@@ -44,6 +44,7 @@ export default async function DatasetProfilePage({ params }: PageProps<"/data/[i
     ["Updated", d.updateCadence],
     ["License", d.license],
     ["Cite as", d.source.citation],
+    ["Use here", "Shown for non-commercial, educational purposes, with attribution to the source."],
   ];
 
   return (

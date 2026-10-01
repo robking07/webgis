@@ -12,7 +12,8 @@ export default function DataPage() {
         <h1 className="text-2xl font-semibold tracking-tight">Data</h1>
         <p className="mt-2 text-muted-foreground">
           Every dataset on the map, with where it comes from, how each value is computed, and what to watch out for.
-          All of it is free, public-domain U.S. government data.
+          Most of it is public-domain U.S. government data; academic sources are credited on each dataset&apos;s page.
+          webgis is a non-commercial, educational project.
         </p>
       </header>
       <DataDirectory />
