@@ -14,7 +14,7 @@ export interface UrlState {
   at: ViewState;
   theme: "light" | "dark" | null;
   /** Geography level ("Display options"): a fixed level, "auto" (switch with zoom), or
-   *  null = the dataset's default (how the source publishes it; D-33). */
+   *  null = the dataset's default (how the source publishes it; D-35). */
   lv: "state" | "county" | "tract" | "auto" | null;
 }
 

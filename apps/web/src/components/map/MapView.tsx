@@ -2,7 +2,7 @@
 // The only module that touches the map library. Swapping in Mapbox GL JS (Q-1) means
 // reimplementing this component against the same props.
 import { useEffect, useRef } from "react";
-import { LngLatBounds, Map as MlMap, ScaleControl, addProtocol, setWorkerUrl, type MapGeoJSONFeature } from "maplibre-gl";
+import { AttributionControl, LngLatBounds, Map as MlMap, ScaleControl, addProtocol, setWorkerUrl, type LayerSpecification, type MapGeoJSONFeature } from "maplibre-gl";
 import { Protocol } from "pmtiles";
 import { basemapStyle, choroplethFill, DATA_BEFORE_ID, featureLineLayers, featurePolygonLayers, focusLandLayer, FOCUS_LAND_BEFORE_ID, GEO_LEVELS, MOTION, thematicLayers, type GeoLevel, type ThemeName } from "@webgis/design";
 import type { FeatureLayerSpec } from "@/lib/layers";
@@ -69,6 +69,9 @@ interface Props {
   onApi?: (api: MapApi) => void;
   /** Scale bar units (Settings). */
   scaleUnit?: "imperial" | "metric";
+  /** MapLibre's attribution control. The main map turns it off and shows its own credits
+   *  footnote (MapCredits); smaller maps (Odd Pairings) keep it. */
+  attribution?: boolean;
 }
 
 export interface MapApi {
@@ -94,7 +97,7 @@ function tilesUrl(level: GeoLevel) {
   return `pmtiles://${base}/${level}.pmtiles`;
 }
 
-export function MapView({ theme, initialView, paint, onViewChange, onHover, onSelect, onTilesError, ariaLabel, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, onApi, featureFilter, scaleUnit = "imperial" }: Props) {
+export function MapView({ theme, initialView, paint, onViewChange, onHover, onSelect, onTilesError, ariaLabel, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, onApi, featureFilter, scaleUnit = "imperial", attribution = true }: Props) {
   const container = useRef<HTMLDivElement>(null);
   const map = useRef<MlMap | null>(null);
   const applied = useRef<Partial<Record<GeoLevel, LevelPaint>>>({});
@@ -155,7 +158,14 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
     m.getCanvasContainer().addEventListener("wheel", userMove, { passive: true });
     m.on("dragstart", userMove);
     m.on("zoomstart", (e) => { if ((e as { originalEvent?: unknown }).originalEvent) userMove(); });
-    // Attribution is the page's own footnote (MapCredits), under the legend and scale bar.
+    if (attribution) {
+      m.addControl(new AttributionControl({ compact: true, customAttribution: "Boundaries: U.S. Census Bureau TIGER/Line cartographic boundaries" }), "bottom-right");
+      // Compact attribution starts expanded; start it collapsed to its ⓘ button on any map too narrow
+      // for the one-line credit (phones, and the small maps on Odd Pairing pages).
+      if (container.current.clientWidth < 900) {
+        m.once("load", () => container.current?.querySelector(".maplibregl-ctrl-attrib")?.classList.remove("maplibregl-compact-show"));
+      }
+    }
     m.getCanvas().setAttribute("aria-label", ariaLabel);
 
     m.on("style.load", () => {
@@ -272,7 +282,7 @@ function applyBands(m: MlMap, bands?: Props["levelZooms"]) {
       m.setLayoutProperty(id, "visibility", band ? "visible" : "none");
       if (band) m.setLayerZoomRange(id, band.minzoom, band.maxzoom);
     }
-    for (const id of [`${level}-highlight-casing`, `${level}-highlight`]) if (m.getLayer(id)) m.setLayerZoomRange(id, 0, 24);
+    for (const id of [`${level}-highlight-halo`, `${level}-highlight`]) if (m.getLayer(id)) m.setLayerZoomRange(id, 0, 24);
   }
 }
 
@@ -324,7 +334,7 @@ function addThematic(m: MlMap, theme: ThemeName) {
     }
   }
   // Selection outlines go above every level's fill, so a county picked while tracts are drawn still shows.
-  for (const level of LEVELS) for (const id of [`${level}-highlight-casing`, `${level}-highlight`]) {
+  for (const level of LEVELS) for (const id of [`${level}-highlight-halo`, `${level}-highlight`]) {
     if (m.getLayer(id)) m.moveLayer(id, m.getLayer(DATA_BEFORE_ID) ? DATA_BEFORE_ID : undefined);
   }
 }
@@ -359,12 +369,15 @@ function setFlag(m: MlMap, ref: { current: { level: GeoLevel; id: string } | nul
 }
 
 const FEATURE_SRC = "feature-layer";
+const FEATURE_TAG = "wg:feature";
 
 /** Show exactly one feature layer (or none), placed above the choropleth and basemap overlays, below labels. */
 function syncFeatureLayer(m: MlMap, spec: FeatureLayerSpec | null, theme: ThemeName) {
-  const current = m.getStyle().layers.filter((l) => "source" in l && l.source === FEATURE_SRC).map((l) => l.id);
-  const wantedIds = spec ? (spec.geometry === "polygon" ? [`${spec.id}-fill`, `${spec.id}-casing`] : [`${spec.id}-casing`, `${spec.id}-line`]) : [];
-  if (current.length && current.join() === wantedIds.join()) return;
+  // Every layer we add is tagged, including ones on the basemap source (the polygon water mask).
+  const current = m.getStyle().layers.filter((l) => (l.metadata as Record<string, unknown> | undefined)?.[FEATURE_TAG]).map((l) => l.id);
+  const opts = spec && { id: spec.id, source: FEATURE_SRC, sourceLayer: spec.sourceLayer, valueField: spec.valueField, breaks: spec.breaks, colors: spec.colors, rankField: spec.rankField, theme };
+  const wanted = !spec || !opts ? [] : spec.geometry === "polygon" ? featurePolygonLayers(opts) : featureLineLayers(opts);
+  if (current.length && current.join() === wanted.map((l) => l.id).join()) return;
   for (const id of current) m.removeLayer(id);
   if (m.getSource(FEATURE_SRC)) m.removeSource(FEATURE_SRC);
   for (const id of HIDDEN_WITH_LINES) if (m.getLayer(id)) m.setLayoutProperty(id, "visibility", spec?.geometry === "line" ? "none" : "visible");
@@ -375,16 +388,7 @@ function syncFeatureLayer(m: MlMap, spec: FeatureLayerSpec | null, theme: ThemeN
   const before = spec.geometry === "polygon"
     ? (m.getLayer(DATA_BEFORE_ID) ? DATA_BEFORE_ID : undefined)
     : (m.getLayer("label-water") ? "label-water" : undefined);
-  if (spec.geometry === "polygon") {
-    for (const layer of featurePolygonLayers({ id: spec.id, source: FEATURE_SRC, sourceLayer: spec.sourceLayer, valueField: spec.valueField, breaks: spec.breaks, colors: spec.colors, rankField: spec.rankField, theme })) {
-      m.addLayer(layer, before);
-    }
-  }
-  if (spec.geometry === "line") {
-    for (const layer of featureLineLayers({ id: spec.id, source: FEATURE_SRC, sourceLayer: spec.sourceLayer, valueField: spec.valueField, breaks: spec.breaks, colors: spec.colors, rankField: spec.rankField, theme })) {
-      m.addLayer(layer, before);
-    }
-  }
+  for (const layer of wanted) m.addLayer({ ...layer, metadata: { [FEATURE_TAG]: true } } as LayerSpecification, before);
 }
 
 /** Show only features whose facet values are allowed. Values may be numbers or strings in the tiles. */

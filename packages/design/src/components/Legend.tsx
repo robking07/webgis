@@ -25,7 +25,7 @@ export function Legend({ title, unit, colors, breaks, caption, minClass, showNoD
       <ul className="wg-legend-list">
         {colors.map((c, i) => (
           <li key={c + i}>
-            <span className="wg-swatch" style={{ background: c, width: LEGEND.swatchSize, height: swatch === "line" ? 4 + i : LEGEND.swatchSize }} aria-hidden />
+            <span className={swatch === "line" ? "wg-swatch wg-swatch-line" : "wg-swatch"} style={{ background: c, width: LEGEND.swatchSize, height: swatch === "line" ? 4 + i : LEGEND.swatchSize }} aria-hidden />
             <span>{labels[i] ?? ""}</span>
           </li>
         ))}

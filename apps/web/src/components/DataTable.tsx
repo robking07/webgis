@@ -83,7 +83,7 @@ export const DataTable = memo(function DataTable({ level, x, xv, y, yv, selected
   );
 
   return (
-    // Phones and tablets: docked to the bottom 42% so a picked place stays visible above it (D-33).
+    // Phones and tablets: docked to the bottom 42% so a picked place stays visible above it (D-35).
     <section role="dialog" aria-modal="false" aria-label={`Table of ${x.title}`} data-obstructs=""
       className="absolute inset-x-0 bottom-0 z-40 flex h-[42%] flex-col gap-2 rounded-t-2xl border bg-card p-3 shadow-lg lg:inset-y-3 lg:bottom-3 lg:left-3 lg:right-auto lg:h-auto lg:w-[28rem] lg:rounded-lg">
       <header className="flex items-start justify-between gap-2">

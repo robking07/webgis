@@ -31,7 +31,7 @@ export async function exportNames() {
   await pool.end();
 }
 
-/** Place search index (D-33): states and counties (with their geoids, so search can select
+/** Place search index (D-35): states and counties (with their geoids, so search can select
  *  them on the map) plus every Gazetteer city, town and CDP. Rows are
  *  [name, kind, geoid | "", lon, lat, land sq mi]; the map picks a zoom from the land area. */
 export async function exportSearch() {

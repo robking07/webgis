@@ -6,7 +6,7 @@ const Ramp = z.enum(["blues", "ylgnbu", "oranges", "purples", "viridis", "cividi
 const Unit = z.enum(["dollars", "percent", "minutes", "count", "per_sq_mi", "ratio", "years", "deg_f", "inches", "per_100k", "vehicles_per_day", "miles_per_day", "categories", "agreements", "percentile"]);
 export const GeoLevel = z.enum(["state", "county", "tract"]);
 
-/** A feature-layer popup field with optional explainers (D-33). */
+/** A feature-layer popup field with optional explainers (D-35). */
 const FeatureField = z.object({
   label: z.string(),
   unit: z.string().optional(),
@@ -163,6 +163,11 @@ export const Facet = z.object({
 export const DatasetEntry = z.object({
   id: z.string().regex(/^[a-z0-9_]+$/),
   title: z.string(),
+  /**
+   * Plain noun phrase that reads after "higher" / "lower" in Odd Pairings captions,
+   * e.g. "work-from-home rates", "household incomes". Falls back to the title.
+   */
+  phrase: z.string().optional(),
   /** One sentence shown in the browser and popups. */
   description: z.string(),
   category: z.enum(["Income & poverty", "Commuting", "Vehicles", "Housing", "Population", "Jobs", "Transportation", "Environment", "Environmental justice", "Immigration enforcement", "Health", "Climate"]),
@@ -191,9 +196,9 @@ export const DatasetEntry = z.object({
   /** Keep out of Odd Pairings (Specials)' playful pairings (sensitive subjects, e.g. enforcement). */
   excludeFromInsights: z.boolean().default(false),
   /** Level shown by default, at every zoom. Omitted = the finest level the data has
-   *  (ACS → tract), which is how the source publishes it (Robbie, D-33). */
+   *  (ACS → tract), which is how the source publishes it (Robbie, D-35). */
   defaultLevel: GeoLevel.optional(),
-  /** Popup links to readable resources about the clicked place or feature (D-33). */
+  /** Popup links to readable resources about the clicked place or feature (D-35). */
   learnMore: z.array(LearnMore).default([]),
   /** Glossary term ids (data/registry/glossary.yaml) that explain this dataset's jargon. */
   terms: z.array(z.string()).default([]),

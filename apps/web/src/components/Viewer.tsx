@@ -1,14 +1,18 @@
 "use client";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ArrowUpRight, ChevronDown, CornerUpLeft, Info, Menu, Minus, Plus, Search, SlidersHorizontal, X } from "lucide-react";
+import { ArrowUpRight, ChevronDown, CornerUpLeft, Info, Menu, Minus, Plus, SlidersHorizontal, X } from "lucide-react";
 import { BivariateLegend, Legend, Popup, StatusState } from "@webgis/design/components";
-import { formatValue, GEO_LEVELS, levelAtZoom, levelBands, type GeoLevel, type ThemeName } from "@webgis/design";
+import { featureLineColors, formatValue, GEO_LEVELS, levelAtZoom, levelBands, type GeoLevel } from "@webgis/design";
 import { DatasetBrowser } from "./DatasetBrowser";
 import { DataTable } from "./DataTable";
 import { DatasetHeading } from "./DatasetMenus";
 import { MapCredits } from "./MapCredits";
 import { SearchOverlay } from "./SearchOverlay";
-import { SettingsMenu, useScaleUnit } from "./SettingsMenu";
+import { useScaleUnit } from "./SettingsMenu";
+import { HeaderContent } from "./SiteHeader";
+import { LogoMark } from "./Logo";
+import { LANDING } from "@/lib/landing";
+import { readStoredTheme, useResolvedTheme } from "@/lib/theme";
 import { TERM_BY_ID } from "@/lib/glossary";
 import type { Facet } from "@webgis/registry";
 import { MapView, type Camera, type FeatureHit, type HoverInfo, type LevelPaint, type MapApi, type Padding } from "./map/MapView";
@@ -29,8 +33,14 @@ const HEADER_GAP = 68; // header (56) + 12
 
 export function Viewer({ search }: { search: string }) {
   const [initial] = useState<UrlState>(() => {
-    const s = parseUrlState(search);
-    return { ...s, d: s.d && DATASET_BY_ID.has(s.d) ? s.d : DATASETS[0]?.id ?? null, b: s.b && DATASET_BY_ID.has(s.b) ? s.b : null };
+    const parsed = parseUrlState(search);
+    // A theme chosen on another page carries over (client-only render, so storage is readable here).
+    const s = { ...parsed, theme: parsed.theme ?? readStoredTheme() };
+    if (s.d && DATASET_BY_ID.has(s.d)) return { ...s, b: s.b && DATASET_BY_ID.has(s.b) ? s.b : null };
+    // No dataset in the URL: the featured landing view (lib/landing.ts).
+    const d = DATASET_BY_ID.has(LANDING.d) ? LANDING.d : DATASETS[0]?.id ?? null;
+    const b = LANDING.b && DATASET_BY_ID.has(LANDING.b) ? LANDING.b : null;
+    return { ...s, d, b, at: new URLSearchParams(search).has("at") ? s.at : LANDING.at ?? s.at };
   });
   const [state, update] = useUrlState(initial);
   const theme = useResolvedTheme(state.theme);
@@ -64,7 +74,7 @@ export function Viewer({ search }: { search: string }) {
     ro.observe(el);
     return () => ro.disconnect();
   }, [state.d]);
-  /** Views to return to: pushed only when a click on the map zooms to a feature (D-33). */
+  /** Views to return to: pushed only when a click on the map zooms to a feature (D-35). */
   const history = useRef<Camera[]>([]);
   const [canGoBack, setCanGoBack] = useState(false);
   const phone = useIsPhone();
@@ -89,7 +99,7 @@ export function Viewer({ search }: { search: string }) {
   // Levels both datasets have.
   const availableLevels = useMemo(() => isFeature ? [] : LEVELS.filter((l) => (!primary || primary.geographyLevels.includes(l)) && (!secondary || secondary.geographyLevels.includes(l))), [primary, secondary, isFeature]);
   // Default level: how the source publishes the data, i.e. its finest level (ACS → tracts),
-  // drawn at every zoom (D-33). "Switch with zoom" (lv=auto) restores the old zoom bands.
+  // drawn at every zoom (D-35). "Switch with zoom" (lv=auto) restores the old zoom bands.
   const defaultLevel = primary?.defaultLevel && availableLevels.includes(primary.defaultLevel) ? primary.defaultLevel : availableLevels[availableLevels.length - 1] ?? null;
   const pinnedLevel = state.lv === "auto" ? null : state.lv && availableLevels.includes(state.lv) ? state.lv : defaultLevel;
   const bands = useMemo(() => (pinnedLevel ? { [pinnedLevel]: { minzoom: 0, maxzoom: 24 } } : levelBands(availableLevels)), [availableLevels, pinnedLevel]);
@@ -138,7 +148,7 @@ export function Viewer({ search }: { search: string }) {
   });
   const filtersActive = Object.values(hidden).some((h) => h.size > 0);
 
-  // ── Framing (D-33) ─────────────────────────────────────────────────────────────
+  // ── Framing (D-35) ─────────────────────────────────────────────────────────────
   /** Map padding that keeps a target clear of whatever is open: every element marked
    *  `data-obstructs` claims the screen edge it covers least. `detail` reserves room for a
    *  details panel that is about to open. */
@@ -222,7 +232,9 @@ export function Viewer({ search }: { search: string }) {
   // At rest: slim header, dataset card, full legend. The first user pan/zoom/scroll
   // "immerses": the navigation falls away, leaving the wordmark, the category and dataset
   // heading (with menus), and the legend. The menu button, the top edge, or Esc brings it back.
-  const legendStrip = primary && (featureSpec ? featureSpec.colors : current?.colors);
+  // Line layers reverse their ramp on dark land (see featureLineColors); the legend follows the map.
+  const featureColors = featureSpec && (featureSpec.geometry === "line" ? featureLineColors(featureSpec.colors, theme) : featureSpec.colors);
+  const legendStrip = primary && (featureColors || current?.colors);
   const legendEnds = featureSpec
     ? [`< ${formatValue(featureSpec.breaks[0], primary!.unit)}`, `≥ ${formatValue(featureSpec.breaks[featureSpec.breaks.length - 1], primary!.unit)}`]
     : current?.breaks?.length ? [`< ${formatValue(current.breaks[0], primary!.unit)}`, `≥ ${formatValue(current.breaks[current.breaks.length - 1], primary!.unit)}`] : null;
@@ -252,7 +264,7 @@ export function Viewer({ search }: { search: string }) {
   const legendBody = (
     <>
       {primary && isFeature ? (featureSpec ? (
-          <Legend title={primary.title} unit={primary.unit} colors={featureSpec.colors} breaks={featureSpec.breaks} showNoData={false} swatch={featureSpec.geometry === "line" ? "line" : "area"}
+          <Legend title={primary.title} unit={primary.unit} colors={featureColors!} breaks={featureSpec.breaks} showNoData={false} swatch={featureSpec.geometry === "line" ? "line" : "area"}
             caption={`${primary.vintage} · ${featureSpec.featureCount.toLocaleString()} ${featureSpec.geometry === "line" ? "segments · wider lines = higher road class" : "areas"}${primary.coverageNote ? `. ${primary.coverageNote}` : ""}`} />
         ) : <StatusState status="empty" message="This layer hasn't been built yet." />)
         : error ? <StatusState status="error" message={error} />
@@ -294,6 +306,7 @@ export function Viewer({ search }: { search: string }) {
           onUserMove={() => { if (!browserOpen) { setImmersed(true); setPeek(false); if (filtersActive) setDockOpen(true); } }}
           onApi={(api) => { mapApi.current = api; }}
           scaleUnit={scaleUnit}
+          attribution={false}
           ariaLabel={primary ? `Map of ${primary.title}${secondary ? ` compared with ${secondary.title}` : ""} by ${GEO_LEVELS[level].label.toLowerCase()}` : "Map"}
         />
       </main>
@@ -302,20 +315,8 @@ export function Viewer({ search }: { search: string }) {
       <header onMouseLeave={() => setPeek(false)} data-obstructs={chromeShown ? "" : undefined}
         className={`absolute inset-x-0 top-0 z-30 flex h-14 items-center justify-between gap-3 border-b bg-background/95 px-4 backdrop-blur transition-transform duration-300 ease-out md:px-6 ${chromeShown ? "translate-y-0" : "-translate-y-full"}`}
         aria-hidden={!chromeShown || undefined} inert={!chromeShown || undefined}>
-        <div className="flex min-w-0 items-center gap-5 md:gap-7">
-          <a href="/" className="text-lg font-bold tracking-tight text-foreground">Mapwich</a>
-          <nav aria-label="Sections" className="flex gap-4 text-sm md:gap-5">
-            <span aria-current="page" className="font-semibold text-foreground shadow-[inset_0_-2px_0_var(--ui-accent)]">Map</span>
-            <a href="/specials" className="text-muted-foreground hover:text-foreground">Specials</a>
-          </nav>
-        </div>
-        <div className="flex items-center gap-1">
-          <button type="button" onClick={() => setSearchOpen(true)} aria-label="Search places and datasets" title="Search places and datasets ( / )"
-            className="grid size-9 place-items-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring">
-            <Search className="size-[18px]" aria-hidden />
-          </button>
-          <SettingsMenu theme={state.theme} onTheme={(t) => update({ theme: t })} unit={scaleUnit} onUnit={setScaleUnit} />
-        </div>
+        <HeaderContent current="map" onSearch={() => setSearchOpen(true)} explicitTheme={state.theme} onTheme={(t) => update({ theme: t })}
+          unit={scaleUnit} onUnit={setScaleUnit} />
       </header>
 
       {/* At rest: the factual dataset card. */}
@@ -345,18 +346,20 @@ export function Viewer({ search }: { search: string }) {
               <a href={`/data/${primary.id}#explainers`} className="block pt-0.5 text-primary hover:underline">More on the data page →</a>
             </dl>
           )}
-          <div className="mt-3 hidden flex-wrap gap-2 md:flex">
+          {/* Actions, then Display options: one wrapping row on phones (so Table and Compare are
+              reachable there too, D-33 P3); on desktop Display options sits on its own line. */}
+          <div className="mt-3 flex flex-wrap items-center gap-2">
             {!isFeature && <button type="button" onClick={() => setBrowserOpen(true)} className="rounded-md border px-2.5 py-1 text-[13px] hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring">Compare</button>}
             {tableReady && <button type="button" onClick={() => setTableOpen(true)} className="rounded-md border px-2.5 py-1 text-[13px] hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring">Table</button>}
-            <a href={`/data/${primary.id}`} className="rounded-md border px-2.5 py-1 text-[13px] text-foreground hover:bg-muted">About this data</a>
+            <a href={`/data/${primary.id}`} className="rounded-md border px-2.5 py-1 text-[13px] text-foreground hover:bg-muted"><span className="md:hidden">About</span><span className="hidden md:inline">About this data</span></a>
+            {/* Progressive disclosure: options stay tucked away until asked for. */}
+            {hasOptions && (
+              <button type="button" onClick={() => setOptionsOpen((o) => !o)} aria-expanded={optionsOpen} aria-controls="display-options"
+                className="flex items-center gap-1.5 rounded px-1 text-xs font-medium text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring md:mt-1 md:basis-full md:px-0">
+                <SlidersHorizontal className="size-3.5" aria-hidden /> <span className="md:hidden">Options</span><span className="hidden md:inline">Display options</span> <ChevronDown className={`size-3.5 transition-transform ${optionsOpen ? "rotate-180" : ""}`} aria-hidden />
+              </button>
+            )}
           </div>
-          {/* Progressive disclosure: options stay tucked away until asked for. */}
-          {hasOptions && (
-            <button type="button" onClick={() => setOptionsOpen((o) => !o)} aria-expanded={optionsOpen} aria-controls="display-options"
-              className="mt-3 flex items-center gap-1.5 rounded text-xs font-medium text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring">
-              <SlidersHorizontal className="size-3.5" aria-hidden /> Display options <ChevronDown className={`size-3.5 transition-transform ${optionsOpen ? "rotate-180" : ""}`} aria-hidden />
-            </button>
-          )}
           {optionsOpen && (
             <div id="display-options" className="mt-2 max-h-[45vh] space-y-4 overflow-y-auto border-t pt-3">
               {displayOptions(false)}
@@ -376,7 +379,10 @@ export function Viewer({ search }: { search: string }) {
               className="wg-glass grid size-10 place-items-center rounded-xl text-foreground focus-visible:outline-2 focus-visible:outline-ring">
               <Menu className="size-[18px]" aria-hidden />
             </button>
-            <span className="wg-wordmark text-[28px] font-extrabold tracking-tight md:text-[34px]" aria-hidden>Mapwich</span>
+            <span className="flex items-center gap-2" aria-hidden>
+              <span className="wg-logo-on-map"><LogoMark size={34} /></span>
+              <span className="wg-wordmark hidden text-[34px] font-extrabold tracking-tight md:inline">Mapwich</span>
+            </span>
           </div>
           <div className="mt-1">
             <DatasetHeading key={primary.id} primary={primary} secondary={secondary} onPick={pickDataset} />
@@ -392,7 +398,7 @@ export function Viewer({ search }: { search: string }) {
         </div>
       )}
 
-      {/* Display dock (immersed): geography level and filters stay reachable after zooming in (D-28, D-33).
+      {/* Display dock (immersed): geography level and filters stay reachable after zooming in (D-28, D-35).
           Transparent, with text halos and glass chips. */}
       {dockShown && (
         <section id="display-dock" aria-label="Display options" data-obstructs=""
@@ -422,12 +428,13 @@ export function Viewer({ search }: { search: string }) {
       {/* Legend: full card at rest on desktop; a strip when immersed or on phones (tap to expand). */}
       {legendStrip && legendEnds && !legendOpen && (
         <button type="button" onClick={() => setLegendOpen(true)} aria-expanded={false} aria-label={`Show legend for ${primary!.title}`}
-          className={`wg-glass absolute bottom-6 left-3 z-20 items-center gap-2 rounded-full px-3 py-2 text-xs tabular-nums text-foreground focus-visible:outline-2 focus-visible:outline-ring md:left-4 ${desktopStrip ? "flex" : "flex md:hidden"}`}>
-          <span>{legendEnds[0]}</span>
+          className={`wg-glass wg-glass-strong absolute bottom-6 left-3 z-20 max-w-[calc(100%-9rem)] items-center gap-2 whitespace-nowrap rounded-full px-3 py-2 text-xs tabular-nums text-foreground focus-visible:outline-2 focus-visible:outline-ring md:left-4 md:max-w-none ${desktopStrip ? "flex" : "flex md:hidden"}`}>
+          {/* The strip is a compact key: numbers only ("< 2.5K", "≥ 75K"); the unit is in the full legend. */}
+          <span>{stripEnd(legendEnds[0])}</span>
           <span className="flex overflow-hidden rounded-sm" aria-hidden>
-            {(secondary && current ? [current.colors[0], current.colors[4], current.colors[8]] : legendStrip).map((c, i) => <span key={i} className={featureSpec ? "h-1.5 w-5 self-center" : "h-2 w-5"} style={{ background: c }} />)}
+            {(secondary && current ? [current.colors[0], current.colors[4], current.colors[8]] : legendStrip).map((c, i) => <span key={i} className={featureSpec ? "h-1.5 w-4 self-center md:w-5" : "h-2 w-4 md:w-5"} style={{ background: c }} />)}
           </span>
-          <span>{legendEnds[1]}</span>
+          <span>{stripEnd(legendEnds[1])}</span>
         </button>
       )}
       <section aria-label="Legend"
@@ -598,6 +605,9 @@ function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, onMapIt }
     </section>
   );
 }
+
+/** "< 2.5K vehicles/day" → "< 2.5K": the legend strip keeps the comparison and number, drops unit words. */
+const stripEnd = (s: string) => s.replace(/^([<≥]\s*\S+).*$/, "$1");
 
 const dedupe = (links: Link[]) => links.filter((l, i) => links.findIndex((m) => m.url === l.url) === i);
 
@@ -794,19 +804,3 @@ function FeaturePanel({ hit, spec, dataset, top, onClose }: { hit: FeatureHit; s
   );
 }
 
-function useResolvedTheme(explicit: ThemeName | null): ThemeName {
-  const [system, setSystem] = useState<ThemeName>("light");
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-color-scheme: dark)");
-    const set = () => setSystem(mq.matches ? "dark" : "light");
-    set();
-    mq.addEventListener("change", set);
-    return () => mq.removeEventListener("change", set);
-  }, []);
-  const theme = explicit ?? system;
-  useEffect(() => {
-    if (explicit) document.documentElement.dataset.theme = explicit;
-    else delete document.documentElement.dataset.theme;
-  }, [explicit]);
-  return theme;
-}

@@ -1,4 +1,4 @@
-// Popup links that help a reader understand one data point (D-33): a readable profile of
+// Popup links that help a reader understand one data point (D-35): a readable profile of
 // the place, the source's own explainer, or the place itself (Street View). Templates live in
 // each registry entry's `learnMore`; this only fills in the placeholders.
 import type { GeoLevel } from "@webgis/design";

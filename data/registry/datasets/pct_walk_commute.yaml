@@ -1,5 +1,6 @@
 id: pct_walk_commute
 title: Walk to work
+phrase: walk-to-work rates
 description: Share of workers 16 and over who usually walked to work.
 category: Commuting
 tags: [walking, active transportation, pedestrian, mode share]

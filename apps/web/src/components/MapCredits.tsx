@@ -1,4 +1,4 @@
-// Map credits as a footnote (D-33): small, low-contrast, under the legend and scale bar.
+// Map credits as a footnote (D-35): small, low-contrast, under the legend and scale bar.
 // Replaces MapLibre's attribution box; the basemap credit (OpenStreetMap et al.) stays visible.
 import type { Dataset } from "@/lib/registry";
 

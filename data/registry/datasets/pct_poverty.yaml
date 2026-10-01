@@ -1,5 +1,6 @@
 id: pct_poverty
 title: Population below poverty
+phrase: poverty rates
 description: Share of people whose income in the past 12 months was below the federal poverty level.
 category: Income & poverty
 tags: [poverty, income, equity]

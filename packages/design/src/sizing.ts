@@ -35,9 +35,10 @@ export function levelAtZoom(bands: Partial<Record<GeoLevel, ZoomBand>>, zoom: nu
 /** [zoom, value] pairs, interpolated linearly. */
 export const SIZE = {
   featureOutline: [[3, 0.2], [6, 0.4], [10, 0.8], [14, 1.2]],
+  /** Outline opacity for small areas (tracts and finer): at national zooms thousands of
+   *  outlines would wash the fills out, so they fade in as areas grow (D-35). */
+  fineOutlineOpacity: [[5, 0], [8, 0.7]],
   highlightOutline: [[3, 1.5], [10, 2.5], [14, 3]],
-  /** Halo under the selection outline: outline + ~2.5 px. */
-  highlightCasing: [[3, 4], [10, 5], [14, 5.5]],
   line: [[4, 0.6], [8, 1.2], [12, 2.5], [16, 5]],
   lineMajor: [[4, 1], [8, 2], [12, 4], [16, 8]],
   point: [[4, 2], [8, 3.5], [12, 6], [16, 9]],

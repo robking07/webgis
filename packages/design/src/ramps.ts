@@ -86,8 +86,12 @@ export const RAMPS = {
 
 export type RampId = keyof typeof RAMPS;
 
-/** Trim of the light end so the first class never disappears into the basemap. */
-const SEQ_START = 0.1;
+/**
+ * Trim of the light end so the first class never disappears into the basemap or reads as
+ * "no data". 0.1 left ColorBrewer Purples/Blues/Oranges within ΔE 6–9 of light land (D-33, C1);
+ * 0.25 puts every ramp ≥ 11 away while keeping CVD adjacency ≥ 5. Enforced in scripts/check.ts.
+ */
+const SEQ_START = 0.25;
 
 /** Colors for a ramp at `n` classes, as hex strings. */
 export function rampColors(id: RampId, n: number): string[] {
