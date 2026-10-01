@@ -62,6 +62,7 @@ function vars(e: DatasetEntry): string[] {
   if (m.kind === "climdiv") return [`CLIMDIV:${m.element}:${m.months.join(",")}`];
   if (m.kind === "nbi") return [`NBI:${m.condition}`];
   if (m.kind === "features") return [`FEATURES:${e.id}`];
+  if (m.kind === "hpms_vmt") return ["HPMS:VMT"];
   return ["FARS:FATALS"];
 }
 function perArea(e: DatasetEntry) {

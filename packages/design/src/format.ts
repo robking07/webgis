@@ -1,6 +1,6 @@
 // Number formatting and legend rules, keyed by the `unit` field of a registry entry.
 
-export type Unit = "dollars" | "percent" | "minutes" | "count" | "per_sq_mi" | "ratio" | "years" | "deg_f" | "inches" | "per_100k" | "vehicles_per_day";
+export type Unit = "dollars" | "percent" | "minutes" | "count" | "per_sq_mi" | "ratio" | "years" | "deg_f" | "inches" | "per_100k" | "vehicles_per_day" | "miles_per_day";
 
 const nf = (o: Intl.NumberFormatOptions) => new Intl.NumberFormat("en-US", o);
 const FORMATTERS: Record<Unit, (v: number) => string> = {
@@ -14,6 +14,7 @@ const FORMATTERS: Record<Unit, (v: number) => string> = {
   deg_f: (v) => `${nf({ maximumFractionDigits: 1 }).format(v)}°F`,
   inches: (v) => `${nf({ maximumFractionDigits: 1 }).format(v)} in`,
   vehicles_per_day: (v) => `${nf({ notation: v >= 1000 ? "compact" : "standard", maximumFractionDigits: 1 }).format(v)} vehicles/day`,
+  miles_per_day: (v) => `${nf({ maximumFractionDigits: 1 }).format(v)} mi/day`,
   per_100k: (v) => `${nf({ maximumFractionDigits: 1 }).format(v)} per 100k`,
 };
 

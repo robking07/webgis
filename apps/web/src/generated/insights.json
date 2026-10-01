@@ -6,7 +6,7 @@
   "minAbsRho": 0.3,
   "minWithinStateRho": 0.15
  },
- "generatedAt": "2026-10-01T11:56:11.172Z",
+ "generatedAt": "2026-10-01T13:03:46.943Z",
  "insights": [
   {
    "id": "job_density__population_density",
@@ -742,6 +742,25 @@
    "captionBy": null
   },
   {
+   "id": "traffic_fatalities__vmt_per_capita",
+   "x": "traffic_fatalities",
+   "y": "vmt_per_capita",
+   "level": "county",
+   "n": 3130,
+   "r": 0.916,
+   "rho": 0.505,
+   "withinState": 0.507,
+   "status": "flagged",
+   "flags": [
+    "too good to be true (|r|>0.9)",
+    "Pearson and Spearman disagree (r=0.92, ρ=0.50): outlier-driven",
+    "same category (Transportation): expected, not weird"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null
+  },
+  {
    "id": "obesity__pct_poverty",
    "x": "obesity",
    "y": "pct_poverty",
@@ -859,6 +878,24 @@
    "captionBy": "template"
   },
   {
+   "id": "population_density__vmt_per_capita",
+   "x": "population_density",
+   "y": "vmt_per_capita",
+   "level": "county",
+   "n": 3130,
+   "r": -0.024,
+   "rho": -0.461,
+   "withinState": -0.433,
+   "status": "flagged",
+   "flags": [
+    "Pearson and Spearman disagree (r=-0.02, ρ=-0.46): outlier-driven",
+    "by construction: Vehicle miles per resident is modeled using Population density"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null
+  },
+  {
    "id": "job_density__pct_age_65_plus",
    "x": "job_density",
    "y": "pct_age_65_plus",
@@ -921,6 +958,23 @@
    "headline": "Median household income and households with no vehicle move in opposite directions",
    "caption": "Across 3,221 counties, places with higher median household income tend to have less households with no vehicle (Spearman ρ = -0.45). It holds within states too (ρ = -0.49), but both may still track something else, such as how urban a county is.",
    "captionBy": "template"
+  },
+  {
+   "id": "job_density__vmt_per_capita",
+   "x": "job_density",
+   "y": "vmt_per_capita",
+   "level": "county",
+   "n": 3103,
+   "r": -0.013,
+   "rho": -0.453,
+   "withinState": -0.388,
+   "status": "flagged",
+   "flags": [
+    "Pearson and Spearman disagree (r=-0.01, ρ=-0.45): outlier-driven"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null
   },
   {
    "id": "binge_drinking__july_high",
@@ -2512,6 +2566,23 @@
    "captionBy": null
   },
   {
+   "id": "pct_transit_commute__vmt_per_capita",
+   "x": "pct_transit_commute",
+   "y": "vmt_per_capita",
+   "level": "county",
+   "n": 3130,
+   "r": -0.028,
+   "rho": -0.259,
+   "withinState": -0.209,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null
+  },
+  {
    "id": "short_sleep__traffic_fatalities",
    "x": "short_sleep",
    "y": "traffic_fatalities",
@@ -2692,6 +2763,23 @@
    "r": 0.136,
    "rho": 0.242,
    "withinState": 0.028,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null
+  },
+  {
+   "id": "annual_precipitation__vmt_per_capita",
+   "x": "annual_precipitation",
+   "y": "vmt_per_capita",
+   "level": "county",
+   "n": 3128,
+   "r": -0.1,
+   "rho": -0.24,
+   "withinState": -0.133,
    "status": "flagged",
    "flags": [
     "weak (|ρ|<0.3)"
@@ -3093,6 +3181,23 @@
    "captionBy": null
   },
   {
+   "id": "pct_age_65_plus__vmt_per_capita",
+   "x": "pct_age_65_plus",
+   "y": "vmt_per_capita",
+   "level": "county",
+   "n": 3130,
+   "r": 0.246,
+   "rho": 0.205,
+   "withinState": 0.242,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null
+  },
+  {
    "id": "pct_bike_commute__population_density",
    "x": "pct_bike_commute",
    "y": "population_density",
@@ -3203,6 +3308,23 @@
    "r": 0.17,
    "rho": 0.191,
    "withinState": 0.123,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null
+  },
+  {
+   "id": "pct_zero_vehicle_households__vmt_per_capita",
+   "x": "pct_zero_vehicle_households",
+   "y": "vmt_per_capita",
+   "level": "county",
+   "n": 3130,
+   "r": -0.003,
+   "rho": -0.191,
+   "withinState": -0.11,
    "status": "flagged",
    "flags": [
     "weak (|ρ|<0.3)"
@@ -3349,6 +3471,23 @@
    "captionBy": null
   },
   {
+   "id": "pct_bike_commute__vmt_per_capita",
+   "x": "pct_bike_commute",
+   "y": "vmt_per_capita",
+   "level": "county",
+   "n": 3130,
+   "r": -0.025,
+   "rho": -0.175,
+   "withinState": -0.18,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null
+  },
+  {
    "id": "pct_long_commute__smoking",
    "x": "pct_long_commute",
    "y": "smoking",
@@ -3429,6 +3568,23 @@
    "status": "flagged",
    "flags": [
     "Pearson and Spearman disagree (r=0.48, ρ=0.17): outlier-driven",
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null
+  },
+  {
+   "id": "july_high__vmt_per_capita",
+   "x": "july_high",
+   "y": "vmt_per_capita",
+   "level": "county",
+   "n": 3128,
+   "r": 0.073,
+   "rho": 0.167,
+   "withinState": 0.057,
+   "status": "flagged",
+   "flags": [
     "weak (|ρ|<0.3)"
    ],
    "headline": null,
@@ -3564,6 +3720,23 @@
    "r": 0.154,
    "rho": 0.151,
    "withinState": -0.001,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null
+  },
+  {
+   "id": "pct_renter_households__vmt_per_capita",
+   "x": "pct_renter_households",
+   "y": "vmt_per_capita",
+   "level": "county",
+   "n": 3130,
+   "r": 0.112,
+   "rho": -0.15,
+   "withinState": -0.157,
    "status": "flagged",
    "flags": [
     "weak (|ρ|<0.3)"
@@ -3880,6 +4053,23 @@
    "captionBy": null
   },
   {
+   "id": "pct_work_from_home__vmt_per_capita",
+   "x": "pct_work_from_home",
+   "y": "vmt_per_capita",
+   "level": "county",
+   "n": 3130,
+   "r": -0.028,
+   "rho": -0.134,
+   "withinState": -0.124,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null
+  },
+  {
    "id": "job_density__loneliness",
    "x": "job_density",
    "y": "loneliness",
@@ -3959,6 +4149,23 @@
    "r": 0.033,
    "rho": 0.125,
    "withinState": 0.138,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null
+  },
+  {
+   "id": "physical_inactivity__vmt_per_capita",
+   "x": "physical_inactivity",
+   "y": "vmt_per_capita",
+   "level": "county",
+   "n": 2942,
+   "r": 0.059,
+   "rho": 0.121,
+   "withinState": 0.088,
    "status": "flagged",
    "flags": [
     "weak (|ρ|<0.3)"
@@ -4070,6 +4277,23 @@
    "captionBy": null
   },
   {
+   "id": "mean_commute_minutes__vmt_per_capita",
+   "x": "mean_commute_minutes",
+   "y": "vmt_per_capita",
+   "level": "county",
+   "n": 3129,
+   "r": -0.06,
+   "rho": -0.111,
+   "withinState": -0.006,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null
+  },
+  {
    "id": "job_density__pct_long_commute",
    "x": "job_density",
    "y": "pct_long_commute",
@@ -4121,6 +4345,23 @@
    "captionBy": null
   },
   {
+   "id": "median_household_income__vmt_per_capita",
+   "x": "median_household_income",
+   "y": "vmt_per_capita",
+   "level": "county",
+   "n": 3129,
+   "r": -0.049,
+   "rho": -0.104,
+   "withinState": -0.101,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null
+  },
+  {
    "id": "mean_temperature__pct_zero_vehicle_households",
    "x": "mean_temperature",
    "y": "pct_zero_vehicle_households",
@@ -4129,6 +4370,23 @@
    "r": -0.012,
    "rho": 0.103,
    "withinState": 0.141,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null
+  },
+  {
+   "id": "binge_drinking__vmt_per_capita",
+   "x": "binge_drinking",
+   "y": "vmt_per_capita",
+   "level": "county",
+   "n": 2942,
+   "r": 0.04,
+   "rho": 0.101,
+   "withinState": 0.059,
    "status": "flagged",
    "flags": [
     "weak (|ρ|<0.3)"
@@ -4189,6 +4447,23 @@
    "captionBy": null
   },
   {
+   "id": "obesity__vmt_per_capita",
+   "x": "obesity",
+   "y": "vmt_per_capita",
+   "level": "county",
+   "n": 2942,
+   "r": 0.012,
+   "rho": 0.093,
+   "withinState": 0.08,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null
+  },
+  {
    "id": "bridges_poor_condition__smoking",
    "x": "bridges_poor_condition",
    "y": "smoking",
@@ -4197,6 +4472,23 @@
    "r": 0.095,
    "rho": 0.092,
    "withinState": 0.1,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null
+  },
+  {
+   "id": "smoking__vmt_per_capita",
+   "x": "smoking",
+   "y": "vmt_per_capita",
+   "level": "county",
+   "n": 2942,
+   "r": 0.002,
+   "rho": 0.092,
+   "withinState": 0.146,
    "status": "flagged",
    "flags": [
     "weak (|ρ|<0.3)"
@@ -4233,6 +4525,24 @@
    "withinState": 0.052,
    "status": "flagged",
    "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null
+  },
+  {
+   "id": "bridges_poor_condition__vmt_per_capita",
+   "x": "bridges_poor_condition",
+   "y": "vmt_per_capita",
+   "level": "county",
+   "n": 3081,
+   "r": -0.042,
+   "rho": -0.087,
+   "withinState": -0.017,
+   "status": "flagged",
+   "flags": [
+    "same category (Transportation): expected, not weird",
     "weak (|ρ|<0.3)"
    ],
    "headline": null,
@@ -4333,6 +4643,23 @@
    "r": -0.126,
    "rho": -0.072,
    "withinState": -0.092,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null
+  },
+  {
+   "id": "short_sleep__vmt_per_capita",
+   "x": "short_sleep",
+   "y": "vmt_per_capita",
+   "level": "county",
+   "n": 3129,
+   "r": -0.011,
+   "rho": -0.068,
+   "withinState": 0.036,
    "status": "flagged",
    "flags": [
     "weak (|ρ|<0.3)"
@@ -4445,6 +4772,23 @@
    "captionBy": null
   },
   {
+   "id": "loneliness__vmt_per_capita",
+   "x": "loneliness",
+   "y": "vmt_per_capita",
+   "level": "county",
+   "n": 2285,
+   "r": -0.038,
+   "rho": -0.06,
+   "withinState": 0.039,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null
+  },
+  {
    "id": "mean_commute_minutes__pct_work_from_home",
    "x": "mean_commute_minutes",
    "y": "pct_work_from_home",
@@ -4508,6 +4852,40 @@
    "r": 0.069,
    "rho": 0.057,
    "withinState": -0.001,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null
+  },
+  {
+   "id": "january_low__vmt_per_capita",
+   "x": "january_low",
+   "y": "vmt_per_capita",
+   "level": "county",
+   "n": 3128,
+   "r": 0.016,
+   "rho": -0.056,
+   "withinState": -0.127,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null
+  },
+  {
+   "id": "pct_walk_commute__vmt_per_capita",
+   "x": "pct_walk_commute",
+   "y": "vmt_per_capita",
+   "level": "county",
+   "n": 3130,
+   "r": 0.023,
+   "rho": 0.054,
+   "withinState": 0.035,
    "status": "flagged",
    "flags": [
     "weak (|ρ|<0.3)"
@@ -4808,6 +5186,23 @@
    "captionBy": null
   },
   {
+   "id": "pct_poverty__vmt_per_capita",
+   "x": "pct_poverty",
+   "y": "vmt_per_capita",
+   "level": "county",
+   "n": 3130,
+   "r": -0.02,
+   "rho": -0.025,
+   "withinState": -0.022,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null
+  },
+  {
    "id": "bridges_poor_condition__pct_renter_households",
    "x": "bridges_poor_condition",
    "y": "pct_renter_households",
@@ -4918,6 +5313,23 @@
    "r": -0.076,
    "rho": -0.018,
    "withinState": -0.066,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null
+  },
+  {
+   "id": "mean_temperature__vmt_per_capita",
+   "x": "mean_temperature",
+   "y": "vmt_per_capita",
+   "level": "county",
+   "n": 3128,
+   "r": 0.037,
+   "rho": 0.017,
+   "withinState": -0.073,
    "status": "flagged",
    "flags": [
     "weak (|ρ|<0.3)"
@@ -5054,6 +5466,23 @@
    "r": 0.094,
    "rho": -0.002,
    "withinState": 0.054,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null
+  },
+  {
+   "id": "pct_long_commute__vmt_per_capita",
+   "x": "pct_long_commute",
+   "y": "vmt_per_capita",
+   "level": "county",
+   "n": 3130,
+   "r": -0.019,
+   "rho": -0.001,
+   "withinState": 0.059,
    "status": "flagged",
    "flags": [
     "weak (|ρ|<0.3)"

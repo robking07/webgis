@@ -1188,5 +1188,52 @@
    "classification": "quantile",
    "classes": 5
   }
+ },
+ {
+  "id": "vmt_per_capita",
+  "title": "Vehicle miles per resident",
+  "description": "Daily vehicle miles traveled on counted roads in the area, per resident, from traffic counts (AADT) times road length.",
+  "category": "Transportation",
+  "tags": [
+   "VMT",
+   "driving",
+   "traffic",
+   "travel",
+   "HPMS",
+   "emissions"
+  ],
+  "source": {
+   "name": "FHWA Highway Performance Monitoring System (HPMS) 2024",
+   "url": "https://geodata.bts.gov/datasets/5e6a977c2d7c4ec1bdc82e684d3384f2",
+   "citation": "Federal Highway Administration, Highway Performance Monitoring System 2024 (via BTS NTAD); ACS 2020–2024 population"
+  },
+  "license": "Public domain (U.S. Government work; NTAD \"available for unrestricted public use\"). Credit FHWA and BTS.",
+  "updateCadence": "annual",
+  "vintage": "HPMS 2024",
+  "geographyLevels": [
+   "state",
+   "county"
+  ],
+  "unit": "miles_per_day",
+  "universe": "vehicle miles on counted roads per resident",
+  "measure": {
+   "kind": "hpms_vmt",
+   "source": {
+    "url": "https://www.arcgis.com/sharing/rest/content/items/5e6a977c2d7c4ec1bdc82e684d3384f2/data",
+    "file": "HPMS2024.zip",
+    "path": "HPMS2024.gdb",
+    "layerPattern": "^HPMS_FULL_[A-Z]{2}_2024$"
+   },
+   "perCapita": true
+  },
+  "modelInputs": [
+   "population_density"
+  ],
+  "coverageNote": "Counts traffic where it drives, divided by residents, so counties on major through-routes look high. Counted roads only (about 10–15% below FHWA totals). Connecticut counties show no data.",
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5
+  }
  }
 ]
