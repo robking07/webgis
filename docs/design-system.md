@@ -114,10 +114,12 @@ Light and dark come from the same token structure; the basemap and the UI chrome
 | light | panel borders (decorative) | `border` on `surface` | 1.45 | 1.3 |
 | light | map labels | `map.label` on `map.labelHalo` | 13.37 | 7 |
 | light | minor map labels | `map.labelMuted` on `map.labelHalo` | 6.18 | 4.5 |
-| light | selection outline (non-text) | `map.highlight` on `map.land` | 16.58 | 3 |
+| light | selection outline (non-text) | `map.highlight` on `map.land` | 14.73 | 3 |
 | light | interstate line vs its casing (non-text, reads over any fill) | `map.interstate` on `map.interstateCasing` | 8.45 | 4.5 |
 | light | river line vs its casing (non-text) | `map.river` on `map.riverCasing` | 3.09 | 3 |
 | light | interstate route number text | `map.shieldText` on `map.interstate` | 8.45 | 4.5 |
+| light | national boundary vs U.S. land (non-text) | `map.countryLine` on `map.focusLand` | 5.65 | 3 |
+| light | shoreline vs water (decorative) | `map.coastline` on `map.water` | 1.71 | 1.5 |
 | dark | body text | `text` on `bg` | 15.75 | 7 |
 | dark | panel text | `text` on `surface` | 14.30 | 7 |
 | dark | secondary text | `textMuted` on `surface` | 6.92 | 4.5 |
@@ -128,10 +130,12 @@ Light and dark come from the same token structure; the basemap and the UI chrome
 | dark | panel borders (decorative) | `border` on `surface` | 1.46 | 1.3 |
 | dark | map labels | `map.label` on `map.labelHalo` | 12.22 | 7 |
 | dark | minor map labels | `map.labelMuted` on `map.labelHalo` | 6.62 | 4.5 |
-| dark | selection outline (non-text) | `map.highlight` on `map.land` | 16.69 | 3 |
+| dark | selection outline (non-text) | `map.highlight` on `map.land` | 18.13 | 3 |
 | dark | interstate line vs its casing (non-text, reads over any fill) | `map.interstate` on `map.interstateCasing` | 11.05 | 4.5 |
 | dark | river line vs its casing (non-text) | `map.river` on `map.riverCasing` | 6.96 | 3 |
 | dark | interstate route number text | `map.shieldText` on `map.interstate` | 11.05 | 4.5 |
+| dark | national boundary vs U.S. land (non-text) | `map.countryLine` on `map.focusLand` | 4.85 | 3 |
+| dark | shoreline vs water (decorative) | `map.coastline` on `map.water` | 2.38 | 1.5 |
 
 ## Classification and legends
 
@@ -150,7 +154,7 @@ Light and dark come from the same token structure; the basemap and the UI chrome
 | County | 3 – 8.5 |
 | Census tract | 8.5 – max |
 
-Line widths and outlines scale with zoom (`SIZE`: featureOutline, highlightOutline, line, lineMajor, point, interstate, interstateCasing, river, riverCasing, pointStroke). Labels use Noto Sans Regular with a 1.4px halo that matches the basemap tone. Thematic fills are inserted **below** the basemap's label layers, so place names stay readable over any fill.
+Line widths and outlines scale with zoom (`SIZE`: featureOutline, highlightOutline, line, lineMajor, point, dataLine, interstate, interstateCasing, river, riverCasing, pointStroke). Labels use Noto Sans Regular with a 1.4px halo that matches the basemap tone. Thematic fills are inserted **below** the basemap's label layers, so place names stay readable over any fill.
 
 ## Motion and accessibility
 

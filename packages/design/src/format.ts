@@ -20,6 +20,9 @@ const FORMATTERS: Record<Unit, (v: number) => string> = {
   per_100k: (v) => `${nf({ maximumFractionDigits: 1 }).format(v)} per 100k`,
 };
 
+/** Units whose values are whole-number counts. */
+const INTEGER_UNITS = new Set<Unit>(["count", "categories", "agreements"]);
+
 /** Units in words, for profile pages and screen readers. */
 export const UNIT_LABEL: Record<Unit, string> = {
   dollars: "U.S. dollars", percent: "percent", minutes: "minutes", count: "count", per_sq_mi: "per square mile of land",
@@ -53,6 +56,17 @@ export function classLabels(breaks: number[], unit: Unit, opts?: { min?: number;
     const suffix = fb.match(/^[^\d]*[\d.,]+(.*)$/)?.[1] ?? ""; // everything after the leading number
     return `${suffix.trim().length > 1 && fa.endsWith(suffix) ? fa.slice(0, -suffix.length) : fa} – ${fb}`;
   };
+  // Whole-number counts (agreements, categories…): exact inclusive ranges, e.g.
+  // "0 agreements", "1 agreement", "2–3 agreements", "4–7 agreements", "8 or more agreements".
+  if (INTEGER_UNITS.has(unit) && breaks.length && breaks.every(Number.isInteger)) {
+    const n = (v: number) => nf({ maximumFractionDigits: 0 }).format(v);
+    const lo0 = opts?.min ?? 0;
+    const cls = [[lo0, breaks[0] - 1], ...breaks.slice(1).map((b, i) => [breaks[i], b - 1])];
+    return [
+      ...cls.map(([lo, hi]) => (lo >= hi ? f(hi) : `${n(lo)}–${f(hi)}`)),
+      `${n(breaks[breaks.length - 1])} or more ${f(breaks[breaks.length - 1]).replace(/^[\d,.]+\s*/, "").replace(/^agreement$/, "agreements").replace(/^category$/, "categories")}`,
+    ];
+  }
   // Whole-number steps of 1 (e.g. 0–8 categories): label each class with its exact value.
   if (breaks.length && breaks.every((b, i) => Number.isInteger(b) && (i === 0 || b - breaks[i - 1] === 1)) && breaks[0] >= 1) {
     return [...breaks.map((b) => f(b - 1)), `≥ ${f(breaks[breaks.length - 1])}`];
