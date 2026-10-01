@@ -173,19 +173,21 @@ export function thematicLayers(o: ThematicLayerOptions): LayerSpecification[] {
   const { minzoom, maxzoom } = o.zooms ?? GEO_LEVELS[o.level];
   const base = { source: o.source, "source-layer": o.sourceLayer, minzoom, maxzoom };
   const fillColor = choroplethFill(o.colors, o.theme);
+  const shown = ["case", ["any", ["boolean", ["feature-state", "hover"], false], ["boolean", ["feature-state", "selected"], false]], 1, 0];
   return [
     { id: `${o.level}-fill`, type: "fill", ...base, paint: { "fill-color": fillColor as never, "fill-opacity": 0.92 } },
     {
       id: `${o.level}-outline`, type: "line", ...base,
       paint: { "line-color": m.featureOutline, "line-width": zoomInterp(SIZE.featureOutline) as never, "line-opacity": 0.7 },
     },
+    // Cased selection: a contrasting halo under the outline, so it reads on the darkest and lightest classes.
+    {
+      id: `${o.level}-highlight-halo`, type: "line", ...base,
+      paint: { "line-color": m.highlightHalo, "line-width": zoomInterp(SIZE.highlightOutline.map(([z, w]) => [z, w + 3] as const)) as never, "line-opacity": shown as never },
+    },
     {
       id: `${o.level}-highlight`, type: "line", ...base,
-      paint: {
-        "line-color": m.highlight,
-        "line-width": zoomInterp(SIZE.highlightOutline) as never,
-        "line-opacity": ["case", ["any", ["boolean", ["feature-state", "hover"], false], ["boolean", ["feature-state", "selected"], false]], 1, 0],
-      },
+      paint: { "line-color": m.highlight, "line-width": zoomInterp(SIZE.highlightOutline) as never, "line-opacity": shown as never },
     },
   ];
 }
@@ -226,7 +228,7 @@ export function featureLineLayers(o: FeatureLineOptions): LayerSpecification[] {
   const base = { source: o.source, "source-layer": o.sourceLayer };
   const layout = { "line-cap": "round" as const, "line-join": "round" as const, "line-sort-key": value as never };
   return [
-    { id: `${o.id}-casing`, type: "line", ...base, layout, paint: { "line-color": m.featureOutline, "line-opacity": 0.75, "line-width": width(1.2) as never } },
+    { id: `${o.id}-casing`, type: "line", ...base, layout, paint: { "line-color": m.featureLineCasing, "line-opacity": 0.9, "line-width": width(1.2) as never } },
     { id: `${o.id}-line`, type: "line", ...base, layout, paint: { "line-color": color as never, "line-width": width(0) as never } },
   ];
 }
@@ -238,7 +240,11 @@ export function focusLandLayer(source: string, theme: ThemeName): LayerSpecifica
 
 export interface FeaturePolygonOptions extends FeatureLineOptions {}
 
-/** Areas from their own geometry (e.g. CEJST tracts): step color by value, thin outline. */
+/**
+ * Areas from their own geometry (e.g. CEJST tracts): step color by value, thin outline.
+ * Such geometry is often not clipped to the shoreline (CEJST's 2010 tracts cover lakes and bays),
+ * so the basemap's water and shoreline are drawn again on top as a mask.
+ */
 export function featurePolygonLayers(o: FeaturePolygonOptions): LayerSpecification[] {
   const m = THEMES[o.theme].map;
   const value = ["to-number", ["get", o.valueField], 0];
@@ -247,5 +253,11 @@ export function featurePolygonLayers(o: FeaturePolygonOptions): LayerSpecificati
   return [
     { id: `${o.id}-fill`, type: "fill", ...base, paint: { "fill-color": color as never, "fill-opacity": 0.85 } },
     { id: `${o.id}-casing`, type: "line", ...base, paint: { "line-color": m.featureOutline, "line-width": zoomInterp(SIZE.featureOutline) as never, "line-opacity": 0.6 } },
+    { id: `${o.id}-water-mask`, type: "fill", source: "omt", "source-layer": "water", paint: { "fill-color": m.water } },
+    {
+      id: `${o.id}-shoreline`, type: "line", source: "omt", "source-layer": "water",
+      filter: ["!=", ["get", "brunnel"], "tunnel"],
+      paint: { "line-color": m.coastline, "line-width": ["interpolate", ["linear"], ["zoom"], 2, 0.6, 6, 1, 12, 1.4] as never, "line-opacity": 0.9 },
+    },
   ];
 }
