@@ -13,7 +13,7 @@ const FORMATTERS: Record<Unit, (v: number) => string> = {
   years: (v) => `${nf({ maximumFractionDigits: 1 }).format(v)} yr`,
   deg_f: (v) => `${nf({ maximumFractionDigits: 1 }).format(v)}°F`,
   inches: (v) => `${nf({ maximumFractionDigits: 1 }).format(v)} in`,
-  vehicles_per_day: (v) => `${nf({ notation: v >= 10000 ? "compact" : "standard", maximumFractionDigits: v >= 10000 ? 1 : 0 }).format(v)} vehicles/day`,
+  vehicles_per_day: (v) => `${nf({ notation: v >= 1000 ? "compact" : "standard", maximumFractionDigits: 1 }).format(v)} vehicles/day`,
   per_100k: (v) => `${nf({ maximumFractionDigits: 1 }).format(v)} per 100k`,
 };
 

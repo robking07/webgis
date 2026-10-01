@@ -306,18 +306,19 @@ function DetailPanel({ info, onClose, primary, secondary, xv, yv, onMapIt }: Det
   );
 }
 
+/** Readable title: the road class ("Minor arterial"); the raw route ID is a detail row. */
 function featureTitle(h: FeatureHit): string {
-  const route = h.properties.route_id;
-  return route ? String(route) : "Road segment";
+  const fs = Number(h.properties.f_system);
+  return F_SYSTEM[fs] ? `${F_SYSTEM[fs]} segment` : "Road segment";
 }
 
 /** Popup rows for a feature: the registry's field labels, formatted by field. */
 function featureRows(spec: FeatureLayerSpec, h: FeatureHit): PopupRow[] {
   const rows: PopupRow[] = [];
   for (const [field, label] of Object.entries(spec.fields)) {
-    if (field === "route_id") continue;
     const v = h.properties[field];
     if (v == null || v === "") continue;
+    if (field === "route_id") { rows.push({ label, value: null, unit: "count", text: String(v) }); continue; }
     if (field === spec.rankField && field === "f_system") rows.push({ label, value: null, unit: "count", text: F_SYSTEM[Number(v)] ?? String(v) });
     else if (field.startsWith("aadt")) rows.push({ label, value: Number(v), unit: "vehicles_per_day" });
     else rows.push({ label, value: Number(v), unit: "count" });
