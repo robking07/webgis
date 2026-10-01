@@ -72,7 +72,10 @@ export default async function DatasetProfilePage({ params }: PageProps<"/data/[i
 
       <section aria-labelledby="method" className="mb-8">
         <h2 id="method" className="mb-2 text-base font-semibold">How it’s computed</h2>
-        <p className="text-sm leading-relaxed">{describeMethod(d)}</p>
+        <p className="text-sm leading-relaxed">
+          {/* The method text is shared with the Markdown doc: render its `code` spans. */}
+          {describeMethod(d).split("`").map((part, i) => (i % 2 ? <code key={i} className="rounded bg-muted px-1 py-0.5 font-mono text-xs">{part}</code> : part))}
+        </p>
       </section>
 
       {(d.coverageNote || modelInputs.length > 0) && (
