@@ -4,13 +4,17 @@
 // formulas (ACS General Handbook, ch. 8).
 import { loadRegistry } from "@webgis/registry/load";
 import type { DatasetEntry } from "@webgis/registry";
-import { db, log, STATES } from "./util.ts";
-import { landArea, registerDataset, writeStatic, writeValues, type Level, type Value } from "./values.ts";
-import { blockGroupLandArea } from "./geographies.ts";
+import { ACS_HEADLINE_YEAR, timelineStops } from "@webgis/registry/timeline";
+import { db, FIPS_RENAMES, log, STATES } from "./util.ts";
+import { areas2019, blockGroupLandArea } from "./geographies.ts";
+import { landArea, registerDataset, writeStatic, writeStopValues, writeValues, type Level, type Value } from "./values.ts";
 
-const YEAR = 2024;
-const API = `https://api.census.gov/data/${YEAR}/acs/acs5`;
+const YEAR = ACS_HEADLINE_YEAR;
+const API = (year: number) => `https://api.census.gov/data/${year}/acs/acs5`;
 const MAX_VARS = 48;
+/** CPI-U annual averages (BLS series CUUR0000SA0, period M13). A 5-year estimate's dollars are
+ *  its last year's dollars; timeline periods are restated in headline-year dollars (D-36). */
+const CPI_U: Record<number, number> = { 2014: 236.736, 2019: 255.657, 2024: 313.689 };
 
 type Row = Map<string, number | null>; // variable (with E/M suffix) → number
 
@@ -24,13 +28,13 @@ function clean(raw: string | null, isMoe: boolean): number | null {
   return v;
 }
 
-async function fetchTable(vars: string[], geo: string): Promise<Map<string, Row>> {
+async function fetchTable(vars: string[], geo: string, year = YEAR): Promise<Map<string, Row>> {
   const key = process.env.CENSUS_API_KEY;
   if (!key) throw new Error("CENSUS_API_KEY is not set in .env.local (free: https://api.census.gov/data/key_signup.html)");
   const out = new Map<string, Row>();
   for (let i = 0; i < vars.length; i += MAX_VARS) {
     const chunk = vars.slice(i, i + MAX_VARS);
-    const url = `${API}?get=${chunk.join(",")}&${geo}&key=${key}`;
+    const url = `${API(year)}?get=${chunk.join(",")}&${geo}&key=${key}`;
     let res: Response | undefined;
     for (let attempt = 0; attempt < 4; attempt++) {
       res = await fetch(url, { redirect: "manual" });
@@ -89,44 +93,85 @@ function derive(entry: DatasetEntry, row: Row, area?: number, level?: Level): Va
   return { value: value * scale, moe: moe == null ? null : moe * scale };
 }
 
-export async function ingestAcs(only?: string[], levelsOnly?: Level[]) {
-  const entries = loadRegistry().filter((e) => e.measure.kind === "acs5" && (!only || only.includes(e.id)));
-  if (!entries.length) return log("acs", "no acs5 entries selected");
-  const varsOf = (level: Level) => [...new Set(entries.flatMap((e) => {
+/** Every variable the entries need; block groups use each entry's `blockGroup` tables (D-39). */
+function varsOf(entries: DatasetEntry[], level?: Level): string[] {
+  return [...new Set(entries.flatMap((e) => {
     if (e.measure.kind !== "acs5") return [];
     const m = level === "block_group" && e.measure.blockGroup ? e.measure.blockGroup : e.measure;
     return [...m.numerator, ...(m.denominator ?? [])];
   }))].flatMap((v) => [`${v}E`, `${v}M`]);
-  const vars = varsOf("state");
+}
+
+function fetchLevel(level: Level, vars: string[], year = YEAR): Promise<Map<string, Row>> {
+  if (level === "state") return fetchTable(vars, "for=state:*", year);
+  if (level === "county") return fetchTable(vars, "for=county:*", year);
+  // Tracts and block groups: one call per state (block groups across every county and tract).
+  const geo = level === "block_group" ? "for=block%20group:*&in=state:{s}&in=county:*&in=tract:*" : "for=tract:*&in=state:{s}";
+  return (async () => {
+    const all = new Map<string, Row>();
+    for (const s of Object.keys(STATES)) for (const [k, v] of await fetchTable(vars, geo.replace("{s}", s), year)) all.set(k, v);
+    return all;
+  })();
+}
+
+/** Earlier 5-year periods for the year control (D-36), written to the web export only.
+ *  Periods before 2020 are keyed to 2019 boundaries (2010 tracts); the 2010–2014 county
+ *  codes renamed in 2015 are carried forward to match them. */
+export async function ingestAcsTimeline(only?: string[]) {
+  const entries = loadRegistry().filter((e) => e.measure.kind === "acs5" && e.timeline && (!only || only.includes(e.id)));
+  const byYear = new Map<number, Array<{ e: DatasetEntry; boundaries?: "2019" }>>();
+  for (const e of entries) for (const s of timelineStops(e)) {
+    if (s.isDefault) continue;
+    (byYear.get(+s.id) ?? byYear.set(+s.id, []).get(+s.id)!).push({ e, boundaries: s.boundaries });
+  }
+  if (!byYear.size) return log("acs", "no acs5 timeline periods selected");
+  const pool = db();
+  for (const [year, list] of [...byYear].sort((a, b) => a[0] - b[0])) {
+    const cpi = CPI_U[year];
+    if (list.some(({ e }) => e.unit === "dollars") && !cpi) throw new Error(`no CPI-U for ${year}: add it to CPI_U in acs.ts`);
+    const boundaries = list[0].boundaries;
+    const vars = varsOf(list.map((x) => x.e));
+    log("acs", `${year - 4}–${year}: ${list.length} datasets, ${vars.length} variables${boundaries ? `, ${boundaries} boundaries` : ""}`);
+    for (const level of ["state", "county", "tract"] as const) {
+      const levelEntries = list.map((x) => x.e).filter((e) => e.geographyLevels.includes(level));
+      if (!levelEntries.length) continue;
+      log("acs", `fetching ${year} ${level}…`);
+      const raw = await fetchLevel(level, vars, year);
+      const table = new Map<string, Row>();
+      for (const [g, row] of raw) {
+        const fixed = level === "state" || !boundaries ? g : (FIPS_RENAMES[g.slice(0, 5)] ?? g.slice(0, 5)) + g.slice(5);
+        table.set(fixed, row);
+      }
+      const areas = level !== "state" && boundaries ? await areas2019(level) : await landArea(pool, level);
+      for (const e of levelEntries) {
+        const values = new Map<string, Value>();
+        const k = e.unit === "dollars" ? CPI_U[YEAR] / cpi : 1;
+        for (const [geoid, row] of table) {
+          const v = derive(e, row, areas.get(geoid));
+          values.set(geoid, { value: v.value == null ? null : v.value * k, moe: v.moe == null ? null : v.moe * k });
+        }
+        writeStopValues(e.id, String(year), level, values);
+      }
+    }
+  }
+  await pool.end();
+}
+
+/** `levelsOnly`: e.g. ["block_group"] for `ingest acs-bg`, without re-fetching the other levels. */
+export async function ingestAcs(only?: string[], levelsOnly?: Level[]) {
+  const entries = loadRegistry().filter((e) => e.measure.kind === "acs5" && (!only || only.includes(e.id)));
+  if (!entries.length) return log("acs", "no acs5 entries selected");
+  const vars = varsOf(entries);
   log("acs", `${entries.length} datasets, ${vars.length} variables`);
   const pool = db();
   for (const e of entries) await registerDataset(pool, e);
 
-  const levels: Array<[Level, () => Promise<Map<string, Row>>]> = [
-    ["state", () => fetchTable(vars, "for=state:*")],
-    ["county", () => fetchTable(vars, "for=county:*")],
-    ["tract", async () => {
-      const all = new Map<string, Row>();
-      for (const s of Object.keys(STATES)) {
-        for (const [k, v] of await fetchTable(vars, `for=tract:*&in=state:${s}`)) all.set(k, v);
-      }
-      return all;
-    }],
-    // Block groups: one call per state (every county and tract), with block-group tables.
-    ["block_group", async () => {
-      const all = new Map<string, Row>();
-      for (const s of Object.keys(STATES)) {
-        for (const [k, v] of await fetchTable(varsOf("block_group"), `for=block%20group:*&in=state:${s}&in=county:*&in=tract:*`)) all.set(k, v);
-      }
-      return all;
-    }],
-  ];
-  for (const [level, fetchLevel] of levels) {
+  for (const level of ["state", "county", "tract", "block_group"] as const) {
     if (levelsOnly && !levelsOnly.includes(level)) continue;
     const levelEntries = entries.filter((e) => e.geographyLevels.includes(level));
     if (!levelEntries.length) continue;
     log("acs", `fetching ${level}…`);
-    const table = await fetchLevel();
+    const table = await fetchLevel(level, level === "block_group" ? varsOf(entries, level) : vars);
     const areas = level === "block_group" ? await blockGroupLandArea() : await landArea(pool, level);
     for (const e of levelEntries) {
       const values = new Map<string, Value>();

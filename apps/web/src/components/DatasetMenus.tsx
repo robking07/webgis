@@ -1,5 +1,5 @@
 "use client";
-// The immersed map heading (D-33): the category sits above the dataset name. Clicking the
+// The immersed map heading (D-35): the category sits above the dataset name. Clicking the
 // category lays the category list over the heading; keeping the same category (or picking
 // another) opens the list of that category's datasets under the name. The name's caret
 // opens that list directly.

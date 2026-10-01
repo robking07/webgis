@@ -1,14 +1,18 @@
 "use client";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ArrowUpRight, ChevronDown, CornerUpLeft, Info, Menu, Minus, Plus, Search, SlidersHorizontal, X } from "lucide-react";
+import { ArrowUpRight, ChevronDown, CornerUpLeft, Info, Menu, Minus, Plus, SlidersHorizontal, X } from "lucide-react";
 import { BivariateLegend, Legend, Popup, StatusState } from "@webgis/design/components";
-import { formatValue, GEO_LEVELS, LAZY_LEVELS, levelAtZoom, levelBands, STATIC_ONLY_LEVELS, TILE_VALUE_LEVELS, type GeoLevel, type ThemeName } from "@webgis/design";
+import { featureLineColors, formatValue, GEO_LEVELS, LAZY_LEVELS, levelAtZoom, levelBands, STATIC_ONLY_LEVELS, TILE_VALUE_LEVELS, type GeoLevel } from "@webgis/design";
 import { DatasetBrowser } from "./DatasetBrowser";
 import { DataTable } from "./DataTable";
 import { DatasetHeading } from "./DatasetMenus";
 import { MapCredits } from "./MapCredits";
 import { SearchOverlay } from "./SearchOverlay";
-import { SettingsMenu, useScaleUnit } from "./SettingsMenu";
+import { useScaleUnit } from "./SettingsMenu";
+import { HeaderContent } from "./SiteHeader";
+import { LogoMark } from "./Logo";
+import { LANDING } from "@/lib/landing";
+import { readStoredTheme, useResolvedTheme } from "@/lib/theme";
 import { TERM_BY_ID } from "@/lib/glossary";
 import type { Facet } from "@webgis/registry";
 import { MapView, type Camera, type FeatureHit, type HoverInfo, type LevelPaint, type MapApi, type Padding } from "./map/MapView";
@@ -22,6 +26,8 @@ import { BottomSheet, useIsNarrow, useIsPhone } from "./BottomSheet";
 import { PlaceDataList, type Detail } from "./PlaceDataList";
 import { parseUrlState, useUrlState, type UrlState } from "@/lib/url-state";
 import { classifyBivariate, classifyUnivariate, loadMoes, useDatasetValues, type Values } from "@/lib/values";
+import { stopNote, stopsFor } from "@/lib/periods";
+import { TimeControl } from "./TimeControl";
 import { fetchDetail } from "@/lib/supabase";
 
 const LEVELS = Object.keys(GEO_LEVELS) as GeoLevel[];
@@ -29,8 +35,14 @@ const HEADER_GAP = 68; // header (56) + 12
 
 export function Viewer({ search }: { search: string }) {
   const [initial] = useState<UrlState>(() => {
-    const s = parseUrlState(search);
-    return { ...s, d: s.d && DATASET_BY_ID.has(s.d) ? s.d : DATASETS[0]?.id ?? null, b: s.b && DATASET_BY_ID.has(s.b) ? s.b : null };
+    const parsed = parseUrlState(search);
+    // A theme chosen on another page carries over (client-only render, so storage is readable here).
+    const s = { ...parsed, theme: parsed.theme ?? readStoredTheme() };
+    if (s.d && DATASET_BY_ID.has(s.d)) return { ...s, b: s.b && DATASET_BY_ID.has(s.b) ? s.b : null };
+    // No dataset in the URL: the featured landing view (lib/landing.ts).
+    const d = DATASET_BY_ID.has(LANDING.d) ? LANDING.d : DATASETS[0]?.id ?? null;
+    const b = LANDING.b && DATASET_BY_ID.has(LANDING.b) ? LANDING.b : null;
+    return { ...s, d, b, at: new URLSearchParams(search).has("at") ? s.at : LANDING.at ?? s.at };
   });
   const [state, update] = useUrlState(initial);
   const theme = useResolvedTheme(state.theme);
@@ -64,7 +76,7 @@ export function Viewer({ search }: { search: string }) {
     ro.observe(el);
     return () => ro.disconnect();
   }, [state.d]);
-  /** Views to return to: pushed only when a click on the map zooms to a feature (D-33). */
+  /** Views to return to: pushed only when a click on the map zooms to a feature (D-35). */
   const history = useRef<Camera[]>([]);
   const [canGoBack, setCanGoBack] = useState(false);
   const phone = useIsPhone();
@@ -86,11 +98,16 @@ export function Viewer({ search }: { search: string }) {
   const isFeature = isFeatureDataset(primary);
   const featureSpec = useMemo(() => (primary && isFeature ? featureLayerSpec(primary) : null), [primary, isFeature]);
   const secondary = state.b && !isFeature && !isFeatureDataset(DATASET_BY_ID.get(state.b)) ? DATASET_BY_ID.get(state.b)! : null;
-  // Levels both datasets have.
-  // Blocks (values in the tiles) can't be compared: no bivariate join.
-  const availableLevels = useMemo(() => isFeature ? [] : LEVELS.filter((l) => (!primary || primary.geographyLevels.includes(l)) && (!secondary || (secondary.geographyLevels.includes(l) && !TILE_VALUE_LEVELS.has(l)))), [primary, secondary, isFeature]);
+  // Year control (D-36): single-dataset maps only; comparisons use the default period.
+  const stops = useMemo(() => (secondary || isFeature ? [] : stopsFor(primary)), [primary, secondary, isFeature]);
+  const stop = stops.find((s) => s.id === state.t) ?? stops.find((s) => s.isDefault) ?? null;
+  /** The shown stop when it isn't the default; null = the default period. */
+  const stopId = stop && !stop.isDefault ? stop.id : null;
+  // Levels both datasets have (and the shown stop has). Blocks (values in the tiles) can't be
+  // compared: no bivariate join.
+  const availableLevels = useMemo(() => isFeature ? [] : LEVELS.filter((l) => (!primary || primary.geographyLevels.includes(l)) && (!secondary || (secondary.geographyLevels.includes(l) && !TILE_VALUE_LEVELS.has(l))) && (!stopId || stop!.levels.includes(l))), [primary, secondary, isFeature, stopId, stop]);
   // Default level: how the source publishes the data, i.e. its finest level (ACS → tracts),
-  // drawn at every zoom (D-33). "Switch with zoom" (lv=auto) restores the old zoom bands.
+  // drawn at every zoom (D-35). "Switch with zoom" (lv=auto) restores the old zoom bands.
   const defaultLevel = primary?.defaultLevel && availableLevels.includes(primary.defaultLevel) ? primary.defaultLevel : availableLevels[availableLevels.length - 1] ?? null;
   const pinnedLevel = state.lv === "auto" ? null : state.lv && availableLevels.includes(state.lv) ? state.lv : defaultLevel;
   const bands = useMemo(() => (pinnedLevel ? { [pinnedLevel]: { minzoom: 0, maxzoom: 24 } } : levelBands(availableLevels)), [availableLevels, pinnedLevel]);
@@ -99,8 +116,10 @@ export function Viewer({ search }: { search: string }) {
   const want = LEVELS.filter((l) => LAZY_LEVELS.has(l) && ((!!bands[l] && state.at.zoom >= bands[l]!.minzoom - 1) || (l === "block_group" && nearBlocks)));
   // Blocks are colored from their tile property with the block-group classes, so the legend holds.
   const blockField = primary?.measure.kind === "census2020" ? primary.measure.value : null;
-  const x = useDatasetValues(primary, want);
+  const x = useDatasetValues(primary, want, stopId, stop?.levels);
   const y = useDatasetValues(secondary, want);
+  // A non-default stop is colored with the default view's breaks, so stepping shows change.
+  const xBase = useDatasetValues(stopId ? primary : null, want);
   const level = levelAtZoom(bands, state.at.zoom) ?? availableLevels[0] ?? "county";
 
   const classed = useMemo(() => {
@@ -112,6 +131,8 @@ export function Viewer({ search }: { search: string }) {
       if (secondary) {
         const yv = y.values[l];
         if (yv) out[l] = classifyBivariate(xv, yv);
+      } else if (stopId) {
+        if (xBase.values[l]) out[l] = classifyUnivariate(primary, xv, xBase.values[l]);
       } else {
         out[l] = classifyUnivariate(primary, xv);
       }
@@ -119,7 +140,7 @@ export function Viewer({ search }: { search: string }) {
     const bg = out.block_group;
     if (blockField && !secondary && bg?.breaks) out.block = { colors: bg.colors, breaks: bg.breaks, classes: new Map(), field: blockField };
     return out;
-  }, [primary, secondary, x.values, y.values, blockField]);
+  }, [primary, secondary, x.values, y.values, stopId, xBase.values, blockField]);
 
   const current = classed[level];
   const error = x.error ?? y.error;
@@ -144,7 +165,7 @@ export function Viewer({ search }: { search: string }) {
   });
   const filtersActive = Object.values(hidden).some((h) => h.size > 0);
 
-  // ── Framing (D-33) ─────────────────────────────────────────────────────────────
+  // ── Framing (D-35) ─────────────────────────────────────────────────────────────
   /** Map padding that keeps a target clear of whatever is open: every element marked
    *  `data-obstructs` claims the screen edge it covers least. `detail` reserves room for a
    *  details panel that is about to open. */
@@ -220,15 +241,19 @@ export function Viewer({ search }: { search: string }) {
       .then((sqmi) => goToPlace({ geoid, level: tableLevel, name, lon, lat, sqmi }));
   }, [tableLevel, goToPlace]);
   const onSearchPlace = (p: PlaceHit) => { setSearchOpen(false); goToPlace(p); };
-  const onSearchDataset = (d: Dataset) => { setSearchOpen(false); update({ d: d.id, b: state.b === d.id ? null : state.b, lv: null }); };
-  const pickDataset = (id: string) => update({ d: id, b: state.b === id ? null : state.b, lv: null });
+  /** Keep the shown year when the next dataset has it too. */
+  const keepStop = (id: string) => (state.t && stopsFor(DATASET_BY_ID.get(id) ?? null).some((s) => s.id === state.t) ? state.t : null);
+  const onSearchDataset = (d: Dataset) => { setSearchOpen(false); update({ d: d.id, b: state.b === d.id ? null : state.b, lv: null, t: keepStop(d.id) }); };
+  const pickDataset = (id: string) => update({ d: id, b: state.b === id ? null : state.b, lv: null, t: keepStop(id) });
   const loading = available && !current && !error;
 
   // ── Map-first chrome (D-25) ─────────────────────────────────────────────────
   // At rest: slim header, dataset card, full legend. The first user pan/zoom/scroll
   // "immerses": the navigation falls away, leaving the wordmark, the category and dataset
   // heading (with menus), and the legend. The menu button, the top edge, or Esc brings it back.
-  const legendStrip = primary && (featureSpec ? featureSpec.colors : current?.colors);
+  // Line layers reverse their ramp on dark land (see featureLineColors); the legend follows the map.
+  const featureColors = featureSpec && (featureSpec.geometry === "line" ? featureLineColors(featureSpec.colors, theme) : featureSpec.colors);
+  const legendStrip = primary && (featureColors || current?.colors);
   const legendEnds = featureSpec
     ? [`< ${formatValue(featureSpec.breaks[0], primary!.unit)}`, `≥ ${formatValue(featureSpec.breaks[featureSpec.breaks.length - 1], primary!.unit)}`]
     : current?.breaks?.length ? [`< ${formatValue(current.breaks[0], primary!.unit)}`, `≥ ${formatValue(current.breaks[current.breaks.length - 1], primary!.unit)}`] : null;
@@ -239,7 +264,8 @@ export function Viewer({ search }: { search: string }) {
   const desktopStrip = optionsOpen && !immersed;
   const hasOptions = !!primary && (availableLevels.length > 1 || primary.facets.length > 0);
   const featureNoun = featureSpec?.geometry === "polygon" ? "Census tracts (2010)" : "Road segments";
-  const meta = primary ? [isFeature ? featureNoun : GEO_LEVELS[level].label, primary.vintage, primary.source.name.split(",")[0].split(" (")[0]].join(" · ") : "";
+  const periodLabel = primary ? (stopId ? stop!.label : primary.vintage) : "";
+  const meta = primary ? [isFeature ? featureNoun : GEO_LEVELS[level].label, periodLabel, primary.source.name.split(",")[0].split(" (")[0]].join(" · ") : "";
   const levelNote = pinnedLevel
     ? `Showing ${GEO_LEVELS[pinnedLevel].label.toLowerCase()}s at every zoom${pinnedLevel === defaultLevel ? ", how the source publishes this data" : ""}.`
     : "Switches to smaller areas as you zoom in.";
@@ -255,10 +281,14 @@ export function Viewer({ search }: { search: string }) {
       ))}
     </>
   );
+  const timeControl = stops.length > 0 && stop && (
+    <TimeControl stops={stops} value={stop.id} onChange={(id) => update({ t: stops.find((s) => s.id === id)?.isDefault ? null : id })} />
+  );
   const legendBody = (
     <>
+      {timeControl && <div className="mb-3 border-b pb-3">{timeControl}</div>}
       {primary && isFeature ? (featureSpec ? (
-          <Legend title={primary.title} unit={primary.unit} colors={featureSpec.colors} breaks={featureSpec.breaks} showNoData={false} swatch={featureSpec.geometry === "line" ? "line" : "area"}
+          <Legend title={primary.title} unit={primary.unit} colors={featureColors!} breaks={featureSpec.breaks} showNoData={false} swatch={featureSpec.geometry === "line" ? "line" : "area"}
             caption={`${primary.vintage} · ${featureSpec.featureCount.toLocaleString()} ${featureSpec.geometry === "line" ? "segments · wider lines = higher road class" : "areas"}${primary.coverageNote ? `. ${primary.coverageNote}` : ""}`} />
         ) : <StatusState status="empty" message="This layer hasn't been built yet." />)
         : error ? <StatusState status="error" message={error} />
@@ -268,7 +298,7 @@ export function Viewer({ search }: { search: string }) {
           <BivariateLegend xTitle={primary.title} yTitle={secondary.title} colors={current.colors} />
         ) : primary && current?.breaks ? (
           <Legend title={primary.title} unit={primary.unit} colors={current.colors} breaks={current.breaks} minClass={current.minClass}
-            caption={`${GEO_LEVELS[level].label} · ${primary.vintage}${primary.coverageNote ? `. ${primary.coverageNote}` : ""}`} />
+            caption={`${GEO_LEVELS[level].label} · ${periodLabel}${stop && stopNote(primary, stop, level) ? `. ${stopNote(primary, stop, level)}` : ""}${primary.coverageNote ? `. ${primary.coverageNote}` : ""}`} />
         ) : null}
     </>
   );
@@ -288,6 +318,7 @@ export function Viewer({ search }: { search: string }) {
           theme={theme}
           initialView={initial.at}
           paint={classed}
+          boundaries={stopId ? stop!.boundaries ?? null : null}
           onViewChange={(at) => update({ at })}
           onHover={setHover}
           onSelect={onMapSelect}
@@ -300,6 +331,7 @@ export function Viewer({ search }: { search: string }) {
           onUserMove={() => { if (!browserOpen) { setImmersed(true); setPeek(false); if (filtersActive) setDockOpen(true); } }}
           onApi={(api) => { mapApi.current = api; }}
           scaleUnit={scaleUnit}
+          attribution={false}
           ariaLabel={primary ? `Map of ${primary.title}${secondary ? ` compared with ${secondary.title}` : ""} by ${GEO_LEVELS[level].label.toLowerCase()}` : "Map"}
         />
       </main>
@@ -308,20 +340,8 @@ export function Viewer({ search }: { search: string }) {
       <header onMouseLeave={() => setPeek(false)} data-obstructs={chromeShown ? "" : undefined}
         className={`absolute inset-x-0 top-0 z-30 flex h-14 items-center justify-between gap-3 border-b bg-background/95 px-4 backdrop-blur transition-transform duration-300 ease-out md:px-6 ${chromeShown ? "translate-y-0" : "-translate-y-full"}`}
         aria-hidden={!chromeShown || undefined} inert={!chromeShown || undefined}>
-        <div className="flex min-w-0 items-center gap-5 md:gap-7">
-          <a href="/" className="text-lg font-bold tracking-tight text-foreground">Mapwich</a>
-          <nav aria-label="Sections" className="flex gap-4 text-sm md:gap-5">
-            <span aria-current="page" className="font-semibold text-foreground shadow-[inset_0_-2px_0_var(--ui-accent)]">Map</span>
-            <a href="/specials" className="text-muted-foreground hover:text-foreground">Specials</a>
-          </nav>
-        </div>
-        <div className="flex items-center gap-1">
-          <button type="button" onClick={() => setSearchOpen(true)} aria-label="Search places and datasets" title="Search places and datasets ( / )"
-            className="grid size-9 place-items-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring">
-            <Search className="size-[18px]" aria-hidden />
-          </button>
-          <SettingsMenu theme={state.theme} onTheme={(t) => update({ theme: t })} unit={scaleUnit} onUnit={setScaleUnit} />
-        </div>
+        <HeaderContent current="map" onSearch={() => setSearchOpen(true)} explicitTheme={state.theme} onTheme={(t) => update({ theme: t })}
+          unit={scaleUnit} onUnit={setScaleUnit} />
       </header>
 
       {/* At rest: the factual dataset card. */}
@@ -351,18 +371,20 @@ export function Viewer({ search }: { search: string }) {
               <a href={`/data/${primary.id}#explainers`} className="block pt-0.5 text-primary hover:underline">More on the data page →</a>
             </dl>
           )}
-          <div className="mt-3 hidden flex-wrap gap-2 md:flex">
+          {/* Actions, then Display options: one wrapping row on phones (so Table and Compare are
+              reachable there too, D-33 P3); on desktop Display options sits on its own line. */}
+          <div className="mt-3 flex flex-wrap items-center gap-2">
             {!isFeature && <button type="button" onClick={() => setBrowserOpen(true)} className="rounded-md border px-2.5 py-1 text-[13px] hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring">Compare</button>}
             {tableReady && <button type="button" onClick={() => setTableOpen(true)} className="rounded-md border px-2.5 py-1 text-[13px] hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring">Table</button>}
-            <a href={`/data/${primary.id}`} className="rounded-md border px-2.5 py-1 text-[13px] text-foreground hover:bg-muted">About this data</a>
+            <a href={`/data/${primary.id}`} className="rounded-md border px-2.5 py-1 text-[13px] text-foreground hover:bg-muted"><span className="md:hidden">About</span><span className="hidden md:inline">About this data</span></a>
+            {/* Progressive disclosure: options stay tucked away until asked for. */}
+            {hasOptions && (
+              <button type="button" onClick={() => setOptionsOpen((o) => !o)} aria-expanded={optionsOpen} aria-controls="display-options"
+                className="flex items-center gap-1.5 rounded px-1 text-xs font-medium text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring md:mt-1 md:basis-full md:px-0">
+                <SlidersHorizontal className="size-3.5" aria-hidden /> <span className="md:hidden">Options</span><span className="hidden md:inline">Display options</span> <ChevronDown className={`size-3.5 transition-transform ${optionsOpen ? "rotate-180" : ""}`} aria-hidden />
+              </button>
+            )}
           </div>
-          {/* Progressive disclosure: options stay tucked away until asked for. */}
-          {hasOptions && (
-            <button type="button" onClick={() => setOptionsOpen((o) => !o)} aria-expanded={optionsOpen} aria-controls="display-options"
-              className="mt-3 flex items-center gap-1.5 rounded text-xs font-medium text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring">
-              <SlidersHorizontal className="size-3.5" aria-hidden /> Display options <ChevronDown className={`size-3.5 transition-transform ${optionsOpen ? "rotate-180" : ""}`} aria-hidden />
-            </button>
-          )}
           {optionsOpen && (
             <div id="display-options" className="mt-2 max-h-[45vh] space-y-4 overflow-y-auto border-t pt-3">
               {displayOptions(false)}
@@ -382,7 +404,10 @@ export function Viewer({ search }: { search: string }) {
               className="wg-glass grid size-10 place-items-center rounded-xl text-foreground focus-visible:outline-2 focus-visible:outline-ring">
               <Menu className="size-[18px]" aria-hidden />
             </button>
-            <span className="wg-wordmark text-[28px] font-extrabold tracking-tight md:text-[34px]" aria-hidden>Mapwich</span>
+            <span className="flex items-center gap-2" aria-hidden>
+              <span className="wg-logo-on-map"><LogoMark size={34} /></span>
+              <span className="wg-wordmark hidden text-[34px] font-extrabold tracking-tight md:inline">Mapwich</span>
+            </span>
           </div>
           <div className="mt-1">
             <DatasetHeading key={primary.id} primary={primary} secondary={secondary} onPick={pickDataset} />
@@ -398,7 +423,7 @@ export function Viewer({ search }: { search: string }) {
         </div>
       )}
 
-      {/* Display dock (immersed): geography level and filters stay reachable after zooming in (D-28, D-33).
+      {/* Display dock (immersed): geography level and filters stay reachable after zooming in (D-28, D-35).
           Transparent, with text halos and glass chips. */}
       {dockShown && (
         <section id="display-dock" aria-label="Display options" data-obstructs=""
@@ -428,12 +453,14 @@ export function Viewer({ search }: { search: string }) {
       {/* Legend: full card at rest on desktop; a strip when immersed or on phones (tap to expand). */}
       {legendStrip && legendEnds && !legendOpen && (
         <button type="button" onClick={() => setLegendOpen(true)} aria-expanded={false} aria-label={`Show legend for ${primary!.title}`}
-          className={`wg-glass absolute bottom-6 left-3 z-20 items-center gap-2 rounded-full px-3 py-2 text-xs tabular-nums text-foreground focus-visible:outline-2 focus-visible:outline-ring md:left-4 ${desktopStrip ? "flex" : "flex md:hidden"}`}>
-          <span>{legendEnds[0]}</span>
+          className={`wg-glass wg-glass-strong absolute bottom-6 left-3 z-20 max-w-[calc(100%-9rem)] items-center gap-2 whitespace-nowrap rounded-full px-3 py-2 text-xs tabular-nums text-foreground focus-visible:outline-2 focus-visible:outline-ring md:left-4 md:max-w-none ${desktopStrip ? "flex" : "flex md:hidden"}`}>
+          {/* The strip is a compact key: numbers only ("< 2.5K", "≥ 75K"); the unit is in the full legend. */}
+          {stopId && <span className="font-semibold">{stop!.label}</span>}
+          <span>{stripEnd(legendEnds[0])}</span>
           <span className="flex overflow-hidden rounded-sm" aria-hidden>
-            {(secondary && current ? [current.colors[0], current.colors[4], current.colors[8]] : legendStrip).map((c, i) => <span key={i} className={featureSpec ? "h-1.5 w-5 self-center" : "h-2 w-5"} style={{ background: c }} />)}
+            {(secondary && current ? [current.colors[0], current.colors[4], current.colors[8]] : legendStrip).map((c, i) => <span key={i} className={featureSpec ? "h-1.5 w-4 self-center md:w-5" : "h-2 w-4 md:w-5"} style={{ background: c }} />)}
           </span>
-          <span>{legendEnds[1]}</span>
+          <span>{stripEnd(legendEnds[1])}</span>
         </button>
       )}
       <section aria-label="Legend"
@@ -465,7 +492,7 @@ export function Viewer({ search }: { search: string }) {
           </div>
           <DatasetBrowser primary={state.d} secondary={state.b}
             onPrimary={(id) => { pickDataset(id); setBrowserOpen(false); }}
-            onSecondary={(id) => { update({ b: id }); setBrowserOpen(false); }} />
+            onSecondary={(id) => { update({ b: id, t: null }); setBrowserOpen(false); }} />
           <a href="/data" className="text-xs text-primary hover:underline">Browse the full data directory →</a>
         </section>
       )}
@@ -473,7 +500,7 @@ export function Viewer({ search }: { search: string }) {
       {searchOpen && <SearchOverlay current={state.d} onClose={() => setSearchOpen(false)} onPlace={onSearchPlace} onDataset={onSearchDataset} />}
 
       {tableOpen && primary && tableLevel && (
-        <DataTable level={tableLevel} x={primary} xv={x.values[tableLevel]} y={secondary} yv={y.values[tableLevel]} selected={selected?.geoid ?? null}
+        <DataTable level={tableLevel} x={primary} xv={x.values[tableLevel]} y={secondary} yv={y.values[tableLevel]} period={stopId ? stop!.label : undefined} selected={selected?.geoid ?? null}
           onClose={onTableClose} onPick={onTablePick} />
       )}
 
@@ -485,7 +512,7 @@ export function Viewer({ search }: { search: string }) {
 
       {hover && !selected && primary && (
         <div className="pointer-events-none absolute z-30 rounded-md border bg-popover p-2.5 shadow-md" style={{ left: hover.x + 14, top: hover.y + 14 }}>
-          <Popup title={hover.name} subtitle={GEO_LEVELS[hover.level].label}
+          <Popup title={hover.name} subtitle={`${GEO_LEVELS[hover.level].label}${stopId ? ` · ${stop!.label}` : ""}`}
             rows={[primary, secondary].filter((d) => !!d).map((d) => ({
               label: d!.title, unit: d!.unit,
               value: TILE_VALUE_LEVELS.has(hover.level) && blockField ? (hover.props?.[blockField] as number | undefined) : (d === primary ? x : y).values[hover.level]?.[hover.geoid],
@@ -504,6 +531,7 @@ export function Viewer({ search }: { search: string }) {
       {selected && primary && !isFeature && !detailHidden && (
         <DetailPanel info={selected} top={panelTop} onClose={() => { setSelected(null); mapApi.current?.select("county", null); }} primary={primary} secondary={secondary}
           xv={x.values[selected.level]} yv={y.values[selected.level]}
+          period={stopId ? { label: stop!.label, defaultLabel: primary.vintage } : undefined}
           onMapIt={pickDataset} />
       )}
     </div>
@@ -522,13 +550,15 @@ interface DetailProps {
   yv?: Values;
   /** Switch the map to another dataset (from the drawer's full list). */
   onMapIt: (id: string) => void;
+  /** A timeline stop is shown (D-36): the primary value comes from `xv` for that period. */
+  period?: { label: string; defaultLabel: string };
 }
 
-function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, onMapIt }: DetailProps) {
+function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, onMapIt, period }: DetailProps) {
   const [rows, setRows] = useState<Detail | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const phone = useIsPhone();
-  // Block groups aren't in the database (D-34): the mapped values come from the static files,
+  // Block groups aren't in the database (D-39): the mapped values come from the static files,
   // margins of error from their side files; there's no all-datasets list or place profile.
   const staticOnly = STATIC_ONLY_LEVELS.has(info.level);
   useEffect(() => {
@@ -570,6 +600,17 @@ function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, onMapIt }
           <div className="space-y-2">
             {featured.map((d, i) => {
               const r = rows[d.id];
+              if (i === 0 && period) {
+                const v = xv?.[info.geoid];
+                return (
+                  <div key={d.id} className="rounded-md bg-muted px-3 py-2">
+                    <p className="text-xs text-muted-foreground">{d.title}, {period.label}</p>
+                    <p className="text-xl font-semibold tabular-nums">{formatValue(v, d.unit)}</p>
+                    {rankText(xv, v, info.level) && <p className="text-xs text-muted-foreground">{rankText(xv, v, info.level)}</p>}
+                    {r?.value != null && <p className="mt-1 text-xs text-muted-foreground">{period.defaultLabel}: <span className="tabular-nums">{formatValue(r.value, d.unit)}</span></p>}
+                  </div>
+                );
+              }
               const rank = rankText(i === 0 ? xv : yv, r?.value, info.level);
               return (
                 <div key={d.id} className="rounded-md bg-muted px-3 py-2">
@@ -615,6 +656,9 @@ function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, onMapIt }
     </section>
   );
 }
+
+/** "< 2.5K vehicles/day" → "< 2.5K": the legend strip keeps the comparison and number, drops unit words. */
+const stripEnd = (s: string) => s.replace(/^([<≥]\s*\S+).*$/, "$1");
 
 const dedupe = (links: Link[]) => links.filter((l, i) => links.findIndex((m) => m.url === l.url) === i);
 
@@ -811,19 +855,3 @@ function FeaturePanel({ hit, spec, dataset, top, onClose }: { hit: FeatureHit; s
   );
 }
 
-function useResolvedTheme(explicit: ThemeName | null): ThemeName {
-  const [system, setSystem] = useState<ThemeName>("light");
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-color-scheme: dark)");
-    const set = () => setSystem(mq.matches ? "dark" : "light");
-    set();
-    mq.addEventListener("change", set);
-    return () => mq.removeEventListener("change", set);
-  }, []);
-  const theme = explicit ?? system;
-  useEffect(() => {
-    if (explicit) document.documentElement.dataset.theme = explicit;
-    else delete document.documentElement.dataset.theme;
-  }, [explicit]);
-  return theme;
-}

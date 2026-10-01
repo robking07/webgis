@@ -8,9 +8,9 @@ export const GEO_LEVELS = {
   state: { label: "State", minzoom: 0, maxzoom: 3 },
   county: { label: "County", minzoom: 3, maxzoom: 8.5 },
   tract: { label: "Census tract", minzoom: 8.5, maxzoom: 11 },
-  /** ACS publishes most tables here; values live only in static exports (D-34). */
+  /** ACS publishes most tables here; values live only in static exports (D-39). */
   block_group: { label: "Block group", minzoom: 11, maxzoom: 13 },
-  /** 2020 Census only; values are baked into the block tiles, not joined (D-34). */
+  /** 2020 Census only; values are baked into the block tiles, not joined (D-39). */
   block: { label: "Block", minzoom: 13, maxzoom: 24 },
 } as const;
 /** Levels too large for the database (500 MB free tier): values are static files only. */
@@ -45,9 +45,10 @@ export function levelAtZoom(bands: Partial<Record<GeoLevel, ZoomBand>>, zoom: nu
 /** [zoom, value] pairs, interpolated linearly. */
 export const SIZE = {
   featureOutline: [[3, 0.2], [6, 0.4], [10, 0.8], [14, 1.2]],
+  /** Outline opacity for small areas (tracts and finer): at national zooms thousands of
+   *  outlines would wash the fills out, so they fade in as areas grow (D-35). */
+  fineOutlineOpacity: [[5, 0], [8, 0.7]],
   highlightOutline: [[3, 1.5], [10, 2.5], [14, 3]],
-  /** Halo under the selection outline: outline + ~2.5 px. */
-  highlightCasing: [[3, 4], [10, 5], [14, 5.5]],
   line: [[4, 0.6], [8, 1.2], [12, 2.5], [16, 5]],
   lineMajor: [[4, 1], [8, 2], [12, 4], [16, 8]],
   point: [[4, 2], [8, 3.5], [12, 6], [16, 9]],
@@ -71,8 +72,14 @@ export const LABEL = {
     country: [[2, 11], [6, 16]],
     state: [[3, 10], [6, 14]],
     city: [[4, 10], [8, 13], [12, 16]],
+    /** Cities outside the U.S.: a step smaller at every zoom. */
+    foreign: [[5, 9], [8, 11], [12, 13]],
+    stateForeign: [[4, 8.5], [6, 10.5]],
     place: [[10, 10], [14, 13]],
   },
+  /** Foreign cities with OpenMapTiles rank ≤ this show from z5 (Toronto, Monterrey, Tijuana…);
+   *  the rest of the cities wait for z8. */
+  foreignMajorRank: 4,
   /** Minimum on-screen spacing between repeated line labels, px. */
   symbolSpacing: 300,
 } as const;

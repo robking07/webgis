@@ -99,22 +99,32 @@ const Caption = z.object({
 });
 type Caption = z.infer<typeof Caption>;
 
-const SYSTEM = `You write captions for "Weird Insights", a public map site that pairs unrelated U.S. datasets and shows how they line up across counties.
-Tone (Robbie's decision, Q-4: playful): headlines can be jokey and punchy, with wordplay welcome. Example: "Cold Januaries, busy bars: the binge-drinking belt runs north." Keep it good-natured: never mock places, regions, groups of people, or anyone's health, income or circumstances; the joke is about the data lining up, not about who lives there.
+const SYSTEM = `You write captions for "Odd Pairings", a section of a public map site that pairs unrelated U.S. datasets and shows how they line up across counties.
+Tone (Robbie, 2026-10-01, amending Q-4): plain language, no wordplay or flourish. The headline states the relationship in one sentence a general reader understands, e.g. "Counties with higher work-from-home rates tend to have lower physical inactivity rates." Never mock places, regions, groups of people, or anyone's health, income or circumstances.
 Never imply causation: say "counties with more X tend to have more Y", not "X causes Y". If the within-state correlation is much weaker than the overall one, say plainly that much of the pattern is regional. Name one plausible confounder or shared driver in the caption. Use only the numbers you are given; don't invent statistics. American English, no emoji, no exclamation marks.`;
 
 /** Lower-case a dataset title mid-sentence, keeping proper nouns (months) capitalized. */
 const lc = (t: string) => (/^(January|February|March|April|May|June|July|August|September|October|November|December)\b/.test(t) ? t : t[0].toLowerCase() + t.slice(1));
 
+/** What the caption calls a dataset after "higher" / "lower": its registry phrase, else its title. */
+const phrase = (e: DatasetEntry) => e.phrase ?? lc(e.title);
+/** Plain-language strength for |ρ| (published pairs are all ≥ RULES.minAbsRho). */
+// Judged on the printed (2-decimal) value, so "ρ = −0.60" never reads "moderate".
+const strength = (rho: number) => { const a = Math.abs(+rho.toFixed(2)); return a >= 0.6 ? "strong" : a >= 0.4 ? "moderate" : "modest"; };
+const num = (v: number) => v.toFixed(2).replace("-", "−");
+
+// Plain statements, no flourish (Robbie, 2026-10-01): say what goes with what, how strongly, and
+// whether it is mostly regional.
 function template(p: Pair): Caption {
-  const dir = p.rho > 0 ? "more" : "less";
+  const dir = p.rho > 0 ? "higher" : "lower";
   const regional = Math.abs(p.withinState) < Math.abs(p.rho) * 0.6;
-  const confounder = regional
-    ? `Much of it is regional: comparing counties within the same state, the link is weaker (ρ = ${p.withinState.toFixed(2)}).`
-    : `It holds within states too (ρ = ${p.withinState.toFixed(2)}), but both may still track something else, such as how urban a county is.`;
+  const within = regional
+    ? `Much of it is regional: within the same state the link is weaker (ρ = ${num(p.withinState)}).`
+    : `It holds within states too (ρ = ${num(p.withinState)}). Both may reflect something else, such as how urban a county is.`;
+  const headline = `Counties with higher ${phrase(p.x)} tend to have ${dir} ${phrase(p.y)}`;
   return {
-    headline: `${p.x.title} and ${lc(p.y.title)} move ${p.rho > 0 ? "together" : "in opposite directions"}`,
-    caption: `Across ${p.n.toLocaleString()} counties, places with higher ${lc(p.x.title)} tend to have ${dir} ${lc(p.y.title)} (Spearman ρ = ${p.rho.toFixed(2)}). ${confounder}`,
+    headline,
+    caption: `A ${strength(p.rho)} link across ${p.n.toLocaleString()} counties (Spearman ρ = ${num(p.rho)}). ${within}`,
   };
 }
 

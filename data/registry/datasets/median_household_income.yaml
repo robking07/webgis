@@ -1,5 +1,6 @@
 id: median_household_income
 title: Median household income
+phrase: household incomes
 description: Median household income in the past 12 months, in 2024 inflation-adjusted dollars.
 category: Income & poverty
 tags: [income, earnings, economy]
@@ -11,7 +12,7 @@ license: Public domain (U.S. Government work, 17 U.S.C. § 105)
 updateCadence: annual
 vintage: "2020–2024 (5-year estimate)"
 geographyLevels: [state, county, tract, block_group]
-defaultLevel: tract  # ACS: tracts keep margins of error low (Robbie, D-33)
+defaultLevel: tract  # ACS: tracts keep margins of error low (Robbie, D-35)
 unit: dollars
 universe: households
 terms: [acs-5-year, margin-of-error, census-geography, quantile-classes]
@@ -19,4 +20,5 @@ learnMore:
   - label: See this place's full Census profile on Census Reporter
     url: "https://censusreporter.org/profiles/{cr}/"
 measure: { kind: acs5, numerator: [B19013_001] }
+timeline: { from: 2014, to: 2024, step: 5 }
 symbology: { ramp: ylgnbu, classification: quantile, classes: 5, higherIsBetter: true }

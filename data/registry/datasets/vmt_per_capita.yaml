@@ -1,5 +1,6 @@
 id: vmt_per_capita
 title: Vehicle miles per resident
+phrase: driving per resident
 description: Daily vehicle miles traveled on counted roads in the area, per resident, from traffic counts (AADT) times road length.
 category: Transportation
 tags: [VMT, driving, traffic, travel, HPMS, emissions]

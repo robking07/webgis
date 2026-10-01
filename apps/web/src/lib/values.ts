@@ -8,11 +8,12 @@ import type { Dataset } from "./registry";
 export type Values = Record<string, number>;
 const cache = new Map<string, Promise<Values>>();
 
-/** Block-group files live with the tiles (R2 in production, the /tiles link locally; D-34). */
+/** Block-group files live with the tiles (R2 in production, the /tiles link locally; D-39). */
 const TILES_BASE = process.env.NEXT_PUBLIC_TILES_BASE_URL || "/tiles";
 
-export function loadValues(id: string, level: GeoLevel): Promise<Values> {
-  const key = `${id}/${level}`;
+/** `stop`: a timeline stop id (D-36); omitted = the default (headline) values. */
+export function loadValues(id: string, level: GeoLevel, stop?: string | null): Promise<Values> {
+  const key = stop ? `${id}/${stop}/${level}` : `${id}/${level}`;
   const staticOnly = STATIC_ONLY_LEVELS.has(level.replace(/\.moe$/, "") as GeoLevel);
   if (!cache.has(key)) {
     cache.set(key, fetch(staticOnly ? `${TILES_BASE}/values/${key}.json` : `/data/values/${key}.json`).then((r) => {
@@ -31,23 +32,27 @@ export function loadMoes(id: string, level: GeoLevel): Promise<Values> {
 }
 
 /** Loads state + county immediately; tracts and block groups only once they're wanted
- *  (`want`: the fine levels about to be drawn). */
-export function useDatasetValues(ds: Dataset | null, want: GeoLevel[]) {
-  const wantKey = want.join();
-  const [data, setData] = useState<{ id: string | null; values: LevelValues; error: string | null }>({ id: null, values: {}, error: null });
+ *  (`want`: the fine levels about to be drawn). `stop` picks a timeline stop (null = default);
+ *  `levels` limits loading to the levels that stop has. */
+export function useDatasetValues(ds: Dataset | null, want: GeoLevel[], stop: string | null = null, levels?: GeoLevel[]) {
+  const wantKey = want.join(",");
+  const key = ds ? `${ds.id}@${stop ?? ""}` : null;
+  const [data, setData] = useState<{ key: string | null; values: LevelValues; error: string | null }>({ key: null, values: {}, error: null });
+  const levelKey = (levels ?? ds?.geographyLevels ?? []).join(",");
   useEffect(() => {
-    if (!ds) return;
+    if (!ds || !key) return;
     let live = true;
-    const levels = ds.geographyLevels.filter((l) => !LAZY_LEVELS.has(l) || wantKey.split(",").includes(l)) as GeoLevel[];
-    for (const level of levels) {
-      loadValues(ds.id, level).then(
-        (v) => live && setData((d) => ({ id: ds.id, values: { ...(d.id === ds.id ? d.values : {}), [level]: v }, error: null })),
-        (e: Error) => live && setData((d) => ({ ...d, id: ds.id, error: e.message })),
+    const wanted = wantKey.split(",");
+    const load = (levelKey ? levelKey.split(",") : []).filter((l) => !LAZY_LEVELS.has(l as GeoLevel) || wanted.includes(l)) as GeoLevel[];
+    for (const level of load) {
+      loadValues(ds.id, level, stop).then(
+        (v) => live && setData((d) => ({ key, values: { ...(d.key === key ? d.values : {}), [level]: v }, error: null })),
+        (e: Error) => live && setData((d) => ({ ...d, key, error: e.message })),
       );
     }
     return () => { live = false; };
-  }, [ds, wantKey]);
-  return data.id === ds?.id ? data : { id: null, values: {} as LevelValues, error: null };
+  }, [ds, key, stop, levelKey, wantKey]);
+  return data.key === key && key ? data : { key: null, values: {} as LevelValues, error: null };
 }
 
 export interface Classed {
@@ -58,11 +63,13 @@ export interface Classed {
   minClass?: number;
 }
 
-export function classifyUnivariate(ds: Dataset, values: Values): Classed {
+/** `breaksFrom`: classify with breaks computed from these values instead (the default view's),
+ *  so stepping through time shows change rather than re-ranking each year (D-36). */
+export function classifyUnivariate(ds: Dataset, values: Values, breaksFrom?: Values): Classed {
   const { ramp, classification, classes } = ds.symbology;
   const r = RAMPS[ramp as RampId];
   const n = Math.min(Math.max(classes, r.minClasses), r.maxClasses);
-  const breaks = classify(Object.values(values), { method: classification, classes: n, breaks: ds.symbology.breaks });
+  const breaks = classify(Object.values(breaksFrom ?? values), { method: classification, classes: n, breaks: ds.symbology.breaks });
   const colors = rampColors(ramp as RampId, breaks.length + 1);
   const out = new Map<string, number>();
   let min = Infinity, bottomAllMin = true;

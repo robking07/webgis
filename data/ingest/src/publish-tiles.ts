@@ -44,7 +44,7 @@ export async function publishTiles(only?: string[]) {
   }
 }
 
-/** Upload static-only values (block groups, D-34) from data/tiles/values, gzip-encoded. */
+/** Upload static-only values (block groups, D-39) from data/tiles/values, gzip-encoded. */
 export async function publishValues(only?: string[]) {
   const { s3, bucket } = r2();
   const root = join(TILES, "values");

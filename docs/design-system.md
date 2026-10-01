@@ -31,37 +31,37 @@ Thresholds are logged as decision D-12. The rows in each example below are the s
 
 ![Blues](design-system/ramp-blues.svg)
 
-Source: ColorBrewer 2.0 (Brewer, Penn State). Worst-case adjacent-class ΔE2000 across certified class counts: Normal vision **6.1** · Protanopia **5.5** · Deuteranopia **6.2** · Tritanopia **6.8**.
+Source: ColorBrewer 2.0 (Brewer, Penn State). Worst-case adjacent-class ΔE2000 across certified class counts: Normal vision **7.9** · Protanopia **5.2** · Deuteranopia **6.4** · Tritanopia **8.0**.
 
 ### Yellow–Green–Blue (`ylgnbu`) · sequential, 3–6 classes
 
 ![Yellow–Green–Blue](design-system/ramp-ylgnbu.svg)
 
-Source: ColorBrewer 2.0. Worst-case adjacent-class ΔE2000 across certified class counts: Normal vision **12.1** · Protanopia **7.5** · Deuteranopia **10.0** · Tritanopia **12.7**.
+Source: ColorBrewer 2.0. Worst-case adjacent-class ΔE2000 across certified class counts: Normal vision **12.3** · Protanopia **13.1** · Deuteranopia **11.5** · Tritanopia **7.9**.
 
 ### Oranges (`oranges`) · sequential, 3–7 classes
 
 ![Oranges](design-system/ramp-oranges.svg)
 
-Source: ColorBrewer 2.0. Worst-case adjacent-class ΔE2000 across certified class counts: Normal vision **9.9** · Protanopia **8.3** · Deuteranopia **9.0** · Tritanopia **7.8**.
+Source: ColorBrewer 2.0. Worst-case adjacent-class ΔE2000 across certified class counts: Normal vision **8.6** · Protanopia **6.8** · Deuteranopia **7.2** · Tritanopia **5.2**.
 
 ### Purples (`purples`) · sequential, 3–7 classes
 
 ![Purples](design-system/ramp-purples.svg)
 
-Source: ColorBrewer 2.0. Worst-case adjacent-class ΔE2000 across certified class counts: Normal vision **6.4** · Protanopia **6.3** · Deuteranopia **6.2** · Tritanopia **5.4**.
+Source: ColorBrewer 2.0. Worst-case adjacent-class ΔE2000 across certified class counts: Normal vision **7.1** · Protanopia **8.4** · Deuteranopia **8.6** · Tritanopia **7.2**.
 
 ### Viridis (`viridis`) · sequential, 3–7 classes
 
 ![Viridis](design-system/ramp-viridis.svg)
 
-Source: matplotlib viridis (van der Walt & Smith). Worst-case adjacent-class ΔE2000 across certified class counts: Normal vision **12.7** · Protanopia **11.4** · Deuteranopia **7.8** · Tritanopia **7.3**.
+Source: matplotlib viridis (van der Walt & Smith). Worst-case adjacent-class ΔE2000 across certified class counts: Normal vision **10.6** · Protanopia **9.1** · Deuteranopia **6.7** · Tritanopia **6.2**.
 
 ### Cividis (`cividis`) · sequential, 3–7 classes
 
 ![Cividis](design-system/ramp-cividis.svg)
 
-Source: Nuñez, Anderton & Renslow 2018 (CVD-optimized). Worst-case adjacent-class ΔE2000 across certified class counts: Normal vision **8.5** · Protanopia **9.1** · Deuteranopia **8.9** · Tritanopia **8.4**.
+Source: Nuñez, Anderton & Renslow 2018 (CVD-optimized). Worst-case adjacent-class ΔE2000 across certified class counts: Normal vision **7.5** · Protanopia **8.2** · Deuteranopia **7.8** · Tritanopia **7.5**.
 
 ### Red–Blue (`rdbu`) · diverging, 3–7 classes
 
@@ -111,10 +111,15 @@ Light and dark come from the same token structure; the basemap and the UI chrome
 | light | links and accent text | `accent` on `surface` | 6.44 | 4.5 |
 | light | text on accent buttons | `accentText` on `accent` | 6.44 | 4.5 |
 | light | focus ring (non-text) | `focus` on `surface` | 6.44 | 3 |
+| light | logo bread on the page (non-text) | `brandBread` on `bg` | 4.22 | 3 |
+| light | logo bread on panels (non-text) | `brandBread` on `surface` | 4.61 | 3 |
+| light | logo map layer on the page (non-text) | `accent` on `bg` | 5.91 | 3 |
 | light | panel borders (decorative) | `border` on `surface` | 1.45 | 1.3 |
 | light | map labels | `map.label` on `map.labelHalo` | 13.37 | 7 |
 | light | minor map labels | `map.labelMuted` on `map.labelHalo` | 6.18 | 4.5 |
 | light | selection outline (non-text) | `map.highlight` on `map.land` | 14.73 | 3 |
+| light | selection outline vs its halo (reads over the darkest and lightest classes) | `map.highlight` on `map.highlightHalo` | 18.88 | 7 |
+| light | data-line casing vs U.S. land (non-text; keeps the quietest class visible) | `map.featureLineCasing` on `map.focusLand` | 3.25 | 3 |
 | light | interstate line vs its casing (non-text, reads over any fill) | `map.interstate` on `map.interstateCasing` | 8.45 | 4.5 |
 | light | river line vs its casing (non-text) | `map.river` on `map.riverCasing` | 3.09 | 3 |
 | light | interstate route number text | `map.shieldText` on `map.interstate` | 8.45 | 4.5 |
@@ -127,10 +132,15 @@ Light and dark come from the same token structure; the basemap and the UI chrome
 | dark | links and accent text | `accent` on `surface` | 7.62 | 4.5 |
 | dark | text on accent buttons | `accentText` on `accent` | 7.85 | 4.5 |
 | dark | focus ring (non-text) | `focus` on `surface` | 7.62 | 3 |
+| dark | logo bread on the page (non-text) | `brandBread` on `bg` | 8.40 | 3 |
+| dark | logo bread on panels (non-text) | `brandBread` on `surface` | 7.63 | 3 |
+| dark | logo map layer on the page (non-text) | `accent` on `bg` | 8.39 | 3 |
 | dark | panel borders (decorative) | `border` on `surface` | 1.46 | 1.3 |
 | dark | map labels | `map.label` on `map.labelHalo` | 12.22 | 7 |
 | dark | minor map labels | `map.labelMuted` on `map.labelHalo` | 6.62 | 4.5 |
 | dark | selection outline (non-text) | `map.highlight` on `map.land` | 18.13 | 3 |
+| dark | selection outline vs its halo (reads over the darkest and lightest classes) | `map.highlight` on `map.highlightHalo` | 18.88 | 7 |
+| dark | data-line casing vs U.S. land (non-text; keeps the quietest class visible) | `map.featureLineCasing` on `map.focusLand` | 3.23 | 3 |
 | dark | interstate line vs its casing (non-text, reads over any fill) | `map.interstate` on `map.interstateCasing` | 11.05 | 4.5 |
 | dark | river line vs its casing (non-text) | `map.river` on `map.riverCasing` | 6.96 | 3 |
 | dark | interstate route number text | `map.shieldText` on `map.interstate` | 11.05 | 4.5 |
@@ -154,7 +164,7 @@ Light and dark come from the same token structure; the basemap and the UI chrome
 | County | 3 – 8.5 |
 | Census tract | 8.5 – max |
 
-Line widths and outlines scale with zoom (`SIZE`: featureOutline, highlightOutline, highlightCasing, line, lineMajor, point, dataLine, interstate, interstateCasing, river, riverCasing, pointStroke). Labels use Noto Sans Regular with a 1.4px halo that matches the basemap tone. Thematic fills are inserted **below** the basemap's label layers, so place names stay readable over any fill.
+Line widths and outlines scale with zoom (`SIZE`: featureOutline, fineOutlineOpacity, highlightOutline, line, lineMajor, point, dataLine, interstate, interstateCasing, river, riverCasing, pointStroke). Labels use Noto Sans Regular with a 1.4px halo that matches the basemap tone. Thematic fills are inserted **below** the basemap's label layers, so place names stay readable over any fill.
 
 ## Motion and accessibility
 

@@ -1,5 +1,6 @@
 id: january_low
 title: January low temperature
+phrase: January low temperatures
 description: "Average daily minimum temperature in January. Average over 1991–2020."
 category: Climate
 tags: [cold, winter, temperature, climate]
@@ -16,4 +17,5 @@ coverageNote: Contiguous U.S. and Alaska; Hawaii has no county series. Connectic
 unit: deg_f
 terms: [climate-normal, quantile-classes]
 measure: { kind: climdiv, element: tmin, months: [1], stat: mean, years: [1991, 2020] }
+timeline: { from: 1991, to: 2025 }
 symbology: { ramp: blues, classification: quantile, classes: 5 }

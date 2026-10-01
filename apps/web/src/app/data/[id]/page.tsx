@@ -3,7 +3,8 @@ import { notFound } from "next/navigation";
 import { rampColors, RAMPS, UNIT_LABEL, type RampId, type Unit } from "@webgis/design";
 import { TERM_BY_ID } from "@/lib/glossary";
 import { describeMethod } from "@webgis/registry/describe";
-import { SiteFooter, SiteNav } from "@/components/SiteNav";
+import { SiteFooter } from "@/components/SiteNav";
+import { SiteHeader } from "@/components/SiteHeader";
 import { DATASETS, DATASET_BY_ID } from "@/lib/registry";
 import { sourceOf, datasetHref } from "@/lib/sources";
 import { PUBLISHED } from "@/lib/insights";
@@ -48,8 +49,9 @@ export default async function DatasetProfilePage({ params }: PageProps<"/data/[i
   ];
 
   return (
+    <>
+    <SiteHeader />
     <main className="mx-auto max-w-3xl px-4 py-6 md:px-8 md:py-8">
-      <SiteNav />
       <p className="text-sm"><a href="/data" className="text-primary underline-offset-2 hover:underline">← All data</a></p>
       <header className="mb-6 mt-3">
         <p className="text-xs uppercase tracking-wide text-muted-foreground">{d.category} · {source.name}</p>
@@ -172,5 +174,6 @@ export default async function DatasetProfilePage({ params }: PageProps<"/data/[i
       )}
       <SiteFooter />
     </main>
+    </>
   );
 }

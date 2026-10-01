@@ -1,5 +1,6 @@
 id: pct_age_65_plus
 title: Population 65 and older
+phrase: shares of people 65 and older
 description: Share of the total population aged 65 and over.
 category: Population
 tags: [age, seniors, aging, demographics]
@@ -11,7 +12,7 @@ license: Public domain (U.S. Government work, 17 U.S.C. § 105)
 updateCadence: annual
 vintage: "2020–2024 (5-year estimate)"
 geographyLevels: [state, county, tract, block_group]
-defaultLevel: tract  # ACS: tracts keep margins of error low (Robbie, D-33)
+defaultLevel: tract  # ACS: tracts keep margins of error low (Robbie, D-35)
 unit: percent
 universe: total population
 terms: [acs-5-year, margin-of-error, census-geography, quantile-classes]
@@ -23,4 +24,5 @@ measure:
   numerator: [B01001_020, B01001_021, B01001_022, B01001_023, B01001_024, B01001_025, B01001_044, B01001_045, B01001_046, B01001_047, B01001_048, B01001_049]
   denominator: [B01001_001]
   scale: 100
+timeline: { from: 2014, to: 2024, step: 5 }
 symbology: { ramp: cividis, classification: quantile, classes: 5 }

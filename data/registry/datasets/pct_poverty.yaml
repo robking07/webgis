@@ -1,5 +1,6 @@
 id: pct_poverty
 title: Population below poverty
+phrase: poverty rates
 description: Share of people whose income in the past 12 months was below the federal poverty level.
 category: Income & poverty
 tags: [poverty, income, equity]
@@ -11,7 +12,7 @@ license: Public domain (U.S. Government work, 17 U.S.C. § 105)
 updateCadence: annual
 vintage: "2020–2024 (5-year estimate)"
 geographyLevels: [state, county, tract, block_group]
-defaultLevel: tract  # ACS: tracts keep margins of error low (Robbie, D-33)
+defaultLevel: tract  # ACS: tracts keep margins of error low (Robbie, D-35)
 unit: percent
 universe: people for whom poverty status is determined
 terms: [acs-5-year, margin-of-error, census-geography, quantile-classes]
@@ -25,4 +26,5 @@ measure:
   scale: 100
   # B17001 stops at tracts; C17002 (ratio of income to poverty) gives the same count at block groups.
   blockGroup: { numerator: [C17002_002, C17002_003], denominator: [C17002_001] }
+timeline: { from: 2014, to: 2024, step: 5 }
 symbology: { ramp: purples, classification: quantile, classes: 5, higherIsBetter: false }

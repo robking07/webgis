@@ -1,23 +1,24 @@
 // npm run ingest -- <step> [dataset or level ids…]
-// Steps: geographies | acs | acs-bg | census2020 | lodes | places | climdiv | nbi | fars | features | vmt | cejst | ddp287g | tiles | publish-tiles | publish-values | export | insights | docs | mn-catalog | all
+// Steps: geographies | label-mask | timeline | acs | acs-bg | census2020 | lodes | places | climdiv | nbi | fars | features | vmt | cejst | ddp287g | tiles | publish-tiles | publish-values | export | insights | docs | mn-catalog | all
 import { ingestGeographies } from "./geographies.ts";
-import { ingestAcs } from "./acs.ts";
+import { ingestAcs, ingestAcsTimeline } from "./acs.ts";
 import { ingestCensus2020 } from "./census2020.ts";
-import { ingestLodes } from "./lodes.ts";
+import { ingestLodes, ingestLodesTimeline } from "./lodes.ts";
 import { buildTiles } from "./tiles.ts";
 import { exportNames, exportRegistry, exportSearch, exportValues } from "./exportweb.ts";
 import { computeInsights } from "./insights.ts";
 import { ingestPlaces } from "./places.ts";
-import { ingestClimdiv } from "./climdiv.ts";
+import { ingestClimdiv, ingestClimdivTimeline } from "./climdiv.ts";
 import { publishTiles, publishValues } from "./publish-tiles.ts";
 import { writeDataSourcesDoc } from "./docs.ts";
 import { mnCatalog } from "./mn-catalog.ts";
-import { ingestNbi } from "./nbi.ts";
-import { ingestFars } from "./fars.ts";
+import { ingestNbi, ingestNbiTimeline } from "./nbi.ts";
+import { ingestFars, ingestFarsTimeline } from "./fars.ts";
 import { ingestFeatures } from "./features.ts";
 import { ingestVmt } from "./vmt.ts";
 import { ingestCejst } from "./cejst.ts";
 import { ingestDdp287g } from "./ddp287g.ts";
+import { buildLabelMask } from "./label-mask.ts";
 
 const [step, ...rest] = process.argv.slice(2);
 const only = rest.length ? rest : undefined;
@@ -36,6 +37,11 @@ const steps: Record<string, () => Promise<void> | void> = {
   cejst: () => ingestCejst(only),
   ddp287g: () => ingestDdp287g(only),
   tiles: () => buildTiles(only),
+  "label-mask": buildLabelMask,
+  // Year control (D-36): earlier periods, written to the web export only. ACS first (FARS
+  // uses its 2015–2019 population).
+  timeline: async () => { await ingestAcsTimeline(only); await ingestFarsTimeline(only); await ingestClimdivTimeline(only);
+    await ingestNbiTimeline(only); await ingestLodesTimeline(only); exportRegistry(); },
   "publish-tiles": () => publishTiles(only),
   "publish-values": () => publishValues(only),
   docs: writeDataSourcesDoc,
@@ -44,7 +50,8 @@ const steps: Record<string, () => Promise<void> | void> = {
   search: exportSearch,
   insights: computeInsights,
   all: async () => {
-    await ingestGeographies(); await ingestAcs(); await ingestLodes(); await ingestPlaces(); await ingestClimdiv(); await ingestNbi(); await ingestFars(); await buildTiles();
+    await ingestGeographies(); await ingestAcs(); await ingestLodes(); await ingestPlaces(); await ingestClimdiv(); await ingestNbi(); await ingestFars();
+    await ingestAcsTimeline(); await ingestFarsTimeline(); await ingestClimdivTimeline(); await ingestNbiTimeline(); await ingestLodesTimeline(); await buildTiles();
     exportRegistry(); await exportNames(); await exportValues(); await computeInsights(); await writeDataSourcesDoc();
   },
 };

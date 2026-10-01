@@ -1,5 +1,6 @@
 id: population_density
 title: Population density
+phrase: population density
 description: Total resident population. Shown as people per square mile of land, so large rural areas don't dominate the map.
 category: Population
 tags: [population, density, demographics]
@@ -11,7 +12,7 @@ license: Public domain (U.S. Government work, 17 U.S.C. § 105)
 updateCadence: annual
 vintage: "2020–2024 (5-year estimate)"
 geographyLevels: [state, county, tract, block_group]
-defaultLevel: tract  # ACS: tracts keep margins of error low (Robbie, D-33)
+defaultLevel: tract  # ACS: tracts keep margins of error low (Robbie, D-35)
 unit: per_sq_mi
 universe: total population
 terms: [acs-5-year, margin-of-error, census-geography, quantile-classes]
@@ -19,4 +20,5 @@ learnMore:
   - label: See this place's full Census profile on Census Reporter
     url: "https://censusreporter.org/profiles/{cr}/"
 measure: { kind: acs5, numerator: [B01001_001], perSqMi: true }
+timeline: { from: 2014, to: 2024, step: 5 }
 symbology: { ramp: viridis, classification: quantile, classes: 7 }

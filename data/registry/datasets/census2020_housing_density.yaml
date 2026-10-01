@@ -11,7 +11,7 @@ license: Public domain (U.S. Government work, 17 U.S.C. § 105)
 updateCadence: static
 vintage: "2020"
 geographyLevels: [state, county, tract, block_group, block]
-defaultLevel: block_group  # Census: block groups by default, blocks one click away (Robbie, D-34)
+defaultLevel: block_group  # Census: block groups by default, blocks one click away (Robbie, D-39)
 coverageNote: "Built from 2020 blocks. Block counts include Census Bureau privacy noise; block groups and larger are reliable."
 terms: [decennial-census, census-geography, quantile-classes]
 learnMore:

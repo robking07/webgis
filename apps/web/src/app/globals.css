@@ -96,6 +96,8 @@
   -webkit-backdrop-filter: blur(12px);
   box-shadow: 0 6px 18px rgb(0 0 0 / 0.14), 0 0 0 1px color-mix(in srgb, var(--ui-text) 9%, transparent);
 }
+/* Small text over busy map labels (the legend strip) needs a more solid backing. */
+.wg-glass.wg-glass-strong { background: color-mix(in srgb, var(--ui-surface) 90%, transparent); }
 .wg-zbtn { background: transparent; cursor: pointer; }
 .wg-zbtn:hover { background: color-mix(in srgb, var(--ui-text) 7%, transparent); }
 .wg-zbtn:active { background: color-mix(in srgb, var(--ui-text) 13%, transparent); }
@@ -105,10 +107,17 @@
   color: color-mix(in srgb, var(--ui-text) 36%, transparent);
   text-shadow: 0 1px 1px color-mix(in srgb, var(--map-label-halo) 85%, transparent), 0 3px 14px rgb(0 0 0 / 0.22);
 }
+/* The logo mark sitting on the map (immersed): a halo and soft shadow like the wordmark. */
+.wg-logo-on-map {
+  display: inline-flex;
+  filter: drop-shadow(0 0 1.5px var(--map-label-halo)) drop-shadow(0 3px 8px rgb(0 0 0 / 0.25));
+}
 /* Solid text placed directly on the map gets the basemap label halo. */
 .wg-on-map {
   text-shadow: 0 0 2px var(--map-label-halo), 0 0 6px var(--map-label-halo), 0 0 12px var(--map-label-halo);
 }
+/* Year control slider (D-36): accent thumb and track from the theme. */
+.wg-range { accent-color: var(--ui-accent); height: 1.25rem; cursor: pointer; }
 /* Docked filters (D-28): no card, just halo'd text and glass chips over the map. */
 .wg-dock { pointer-events: auto; }
 /* Immersed legend: a lighter card so it gives context without blocking the map. */
@@ -118,7 +127,7 @@
   -webkit-backdrop-filter: blur(12px);
 }
 
-/* Credits footnote (D-33): small and quiet, with a label halo so it reads over the map. */
+/* Credits footnote (D-35): small and quiet, with a label halo so it reads over the map. */
 .wg-credits {
   color: color-mix(in srgb, var(--ui-text) 52%, transparent);
   text-shadow: 0 0 2px var(--map-label-halo), 0 0 4px var(--map-label-halo);

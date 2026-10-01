@@ -5,6 +5,7 @@
 import type { LayerSpecification, StyleSpecification } from "maplibre-gl";
 import { THEMES, type ThemeName } from "./themes.ts";
 import { LABEL, RANK_WIDTH, SIZE, zoomInterp, GEO_LEVELS, type GeoLevel } from "./sizing.ts";
+import { US_LABEL_MASK } from "./us-label-mask.ts";
 
 export const BASEMAP = {
   tilejson: "https://tiles.openfreemap.org/planet",
@@ -23,6 +24,8 @@ export const DATA_BEFORE_ID = "overlay-river-casing";
 export function basemapStyle(themeName: ThemeName): StyleSpecification {
   const m = THEMES[themeName].map;
   const halo = { "text-halo-color": m.labelHalo, "text-halo-width": LABEL.haloWidth };
+  /** True for label points inside the U.S. (OpenMapTiles places have no country code). */
+  const inUS = ["within", US_LABEL_MASK] as never;
   const layers: LayerSpecification[] = [
     { id: "background", type: "background", paint: { "background-color": m.background } },
     {
@@ -100,9 +103,11 @@ export function basemapStyle(themeName: ThemeName): StyleSpecification {
       layout: { "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]], "text-font": ["Noto Sans Italic"], "text-size": 12 },
       paint: { "text-color": m.labelMuted, ...halo },
     },
+    // Places: U.S. cities and towns at full strength; foreign ones (outside the U.S. mask)
+    // fewer, smaller and muted, so the map reads as a U.S. map (Robbie, D-37).
     {
       id: "label-place", type: "symbol", source: "omt", "source-layer": "place", minzoom: 4,
-      filter: ["in", ["get", "class"], ["literal", ["city", "town"]]],
+      filter: ["all", ["in", ["get", "class"], ["literal", ["city", "town"]]], inUS],
       layout: {
         "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
         "text-font": LABEL.font as unknown as string[],
@@ -111,6 +116,18 @@ export function basemapStyle(themeName: ThemeName): StyleSpecification {
       },
       paint: { "text-color": m.label, ...halo },
     },
+    // Foreign: only the biggest cities at first, the rest of the cities from z8, never towns.
+    ...([["label-place-foreign", 5, ["<=", ["get", "rank"], LABEL.foreignMajorRank]], ["label-place-foreign-minor", 8, [">", ["get", "rank"], LABEL.foreignMajorRank]]] as const).map(([id, minzoom, rank]): LayerSpecification => ({
+      id, type: "symbol", source: "omt", "source-layer": "place", minzoom,
+      filter: ["all", ["==", ["get", "class"], "city"], rank, ["!", inUS]] as never,
+      layout: {
+        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-font": LABEL.font as unknown as string[],
+        "text-size": zoomInterp(LABEL.sizes.foreign) as never,
+        "symbol-sort-key": ["get", "rank"],
+      },
+      paint: { "text-color": m.labelForeign, "text-halo-color": m.labelHalo, "text-halo-width": LABEL.haloWidth * 0.7 },
+    })),
     {
       id: "label-interstate", type: "symbol", source: "omt", "source-layer": "transportation_name", minzoom: 6,
       filter: ["all", ["==", ["get", "network"], "us-interstate"], ["has", "ref"]],
@@ -126,7 +143,7 @@ export function basemapStyle(themeName: ThemeName): StyleSpecification {
     },
     {
       id: "label-state", type: "symbol", source: "omt", "source-layer": "place", minzoom: 3, maxzoom: 7,
-      filter: ["==", ["get", "class"], "state"],
+      filter: ["all", ["==", ["get", "class"], "state"], inUS],
       layout: {
         "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
         "text-font": LABEL.fontBold as unknown as string[],
@@ -135,6 +152,19 @@ export function basemapStyle(themeName: ThemeName): StyleSpecification {
         "text-letter-spacing": 0.08,
       },
       paint: { "text-color": m.labelMuted, ...halo },
+    },
+    // Provinces and Mexican states: smaller, fainter, and only once zoomed past the national view.
+    {
+      id: "label-state-foreign", type: "symbol", source: "omt", "source-layer": "place", minzoom: 4, maxzoom: 7,
+      filter: ["all", ["==", ["get", "class"], "state"], ["!", inUS]],
+      layout: {
+        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-font": LABEL.font as unknown as string[],
+        "text-size": zoomInterp(LABEL.sizes.stateForeign) as never,
+        "text-transform": "uppercase",
+        "text-letter-spacing": 0.08,
+      },
+      paint: { "text-color": m.labelForeign, "text-halo-color": m.labelHalo, "text-halo-width": LABEL.haloWidth * 0.7, "text-opacity": 0.8 },
     },
   ];
   return {
@@ -173,28 +203,22 @@ export function thematicLayers(o: ThematicLayerOptions): LayerSpecification[] {
   const { minzoom, maxzoom } = o.zooms ?? GEO_LEVELS[o.level];
   const base = { source: o.source, "source-layer": o.sourceLayer, minzoom, maxzoom };
   const fillColor = choroplethFill(o.colors, o.theme);
+  const shown = ["case", ["any", ["boolean", ["feature-state", "hover"], false], ["boolean", ["feature-state", "selected"], false]], 1, 0];
   return [
     { id: `${o.level}-fill`, type: "fill", ...base, paint: { "fill-color": fillColor as never, "fill-opacity": 0.92 } },
     {
       id: `${o.level}-outline`, type: "line", ...base,
-      paint: { "line-color": m.featureOutline, "line-width": zoomInterp(SIZE.featureOutline) as never, "line-opacity": 0.7 },
+      paint: { "line-color": m.featureOutline, "line-width": zoomInterp(SIZE.featureOutline) as never,
+        "line-opacity": (o.level === "state" || o.level === "county" ? 0.7 : zoomInterp(SIZE.fineOutlineOpacity)) as never },
     },
-    // A halo under the selection outline keeps it visible on the darkest classes (D-33).
+    // Cased selection: a contrasting halo under the outline, so it reads on the darkest and lightest classes.
     {
-      id: `${o.level}-highlight-casing`, type: "line", ...base,
-      paint: {
-        "line-color": m.labelHalo,
-        "line-width": zoomInterp(SIZE.highlightCasing) as never,
-        "line-opacity": ["case", ["boolean", ["feature-state", "selected"], false], 0.9, 0],
-      },
+      id: `${o.level}-highlight-halo`, type: "line", ...base,
+      paint: { "line-color": m.highlightHalo, "line-width": zoomInterp(SIZE.highlightOutline.map(([z, w]) => [z, w + 3] as const)) as never, "line-opacity": shown as never },
     },
     {
       id: `${o.level}-highlight`, type: "line", ...base,
-      paint: {
-        "line-color": m.highlight,
-        "line-width": zoomInterp(SIZE.highlightOutline) as never,
-        "line-opacity": ["case", ["any", ["boolean", ["feature-state", "hover"], false], ["boolean", ["feature-state", "selected"], false]], 1, 0],
-      },
+      paint: { "line-color": m.highlight, "line-width": zoomInterp(SIZE.highlightOutline) as never, "line-opacity": shown as never },
     },
   ];
 }
@@ -211,11 +235,21 @@ export interface FeatureLineOptions {
   theme: ThemeName;
 }
 
+/**
+ * Line ramps run light → dark, which suits light land. On dark land the darkest (highest) class
+ * sinks into the background and the quietest roads glow, so dark themes reverse the ramp:
+ * the highest class is always the one that stands out. Map layers and legends both use this.
+ */
+export function featureLineColors(colors: string[], theme: ThemeName): string[] {
+  return theme === "dark" ? [...colors].reverse() : colors;
+}
+
 /** Cased lines colored by value class and sized by zoom × rank. Busier segments draw on top. */
 export function featureLineLayers(o: FeatureLineOptions): LayerSpecification[] {
   const m = THEMES[o.theme].map;
   const value = ["to-number", ["get", o.valueField], 0];
-  const color = ["step", value, o.colors[0], ...o.breaks.flatMap((b, i) => [b, o.colors[i + 1]])];
+  const colors = featureLineColors(o.colors, o.theme);
+  const color = ["step", value, colors[0], ...o.breaks.flatMap((b, i) => [b, colors[i + 1]])];
   const width = (extra: number) => [
     "interpolate", ["linear"], ["zoom"],
     ...SIZE.dataLine.flatMap(([z, w]) => [z, o.rankField
@@ -225,7 +259,7 @@ export function featureLineLayers(o: FeatureLineOptions): LayerSpecification[] {
   const base = { source: o.source, "source-layer": o.sourceLayer };
   const layout = { "line-cap": "round" as const, "line-join": "round" as const, "line-sort-key": value as never };
   return [
-    { id: `${o.id}-casing`, type: "line", ...base, layout, paint: { "line-color": m.featureOutline, "line-opacity": 0.75, "line-width": width(1.2) as never } },
+    { id: `${o.id}-casing`, type: "line", ...base, layout, paint: { "line-color": m.featureLineCasing, "line-opacity": 0.9, "line-width": width(1.2) as never } },
     { id: `${o.id}-line`, type: "line", ...base, layout, paint: { "line-color": color as never, "line-width": width(0) as never } },
   ];
 }
@@ -237,7 +271,11 @@ export function focusLandLayer(source: string, theme: ThemeName): LayerSpecifica
 
 export interface FeaturePolygonOptions extends FeatureLineOptions {}
 
-/** Areas from their own geometry (e.g. CEJST tracts): step color by value, thin outline. */
+/**
+ * Areas from their own geometry (e.g. CEJST tracts): step color by value, thin outline.
+ * Such geometry is often not clipped to the shoreline (CEJST's 2010 tracts cover lakes and bays),
+ * so the basemap's water and shoreline are drawn again on top as a mask.
+ */
 export function featurePolygonLayers(o: FeaturePolygonOptions): LayerSpecification[] {
   const m = THEMES[o.theme].map;
   const value = ["to-number", ["get", o.valueField], 0];
@@ -246,5 +284,11 @@ export function featurePolygonLayers(o: FeaturePolygonOptions): LayerSpecificati
   return [
     { id: `${o.id}-fill`, type: "fill", ...base, paint: { "fill-color": color as never, "fill-opacity": 0.85 } },
     { id: `${o.id}-casing`, type: "line", ...base, paint: { "line-color": m.featureOutline, "line-width": zoomInterp(SIZE.featureOutline) as never, "line-opacity": 0.6 } },
+    { id: `${o.id}-water-mask`, type: "fill", source: "omt", "source-layer": "water", paint: { "fill-color": m.water } },
+    {
+      id: `${o.id}-shoreline`, type: "line", source: "omt", "source-layer": "water",
+      filter: ["!=", ["get", "brunnel"], "tunnel"],
+      paint: { "line-color": m.coastline, "line-width": ["interpolate", ["linear"], ["zoom"], 2, 0.6, 6, 1, 12, 1.4] as never, "line-opacity": 0.9 },
+    },
   ];
 }

@@ -1,5 +1,6 @@
 id: pct_long_commute
 title: Hour-plus commutes
+phrase: shares of hour-plus commutes
 description: Share of workers who don't work from home whose one-way trip to work takes 60 minutes or more.
 category: Commuting
 tags: [long commute, super commuters, travel time, congestion]
@@ -11,7 +12,7 @@ license: Public domain (U.S. Government work, 17 U.S.C. § 105)
 updateCadence: annual
 vintage: "2020–2024 (5-year estimate)"
 geographyLevels: [state, county, tract, block_group]
-defaultLevel: tract  # ACS: tracts keep margins of error low (Robbie, D-33)
+defaultLevel: tract  # ACS: tracts keep margins of error low (Robbie, D-35)
 unit: percent
 universe: workers 16+ not working from home
 terms: [acs-5-year, margin-of-error, census-geography, quantile-classes]
@@ -19,4 +20,5 @@ learnMore:
   - label: See this place's full Census profile on Census Reporter
     url: "https://censusreporter.org/profiles/{cr}/"
 measure: { kind: acs5, numerator: [B08303_012, B08303_013], denominator: [B08303_001], scale: 100 }
+timeline: { from: 2014, to: 2024, step: 5 }
 symbology: { ramp: oranges, classification: quantile, classes: 5 }

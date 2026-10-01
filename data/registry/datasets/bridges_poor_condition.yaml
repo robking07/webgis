@@ -1,5 +1,6 @@
 id: bridges_poor_condition
 title: Bridge deck area in poor condition
+phrase: shares of bridges in poor condition
 description: Share of highway bridge deck area rated in poor condition (lowest of deck, superstructure, substructure or culvert rating 4 or below), the federal bridge performance measure.
 category: Transportation
 tags: [bridges, infrastructure, condition, NBI, asset management]
@@ -16,4 +17,5 @@ universe: highway bridge deck area
 coverageNote: Counties with fewer than 10 bridges show no data. Connecticut's NBI records still use pre-2022 counties, so CT counties show no data.
 terms: [bridge-condition, quantile-classes]
 measure: { kind: nbi, year: 2025, weight: deckArea, condition: P, minBridges: 10 }
+timeline: { from: 2019, to: 2025 }
 symbology: { ramp: oranges, classification: quantile, classes: 5 }

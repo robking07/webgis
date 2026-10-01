@@ -4,7 +4,7 @@ import manifest from "@/generated/layers.json";
 import { rampColors, type RampId } from "@webgis/design";
 import type { Dataset } from "./registry";
 
-/** A popup field: label and unit, plus optional explainers (D-33). */
+/** A popup field: label and unit, plus optional explainers (D-35). */
 export interface FeatureField {
   label: string;
   unit?: string;

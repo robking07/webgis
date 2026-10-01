@@ -1,5 +1,5 @@
 "use client";
-// Header settings (D-33): theme and map units, out of the main navigation.
+// Header settings (D-35): theme and map units, out of the main navigation.
 import { useEffect, useRef, useState } from "react";
 import { Settings } from "lucide-react";
 import type { ThemeName } from "@webgis/design";
@@ -9,8 +9,9 @@ export type ScaleUnit = "imperial" | "metric";
 interface Props {
   theme: ThemeName | null;
   onTheme: (t: ThemeName | null) => void;
-  unit: ScaleUnit;
-  onUnit: (u: ScaleUnit) => void;
+  /** Map only: distance units for the scale bar. */
+  unit?: ScaleUnit;
+  onUnit?: (u: ScaleUnit) => void;
 }
 
 export function SettingsMenu({ theme, onTheme, unit, onUnit }: Props) {
@@ -35,8 +36,10 @@ export function SettingsMenu({ theme, onTheme, unit, onUnit }: Props) {
         <div role="group" aria-label="Settings" className="absolute right-0 top-11 z-50 w-60 space-y-4 rounded-lg border bg-popover p-3 shadow-lg">
           <Choice label="Theme" value={theme ?? "system"} onChange={(v) => onTheme(v === "system" ? null : (v as ThemeName))}
             options={[["system", "System"], ["light", "Light"], ["dark", "Dark"]]} />
-          <Choice label="Distances" value={unit} onChange={(v) => onUnit(v as ScaleUnit)}
-            options={[["imperial", "Miles"], ["metric", "Kilometers"]]} />
+          {unit && onUnit && (
+            <Choice label="Distances" value={unit} onChange={(v) => onUnit(v as ScaleUnit)}
+              options={[["imperial", "Miles"], ["metric", "Kilometers"]]} />
+          )}
         </div>
       )}
     </div>
