@@ -4,7 +4,7 @@ import { z } from "zod";
 
 const Ramp = z.enum(["blues", "ylgnbu", "oranges", "purples", "viridis", "cividis", "rdbu", "puor", "brbg"]);
 const Unit = z.enum(["dollars", "percent", "minutes", "count", "per_sq_mi", "ratio", "years", "deg_f", "inches", "per_100k", "vehicles_per_day", "miles_per_day", "categories", "agreements", "percentile"]);
-export const GeoLevel = z.enum(["state", "county", "tract", "block_group"]);
+export const GeoLevel = z.enum(["state", "county", "tract", "block_group", "block"]);
 
 /** A feature-layer popup field with optional explainers (D-33). */
 const FeatureField = z.object({
@@ -32,6 +32,12 @@ const AcsMeasure = z.object({
     numerator: z.array(z.string().regex(/^[BC]\d{5}[A-Z]?_\d{3}$/)).min(1),
     denominator: z.array(z.string().regex(/^[BC]\d{5}[A-Z]?_\d{3}$/)).optional(),
   }).optional(),
+});
+/** 2020 Census counts (P.L. 94-171), built from blocks up so every level adds up (D-34).
+ *  One ingest computes every `value`; block values live in the block tiles. */
+const Census2020Measure = z.object({
+  kind: z.literal("census2020"),
+  value: z.enum(["pop_density", "hu_density", "pct_vacant"]),
 });
 const LodesMeasure = z.object({
   kind: z.literal("lodes"),
@@ -186,7 +192,7 @@ export const DatasetEntry = z.object({
   unit: Unit,
   /** For insights: the population the value describes. Pairs that share one are flagged. */
   universe: z.string(),
-  measure: z.discriminatedUnion("kind", [AcsMeasure, LodesMeasure, PlacesMeasure, ClimdivMeasure, NbiMeasure, FarsMeasure, FeaturesMeasure, HpmsVmtMeasure, CejstMeasure, Ddp287gMeasure]),
+  measure: z.discriminatedUnion("kind", [AcsMeasure, Census2020Measure, LodesMeasure, PlacesMeasure, ClimdivMeasure, NbiMeasure, FarsMeasure, FeaturesMeasure, HpmsVmtMeasure, CejstMeasure, Ddp287gMeasure]),
   /** Other registry datasets used as inputs to this dataset's model (e.g. PLACES uses county poverty).
    *  Insight pairs with these are flagged: they correlate partly by construction. */
   modelInputs: z.array(z.string()).default([]),

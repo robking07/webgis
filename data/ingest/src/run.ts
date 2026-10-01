@@ -1,7 +1,8 @@
 // npm run ingest -- <step> [dataset or level ids…]
-// Steps: geographies | acs | acs-bg | lodes | places | climdiv | nbi | fars | features | vmt | cejst | ddp287g | tiles | publish-tiles | publish-values | export | insights | docs | mn-catalog | all
+// Steps: geographies | acs | acs-bg | census2020 | lodes | places | climdiv | nbi | fars | features | vmt | cejst | ddp287g | tiles | publish-tiles | publish-values | export | insights | docs | mn-catalog | all
 import { ingestGeographies } from "./geographies.ts";
 import { ingestAcs } from "./acs.ts";
+import { ingestCensus2020 } from "./census2020.ts";
 import { ingestLodes } from "./lodes.ts";
 import { buildTiles } from "./tiles.ts";
 import { exportNames, exportRegistry, exportSearch, exportValues } from "./exportweb.ts";
@@ -24,6 +25,7 @@ const steps: Record<string, () => Promise<void> | void> = {
   geographies: ingestGeographies,
   acs: () => ingestAcs(only),
   "acs-bg": () => ingestAcs(only, ["block_group"]),
+  census2020: () => ingestCensus2020(only),
   lodes: () => ingestLodes(only),
   places: () => ingestPlaces(only),
   climdiv: () => ingestClimdiv(only),

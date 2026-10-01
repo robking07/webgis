@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowUpRight, ChevronDown, CornerUpLeft, Info, Menu, Minus, Plus, Search, SlidersHorizontal, X } from "lucide-react";
 import { BivariateLegend, Legend, Popup, StatusState } from "@webgis/design/components";
-import { formatValue, GEO_LEVELS, LAZY_LEVELS, levelAtZoom, levelBands, STATIC_ONLY_LEVELS, type GeoLevel, type ThemeName } from "@webgis/design";
+import { formatValue, GEO_LEVELS, LAZY_LEVELS, levelAtZoom, levelBands, STATIC_ONLY_LEVELS, TILE_VALUE_LEVELS, type GeoLevel, type ThemeName } from "@webgis/design";
 import { DatasetBrowser } from "./DatasetBrowser";
 import { DataTable } from "./DataTable";
 import { DatasetHeading } from "./DatasetMenus";
@@ -87,14 +87,18 @@ export function Viewer({ search }: { search: string }) {
   const featureSpec = useMemo(() => (primary && isFeature ? featureLayerSpec(primary) : null), [primary, isFeature]);
   const secondary = state.b && !isFeature && !isFeatureDataset(DATASET_BY_ID.get(state.b)) ? DATASET_BY_ID.get(state.b)! : null;
   // Levels both datasets have.
-  const availableLevels = useMemo(() => isFeature ? [] : LEVELS.filter((l) => (!primary || primary.geographyLevels.includes(l)) && (!secondary || secondary.geographyLevels.includes(l))), [primary, secondary, isFeature]);
+  // Blocks (values in the tiles) can't be compared: no bivariate join.
+  const availableLevels = useMemo(() => isFeature ? [] : LEVELS.filter((l) => (!primary || primary.geographyLevels.includes(l)) && (!secondary || (secondary.geographyLevels.includes(l) && !TILE_VALUE_LEVELS.has(l)))), [primary, secondary, isFeature]);
   // Default level: how the source publishes the data, i.e. its finest level (ACS → tracts),
   // drawn at every zoom (D-33). "Switch with zoom" (lv=auto) restores the old zoom bands.
   const defaultLevel = primary?.defaultLevel && availableLevels.includes(primary.defaultLevel) ? primary.defaultLevel : availableLevels[availableLevels.length - 1] ?? null;
   const pinnedLevel = state.lv === "auto" ? null : state.lv && availableLevels.includes(state.lv) ? state.lv : defaultLevel;
   const bands = useMemo(() => (pinnedLevel ? { [pinnedLevel]: { minzoom: 0, maxzoom: 24 } } : levelBands(availableLevels)), [availableLevels, pinnedLevel]);
   // Start loading tract / block-group values a little before they appear.
-  const want = LEVELS.filter((l) => LAZY_LEVELS.has(l) && !!bands[l] && state.at.zoom >= bands[l]!.minzoom - 1);
+  const nearBlocks = !!bands.block && state.at.zoom >= bands.block.minzoom - 1;
+  const want = LEVELS.filter((l) => LAZY_LEVELS.has(l) && ((!!bands[l] && state.at.zoom >= bands[l]!.minzoom - 1) || (l === "block_group" && nearBlocks)));
+  // Blocks are colored from their tile property with the block-group classes, so the legend holds.
+  const blockField = primary?.measure.kind === "census2020" ? primary.measure.value : null;
   const x = useDatasetValues(primary, want);
   const y = useDatasetValues(secondary, want);
   const level = levelAtZoom(bands, state.at.zoom) ?? availableLevels[0] ?? "county";
@@ -112,8 +116,10 @@ export function Viewer({ search }: { search: string }) {
         out[l] = classifyUnivariate(primary, xv);
       }
     }
+    const bg = out.block_group;
+    if (blockField && !secondary && bg?.breaks) out.block = { colors: bg.colors, breaks: bg.breaks, classes: new Map(), field: blockField };
     return out;
-  }, [primary, secondary, x.values, y.values]);
+  }, [primary, secondary, x.values, y.values, blockField]);
 
   const current = classed[level];
   const error = x.error ?? y.error;
@@ -482,7 +488,7 @@ export function Viewer({ search }: { search: string }) {
           <Popup title={hover.name} subtitle={GEO_LEVELS[hover.level].label}
             rows={[primary, secondary].filter((d) => !!d).map((d) => ({
               label: d!.title, unit: d!.unit,
-              value: (d === primary ? x : y).values[hover.level]?.[hover.geoid],
+              value: TILE_VALUE_LEVELS.has(hover.level) && blockField ? (hover.props?.[blockField] as number | undefined) : (d === primary ? x : y).values[hover.level]?.[hover.geoid],
             }))} />
         </div>
       )}
@@ -530,8 +536,10 @@ function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, onMapIt }
     setRows(null); setErr(null);
     const load = staticOnly
       ? Promise.all([primary, secondary].filter((d): d is Dataset => !!d).map(async (d, i) => {
-          const moes = await loadMoes(d.id, info.level).catch(() => ({} as Values));
-          return [d.id, { value: (i === 0 ? xv : yv)?.[info.geoid] ?? null, moe: moes[info.geoid] ?? null }] as const;
+          const moes = TILE_VALUE_LEVELS.has(info.level) ? ({} as Values) : await loadMoes(d.id, info.level).catch(() => ({} as Values));
+          // Blocks: the value is in the tile; 2020 Census counts have no margin of error.
+          const fromTile = TILE_VALUE_LEVELS.has(info.level) && d.measure.kind === "census2020" ? (info.props?.[d.measure.value] as number | undefined) : undefined;
+          return [d.id, { value: fromTile ?? (i === 0 ? xv : yv)?.[info.geoid] ?? null, moe: moes[info.geoid] ?? null }] as const;
         })).then((e) => Object.fromEntries(e) as Detail)
       : fetchDetail(info.geoid);
     load.then((r) => live && setRows(r), (e) => live && setErr(String(e.message ?? e)));

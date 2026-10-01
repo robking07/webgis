@@ -5,7 +5,7 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { log, TILES, upsert } from "./util.ts";
 
-export type Level = "state" | "county" | "tract" | "block_group";
+export type Level = "state" | "county" | "tract" | "block_group" | "block";
 export interface Value { value: number | null; moe: number | null }
 
 export async function registerDataset(pool: pg.Pool, e: DatasetEntry) {

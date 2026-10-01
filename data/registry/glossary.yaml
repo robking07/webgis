@@ -146,3 +146,9 @@
   long: >-
     Section 287(g) of the Immigration and Nationality Act lets ICE deputize state and local officers. In the Jail Enforcement model, jail staff check the immigration status of people already booked. In the Task Force model, officers can question and arrest people during regular policing. The Warrant Service Officer model lets jail staff serve ICE administrative warrants. A county with several agreements usually has several agencies (sheriff, city police) signed up. Counts here are agreements, not arrests.
   source: https://deportationdata.org/
+
+- id: decennial-census
+  term: 2020 Census
+  short: "A count of every person and home, not a survey sample, so there's no margin of error."
+  long: "The decennial Census counts every resident and housing unit as of April 1, 2020. Its redistricting file (P.L. 94-171) is published down to census blocks, often a single city block. To protect privacy, the Census Bureau adds statistical noise to small-area counts (differential privacy), so a single block's numbers can be off by a few people; block groups and larger areas are reliable."
+  source: https://www.census.gov/programs-surveys/decennial-census/about/rdo/summary-files.html

@@ -1,0 +1,24 @@
+id: census2020_pct_vacant
+title: Share of homes vacant (2020 Census)
+description: Vacant housing units as a share of all housing units on April 1, 2020. Includes seasonal and vacation homes, so resort and cabin areas run high.
+category: Housing
+tags: [vacancy, vacant homes, seasonal homes, housing, 2020 Census, decennial, blocks]
+source:
+  name: U.S. Census Bureau, 2020 Census Redistricting Data (P.L. 94-171)
+  url: https://www.census.gov/programs-surveys/decennial-census/about/rdo/summary-files.html
+  citation: "U.S. Census Bureau, 2020 Census Redistricting Data (Public Law 94-171) Summary File; 2020 TIGER/Line census blocks"
+license: Public domain (U.S. Government work, 17 U.S.C. § 105)
+updateCadence: static
+vintage: "2020"
+geographyLevels: [state, county, tract, block_group, block]
+defaultLevel: block_group  # Census: block groups by default, blocks one click away (Robbie, D-34)
+coverageNote: "Built from 2020 blocks. Block counts include Census Bureau privacy noise; block groups and larger are reliable."
+terms: [decennial-census, census-geography, quantile-classes]
+learnMore:
+  - label: See this place's full Census profile on Census Reporter
+    url: "https://censusreporter.org/profiles/{cr}/"
+    levels: [state, county, tract, block_group]
+unit: percent
+universe: housing units (2020 Census count)
+measure: { kind: census2020, value: pct_vacant }
+symbology: { ramp: oranges, classification: quantile, classes: 5 }
