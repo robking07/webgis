@@ -1,0 +1,17 @@
+id: job_density
+title: Job density
+description: Jobs located in the area (all jobs, by workplace) per square mile of land.
+category: Jobs
+tags: [jobs, employment, workplace, LODES, LEHD]
+source:
+  name: U.S. Census Bureau, LEHD Origin-Destination Employment Statistics (LODES 8)
+  url: https://lehd.ces.census.gov/data/
+  citation: "U.S. Census Bureau, LEHD Origin-Destination Employment Statistics (LODES8), 2023 Workplace Area Characteristics"
+license: Public domain (U.S. Government work, 17 U.S.C. § 105)
+updateCadence: annual
+vintage: "2023"
+geographyLevels: [state, county, tract]
+unit: per_sq_mi
+universe: jobs (by workplace)
+measure: { kind: lodes, file: wac, column: C000, segment: S000, jobType: JT00, perSqMi: true }
+symbology: { ramp: blues, classification: quantile, classes: 7 }

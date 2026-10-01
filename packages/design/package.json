@@ -1,0 +1,27 @@
+{
+  "name": "@webgis/design",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./components": "./src/components/index.ts",
+    "./components/design.css": "./src/components/design.css"
+  },
+  "scripts": {
+    "check": "node scripts/check.ts",
+    "docs": "node scripts/render-docs.ts"
+  },
+  "dependencies": {
+    "culori": "^4.0.1",
+    "simple-statistics": "^7.8.8"
+  },
+  "peerDependencies": {
+    "react": ">=19"
+  },
+  "devDependencies": {
+    "@types/culori": "^4.0.0",
+    "@types/react": "^19",
+    "maplibre-gl": "^6.11.2"
+  }
+}

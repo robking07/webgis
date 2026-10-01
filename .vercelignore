@@ -1,0 +1,12 @@
+# Upload the monorepo source only; Vercel builds apps/web (project Root Directory).
+node_modules
+**/node_modules
+.next
+**/.next
+data/cache
+data/tiles
+apps/web/public/tiles
+apps/web/public/maplibre
+.env*
+!.env.example
+.claude

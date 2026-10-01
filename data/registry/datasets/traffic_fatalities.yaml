@@ -1,0 +1,19 @@
+id: traffic_fatalities
+title: Traffic deaths
+description: Average yearly deaths in motor vehicle crashes per 100,000 residents, 2020–2024, counted where the crash happened.
+category: Transportation
+tags: [safety, crashes, fatalities, FARS, Vision Zero]
+source:
+  name: NHTSA Fatality Analysis Reporting System (FARS)
+  url: https://www.nhtsa.gov/research-data/fatality-analysis-reporting-system-fars
+  citation: "National Highway Traffic Safety Administration, Fatality Analysis Reporting System, 2020–2024"
+license: Public domain (U.S. Government work, 17 U.S.C. § 105)
+updateCadence: annual
+vintage: "FARS 2020–2024"
+geographyLevels: [state, county]
+unit: per_100k
+universe: crashes per resident (rate uses ACS population)
+modelInputs: [population_density]
+coverageNote: Counted where crashes happened, divided by residents, so counties with heavy through-traffic look high. Connecticut counties use pre-2022 codes and show no data.
+measure: { kind: fars, years: [2020, 2024], perPopulation: 100000 }
+symbology: { ramp: purples, classification: quantile, classes: 5 }

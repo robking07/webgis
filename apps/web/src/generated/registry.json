@@ -1,0 +1,1102 @@
+[
+ {
+  "id": "annual_precipitation",
+  "title": "Annual precipitation",
+  "description": "Total yearly precipitation (rain plus melted snow). Average over 1991–2020.",
+  "category": "Climate",
+  "tags": [
+   "rain",
+   "precipitation",
+   "climate",
+   "weather"
+  ],
+  "source": {
+   "name": "NOAA NCEI nClimDiv county climate data",
+   "url": "https://www.ncei.noaa.gov/pub/data/cirs/climdiv/",
+   "citation": "NOAA National Centers for Environmental Information, nClimDiv county monthly data (Vose et al. 2014), 1991–2020 normals computed by this site"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "static",
+  "vintage": "1991–2020 normal",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "inches",
+  "universe": "county area (area-weighted grid average)",
+  "measure": {
+   "kind": "climdiv",
+   "element": "pcpn",
+   "months": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+   ],
+   "stat": "sum",
+   "years": [
+    1991,
+    2020
+   ]
+  },
+  "modelInputs": [],
+  "coverageNote": "Contiguous U.S. and Alaska; Hawaii has no county series. Connecticut uses pre-2022 county codes in nClimDiv, so it shows no data.",
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "binge_drinking",
+  "title": "Binge drinking",
+  "description": "Share of adults who binge drank in the past 30 days. Age-adjusted prevalence among adults; model-based small-area estimate.",
+  "category": "Health",
+  "tags": [
+   "alcohol",
+   "drinking",
+   "health",
+   "behavior"
+  ],
+  "source": {
+   "name": "CDC PLACES (Local Data for Better Health), 2025 release",
+   "url": "https://www.cdc.gov/places/",
+   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+  },
+  "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
+  "updateCadence": "annual",
+  "vintage": "BRFSS 2023",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "percent",
+  "universe": "adults 18+ (model-based estimate)",
+  "measure": {
+   "kind": "places",
+   "socrata": "swc5-untb",
+   "measureId": "BINGE",
+   "valueType": "AgeAdjPrv"
+  },
+  "modelInputs": [
+   "pct_poverty",
+   "median_household_income"
+  ],
+  "coverageNote": "Model-based estimates; not every county is covered in every measure.",
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "bridges_poor_condition",
+  "title": "Bridge deck area in poor condition",
+  "description": "Share of highway bridge deck area rated in poor condition (lowest of deck, superstructure, substructure or culvert rating 4 or below), the federal bridge performance measure.",
+  "category": "Transportation",
+  "tags": [
+   "bridges",
+   "infrastructure",
+   "condition",
+   "NBI",
+   "asset management"
+  ],
+  "source": {
+   "name": "FHWA National Bridge Inventory",
+   "url": "https://www.fhwa.dot.gov/bridge/nbi.cfm",
+   "citation": "Federal Highway Administration, National Bridge Inventory, 2025 highway bridge file"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "NBI 2025",
+  "geographyLevels": [
+   "state",
+   "county"
+  ],
+  "unit": "percent",
+  "universe": "highway bridge deck area",
+  "measure": {
+   "kind": "nbi",
+   "year": 2025,
+   "weight": "deckArea",
+   "condition": "P",
+   "minBridges": 10
+  },
+  "modelInputs": [],
+  "coverageNote": "Counties with fewer than 10 bridges show no data. Connecticut's NBI records still use pre-2022 counties, so CT counties show no data.",
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "january_low",
+  "title": "January low temperature",
+  "description": "Average daily minimum temperature in January. Average over 1991–2020.",
+  "category": "Climate",
+  "tags": [
+   "cold",
+   "winter",
+   "temperature",
+   "climate"
+  ],
+  "source": {
+   "name": "NOAA NCEI nClimDiv county climate data",
+   "url": "https://www.ncei.noaa.gov/pub/data/cirs/climdiv/",
+   "citation": "NOAA National Centers for Environmental Information, nClimDiv county monthly data (Vose et al. 2014), 1991–2020 normals computed by this site"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "static",
+  "vintage": "1991–2020 normal",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "deg_f",
+  "universe": "county area (area-weighted grid average)",
+  "measure": {
+   "kind": "climdiv",
+   "element": "tmin",
+   "months": [
+    1
+   ],
+   "stat": "mean",
+   "years": [
+    1991,
+    2020
+   ]
+  },
+  "modelInputs": [],
+  "coverageNote": "Contiguous U.S. and Alaska; Hawaii has no county series. Connecticut uses pre-2022 county codes in nClimDiv, so it shows no data.",
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "job_density",
+  "title": "Job density",
+  "description": "Jobs located in the area (all jobs, by workplace) per square mile of land.",
+  "category": "Jobs",
+  "tags": [
+   "jobs",
+   "employment",
+   "workplace",
+   "LODES",
+   "LEHD"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, LEHD Origin-Destination Employment Statistics (LODES 8)",
+   "url": "https://lehd.ces.census.gov/data/",
+   "citation": "U.S. Census Bureau, LEHD Origin-Destination Employment Statistics (LODES8), 2023 Workplace Area Characteristics"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2023",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "per_sq_mi",
+  "universe": "jobs (by workplace)",
+  "measure": {
+   "kind": "lodes",
+   "column": "C000",
+   "file": "wac",
+   "segment": "S000",
+   "jobType": "JT00",
+   "perSqMi": true
+  },
+  "modelInputs": [],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 7
+  }
+ },
+ {
+  "id": "july_high",
+  "title": "July high temperature",
+  "description": "Average daily maximum temperature in July. Average over 1991–2020.",
+  "category": "Climate",
+  "tags": [
+   "heat",
+   "summer",
+   "temperature",
+   "climate"
+  ],
+  "source": {
+   "name": "NOAA NCEI nClimDiv county climate data",
+   "url": "https://www.ncei.noaa.gov/pub/data/cirs/climdiv/",
+   "citation": "NOAA National Centers for Environmental Information, nClimDiv county monthly data (Vose et al. 2014), 1991–2020 normals computed by this site"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "static",
+  "vintage": "1991–2020 normal",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "deg_f",
+  "universe": "county area (area-weighted grid average)",
+  "measure": {
+   "kind": "climdiv",
+   "element": "tmax",
+   "months": [
+    7
+   ],
+   "stat": "mean",
+   "years": [
+    1991,
+    2020
+   ]
+  },
+  "modelInputs": [],
+  "coverageNote": "Contiguous U.S. and Alaska; Hawaii has no county series. Connecticut uses pre-2022 county codes in nClimDiv, so it shows no data.",
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "loneliness",
+  "title": "Loneliness",
+  "description": "Share of adults who always, usually or sometimes feel lonely. Age-adjusted prevalence among adults; model-based small-area estimate.",
+  "category": "Health",
+  "tags": [
+   "loneliness",
+   "social",
+   "mental health"
+  ],
+  "source": {
+   "name": "CDC PLACES (Local Data for Better Health), 2025 release",
+   "url": "https://www.cdc.gov/places/",
+   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+  },
+  "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
+  "updateCadence": "annual",
+  "vintage": "BRFSS 2023",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "percent",
+  "universe": "adults 18+ (model-based estimate)",
+  "measure": {
+   "kind": "places",
+   "socrata": "swc5-untb",
+   "measureId": "LONELINESS",
+   "valueType": "AgeAdjPrv"
+  },
+  "modelInputs": [
+   "pct_poverty",
+   "median_household_income"
+  ],
+  "coverageNote": "Model-based estimates; not every county is covered in every measure.",
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "mean_commute_minutes",
+  "title": "Mean travel time to work",
+  "description": "Average one-way travel time to work for workers 16 and over who do not work from home.",
+  "category": "Commuting",
+  "tags": [
+   "commute",
+   "travel time",
+   "congestion",
+   "transportation"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 ACS 5-year",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "minutes",
+  "universe": "workers 16+ not working from home",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B08013_001"
+   ],
+   "denominator": [
+    "B08012_001"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "symbology": {
+   "ramp": "viridis",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "mean_temperature",
+  "title": "Average temperature",
+  "description": "Mean annual air temperature. Average over 1991–2020.",
+  "category": "Climate",
+  "tags": [
+   "temperature",
+   "climate",
+   "weather"
+  ],
+  "source": {
+   "name": "NOAA NCEI nClimDiv county climate data",
+   "url": "https://www.ncei.noaa.gov/pub/data/cirs/climdiv/",
+   "citation": "NOAA National Centers for Environmental Information, nClimDiv county monthly data (Vose et al. 2014), 1991–2020 normals computed by this site"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "static",
+  "vintage": "1991–2020 normal",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "deg_f",
+  "universe": "county area (area-weighted grid average)",
+  "measure": {
+   "kind": "climdiv",
+   "element": "tmpc",
+   "months": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+   ],
+   "stat": "mean",
+   "years": [
+    1991,
+    2020
+   ]
+  },
+  "modelInputs": [],
+  "coverageNote": "Contiguous U.S. and Alaska; Hawaii has no county series. Connecticut uses pre-2022 county codes in nClimDiv, so it shows no data.",
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "median_household_income",
+  "title": "Median household income",
+  "description": "Median household income in the past 12 months, in 2024 inflation-adjusted dollars.",
+  "category": "Income & poverty",
+  "tags": [
+   "income",
+   "earnings",
+   "economy"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 ACS 5-year",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "dollars",
+  "universe": "households",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B19013_001"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": true
+  }
+ },
+ {
+  "id": "obesity",
+  "title": "Obesity",
+  "description": "Share of adults with a body mass index of 30 or more. Age-adjusted prevalence among adults; model-based small-area estimate.",
+  "category": "Health",
+  "tags": [
+   "obesity",
+   "BMI",
+   "health"
+  ],
+  "source": {
+   "name": "CDC PLACES (Local Data for Better Health), 2025 release",
+   "url": "https://www.cdc.gov/places/",
+   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+  },
+  "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
+  "updateCadence": "annual",
+  "vintage": "BRFSS 2023",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "percent",
+  "universe": "adults 18+ (model-based estimate)",
+  "measure": {
+   "kind": "places",
+   "socrata": "swc5-untb",
+   "measureId": "OBESITY",
+   "valueType": "AgeAdjPrv"
+  },
+  "modelInputs": [
+   "pct_poverty",
+   "median_household_income"
+  ],
+  "coverageNote": "Model-based estimates; not every county is covered in every measure.",
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_age_65_plus",
+  "title": "Population 65 and older",
+  "description": "Share of the total population aged 65 and over.",
+  "category": "Population",
+  "tags": [
+   "age",
+   "seniors",
+   "aging",
+   "demographics"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 ACS 5-year",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "percent",
+  "universe": "total population",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B01001_020",
+    "B01001_021",
+    "B01001_022",
+    "B01001_023",
+    "B01001_024",
+    "B01001_025",
+    "B01001_044",
+    "B01001_045",
+    "B01001_046",
+    "B01001_047",
+    "B01001_048",
+    "B01001_049"
+   ],
+   "denominator": [
+    "B01001_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "symbology": {
+   "ramp": "cividis",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_bike_commute",
+  "title": "Bike to work",
+  "description": "Share of workers 16 and over who usually biked to work.",
+  "category": "Commuting",
+  "tags": [
+   "bicycling",
+   "active transportation",
+   "bike",
+   "mode share"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 ACS 5-year",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "percent",
+  "universe": "workers 16+",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B08301_018"
+   ],
+   "denominator": [
+    "B08301_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_long_commute",
+  "title": "Hour-plus commutes",
+  "description": "Share of workers who don't work from home whose one-way trip to work takes 60 minutes or more.",
+  "category": "Commuting",
+  "tags": [
+   "long commute",
+   "super commuters",
+   "travel time",
+   "congestion"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 ACS 5-year",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "percent",
+  "universe": "workers 16+ not working from home",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B08303_012",
+    "B08303_013"
+   ],
+   "denominator": [
+    "B08303_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_poverty",
+  "title": "Population below poverty",
+  "description": "Share of people whose income in the past 12 months was below the federal poverty level.",
+  "category": "Income & poverty",
+  "tags": [
+   "poverty",
+   "income",
+   "equity"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 ACS 5-year",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "percent",
+  "universe": "people for whom poverty status is determined",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B17001_002"
+   ],
+   "denominator": [
+    "B17001_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": false
+  }
+ },
+ {
+  "id": "pct_renter_households",
+  "title": "Renter-occupied households",
+  "description": "Share of occupied housing units that are renter-occupied.",
+  "category": "Housing",
+  "tags": [
+   "rent",
+   "tenure",
+   "housing"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 ACS 5-year",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "percent",
+  "universe": "households",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B25003_003"
+   ],
+   "denominator": [
+    "B25003_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_transit_commute",
+  "title": "Commute by public transit",
+  "description": "Share of workers 16 and over who usually commute by public transportation (excluding taxicab).",
+  "category": "Commuting",
+  "tags": [
+   "transit",
+   "bus",
+   "rail",
+   "mode share",
+   "transportation"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 ACS 5-year",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "percent",
+  "universe": "workers 16+",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B08301_010"
+   ],
+   "denominator": [
+    "B08301_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_walk_commute",
+  "title": "Walk to work",
+  "description": "Share of workers 16 and over who usually walked to work.",
+  "category": "Commuting",
+  "tags": [
+   "walking",
+   "active transportation",
+   "pedestrian",
+   "mode share"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 ACS 5-year",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "percent",
+  "universe": "workers 16+",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B08301_019"
+   ],
+   "denominator": [
+    "B08301_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_work_from_home",
+  "title": "Work from home",
+  "description": "Share of workers 16 and over who usually worked from home.",
+  "category": "Commuting",
+  "tags": [
+   "remote work",
+   "telework",
+   "commute",
+   "transportation"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 ACS 5-year",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "percent",
+  "universe": "workers 16+",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B08301_021"
+   ],
+   "denominator": [
+    "B08301_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_zero_vehicle_households",
+  "title": "Households with no vehicle",
+  "description": "Share of households with no vehicle available.",
+  "category": "Vehicles",
+  "tags": [
+   "car-free",
+   "vehicles",
+   "mobility",
+   "transportation"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 ACS 5-year",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "percent",
+  "universe": "households",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B08201_002"
+   ],
+   "denominator": [
+    "B08201_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "physical_inactivity",
+  "title": "No leisure-time exercise",
+  "description": "Share of adults with no leisure-time physical activity. Age-adjusted prevalence among adults; model-based small-area estimate.",
+  "category": "Health",
+  "tags": [
+   "exercise",
+   "activity",
+   "health",
+   "behavior"
+  ],
+  "source": {
+   "name": "CDC PLACES (Local Data for Better Health), 2025 release",
+   "url": "https://www.cdc.gov/places/",
+   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+  },
+  "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
+  "updateCadence": "annual",
+  "vintage": "BRFSS 2023",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "percent",
+  "universe": "adults 18+ (model-based estimate)",
+  "measure": {
+   "kind": "places",
+   "socrata": "swc5-untb",
+   "measureId": "LPA",
+   "valueType": "AgeAdjPrv"
+  },
+  "modelInputs": [
+   "pct_poverty",
+   "median_household_income"
+  ],
+  "coverageNote": "Model-based estimates; not every county is covered in every measure.",
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "population_density",
+  "title": "Population density",
+  "description": "Total resident population. Shown as people per square mile of land, so large rural areas don't dominate the map.",
+  "category": "Population",
+  "tags": [
+   "population",
+   "density",
+   "demographics"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 ACS 5-year",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "per_sq_mi",
+  "universe": "total population",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B01001_001"
+   ],
+   "scale": 1,
+   "perSqMi": true
+  },
+  "modelInputs": [],
+  "symbology": {
+   "ramp": "viridis",
+   "classification": "quantile",
+   "classes": 7
+  }
+ },
+ {
+  "id": "short_sleep",
+  "title": "Short sleep",
+  "description": "Share of adults who usually sleep less than 7 hours a night. Age-adjusted prevalence among adults; model-based small-area estimate.",
+  "category": "Health",
+  "tags": [
+   "sleep",
+   "health",
+   "behavior"
+  ],
+  "source": {
+   "name": "CDC PLACES (Local Data for Better Health), 2025 release",
+   "url": "https://www.cdc.gov/places/",
+   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+  },
+  "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
+  "updateCadence": "annual",
+  "vintage": "BRFSS 2022",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "percent",
+  "universe": "adults 18+ (model-based estimate)",
+  "measure": {
+   "kind": "places",
+   "socrata": "swc5-untb",
+   "measureId": "SLEEP",
+   "valueType": "AgeAdjPrv"
+  },
+  "modelInputs": [
+   "pct_poverty",
+   "median_household_income"
+  ],
+  "coverageNote": "Model-based estimates; not every county is covered in every measure.",
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "smoking",
+  "title": "Cigarette smoking",
+  "description": "Share of adults who currently smoke cigarettes. Age-adjusted prevalence among adults; model-based small-area estimate.",
+  "category": "Health",
+  "tags": [
+   "smoking",
+   "tobacco",
+   "health",
+   "behavior"
+  ],
+  "source": {
+   "name": "CDC PLACES (Local Data for Better Health), 2025 release",
+   "url": "https://www.cdc.gov/places/",
+   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+  },
+  "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
+  "updateCadence": "annual",
+  "vintage": "BRFSS 2023",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "percent",
+  "universe": "adults 18+ (model-based estimate)",
+  "measure": {
+   "kind": "places",
+   "socrata": "swc5-untb",
+   "measureId": "CSMOKING",
+   "valueType": "AgeAdjPrv"
+  },
+  "modelInputs": [
+   "pct_poverty",
+   "median_household_income"
+  ],
+  "coverageNote": "Model-based estimates; not every county is covered in every measure.",
+  "symbology": {
+   "ramp": "cividis",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "traffic_fatalities",
+  "title": "Traffic deaths",
+  "description": "Average yearly deaths in motor vehicle crashes per 100,000 residents, 2020–2024, counted where the crash happened.",
+  "category": "Transportation",
+  "tags": [
+   "safety",
+   "crashes",
+   "fatalities",
+   "FARS",
+   "Vision Zero"
+  ],
+  "source": {
+   "name": "NHTSA Fatality Analysis Reporting System (FARS)",
+   "url": "https://www.nhtsa.gov/research-data/fatality-analysis-reporting-system-fars",
+   "citation": "National Highway Traffic Safety Administration, Fatality Analysis Reporting System, 2020–2024"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "FARS 2020–2024",
+  "geographyLevels": [
+   "state",
+   "county"
+  ],
+  "unit": "per_100k",
+  "universe": "crashes per resident (rate uses ACS population)",
+  "measure": {
+   "kind": "fars",
+   "years": [
+    2020,
+    2024
+   ],
+   "perPopulation": 100000
+  },
+  "modelInputs": [
+   "population_density"
+  ],
+  "coverageNote": "Counted where crashes happened, divided by residents, so counties with heavy through-traffic look high. Connecticut counties use pre-2022 codes and show no data.",
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ }
+]

@@ -1,0 +1,17 @@
+id: pct_poverty
+title: Population below poverty
+description: Share of people whose income in the past 12 months was below the federal poverty level.
+category: Income & poverty
+tags: [poverty, income, equity]
+source:
+  name: U.S. Census Bureau, American Community Survey 5-Year Estimates
+  url: https://www.census.gov/programs-surveys/acs
+  citation: "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+license: Public domain (U.S. Government work, 17 U.S.C. § 105)
+updateCadence: annual
+vintage: "2020–2024 ACS 5-year"
+geographyLevels: [state, county, tract]
+unit: percent
+universe: people for whom poverty status is determined
+measure: { kind: acs5, numerator: [B17001_002], denominator: [B17001_001], scale: 100 }
+symbology: { ramp: purples, classification: quantile, classes: 5, higherIsBetter: false }

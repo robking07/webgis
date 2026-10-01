@@ -1,0 +1,17 @@
+id: population_density
+title: Population density
+description: Total resident population. Shown as people per square mile of land, so large rural areas don't dominate the map.
+category: Population
+tags: [population, density, demographics]
+source:
+  name: U.S. Census Bureau, American Community Survey 5-Year Estimates
+  url: https://www.census.gov/programs-surveys/acs
+  citation: "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+license: Public domain (U.S. Government work, 17 U.S.C. § 105)
+updateCadence: annual
+vintage: "2020–2024 ACS 5-year"
+geographyLevels: [state, county, tract]
+unit: per_sq_mi
+universe: total population
+measure: { kind: acs5, numerator: [B01001_001], perSqMi: true }
+symbology: { ramp: viridis, classification: quantile, classes: 7 }

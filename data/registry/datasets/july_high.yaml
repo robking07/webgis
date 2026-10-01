@@ -1,0 +1,18 @@
+id: july_high
+title: July high temperature
+description: "Average daily maximum temperature in July. Average over 1991–2020."
+category: Climate
+tags: [heat, summer, temperature, climate]
+source:
+  name: NOAA NCEI nClimDiv county climate data
+  url: https://www.ncei.noaa.gov/pub/data/cirs/climdiv/
+  citation: "NOAA National Centers for Environmental Information, nClimDiv county monthly data (Vose et al. 2014), 1991–2020 normals computed by this site"
+license: Public domain (U.S. Government work, 17 U.S.C. § 105)
+updateCadence: static
+vintage: "1991–2020 normal"
+geographyLevels: [county]
+universe: county area (area-weighted grid average)
+coverageNote: Contiguous U.S. and Alaska; Hawaii has no county series. Connecticut uses pre-2022 county codes in nClimDiv, so it shows no data.
+unit: deg_f
+measure: { kind: climdiv, element: tmax, months: [7], stat: mean, years: [1991, 2020] }
+symbology: { ramp: oranges, classification: quantile, classes: 5 }

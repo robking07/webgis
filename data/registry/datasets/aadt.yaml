@@ -1,0 +1,43 @@
+id: aadt
+title: Traffic volume (AADT)
+description: Average annual daily traffic, in vehicles per day, on each road segment with a count. Wider lines are higher road classes.
+category: Transportation
+tags: [traffic, AADT, volume, roads, highways, HPMS, congestion, trucks]
+source:
+  name: FHWA Highway Performance Monitoring System (HPMS) 2024
+  url: https://geodata.bts.gov/datasets/5e6a977c2d7c4ec1bdc82e684d3384f2
+  citation: "Federal Highway Administration, Highway Performance Monitoring System 2024, via the BTS National Transportation Atlas Database"
+license: Public domain (U.S. Government work; NTAD "available for unrestricted public use"). Credit FHWA and BTS.
+updateCadence: annual
+vintage: "HPMS 2024"
+unit: vehicles_per_day
+universe: road segments with a reported AADT
+coverageNote: Segments are as states report them to FHWA; not every local road has a count. Not for navigation.
+measure:
+  kind: features
+  geometry: line
+  source:
+    url: https://www.arcgis.com/sharing/rest/content/items/5e6a977c2d7c4ec1bdc82e684d3384f2/data
+    file: HPMS2024.zip
+    path: HPMS2024.gdb
+    layerPattern: "^HPMS_FULL_[A-Z]{2}_2024$"
+  where: "aadt > 0"
+  valueField: aadt
+  fields:
+    route_id: Route
+    f_system: Functional class
+    aadt: Traffic (AADT)
+    aadt_single_unit: Single-unit trucks
+    aadt_combination: Combination trucks
+    through_lanes: Through lanes
+  # f_system: 1 Interstate, 2 freeway/expressway, 3 principal arterial, 4 minor arterial,
+  # 5 major collector, 6 minor collector, 7 local
+  rank:
+    field: f_system
+    showUpTo: [[3, 1], [5, 2], [6, 3], [8, 4], [10, 7]]
+  zooms: [3, 12]
+symbology:
+  ramp: ylgnbu
+  classification: manual
+  classes: 6
+  breaks: [2500, 5000, 10000, 25000, 75000]

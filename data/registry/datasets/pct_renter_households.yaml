@@ -1,0 +1,17 @@
+id: pct_renter_households
+title: Renter-occupied households
+description: Share of occupied housing units that are renter-occupied.
+category: Housing
+tags: [rent, tenure, housing]
+source:
+  name: U.S. Census Bureau, American Community Survey 5-Year Estimates
+  url: https://www.census.gov/programs-surveys/acs
+  citation: "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+license: Public domain (U.S. Government work, 17 U.S.C. § 105)
+updateCadence: annual
+vintage: "2020–2024 ACS 5-year"
+geographyLevels: [state, county, tract]
+unit: percent
+universe: households
+measure: { kind: acs5, numerator: [B25003_003], denominator: [B25003_001], scale: 100 }
+symbology: { ramp: blues, classification: quantile, classes: 5 }

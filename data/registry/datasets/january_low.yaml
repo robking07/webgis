@@ -1,0 +1,18 @@
+id: january_low
+title: January low temperature
+description: "Average daily minimum temperature in January. Average over 1991–2020."
+category: Climate
+tags: [cold, winter, temperature, climate]
+source:
+  name: NOAA NCEI nClimDiv county climate data
+  url: https://www.ncei.noaa.gov/pub/data/cirs/climdiv/
+  citation: "NOAA National Centers for Environmental Information, nClimDiv county monthly data (Vose et al. 2014), 1991–2020 normals computed by this site"
+license: Public domain (U.S. Government work, 17 U.S.C. § 105)
+updateCadence: static
+vintage: "1991–2020 normal"
+geographyLevels: [county]
+universe: county area (area-weighted grid average)
+coverageNote: Contiguous U.S. and Alaska; Hawaii has no county series. Connecticut uses pre-2022 county codes in nClimDiv, so it shows no data.
+unit: deg_f
+measure: { kind: climdiv, element: tmin, months: [1], stat: mean, years: [1991, 2020] }
+symbology: { ramp: blues, classification: quantile, classes: 5 }

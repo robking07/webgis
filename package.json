@@ -1,0 +1,22 @@
+{
+  "name": "webgis",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "data/registry",
+    "data/ingest"
+  ],
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "npm run dev -w web",
+    "build": "npm run check:design && npm run build -w web",
+    "check:design": "npm run check -w @webgis/design",
+    "registry:validate": "npm run validate -w @webgis/ingest",
+    "ingest": "npm run ingest -w @webgis/ingest --",
+    "db:migrate": "bash scripts/db-push.sh"
+  }
+}

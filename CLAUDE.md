@@ -22,5 +22,8 @@ Current mode: **PROTOTYPE**
 
 - Adding a dataset = registry entry + ingest script only. No UI code.
 - All symbology comes from `packages/design` tokens. No ad hoc layer styling.
-- Never touch Robbie's NAS, home network, or Met Council systems or data.
-- Secrets live in `.env.local` only (`CENSUS_API_KEY`, `ANTHROPIC_API_KEY`). Never commit them.
+- Never touch Robbie's NAS, home network, or Met Council internal systems or non-public data.
+  Open data the Met Council publishes publicly (e.g. on the MN Geospatial Commons) is allowed,
+  under the same license checks as any other source (Robbie, 2026-10-01; DECISIONS D-16).
+- Secrets live in `.env.local` only (Supabase, Census, Anthropic, R2, Vercel; names in `.env.example`). Never commit them,
+  never print them, and never pass them as command-line arguments.
