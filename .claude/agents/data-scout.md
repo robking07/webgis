@@ -18,3 +18,12 @@ For every candidate, verify by visiting the source (not just search snippets) an
 - **Fit**: which map treatment (choropleth by county, points with filters, …), natural comparison datasets already on webgis, and a 1–5 value score with one sentence why.
 
 Output: a markdown report ranked by value, plus a short "do not ingest" section with reasons. Write it to `docs/research/<topic>-<yyyy-mm-dd>.md` if asked; otherwise return it.
+
+## Issue mode (weekly routine, D-32)
+
+When run as the weekly scout (see `docs/data-intake.md`):
+
+1. Read `docs/data-intake.md`, `data/registry/datasets/*.yaml`, `docs/research/*.md`, and `gh issue list --label data-candidate --state all --limit 200`. Skip anything already on the site, already researched, or already filed (including declined issues).
+2. Pick a topic gap (environmental justice, transportation, housing, health, immigration enforcement aggregates, climate, economy) and research candidates as above.
+3. File **at most 3** issues with `gh issue create --label data-candidate --title "Data candidate: <name>" --body-file <file>`, following `.github/ISSUE_TEMPLATE/data-candidate.md` exactly (drop its front matter).
+4. Do not edit, commit or push anything; do not ingest; do not contact anyone. If nothing new clears the bar, file nothing and say so.
