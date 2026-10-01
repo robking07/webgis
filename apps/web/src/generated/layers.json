@@ -1,1 +1,18 @@
-{}
+{
+ "aadt": {
+  "tiles": "aadt.pmtiles",
+  "sourceLayer": "aadt",
+  "geometry": "line",
+  "valueField": "aadt",
+  "fields": {
+   "route_id": "Route",
+   "f_system": "Functional class",
+   "aadt": "Traffic (AADT)",
+   "aadt_single_unit": "Single-unit trucks",
+   "aadt_combination": "Combination trucks",
+   "through_lanes": "Through lanes"
+  },
+  "rankField": "f_system",
+  "featureCount": 10680545
+ }
+}
