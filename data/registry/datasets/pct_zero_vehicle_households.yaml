@@ -1,5 +1,6 @@
 id: pct_zero_vehicle_households
 title: Households with no vehicle
+phrase: shares of households without a car
 description: Share of households with no vehicle available.
 category: Vehicles
 tags: [car-free, vehicles, mobility, transportation]

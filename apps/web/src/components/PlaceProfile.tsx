@@ -6,7 +6,7 @@ import { PlaceDataList, type Detail } from "./PlaceDataList";
 import { fetchDetail, fetchGeography, type Geography } from "@/lib/supabase";
 import { levelOfGeoid, PLACE_ZOOM } from "@/lib/place";
 import { serializeUrlState } from "@/lib/url-state";
-import { DATASETS } from "@/lib/registry";
+import { LANDING } from "@/lib/landing";
 
 export function PlaceProfile({ geoid }: { geoid: string }) {
   const level = levelOfGeoid(geoid)!;
@@ -26,7 +26,7 @@ export function PlaceProfile({ geoid }: { geoid: string }) {
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-6 md:px-8 md:py-8">
-      <nav className="mb-4 text-sm"><a href={mapHref(DATASETS[0]?.id ?? "")} className="text-primary underline-offset-2 hover:underline">← Back to the map</a></nav>
+      <nav className="mb-4 text-sm"><a href={mapHref(LANDING.d)} className="text-primary underline-offset-2 hover:underline">← Back to the map</a></nav>
       <header className="mb-5">
         <p className="text-xs uppercase tracking-wide text-muted-foreground">{level === "tract" ? "Census tract" : level === "county" ? "County" : "State"} profile</p>
         <h1 className="text-2xl font-semibold tracking-tight">{geo.name}</h1>

@@ -1,5 +1,6 @@
 id: short_sleep
 title: Short sleep
+phrase: rates of short sleep
 description: "Share of adults who usually sleep less than 7 hours a night. Age-adjusted prevalence among adults; model-based small-area estimate."
 category: Health
 tags: [sleep, health, behavior]

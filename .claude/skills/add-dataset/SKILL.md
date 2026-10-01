@@ -30,6 +30,7 @@ Fields that matter beyond the obvious:
 - `symbology.ramp`: must be a ramp in `packages/design/src/ramps.ts`, and `classes` must fit its certified range. Sequential for magnitude, diverging only when there's a meaningful midpoint.
 - `coverageNote`: known gaps; shown in the legend caption and data-sources doc.
 - `geographyLevels`: only the levels the source really has. The UI handles county-only data.
+- `phrase`: a plain noun phrase that reads after "higher" / "lower" in Odd Pairings captions ("work-from-home rates", "household incomes", "shares of renters"). Needed for any county dataset that can be paired; otherwise captions fall back to the title, which often reads badly ("higher no leisure-time exercise").
 
 Then: `npm run registry:validate`.
 

@@ -1,5 +1,6 @@
 id: smoking
 title: Cigarette smoking
+phrase: smoking rates
 description: "Share of adults who currently smoke cigarettes. Age-adjusted prevalence among adults; model-based small-area estimate."
 category: Health
 tags: [smoking, tobacco, health, behavior]

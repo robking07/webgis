@@ -6,7 +6,7 @@
   "minAbsRho": 0.3,
   "minWithinStateRho": 0.15
  },
- "generatedAt": "2026-10-01T15:28:05.390Z",
+ "generatedAt": "2026-10-01T19:45:36.341Z",
  "insights": [
   {
    "id": "job_density__population_density",
@@ -328,8 +328,8 @@
    "withinState": 0.627,
    "status": "published",
    "flags": [],
-   "headline": "Residents in disadvantaged communities and no leisure-time exercise move together",
-   "caption": "Across 2,943 counties, places with higher residents in disadvantaged communities tend to have more no leisure-time exercise (Spearman ρ = 0.64). It holds within states too (ρ = 0.63), but both may still track something else, such as how urban a county is.",
+   "headline": "Counties with higher shares of residents in disadvantaged communities tend to have higher physical inactivity rates",
+   "caption": "A strong link across 2,943 counties (Spearman ρ = 0.64). It holds within states too (ρ = 0.63). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template"
   },
   {
@@ -343,8 +343,8 @@
    "withinState": -0.529,
    "status": "published",
    "flags": [],
-   "headline": "Work from home and no leisure-time exercise move in opposite directions",
-   "caption": "Across 2,956 counties, places with higher work from home tend to have less no leisure-time exercise (Spearman ρ = -0.62). It holds within states too (ρ = -0.53), but both may still track something else, such as how urban a county is.",
+   "headline": "Counties with higher work-from-home rates tend to have lower physical inactivity rates",
+   "caption": "A strong link across 2,956 counties (Spearman ρ = −0.62). It holds within states too (ρ = −0.53). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template"
   },
   {
@@ -358,8 +358,8 @@
    "withinState": 0.165,
    "status": "published",
    "flags": [],
-   "headline": "Loneliness and average temperature move together",
-   "caption": "Across 2,288 counties, places with higher loneliness tend to have more average temperature (Spearman ρ = 0.61). Much of it is regional: comparing counties within the same state, the link is weaker (ρ = 0.17).",
+   "headline": "Counties with higher loneliness rates tend to have higher average temperatures",
+   "caption": "A strong link across 2,288 counties (Spearman ρ = 0.61). Much of it is regional: within the same state the link is weaker (ρ = 0.17).",
    "captionBy": "template"
   },
   {
@@ -373,8 +373,8 @@
    "withinState": -0.189,
    "status": "published",
    "flags": [],
-   "headline": "Binge drinking and January low temperature move in opposite directions",
-   "caption": "Across 2,945 counties, places with higher binge drinking tend to have less January low temperature (Spearman ρ = -0.60). Much of it is regional: comparing counties within the same state, the link is weaker (ρ = -0.19).",
+   "headline": "Counties with higher binge drinking rates tend to have lower January low temperatures",
+   "caption": "A strong link across 2,945 counties (Spearman ρ = −0.60). Much of it is regional: within the same state the link is weaker (ρ = −0.19).",
    "captionBy": "template"
   },
   {
@@ -388,8 +388,8 @@
    "withinState": 0.628,
    "status": "published",
    "flags": [],
-   "headline": "Residents in disadvantaged communities and cigarette smoking move together",
-   "caption": "Across 2,943 counties, places with higher residents in disadvantaged communities tend to have more cigarette smoking (Spearman ρ = 0.59). It holds within states too (ρ = 0.63), but both may still track something else, such as how urban a county is.",
+   "headline": "Counties with higher shares of residents in disadvantaged communities tend to have higher smoking rates",
+   "caption": "A moderate link across 2,943 counties (Spearman ρ = 0.59). It holds within states too (ρ = 0.63). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template"
   },
   {
@@ -437,8 +437,8 @@
    "withinState": 0.188,
    "status": "published",
    "flags": [],
-   "headline": "Average temperature and short sleep move together",
-   "caption": "Across 3,132 counties, places with higher average temperature tend to have more short sleep (Spearman ρ = 0.58). Much of it is regional: comparing counties within the same state, the link is weaker (ρ = 0.19).",
+   "headline": "Counties with higher average temperatures tend to have higher rates of short sleep",
+   "caption": "A moderate link across 3,132 counties (Spearman ρ = 0.58). Much of it is regional: within the same state the link is weaker (ρ = 0.19).",
    "captionBy": "template"
   },
   {
@@ -486,8 +486,8 @@
    "withinState": -0.518,
    "status": "published",
    "flags": [],
-   "headline": "Work from home and cigarette smoking move in opposite directions",
-   "caption": "Across 2,956 counties, places with higher work from home tend to have less cigarette smoking (Spearman ρ = -0.58). It holds within states too (ρ = -0.52), but both may still track something else, such as how urban a county is.",
+   "headline": "Counties with higher work-from-home rates tend to have lower smoking rates",
+   "caption": "A moderate link across 2,956 counties (Spearman ρ = −0.58). It holds within states too (ρ = −0.52). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template"
   },
   {
@@ -569,8 +569,8 @@
    "withinState": 0.449,
    "status": "published",
    "flags": [],
-   "headline": "Median household income and work from home move together",
-   "caption": "Across 3,221 counties, places with higher median household income tend to have more work from home (Spearman ρ = 0.56). It holds within states too (ρ = 0.45), but both may still track something else, such as how urban a county is.",
+   "headline": "Counties with higher household incomes tend to have higher work-from-home rates",
+   "caption": "A moderate link across 3,221 counties (Spearman ρ = 0.56). It holds within states too (ρ = 0.45). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template"
   },
   {
@@ -601,8 +601,8 @@
    "withinState": -0.424,
    "status": "published",
    "flags": [],
-   "headline": "Obesity and work from home move in opposite directions",
-   "caption": "Across 2,956 counties, places with higher obesity tend to have less work from home (Spearman ρ = -0.56). It holds within states too (ρ = -0.42), but both may still track something else, such as how urban a county is.",
+   "headline": "Counties with higher obesity rates tend to have lower work-from-home rates",
+   "caption": "A moderate link across 2,956 counties (Spearman ρ = −0.56). It holds within states too (ρ = −0.42). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template"
   },
   {
@@ -616,8 +616,8 @@
    "withinState": -0.254,
    "status": "published",
    "flags": [],
-   "headline": "Binge drinking and average temperature move in opposite directions",
-   "caption": "Across 2,945 counties, places with higher binge drinking tend to have less average temperature (Spearman ρ = -0.55). Much of it is regional: comparing counties within the same state, the link is weaker (ρ = -0.25).",
+   "headline": "Counties with higher binge drinking rates tend to have lower average temperatures",
+   "caption": "A moderate link across 2,945 counties (Spearman ρ = −0.55). Much of it is regional: within the same state the link is weaker (ρ = −0.25).",
    "captionBy": "template"
   },
   {
@@ -631,8 +631,8 @@
    "withinState": 0.564,
    "status": "published",
    "flags": [],
-   "headline": "Population below poverty and households with no vehicle move together",
-   "caption": "Across 3,222 counties, places with higher population below poverty tend to have more households with no vehicle (Spearman ρ = 0.55). It holds within states too (ρ = 0.56), but both may still track something else, such as how urban a county is.",
+   "headline": "Counties with higher poverty rates tend to have higher shares of households without a car",
+   "caption": "A moderate link across 3,222 counties (Spearman ρ = 0.55). It holds within states too (ρ = 0.56). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template"
   },
   {
@@ -749,8 +749,8 @@
    "withinState": 0.207,
    "status": "published",
    "flags": [],
-   "headline": "July high temperature and no leisure-time exercise move together",
-   "caption": "Across 2,945 counties, places with higher July high temperature tend to have more no leisure-time exercise (Spearman ρ = 0.51). Much of it is regional: comparing counties within the same state, the link is weaker (ρ = 0.21).",
+   "headline": "Counties with higher July high temperatures tend to have higher physical inactivity rates",
+   "caption": "A moderate link across 2,945 counties (Spearman ρ = 0.51). Much of it is regional: within the same state the link is weaker (ρ = 0.21).",
    "captionBy": "template"
   },
   {
@@ -764,8 +764,8 @@
    "withinState": -0.394,
    "status": "published",
    "flags": [],
-   "headline": "Binge drinking and residents in disadvantaged communities move in opposite directions",
-   "caption": "Across 2,943 counties, places with higher binge drinking tend to have less residents in disadvantaged communities (Spearman ρ = -0.51). It holds within states too (ρ = -0.39), but both may still track something else, such as how urban a county is.",
+   "headline": "Counties with higher binge drinking rates tend to have lower shares of residents in disadvantaged communities",
+   "caption": "A moderate link across 2,943 counties (Spearman ρ = −0.51). It holds within states too (ρ = −0.39). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template"
   },
   {
@@ -796,8 +796,8 @@
    "withinState": 0.426,
    "status": "published",
    "flags": [],
-   "headline": "Residents in disadvantaged communities and short sleep move together",
-   "caption": "Across 3,130 counties, places with higher residents in disadvantaged communities tend to have more short sleep (Spearman ρ = 0.51). It holds within states too (ρ = 0.43), but both may still track something else, such as how urban a county is.",
+   "headline": "Counties with higher shares of residents in disadvantaged communities tend to have higher rates of short sleep",
+   "caption": "A moderate link across 3,130 counties (Spearman ρ = 0.51). It holds within states too (ρ = 0.43). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template"
   },
   {
@@ -899,8 +899,8 @@
    "withinState": 0.465,
    "status": "published",
    "flags": [],
-   "headline": "Residents in disadvantaged communities and loneliness move together",
-   "caption": "Across 2,287 counties, places with higher residents in disadvantaged communities tend to have more loneliness (Spearman ρ = 0.49). It holds within states too (ρ = 0.47), but both may still track something else, such as how urban a county is.",
+   "headline": "Counties with higher shares of residents in disadvantaged communities tend to have higher loneliness rates",
+   "caption": "A moderate link across 2,287 counties (Spearman ρ = 0.49). It holds within states too (ρ = 0.47). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template"
   },
   {
@@ -982,8 +982,8 @@
    "withinState": -0.352,
    "status": "published",
    "flags": [],
-   "headline": "Population below poverty and work from home move in opposite directions",
-   "caption": "Across 3,222 counties, places with higher population below poverty tend to have less work from home (Spearman ρ = -0.46). It holds within states too (ρ = -0.35), but both may still track something else, such as how urban a county is.",
+   "headline": "Counties with higher poverty rates tend to have lower work-from-home rates",
+   "caption": "A moderate link across 3,222 counties (Spearman ρ = −0.46). It holds within states too (ρ = −0.35). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template"
   },
   {
@@ -1049,8 +1049,8 @@
    "withinState": 0.179,
    "status": "published",
    "flags": [],
-   "headline": "Annual precipitation and mean travel time to work move together",
-   "caption": "Across 3,132 counties, places with higher annual precipitation tend to have more mean travel time to work (Spearman ρ = 0.45). Much of it is regional: comparing counties within the same state, the link is weaker (ρ = 0.18).",
+   "headline": "Counties with higher yearly precipitation tend to have higher commute times",
+   "caption": "A moderate link across 3,132 counties (Spearman ρ = 0.45). Much of it is regional: within the same state the link is weaker (ρ = 0.18).",
    "captionBy": "template"
   },
   {
@@ -1064,8 +1064,8 @@
    "withinState": -0.493,
    "status": "published",
    "flags": [],
-   "headline": "Median household income and households with no vehicle move in opposite directions",
-   "caption": "Across 3,221 counties, places with higher median household income tend to have less households with no vehicle (Spearman ρ = -0.45). It holds within states too (ρ = -0.49), but both may still track something else, such as how urban a county is.",
+   "headline": "Counties with higher household incomes tend to have lower shares of households without a car",
+   "caption": "A moderate link across 3,221 counties (Spearman ρ = −0.45). It holds within states too (ρ = −0.49). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template"
   },
   {
@@ -1096,8 +1096,8 @@
    "withinState": -0.255,
    "status": "published",
    "flags": [],
-   "headline": "Binge drinking and July high temperature move in opposite directions",
-   "caption": "Across 2,945 counties, places with higher binge drinking tend to have less July high temperature (Spearman ρ = -0.45). Much of it is regional: comparing counties within the same state, the link is weaker (ρ = -0.26).",
+   "headline": "Counties with higher binge drinking rates tend to have lower July high temperatures",
+   "caption": "A moderate link across 2,945 counties (Spearman ρ = −0.45). Much of it is regional: within the same state the link is weaker (ρ = −0.26).",
    "captionBy": "template"
   },
   {
@@ -1145,8 +1145,8 @@
    "withinState": -0.471,
    "status": "published",
    "flags": [],
-   "headline": "Population 65 and older and renter-occupied households move in opposite directions",
-   "caption": "Across 3,222 counties, places with higher population 65 and older tend to have less renter-occupied households (Spearman ρ = -0.45). It holds within states too (ρ = -0.47), but both may still track something else, such as how urban a county is.",
+   "headline": "Counties with higher shares of people 65 and older tend to have lower shares of renters",
+   "caption": "A moderate link across 3,222 counties (Spearman ρ = −0.45). It holds within states too (ρ = −0.47). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template"
   },
   {
@@ -1160,8 +1160,8 @@
    "withinState": 0.436,
    "status": "published",
    "flags": [],
-   "headline": "Loneliness and households with no vehicle move together",
-   "caption": "Across 2,299 counties, places with higher loneliness tend to have more households with no vehicle (Spearman ρ = 0.44). It holds within states too (ρ = 0.44), but both may still track something else, such as how urban a county is.",
+   "headline": "Counties with higher loneliness rates tend to have higher shares of households without a car",
+   "caption": "A moderate link across 2,299 counties (Spearman ρ = 0.44). It holds within states too (ρ = 0.44). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template"
   },
   {
@@ -1175,8 +1175,8 @@
    "withinState": 0.192,
    "status": "published",
    "flags": [],
-   "headline": "July high temperature and short sleep move together",
-   "caption": "Across 3,132 counties, places with higher July high temperature tend to have more short sleep (Spearman ρ = 0.44). Much of it is regional: comparing counties within the same state, the link is weaker (ρ = 0.19).",
+   "headline": "Counties with higher July high temperatures tend to have higher rates of short sleep",
+   "caption": "A moderate link across 3,132 counties (Spearman ρ = 0.44). Much of it is regional: within the same state the link is weaker (ρ = 0.19).",
    "captionBy": "template"
   },
   {
@@ -1190,8 +1190,8 @@
    "withinState": 0.378,
    "status": "published",
    "flags": [],
-   "headline": "Job density and commute by public transit move together",
-   "caption": "Across 3,114 counties, places with higher job density tend to have more commute by public transit (Spearman ρ = 0.43). It holds within states too (ρ = 0.38), but both may still track something else, such as how urban a county is.",
+   "headline": "Counties with higher job density tend to have higher transit commuting rates",
+   "caption": "A moderate link across 3,114 counties (Spearman ρ = 0.43). It holds within states too (ρ = 0.38). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template"
   },
   {
@@ -1222,8 +1222,8 @@
    "withinState": 0.346,
    "status": "published",
    "flags": [],
-   "headline": "No leisure-time exercise and traffic deaths move together",
-   "caption": "Across 2,947 counties, places with higher no leisure-time exercise tend to have more traffic deaths (Spearman ρ = 0.43). It holds within states too (ρ = 0.35), but both may still track something else, such as how urban a county is.",
+   "headline": "Counties with higher physical inactivity rates tend to have higher traffic death rates",
+   "caption": "A moderate link across 2,947 counties (Spearman ρ = 0.43). It holds within states too (ρ = 0.35). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template"
   },
   {
@@ -1271,8 +1271,8 @@
    "withinState": -0.339,
    "status": "published",
    "flags": [],
-   "headline": "Work from home and short sleep move in opposite directions",
-   "caption": "Across 3,143 counties, places with higher work from home tend to have less short sleep (Spearman ρ = -0.42). It holds within states too (ρ = -0.34), but both may still track something else, such as how urban a county is.",
+   "headline": "Counties with higher work-from-home rates tend to have lower rates of short sleep",
+   "caption": "A moderate link across 3,143 counties (Spearman ρ = −0.42). It holds within states too (ρ = −0.34). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template"
   },
   {
@@ -1286,8 +1286,8 @@
    "withinState": -0.318,
    "status": "published",
    "flags": [],
-   "headline": "Residents in disadvantaged communities and work from home move in opposite directions",
-   "caption": "Across 3,209 counties, places with higher residents in disadvantaged communities tend to have less work from home (Spearman ρ = -0.41). It holds within states too (ρ = -0.32), but both may still track something else, such as how urban a county is.",
+   "headline": "Counties with higher shares of residents in disadvantaged communities tend to have lower work-from-home rates",
+   "caption": "A moderate link across 3,209 counties (Spearman ρ = −0.41). It holds within states too (ρ = −0.32). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template"
   },
   {
@@ -1336,8 +1336,8 @@
    "withinState": 0.177,
    "status": "published",
    "flags": [],
-   "headline": "July high temperature and loneliness move together",
-   "caption": "Across 2,288 counties, places with higher July high temperature tend to have more loneliness (Spearman ρ = 0.40). Much of it is regional: comparing counties within the same state, the link is weaker (ρ = 0.18).",
+   "headline": "Counties with higher July high temperatures tend to have higher loneliness rates",
+   "caption": "A moderate link across 2,288 counties (Spearman ρ = 0.40). Much of it is regional: within the same state the link is weaker (ρ = 0.18).",
    "captionBy": "template"
   },
   {
@@ -1368,8 +1368,8 @@
    "withinState": 0.385,
    "status": "published",
    "flags": [],
-   "headline": "Households with no vehicle and short sleep move together",
-   "caption": "Across 3,143 counties, places with higher households with no vehicle tend to have more short sleep (Spearman ρ = 0.40). It holds within states too (ρ = 0.38), but both may still track something else, such as how urban a county is.",
+   "headline": "Counties with higher shares of households without a car tend to have higher rates of short sleep",
+   "caption": "A moderate link across 3,143 counties (Spearman ρ = 0.40). It holds within states too (ρ = 0.38). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template"
   },
   {
@@ -1383,8 +1383,8 @@
    "withinState": 0.433,
    "status": "published",
    "flags": [],
-   "headline": "Residents in disadvantaged communities and obesity move together",
-   "caption": "Across 2,943 counties, places with higher residents in disadvantaged communities tend to have more obesity (Spearman ρ = 0.40). It holds within states too (ρ = 0.43), but both may still track something else, such as how urban a county is.",
+   "headline": "Counties with higher shares of residents in disadvantaged communities tend to have higher obesity rates",
+   "caption": "A moderate link across 2,943 counties (Spearman ρ = 0.40). It holds within states too (ρ = 0.43). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template"
   },
   {
@@ -1432,8 +1432,8 @@
    "withinState": 0.441,
    "status": "published",
    "flags": [],
-   "headline": "Cigarette smoking and traffic deaths move together",
-   "caption": "Across 2,947 counties, places with higher cigarette smoking tend to have more traffic deaths (Spearman ρ = 0.39). It holds within states too (ρ = 0.44), but both may still track something else, such as how urban a county is.",
+   "headline": "Counties with higher smoking rates tend to have higher traffic death rates",
+   "caption": "A modest link across 2,947 counties (Spearman ρ = 0.39). It holds within states too (ρ = 0.44). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template"
   },
   {
@@ -1447,8 +1447,8 @@
    "withinState": 0.406,
    "status": "published",
    "flags": [],
-   "headline": "Residents in disadvantaged communities and households with no vehicle move together",
-   "caption": "Across 3,209 counties, places with higher residents in disadvantaged communities tend to have more households with no vehicle (Spearman ρ = 0.39). It holds within states too (ρ = 0.41), but both may still track something else, such as how urban a county is.",
+   "headline": "Counties with higher shares of residents in disadvantaged communities tend to have higher shares of households without a car",
+   "caption": "A modest link across 3,209 counties (Spearman ρ = 0.39). It holds within states too (ρ = 0.41). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template"
   },
   {
@@ -1531,8 +1531,8 @@
    "withinState": 0.484,
    "status": "published",
    "flags": [],
-   "headline": "Job density and median household income move together",
-   "caption": "Across 3,113 counties, places with higher job density tend to have more median household income (Spearman ρ = 0.38). It holds within states too (ρ = 0.48), but both may still track something else, such as how urban a county is.",
+   "headline": "Counties with higher job density tend to have higher household incomes",
+   "caption": "A modest link across 3,113 counties (Spearman ρ = 0.38). It holds within states too (ρ = 0.48). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template"
   },
   {
@@ -1648,8 +1648,8 @@
    "withinState": 0.407,
    "status": "published",
    "flags": [],
-   "headline": "Households with no vehicle and cigarette smoking move together",
-   "caption": "Across 2,956 counties, places with higher households with no vehicle tend to have more cigarette smoking (Spearman ρ = 0.36). It holds within states too (ρ = 0.41), but both may still track something else, such as how urban a county is.",
+   "headline": "Counties with higher shares of households without a car tend to have higher smoking rates",
+   "caption": "A modest link across 2,956 counties (Spearman ρ = 0.36). It holds within states too (ρ = 0.41). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template"
   },
   {
@@ -1663,8 +1663,8 @@
    "withinState": 0.454,
    "status": "published",
    "flags": [],
-   "headline": "Households with no vehicle and no leisure-time exercise move together",
-   "caption": "Across 2,956 counties, places with higher households with no vehicle tend to have more no leisure-time exercise (Spearman ρ = 0.36). It holds within states too (ρ = 0.45), but both may still track something else, such as how urban a county is.",
+   "headline": "Counties with higher shares of households without a car tend to have higher physical inactivity rates",
+   "caption": "A modest link across 2,956 counties (Spearman ρ = 0.36). It holds within states too (ρ = 0.45). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template"
   },
   {
@@ -1695,8 +1695,8 @@
    "withinState": -0.166,
    "status": "published",
    "flags": [],
-   "headline": "Bike to work and no leisure-time exercise move in opposite directions",
-   "caption": "Across 2,956 counties, places with higher bike to work tend to have less no leisure-time exercise (Spearman ρ = -0.36). Much of it is regional: comparing counties within the same state, the link is weaker (ρ = -0.17).",
+   "headline": "Counties with higher bike commuting rates tend to have lower physical inactivity rates",
+   "caption": "A modest link across 2,956 counties (Spearman ρ = −0.36). Much of it is regional: within the same state the link is weaker (ρ = −0.17).",
    "captionBy": "template"
   },
   {
@@ -1795,8 +1795,8 @@
    "withinState": 0.433,
    "status": "published",
    "flags": [],
-   "headline": "Job density and renter-occupied households move together",
-   "caption": "Across 3,114 counties, places with higher job density tend to have more renter-occupied households (Spearman ρ = 0.35). It holds within states too (ρ = 0.43), but both may still track something else, such as how urban a county is.",
+   "headline": "Counties with higher job density tend to have higher shares of renters",
+   "caption": "A modest link across 3,114 counties (Spearman ρ = 0.35). It holds within states too (ρ = 0.43). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template"
   },
   {
@@ -1861,8 +1861,8 @@
    "withinState": -0.352,
    "status": "published",
    "flags": [],
-   "headline": "Loneliness and work from home move in opposite directions",
-   "caption": "Across 2,299 counties, places with higher loneliness tend to have less work from home (Spearman ρ = -0.34). It holds within states too (ρ = -0.35), but both may still track something else, such as how urban a county is.",
+   "headline": "Counties with higher loneliness rates tend to have lower work-from-home rates",
+   "caption": "A modest link across 2,299 counties (Spearman ρ = −0.34). It holds within states too (ρ = −0.35). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template"
   },
   {
@@ -1893,8 +1893,8 @@
    "withinState": -0.22,
    "status": "published",
    "flags": [],
-   "headline": "Bike to work and cigarette smoking move in opposite directions",
-   "caption": "Across 2,956 counties, places with higher bike to work tend to have less cigarette smoking (Spearman ρ = -0.34). It holds within states too (ρ = -0.22), but both may still track something else, such as how urban a county is.",
+   "headline": "Counties with higher bike commuting rates tend to have lower smoking rates",
+   "caption": "A modest link across 2,956 counties (Spearman ρ = −0.34). It holds within states too (ρ = −0.22). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template"
   },
   {
@@ -1959,8 +1959,8 @@
    "withinState": 0.355,
    "status": "published",
    "flags": [],
-   "headline": "Population below poverty and renter-occupied households move together",
-   "caption": "Across 3,222 counties, places with higher population below poverty tend to have more renter-occupied households (Spearman ρ = 0.33). It holds within states too (ρ = 0.35), but both may still track something else, such as how urban a county is.",
+   "headline": "Counties with higher poverty rates tend to have higher shares of renters",
+   "caption": "A modest link across 3,222 counties (Spearman ρ = 0.33). It holds within states too (ρ = 0.35). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template"
   },
   {
@@ -2095,8 +2095,8 @@
    "withinState": -0.438,
    "status": "published",
    "flags": [],
-   "headline": "Mean travel time to work and renter-occupied households move in opposite directions",
-   "caption": "Across 3,221 counties, places with higher mean travel time to work tend to have less renter-occupied households (Spearman ρ = -0.31). It holds within states too (ρ = -0.44), but both may still track something else, such as how urban a county is.",
+   "headline": "Counties with higher commute times tend to have lower shares of renters",
+   "caption": "A modest link across 3,221 counties (Spearman ρ = −0.31). It holds within states too (ρ = −0.44). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template"
   },
   {
@@ -2144,8 +2144,8 @@
    "withinState": -0.519,
    "status": "published",
    "flags": [],
-   "headline": "Job density and cigarette smoking move in opposite directions",
-   "caption": "Across 2,926 counties, places with higher job density tend to have less cigarette smoking (Spearman ρ = -0.31). It holds within states too (ρ = -0.52), but both may still track something else, such as how urban a county is.",
+   "headline": "Counties with higher job density tend to have lower smoking rates",
+   "caption": "A modest link across 2,926 counties (Spearman ρ = −0.31). It holds within states too (ρ = −0.52). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template"
   },
   {
@@ -2159,8 +2159,8 @@
    "withinState": 0.377,
    "status": "published",
    "flags": [],
-   "headline": "Obesity and households with no vehicle move together",
-   "caption": "Across 2,956 counties, places with higher obesity tend to have more households with no vehicle (Spearman ρ = 0.31). It holds within states too (ρ = 0.38), but both may still track something else, such as how urban a county is.",
+   "headline": "Counties with higher obesity rates tend to have higher shares of households without a car",
+   "caption": "A modest link across 2,956 counties (Spearman ρ = 0.31). It holds within states too (ρ = 0.38). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template"
   },
   {

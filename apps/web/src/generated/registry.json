@@ -191,6 +191,7 @@
  {
   "id": "annual_precipitation",
   "title": "Annual precipitation",
+  "phrase": "yearly precipitation",
   "description": "Total yearly precipitation (rain plus melted snow). Average over 1991–2020.",
   "category": "Climate",
   "tags": [
@@ -252,6 +253,7 @@
  {
   "id": "binge_drinking",
   "title": "Binge drinking",
+  "phrase": "binge drinking rates",
   "description": "Share of adults who binge drank in the past 30 days. Age-adjusted prevalence among adults; model-based small-area estimate.",
   "category": "Health",
   "tags": [
@@ -301,6 +303,7 @@
  {
   "id": "bridges_poor_condition",
   "title": "Bridge deck area in poor condition",
+  "phrase": "shares of bridges in poor condition",
   "description": "Share of highway bridge deck area rated in poor condition (lowest of deck, superstructure, substructure or culvert rating 4 or below), the federal bridge performance measure.",
   "category": "Transportation",
   "tags": [
@@ -443,6 +446,7 @@
  {
   "id": "cejst_pct_pop_disadvantaged",
   "title": "Residents in disadvantaged communities",
+  "phrase": "shares of residents in disadvantaged communities",
   "description": "Share of residents living in census tracts the Climate and Economic Justice Screening Tool identified as disadvantaged.",
   "category": "Environmental justice",
   "tags": [
@@ -547,6 +551,7 @@
  {
   "id": "january_low",
   "title": "January low temperature",
+  "phrase": "January low temperatures",
   "description": "Average daily minimum temperature in January. Average over 1991–2020.",
   "category": "Climate",
   "tags": [
@@ -597,6 +602,7 @@
  {
   "id": "job_density",
   "title": "Job density",
+  "phrase": "job density",
   "description": "Jobs located in the area (all jobs, by workplace) per square mile of land.",
   "category": "Jobs",
   "tags": [
@@ -646,6 +652,7 @@
  {
   "id": "july_high",
   "title": "July high temperature",
+  "phrase": "July high temperatures",
   "description": "Average daily maximum temperature in July. Average over 1991–2020.",
   "category": "Climate",
   "tags": [
@@ -696,6 +703,7 @@
  {
   "id": "loneliness",
   "title": "Loneliness",
+  "phrase": "loneliness rates",
   "description": "Share of adults who always, usually or sometimes feel lonely. Age-adjusted prevalence among adults; model-based small-area estimate.",
   "category": "Health",
   "tags": [
@@ -744,6 +752,7 @@
  {
   "id": "mean_commute_minutes",
   "title": "Mean travel time to work",
+  "phrase": "commute times",
   "description": "Average one-way travel time to work for workers 16 and over who do not work from home.",
   "category": "Commuting",
   "tags": [
@@ -796,6 +805,7 @@
  {
   "id": "mean_temperature",
   "title": "Average temperature",
+  "phrase": "average temperatures",
   "description": "Mean annual air temperature. Average over 1991–2020.",
   "category": "Climate",
   "tags": [
@@ -856,6 +866,7 @@
  {
   "id": "median_household_income",
   "title": "Median household income",
+  "phrase": "household incomes",
   "description": "Median household income in the past 12 months, in 2024 inflation-adjusted dollars.",
   "category": "Income & poverty",
   "tags": [
@@ -905,6 +916,7 @@
  {
   "id": "obesity",
   "title": "Obesity",
+  "phrase": "obesity rates",
   "description": "Share of adults with a body mass index of 30 or more. Age-adjusted prevalence among adults; model-based small-area estimate.",
   "category": "Health",
   "tags": [
@@ -953,6 +965,7 @@
  {
   "id": "pct_age_65_plus",
   "title": "Population 65 and older",
+  "phrase": "shares of people 65 and older",
   "description": "Share of the total population aged 65 and over.",
   "category": "Population",
   "tags": [
@@ -1016,6 +1029,7 @@
  {
   "id": "pct_bike_commute",
   "title": "Bike to work",
+  "phrase": "bike commuting rates",
   "description": "Share of workers 16 and over who usually biked to work.",
   "category": "Commuting",
   "tags": [
@@ -1068,6 +1082,7 @@
  {
   "id": "pct_long_commute",
   "title": "Hour-plus commutes",
+  "phrase": "shares of hour-plus commutes",
   "description": "Share of workers who don't work from home whose one-way trip to work takes 60 minutes or more.",
   "category": "Commuting",
   "tags": [
@@ -1121,6 +1136,7 @@
  {
   "id": "pct_poverty",
   "title": "Population below poverty",
+  "phrase": "poverty rates",
   "description": "Share of people whose income in the past 12 months was below the federal poverty level.",
   "category": "Income & poverty",
   "tags": [
@@ -1173,6 +1189,7 @@
  {
   "id": "pct_renter_households",
   "title": "Renter-occupied households",
+  "phrase": "shares of renters",
   "description": "Share of occupied housing units that are renter-occupied.",
   "category": "Housing",
   "tags": [
@@ -1224,6 +1241,7 @@
  {
   "id": "pct_transit_commute",
   "title": "Commute by public transit",
+  "phrase": "transit commuting rates",
   "description": "Share of workers 16 and over who usually commute by public transportation (excluding taxicab).",
   "category": "Commuting",
   "tags": [
@@ -1277,6 +1295,7 @@
  {
   "id": "pct_walk_commute",
   "title": "Walk to work",
+  "phrase": "walk-to-work rates",
   "description": "Share of workers 16 and over who usually walked to work.",
   "category": "Commuting",
   "tags": [
@@ -1329,6 +1348,7 @@
  {
   "id": "pct_work_from_home",
   "title": "Work from home",
+  "phrase": "work-from-home rates",
   "description": "Share of workers 16 and over who usually worked from home.",
   "category": "Commuting",
   "tags": [
@@ -1381,6 +1401,7 @@
  {
   "id": "pct_zero_vehicle_households",
   "title": "Households with no vehicle",
+  "phrase": "shares of households without a car",
   "description": "Share of households with no vehicle available.",
   "category": "Vehicles",
   "tags": [
@@ -1433,6 +1454,7 @@
  {
   "id": "physical_inactivity",
   "title": "No leisure-time exercise",
+  "phrase": "physical inactivity rates",
   "description": "Share of adults with no leisure-time physical activity. Age-adjusted prevalence among adults; model-based small-area estimate.",
   "category": "Health",
   "tags": [
@@ -1482,6 +1504,7 @@
  {
   "id": "population_density",
   "title": "Population density",
+  "phrase": "population density",
   "description": "Total resident population. Shown as people per square mile of land, so large rural areas don't dominate the map.",
   "category": "Population",
   "tags": [
@@ -1530,6 +1553,7 @@
  {
   "id": "short_sleep",
   "title": "Short sleep",
+  "phrase": "rates of short sleep",
   "description": "Share of adults who usually sleep less than 7 hours a night. Age-adjusted prevalence among adults; model-based small-area estimate.",
   "category": "Health",
   "tags": [
@@ -1578,6 +1602,7 @@
  {
   "id": "smoking",
   "title": "Cigarette smoking",
+  "phrase": "smoking rates",
   "description": "Share of adults who currently smoke cigarettes. Age-adjusted prevalence among adults; model-based small-area estimate.",
   "category": "Health",
   "tags": [
@@ -1627,6 +1652,7 @@
  {
   "id": "traffic_fatalities",
   "title": "Traffic deaths",
+  "phrase": "traffic death rates",
   "description": "Average yearly deaths in motor vehicle crashes per 100,000 residents, 2020–2024, counted where the crash happened.",
   "category": "Transportation",
   "tags": [
@@ -1677,6 +1703,7 @@
  {
   "id": "vmt_per_capita",
   "title": "Vehicle miles per resident",
+  "phrase": "driving per resident",
   "description": "Daily vehicle miles traveled on counted roads in the area, per resident, from traffic counts (AADT) times road length.",
   "category": "Transportation",
   "tags": [

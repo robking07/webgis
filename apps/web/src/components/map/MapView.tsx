@@ -125,8 +125,9 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
     m.on("dragstart", userMove);
     m.on("zoomstart", (e) => { if ((e as { originalEvent?: unknown }).originalEvent) userMove(); });
     m.addControl(new AttributionControl({ compact: true, customAttribution: "Boundaries: U.S. Census Bureau TIGER/Line cartographic boundaries" }), "bottom-right");
-    // Compact attribution starts expanded; start it collapsed to its ⓘ button on small screens.
-    if (window.matchMedia("(max-width: 767px)").matches) {
+    // Compact attribution starts expanded; start it collapsed to its ⓘ button on any map too narrow
+    // for the one-line credit (phones, and the small maps on Odd Pairing pages).
+    if (container.current.clientWidth < 900) {
       m.once("load", () => container.current?.querySelector(".maplibregl-ctrl-attrib")?.classList.remove("maplibregl-compact-show"));
     }
     m.getCanvas().setAttribute("aria-label", ariaLabel);
