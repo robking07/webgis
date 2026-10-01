@@ -2,11 +2,14 @@
 //  1. src/generated/theme.css — CSS variables for both themes, from @webgis/design tokens
 //  2. public/maplibre/ — MapLibre's worker + shared chunk, for setWorkerUrl() (v6 under Turbopack)
 //  3. public/tiles → data/tiles symlink for local PMTiles during development
+//  4. src/generated/registry.json, regenerated from data/registry/datasets/*.yaml on every
+//     build, so a new registry entry can never be missing from the app
 import { copyFileSync, existsSync, mkdirSync, symlinkSync, writeFileSync, lstatSync } from "node:fs";
 import { createRequire } from "node:module";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { THEMES, themeCssVars } from "@webgis/design";
+import { loadRegistry } from "@webgis/registry/load";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const app = join(here, "..");
@@ -31,4 +34,6 @@ const tiles = join(app, "../../data/tiles");
 const link = join(app, "public/tiles");
 mkdirSync(tiles, { recursive: true });
 if (!existsSync(link) && !(() => { try { return lstatSync(link).isSymbolicLink(); } catch { return false; } })()) symlinkSync(tiles, link);
-console.log("prepare: theme.css, maplibre worker, tiles link ready");
+const entries = loadRegistry();
+writeFileSync(join(app, "src/generated/registry.json"), JSON.stringify(entries, null, 1));
+console.log(`prepare: theme.css, maplibre worker, tiles link, registry.json (${entries.length} datasets) ready`);
