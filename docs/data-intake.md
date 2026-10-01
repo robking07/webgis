@@ -15,7 +15,7 @@ weekly scout routine ─┬─ discovery ──► issue per candidate (data-can
 
 ## 1. Scout (automatic, weekly, two tracks in parallel)
 
-A Claude routine on claude.ai runs every Monday morning (Central). It follows `.claude/agents/data-scout.md` and runs both tracks every time:
+A Claude routine on claude.ai ("Mapwich data scout (weekly)", `trig_01KCTp62anhYKbk74ARNiPkF`, Mondays 8:17 am Central, Opus) runs every Monday morning. To change its schedule or prompt, edit it on claude.ai/code under Routines, or ask Claude to update it. It follows `.claude/agents/data-scout.md` and runs both tracks every time:
 
 - **Discovery**: new datasets from any source, government or not. It files at most 3 issues per run, using `.github/ISSUE_TEMPLATE/data-candidate.md` and the label `data-candidate`.
 - **Government release watch**: new, revised, discontinued and removed federal datasets since the last run. For each, it reports what changed versus the prior vintage, whether the series is still comparable, independent cross-checks with numbers side by side, and archived copies of anything removed. It files at most 3 issues per run, using `.github/ISSUE_TEMPLATE/gov-release.md` and the label `gov-release`. Releases worth mapping also get `data-candidate`. The scout reports sourced facts and leaves interpretation to Robbie.
