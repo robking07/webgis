@@ -18,8 +18,9 @@ export const viewport: Viewport = {
   ],
 };
 
-// Apply an explicit ?theme= before first paint so there's no light/dark flash.
-const themeScript = `try{var t=new URLSearchParams(location.search).get("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}`;
+// Apply an explicit theme (?theme=, else the one remembered in this browser; lib/theme.ts) before
+// first paint so there's no light/dark flash.
+const themeScript = `try{var t=new URLSearchParams(location.search).get("theme");if(t!=="light"&&t!=="dark")t=localStorage.getItem("mapwich-theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}`;
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (

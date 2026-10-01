@@ -32,8 +32,12 @@ export interface Theme {
     labelHalo: string;
     /** Outline drawn around every choropleth polygon. */
     featureOutline: string;
+    /** Casing under data lines (e.g. AADT), so even the class nearest the land color stays visible. */
+    featureLineCasing: string;
     /** Outline for the hovered / selected feature. */
     highlight: string;
+    /** Halo under the highlight outline, so the selection reads on any fill, light or dark. */
+    highlightHalo: string;
     /** Fill for features with no value. */
     noData: string;
     /** Reference overlays drawn above thematic fills (cased so they read over any fill). */
@@ -83,7 +87,9 @@ export const THEMES: Record<ThemeName, Theme> = {
       labelMuted: "#5f6168",
       labelHalo: "#ffffff",
       featureOutline: "#ffffff",
+      featureLineCasing: "#8b8780",
       highlight: "#111111",
+      highlightHalo: "#ffffff",
       noData: "#d9d6cf",
       interstate: "#4a4d55",
       interstateCasing: "#ffffff",
@@ -125,7 +131,9 @@ export const THEMES: Record<ThemeName, Theme> = {
       labelMuted: "#9a9ea6",
       labelHalo: "#16181b",
       featureOutline: "#16181b",
+      featureLineCasing: "#6f737b",
       highlight: "#ffffff",
+      highlightHalo: "#111111",
       noData: "#3a3d43",
       interstate: "#c9ccd2",
       interstateCasing: "#16181b",
@@ -154,6 +162,8 @@ export const CONTRAST_RULES: Array<[keyof Theme["ui"] | `map.${keyof Theme["map"
   ["map.label", "map.labelHalo", 7, "map labels"],
   ["map.labelMuted", "map.labelHalo", 4.5, "minor map labels"],
   ["map.highlight", "map.land", 3, "selection outline (non-text)"],
+  ["map.highlight", "map.highlightHalo", 7, "selection outline vs its halo (reads over the darkest and lightest classes)"],
+  ["map.featureLineCasing", "map.focusLand", 3, "data-line casing vs U.S. land (non-text; keeps the quietest class visible)"],
   ["map.interstate", "map.interstateCasing", 4.5, "interstate line vs its casing (non-text, reads over any fill)"],
   ["map.river", "map.riverCasing", 3, "river line vs its casing (non-text)"],
   ["map.shieldText", "map.interstate", 4.5, "interstate route number text"],

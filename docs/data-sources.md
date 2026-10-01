@@ -122,7 +122,7 @@
 
 | Dataset | Levels (non-null / rows) | Unit | Vintage | Method |
 |---|---|---|---|---|
-| **Traffic deaths** (`traffic_fatalities`) | state: 51 of 51<br>county: 3,135 of 3,144 | per_100k | 2020–2024 average | NHTSA FARS accident files 2020–2024; total `FATALS` by state/county, averaged per year, ÷ ACS population (population density × land area) × 100,000. Crashes with unknown county count toward the state only; Connecticut counties use pre-2022 codes and show no data. Modeled using: population_density (insight pairs with those are flagged). |
+| **Traffic deaths** (`traffic_fatalities`) | state: 51 of 51<br>county: 3,135 of 3,144 | per_100k | 2020–2024 average | NHTSA FARS accident files 2020–2024; deaths per crash (the `FATALS` field) summed by state/county, averaged per year, ÷ ACS population (population density × land area) × 100,000. Crashes with unknown county count toward the state only; Connecticut counties use pre-2022 codes and show no data. Modeled using: population_density (insight pairs with those are flagged). |
 
 ## Known gaps and caveats
 

@@ -96,6 +96,8 @@
   -webkit-backdrop-filter: blur(12px);
   box-shadow: 0 6px 18px rgb(0 0 0 / 0.14), 0 0 0 1px color-mix(in srgb, var(--ui-text) 9%, transparent);
 }
+/* Small text over busy map labels (the legend strip) needs a more solid backing. */
+.wg-glass.wg-glass-strong { background: color-mix(in srgb, var(--ui-surface) 90%, transparent); }
 .wg-zbtn { background: transparent; cursor: pointer; }
 .wg-zbtn:hover { background: color-mix(in srgb, var(--ui-text) 7%, transparent); }
 .wg-zbtn:active { background: color-mix(in srgb, var(--ui-text) 13%, transparent); }

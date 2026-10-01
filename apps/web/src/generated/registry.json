@@ -1675,7 +1675,7 @@
    "county"
   ],
   "unit": "per_100k",
-  "universe": "crashes per resident (rate uses ACS population)",
+  "universe": "traffic deaths per resident, counted where the crash happened (rate uses ACS population)",
   "measure": {
    "kind": "fars",
    "years": [

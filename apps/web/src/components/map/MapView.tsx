@@ -2,7 +2,7 @@
 // The only module that touches the map library. Swapping in Mapbox GL JS (Q-1) means
 // reimplementing this component against the same props.
 import { useEffect, useRef } from "react";
-import { AttributionControl, Map as MlMap, ScaleControl, addProtocol, setWorkerUrl, type MapGeoJSONFeature } from "maplibre-gl";
+import { AttributionControl, Map as MlMap, ScaleControl, addProtocol, setWorkerUrl, type LayerSpecification, type MapGeoJSONFeature } from "maplibre-gl";
 import { Protocol } from "pmtiles";
 import { basemapStyle, choroplethFill, DATA_BEFORE_ID, featureLineLayers, featurePolygonLayers, focusLandLayer, FOCUS_LAND_BEFORE_ID, GEO_LEVELS, MOTION, thematicLayers, type GeoLevel, type ThemeName } from "@webgis/design";
 import type { FeatureLayerSpec } from "@/lib/layers";
@@ -239,7 +239,7 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
 function applyBands(m: MlMap, bands?: Props["levelZooms"]) {
   for (const level of LEVELS) {
     const band = bands ? bands[level] : GEO_LEVELS[level];
-    for (const suffix of ["fill", "outline", "highlight"]) {
+    for (const suffix of ["fill", "outline", "highlight-halo", "highlight"]) {
       const id = `${level}-${suffix}`;
       if (!m.getLayer(id)) continue;
       m.setLayoutProperty(id, "visibility", band ? "visible" : "none");
@@ -285,12 +285,15 @@ function setFlag(m: MlMap, ref: { current: { level: GeoLevel; id: string } | nul
 }
 
 const FEATURE_SRC = "feature-layer";
+const FEATURE_TAG = "wg:feature";
 
 /** Show exactly one feature layer (or none), placed above the choropleth and basemap overlays, below labels. */
 function syncFeatureLayer(m: MlMap, spec: FeatureLayerSpec | null, theme: ThemeName) {
-  const current = m.getStyle().layers.filter((l) => "source" in l && l.source === FEATURE_SRC).map((l) => l.id);
-  const wantedIds = spec ? (spec.geometry === "polygon" ? [`${spec.id}-fill`, `${spec.id}-casing`] : [`${spec.id}-casing`, `${spec.id}-line`]) : [];
-  if (current.length && current.join() === wantedIds.join()) return;
+  // Every layer we add is tagged, including ones on the basemap source (the polygon water mask).
+  const current = m.getStyle().layers.filter((l) => (l.metadata as Record<string, unknown> | undefined)?.[FEATURE_TAG]).map((l) => l.id);
+  const opts = spec && { id: spec.id, source: FEATURE_SRC, sourceLayer: spec.sourceLayer, valueField: spec.valueField, breaks: spec.breaks, colors: spec.colors, rankField: spec.rankField, theme };
+  const wanted = !spec || !opts ? [] : spec.geometry === "polygon" ? featurePolygonLayers(opts) : featureLineLayers(opts);
+  if (current.length && current.join() === wanted.map((l) => l.id).join()) return;
   for (const id of current) m.removeLayer(id);
   if (m.getSource(FEATURE_SRC)) m.removeSource(FEATURE_SRC);
   for (const id of HIDDEN_WITH_LINES) if (m.getLayer(id)) m.setLayoutProperty(id, "visibility", spec?.geometry === "line" ? "none" : "visible");
@@ -301,16 +304,7 @@ function syncFeatureLayer(m: MlMap, spec: FeatureLayerSpec | null, theme: ThemeN
   const before = spec.geometry === "polygon"
     ? (m.getLayer(DATA_BEFORE_ID) ? DATA_BEFORE_ID : undefined)
     : (m.getLayer("label-water") ? "label-water" : undefined);
-  if (spec.geometry === "polygon") {
-    for (const layer of featurePolygonLayers({ id: spec.id, source: FEATURE_SRC, sourceLayer: spec.sourceLayer, valueField: spec.valueField, breaks: spec.breaks, colors: spec.colors, rankField: spec.rankField, theme })) {
-      m.addLayer(layer, before);
-    }
-  }
-  if (spec.geometry === "line") {
-    for (const layer of featureLineLayers({ id: spec.id, source: FEATURE_SRC, sourceLayer: spec.sourceLayer, valueField: spec.valueField, breaks: spec.breaks, colors: spec.colors, rankField: spec.rankField, theme })) {
-      m.addLayer(layer, before);
-    }
-  }
+  for (const layer of wanted) m.addLayer({ ...layer, metadata: { [FEATURE_TAG]: true } } as LayerSpecification, before);
 }
 
 /** Show only features whose facet values are allowed. Values may be numbers or strings in the tiles. */

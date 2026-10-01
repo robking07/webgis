@@ -2,14 +2,16 @@ import type { Metadata } from "next";
 import { FLAGGED, PUBLISHED, RULES } from "@/lib/insights";
 import { DATASET_BY_ID } from "@/lib/registry";
 import { InsightCard } from "@/components/InsightCard";
-import { SiteFooter, SiteNav } from "@/components/SiteNav";
+import { SiteFooter } from "@/components/SiteNav";
+import { SiteHeader } from "@/components/SiteHeader";
 
 export const metadata: Metadata = { title: "Specials · Mapwich" };
 
 export default function SpecialsPage() {
   return (
+    <>
+    <SiteHeader current="specials" />
     <main className="mx-auto max-w-6xl px-4 py-8 md:px-8">
-      <SiteNav current="specials" />
       <h1 className="mb-6 text-2xl font-semibold tracking-tight">Specials</h1>
       <header className="mb-6 max-w-2xl">
         <h2 className="text-lg font-semibold tracking-tight">Odd Pairings</h2>
@@ -44,5 +46,6 @@ export default function SpecialsPage() {
       </details>
       <SiteFooter />
     </main>
+    </>
   );
 }

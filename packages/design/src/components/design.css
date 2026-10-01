@@ -5,6 +5,8 @@
 .wg-legend-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.25rem; }
 .wg-legend-list li { display: flex; align-items: center; gap: 0.5rem; font-variant-numeric: tabular-nums; }
 .wg-swatch { display: inline-block; border-radius: 3px; box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.12); flex: none; }
+/* Line samples carry the same casing as the map's data lines (featureLineCasing). */
+.wg-swatch-line { box-shadow: 0 0 0 1px var(--map-feature-line-casing); }
 .wg-swatch-nodata { background: repeating-linear-gradient(45deg, var(--map-no-data) 0 3px, var(--ui-surface) 3px 6px); }
 /* Sized to its tracks so the rotation pivots on the diamond's own center; the margin holds the
    rotated corners (a 70px square turned 45° spans 99px, so 15px a side). */
