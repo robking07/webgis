@@ -121,6 +121,8 @@ export function Viewer({ search }: { search: string }) {
     ? [`< ${formatValue(featureSpec.breaks[0], primary!.unit)}`, `≥ ${formatValue(featureSpec.breaks[featureSpec.breaks.length - 1], primary!.unit)}`]
     : current?.breaks?.length ? [`< ${formatValue(current.breaks[0], primary!.unit)}`, `≥ ${formatValue(current.breaks[current.breaks.length - 1], primary!.unit)}`] : null;
   const chromeShown = !immersed || peek;
+  // The legend shrinks to its strip when immersed, or when Display options needs the room.
+  const compactLegend = immersed || optionsOpen;
   const meta = primary ? [isFeature ? "Road segments" : GEO_LEVELS[level].label, primary.vintage, primary.source.name.split(",")[0].split(" (")[0]].join(" · ") : "";
   const legendBody = (
     <>
@@ -287,7 +289,7 @@ export function Viewer({ search }: { search: string }) {
       {/* Legend: full card at rest on desktop; a strip when immersed or on phones (tap to expand). */}
       {legendStrip && legendEnds && !legendOpen && (
         <button type="button" onClick={() => setLegendOpen(true)} aria-expanded={false} aria-label={`Show legend for ${primary!.title}`}
-          className={`wg-glass absolute bottom-6 left-3 z-20 items-center gap-2 rounded-full px-3 py-2 text-xs tabular-nums text-foreground focus-visible:outline-2 focus-visible:outline-ring md:left-4 ${immersed ? "flex" : "flex md:hidden"}`}>
+          className={`wg-glass absolute bottom-6 left-3 z-20 items-center gap-2 rounded-full px-3 py-2 text-xs tabular-nums text-foreground focus-visible:outline-2 focus-visible:outline-ring md:left-4 ${compactLegend ? "flex" : "flex md:hidden"}`}>
           <span>{legendEnds[0]}</span>
           <span className="flex overflow-hidden rounded-sm" aria-hidden>
             {(secondary && current ? [current.colors[0], current.colors[4], current.colors[8]] : legendStrip).map((c, i) => <span key={i} className={featureSpec ? "h-1.5 w-5 self-center" : "h-2 w-5"} style={{ background: c }} />)}
@@ -296,7 +298,7 @@ export function Viewer({ search }: { search: string }) {
         </button>
       )}
       <section aria-label="Legend"
-        className={`absolute bottom-6 left-3 right-3 z-20 max-h-[55%] overflow-y-auto rounded-lg border bg-card/95 p-3 shadow-sm backdrop-blur md:left-4 md:right-auto md:max-h-[60%] md:w-64 ${legendOpen || !(legendStrip && legendEnds) ? "block" : immersed ? "hidden" : "hidden md:block"}`}>
+        className={`absolute bottom-6 left-3 right-3 z-20 max-h-[55%] overflow-y-auto rounded-lg border bg-card/95 p-3 shadow-sm backdrop-blur md:left-4 md:right-auto md:max-h-[60%] md:w-64 ${legendOpen || !(legendStrip && legendEnds) ? "block" : compactLegend ? "hidden" : "hidden md:block"}`}>
         {legendOpen && (
           <button type="button" onClick={() => setLegendOpen(false)} aria-label="Collapse legend"
             className="absolute right-2 top-2 rounded p-1 text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring">
