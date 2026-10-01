@@ -16,7 +16,9 @@ Never ask something already answered. Never ask filler.
 - **Refinement mode (after Robbie says the review is done):** ask the question and
   wait for the answer before continuing.
 
-Current mode: **PROTOTYPE**
+Current mode: **REFINEMENT** (since 2026-10-01). Ask and wait before decisions. Switch back to
+prototype-style momentum only for a full new feature buildout or a similarly large task, and say so
+when you do.
 
 ## Conventions
 
