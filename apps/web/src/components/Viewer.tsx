@@ -15,6 +15,7 @@ import type { PopupRow } from "@webgis/design/components";
 import { BottomSheet, useIsPhone } from "./BottomSheet";
 import { PlaceDataList, type Detail } from "./PlaceDataList";
 import { parseUrlState, useUrlState, type UrlState } from "@/lib/url-state";
+import { LANDING } from "@/lib/landing";
 import { classifyBivariate, classifyUnivariate, useDatasetValues, type Values } from "@/lib/values";
 import { fetchDetail } from "@/lib/supabase";
 
@@ -23,7 +24,11 @@ const LEVELS = Object.keys(GEO_LEVELS) as GeoLevel[];
 export function Viewer({ search }: { search: string }) {
   const [initial] = useState<UrlState>(() => {
     const s = parseUrlState(search);
-    return { ...s, d: s.d && DATASET_BY_ID.has(s.d) ? s.d : DATASETS[0]?.id ?? null, b: s.b && DATASET_BY_ID.has(s.b) ? s.b : null };
+    if (s.d && DATASET_BY_ID.has(s.d)) return { ...s, b: s.b && DATASET_BY_ID.has(s.b) ? s.b : null };
+    // No dataset in the URL: the featured landing view (lib/landing.ts).
+    const d = DATASET_BY_ID.has(LANDING.d) ? LANDING.d : DATASETS[0]?.id ?? null;
+    const b = LANDING.b && DATASET_BY_ID.has(LANDING.b) ? LANDING.b : null;
+    return { ...s, d, b, at: new URLSearchParams(search).has("at") ? s.at : LANDING.at ?? s.at };
   });
   const [state, update] = useUrlState(initial);
   const theme = useResolvedTheme(state.theme);
