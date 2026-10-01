@@ -18,6 +18,13 @@ const FORMATTERS: Record<Unit, (v: number) => string> = {
   per_100k: (v) => `${nf({ maximumFractionDigits: 1 }).format(v)} per 100k`,
 };
 
+/** Units in words, for profile pages and screen readers. */
+export const UNIT_LABEL: Record<Unit, string> = {
+  dollars: "U.S. dollars", percent: "percent", minutes: "minutes", count: "count", per_sq_mi: "per square mile of land",
+  ratio: "ratio", years: "years", deg_f: "degrees Fahrenheit", inches: "inches", per_100k: "per 100,000 residents",
+  vehicles_per_day: "vehicles per day", miles_per_day: "miles per day",
+};
+
 export function formatValue(v: number | null | undefined, unit: Unit): string {
   if (v == null || !Number.isFinite(v)) return "No data";
   return FORMATTERS[unit](v);

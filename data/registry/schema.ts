@@ -89,17 +89,36 @@ const FeaturesMeasure = z.object({
     /** Regex matching the GDAL layer(s) to read; HPMS ships one layer per state. */
     layerPattern: z.string(),
   }),
-  /** OGR SQL WHERE clause applied while extracting (e.g. "AADT > 0"). */
+  /** OGR SQL WHERE clause applied while extracting (e.g. "AADT > 0"). Ignored when `select` is set. */
   where: z.string().optional(),
+  /** SQLite-dialect SELECT run per source layer, for derived readable fields (e.g. route labels).
+   *  Placeholders: {layer} (source layer name), {state} (USPS code parsed from the layer name).
+   *  Must select the geometry column. Overrides `where`; `fields` still lists what's kept. */
+  select: z.string().optional(),
   /** Numeric field that drives color. */
   valueField: z.string(),
-  /** Source field → popup label. Only these fields are kept in the tiles. */
-  fields: z.record(z.string(), z.string()),
+  /** Source field → popup label (or {label, unit}). Only these fields are kept in the tiles. */
+  fields: z.record(z.string(), z.union([z.string(), z.object({ label: z.string(), unit: z.string().optional() })])),
   /** Ordinal field for importance (lower = more important, e.g. functional class) used for
    *  line width and for thinning at low zoom: at zoom ≥ z, show features with field ≤ max. */
   rank: z.object({ field: z.string(), showUpTo: z.array(z.tuple([z.number(), z.number()])).min(1) }).optional(),
   /** Tile zoom range. */
   zooms: z.tuple([z.number().int(), z.number().int()]).default([3, 12]),
+});
+
+/** A categorical field people can filter by, with a plain-language explainer (D-26). */
+export const Facet = z.object({
+  field: z.string(),
+  label: z.string(),
+  /** One or two sentences a non-specialist can follow. */
+  explainer: z.string(),
+  /** Glossary term id with the longer explanation, if any. */
+  term: z.string().optional(),
+  values: z.array(z.object({
+    value: z.union([z.string(), z.number()]),
+    label: z.string(),
+    description: z.string().optional(),
+  })).min(2),
 });
 
 export const DatasetEntry = z.object({
@@ -128,6 +147,10 @@ export const DatasetEntry = z.object({
   modelInputs: z.array(z.string()).default([]),
   /** Known coverage gaps, shown in the legend caption and data-sources doc. */
   coverageNote: z.string().optional(),
+  /** Filterable categorical fields (feature layers), each with an explainer. */
+  facets: z.array(Facet).default([]),
+  /** Glossary term ids (data/registry/glossary.yaml) that explain this dataset's jargon. */
+  terms: z.array(z.string()).default([]),
   symbology: z.object({
     ramp: Ramp,
     classification: z.enum(["quantile", "equalInterval", "jenks", "manual"]).default("quantile"),
@@ -140,3 +163,15 @@ export const DatasetEntry = z.object({
 });
 export const isFeatureLayer = (e: { measure: { kind: string } }) => e.measure.kind === "features";
 export type DatasetEntry = z.infer<typeof DatasetEntry>;
+
+export const GlossaryTerm = z.object({
+  id: z.string().regex(/^[a-z0-9-]+$/),
+  term: z.string(),
+  /** One plain sentence: what it means for someone reading the map. */
+  short: z.string(),
+  /** A short paragraph with more detail. */
+  long: z.string(),
+  source: z.url().optional(),
+});
+export type GlossaryTerm = z.infer<typeof GlossaryTerm>;
+export type Facet = z.infer<typeof Facet>;

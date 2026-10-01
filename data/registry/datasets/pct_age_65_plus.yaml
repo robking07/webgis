@@ -9,10 +9,11 @@ source:
   citation: "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
 license: Public domain (U.S. Government work, 17 U.S.C. § 105)
 updateCadence: annual
-vintage: "2020–2024 ACS 5-year"
+vintage: "2020–2024 (5-year estimate)"
 geographyLevels: [state, county, tract]
 unit: percent
 universe: total population
+terms: [acs-5-year, margin-of-error, census-geography, quantile-classes]
 measure:
   kind: acs5
   numerator: [B01001_020, B01001_021, B01001_022, B01001_023, B01001_024, B01001_025, B01001_044, B01001_045, B01001_046, B01001_047, B01001_048, B01001_049]

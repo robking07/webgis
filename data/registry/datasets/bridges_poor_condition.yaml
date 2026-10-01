@@ -9,10 +9,11 @@ source:
   citation: "Federal Highway Administration, National Bridge Inventory, 2025 highway bridge file"
 license: Public domain (U.S. Government work, 17 U.S.C. § 105)
 updateCadence: annual
-vintage: "NBI 2025"
+vintage: "2025 inventory"
 geographyLevels: [state, county]
 unit: percent
 universe: highway bridge deck area
 coverageNote: Counties with fewer than 10 bridges show no data. Connecticut's NBI records still use pre-2022 counties, so CT counties show no data.
+terms: [bridge-condition, quantile-classes]
 measure: { kind: nbi, year: 2025, weight: deckArea, condition: P, minBridges: 10 }
 symbology: { ramp: oranges, classification: quantile, classes: 5 }

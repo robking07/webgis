@@ -9,12 +9,13 @@ source:
   citation: "Federal Highway Administration, Highway Performance Monitoring System 2024 (via BTS NTAD); ACS 2020–2024 population"
 license: Public domain (U.S. Government work; NTAD "available for unrestricted public use"). Credit FHWA and BTS.
 updateCadence: annual
-vintage: "HPMS 2024"
+vintage: "2024"
 geographyLevels: [state, county]
 unit: miles_per_day
 universe: vehicle miles on counted roads per resident
 modelInputs: [population_density]
 coverageNote: Counts traffic where it drives, divided by residents, so counties on major through-routes look high. Counted roads only (about 10–15% below FHWA totals). Connecticut counties show no data.
+terms: [vmt, aadt, quantile-classes]
 measure:
   kind: hpms_vmt
   source:

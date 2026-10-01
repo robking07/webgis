@@ -2,17 +2,41 @@ id: aadt
 title: Traffic volume (AADT)
 description: Average annual daily traffic, in vehicles per day, on each road segment with a count. Wider lines are higher road classes.
 category: Transportation
-tags: [traffic, AADT, volume, roads, highways, HPMS, congestion, trucks]
+tags: [traffic, AADT, volume, roads, highways, HPMS, congestion, trucks, interstate, US highway, state highway, county road]
 source:
   name: FHWA Highway Performance Monitoring System (HPMS) 2024
   url: https://geodata.bts.gov/datasets/5e6a977c2d7c4ec1bdc82e684d3384f2
   citation: "Federal Highway Administration, Highway Performance Monitoring System 2024, via the BTS National Transportation Atlas Database"
 license: Public domain (U.S. Government work; NTAD "available for unrestricted public use"). Credit FHWA and BTS.
 updateCadence: annual
-vintage: "HPMS 2024"
+vintage: "2024"
 unit: vehicles_per_day
 universe: road segments with a reported AADT
-coverageNote: Segments are as states report them to FHWA; not every local road has a count. Not for navigation.
+coverageNote: "Segments are as states report them to FHWA; not every local road has a count. Not for navigation."
+terms: [aadt, functional-class, road-type]
+facets:
+  - field: road_type
+    label: Road type
+    term: road-type
+    explainer: "Which route sign the road carries. Turn types off to focus on, say, just Interstates and U.S. highways."
+    values:
+      - { value: "Interstate", label: "Interstate", description: "The Interstate Highway System, including Interstate business loops." }
+      - { value: "US highway", label: "U.S. highway", description: "Numbered U.S. routes such as US 52." }
+      - { value: "State highway", label: "State highway", description: "Routes numbered by the state, such as MN 55." }
+      - { value: "County road", label: "County road", description: "Roads numbered by the county." }
+      - { value: "City or local road", label: "City or local road", description: "Roads with only a street name, including busy city arterials." }
+  - field: f_system
+    label: Functional class
+    term: functional-class
+    explainer: "The job a road does, from long-distance travel down to reaching your front door. It sets line width on the map."
+    values:
+      - { value: 1, label: "Interstate", description: "Interstate highways." }
+      - { value: 2, label: "Freeway or expressway", description: "Other limited-access highways, with ramps instead of intersections." }
+      - { value: 3, label: "Principal arterial", description: "Major roads connecting cities, and the main corridors within them." }
+      - { value: 4, label: "Minor arterial", description: "Roads linking neighborhoods and towns to principal arterials." }
+      - { value: 5, label: "Major collector", description: "Gather traffic from local roads in towns and rural areas." }
+      - { value: 6, label: "Minor collector", description: "Lower-volume collectors, mostly rural." }
+      - { value: 7, label: "Local road", description: "Streets that mainly provide access to homes and businesses." }
 measure:
   kind: features
   geometry: line
@@ -21,14 +45,34 @@ measure:
     file: HPMS2024.zip
     path: HPMS2024.gdb
     layerPattern: "^HPMS_FULL_[A-Z]{2}_2024$"
-  where: "aadt > 0"
+  # Readable route labels and road types are derived here (D-26), never shown as raw LRS ids.
+  # HPMS routesigning: 1 not signed, 2 Interstate, 3 US, 4 State, 5 Off-Interstate business,
+  # 6 County, 7 Township, 8 Municipal, 9 Parkway/forest, 10 none of these.
+  # routequalifier: 2 Alternate, 3 Business, 4 Bypass, 5 Spur, 6 Loop, 9 Truck.
+  select: >-
+    SELECT aadt, f_system, through_lanes, aadt_single_unit, aadt_combination,
+    CASE routesigning WHEN 2 THEN 'Interstate' WHEN 5 THEN 'Interstate' WHEN 3 THEN 'US highway'
+    WHEN 4 THEN 'State highway' WHEN 6 THEN 'County road' ELSE 'City or local road' END AS road_type,
+    TRIM(CASE routesigning
+    WHEN 2 THEN 'I-' || CASE WHEN TRIM(routename) GLOB '[0-9]*' AND LENGTH(TRIM(routename)) <= 5 THEN TRIM(routename) ELSE routenumber END
+    WHEN 5 THEN 'I-' || routenumber || ' Business'
+    WHEN 3 THEN 'US ' || routenumber
+    WHEN 4 THEN '{state} ' || routenumber
+    WHEN 6 THEN 'County Rd ' || routenumber
+    ELSE '' END
+    || CASE WHEN routesigning IN (2,3,4,6) THEN CASE routequalifier WHEN 2 THEN ' Alternate' WHEN 3 THEN ' Business'
+    WHEN 4 THEN ' Bypass' WHEN 5 THEN ' Spur' WHEN 6 THEN ' Loop' WHEN 9 THEN ' Truck' ELSE '' END ELSE '' END) AS route,
+    CASE WHEN routesigning IN (2,5) THEN NULL ELSE NULLIF(TRIM(routename), '') END AS street,
+    Shape FROM {layer} WHERE aadt > 0
   valueField: aadt
   fields:
-    route_id: Route
+    route: Route
+    street: Street
+    road_type: Road type
     f_system: Functional class
-    aadt: Traffic (AADT)
-    aadt_single_unit: Single-unit trucks
-    aadt_combination: Combination trucks
+    aadt: { label: "Traffic (AADT)", unit: vehicles_per_day }
+    aadt_single_unit: { label: "Single-unit trucks", unit: vehicles_per_day }
+    aadt_combination: { label: "Tractor-trailers", unit: vehicles_per_day }
     through_lanes: Through lanes
   # f_system: 1 Interstate, 2 freeway/expressway, 3 principal arterial, 4 minor arterial,
   # 5 major collector, 6 minor collector, 7 local

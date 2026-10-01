@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { rampColors, RAMPS, type RampId } from "@webgis/design";
+import { rampColors, RAMPS, UNIT_LABEL, type RampId, type Unit } from "@webgis/design";
+import { TERM_BY_ID } from "@/lib/glossary";
 import { describeMethod } from "@webgis/registry/describe";
 import { SiteNav } from "@/components/SiteNav";
 import { DATASETS, DATASET_BY_ID } from "@/lib/registry";
@@ -39,7 +40,7 @@ export default async function DatasetProfilePage({ params }: PageProps<"/data/[i
     ["Vintage", d.vintage],
     ["Geography", d.measure.kind === "features" ? `Road segments${featureCount ? ` (${featureCount.toLocaleString()})` : ""}` : d.geographyLevels.map((l) => LEVEL_LABEL[l]).join(", ")],
     ["Measures", d.universe],
-    ["Unit", d.unit.replaceAll("_", " ")],
+    ["Unit", UNIT_LABEL[d.unit as Unit] ?? d.unit],
     ["Updated", d.updateCadence],
     ["License", d.license],
     ["Cite as", d.source.citation],
@@ -77,6 +78,41 @@ export default async function DatasetProfilePage({ params }: PageProps<"/data/[i
           {describeMethod(d).split("`").map((part, i) => (i % 2 ? <code key={i} className="rounded bg-muted px-1 py-0.5 font-mono text-xs">{part}</code> : part))}
         </p>
       </section>
+
+      {d.terms.length > 0 && (
+        <section aria-labelledby="explainers" className="mb-8">
+          <h2 id="explainers" className="mb-2 text-base font-semibold">Explainers</h2>
+          <dl className="space-y-3 text-sm">
+            {d.terms.map((id) => TERM_BY_ID.get(id)).filter((t) => !!t).map((t) => (
+              <div key={t!.id} id={`term-${t!.id}`}>
+                <dt className="font-semibold">{t!.term}</dt>
+                <dd className="m-0 mt-0.5 leading-relaxed text-muted-foreground">
+                  {t!.long}{t!.source && <> <a href={t!.source} rel="noopener" className="text-primary underline-offset-2 hover:underline">Learn more ↗</a></>}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+      )}
+
+      {d.facets.length > 0 && (
+        <section aria-labelledby="facets" className="mb-8">
+          <h2 id="facets" className="mb-2 text-base font-semibold">Filters on the map</h2>
+          {d.facets.map((f) => (
+            <div key={f.field} className="mb-4">
+              <h3 className="text-sm font-semibold">{f.label}</h3>
+              <p className="mb-1.5 text-sm text-muted-foreground">{f.explainer}</p>
+              <ul className="divide-y rounded-xl border bg-card text-sm">
+                {f.values.map((v) => (
+                  <li key={String(v.value)} className="grid gap-0.5 px-4 py-2 sm:grid-cols-[11rem_1fr] sm:gap-4">
+                    <span className="font-medium">{v.label}</span><span className="text-muted-foreground">{v.description}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </section>
+      )}
 
       {(d.coverageNote || modelInputs.length > 0) && (
         <section aria-labelledby="caveats" className="mb-8">

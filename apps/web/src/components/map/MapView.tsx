@@ -51,11 +51,20 @@ interface Props {
   onFeatureSelect?: (h: FeatureHit | null) => void;
   /** First user-initiated pan/zoom/scroll on the map (not programmatic moves). */
   onUserMove?: () => void;
+  /** Feature-layer filter: field → values to SHOW (absent field = no filter). */
+  featureFilter?: Record<string, Array<string | number>>;
   /** Receives zoom controls for the page's own buttons. */
   onApi?: (api: MapApi) => void;
 }
 
-export interface MapApi { zoomIn: () => void; zoomOut: () => void }
+export interface MapApi {
+  zoomIn: () => void;
+  zoomOut: () => void;
+  /** Fly to a point (instant with reduced motion). */
+  flyTo: (lon: number, lat: number, zoom: number) => void;
+  /** Mark one geography as selected (outline), or clear with null. */
+  select: (level: GeoLevel, geoid: string) => void;
+}
 
 const TILES_BASE = process.env.NEXT_PUBLIC_TILES_BASE_URL || "/tiles";
 const LEVELS = Object.keys(GEO_LEVELS) as GeoLevel[];
@@ -66,7 +75,7 @@ function tilesUrl(level: GeoLevel) {
   return `pmtiles://${base}/${level}.pmtiles`;
 }
 
-export function MapView({ theme, initialView, paint, onViewChange, onHover, onSelect, onTilesError, ariaLabel, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, onApi }: Props) {
+export function MapView({ theme, initialView, paint, onViewChange, onHover, onSelect, onTilesError, ariaLabel, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, onApi, featureFilter }: Props) {
   const container = useRef<HTMLDivElement>(null);
   const map = useRef<MlMap | null>(null);
   const applied = useRef<Partial<Record<GeoLevel, LevelPaint>>>({});
@@ -106,6 +115,8 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
     onApi?.({
       zoomIn: () => m.zoomIn({ duration: reduceMotion ? 0 : 250 }),
       zoomOut: () => m.zoomOut({ duration: reduceMotion ? 0 : 250 }),
+      flyTo: (lon, lat, zoom) => m.flyTo({ center: [lon, lat], zoom, duration: reduceMotion ? 0 : MOTION.fly, essential: true }),
+      select: (level, geoid) => setFlag(m, selected, { level, id: geoid }, "selected"),
     });
     // User gestures only (programmatic flyTo etc. must not immerse): wheel/trackpad scroll,
     // drag-pan (mouse or touch), pinch and double-click zoom.
@@ -127,6 +138,7 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
       applied.current = {};
       syncPaint(m, latest.current.paint, applied.current, latest.current.theme);
       syncFeatureLayer(m, latest.current.featureLayer ?? null, latest.current.theme);
+      applyFeatureFilter(m, latest.current.featureLayer ?? null, filterRef.current);
       restoreState(m);
     });
     m.on("moveend", () => {
@@ -200,11 +212,17 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
     if (m && ready.current) syncPaint(m, paint, applied.current, latest.current.theme);
   }, [paint]);
 
-  // Feature layer (lines/points): swap in/out.
+  // Feature layer (lines/points): swap in/out, then apply its filter.
+  const filterRef = useRef(featureFilter);
+  filterRef.current = featureFilter;
   useEffect(() => {
     const m = map.current;
-    if (m && ready.current) syncFeatureLayer(m, featureLayer ?? null, latest.current.theme);
+    if (m && ready.current) { syncFeatureLayer(m, featureLayer ?? null, latest.current.theme); applyFeatureFilter(m, featureLayer ?? null, filterRef.current); }
   }, [featureLayer]);
+  useEffect(() => {
+    const m = map.current;
+    if (m && ready.current) applyFeatureFilter(m, latest.current.featureLayer ?? null, featureFilter);
+  }, [featureFilter]);
 
   // Positioning lives on the wrapper: maplibre-gl.css sets `.maplibregl-map { position: relative }`
   // unlayered, which beats Tailwind's layered utilities on the map element itself.
@@ -281,4 +299,14 @@ function syncFeatureLayer(m: MlMap, spec: FeatureLayerSpec | null, theme: ThemeN
       m.addLayer(layer, before);
     }
   }
+}
+
+/** Show only features whose facet values are allowed. Values may be numbers or strings in the tiles. */
+function applyFeatureFilter(m: MlMap, spec: FeatureLayerSpec | null, filter?: Record<string, Array<string | number>>) {
+  if (!spec) return;
+  const clauses = Object.entries(filter ?? {}).map(([field, vals]) => [
+    "in", ["to-string", ["get", field]], ["literal", vals.map(String)],
+  ]);
+  const expr = clauses.length ? ["all", ...clauses] : null;
+  for (const id of [`${spec.id}-casing`, `${spec.id}-line`]) if (m.getLayer(id)) m.setFilter(id, expr as never);
 }

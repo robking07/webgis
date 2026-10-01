@@ -54,8 +54,15 @@ export async function ingestFeatures(only?: string[]) {
     for (const layer of layers) {
       const out = join(work, `${layer}.geojsonl`);
       // -dim XY drops the M (route measure) values; coordinates to ~10 cm.
-      run("ogr2ogr", ["-f", "GeoJSONSeq", out, ds, layer, "-select", fields.join(","), "-dim", "XY",
-        "-t_srs", "EPSG:4326", "-lco", "COORDINATE_PRECISION=6", ...(m.where ? ["-where", m.where] : [])]);
+      const common = ["-dim", "XY", "-t_srs", "EPSG:4326", "-lco", "COORDINATE_PRECISION=6"];
+      if (m.select) {
+        // SQL template with readable derived fields; {state} = USPS code from the layer name.
+        const state = layer.match(/_([A-Z]{2})_/)?.[1] ?? "";
+        const sql = m.select.replaceAll("{layer}", layer).replaceAll("{state}", state);
+        run("ogr2ogr", ["-f", "GeoJSONSeq", out, ds, "-dialect", "SQLite", "-sql", sql, ...common]);
+      } else {
+        run("ogr2ogr", ["-f", "GeoJSONSeq", out, ds, layer, "-select", fields.join(","), ...common, ...(m.where ? ["-where", m.where] : [])]);
+      }
       const n = readFileSync(out, "utf8").split("\n").filter(Boolean).length;
       total += n;
       if (n) files.push(out);
@@ -74,7 +81,9 @@ export async function ingestFeatures(only?: string[]) {
     if (t.status !== 0) throw new Error(`tippecanoe failed for ${e.id}`);
     manifest[e.id] = {
       tiles: `${e.id}.pmtiles`, sourceLayer: e.id, geometry: m.geometry, valueField: m.valueField,
-      fields: m.fields, rankField: m.rank?.field ?? null, featureCount: total,
+      // Normalize {label, unit} field specs; facets carry the categorical labels and explainers.
+      fields: Object.fromEntries(Object.entries(m.fields).map(([k, v]) => [k, typeof v === "string" ? { label: v } : v])),
+      rankField: m.rank?.field ?? null, featureCount: total,
     };
     writeFileSync(LAYERS_JSON, JSON.stringify(manifest, null, 1));
     rmSync(work, { recursive: true, force: true });

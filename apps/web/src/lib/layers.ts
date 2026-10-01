@@ -9,7 +9,7 @@ export interface FeatureLayerInfo {
   sourceLayer: string;
   geometry: "line" | "point";
   valueField: string;
-  fields: Record<string, string>;
+  fields: Record<string, { label: string; unit?: string } | string>;
   rankField: string | null;
   featureCount: number;
 }

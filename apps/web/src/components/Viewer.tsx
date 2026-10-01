@@ -1,10 +1,12 @@
 "use client";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { ChevronDown, Menu, Minus, Moon, Plus, Search, Sun, X } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { ChevronDown, Info, Menu, Minus, Moon, Plus, Search, SlidersHorizontal, Sun, X } from "lucide-react";
 import { BivariateLegend, Legend, Popup, StatusState } from "@webgis/design/components";
 import { formatValue, GEO_LEVELS, levelAtZoom, levelBands, type GeoLevel, type ThemeName } from "@webgis/design";
 import { DatasetBrowser } from "./DatasetBrowser";
 import { DataTable } from "./DataTable";
+import { TERM_BY_ID } from "@/lib/glossary";
+import type { Facet } from "@webgis/registry";
 import { MapView, type FeatureHit, type HoverInfo, type LevelPaint, type MapApi } from "./map/MapView";
 import { DATASET_BY_ID, DATASETS, type Dataset } from "@/lib/registry";
 import { placeHref, rankText } from "@/lib/place";
@@ -36,6 +38,10 @@ export function Viewer({ search }: { search: string }) {
   const [browserOpen, setBrowserOpen] = useState(false);
   const [legendOpen, setLegendOpen] = useState(false);
   const [immersed, setImmersed] = useState(false);
+  const [optionsOpen, setOptionsOpen] = useState(false);
+  const [explainOpen, setExplainOpen] = useState(false);
+  /** Feature-layer facet filters: field → values HIDDEN by the user. */
+  const [hidden, setHidden] = useState<Record<string, Set<string>>>({});
   const [peek, setPeek] = useState(false);
   const mapApi = useRef<MapApi | null>(null);
   // Esc brings the chrome back (panels handle their own Esc first).
@@ -52,7 +58,9 @@ export function Viewer({ search }: { search: string }) {
   const secondary = state.b && !isFeature && !isFeatureDataset(DATASET_BY_ID.get(state.b)) ? DATASET_BY_ID.get(state.b)! : null;
   // Levels both datasets have, and the zoom band each level is drawn at.
   const availableLevels = useMemo(() => isFeature ? [] : LEVELS.filter((l) => (!primary || primary.geographyLevels.includes(l)) && (!secondary || secondary.geographyLevels.includes(l))), [primary, secondary, isFeature]);
-  const bands = useMemo(() => levelBands(availableLevels), [availableLevels]);
+  // "Display options" can pin one level at every zoom; otherwise levels switch with zoom.
+  const pinnedLevel = state.lv && availableLevels.includes(state.lv) ? state.lv : null;
+  const bands = useMemo(() => (pinnedLevel ? { [pinnedLevel]: { minzoom: 0, maxzoom: 24 } } : levelBands(availableLevels)), [availableLevels, pinnedLevel]);
   // Start loading tract values a little before tracts appear.
   const wantTract = !!bands.tract && state.at.zoom >= bands.tract.minzoom - 1;
   const x = useDatasetValues(primary, wantTract);
@@ -78,8 +86,29 @@ export function Viewer({ search }: { search: string }) {
   const current = classed[level];
   const error = x.error ?? y.error;
   const available = !!primary && !isFeature && availableLevels.includes(level);
-  // Clear selections when the dataset changes.
-  useEffect(() => { setSelected(null); setFeatureSelected(null); setFeatureHover(null); }, [state.d]);
+  // Clear selections and filters when the dataset changes.
+  useEffect(() => { setSelected(null); setFeatureSelected(null); setFeatureHover(null); setHidden({}); }, [state.d]);
+  const featureFilter = useMemo(() => {
+    if (!primary) return undefined;
+    const out: Record<string, Array<string | number>> = {};
+    for (const f of primary.facets) {
+      const h = hidden[f.field];
+      if (h?.size) out[f.field] = f.values.map((v) => v.value).filter((v) => !h.has(String(v)));
+    }
+    return out;
+  }, [primary, hidden]);
+  const toggleFacet = (field: string, value: string) => setHidden((cur) => {
+    const next = new Set(cur[field] ?? []);
+    if (next.has(value)) next.delete(value); else next.add(value);
+    return { ...cur, [field]: next };
+  });
+  const onTableClose = useCallback(() => setTableOpen(false), []);
+  const onTablePick = useCallback((geoid: string, name: string, lon: number, lat: number) => {
+    mapApi.current?.flyTo(lon, lat, level === "state" ? 5.2 : 8.2);
+    mapApi.current?.select(level, geoid);
+    setSelected({ geoid, name, level, x: 0, y: 0 });
+    if (window.matchMedia("(max-width: 767px)").matches) setTableOpen(false);
+  }, [level]);
   const loading = available && !current && !error;
 
   // ── Map-first chrome (D-25) ─────────────────────────────────────────────────
@@ -128,6 +157,7 @@ export function Viewer({ search }: { search: string }) {
           onTilesError={setTilesError}
           levelZooms={bands}
           featureLayer={featureSpec}
+          featureFilter={featureFilter}
           onFeatureHover={setFeatureHover}
           onFeatureSelect={setFeatureSelected}
           onUserMove={() => { if (!browserOpen) { setImmersed(true); setPeek(false); } }}
@@ -173,12 +203,59 @@ export function Viewer({ search }: { search: string }) {
           <h1 className="mt-1 text-lg font-bold leading-snug tracking-tight md:text-xl">
             {primary.title}{secondary && <span className="font-semibold text-muted-foreground"> × {secondary.title}</span>}
           </h1>
-          <p className="mt-0.5 text-xs text-muted-foreground md:text-[13px]">{meta}</p>
+          <p className="mt-0.5 flex items-start gap-1.5 text-xs text-muted-foreground md:text-[13px]">
+            <span>{meta}</span>
+            {primary.terms.length > 0 && (
+              <button type="button" onClick={() => setExplainOpen((o) => !o)} aria-expanded={explainOpen} aria-label="What do these numbers mean?"
+                className="mt-px shrink-0 rounded text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring"><Info className="size-3.5" aria-hidden /></button>
+            )}
+          </p>
+          {explainOpen && (
+            <dl className="mt-2 space-y-1.5 rounded-md bg-muted p-2.5 text-[11.5px] leading-snug">
+              {primary.terms.map((id) => TERM_BY_ID.get(id)).filter((t) => !!t).map((t) => (
+                <div key={t!.id}><dt className="inline font-semibold">{t!.term}: </dt><dd className="inline">{t!.short}</dd></div>
+              ))}
+              <a href={`/data/${primary.id}#explainers`} className="block pt-0.5 text-primary hover:underline">More on the data page →</a>
+            </dl>
+          )}
           <div className="mt-3 hidden flex-wrap gap-2 md:flex">
             {!isFeature && <button type="button" onClick={() => setBrowserOpen(true)} className="rounded-md border px-2.5 py-1 text-[13px] hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring">Compare</button>}
             {available && current && <button type="button" onClick={() => setTableOpen(true)} className="rounded-md border px-2.5 py-1 text-[13px] hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring">Table</button>}
             <a href={`/data/${primary.id}`} className="rounded-md border px-2.5 py-1 text-[13px] text-foreground hover:bg-muted">About this data</a>
           </div>
+          {/* Progressive disclosure: options stay tucked away until asked for. */}
+          {(availableLevels.length > 1 || primary.facets.length > 0) && (
+            <button type="button" onClick={() => setOptionsOpen((o) => !o)} aria-expanded={optionsOpen} aria-controls="display-options"
+              className="mt-3 flex items-center gap-1.5 rounded text-xs font-medium text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring">
+              <SlidersHorizontal className="size-3.5" aria-hidden /> Display options <ChevronDown className={`size-3.5 transition-transform ${optionsOpen ? "rotate-180" : ""}`} aria-hidden />
+            </button>
+          )}
+          {optionsOpen && (
+            <div id="display-options" className="mt-2 max-h-[45vh] space-y-4 overflow-y-auto border-t pt-3">
+              {availableLevels.length > 1 && (
+                <fieldset>
+                  <legend className="mb-1.5 text-xs font-semibold">Geography level</legend>
+                  <div role="radiogroup" aria-label="Geography level" className="flex flex-wrap gap-1.5">
+                    {([null, ...availableLevels] as Array<GeoLevel | null>).map((l) => (
+                      <button key={l ?? "auto"} type="button" role="radio" aria-checked={state.lv === l || (!l && !pinnedLevel)}
+                        onClick={() => update({ lv: l })}
+                        className="rounded-full border px-2.5 py-0.5 text-xs text-muted-foreground aria-checked:border-primary aria-checked:bg-primary aria-checked:text-primary-foreground focus-visible:outline-2 focus-visible:outline-ring">
+                        {l ? GEO_LEVELS[l].label.replace("Census tract", "Tract") : "Auto"}
+                      </button>
+                    ))}
+                  </div>
+                  <p className="mt-1.5 text-[11px] leading-snug text-muted-foreground">
+                    {pinnedLevel ? `Showing ${GEO_LEVELS[pinnedLevel].label.toLowerCase()} data at every zoom.` : "Auto switches from states to counties to tracts as you zoom in."}
+                    {" "}Block groups and blocks are coming.
+                  </p>
+                </fieldset>
+              )}
+              {primary.facets.map((f) => (
+                <FacetFilter key={f.field} facet={f} hidden={hidden[f.field]} onToggle={(v) => toggleFacet(f.field, v)}
+                  onAll={() => setHidden((cur) => ({ ...cur, [f.field]: new Set() }))} />
+              ))}
+            </div>
+          )}
         </section>
       )}
 
@@ -251,7 +328,7 @@ export function Viewer({ search }: { search: string }) {
       )}
 
       {tableOpen && primary && (
-        <DataTable level={level} x={primary} xv={x.values[level]} y={secondary} yv={y.values[level]} onClose={() => setTableOpen(false)} />
+        <DataTable level={level} x={primary} xv={x.values[level]} y={secondary} yv={y.values[level]} onClose={onTableClose} onPick={onTablePick} />
       )}
 
       {tilesError && (
@@ -271,11 +348,11 @@ export function Viewer({ search }: { search: string }) {
       )}
       {featureHover && !featureSelected && featureSpec && (
         <div className="pointer-events-none absolute z-30 rounded-md border bg-popover p-2.5 shadow-md" style={{ left: featureHover.x + 14, top: featureHover.y + 14 }}>
-          <Popup title={featureTitle(featureHover)} rows={featureRows(featureSpec, featureHover).slice(0, 2)} />
+          <Popup title={featureTitle(featureHover, featureSpec)} rows={featureRows(featureSpec, featureHover, primary?.facets).slice(0, 2)} />
         </div>
       )}
       {featureSelected && featureSpec && (
-        <FeaturePanel hit={featureSelected} spec={featureSpec} onClose={() => setFeatureSelected(null)} />
+        <FeaturePanel hit={featureSelected} spec={featureSpec} facets={primary?.facets ?? []} onClose={() => setFeatureSelected(null)} />
       )}
       {selected && primary && (
         <DetailPanel info={selected} onClose={() => setSelected(null)} primary={primary} secondary={secondary}
@@ -376,28 +453,79 @@ function DetailPanel({ info, onClose, primary, secondary, xv, yv, onMapIt }: Det
   );
 }
 
-/** Readable title: the road class ("Minor arterial"); the raw route ID is a detail row. */
-function featureTitle(h: FeatureHit): string {
-  const fs = Number(h.properties.f_system);
-  return F_SYSTEM[fs] ? `${F_SYSTEM[fs]} segment` : "Road segment";
+/** Readable title: the signed route ("I-35", "US 52"), else the street name, else the road class. */
+function featureTitle(h: FeatureHit, spec?: FeatureLayerSpec): string {
+  const p = h.properties;
+  if (p.route) return String(p.route);
+  if (p.street) return titleCase(String(p.street));
+  const fs = Number(p.f_system);
+  return F_SYSTEM[fs] ? `${F_SYSTEM[fs]} segment` : spec ? "Segment" : "Road segment";
 }
 
-/** Popup rows for a feature: the registry's field labels, formatted by field. */
-function featureRows(spec: FeatureLayerSpec, h: FeatureHit): PopupRow[] {
+/** Some states publish street names in capitals; show them in title case. */
+function titleCase(s: string) {
+  return s === s.toUpperCase() ? s.toLowerCase().replace(/\b([a-z])/g, (c) => c.toUpperCase()) : s;
+}
+
+/** Popup rows: registry field labels and units; categorical codes shown with their facet labels. */
+function featureRows(spec: FeatureLayerSpec, h: FeatureHit, facets: Facet[] = []): PopupRow[] {
   const rows: PopupRow[] = [];
-  for (const [field, label] of Object.entries(spec.fields)) {
+  for (const [field, f] of Object.entries(spec.fields)) {
+    const { label, unit } = typeof f === "string" ? { label: f, unit: undefined } : f;
     const v = h.properties[field];
     if (v == null || v === "") continue;
-    if (field === "route_id") { rows.push({ label, value: null, unit: "count", text: String(v) }); continue; }
-    if (field === spec.rankField && field === "f_system") rows.push({ label, value: null, unit: "count", text: F_SYSTEM[Number(v)] ?? String(v) });
-    else if (field.startsWith("aadt")) rows.push({ label, value: Number(v), unit: "vehicles_per_day" });
-    else rows.push({ label, value: Number(v), unit: "count" });
+    if (field === "route") continue; // it's the title
+    if (field === "street" && !h.properties.route) continue; // already the title
+    const facet = facets.find((x) => x.field === field);
+    const facetLabel = facet?.values.find((x) => String(x.value) === String(v))?.label;
+    if (facetLabel) rows.push({ label, value: null, unit: "count", text: facetLabel });
+    else if (typeof v === "string" && isNaN(Number(v))) rows.push({ label, value: null, unit: "count", text: titleCase(v) });
+    else rows.push({ label, value: Number(v), unit: (unit ?? "count") as PopupRow["unit"] });
   }
   // Lead with the mapped value.
-  return rows.sort((a, b) => (b.label === spec.fields[spec.valueField] ? 1 : 0) - (a.label === spec.fields[spec.valueField] ? 1 : 0));
+  const main = typeof spec.fields[spec.valueField] === "string" ? spec.fields[spec.valueField] as string : (spec.fields[spec.valueField] as { label: string })?.label;
+  return rows.sort((a, b) => (b.label === main ? 1 : 0) - (a.label === main ? 1 : 0));
 }
 
-function FeaturePanel({ hit, spec, onClose }: { hit: FeatureHit; spec: FeatureLayerSpec; onClose: () => void }) {
+/** One facet as toggle chips with its plain-language explainer behind an info button. */
+function FacetFilter({ facet, hidden, onToggle, onAll }: { facet: Facet; hidden?: Set<string>; onToggle: (v: string) => void; onAll: () => void }) {
+  const [explain, setExplain] = useState(false);
+  const term = facet.term ? TERM_BY_ID.get(facet.term) : undefined;
+  return (
+    <fieldset>
+      <div className="mb-1.5 flex items-center gap-1.5">
+        <legend className="text-xs font-semibold">{facet.label}</legend>
+        <button type="button" onClick={() => setExplain((e) => !e)} aria-expanded={explain} aria-label={`What is ${facet.label.toLowerCase()}?`}
+          className="rounded text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring"><Info className="size-3.5" aria-hidden /></button>
+        {hidden && hidden.size > 0 && <button type="button" onClick={onAll} className="ml-auto rounded text-[11px] text-primary hover:underline">Show all</button>}
+      </div>
+      {explain && (
+        <div className="mb-2 rounded-md bg-muted p-2 text-[11px] leading-snug">
+          <p>{facet.explainer}</p>
+          {term && <p className="mt-1 text-muted-foreground">{term.short}</p>}
+          <dl className="mt-1.5 space-y-0.5">
+            {facet.values.filter((v) => v.description).map((v) => (
+              <div key={String(v.value)}><dt className="inline font-semibold">{v.label}: </dt><dd className="inline">{v.description}</dd></div>
+            ))}
+          </dl>
+        </div>
+      )}
+      <div className="flex flex-wrap gap-1.5">
+        {facet.values.map((v) => {
+          const on = !hidden?.has(String(v.value));
+          return (
+            <button key={String(v.value)} type="button" aria-pressed={on} onClick={() => onToggle(String(v.value))}
+              className="rounded-full border px-2.5 py-0.5 text-xs text-muted-foreground line-through aria-pressed:border-primary aria-pressed:text-foreground aria-pressed:no-underline focus-visible:outline-2 focus-visible:outline-ring">
+              {v.label}
+            </button>
+          );
+        })}
+      </div>
+    </fieldset>
+  );
+}
+
+function FeaturePanel({ hit, spec, facets, onClose }: { hit: FeatureHit; spec: FeatureLayerSpec; facets: Facet[]; onClose: () => void }) {
   const phone = useIsPhone();
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
@@ -412,7 +540,7 @@ function FeaturePanel({ hit, spec, onClose }: { hit: FeatureHit; spec: FeatureLa
           <X className="size-4" />
         </button>
       </div>
-      <Popup rows={featureRows(spec, hit)} />
+      <Popup rows={featureRows(spec, hit, facets)} />
     </>
   );
   if (phone) return <BottomSheet label={`Details for ${featureTitle(hit)}`} summary={body} onClose={onClose}>{null}</BottomSheet>;

@@ -9,7 +9,7 @@ import { createRequire } from "node:module";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { THEMES, themeCssVars } from "@webgis/design";
-import { loadRegistry } from "@webgis/registry/load";
+import { loadGlossary, loadRegistry } from "@webgis/registry/load";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const app = join(here, "..");
@@ -36,4 +36,5 @@ mkdirSync(tiles, { recursive: true });
 if (!existsSync(link) && !(() => { try { return lstatSync(link).isSymbolicLink(); } catch { return false; } })()) symlinkSync(tiles, link);
 const entries = loadRegistry();
 writeFileSync(join(app, "src/generated/registry.json"), JSON.stringify(entries, null, 1));
+writeFileSync(join(app, "src/generated/glossary.json"), JSON.stringify(loadGlossary(), null, 1));
 console.log(`prepare: theme.css, maplibre worker, tiles link, registry.json (${entries.length} datasets) ready`);

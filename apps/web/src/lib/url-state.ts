@@ -9,6 +9,8 @@ export interface UrlState {
   b: string | null;
   at: ViewState;
   theme: "light" | "dark" | null;
+  /** Fixed geography level ("Display options"); null = automatic by zoom. */
+  lv: "state" | "county" | "tract" | null;
 }
 
 export const DEFAULT_VIEW: ViewState = { lon: -96.5, lat: 38.5, zoom: 3.6 };
@@ -22,6 +24,7 @@ export function parseUrlState(search: string): UrlState {
     b: p.get("b"),
     at: at && at.length === 3 && at.every(Number.isFinite) ? { lon: at[0], lat: at[1], zoom: at[2] } : DEFAULT_VIEW,
     theme: theme === "light" || theme === "dark" ? theme : null,
+    lv: (["state", "county", "tract"] as const).find((l) => l === p.get("lv")) ?? null,
   };
 }
 
@@ -31,6 +34,7 @@ export function serializeUrlState(s: UrlState): string {
   if (s.b) p.set("b", s.b);
   p.set("at", `${s.at.lon.toFixed(4)},${s.at.lat.toFixed(4)},${s.at.zoom.toFixed(2)}`);
   if (s.theme) p.set("theme", s.theme);
+  if (s.lv) p.set("lv", s.lv);
   return `?${p.toString().replaceAll("%2C", ",")}`;
 }
 

@@ -15,8 +15,8 @@
 
 | Dataset | Levels (non-null / rows) | Unit | Vintage | Method |
 |---|---|---|---|---|
-| **Traffic volume (AADT)** (`aadt`) | road segments (feature layer) | vehicles_per_day | HPMS 2024 | Line layer from `HPMS2024.zip` (layers matching `^HPMS_FULL_[A-Z]{2}_2024$`), where `aadt > 0`; colored by `aadt`, sized and thinned by `f_system` (shown from zoom: ≤1 at z3, ≤2 at z5, ≤3 at z6, ≤4 at z8, ≤7 at z10). Built to PMTiles with tippecanoe; drawn from its own geometry, so it isn't part of county insights. |
-| **Vehicle miles per resident** (`vmt_per_capita`) | state: 51 of 51<br>county: 3,130 of 3,144 | miles_per_day | HPMS 2024 | HPMS 2024 sections with AADT: Σ AADT × (end_point − begin_point) miles, grouped by state (from the layer name) and `county_id`, ÷ ACS population (population density × land area). Counted roads only, so it runs about 10–15% below FHWA's published totals, which estimate uncounted local roads (MN: 143M vs ≈163M vehicle-miles/day). Connecticut counties use pre-2022 codes and show no data. Modeled using: population_density (insight pairs with those are flagged). |
+| **Traffic volume (AADT)** (`aadt`) | road segments (feature layer) | vehicles_per_day | 2024 | Line layer from `HPMS2024.zip` (layers matching `^HPMS_FULL_[A-Z]{2}_2024$`); colored by `aadt`, sized and thinned by `f_system` (shown from zoom: ≤1 at z3, ≤2 at z5, ≤3 at z6, ≤4 at z8, ≤7 at z10). Built to PMTiles with tippecanoe; drawn from its own geometry, so it isn't part of county insights. |
+| **Vehicle miles per resident** (`vmt_per_capita`) | state: 51 of 51<br>county: 3,130 of 3,144 | miles_per_day | 2024 | HPMS 2024 sections with AADT: Σ AADT × (end_point − begin_point) miles, grouped by state (from the layer name) and `county_id`, ÷ ACS population (population density × land area). Counted roads only, so it runs about 10–15% below FHWA's published totals, which estimate uncounted local roads (MN: 143M vs ≈163M vehicle-miles/day). Connecticut counties use pre-2022 codes and show no data. Modeled using: population_density (insight pairs with those are flagged). |
 
 ## NOAA NCEI nClimDiv county climate data
 
@@ -27,10 +27,10 @@
 
 | Dataset | Levels (non-null / rows) | Unit | Vintage | Method |
 |---|---|---|---|---|
-| **Annual precipitation** (`annual_precipitation`) | county: 3,133 of 3,133 | inches | 1991–2020 normal | nClimDiv county file `climdiv-pcpncy`; sum of months 1,2,3,4,5,6,7,8,9,10,11,12 per year, averaged over 1991–2020 (a county needs ≥ 80% of years). NOAA state codes mapped to FIPS. |
-| **January low temperature** (`january_low`) | county: 3,133 of 3,133 | deg_f | 1991–2020 normal | nClimDiv county file `climdiv-tmincy`; mean of months 1 per year, averaged over 1991–2020 (a county needs ≥ 80% of years). NOAA state codes mapped to FIPS. |
-| **July high temperature** (`july_high`) | county: 3,133 of 3,133 | deg_f | 1991–2020 normal | nClimDiv county file `climdiv-tmaxcy`; mean of months 7 per year, averaged over 1991–2020 (a county needs ≥ 80% of years). NOAA state codes mapped to FIPS. |
-| **Average temperature** (`mean_temperature`) | county: 3,133 of 3,133 | deg_f | 1991–2020 normal | nClimDiv county file `climdiv-tmpccy`; mean of months 1,2,3,4,5,6,7,8,9,10,11,12 per year, averaged over 1991–2020 (a county needs ≥ 80% of years). NOAA state codes mapped to FIPS. |
+| **Annual precipitation** (`annual_precipitation`) | county: 3,133 of 3,133 | inches | 1991–2020 average | nClimDiv county file `climdiv-pcpncy`; sum of months 1,2,3,4,5,6,7,8,9,10,11,12 per year, averaged over 1991–2020 (a county needs ≥ 80% of years). NOAA state codes mapped to FIPS. |
+| **January low temperature** (`january_low`) | county: 3,133 of 3,133 | deg_f | 1991–2020 average | nClimDiv county file `climdiv-tmincy`; mean of months 1 per year, averaged over 1991–2020 (a county needs ≥ 80% of years). NOAA state codes mapped to FIPS. |
+| **July high temperature** (`july_high`) | county: 3,133 of 3,133 | deg_f | 1991–2020 average | nClimDiv county file `climdiv-tmaxcy`; mean of months 7 per year, averaged over 1991–2020 (a county needs ≥ 80% of years). NOAA state codes mapped to FIPS. |
+| **Average temperature** (`mean_temperature`) | county: 3,133 of 3,133 | deg_f | 1991–2020 average | nClimDiv county file `climdiv-tmpccy`; mean of months 1,2,3,4,5,6,7,8,9,10,11,12 per year, averaged over 1991–2020 (a county needs ≥ 80% of years). NOAA state codes mapped to FIPS. |
 
 ## CDC PLACES (Local Data for Better Health), 2025 release
 
@@ -41,12 +41,12 @@
 
 | Dataset | Levels (non-null / rows) | Unit | Vintage | Method |
 |---|---|---|---|---|
-| **Binge drinking** (`binge_drinking`) | county: 2,956 of 2,956 | percent | BRFSS 2023 | data.cdc.gov dataset `swc5-untb`, measure `BINGE`, `AgeAdjPrv`. The "MOE" column stores half the 95% confidence interval. Modeled using: pct_poverty, median_household_income (insight pairs with those are flagged). |
-| **Loneliness** (`loneliness`) | county: 2,299 of 2,299 | percent | BRFSS 2023 | data.cdc.gov dataset `swc5-untb`, measure `LONELINESS`, `AgeAdjPrv`. The "MOE" column stores half the 95% confidence interval. Modeled using: pct_poverty, median_household_income (insight pairs with those are flagged). |
-| **Obesity** (`obesity`) | county: 2,956 of 2,956 | percent | BRFSS 2023 | data.cdc.gov dataset `swc5-untb`, measure `OBESITY`, `AgeAdjPrv`. The "MOE" column stores half the 95% confidence interval. Modeled using: pct_poverty, median_household_income (insight pairs with those are flagged). |
-| **No leisure-time exercise** (`physical_inactivity`) | county: 2,956 of 2,956 | percent | BRFSS 2023 | data.cdc.gov dataset `swc5-untb`, measure `LPA`, `AgeAdjPrv`. The "MOE" column stores half the 95% confidence interval. Modeled using: pct_poverty, median_household_income (insight pairs with those are flagged). |
-| **Short sleep** (`short_sleep`) | county: 3,143 of 3,143 | percent | BRFSS 2022 | data.cdc.gov dataset `swc5-untb`, measure `SLEEP`, `AgeAdjPrv`. The "MOE" column stores half the 95% confidence interval. Modeled using: pct_poverty, median_household_income (insight pairs with those are flagged). |
-| **Cigarette smoking** (`smoking`) | county: 2,956 of 2,956 | percent | BRFSS 2023 | data.cdc.gov dataset `swc5-untb`, measure `CSMOKING`, `AgeAdjPrv`. The "MOE" column stores half the 95% confidence interval. Modeled using: pct_poverty, median_household_income (insight pairs with those are flagged). |
+| **Binge drinking** (`binge_drinking`) | county: 2,956 of 2,956 | percent | 2023 data | data.cdc.gov dataset `swc5-untb`, measure `BINGE`, `AgeAdjPrv`. The "MOE" column stores half the 95% confidence interval. Modeled using: pct_poverty, median_household_income (insight pairs with those are flagged). |
+| **Loneliness** (`loneliness`) | county: 2,299 of 2,299 | percent | 2023 data | data.cdc.gov dataset `swc5-untb`, measure `LONELINESS`, `AgeAdjPrv`. The "MOE" column stores half the 95% confidence interval. Modeled using: pct_poverty, median_household_income (insight pairs with those are flagged). |
+| **Obesity** (`obesity`) | county: 2,956 of 2,956 | percent | 2023 data | data.cdc.gov dataset `swc5-untb`, measure `OBESITY`, `AgeAdjPrv`. The "MOE" column stores half the 95% confidence interval. Modeled using: pct_poverty, median_household_income (insight pairs with those are flagged). |
+| **No leisure-time exercise** (`physical_inactivity`) | county: 2,956 of 2,956 | percent | 2023 data | data.cdc.gov dataset `swc5-untb`, measure `LPA`, `AgeAdjPrv`. The "MOE" column stores half the 95% confidence interval. Modeled using: pct_poverty, median_household_income (insight pairs with those are flagged). |
+| **Short sleep** (`short_sleep`) | county: 3,143 of 3,143 | percent | 2022 data | data.cdc.gov dataset `swc5-untb`, measure `SLEEP`, `AgeAdjPrv`. The "MOE" column stores half the 95% confidence interval. Modeled using: pct_poverty, median_household_income (insight pairs with those are flagged). |
+| **Cigarette smoking** (`smoking`) | county: 2,956 of 2,956 | percent | 2023 data | data.cdc.gov dataset `swc5-untb`, measure `CSMOKING`, `AgeAdjPrv`. The "MOE" column stores half the 95% confidence interval. Modeled using: pct_poverty, median_household_income (insight pairs with those are flagged). |
 
 ## FHWA National Bridge Inventory
 
@@ -57,7 +57,7 @@
 
 | Dataset | Levels (non-null / rows) | Unit | Vintage | Method |
 |---|---|---|---|---|
-| **Bridge deck area in poor condition** (`bridges_poor_condition`) | state: 52 of 52<br>county: 3,152 of 3,206 | percent | NBI 2025 | FHWA NBI 2025 delimited highway-bridge file; share of deck area (the federal 23 CFR 490 measure) whose `BRIDGE_CONDITION` is P; areas with fewer than 10 bridges get no value. County codes are matched as published (Connecticut still uses pre-2022 counties, so its counties show no data). |
+| **Bridge deck area in poor condition** (`bridges_poor_condition`) | state: 52 of 52<br>county: 3,152 of 3,206 | percent | 2025 inventory | FHWA NBI 2025 delimited highway-bridge file; share of deck area (the federal 23 CFR 490 measure) whose `BRIDGE_CONDITION` is P; areas with fewer than 10 bridges get no value. County codes are matched as published (Connecticut still uses pre-2022 counties, so its counties show no data). |
 
 ## U.S. Census Bureau, LEHD Origin-Destination Employment Statistics (LODES 8)
 
@@ -77,18 +77,18 @@
 
 | Dataset | Levels (non-null / rows) | Unit | Vintage | Method |
 |---|---|---|---|---|
-| **Mean travel time to work** (`mean_commute_minutes`) | state: 52 of 52<br>county: 3,221 of 3,222<br>tract: 84,164 of 85,382 | minutes | 2020–2024 ACS 5-year | ACS 5-year API. (`B08013_001`) ÷ (`B08012_001`). MOE: Census approximation formulas (ratio). |
-| **Median household income** (`median_household_income`) | state: 52 of 52<br>county: 3,221 of 3,222<br>tract: 83,828 of 85,382 | dollars | 2020–2024 ACS 5-year | ACS 5-year API. `B19013_001`. MOE: Census approximation formulas (published). |
-| **Population 65 and older** (`pct_age_65_plus`) | state: 52 of 52<br>county: 3,222 of 3,222<br>tract: 84,529 of 85,382 | percent | 2020–2024 ACS 5-year | ACS 5-year API. (`B01001_020` + `B01001_021` + `B01001_022` + `B01001_023` + `B01001_024` + `B01001_025` + `B01001_044` + `B01001_045` + `B01001_046` + `B01001_047` + `B01001_048` + `B01001_049`) ÷ (`B01001_001`) × 100. MOE: Census approximation formulas (proportion). |
-| **Bike to work** (`pct_bike_commute`) | state: 52 of 52<br>county: 3,222 of 3,222<br>tract: 84,378 of 85,382 | percent | 2020–2024 ACS 5-year | ACS 5-year API. (`B08301_018`) ÷ (`B08301_001`) × 100. MOE: Census approximation formulas (proportion). |
-| **Hour-plus commutes** (`pct_long_commute`) | state: 52 of 52<br>county: 3,222 of 3,222<br>tract: 84,365 of 85,382 | percent | 2020–2024 ACS 5-year | ACS 5-year API. (`B08303_012` + `B08303_013`) ÷ (`B08303_001`) × 100. MOE: Census approximation formulas (proportion). |
-| **Population below poverty** (`pct_poverty`) | state: 52 of 52<br>county: 3,222 of 3,222<br>tract: 84,338 of 85,382 | percent | 2020–2024 ACS 5-year | ACS 5-year API. (`B17001_002`) ÷ (`B17001_001`) × 100. MOE: Census approximation formulas (proportion). |
-| **Renter-occupied households** (`pct_renter_households`) | state: 52 of 52<br>county: 3,222 of 3,222<br>tract: 84,279 of 85,382 | percent | 2020–2024 ACS 5-year | ACS 5-year API. (`B25003_003`) ÷ (`B25003_001`) × 100. MOE: Census approximation formulas (proportion). |
-| **Commute by public transit** (`pct_transit_commute`) | state: 52 of 52<br>county: 3,222 of 3,222<br>tract: 84,378 of 85,382 | percent | 2020–2024 ACS 5-year | ACS 5-year API. (`B08301_010`) ÷ (`B08301_001`) × 100. MOE: Census approximation formulas (proportion). |
-| **Walk to work** (`pct_walk_commute`) | state: 52 of 52<br>county: 3,222 of 3,222<br>tract: 84,378 of 85,382 | percent | 2020–2024 ACS 5-year | ACS 5-year API. (`B08301_019`) ÷ (`B08301_001`) × 100. MOE: Census approximation formulas (proportion). |
-| **Work from home** (`pct_work_from_home`) | state: 52 of 52<br>county: 3,222 of 3,222<br>tract: 84,378 of 85,382 | percent | 2020–2024 ACS 5-year | ACS 5-year API. (`B08301_021`) ÷ (`B08301_001`) × 100. MOE: Census approximation formulas (proportion). |
-| **Households with no vehicle** (`pct_zero_vehicle_households`) | state: 52 of 52<br>county: 3,222 of 3,222<br>tract: 84,279 of 85,382 | percent | 2020–2024 ACS 5-year | ACS 5-year API. (`B08201_002`) ÷ (`B08201_001`) × 100. MOE: Census approximation formulas (proportion). |
-| **Population density** (`population_density`) | state: 52 of 52<br>county: 3,222 of 3,222<br>tract: 85,020 of 85,382 | per_sq_mi | 2020–2024 ACS 5-year | ACS 5-year API. `B01001_001` ÷ land area (sq mi). MOE: Census approximation formulas (published). |
+| **Mean travel time to work** (`mean_commute_minutes`) | state: 52 of 52<br>county: 3,221 of 3,222<br>tract: 84,164 of 85,382 | minutes | 2020–2024 (5-year estimate) | ACS 5-year API. (`B08013_001`) ÷ (`B08012_001`). MOE: Census approximation formulas (ratio). |
+| **Median household income** (`median_household_income`) | state: 52 of 52<br>county: 3,221 of 3,222<br>tract: 83,828 of 85,382 | dollars | 2020–2024 (5-year estimate) | ACS 5-year API. `B19013_001`. MOE: Census approximation formulas (published). |
+| **Population 65 and older** (`pct_age_65_plus`) | state: 52 of 52<br>county: 3,222 of 3,222<br>tract: 84,529 of 85,382 | percent | 2020–2024 (5-year estimate) | ACS 5-year API. (`B01001_020` + `B01001_021` + `B01001_022` + `B01001_023` + `B01001_024` + `B01001_025` + `B01001_044` + `B01001_045` + `B01001_046` + `B01001_047` + `B01001_048` + `B01001_049`) ÷ (`B01001_001`) × 100. MOE: Census approximation formulas (proportion). |
+| **Bike to work** (`pct_bike_commute`) | state: 52 of 52<br>county: 3,222 of 3,222<br>tract: 84,378 of 85,382 | percent | 2020–2024 (5-year estimate) | ACS 5-year API. (`B08301_018`) ÷ (`B08301_001`) × 100. MOE: Census approximation formulas (proportion). |
+| **Hour-plus commutes** (`pct_long_commute`) | state: 52 of 52<br>county: 3,222 of 3,222<br>tract: 84,365 of 85,382 | percent | 2020–2024 (5-year estimate) | ACS 5-year API. (`B08303_012` + `B08303_013`) ÷ (`B08303_001`) × 100. MOE: Census approximation formulas (proportion). |
+| **Population below poverty** (`pct_poverty`) | state: 52 of 52<br>county: 3,222 of 3,222<br>tract: 84,338 of 85,382 | percent | 2020–2024 (5-year estimate) | ACS 5-year API. (`B17001_002`) ÷ (`B17001_001`) × 100. MOE: Census approximation formulas (proportion). |
+| **Renter-occupied households** (`pct_renter_households`) | state: 52 of 52<br>county: 3,222 of 3,222<br>tract: 84,279 of 85,382 | percent | 2020–2024 (5-year estimate) | ACS 5-year API. (`B25003_003`) ÷ (`B25003_001`) × 100. MOE: Census approximation formulas (proportion). |
+| **Commute by public transit** (`pct_transit_commute`) | state: 52 of 52<br>county: 3,222 of 3,222<br>tract: 84,378 of 85,382 | percent | 2020–2024 (5-year estimate) | ACS 5-year API. (`B08301_010`) ÷ (`B08301_001`) × 100. MOE: Census approximation formulas (proportion). |
+| **Walk to work** (`pct_walk_commute`) | state: 52 of 52<br>county: 3,222 of 3,222<br>tract: 84,378 of 85,382 | percent | 2020–2024 (5-year estimate) | ACS 5-year API. (`B08301_019`) ÷ (`B08301_001`) × 100. MOE: Census approximation formulas (proportion). |
+| **Work from home** (`pct_work_from_home`) | state: 52 of 52<br>county: 3,222 of 3,222<br>tract: 84,378 of 85,382 | percent | 2020–2024 (5-year estimate) | ACS 5-year API. (`B08301_021`) ÷ (`B08301_001`) × 100. MOE: Census approximation formulas (proportion). |
+| **Households with no vehicle** (`pct_zero_vehicle_households`) | state: 52 of 52<br>county: 3,222 of 3,222<br>tract: 84,279 of 85,382 | percent | 2020–2024 (5-year estimate) | ACS 5-year API. (`B08201_002`) ÷ (`B08201_001`) × 100. MOE: Census approximation formulas (proportion). |
+| **Population density** (`population_density`) | state: 52 of 52<br>county: 3,222 of 3,222<br>tract: 85,020 of 85,382 | per_sq_mi | 2020–2024 (5-year estimate) | ACS 5-year API. `B01001_001` ÷ land area (sq mi). MOE: Census approximation formulas (published). |
 
 ## NHTSA Fatality Analysis Reporting System (FARS)
 
@@ -99,7 +99,7 @@
 
 | Dataset | Levels (non-null / rows) | Unit | Vintage | Method |
 |---|---|---|---|---|
-| **Traffic deaths** (`traffic_fatalities`) | state: 51 of 51<br>county: 3,135 of 3,144 | per_100k | FARS 2020–2024 | NHTSA FARS accident files 2020–2024; total `FATALS` by state/county, averaged per year, ÷ ACS population (population density × land area) × 100,000. Crashes with unknown county count toward the state only; Connecticut counties use pre-2022 codes and show no data. Modeled using: population_density (insight pairs with those are flagged). |
+| **Traffic deaths** (`traffic_fatalities`) | state: 51 of 51<br>county: 3,135 of 3,144 | per_100k | 2020–2024 average | NHTSA FARS accident files 2020–2024; total `FATALS` by state/county, averaged per year, ÷ ACS population (population density × land area) × 100,000. Crashes with unknown county count toward the state only; Connecticut counties use pre-2022 codes and show no data. Modeled using: population_density (insight pairs with those are flagged). |
 
 ## Known gaps and caveats
 

@@ -13,5 +13,6 @@ vintage: "2023"
 geographyLevels: [state, county, tract]
 unit: per_sq_mi
 universe: jobs (by workplace)
+terms: [lodes, census-geography, quantile-classes]
 measure: { kind: lodes, file: wac, column: C000, segment: S000, jobType: JT00, perSqMi: true }
 symbology: { ramp: blues, classification: quantile, classes: 7 }

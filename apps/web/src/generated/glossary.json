@@ -1,0 +1,92 @@
+[
+ {
+  "id": "aadt",
+  "term": "Annual average daily traffic (AADT)",
+  "short": "How many vehicles pass a point on a road on an average day, counting both directions.",
+  "long": "AADT is the standard way traffic engineers describe how busy a road is. States count traffic with sensors for a few days or continuously, then adjust for season and day of week to estimate a typical day across the whole year. A city street might carry a few thousand vehicles a day; a downtown interstate can carry over 150,000.",
+  "source": "https://www.fhwa.dot.gov/policyinformation/tmguide/"
+ },
+ {
+  "id": "functional-class",
+  "term": "Functional classification",
+  "short": "The job a road does in the network, from long-distance travel (Interstates) down to reaching your front door (local roads).",
+  "long": "Planners sort every public road by function. Interstates and other freeways move lots of traffic over long distances with no driveways or stoplights. Arterials carry traffic between and through communities. Collectors gather trips from neighborhoods and feed them to arterials. Local roads give access to homes and businesses. The class affects funding and design standards, and it's why two roads with similar traffic can be built very differently.",
+  "source": "https://www.fhwa.dot.gov/planning/processes/statewide/related/highway_functional_classifications/"
+ },
+ {
+  "id": "road-type",
+  "term": "Road type (route signing)",
+  "short": "Which kind of route sign the road carries, such as Interstate, U.S. highway, state highway or county road.",
+  "long": "Route signing is the shield you see on the road. It mostly reflects who numbered the route, not who maintains it or how busy it is. An unsigned road usually has only a street name. Road type and functional class often line up but not always: a busy city arterial can be unsigned, and some state highways are quiet rural roads."
+ },
+ {
+  "id": "acs-5-year",
+  "term": "ACS 5-year estimates",
+  "short": "Census survey results pooled over five years, so even small places have enough responses to be reliable.",
+  "long": "The American Community Survey asks a sample of households every year. Combining five years of responses gives estimates for every county and census tract, at the cost of describing a period (for example 2020–2024) rather than a single year. Small areas have fewer responses, so their estimates are less precise; that's what the margin of error shows.",
+  "source": "https://www.census.gov/programs-surveys/acs/guidance/estimates.html"
+ },
+ {
+  "id": "margin-of-error",
+  "term": "Margin of error (±)",
+  "short": "How far the true value could reasonably be from the estimate shown.",
+  "long": "Survey and model-based numbers are estimates. A value of 12% ± 3% means the true value is likely between 9% and 15%. For Census ACS data the range covers 90% confidence; for CDC PLACES it is a 95% interval. When two places' ranges overlap a lot, the difference between them may not be real."
+ },
+ {
+  "id": "age-adjusted",
+  "term": "Age-adjusted rate",
+  "short": "A rate recalculated as if every place had the same age mix, so places with many older or younger residents can be compared fairly.",
+  "long": "Many health conditions are more common at older ages. Without adjustment, a county full of retirees would look less healthy simply because of its age profile. Age adjustment weights each place's rates to a standard U.S. population, which isolates differences that aren't just about age."
+ },
+ {
+  "id": "model-based-estimate",
+  "term": "Model-based estimate",
+  "short": "A value predicted from survey data and local characteristics rather than counted directly in that place.",
+  "long": "CDC's PLACES project has health survey responses for states, not for every county. It uses a statistical model that combines those responses with each county's demographics (such as age, race and poverty) to estimate local rates. The estimates are useful for comparison, but they partly reflect the model's inputs, which is why Weird Insights won't pair them with those inputs.",
+  "source": "https://www.cdc.gov/places/methodology/"
+ },
+ {
+  "id": "climate-normal",
+  "term": "Climate normal",
+  "short": "The average of 30 years of weather, here 1991–2020, describing what's typical for a place.",
+  "long": "A single year's weather is noisy. Climate normals average three decades so they describe the expected climate rather than any one year. They are updated every ten years."
+ },
+ {
+  "id": "bridge-condition",
+  "term": "Bridge condition (good, fair, poor)",
+  "short": "Inspectors rate a bridge's deck, superstructure and substructure from 0 to 9. A bridge is \"poor\" if its lowest rating is 4 or less.",
+  "long": "\"Poor\" does not mean unsafe; unsafe bridges are closed. It means significant deterioration that needs major repair or replacement soon. The map shows the share of bridge deck area (the bridge's surface) in poor condition, the measure the federal government uses, so a big bridge counts more than a small culvert.",
+  "source": "https://www.fhwa.dot.gov/bridge/nbi.cfm"
+ },
+ {
+  "id": "vmt",
+  "term": "Vehicle miles traveled (VMT)",
+  "short": "The total miles driven by all vehicles on an area's roads in a day.",
+  "long": "VMT multiplies each road's traffic by its length. A county with an interstate running through it can have high VMT even if few people live there, because most of the driving is by people passing through. Dividing by residents makes counties comparable but exaggerates that through-traffic effect."
+ },
+ {
+  "id": "per-100k",
+  "term": "Rate per 100,000 residents",
+  "short": "A count scaled to the population, so places of different sizes can be compared.",
+  "long": "Ten traffic deaths in a county of 10,000 people is a much higher rate than ten in a county of a million. Dividing by population and multiplying by 100,000 puts them on the same footing. In very small counties a single event moves the rate a lot, so treat extreme values there with care."
+ },
+ {
+  "id": "census-geography",
+  "term": "States, counties and census tracts",
+  "short": "The nested areas the Census Bureau reports data for. Tracts are neighborhoods of roughly 4,000 people.",
+  "long": "Every state is divided into counties (or equivalents), and every county into census tracts. Tracts are drawn to hold about 1,200 to 8,000 people, so they are small in cities and large in rural areas. Block groups and blocks are smaller still; they're planned for later."
+ },
+ {
+  "id": "lodes",
+  "term": "LODES job counts",
+  "short": "The number of jobs located in an area, from unemployment-insurance records matched by the Census Bureau.",
+  "long": "LEHD Origin-Destination Employment Statistics count jobs where they are, not where workers live. They cover most private and public employers but not the self-employed or most federal jobs. Small areas include some statistical noise added to protect confidentiality.",
+  "source": "https://lehd.ces.census.gov/data/"
+ },
+ {
+  "id": "quantile-classes",
+  "term": "How the map colors are grouped",
+  "short": "Each color holds roughly the same number of places, so the map shows how places rank against each other.",
+  "long": "Most maps here split places into equal-sized groups (quantiles), from lightest (lowest) to darkest (highest). That makes patterns easy to see, but the value ranges of the groups can be uneven, so always check the legend. Traffic volume uses fixed, conventional ranges instead."
+ }
+]

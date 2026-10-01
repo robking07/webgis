@@ -12,7 +12,11 @@
    "highways",
    "HPMS",
    "congestion",
-   "trucks"
+   "trucks",
+   "interstate",
+   "US highway",
+   "state highway",
+   "county road"
   ],
   "source": {
    "name": "FHWA Highway Performance Monitoring System (HPMS) 2024",
@@ -21,7 +25,7 @@
   },
   "license": "Public domain (U.S. Government work; NTAD \"available for unrestricted public use\"). Credit FHWA and BTS.",
   "updateCadence": "annual",
-  "vintage": "HPMS 2024",
+  "vintage": "2024",
   "geographyLevels": [],
   "unit": "vehicles_per_day",
   "universe": "road segments with a reported AADT",
@@ -34,14 +38,25 @@
     "path": "HPMS2024.gdb",
     "layerPattern": "^HPMS_FULL_[A-Z]{2}_2024$"
    },
-   "where": "aadt > 0",
+   "select": "SELECT aadt, f_system, through_lanes, aadt_single_unit, aadt_combination, CASE routesigning WHEN 2 THEN 'Interstate' WHEN 5 THEN 'Interstate' WHEN 3 THEN 'US highway' WHEN 4 THEN 'State highway' WHEN 6 THEN 'County road' ELSE 'City or local road' END AS road_type, TRIM(CASE routesigning WHEN 2 THEN 'I-' || CASE WHEN TRIM(routename) GLOB '[0-9]*' AND LENGTH(TRIM(routename)) <= 5 THEN TRIM(routename) ELSE routenumber END WHEN 5 THEN 'I-' || routenumber || ' Business' WHEN 3 THEN 'US ' || routenumber WHEN 4 THEN '{state} ' || routenumber WHEN 6 THEN 'County Rd ' || routenumber ELSE '' END || CASE WHEN routesigning IN (2,3,4,6) THEN CASE routequalifier WHEN 2 THEN ' Alternate' WHEN 3 THEN ' Business' WHEN 4 THEN ' Bypass' WHEN 5 THEN ' Spur' WHEN 6 THEN ' Loop' WHEN 9 THEN ' Truck' ELSE '' END ELSE '' END) AS route, CASE WHEN routesigning IN (2,5) THEN NULL ELSE NULLIF(TRIM(routename), '') END AS street, Shape FROM {layer} WHERE aadt > 0",
    "valueField": "aadt",
    "fields": {
-    "route_id": "Route",
+    "route": "Route",
+    "street": "Street",
+    "road_type": "Road type",
     "f_system": "Functional class",
-    "aadt": "Traffic (AADT)",
-    "aadt_single_unit": "Single-unit trucks",
-    "aadt_combination": "Combination trucks",
+    "aadt": {
+     "label": "Traffic (AADT)",
+     "unit": "vehicles_per_day"
+    },
+    "aadt_single_unit": {
+     "label": "Single-unit trucks",
+     "unit": "vehicles_per_day"
+    },
+    "aadt_combination": {
+     "label": "Tractor-trailers",
+     "unit": "vehicles_per_day"
+    },
     "through_lanes": "Through lanes"
    },
    "rank": {
@@ -76,6 +91,89 @@
   },
   "modelInputs": [],
   "coverageNote": "Segments are as states report them to FHWA; not every local road has a count. Not for navigation.",
+  "facets": [
+   {
+    "field": "road_type",
+    "label": "Road type",
+    "explainer": "Which route sign the road carries. Turn types off to focus on, say, just Interstates and U.S. highways.",
+    "term": "road-type",
+    "values": [
+     {
+      "value": "Interstate",
+      "label": "Interstate",
+      "description": "The Interstate Highway System, including Interstate business loops."
+     },
+     {
+      "value": "US highway",
+      "label": "U.S. highway",
+      "description": "Numbered U.S. routes such as US 52."
+     },
+     {
+      "value": "State highway",
+      "label": "State highway",
+      "description": "Routes numbered by the state, such as MN 55."
+     },
+     {
+      "value": "County road",
+      "label": "County road",
+      "description": "Roads numbered by the county."
+     },
+     {
+      "value": "City or local road",
+      "label": "City or local road",
+      "description": "Roads with only a street name, including busy city arterials."
+     }
+    ]
+   },
+   {
+    "field": "f_system",
+    "label": "Functional class",
+    "explainer": "The job a road does, from long-distance travel down to reaching your front door. It sets line width on the map.",
+    "term": "functional-class",
+    "values": [
+     {
+      "value": 1,
+      "label": "Interstate",
+      "description": "Interstate highways."
+     },
+     {
+      "value": 2,
+      "label": "Freeway or expressway",
+      "description": "Other limited-access highways, with ramps instead of intersections."
+     },
+     {
+      "value": 3,
+      "label": "Principal arterial",
+      "description": "Major roads connecting cities, and the main corridors within them."
+     },
+     {
+      "value": 4,
+      "label": "Minor arterial",
+      "description": "Roads linking neighborhoods and towns to principal arterials."
+     },
+     {
+      "value": 5,
+      "label": "Major collector",
+      "description": "Gather traffic from local roads in towns and rural areas."
+     },
+     {
+      "value": 6,
+      "label": "Minor collector",
+      "description": "Lower-volume collectors, mostly rural."
+     },
+     {
+      "value": 7,
+      "label": "Local road",
+      "description": "Streets that mainly provide access to homes and businesses."
+     }
+    ]
+   }
+  ],
+  "terms": [
+   "aadt",
+   "functional-class",
+   "road-type"
+  ],
   "symbology": {
    "ramp": "ylgnbu",
    "classification": "manual",
@@ -107,7 +205,7 @@
   },
   "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
   "updateCadence": "static",
-  "vintage": "1991–2020 normal",
+  "vintage": "1991–2020 average",
   "geographyLevels": [
    "county"
   ],
@@ -138,6 +236,11 @@
   },
   "modelInputs": [],
   "coverageNote": "Contiguous U.S. and Alaska; Hawaii has no county series. Connecticut uses pre-2022 county codes in nClimDiv, so it shows no data.",
+  "facets": [],
+  "terms": [
+   "climate-normal",
+   "quantile-classes"
+  ],
   "symbology": {
    "ramp": "blues",
    "classification": "quantile",
@@ -162,7 +265,7 @@
   },
   "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
   "updateCadence": "annual",
-  "vintage": "BRFSS 2023",
+  "vintage": "2023 data",
   "geographyLevels": [
    "county"
   ],
@@ -179,6 +282,13 @@
    "median_household_income"
   ],
   "coverageNote": "Model-based estimates; not every county is covered in every measure.",
+  "facets": [],
+  "terms": [
+   "model-based-estimate",
+   "age-adjusted",
+   "margin-of-error",
+   "quantile-classes"
+  ],
   "symbology": {
    "ramp": "oranges",
    "classification": "quantile",
@@ -204,7 +314,7 @@
   },
   "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
   "updateCadence": "annual",
-  "vintage": "NBI 2025",
+  "vintage": "2025 inventory",
   "geographyLevels": [
    "state",
    "county"
@@ -220,6 +330,11 @@
   },
   "modelInputs": [],
   "coverageNote": "Counties with fewer than 10 bridges show no data. Connecticut's NBI records still use pre-2022 counties, so CT counties show no data.",
+  "facets": [],
+  "terms": [
+   "bridge-condition",
+   "quantile-classes"
+  ],
   "symbology": {
    "ramp": "oranges",
    "classification": "quantile",
@@ -244,7 +359,7 @@
   },
   "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
   "updateCadence": "static",
-  "vintage": "1991–2020 normal",
+  "vintage": "1991–2020 average",
   "geographyLevels": [
    "county"
   ],
@@ -264,6 +379,11 @@
   },
   "modelInputs": [],
   "coverageNote": "Contiguous U.S. and Alaska; Hawaii has no county series. Connecticut uses pre-2022 county codes in nClimDiv, so it shows no data.",
+  "facets": [],
+  "terms": [
+   "climate-normal",
+   "quantile-classes"
+  ],
   "symbology": {
    "ramp": "blues",
    "classification": "quantile",
@@ -306,6 +426,12 @@
    "perSqMi": true
   },
   "modelInputs": [],
+  "facets": [],
+  "terms": [
+   "lodes",
+   "census-geography",
+   "quantile-classes"
+  ],
   "symbology": {
    "ramp": "blues",
    "classification": "quantile",
@@ -330,7 +456,7 @@
   },
   "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
   "updateCadence": "static",
-  "vintage": "1991–2020 normal",
+  "vintage": "1991–2020 average",
   "geographyLevels": [
    "county"
   ],
@@ -350,6 +476,11 @@
   },
   "modelInputs": [],
   "coverageNote": "Contiguous U.S. and Alaska; Hawaii has no county series. Connecticut uses pre-2022 county codes in nClimDiv, so it shows no data.",
+  "facets": [],
+  "terms": [
+   "climate-normal",
+   "quantile-classes"
+  ],
   "symbology": {
    "ramp": "oranges",
    "classification": "quantile",
@@ -373,7 +504,7 @@
   },
   "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
   "updateCadence": "annual",
-  "vintage": "BRFSS 2023",
+  "vintage": "2023 data",
   "geographyLevels": [
    "county"
   ],
@@ -390,6 +521,13 @@
    "median_household_income"
   ],
   "coverageNote": "Model-based estimates; not every county is covered in every measure.",
+  "facets": [],
+  "terms": [
+   "model-based-estimate",
+   "age-adjusted",
+   "margin-of-error",
+   "quantile-classes"
+  ],
   "symbology": {
    "ramp": "blues",
    "classification": "quantile",
@@ -414,7 +552,7 @@
   },
   "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
   "updateCadence": "annual",
-  "vintage": "2020–2024 ACS 5-year",
+  "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
    "county",
@@ -434,6 +572,13 @@
    "perSqMi": false
   },
   "modelInputs": [],
+  "facets": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
   "symbology": {
    "ramp": "viridis",
    "classification": "quantile",
@@ -457,7 +602,7 @@
   },
   "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
   "updateCadence": "static",
-  "vintage": "1991–2020 normal",
+  "vintage": "1991–2020 average",
   "geographyLevels": [
    "county"
   ],
@@ -488,6 +633,11 @@
   },
   "modelInputs": [],
   "coverageNote": "Contiguous U.S. and Alaska; Hawaii has no county series. Connecticut uses pre-2022 county codes in nClimDiv, so it shows no data.",
+  "facets": [],
+  "terms": [
+   "climate-normal",
+   "quantile-classes"
+  ],
   "symbology": {
    "ramp": "oranges",
    "classification": "quantile",
@@ -511,7 +661,7 @@
   },
   "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
   "updateCadence": "annual",
-  "vintage": "2020–2024 ACS 5-year",
+  "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
    "county",
@@ -528,6 +678,13 @@
    "perSqMi": false
   },
   "modelInputs": [],
+  "facets": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
   "symbology": {
    "ramp": "ylgnbu",
    "classification": "quantile",
@@ -552,7 +709,7 @@
   },
   "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
   "updateCadence": "annual",
-  "vintage": "BRFSS 2023",
+  "vintage": "2023 data",
   "geographyLevels": [
    "county"
   ],
@@ -569,6 +726,13 @@
    "median_household_income"
   ],
   "coverageNote": "Model-based estimates; not every county is covered in every measure.",
+  "facets": [],
+  "terms": [
+   "model-based-estimate",
+   "age-adjusted",
+   "margin-of-error",
+   "quantile-classes"
+  ],
   "symbology": {
    "ramp": "oranges",
    "classification": "quantile",
@@ -593,7 +757,7 @@
   },
   "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
   "updateCadence": "annual",
-  "vintage": "2020–2024 ACS 5-year",
+  "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
    "county",
@@ -624,6 +788,13 @@
    "perSqMi": false
   },
   "modelInputs": [],
+  "facets": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
   "symbology": {
    "ramp": "cividis",
    "classification": "quantile",
@@ -648,7 +819,7 @@
   },
   "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
   "updateCadence": "annual",
-  "vintage": "2020–2024 ACS 5-year",
+  "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
    "county",
@@ -668,6 +839,13 @@
    "perSqMi": false
   },
   "modelInputs": [],
+  "facets": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
   "symbology": {
    "ramp": "blues",
    "classification": "quantile",
@@ -692,7 +870,7 @@
   },
   "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
   "updateCadence": "annual",
-  "vintage": "2020–2024 ACS 5-year",
+  "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
    "county",
@@ -713,6 +891,13 @@
    "perSqMi": false
   },
   "modelInputs": [],
+  "facets": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
   "symbology": {
    "ramp": "oranges",
    "classification": "quantile",
@@ -736,7 +921,7 @@
   },
   "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
   "updateCadence": "annual",
-  "vintage": "2020–2024 ACS 5-year",
+  "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
    "county",
@@ -756,6 +941,13 @@
    "perSqMi": false
   },
   "modelInputs": [],
+  "facets": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
   "symbology": {
    "ramp": "purples",
    "classification": "quantile",
@@ -780,7 +972,7 @@
   },
   "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
   "updateCadence": "annual",
-  "vintage": "2020–2024 ACS 5-year",
+  "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
    "county",
@@ -800,6 +992,13 @@
    "perSqMi": false
   },
   "modelInputs": [],
+  "facets": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
   "symbology": {
    "ramp": "blues",
    "classification": "quantile",
@@ -825,7 +1024,7 @@
   },
   "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
   "updateCadence": "annual",
-  "vintage": "2020–2024 ACS 5-year",
+  "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
    "county",
@@ -845,6 +1044,13 @@
    "perSqMi": false
   },
   "modelInputs": [],
+  "facets": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
   "symbology": {
    "ramp": "purples",
    "classification": "quantile",
@@ -869,7 +1075,7 @@
   },
   "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
   "updateCadence": "annual",
-  "vintage": "2020–2024 ACS 5-year",
+  "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
    "county",
@@ -889,6 +1095,13 @@
    "perSqMi": false
   },
   "modelInputs": [],
+  "facets": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
   "symbology": {
    "ramp": "purples",
    "classification": "quantile",
@@ -913,7 +1126,7 @@
   },
   "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
   "updateCadence": "annual",
-  "vintage": "2020–2024 ACS 5-year",
+  "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
    "county",
@@ -933,6 +1146,13 @@
    "perSqMi": false
   },
   "modelInputs": [],
+  "facets": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
   "symbology": {
    "ramp": "ylgnbu",
    "classification": "quantile",
@@ -957,7 +1177,7 @@
   },
   "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
   "updateCadence": "annual",
-  "vintage": "2020–2024 ACS 5-year",
+  "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
    "county",
@@ -977,6 +1197,13 @@
    "perSqMi": false
   },
   "modelInputs": [],
+  "facets": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
   "symbology": {
    "ramp": "oranges",
    "classification": "quantile",
@@ -1001,7 +1228,7 @@
   },
   "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
   "updateCadence": "annual",
-  "vintage": "BRFSS 2023",
+  "vintage": "2023 data",
   "geographyLevels": [
    "county"
   ],
@@ -1018,6 +1245,13 @@
    "median_household_income"
   ],
   "coverageNote": "Model-based estimates; not every county is covered in every measure.",
+  "facets": [],
+  "terms": [
+   "model-based-estimate",
+   "age-adjusted",
+   "margin-of-error",
+   "quantile-classes"
+  ],
   "symbology": {
    "ramp": "purples",
    "classification": "quantile",
@@ -1041,7 +1275,7 @@
   },
   "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
   "updateCadence": "annual",
-  "vintage": "2020–2024 ACS 5-year",
+  "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
    "county",
@@ -1058,6 +1292,13 @@
    "perSqMi": true
   },
   "modelInputs": [],
+  "facets": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
   "symbology": {
    "ramp": "viridis",
    "classification": "quantile",
@@ -1081,7 +1322,7 @@
   },
   "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
   "updateCadence": "annual",
-  "vintage": "BRFSS 2022",
+  "vintage": "2022 data",
   "geographyLevels": [
    "county"
   ],
@@ -1098,6 +1339,13 @@
    "median_household_income"
   ],
   "coverageNote": "Model-based estimates; not every county is covered in every measure.",
+  "facets": [],
+  "terms": [
+   "model-based-estimate",
+   "age-adjusted",
+   "margin-of-error",
+   "quantile-classes"
+  ],
   "symbology": {
    "ramp": "purples",
    "classification": "quantile",
@@ -1122,7 +1370,7 @@
   },
   "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
   "updateCadence": "annual",
-  "vintage": "BRFSS 2023",
+  "vintage": "2023 data",
   "geographyLevels": [
    "county"
   ],
@@ -1139,6 +1387,13 @@
    "median_household_income"
   ],
   "coverageNote": "Model-based estimates; not every county is covered in every measure.",
+  "facets": [],
+  "terms": [
+   "model-based-estimate",
+   "age-adjusted",
+   "margin-of-error",
+   "quantile-classes"
+  ],
   "symbology": {
    "ramp": "cividis",
    "classification": "quantile",
@@ -1164,7 +1419,7 @@
   },
   "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
   "updateCadence": "annual",
-  "vintage": "FARS 2020–2024",
+  "vintage": "2020–2024 average",
   "geographyLevels": [
    "state",
    "county"
@@ -1183,6 +1438,11 @@
    "population_density"
   ],
   "coverageNote": "Counted where crashes happened, divided by residents, so counties with heavy through-traffic look high. Connecticut counties use pre-2022 codes and show no data.",
+  "facets": [],
+  "terms": [
+   "per-100k",
+   "quantile-classes"
+  ],
   "symbology": {
    "ramp": "purples",
    "classification": "quantile",
@@ -1209,7 +1469,7 @@
   },
   "license": "Public domain (U.S. Government work; NTAD \"available for unrestricted public use\"). Credit FHWA and BTS.",
   "updateCadence": "annual",
-  "vintage": "HPMS 2024",
+  "vintage": "2024",
   "geographyLevels": [
    "state",
    "county"
@@ -1230,6 +1490,12 @@
    "population_density"
   ],
   "coverageNote": "Counts traffic where it drives, divided by residents, so counties on major through-routes look high. Counted roads only (about 10–15% below FHWA totals). Connecticut counties show no data.",
+  "facets": [],
+  "terms": [
+   "vmt",
+   "aadt",
+   "quantile-classes"
+  ],
   "symbology": {
    "ramp": "oranges",
    "classification": "quantile",

@@ -19,11 +19,14 @@ export function exportRegistry() {
 /** County names for chart tooltips (tracts and states get names from tiles on the map). */
 export async function exportNames() {
   const pool = db();
-  const { rows } = await pool.query<{ geoid: string; name: string }>("select geoid, name from public.geographies where level in ('state','county')");
+  const { rows } = await pool.query<{ geoid: string; name: string; lon: number; lat: number }>(
+    "select geoid, name, lon, lat from public.geographies where level in ('state','county')");
   const dir = join(WEB_DATA, "geo");
   mkdirSync(dir, { recursive: true });
   writeFileSync(join(dir, "names.json"), JSON.stringify(Object.fromEntries(rows.map((r) => [r.geoid, r.name]))));
-  log("export", `geo/names.json: ${rows.length} names`);
+  // Name + internal point, so tables and search can fly the map to a place.
+  writeFileSync(join(dir, "places.json"), JSON.stringify(Object.fromEntries(rows.map((r) => [r.geoid, [r.name, +r.lon.toFixed(4), +r.lat.toFixed(4)]]))));
+  log("export", `geo/names.json + places.json: ${rows.length} places`);
   await pool.end();
 }
 

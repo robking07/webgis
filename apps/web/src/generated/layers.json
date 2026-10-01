@@ -5,12 +5,33 @@
   "geometry": "line",
   "valueField": "aadt",
   "fields": {
-   "route_id": "Route",
-   "f_system": "Functional class",
-   "aadt": "Traffic (AADT)",
-   "aadt_single_unit": "Single-unit trucks",
-   "aadt_combination": "Combination trucks",
-   "through_lanes": "Through lanes"
+   "route": {
+    "label": "Route"
+   },
+   "street": {
+    "label": "Street"
+   },
+   "road_type": {
+    "label": "Road type"
+   },
+   "f_system": {
+    "label": "Functional class"
+   },
+   "aadt": {
+    "label": "Traffic (AADT)",
+    "unit": "vehicles_per_day"
+   },
+   "aadt_single_unit": {
+    "label": "Single-unit trucks",
+    "unit": "vehicles_per_day"
+   },
+   "aadt_combination": {
+    "label": "Tractor-trailers",
+    "unit": "vehicles_per_day"
+   },
+   "through_lanes": {
+    "label": "Through lanes"
+   }
   },
   "rankField": "f_system",
   "featureCount": 10680545

@@ -14,6 +14,7 @@ unit: percent
 universe: adults 18+ (model-based estimate)
 modelInputs: [pct_poverty, median_household_income]  # PLACES models county poverty; median income is near-collinear with it
 coverageNote: Model-based estimates; not every county is covered in every measure.
-vintage: "BRFSS 2023"
+vintage: "2023 data"
+terms: [model-based-estimate, age-adjusted, margin-of-error, quantile-classes]
 measure: { kind: places, socrata: swc5-untb, measureId: LONELINESS, valueType: AgeAdjPrv }
 symbology: { ramp: blues, classification: quantile, classes: 5 }

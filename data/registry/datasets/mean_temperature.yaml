@@ -9,10 +9,11 @@ source:
   citation: "NOAA National Centers for Environmental Information, nClimDiv county monthly data (Vose et al. 2014), 1991–2020 normals computed by this site"
 license: Public domain (U.S. Government work, 17 U.S.C. § 105)
 updateCadence: static
-vintage: "1991–2020 normal"
+vintage: "1991–2020 average"
 geographyLevels: [county]
 universe: county area (area-weighted grid average)
 coverageNote: Contiguous U.S. and Alaska; Hawaii has no county series. Connecticut uses pre-2022 county codes in nClimDiv, so it shows no data.
 unit: deg_f
+terms: [climate-normal, quantile-classes]
 measure: { kind: climdiv, element: tmpc, months: [1,2,3,4,5,6,7,8,9,10,11,12], stat: mean, years: [1991, 2020] }
 symbology: { ramp: oranges, classification: quantile, classes: 5 }
