@@ -35,6 +35,9 @@ export function levelAtZoom(bands: Partial<Record<GeoLevel, ZoomBand>>, zoom: nu
 /** [zoom, value] pairs, interpolated linearly. */
 export const SIZE = {
   featureOutline: [[3, 0.2], [6, 0.4], [10, 0.8], [14, 1.2]],
+  /** Outline opacity for small areas (tracts and finer): at national zooms thousands of
+   *  outlines would wash the fills out, so they fade in as areas grow (D-35). */
+  fineOutlineOpacity: [[5, 0], [8, 0.7]],
   highlightOutline: [[3, 1.5], [10, 2.5], [14, 3]],
   line: [[4, 0.6], [8, 1.2], [12, 2.5], [16, 5]],
   lineMajor: [[4, 1], [8, 2], [12, 4], [16, 8]],
@@ -59,8 +62,14 @@ export const LABEL = {
     country: [[2, 11], [6, 16]],
     state: [[3, 10], [6, 14]],
     city: [[4, 10], [8, 13], [12, 16]],
+    /** Cities outside the U.S.: a step smaller at every zoom. */
+    foreign: [[5, 9], [8, 11], [12, 13]],
+    stateForeign: [[4, 8.5], [6, 10.5]],
     place: [[10, 10], [14, 13]],
   },
+  /** Foreign cities with OpenMapTiles rank ≤ this show from z5 (Toronto, Monterrey, Tijuana…);
+   *  the rest of the cities wait for z8. */
+  foreignMajorRank: 4,
   /** Minimum on-screen spacing between repeated line labels, px. */
   symbolSpacing: 300,
 } as const;

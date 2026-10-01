@@ -1,10 +1,13 @@
 // Static exports for the web app (D-02: viewing never depends on the database being awake):
 //   apps/web/src/generated/registry.json      — validated registry entries
+//   apps/web/src/generated/periods.json       — timeline stops exported per dataset (D-36)
 //   apps/web/public/data/values/<id>/<level>.json — { geoid: value } for each dataset/level
-import { mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { loadRegistry } from "@webgis/registry/load";
-import { db, log, ROOT, WEB_DATA } from "./util.ts";
+import { timelineStops } from "@webgis/registry/timeline";
+import { db, log, ROOT, STATES, WEB_DATA } from "./util.ts";
+import { readGazetteer } from "./geographies.ts";
 
 const round = (v: number) => Number(v.toPrecision(4));
 
@@ -14,6 +17,19 @@ export function exportRegistry() {
   const entries = loadRegistry();
   writeFileSync(join(dir, "registry.json"), JSON.stringify(entries, null, 1));
   log("export", `registry.json: ${entries.length} datasets`);
+  // Timeline stops whose values are on disk, with the levels each has, so the year control
+  // only offers what was exported: { dataset: { stop: [levels] } }.
+  const periods: Record<string, Record<string, string[]>> = {};
+  for (const e of entries) {
+    for (const s of timelineStops(e)) {
+      const dir = join(WEB_DATA, "values", e.id, s.id);
+      if (s.isDefault || !existsSync(dir)) continue;
+      const levels = readdirSync(dir).filter((f) => f.endsWith(".json")).map((f) => f.replace(/\.json$/, ""));
+      if (levels.length) (periods[e.id] ??= {})[s.id] = levels;
+    }
+  }
+  writeFileSync(join(dir, "periods.json"), JSON.stringify(periods, null, 1));
+  log("export", `periods.json: ${Object.values(periods).reduce((n, p) => n + Object.keys(p).length, 0)} timeline stops in ${Object.keys(periods).length} datasets`);
 }
 
 /** County names for chart tooltips (tracts and states get names from tiles on the map). */
@@ -28,6 +44,34 @@ export async function exportNames() {
   writeFileSync(join(dir, "places.json"), JSON.stringify(Object.fromEntries(rows.map((r) => [r.geoid, [r.name, +r.lon.toFixed(4), +r.lat.toFixed(4)]]))));
   log("export", `geo/names.json + places.json: ${rows.length} places`);
   await pool.end();
+}
+
+/** Place search index (D-35): states and counties (with their geoids, so search can select
+ *  them on the map) plus every Gazetteer city, town and CDP. Rows are
+ *  [name, kind, geoid | "", lon, lat, land sq mi]; the map picks a zoom from the land area. */
+export async function exportSearch() {
+  const pool = db();
+  const { rows } = await pool.query<{ geoid: string; name: string; level: string; lon: number; lat: number; aland_sqmi: number }>(
+    "select geoid, name, level, lon, lat, aland_sqmi from public.geographies where level in ('state','county')");
+  await pool.end();
+  const out: Array<[string, string, string, number, number, number]> = rows.map((r) => [
+    r.name, r.level === "state" ? "State" : "County", r.geoid, +r.lon.toFixed(4), +r.lat.toFixed(4), Math.round(r.aland_sqmi)]);
+  const places = await readGazetteer("2024_Gaz_place_national");
+  // "Minneapolis city" → "Minneapolis, MN" (kind "City"); CDPs are labeled as communities.
+  const KIND: Array<[RegExp, string]> = [[/ city$/, "City"], [/ town$/, "Town"], [/ village$/, "Village"], [/ borough$/, "Borough"], [/ CDP$/, "Community"], [/ municipality$/, "City"]];
+  let n = 0;
+  for (const p of places) {
+    const usps = STATES[p.GEOID.slice(0, 2)]?.[1];
+    if (!usps) continue;
+    const k = KIND.find(([re]) => re.test(p.NAME));
+    const name = k ? p.NAME.replace(k[0], "") : p.NAME;
+    out.push([`${name}, ${usps}`, k?.[1] ?? "Place", "", +(+p.INTPTLONG).toFixed(4), +(+p.INTPTLAT).toFixed(4), Math.max(1, Math.round(+p.ALAND_SQMI))]);
+    n++;
+  }
+  const dir = join(WEB_DATA, "geo");
+  mkdirSync(dir, { recursive: true });
+  writeFileSync(join(dir, "search.json"), JSON.stringify(out));
+  log("export", `geo/search.json: ${rows.length} states/counties + ${n} cities, towns and communities`);
 }
 
 export async function exportValues(only?: string[]) {

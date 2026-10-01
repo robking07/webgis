@@ -67,7 +67,7 @@ export function BottomSheet({ summary, children, onClose, label }: Props) {
   const dragProps = { onPointerDown: onDown, onPointerMove: onMove, onPointerUp: onUp, onPointerCancel: onUp };
 
   return (
-    <section ref={sheet} aria-label={label} data-snap={snap}
+    <section ref={sheet} aria-label={label} data-snap={snap} data-obstructs=""
       className={`group absolute inset-x-0 bottom-0 z-20 flex flex-col overflow-hidden rounded-t-2xl border-t bg-popover shadow-[0_-8px_24px_rgb(0_0_0/0.18)] ${drag ? "" : "transition-[height] duration-200 ease-out"}`}
       style={{ height }}>
       <button type="button" aria-expanded={snap === "full"} aria-label={snap === "full" ? "Collapse details" : "Expand details"}
@@ -84,14 +84,18 @@ export function BottomSheet({ summary, children, onClose, label }: Props) {
 }
 
 /** True below Tailwind's md breakpoint. */
-export function useIsPhone() {
-  const [phone, setPhone] = useState(false);
+export const useIsPhone = () => useMedia("(max-width: 767px)");
+/** True below Tailwind's lg breakpoint (phones and tablets): the table docks at the bottom. */
+export const useIsNarrow = () => useMedia("(max-width: 1023px)");
+
+function useMedia(query: string) {
+  const [on, setOn] = useState(false);
   useEffect(() => {
-    const mq = window.matchMedia("(max-width: 767px)");
-    const set = () => setPhone(mq.matches);
+    const mq = window.matchMedia(query);
+    const set = () => setOn(mq.matches);
     set();
     mq.addEventListener("change", set);
     return () => mq.removeEventListener("change", set);
-  }, []);
-  return phone;
+  }, [query]);
+  return on;
 }

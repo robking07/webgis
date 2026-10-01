@@ -23,13 +23,17 @@ interface Props {
   level: GeoLevel;
   x: Dataset; xv?: Values;
   y?: Dataset | null; yv?: Values;
+  /** Timeline stop shown (D-36), e.g. "2015–2019"; omitted = the default period. */
+  period?: string;
   onClose: () => void;
+  /** The selected place's geoid, highlighted in the list. */
+  selected?: string | null;
   /** Fly the map to this place and open its details. */
   onPick: (geoid: string, name: string, lon: number, lat: number) => void;
 }
 
 /** Memoized: the map page re-renders on every hover; the table must not. */
-export const DataTable = memo(function DataTable({ level, x, xv, y, yv, onClose, onPick }: Props) {
+export const DataTable = memo(function DataTable({ level, x, xv, y, yv, period, selected, onClose, onPick }: Props) {
   const [places, setPlaces] = useState<Places | null>(null);
   const [q, setQ] = useState("");
   const [sort, setSort] = useState<{ col: "name" | "x" | "y"; desc: boolean }>({ col: "x", desc: true });
@@ -81,12 +85,13 @@ export const DataTable = memo(function DataTable({ level, x, xv, y, yv, onClose,
   );
 
   return (
-    <section role="dialog" aria-modal="false" aria-label={`Table of ${x.title}`}
-      className="absolute inset-3 z-40 flex flex-col md:inset-y-3 md:left-3 md:right-auto md:w-[min(28rem,calc(100%-1.5rem))] flex-col gap-2 rounded-lg border bg-card p-3 shadow-lg">
+    // Phones and tablets: docked to the bottom 42% so a picked place stays visible above it (D-35).
+    <section role="dialog" aria-modal="false" aria-label={`Table of ${x.title}`} data-obstructs=""
+      className="absolute inset-x-0 bottom-0 z-40 flex h-[42%] flex-col gap-2 rounded-t-2xl border bg-card p-3 shadow-lg lg:inset-y-3 lg:bottom-3 lg:left-3 lg:right-auto lg:h-auto lg:w-[28rem] lg:rounded-lg">
       <header className="flex items-start justify-between gap-2">
         <div>
           <h2 className="text-sm font-semibold">{x.title}{y ? ` × ${y.title}` : ""}</h2>
-          <p className="text-xs text-muted-foreground">By {level} · {rows.length.toLocaleString()} {rows.length === 1 ? "row" : "rows"} · select a place to go there</p>
+          <p className="text-xs text-muted-foreground">By {level}{period ? ` · ${period}` : ""} · {rows.length.toLocaleString()} {rows.length === 1 ? "row" : "rows"} · select a place to go there</p>
         </div>
         <button ref={closeRef} type="button" onClick={onClose} aria-label="Close table" className="rounded p-1 text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring">
           <X className="size-4" />
@@ -108,7 +113,7 @@ export const DataTable = memo(function DataTable({ level, x, xv, y, yv, onClose,
                 {visible.map((r, i) => {
                   const p = places[r.g];
                   return (
-                    <tr key={r.g} className="border-t hover:bg-muted" style={{ height: ROW_H }} aria-rowindex={first + i + 2}>
+                    <tr key={r.g} className={`border-t hover:bg-muted ${r.g === selected ? "bg-muted font-semibold" : ""}`} aria-selected={r.g === selected || undefined} style={{ height: ROW_H }} aria-rowindex={first + i + 2}>
                       <th scope="row" className="truncate px-2 text-left font-normal">
                         {p ? (
                           <button type="button" onClick={() => onPick(r.g, r.name, p[1], p[2])}

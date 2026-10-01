@@ -18,6 +18,11 @@ function storeTheme(t: ThemeName) {
   try { localStorage.setItem(THEME_KEY, t); } catch { /* private mode: the choice lasts this page only */ }
 }
 
+/** "System" in Settings: forget the explicit choice so every page follows the system again. */
+export function forgetTheme() {
+  try { localStorage.removeItem(THEME_KEY); } catch { /* storage blocked */ }
+}
+
 /** Apply an explicit theme to the document (and remember it), or follow the system when null. */
 export function useResolvedTheme(explicit: ThemeName | null): ThemeName {
   const [system, setSystem] = useState<ThemeName>("light");

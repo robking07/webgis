@@ -14,6 +14,9 @@ unit: categories
 universe: census tracts (2010 boundaries)
 coverageNote: "2010 tract boundaries. Removed from federal websites in 2025; this is the final 2.0 data from the PEDP mirror."
 terms: [cejst, tract-2010]
+learnMore:
+  - label: Open this tract in the CEJST tool (Public Environmental Data Partners)
+    url: "https://public-environmental-data-partners.github.io/j40-cejst-2/en/#11/{lat}/{lon}"
 facets:
   - field: status
     label: Status
@@ -42,6 +45,39 @@ measure:
       CASE WHEN N_TRN = 1 THEN 'Transportation, ' ELSE '' END ||
       CASE WHEN N_WTR = 1 THEN 'Water and wastewater, ' ELSE '' END ||
       CASE WHEN N_WKFC = 1 THEN 'Workforce development, ' ELSE '' END, ', ') AS burdens,
+    TRIM(
+      CASE WHEN CAST(EAL_ET AS INTEGER) = 1 THEN 'Agriculture loss, ' ELSE '' END ||
+      CASE WHEN CAST(EBL_ET AS INTEGER) = 1 THEN 'Building loss, ' ELSE '' END ||
+      CASE WHEN CAST(EPL_ET AS INTEGER) = 1 THEN 'Population loss, ' ELSE '' END ||
+      CASE WHEN CAST(FLD_ET AS INTEGER) = 1 THEN 'Flood risk, ' ELSE '' END ||
+      CASE WHEN CAST(WFR_ET AS INTEGER) = 1 THEN 'Wildfire risk, ' ELSE '' END ||
+      CASE WHEN CAST(EB_ET AS INTEGER) = 1 THEN 'Energy cost, ' ELSE '' END ||
+      CASE WHEN CAST(PM25_ET AS INTEGER) = 1 THEN 'PM2.5 in the air, ' ELSE '' END ||
+      CASE WHEN CAST(A_ET AS INTEGER) = 1 THEN 'Asthma, ' ELSE '' END ||
+      CASE WHEN CAST(DB_ET AS INTEGER) = 1 THEN 'Diabetes, ' ELSE '' END ||
+      CASE WHEN CAST(HD_ET AS INTEGER) = 1 THEN 'Heart disease, ' ELSE '' END ||
+      CASE WHEN CAST(LLE_ET AS INTEGER) = 1 THEN 'Low life expectancy, ' ELSE '' END ||
+      CASE WHEN CAST(HRS_ET AS INTEGER) = 1 THEN 'Historic underinvestment, ' ELSE '' END ||
+      CASE WHEN CAST(HB_ET AS INTEGER) = 1 THEN 'Housing cost, ' ELSE '' END ||
+      CASE WHEN CAST(IS_ET AS INTEGER) = 1 THEN 'Lack of green space, ' ELSE '' END ||
+      CASE WHEN CAST(KP_ET AS INTEGER) = 1 THEN 'Lack of indoor plumbing, ' ELSE '' END ||
+      CASE WHEN CAST(LPP_ET AS INTEGER) = 1 THEN 'Lead paint, ' ELSE '' END ||
+      CASE WHEN CAST(AML_ET AS INTEGER) = 1 THEN 'Abandoned mine land, ' ELSE '' END ||
+      CASE WHEN CAST(FUDS_ET AS INTEGER) = 1 THEN 'Formerly used defense sites, ' ELSE '' END ||
+      CASE WHEN CAST(TSDF_ET AS INTEGER) = 1 THEN 'Hazardous waste facilities, ' ELSE '' END ||
+      CASE WHEN CAST(NPL_ET AS INTEGER) = 1 THEN 'Superfund sites, ' ELSE '' END ||
+      CASE WHEN CAST(RMP_ET AS INTEGER) = 1 THEN 'Risk Management Plan facilities, ' ELSE '' END ||
+      CASE WHEN CAST(DS_ET AS INTEGER) = 1 THEN 'Diesel particulate matter, ' ELSE '' END ||
+      CASE WHEN CAST(TD_ET AS INTEGER) = 1 THEN 'Transportation barriers, ' ELSE '' END ||
+      CASE WHEN CAST(TP_ET AS INTEGER) = 1 THEN 'Traffic proximity and volume, ' ELSE '' END ||
+      CASE WHEN CAST(UST_ET AS INTEGER) = 1 THEN 'Leaking underground storage tanks, ' ELSE '' END ||
+      CASE WHEN CAST(WD_ET AS INTEGER) = 1 THEN 'Wastewater discharge, ' ELSE '' END ||
+      CASE WHEN CAST(LISO_ET AS INTEGER) = 1 THEN 'Linguistic isolation, ' ELSE '' END ||
+      CASE WHEN CAST(LMI_ET AS INTEGER) = 1 THEN 'Low median income, ' ELSE '' END ||
+      CASE WHEN CAST(POV_ET AS INTEGER) = 1 THEN 'Poverty, ' ELSE '' END ||
+      CASE WHEN CAST(UN_ET AS INTEGER) = 1 THEN 'Unemployment, ' ELSE '' END ||
+      '', ', ') AS indicators,
+    CAST(ROUND(P200_I_PFS * 100) AS INTEGER) AS low_income_pctile,
     CASE WHEN SN_T = 1 THEN 'Yes' ELSE NULL END AS tribal,
     Geometry FROM usa
   valueField: categories
@@ -49,10 +85,62 @@ measure:
     place: Place
     status: Status
     categories: { label: "Burden categories exceeded", unit: categories }
-    burdens: Burdens
+    burdens:
+      label: Burdens
+      explainer: "A tract is disadvantaged if it is low income and over the threshold in at least one of eight burden categories (or is mostly tribal land)."
+      url: https://public-environmental-data-partners.github.io/j40-cejst-2/en/methodology/
+      items:
+        "Climate change": { description: "In the top 10% nationally for expected losses to farms, buildings or people from natural hazards, or for flood or wildfire risk, and low income.", url: https://public-environmental-data-partners.github.io/j40-cejst-2/en/methodology/ }
+        "Energy": { description: "In the top 10% for household energy costs or fine-particle (PM2.5) air pollution, and low income.", url: https://public-environmental-data-partners.github.io/j40-cejst-2/en/methodology/ }
+        "Health": { description: "In the top 10% for asthma, diabetes or heart disease, or for low life expectancy, and low income.", url: https://public-environmental-data-partners.github.io/j40-cejst-2/en/methodology/ }
+        "Housing": { description: "Historically redlined, or in the top 10% for housing costs, lack of green space, homes without indoor plumbing, or lead-paint risk, and low income.", url: https://public-environmental-data-partners.github.io/j40-cejst-2/en/methodology/ }
+        "Legacy pollution": { description: "Has abandoned mine land or a former military site, or is in the top 10% for nearness to hazardous waste, Superfund or high-risk chemical facilities, and low income.", url: https://public-environmental-data-partners.github.io/j40-cejst-2/en/methodology/ }
+        "Transportation": { description: "In the top 10% for diesel exhaust, barriers to getting around, or heavy nearby traffic, and low income.", url: https://public-environmental-data-partners.github.io/j40-cejst-2/en/methodology/ }
+        "Water and wastewater": { description: "In the top 10% for leaking underground storage tanks or wastewater discharge, and low income.", url: https://public-environmental-data-partners.github.io/j40-cejst-2/en/methodology/ }
+        "Workforce development": { description: "In the top 10% for language isolation, low median income, poverty or unemployment, and more than 10% of adults lack a high school diploma.", url: https://public-environmental-data-partners.github.io/j40-cejst-2/en/methodology/ }
+    indicators:
+      label: Indicators over the threshold
+      explainer: "The specific measures where this tract is in the top 10% nationally. A burden counts only when the tract is also low income."
+      url: https://public-environmental-data-partners.github.io/j40-cejst-2/en/methodology/
+      items:
+        "Agriculture loss": { description: "Expected yearly crop and livestock losses from natural hazards, as a share of the area's agricultural value.", url: "https://public-environmental-data-partners.github.io/j40-cejst-2/en/methodology/#exp-agr-loss-rate" }
+        "Building loss": { description: "Expected yearly building damage from natural hazards, as a share of building value.", url: "https://public-environmental-data-partners.github.io/j40-cejst-2/en/methodology/#exp-bld-loss-rate" }
+        "Population loss": { description: "Expected yearly deaths and injuries from natural hazards, relative to population.", url: "https://public-environmental-data-partners.github.io/j40-cejst-2/en/methodology/#exp-pop-loss-rate" }
+        "Flood risk": { description: "Share of properties at risk of flooding within 30 years.", url: "https://public-environmental-data-partners.github.io/j40-cejst-2/en/methodology/#flood-risk" }
+        "Wildfire risk": { description: "Share of properties at risk of wildfire within 30 years.", url: "https://public-environmental-data-partners.github.io/j40-cejst-2/en/methodology/#wildfire-risk" }
+        "Energy cost": { description: "Average yearly energy bills as a share of household income.", url: "https://public-environmental-data-partners.github.io/j40-cejst-2/en/methodology/#energy-burden" }
+        "PM2.5 in the air": { description: "Fine particulate matter in the air, a pollutant tied to heart and lung disease.", url: "https://public-environmental-data-partners.github.io/j40-cejst-2/en/methodology/#pm-25" }
+        "Asthma": { description: "Share of adults who currently have asthma.", url: "https://public-environmental-data-partners.github.io/j40-cejst-2/en/methodology/#asthma" }
+        "Diabetes": { description: "Share of adults diagnosed with diabetes.", url: "https://public-environmental-data-partners.github.io/j40-cejst-2/en/methodology/#diabetes" }
+        "Heart disease": { description: "Share of adults with coronary heart disease.", url: "https://public-environmental-data-partners.github.io/j40-cejst-2/en/methodology/#heart-disease" }
+        "Low life expectancy": { description: "Average life expectancy is among the lowest in the country.", url: "https://public-environmental-data-partners.github.io/j40-cejst-2/en/methodology/#life-exp" }
+        "Historic underinvestment": { description: "The area was graded hazardous or declining on 1930s federal redlining maps.", url: "https://public-environmental-data-partners.github.io/j40-cejst-2/en/methodology/#hist-underinv" }
+        "Housing cost": { description: "Share of low-income households spending more than 30% of income on housing.", url: "https://public-environmental-data-partners.github.io/j40-cejst-2/en/methodology/#house-burden" }
+        "Lack of green space": { description: "Share of land covered by pavement, buildings or crops instead of trees and grass.", url: "https://public-environmental-data-partners.github.io/j40-cejst-2/en/methodology/#green-space" }
+        "Lack of indoor plumbing": { description: "Share of homes without a full kitchen or indoor plumbing.", url: "https://public-environmental-data-partners.github.io/j40-cejst-2/en/methodology/#indoor-plumb" }
+        "Lead paint": { description: "Share of homes built before 1960, which may contain lead paint, where home values are not high.", url: "https://public-environmental-data-partners.github.io/j40-cejst-2/en/methodology/#lead-paint" }
+        "Abandoned mine land": { description: "Contains abandoned coal mine land.", url: "https://public-environmental-data-partners.github.io/j40-cejst-2/en/methodology/#mine-land" }
+        "Formerly used defense sites": { description: "Contains a former military site that may still be contaminated.", url: "https://public-environmental-data-partners.github.io/j40-cejst-2/en/methodology/#fuds" }
+        "Hazardous waste facilities": { description: "How close and how many hazardous waste facilities are nearby.", url: "https://public-environmental-data-partners.github.io/j40-cejst-2/en/methodology/#prox-haz" }
+        "Superfund sites": { description: "How close and how many Superfund (National Priorities List) sites are nearby.", url: "https://public-environmental-data-partners.github.io/j40-cejst-2/en/methodology/#prox-npl" }
+        "Risk Management Plan facilities": { description: "How close and how many facilities that handle dangerous chemicals are nearby.", url: "https://public-environmental-data-partners.github.io/j40-cejst-2/en/methodology/#prox-rmp" }
+        "Diesel particulate matter": { description: "Diesel exhaust in the air, mostly from trucks, buses and equipment.", url: "https://public-environmental-data-partners.github.io/j40-cejst-2/en/methodology/#diesel-pm" }
+        "Transportation barriers": { description: "How hard it is to get around: travel cost, time and access to options like transit.", url: "https://public-environmental-data-partners.github.io/j40-cejst-2/en/methodology/#trans-barrier" }
+        "Traffic proximity and volume": { description: "How many vehicles pass on major roads nearby.", url: "https://public-environmental-data-partners.github.io/j40-cejst-2/en/methodology/#traffic-vol" }
+        "Leaking underground storage tanks": { description: "How many leaking fuel tanks are nearby.", url: "https://public-environmental-data-partners.github.io/j40-cejst-2/en/methodology/#leaky-uwt" }
+        "Wastewater discharge": { description: "Toxic chemicals discharged into nearby streams.", url: "https://public-environmental-data-partners.github.io/j40-cejst-2/en/methodology/#waste-water" }
+        "Linguistic isolation": { description: "Share of households where no one over 14 speaks English very well.", url: "https://public-environmental-data-partners.github.io/j40-cejst-2/en/methodology/#ling-iso" }
+        "Low median income": { description: "Median household income compared with the surrounding area's.", url: "https://public-environmental-data-partners.github.io/j40-cejst-2/en/methodology/#low-med-inc" }
+        "Poverty": { description: "Share of people below the federal poverty line.", url: "https://public-environmental-data-partners.github.io/j40-cejst-2/en/methodology/#poverty" }
+        "Unemployment": { description: "Share of the labor force without a job.", url: "https://public-environmental-data-partners.github.io/j40-cejst-2/en/methodology/#unemploy" }
+    low_income_pctile:
+      label: Low income (percentile)
+      unit: percentile
+      explainer: "Share of people in households below twice the federal poverty line, not counting college students, ranked nationally. Tracts at or above the 65th percentile meet the low-income test."
+      url: "https://public-environmental-data-partners.github.io/j40-cejst-2/en/methodology/#low-income"
     tribal: Disadvantaged due to tribal lands
     population: { label: "Population", unit: count }
-  zooms: [4, 12]
+  zooms: [2, 12]
 symbology:
   ramp: oranges
   classification: manual

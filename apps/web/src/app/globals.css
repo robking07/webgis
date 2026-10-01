@@ -116,6 +116,8 @@
 .wg-on-map {
   text-shadow: 0 0 2px var(--map-label-halo), 0 0 6px var(--map-label-halo), 0 0 12px var(--map-label-halo);
 }
+/* Year control slider (D-36): accent thumb and track from the theme. */
+.wg-range { accent-color: var(--ui-accent); height: 1.25rem; cursor: pointer; }
 /* Docked filters (D-28): no card, just halo'd text and glass chips over the map. */
 .wg-dock { pointer-events: auto; }
 /* Immersed legend: a lighter card so it gives context without blocking the map. */
@@ -124,3 +126,13 @@
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
+
+/* Credits footnote (D-35): small and quiet, with a label halo so it reads over the map. */
+.wg-credits {
+  color: color-mix(in srgb, var(--ui-text) 52%, transparent);
+  text-shadow: 0 0 2px var(--map-label-halo), 0 0 4px var(--map-label-halo);
+}
+.wg-credits a { color: inherit; text-decoration: none; }
+.wg-credits a:hover { color: var(--ui-text); text-decoration: underline; }
+/* The scale bar sits just above the credits line. */
+.maplibregl-ctrl-bottom-right { bottom: 14px; }

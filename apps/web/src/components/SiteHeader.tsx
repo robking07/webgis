@@ -1,28 +1,32 @@
 "use client";
-// One header for every page (D-33, P1): wordmark, Map · Specials, dataset search, theme toggle.
-// The map wraps HeaderContent in its own header (it falls away when immersed and opens the dataset
-// browser); every other page uses SiteHeader, where search goes to the data directory.
+// One header for every page (D-33, P1): logo and wordmark, Map · Specials, then (right-justified)
+// a search icon and Settings (D-35). On the map, search opens the place + dataset search over the
+// map and Settings adds map units; elsewhere search goes to the data directory.
 import { useState, useSyncExternalStore } from "react";
 import Link from "next/link";
-import { Moon, Search, Sun } from "lucide-react";
+import { Search } from "lucide-react";
 import type { ThemeName } from "@webgis/design";
-import { readStoredTheme, useResolvedTheme } from "@/lib/theme";
+import { forgetTheme, readStoredTheme, useResolvedTheme } from "@/lib/theme";
 import { LogoMark } from "./Logo";
+import { SettingsMenu, type ScaleUnit } from "./SettingsMenu";
 
 type Section = "map" | "specials";
 
-export function HeaderContent({ current, onSearch, theme, onTheme }: {
+export function HeaderContent({ current, onSearch, explicitTheme, onTheme, unit, onUnit }: {
   current?: Section;
-  /** Opens the dataset browser (map). Without it, search links to the data directory. */
+  /** Opens the place + dataset search (map). Without it, search links to the data directory. */
   onSearch?: () => void;
-  theme: ThemeName;
-  onTheme: (t: ThemeName) => void;
+  /** The explicit theme choice, or null when following the system. */
+  explicitTheme: ThemeName | null;
+  onTheme: (t: ThemeName | null) => void;
+  /** Map pages: distance units for the scale bar. */
+  unit?: ScaleUnit;
+  onUnit?: (u: ScaleUnit) => void;
 }) {
   const nav = (href: string, label: string, key: Section) => current === key
     ? <Link href={href} aria-current="page" className="font-semibold text-foreground shadow-[inset_0_-2px_0_var(--ui-accent)]">{label}</Link>
     : <Link href={href} className="text-muted-foreground hover:text-foreground">{label}</Link>;
-  const searchWide = "hidden h-9 w-72 items-center gap-2 rounded-md border bg-card px-3 text-left text-sm text-muted-foreground hover:text-foreground md:flex focus-visible:outline-2 focus-visible:outline-ring";
-  const searchIcon = "grid size-9 place-items-center rounded-md border bg-card text-muted-foreground md:hidden focus-visible:outline-2 focus-visible:outline-ring";
+  const icon = "grid size-9 place-items-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring";
   return (
     <>
       <div className="flex min-w-0 items-center gap-5 md:gap-7">
@@ -36,31 +40,17 @@ export function HeaderContent({ current, onSearch, theme, onTheme }: {
           {nav("/specials", "Specials", "specials")}
         </nav>
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1">
         {onSearch ? (
-          <>
-            <button type="button" onClick={onSearch} className={searchWide}><Search className="size-4" aria-hidden /> Search datasets</button>
-            <button type="button" onClick={onSearch} aria-label="Search datasets" className={searchIcon}><Search className="size-4" aria-hidden /></button>
-          </>
+          <button type="button" onClick={onSearch} aria-label="Search places and datasets" title="Search places and datasets ( / )" className={icon}>
+            <Search className="size-[18px]" aria-hidden />
+          </button>
         ) : (
-          <>
-            <Link href="/data" className={searchWide}><Search className="size-4" aria-hidden /> Search datasets</Link>
-            <Link href="/data" aria-label="Search datasets" className={searchIcon}><Search className="size-4" aria-hidden /></Link>
-          </>
+          <Link href="/data" aria-label="Search datasets" className={icon}><Search className="size-[18px]" aria-hidden /></Link>
         )}
-        <ThemeToggle theme={theme} onChange={onTheme} />
+        <SettingsMenu theme={explicitTheme} onTheme={(t) => { if (!t) forgetTheme(); onTheme(t); }} unit={unit} onUnit={onUnit} />
       </div>
     </>
-  );
-}
-
-export function ThemeToggle({ theme, onChange }: { theme: ThemeName; onChange: (t: ThemeName) => void }) {
-  const next = theme === "dark" ? "light" : "dark";
-  return (
-    <button type="button" onClick={() => onChange(next)} aria-label={`Switch to ${next} theme`}
-      className="grid size-9 place-items-center rounded-md border text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring">
-      {theme === "dark" ? <Sun className="size-4" /> : <Moon className="size-4" />}
-    </button>
   );
 }
 
@@ -76,16 +66,17 @@ export function SiteHeader({ current }: { current?: Section }) {
   // The server can't see the explicit choice (undefined there); the layout script has already
   // applied it before paint, so nothing flashes while the client catches up.
   const initial = useSyncExternalStore(noSubscribe, readExplicit, () => undefined);
-  const [chosen, setChosen] = useState<ThemeName | null>(null);
+  // undefined = no choice made on this page yet; null = "System".
+  const [chosen, setChosen] = useState<ThemeName | null | undefined>(undefined);
   return (
     <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-3 border-b bg-background/95 px-4 backdrop-blur md:px-6">
-      {initial !== undefined ? <ThemedContent current={current} explicit={chosen ?? initial} onTheme={setChosen} />
-        : <HeaderContent current={current} theme="light" onTheme={() => {}} />}
+      {initial !== undefined ? <ThemedContent current={current} explicit={chosen === undefined ? initial : chosen} onTheme={setChosen} />
+        : <HeaderContent current={current} explicitTheme={null} onTheme={() => {}} />}
     </header>
   );
 }
 
-function ThemedContent({ current, explicit, onTheme }: { current?: Section; explicit: ThemeName | null; onTheme: (t: ThemeName) => void }) {
-  const theme = useResolvedTheme(explicit);
-  return <HeaderContent current={current} theme={theme} onTheme={onTheme} />;
+function ThemedContent({ current, explicit, onTheme }: { current?: Section; explicit: ThemeName | null; onTheme: (t: ThemeName | null) => void }) {
+  useResolvedTheme(explicit);
+  return <HeaderContent current={current} explicitTheme={explicit} onTheme={onTheme} />;
 }

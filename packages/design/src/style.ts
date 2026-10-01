@@ -5,6 +5,7 @@
 import type { LayerSpecification, StyleSpecification } from "maplibre-gl";
 import { THEMES, type ThemeName } from "./themes.ts";
 import { LABEL, RANK_WIDTH, SIZE, zoomInterp, GEO_LEVELS, type GeoLevel } from "./sizing.ts";
+import { US_LABEL_MASK } from "./us-label-mask.ts";
 
 export const BASEMAP = {
   tilejson: "https://tiles.openfreemap.org/planet",
@@ -23,6 +24,8 @@ export const DATA_BEFORE_ID = "overlay-river-casing";
 export function basemapStyle(themeName: ThemeName): StyleSpecification {
   const m = THEMES[themeName].map;
   const halo = { "text-halo-color": m.labelHalo, "text-halo-width": LABEL.haloWidth };
+  /** True for label points inside the U.S. (OpenMapTiles places have no country code). */
+  const inUS = ["within", US_LABEL_MASK] as never;
   const layers: LayerSpecification[] = [
     { id: "background", type: "background", paint: { "background-color": m.background } },
     {
@@ -100,9 +103,11 @@ export function basemapStyle(themeName: ThemeName): StyleSpecification {
       layout: { "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]], "text-font": ["Noto Sans Italic"], "text-size": 12 },
       paint: { "text-color": m.labelMuted, ...halo },
     },
+    // Places: U.S. cities and towns at full strength; foreign ones (outside the U.S. mask)
+    // fewer, smaller and muted, so the map reads as a U.S. map (Robbie, D-37).
     {
       id: "label-place", type: "symbol", source: "omt", "source-layer": "place", minzoom: 4,
-      filter: ["in", ["get", "class"], ["literal", ["city", "town"]]],
+      filter: ["all", ["in", ["get", "class"], ["literal", ["city", "town"]]], inUS],
       layout: {
         "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
         "text-font": LABEL.font as unknown as string[],
@@ -111,6 +116,18 @@ export function basemapStyle(themeName: ThemeName): StyleSpecification {
       },
       paint: { "text-color": m.label, ...halo },
     },
+    // Foreign: only the biggest cities at first, the rest of the cities from z8, never towns.
+    ...([["label-place-foreign", 5, ["<=", ["get", "rank"], LABEL.foreignMajorRank]], ["label-place-foreign-minor", 8, [">", ["get", "rank"], LABEL.foreignMajorRank]]] as const).map(([id, minzoom, rank]): LayerSpecification => ({
+      id, type: "symbol", source: "omt", "source-layer": "place", minzoom,
+      filter: ["all", ["==", ["get", "class"], "city"], rank, ["!", inUS]] as never,
+      layout: {
+        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-font": LABEL.font as unknown as string[],
+        "text-size": zoomInterp(LABEL.sizes.foreign) as never,
+        "symbol-sort-key": ["get", "rank"],
+      },
+      paint: { "text-color": m.labelForeign, "text-halo-color": m.labelHalo, "text-halo-width": LABEL.haloWidth * 0.7 },
+    })),
     {
       id: "label-interstate", type: "symbol", source: "omt", "source-layer": "transportation_name", minzoom: 6,
       filter: ["all", ["==", ["get", "network"], "us-interstate"], ["has", "ref"]],
@@ -126,7 +143,7 @@ export function basemapStyle(themeName: ThemeName): StyleSpecification {
     },
     {
       id: "label-state", type: "symbol", source: "omt", "source-layer": "place", minzoom: 3, maxzoom: 7,
-      filter: ["==", ["get", "class"], "state"],
+      filter: ["all", ["==", ["get", "class"], "state"], inUS],
       layout: {
         "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
         "text-font": LABEL.fontBold as unknown as string[],
@@ -135,6 +152,19 @@ export function basemapStyle(themeName: ThemeName): StyleSpecification {
         "text-letter-spacing": 0.08,
       },
       paint: { "text-color": m.labelMuted, ...halo },
+    },
+    // Provinces and Mexican states: smaller, fainter, and only once zoomed past the national view.
+    {
+      id: "label-state-foreign", type: "symbol", source: "omt", "source-layer": "place", minzoom: 4, maxzoom: 7,
+      filter: ["all", ["==", ["get", "class"], "state"], ["!", inUS]],
+      layout: {
+        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-font": LABEL.font as unknown as string[],
+        "text-size": zoomInterp(LABEL.sizes.stateForeign) as never,
+        "text-transform": "uppercase",
+        "text-letter-spacing": 0.08,
+      },
+      paint: { "text-color": m.labelForeign, "text-halo-color": m.labelHalo, "text-halo-width": LABEL.haloWidth * 0.7, "text-opacity": 0.8 },
     },
   ];
   return {
@@ -178,7 +208,8 @@ export function thematicLayers(o: ThematicLayerOptions): LayerSpecification[] {
     { id: `${o.level}-fill`, type: "fill", ...base, paint: { "fill-color": fillColor as never, "fill-opacity": 0.92 } },
     {
       id: `${o.level}-outline`, type: "line", ...base,
-      paint: { "line-color": m.featureOutline, "line-width": zoomInterp(SIZE.featureOutline) as never, "line-opacity": 0.7 },
+      paint: { "line-color": m.featureOutline, "line-width": zoomInterp(SIZE.featureOutline) as never,
+        "line-opacity": (o.level === "state" || o.level === "county" ? 0.7 : zoomInterp(SIZE.fineOutlineOpacity)) as never },
     },
     // Cased selection: a contrasting halo under the outline, so it reads on the darkest and lightest classes.
     {

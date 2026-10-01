@@ -1,6 +1,6 @@
 // Number formatting and legend rules, keyed by the `unit` field of a registry entry.
 
-export type Unit = "dollars" | "percent" | "minutes" | "count" | "per_sq_mi" | "ratio" | "years" | "deg_f" | "inches" | "per_100k" | "vehicles_per_day" | "miles_per_day" | "categories" | "agreements";
+export type Unit = "dollars" | "percent" | "minutes" | "count" | "per_sq_mi" | "ratio" | "years" | "deg_f" | "inches" | "per_100k" | "vehicles_per_day" | "miles_per_day" | "categories" | "agreements" | "percentile";
 
 const nf = (o: Intl.NumberFormatOptions) => new Intl.NumberFormat("en-US", o);
 const FORMATTERS: Record<Unit, (v: number) => string> = {
@@ -18,16 +18,22 @@ const FORMATTERS: Record<Unit, (v: number) => string> = {
   agreements: (v) => `${nf({ maximumFractionDigits: 0 }).format(v)} ${Math.round(v) === 1 ? "agreement" : "agreements"}`,
   miles_per_day: (v) => `${nf({ maximumFractionDigits: 1 }).format(v)} mi/day`,
   per_100k: (v) => `${nf({ maximumFractionDigits: 1 }).format(v)} per 100k`,
+  percentile: (v) => ordinal(Math.round(v)) + " percentile",
 };
 
+function ordinal(n: number) {
+  const s = n % 100 >= 11 && n % 100 <= 13 ? "th" : ["th", "st", "nd", "rd"][n % 10] ?? "th";
+  return `${n}${s}`;
+}
+
 /** Units whose values are whole-number counts. */
-const INTEGER_UNITS = new Set<Unit>(["count", "categories", "agreements"]);
+const INTEGER_UNITS = new Set<Unit>(["count", "categories", "agreements", "percentile"]);
 
 /** Units in words, for profile pages and screen readers. */
 export const UNIT_LABEL: Record<Unit, string> = {
   dollars: "U.S. dollars", percent: "percent", minutes: "minutes", count: "count", per_sq_mi: "per square mile of land",
   ratio: "ratio", years: "years", deg_f: "degrees Fahrenheit", inches: "inches", per_100k: "per 100,000 residents",
-  vehicles_per_day: "vehicles per day", miles_per_day: "miles per day", categories: "burden categories exceeded", agreements: "active agreements",
+  vehicles_per_day: "vehicles per day", miles_per_day: "miles per day", categories: "burden categories exceeded", agreements: "active agreements", percentile: "percentile (national rank)",
 };
 
 export function formatValue(v: number | null | undefined, unit: Unit): string {

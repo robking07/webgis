@@ -4,12 +4,22 @@ import manifest from "@/generated/layers.json";
 import { rampColors, type RampId } from "@webgis/design";
 import type { Dataset } from "./registry";
 
+/** A popup field: label and unit, plus optional explainers (D-35). */
+export interface FeatureField {
+  label: string;
+  unit?: string;
+  explainer?: string;
+  url?: string;
+  /** Comma-separated list fields: each item's explainer and link. */
+  items?: Record<string, { description: string; url?: string }>;
+}
+
 export interface FeatureLayerInfo {
   tiles: string;
   sourceLayer: string;
   geometry: "line" | "point" | "polygon";
   valueField: string;
-  fields: Record<string, { label: string; unit?: string } | string>;
+  fields: Record<string, FeatureField | string>;
   rankField: string | null;
   featureCount: number;
 }

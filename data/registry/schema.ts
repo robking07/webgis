@@ -3,8 +3,17 @@
 import { z } from "zod";
 
 const Ramp = z.enum(["blues", "ylgnbu", "oranges", "purples", "viridis", "cividis", "rdbu", "puor", "brbg"]);
-const Unit = z.enum(["dollars", "percent", "minutes", "count", "per_sq_mi", "ratio", "years", "deg_f", "inches", "per_100k", "vehicles_per_day", "miles_per_day", "categories", "agreements"]);
+const Unit = z.enum(["dollars", "percent", "minutes", "count", "per_sq_mi", "ratio", "years", "deg_f", "inches", "per_100k", "vehicles_per_day", "miles_per_day", "categories", "agreements", "percentile"]);
 export const GeoLevel = z.enum(["state", "county", "tract"]);
+
+/** A feature-layer popup field with optional explainers (D-35). */
+const FeatureField = z.object({
+  label: z.string(),
+  unit: z.string().optional(),
+  explainer: z.string().optional(),
+  url: z.url().optional(),
+  items: z.record(z.string(), z.object({ description: z.string(), url: z.url().optional() })).optional(),
+});
 
 /** How the value is computed from source variables. */
 const AcsMeasure = z.object({
@@ -115,13 +124,25 @@ const FeaturesMeasure = z.object({
   select: z.string().optional(),
   /** Numeric field that drives color. */
   valueField: z.string(),
-  /** Source field → popup label (or {label, unit}). Only these fields are kept in the tiles. */
-  fields: z.record(z.string(), z.union([z.string(), z.object({ label: z.string(), unit: z.string().optional() })])),
+  /** Source field → popup label (or {label, unit, …}). Only these fields are kept in the tiles.
+   *  `explainer`/`url`: a plain-language note and a page that explains the field.
+   *  `items`: for comma-separated list fields, each item's explainer and link (e.g. CEJST burdens). */
+  fields: z.record(z.string(), z.union([z.string(), FeatureField])),
   /** Ordinal field for importance (lower = more important, e.g. functional class) used for
    *  line width and for thinning at low zoom: at zoom ≥ z, show features with field ≤ max. */
   rank: z.object({ field: z.string(), showUpTo: z.array(z.tuple([z.number(), z.number()])).min(1) }).optional(),
   /** Tile zoom range. */
   zooms: z.tuple([z.number().int(), z.number().int()]).default([3, 12]),
+});
+
+/** One popup link that helps a reader understand a data point, not just the metadata.
+ *  Placeholders: {geoid}, {level}, {cr} (Census Reporter id, e.g. 05000US27053) for areas;
+ *  {lat}, {lon} (the clicked point) and any {field} of a feature layer. */
+export const LearnMore = z.object({
+  label: z.string(),
+  url: z.string(),
+  /** Only offer it at these levels (areas). Omitted = every level. */
+  levels: z.array(GeoLevel).optional(),
 });
 
 /** A categorical field people can filter by, with a plain-language explainer (D-26). */
@@ -174,6 +195,17 @@ export const DatasetEntry = z.object({
   facets: z.array(Facet).default([]),
   /** Keep out of Odd Pairings (Specials)' playful pairings (sensitive subjects, e.g. enforcement). */
   excludeFromInsights: z.boolean().default(false),
+  /** Level shown by default, at every zoom. Omitted = the finest level the data has
+   *  (ACS → tract), which is how the source publishes it (Robbie, D-35). */
+  defaultLevel: GeoLevel.optional(),
+  /** Earlier (or later) moments the map can step through (D-36), `from`…`to` by `step`. The
+   *  headline `vintage` stays the default and is what comparisons and Odd Pairings use.
+   *  acs5: 5-year periods named by their last year (2014 = 2010–2014; use step 5 so periods
+   *  don't overlap). fars, climdiv, nbi, lodes: single calendar years. Stops: registry/timeline.ts. */
+  timeline: z.object({ from: z.number().int(), to: z.number().int(), step: z.number().int().min(1).default(1) })
+    .refine((t) => t.to >= t.from, "timeline.to must be ≥ timeline.from").optional(),
+  /** Popup links to readable resources about the clicked place or feature (D-35). */
+  learnMore: z.array(LearnMore).default([]),
   /** Glossary term ids (data/registry/glossary.yaml) that explain this dataset's jargon. */
   terms: z.array(z.string()).default([]),
   symbology: z.object({

@@ -15,5 +15,9 @@ geographyLevels: [state, county, tract]
 unit: minutes
 universe: workers 16+ not working from home
 terms: [acs-5-year, margin-of-error, census-geography, quantile-classes]
+learnMore:
+  - label: See this place's full Census profile on Census Reporter
+    url: "https://censusreporter.org/profiles/{cr}/"
 measure: { kind: acs5, numerator: [B08013_001], denominator: [B08012_001] }
+timeline: { from: 2014, to: 2024, step: 5 }
 symbology: { ramp: viridis, classification: quantile, classes: 5 }

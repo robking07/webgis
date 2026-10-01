@@ -4,10 +4,11 @@ import { readFileSync } from "node:fs";
 import unzipper from "unzipper";
 import { cached, db, log, STATES, upsert } from "./util.ts";
 
-const GAZ = "https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2024_Gazetteer";
+const GAZ = (year: number) => `https://www2.census.gov/geo/docs/maps-data/data/gazetteer/${year}_Gazetteer`;
 
-async function readGazetteer(file: string): Promise<Record<string, string>[]> {
-  const zip = await unzipper.Open.buffer(readFileSync(await cached(`${GAZ}/${file}.zip`)));
+/** A national Gazetteer file, e.g. "2024_Gaz_counties_national" (the year comes from the name). */
+export async function readGazetteer(file: string): Promise<Record<string, string>[]> {
+  const zip = await unzipper.Open.buffer(readFileSync(await cached(`${GAZ(+file.slice(0, 4))}/${file}.zip`)));
   const text = (await zip.files[0].buffer()).toString("utf8");
   const [head, ...lines] = text.trim().split(/\r?\n/);
   const cols = head.split("\t").map((c) => c.trim());
@@ -47,4 +48,12 @@ export async function ingestGeographies() {
   await upsert(pool, "public.geographies", ["geoid", "level", "name", "state_fips", "county_fips", "aland_sqmi", "lon", "lat"], ["geoid"], rows);
   await pool.end();
   log("geographies", `${st.size} states, ${counties.length} counties, ${tracts.length} tracts upserted`);
+}
+
+/** Land area (sq mi) by geoid on 2019 boundaries (2010 tracts, pre-2022 Connecticut counties),
+ *  for timeline periods keyed to them (D-36). They aren't in the database: only the default
+ *  period is (free-tier budget). */
+export async function areas2019(level: "county" | "tract"): Promise<Map<string, number>> {
+  const rows = await readGazetteer(level === "county" ? "2019_Gaz_counties_national" : "2019_Gaz_tracts_national");
+  return new Map(rows.map((r) => [r.GEOID, +r.ALAND_SQMI]));
 }
