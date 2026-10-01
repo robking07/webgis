@@ -46,4 +46,4 @@ Read the ingest log: row counts, nulls, and "geoids not in geographies (dropped)
 
 ## 4. Ship
 
-`npm run build` (it runs the design check), then deploy with the `vercel-cli-with-tokens` flow. The token is project-scoped, so use `vercel deploy --prod -y` with `VERCEL_ORG_ID`/`VERCEL_PROJECT_ID` from `.env.local`, and the REST API for env vars (D-18).
+`npm run build` locally (it runs the design check), then commit and `git push` to `main`: Vercel builds and deploys production automatically (D-23). Commit the regenerated `apps/web/public/data/values/**` and `apps/web/src/generated/*.json`, because the Vercel build can't reach the database. For a feature layer, run `npm run ingest -- publish-tiles` first so its PMTiles are on R2. Fallback: `vercel deploy --prod -y` with `VERCEL_ORG_ID`/`VERCEL_PROJECT_ID` from `.env.local` (D-18).
