@@ -2,13 +2,14 @@ import type { Metadata } from "next";
 import { FLAGGED, PUBLISHED, RULES } from "@/lib/insights";
 import { DATASET_BY_ID } from "@/lib/registry";
 import { InsightCard } from "@/components/InsightCard";
+import { SiteNav } from "@/components/SiteNav";
 
 export const metadata: Metadata = { title: "Weird Insights · webgis" };
 
 export default function InsightsPage() {
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 md:px-8">
-      <nav className="mb-6 text-sm"><a href="/" className="text-primary underline-offset-2 hover:underline">← Back to the map</a></nav>
+      <SiteNav current="insights" />
       <header className="mb-6 max-w-2xl">
         <h1 className="text-2xl font-semibold tracking-tight">Weird Insights</h1>
         <p className="mt-2 text-muted-foreground">

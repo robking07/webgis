@@ -1,0 +1,135 @@
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { rampColors, RAMPS, type RampId } from "@webgis/design";
+import { describeMethod } from "@webgis/registry/describe";
+import { SiteNav } from "@/components/SiteNav";
+import { DATASETS, DATASET_BY_ID } from "@/lib/registry";
+import { sourceOf, datasetHref } from "@/lib/sources";
+import { PUBLISHED } from "@/lib/insights";
+import layersManifest from "@/generated/layers.json";
+
+export function generateStaticParams() {
+  return DATASETS.map((d) => ({ id: d.id }));
+}
+
+export async function generateMetadata({ params }: PageProps<"/data/[id]">): Promise<Metadata> {
+  const { id } = await params;
+  const d = DATASET_BY_ID.get(id);
+  return d ? { title: `${d.title} · Data · webgis`, description: d.description } : { title: "Data · webgis" };
+}
+
+const LEVEL_LABEL: Record<string, string> = { state: "States", county: "Counties", tract: "Census tracts" };
+const CLASSIFY_LABEL: Record<string, string> = { quantile: "Quantile", equalInterval: "Equal interval", jenks: "Natural breaks (Jenks)", manual: "Fixed breaks" };
+
+export default async function DatasetProfilePage({ params }: PageProps<"/data/[id]">) {
+  const { id } = await params;
+  const d = DATASET_BY_ID.get(id);
+  if (!d) notFound();
+  const source = sourceOf(d);
+  const ramp = RAMPS[d.symbology.ramp as RampId];
+  const n = Math.min(Math.max(d.symbology.classes, ramp.minClasses), ramp.maxClasses);
+  const colors = rampColors(d.symbology.ramp as RampId, n);
+  const insights = PUBLISHED.filter((i) => i.x === d.id || i.y === d.id);
+  const siblings = source.datasets.filter((s) => s.id !== d.id);
+  const featureCount = (layersManifest as Record<string, { featureCount?: number }>)[d.id]?.featureCount;
+  const modelInputs = d.modelInputs.map((m) => DATASET_BY_ID.get(m)).filter((x) => !!x);
+
+  const facts: Array<[string, React.ReactNode]> = [
+    ["Source", <a key="s" href={d.source.url} rel="noopener" className="text-primary underline-offset-2 hover:underline">{d.source.name} ↗</a>],
+    ["Vintage", d.vintage],
+    ["Geography", d.measure.kind === "features" ? `Road segments${featureCount ? ` (${featureCount.toLocaleString()})` : ""}` : d.geographyLevels.map((l) => LEVEL_LABEL[l]).join(", ")],
+    ["Measures", d.universe],
+    ["Unit", d.unit.replaceAll("_", " ")],
+    ["Updated", d.updateCadence],
+    ["License", d.license],
+    ["Cite as", d.source.citation],
+  ];
+
+  return (
+    <main className="mx-auto max-w-3xl px-4 py-6 md:px-8 md:py-8">
+      <SiteNav current="data" />
+      <p className="text-sm"><a href="/data" className="text-primary underline-offset-2 hover:underline">← All data</a></p>
+      <header className="mb-6 mt-3">
+        <p className="text-xs uppercase tracking-wide text-muted-foreground">{d.category} · {source.name}</p>
+        <h1 className="mt-1 text-2xl font-semibold tracking-tight">{d.title}</h1>
+        <p className="mt-2 text-muted-foreground">{d.description}</p>
+        <a href={`/?d=${d.id}`} className="mt-4 inline-flex rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">
+          Map it
+        </a>
+      </header>
+
+      <section aria-labelledby="facts" className="mb-8">
+        <h2 id="facts" className="sr-only">About this dataset</h2>
+        <dl className="divide-y rounded-xl border bg-card text-sm">
+          {facts.map(([k, v]) => (
+            <div key={k} className="grid gap-1 px-4 py-2.5 sm:grid-cols-[9rem_1fr] sm:gap-4">
+              <dt className="text-muted-foreground">{k}</dt>
+              <dd className="m-0">{v}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+
+      <section aria-labelledby="method" className="mb-8">
+        <h2 id="method" className="mb-2 text-base font-semibold">How it’s computed</h2>
+        <p className="text-sm leading-relaxed">{describeMethod(d)}</p>
+      </section>
+
+      {(d.coverageNote || modelInputs.length > 0) && (
+        <section aria-labelledby="caveats" className="mb-8">
+          <h2 id="caveats" className="mb-2 text-base font-semibold">Caveats</h2>
+          <ul className="list-disc space-y-1 pl-5 text-sm">
+            {d.coverageNote && <li>{d.coverageNote}</li>}
+            {modelInputs.length > 0 && (
+              <li>
+                Built using {modelInputs.map((m, i) => <span key={m!.id}>{i > 0 && ", "}<a href={datasetHref(m!.id)} className="text-primary underline-offset-2 hover:underline">{m!.title.toLowerCase()}</a></span>)}, so Weird Insights doesn’t pair it with {modelInputs.length > 1 ? "those" : "that"}: they’d match partly by construction.
+              </li>
+            )}
+          </ul>
+        </section>
+      )}
+
+      <section aria-labelledby="symbology" className="mb-8">
+        <h2 id="symbology" className="mb-2 text-base font-semibold">How it’s drawn</h2>
+        <div className="flex items-center gap-3">
+          <span className="flex overflow-hidden rounded" aria-hidden>{colors.map((c) => <span key={c} className="h-4 w-8" style={{ background: c }} />)}</span>
+          <span className="text-sm text-muted-foreground">
+            {ramp.label} · {CLASSIFY_LABEL[d.symbology.classification]}, {n} classes
+            {d.symbology.breaks ? ` (${d.symbology.breaks.map((b) => b.toLocaleString()).join(" / ")})` : ""}
+          </span>
+        </div>
+        <p className="mt-2 text-xs text-muted-foreground">Colors pass the site’s color-blind and contrast checks. See the <a href="https://github.com/robking07/webgis/blob/main/docs/design-system.md" className="underline">design system</a>.</p>
+      </section>
+
+      {insights.length > 0 && (
+        <section aria-labelledby="insights" className="mb-8">
+          <h2 id="insights" className="mb-2 text-base font-semibold">In Weird Insights</h2>
+          <ul className="divide-y rounded-xl border bg-card">
+            {insights.map((i) => {
+              const other = DATASET_BY_ID.get(i.x === d.id ? i.y : i.x)!;
+              return (
+                <li key={i.id}>
+                  <a href={`/insights/${i.id}`} className="flex items-baseline justify-between gap-4 px-4 py-2.5 text-sm hover:bg-muted">
+                    <span>× {other.title}</span>
+                    <span className="shrink-0 tabular-nums text-muted-foreground">ρ = {i.rho.toFixed(2)}</span>
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      )}
+
+      {siblings.length > 0 && (
+        <section aria-labelledby="more" className="mb-8">
+          <h2 id="more" className="mb-2 text-base font-semibold">More from {source.name}</h2>
+          <ul className="flex flex-wrap gap-2">
+            {siblings.map((s) => (
+              <li key={s.id}><a href={datasetHref(s.id)} className="inline-block rounded-full border px-3 py-1 text-xs hover:bg-muted">{s.title}</a></li>
+            ))}
+          </ul>
+        </section>
+      )}
+    </main>
+  );
+}

@@ -82,12 +82,14 @@ export function Viewer({ search }: { search: string }) {
             <h1 className="text-base font-semibold tracking-tight">webgis</h1>
             <p className="hidden text-xs text-muted-foreground md:block">Transportation &amp; planning data, mapped.</p>
             {/* Phone: section links sit on the title row to save height. */}
-            <a href="/insights" className="truncate text-sm text-muted-foreground hover:text-foreground md:hidden">Weird Insights</a>
+            <a href="/data" className="text-sm text-muted-foreground hover:text-foreground md:hidden">Data</a>
+            <a href="/insights" className="truncate text-sm text-muted-foreground hover:text-foreground md:hidden">Insights</a>
           </div>
           <ThemeToggle theme={theme} onChange={(t) => update({ theme: t })} />
         </header>
         <nav aria-label="Sections" className="hidden gap-3 text-sm md:flex">
           <span aria-current="page" className="font-medium">Map</span>
+          <a href="/data" className="text-muted-foreground hover:text-foreground">Data</a>
           <a href="/insights" className="text-muted-foreground hover:text-foreground">Weird Insights</a>
         </nav>
         {/* Phone: one-line summary of what's mapped; tap to open the dataset list. */}
