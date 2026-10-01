@@ -7,13 +7,13 @@ export function generateStaticParams() {
   return PUBLISHED.map((i) => ({ id: i.id }));
 }
 
-export async function generateMetadata({ params }: PageProps<"/insights/[id]">): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps<"/specials/[id]">): Promise<Metadata> {
   const { id } = await params;
   const i = PUBLISHED.find((p) => p.id === id);
-  return { title: i?.headline ? `${i.headline} · Weird Insights` : "Weird Insights" };
+  return { title: i?.headline ? `${i.headline} · Odd Pairings · Mapwich` : "Odd Pairings · Mapwich" };
 }
 
-export default async function InsightPage({ params }: PageProps<"/insights/[id]">) {
+export default async function InsightPage({ params }: PageProps<"/specials/[id]">) {
   const { id } = await params;
   const insight = PUBLISHED.find((p) => p.id === id);
   if (!insight) notFound();

@@ -15,15 +15,15 @@ export function InsightCard({ insight }: { insight: Insight }) {
   }, [x.id, y.id]);
   return (
     <article className="flex flex-col gap-3 rounded-xl border bg-card p-4">
-      <a href={`/insights/${insight.id}`} className="block rounded focus-visible:outline-2 focus-visible:outline-ring">
-        <h2 className="text-base font-semibold leading-snug">{insight.headline}</h2>
+      <a href={`/specials/${insight.id}`} className="block rounded focus-visible:outline-2 focus-visible:outline-ring">
+        <h3 className="text-base font-semibold leading-snug">{insight.headline}</h3>
       </a>
       <p className="text-sm text-muted-foreground">{insight.caption}</p>
       <div className="aspect-[14/9]">
         {err ? <StatusState status="error" /> : vals ? <Scatter x={x} y={y} xv={vals[0]} yv={vals[1]} compact width={420} height={270} /> : <StatusState status="loading" />}
       </div>
       <Stats insight={insight} />
-      <a href={`/insights/${insight.id}`} className="text-sm text-primary underline-offset-2 hover:underline">See the map →</a>
+      <a href={`/specials/${insight.id}`} className="text-sm text-primary underline-offset-2 hover:underline">See the map →</a>
     </article>
   );
 }

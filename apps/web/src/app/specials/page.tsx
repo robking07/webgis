@@ -2,17 +2,18 @@ import type { Metadata } from "next";
 import { FLAGGED, PUBLISHED, RULES } from "@/lib/insights";
 import { DATASET_BY_ID } from "@/lib/registry";
 import { InsightCard } from "@/components/InsightCard";
-import { SiteNav } from "@/components/SiteNav";
+import { SiteFooter, SiteNav } from "@/components/SiteNav";
 
-export const metadata: Metadata = { title: "Weird Insights · Mapwich" };
+export const metadata: Metadata = { title: "Specials · Mapwich" };
 
-export default function InsightsPage() {
+export default function SpecialsPage() {
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 md:px-8">
-      <SiteNav current="insights" />
+      <SiteNav current="specials" />
+      <h1 className="mb-6 text-2xl font-semibold tracking-tight">Specials</h1>
       <header className="mb-6 max-w-2xl">
-        <h1 className="text-2xl font-semibold tracking-tight">Weird Insights</h1>
-        <p className="mt-2 text-muted-foreground">
+        <h2 className="text-lg font-semibold tracking-tight">Odd Pairings</h2>
+        <p className="mt-1 text-muted-foreground">
           Pairs of datasets that line up across U.S. counties. <strong className="text-foreground">Correlation is not causation:</strong>{" "}
           two things that rise together often both follow a third, like how urban a place is. Each pair passed automatic checks for
           tiny samples, shared denominators, outlier-driven results and purely regional patterns before it got here.
@@ -41,6 +42,7 @@ export default function InsightsPage() {
           ))}
         </ul>
       </details>
+      <SiteFooter />
     </main>
   );
 }

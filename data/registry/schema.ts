@@ -167,7 +167,7 @@ export const DatasetEntry = z.object({
   coverageNote: z.string().optional(),
   /** Filterable categorical fields (feature layers), each with an explainer. */
   facets: z.array(Facet).default([]),
-  /** Keep out of Weird Insights' playful pairings (sensitive subjects, e.g. enforcement). */
+  /** Keep out of Odd Pairings (Specials)' playful pairings (sensitive subjects, e.g. enforcement). */
   excludeFromInsights: z.boolean().default(false),
   /** Glossary term ids (data/registry/glossary.yaml) that explain this dataset's jargon. */
   terms: z.array(z.string()).default([]),

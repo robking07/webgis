@@ -180,8 +180,7 @@ export function Viewer({ search }: { search: string }) {
           <a href="/" className="text-lg font-bold tracking-tight text-foreground">Mapwich</a>
           <nav aria-label="Sections" className="flex gap-4 text-sm md:gap-5">
             <span aria-current="page" className="font-semibold text-foreground shadow-[inset_0_-2px_0_var(--ui-accent)]">Map</span>
-            <a href="/data" className="text-muted-foreground hover:text-foreground">Data</a>
-            <a href="/insights" className="text-muted-foreground hover:text-foreground">Insights</a>
+            <a href="/specials" className="text-muted-foreground hover:text-foreground">Specials</a>
           </nav>
         </div>
         <div className="flex items-center gap-2">

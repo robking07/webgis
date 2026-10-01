@@ -42,7 +42,7 @@
   "id": "model-based-estimate",
   "term": "Model-based estimate",
   "short": "A value predicted from survey data and local characteristics rather than counted directly in that place.",
-  "long": "CDC's PLACES project has health survey responses for states, not for every county. It uses a statistical model that combines those responses with each county's demographics (such as age, race and poverty) to estimate local rates. The estimates are useful for comparison, but they partly reflect the model's inputs, which is why Weird Insights won't pair them with those inputs.",
+  "long": "CDC's PLACES project has health survey responses for states, not for every county. It uses a statistical model that combines those responses with each county's demographics (such as age, race and poverty) to estimate local rates. The estimates are useful for comparison, but they partly reflect the model's inputs, which is why Odd Pairings won't pair them with those inputs.",
   "source": "https://www.cdc.gov/places/methodology/"
  },
  {

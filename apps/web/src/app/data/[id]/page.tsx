@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { rampColors, RAMPS, UNIT_LABEL, type RampId, type Unit } from "@webgis/design";
 import { TERM_BY_ID } from "@/lib/glossary";
 import { describeMethod } from "@webgis/registry/describe";
-import { SiteNav } from "@/components/SiteNav";
+import { SiteFooter, SiteNav } from "@/components/SiteNav";
 import { DATASETS, DATASET_BY_ID } from "@/lib/registry";
 import { sourceOf, datasetHref } from "@/lib/sources";
 import { PUBLISHED } from "@/lib/insights";
@@ -49,7 +49,7 @@ export default async function DatasetProfilePage({ params }: PageProps<"/data/[i
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-6 md:px-8 md:py-8">
-      <SiteNav current="data" />
+      <SiteNav />
       <p className="text-sm"><a href="/data" className="text-primary underline-offset-2 hover:underline">← All data</a></p>
       <header className="mb-6 mt-3">
         <p className="text-xs uppercase tracking-wide text-muted-foreground">{d.category} · {source.name}</p>
@@ -122,7 +122,7 @@ export default async function DatasetProfilePage({ params }: PageProps<"/data/[i
             {d.coverageNote && <li>{d.coverageNote}</li>}
             {modelInputs.length > 0 && (
               <li>
-                Built using {modelInputs.map((m, i) => <span key={m!.id}>{i > 0 && ", "}<a href={datasetHref(m!.id)} className="text-primary underline-offset-2 hover:underline">{m!.title.toLowerCase()}</a></span>)}, so Weird Insights doesn’t pair it with {modelInputs.length > 1 ? "those" : "that"}: they’d match partly by construction.
+                Built using {modelInputs.map((m, i) => <span key={m!.id}>{i > 0 && ", "}<a href={datasetHref(m!.id)} className="text-primary underline-offset-2 hover:underline">{m!.title.toLowerCase()}</a></span>)}, so Odd Pairings doesn’t pair it with {modelInputs.length > 1 ? "those" : "that"}: they’d match partly by construction.
               </li>
             )}
           </ul>
@@ -143,13 +143,13 @@ export default async function DatasetProfilePage({ params }: PageProps<"/data/[i
 
       {insights.length > 0 && (
         <section aria-labelledby="insights" className="mb-8">
-          <h2 id="insights" className="mb-2 text-base font-semibold">In Weird Insights</h2>
+          <h2 id="insights" className="mb-2 text-base font-semibold">In Odd Pairings</h2>
           <ul className="divide-y rounded-xl border bg-card">
             {insights.map((i) => {
               const other = DATASET_BY_ID.get(i.x === d.id ? i.y : i.x)!;
               return (
                 <li key={i.id}>
-                  <a href={`/insights/${i.id}`} className="flex items-baseline justify-between gap-4 px-4 py-2.5 text-sm hover:bg-muted">
+                  <a href={`/specials/${i.id}`} className="flex items-baseline justify-between gap-4 px-4 py-2.5 text-sm hover:bg-muted">
                     <span>× {other.title}</span>
                     <span className="shrink-0 tabular-nums text-muted-foreground">ρ = {i.rho.toFixed(2)}</span>
                   </a>
@@ -170,6 +170,7 @@ export default async function DatasetProfilePage({ params }: PageProps<"/data/[i
           </ul>
         </section>
       )}
+      <SiteFooter />
     </main>
   );
 }
