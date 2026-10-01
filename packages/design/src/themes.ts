@@ -16,6 +16,8 @@ export interface Theme {
     accentText: string;
     focus: string;
     danger: string;
+    /** Bread in the Mapwich logo (the map layer between the slices is `accent`). */
+    brandBread: string;
   };
   map: {
     background: string;
@@ -72,6 +74,7 @@ export const THEMES: Record<ThemeName, Theme> = {
       accentText: "#ffffff",
       focus: "#1f5fa8",
       danger: "#b3261e",
+      brandBread: "#a8652a",
     },
     map: {
       background: "#e6e3dc",
@@ -116,6 +119,7 @@ export const THEMES: Record<ThemeName, Theme> = {
       accentText: "#0d1b2a",
       focus: "#7fb2ec",
       danger: "#f2b8b5",
+      brandBread: "#e0a25c",
     },
     map: {
       background: "#141619",
@@ -158,6 +162,9 @@ export const CONTRAST_RULES: Array<[keyof Theme["ui"] | `map.${keyof Theme["map"
   ["accent", "surface", 4.5, "links and accent text"],
   ["accentText", "accent", 4.5, "text on accent buttons"],
   ["focus", "surface", 3, "focus ring (non-text)"],
+  ["brandBread", "bg", 3, "logo bread on the page (non-text)"],
+  ["brandBread", "surface", 3, "logo bread on panels (non-text)"],
+  ["accent", "bg", 3, "logo map layer on the page (non-text)"],
   ["border", "surface", 1.3, "panel borders (decorative)"],
   ["map.label", "map.labelHalo", 7, "map labels"],
   ["map.labelMuted", "map.labelHalo", 4.5, "minor map labels"],

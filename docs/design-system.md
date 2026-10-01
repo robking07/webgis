@@ -111,6 +111,9 @@ Light and dark come from the same token structure; the basemap and the UI chrome
 | light | links and accent text | `accent` on `surface` | 6.44 | 4.5 |
 | light | text on accent buttons | `accentText` on `accent` | 6.44 | 4.5 |
 | light | focus ring (non-text) | `focus` on `surface` | 6.44 | 3 |
+| light | logo bread on the page (non-text) | `brandBread` on `bg` | 4.22 | 3 |
+| light | logo bread on panels (non-text) | `brandBread` on `surface` | 4.61 | 3 |
+| light | logo map layer on the page (non-text) | `accent` on `bg` | 5.91 | 3 |
 | light | panel borders (decorative) | `border` on `surface` | 1.45 | 1.3 |
 | light | map labels | `map.label` on `map.labelHalo` | 13.37 | 7 |
 | light | minor map labels | `map.labelMuted` on `map.labelHalo` | 6.18 | 4.5 |
@@ -129,6 +132,9 @@ Light and dark come from the same token structure; the basemap and the UI chrome
 | dark | links and accent text | `accent` on `surface` | 7.62 | 4.5 |
 | dark | text on accent buttons | `accentText` on `accent` | 7.85 | 4.5 |
 | dark | focus ring (non-text) | `focus` on `surface` | 7.62 | 3 |
+| dark | logo bread on the page (non-text) | `brandBread` on `bg` | 8.40 | 3 |
+| dark | logo bread on panels (non-text) | `brandBread` on `surface` | 7.63 | 3 |
+| dark | logo map layer on the page (non-text) | `accent` on `bg` | 8.39 | 3 |
 | dark | panel borders (decorative) | `border` on `surface` | 1.46 | 1.3 |
 | dark | map labels | `map.label` on `map.labelHalo` | 12.22 | 7 |
 | dark | minor map labels | `map.labelMuted` on `map.labelHalo` | 6.62 | 4.5 |
