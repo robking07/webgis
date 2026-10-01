@@ -26,6 +26,8 @@ Run with the `dataset-display-review` skill (`.claude/skills/dataset-display-rev
 | Job density | ✓ | LODES, geography, classes | – | jobs by industry/wage family (LODES CNS/CE columns) |
 | 12 ACS measures | ✓ | ACS 5-year, MOE, geography, classes | – | **families**: commute mode (transit/walk/bike/WFH), commute time; block group level (D-27) |
 | 6 CDC PLACES measures | ✓ | model-based, age-adjusted, MOE, classes | – | **family**: health behaviors; tract level exists in PLACES (needs 2020-tract check) |
+| CEJST disadvantaged tracts (2010 tracts) | ✓ burdens listed in words | CEJST, 2010 tracts | status | per-category facets (8 burdens), tract 2010→2020 crosswalk |
+| Residents in disadvantaged communities (CEJST) | ✓ | CEJST, 2010 tracts, classes | – | pairs naturally with poverty, PLACES health, climate |
 | 4 NOAA climate normals | ✓ | climate normal, classes | – | **family** with a season/month selector |
 
 ## Opportunities, ranked

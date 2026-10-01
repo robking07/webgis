@@ -1,0 +1,23 @@
+id: cejst_pct_pop_disadvantaged
+title: Residents in disadvantaged communities
+description: Share of residents living in census tracts the Climate and Economic Justice Screening Tool identified as disadvantaged.
+category: Environmental justice
+tags: [Justice40, CEJST, environmental justice, disadvantaged communities, EJ]
+source:
+  name: Climate and Economic Justice Screening Tool 2.0 (CEQ; mirrored by Public Environmental Data Partners)
+  url: https://github.com/usds/justice40-tool
+  citation: "Council on Environmental Quality, Climate and Economic Justice Screening Tool v2.0 (Dec. 2024); archived copy via Public Environmental Data Partners"
+license: Public domain (U.S. Government work); the tool's code is CC0 (usds/justice40-tool).
+updateCadence: static
+vintage: "Version 2.0 (Dec. 2024)"
+geographyLevels: [state, county]
+unit: percent
+universe: residents (CEJST tract population, 2010 tracts)
+coverageNote: "Built from 2010 tracts. Connecticut counties show no data (2022 county change)."
+terms: [cejst, tract-2010, quantile-classes]
+modelInputs: [pct_poverty, median_household_income]  # CEJST requires a low-income threshold (200% of poverty)
+measure:
+  kind: cejst
+  url: https://dblew8dgr6ajz.cloudfront.net/data-versions/2.0/data/score/downloadable/2.0-communities.csv
+  file: cejst-2.0-communities.csv
+symbology: { ramp: purples, classification: quantile, classes: 5 }

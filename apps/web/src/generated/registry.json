@@ -342,6 +342,148 @@
   }
  },
  {
+  "id": "cejst_disadvantaged_tracts",
+  "title": "Disadvantaged communities (CEJST tracts)",
+  "description": "Census tracts the Climate and Economic Justice Screening Tool identified as disadvantaged, shaded by how many of its eight burden categories they exceed.",
+  "category": "Environmental justice",
+  "tags": [
+   "Justice40",
+   "CEJST",
+   "environmental justice",
+   "disadvantaged communities",
+   "climate",
+   "pollution",
+   "energy burden",
+   "EJ"
+  ],
+  "source": {
+   "name": "Climate and Economic Justice Screening Tool 2.0 (CEQ; mirrored by Public Environmental Data Partners)",
+   "url": "https://github.com/usds/justice40-tool",
+   "citation": "Council on Environmental Quality, Climate and Economic Justice Screening Tool v2.0 (Dec. 2024); archived copy via Public Environmental Data Partners"
+  },
+  "license": "Public domain (U.S. Government work); the tool's code is CC0 (usds/justice40-tool).",
+  "updateCadence": "static",
+  "vintage": "Version 2.0 (Dec. 2024)",
+  "geographyLevels": [],
+  "unit": "categories",
+  "universe": "census tracts (2010 boundaries)",
+  "measure": {
+   "kind": "features",
+   "geometry": "polygon",
+   "source": {
+    "url": "https://dblew8dgr6ajz.cloudfront.net/data-versions/2.0/data/score/downloadable/2.0-shapefile-codebook.zip",
+    "file": "cejst-2.0-shapefile-codebook.zip",
+    "path": "usa.zip/usa.shp",
+    "layerPattern": "^usa$"
+   },
+   "select": "SELECT GEOID10 AS tract, CF || ', ' || SF AS place, CAST(CC AS INTEGER) AS categories, CAST(TPF AS INTEGER) AS population, CASE WHEN SN_C = 1 THEN 'Disadvantaged' ELSE 'Not disadvantaged' END AS status, TRIM(\n  CASE WHEN N_CLT = 1 THEN 'Climate change, ' ELSE '' END ||\n  CASE WHEN N_ENY = 1 THEN 'Energy, ' ELSE '' END ||\n  CASE WHEN N_HLTH = 1 THEN 'Health, ' ELSE '' END ||\n  CASE WHEN N_HSG = 1 THEN 'Housing, ' ELSE '' END ||\n  CASE WHEN N_PLN = 1 THEN 'Legacy pollution, ' ELSE '' END ||\n  CASE WHEN N_TRN = 1 THEN 'Transportation, ' ELSE '' END ||\n  CASE WHEN N_WTR = 1 THEN 'Water and wastewater, ' ELSE '' END ||\n  CASE WHEN N_WKFC = 1 THEN 'Workforce development, ' ELSE '' END, ', ') AS burdens,\nCASE WHEN SN_T = 1 THEN 'Yes' ELSE NULL END AS tribal, Geometry FROM usa",
+   "valueField": "categories",
+   "fields": {
+    "place": "Place",
+    "status": "Status",
+    "categories": {
+     "label": "Burden categories exceeded",
+     "unit": "categories"
+    },
+    "burdens": "Burdens",
+    "tribal": "Disadvantaged due to tribal lands",
+    "population": {
+     "label": "Population",
+     "unit": "count"
+    }
+   },
+   "zooms": [
+    4,
+    12
+   ]
+  },
+  "modelInputs": [],
+  "coverageNote": "2010 tract boundaries. Removed from federal websites in 2025; this is the final 2.0 data from the PEDP mirror.",
+  "facets": [
+   {
+    "field": "status",
+    "label": "Status",
+    "explainer": "Whether CEJST identified the tract as disadvantaged. Hide one group to see only the other.",
+    "term": "cejst",
+    "values": [
+     {
+      "value": "Disadvantaged",
+      "label": "Disadvantaged",
+      "description": "Low income and over a burden threshold in at least one category, or mostly tribal land."
+     },
+     {
+      "value": "Not disadvantaged",
+      "label": "Not disadvantaged",
+      "description": "Didn't meet the criteria (or had too little data)."
+     }
+    ]
+   }
+  ],
+  "terms": [
+   "cejst",
+   "tract-2010"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "manual",
+   "classes": 5,
+   "breaks": [
+    1,
+    2,
+    3,
+    4
+   ]
+  }
+ },
+ {
+  "id": "cejst_pct_pop_disadvantaged",
+  "title": "Residents in disadvantaged communities",
+  "description": "Share of residents living in census tracts the Climate and Economic Justice Screening Tool identified as disadvantaged.",
+  "category": "Environmental justice",
+  "tags": [
+   "Justice40",
+   "CEJST",
+   "environmental justice",
+   "disadvantaged communities",
+   "EJ"
+  ],
+  "source": {
+   "name": "Climate and Economic Justice Screening Tool 2.0 (CEQ; mirrored by Public Environmental Data Partners)",
+   "url": "https://github.com/usds/justice40-tool",
+   "citation": "Council on Environmental Quality, Climate and Economic Justice Screening Tool v2.0 (Dec. 2024); archived copy via Public Environmental Data Partners"
+  },
+  "license": "Public domain (U.S. Government work); the tool's code is CC0 (usds/justice40-tool).",
+  "updateCadence": "static",
+  "vintage": "Version 2.0 (Dec. 2024)",
+  "geographyLevels": [
+   "state",
+   "county"
+  ],
+  "unit": "percent",
+  "universe": "residents (CEJST tract population, 2010 tracts)",
+  "measure": {
+   "kind": "cejst",
+   "url": "https://dblew8dgr6ajz.cloudfront.net/data-versions/2.0/data/score/downloadable/2.0-communities.csv",
+   "file": "cejst-2.0-communities.csv"
+  },
+  "modelInputs": [
+   "pct_poverty",
+   "median_household_income"
+  ],
+  "coverageNote": "Built from 2010 tracts. Connecticut counties show no data (2022 county change).",
+  "facets": [],
+  "terms": [
+   "cejst",
+   "tract-2010",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
   "id": "january_low",
   "title": "January low temperature",
   "description": "Average daily minimum temperature in January. Average over 1991–2020.",

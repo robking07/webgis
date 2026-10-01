@@ -7,7 +7,7 @@ import type { Dataset } from "./registry";
 export interface FeatureLayerInfo {
   tiles: string;
   sourceLayer: string;
-  geometry: "line" | "point";
+  geometry: "line" | "point" | "polygon";
   valueField: string;
   fields: Record<string, { label: string; unit?: string } | string>;
   rankField: string | null;

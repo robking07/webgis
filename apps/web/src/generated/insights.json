@@ -6,7 +6,7 @@
   "minAbsRho": 0.3,
   "minWithinStateRho": 0.15
  },
- "generatedAt": "2026-10-01T13:03:46.943Z",
+ "generatedAt": "2026-10-01T15:28:05.390Z",
  "insights": [
   {
    "id": "job_density__population_density",
@@ -165,6 +165,23 @@
    "captionBy": null
   },
   {
+   "id": "cejst_pct_pop_disadvantaged__median_household_income",
+   "x": "cejst_pct_pop_disadvantaged",
+   "y": "median_household_income",
+   "level": "county",
+   "n": 3208,
+   "r": -0.661,
+   "rho": -0.719,
+   "withinState": -0.64,
+   "status": "flagged",
+   "flags": [
+    "by construction: Residents in disadvantaged communities is modeled using Median household income"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null
+  },
+  {
    "id": "obesity__physical_inactivity",
    "x": "obesity",
    "y": "physical_inactivity",
@@ -193,6 +210,23 @@
    "status": "flagged",
    "flags": [
     "same category (Health): expected, not weird"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null
+  },
+  {
+   "id": "cejst_pct_pop_disadvantaged__pct_poverty",
+   "x": "cejst_pct_pop_disadvantaged",
+   "y": "pct_poverty",
+   "level": "county",
+   "n": 3209,
+   "r": 0.634,
+   "rho": 0.708,
+   "withinState": 0.596,
+   "status": "flagged",
+   "flags": [
+    "by construction: Residents in disadvantaged communities is modeled using Population below poverty"
    ],
    "headline": null,
    "caption": null,
@@ -284,6 +318,21 @@
    "captionBy": null
   },
   {
+   "id": "cejst_pct_pop_disadvantaged__physical_inactivity",
+   "x": "cejst_pct_pop_disadvantaged",
+   "y": "physical_inactivity",
+   "level": "county",
+   "n": 2943,
+   "r": 0.646,
+   "rho": 0.642,
+   "withinState": 0.627,
+   "status": "published",
+   "flags": [],
+   "headline": "Residents in disadvantaged communities and no leisure-time exercise move together",
+   "caption": "Across 2,943 counties, places with higher residents in disadvantaged communities tend to have more no leisure-time exercise (Spearman ρ = 0.64). It holds within states too (ρ = 0.63), but both may still track something else, such as how urban a county is.",
+   "captionBy": "template"
+  },
+  {
    "id": "pct_work_from_home__physical_inactivity",
    "x": "pct_work_from_home",
    "y": "physical_inactivity",
@@ -326,6 +375,21 @@
    "flags": [],
    "headline": "Binge drinking and January low temperature move in opposite directions",
    "caption": "Across 2,945 counties, places with higher binge drinking tend to have less January low temperature (Spearman ρ = -0.60). Much of it is regional: comparing counties within the same state, the link is weaker (ρ = -0.19).",
+   "captionBy": "template"
+  },
+  {
+   "id": "cejst_pct_pop_disadvantaged__smoking",
+   "x": "cejst_pct_pop_disadvantaged",
+   "y": "smoking",
+   "level": "county",
+   "n": 2943,
+   "r": 0.596,
+   "rho": 0.591,
+   "withinState": 0.628,
+   "status": "published",
+   "flags": [],
+   "headline": "Residents in disadvantaged communities and cigarette smoking move together",
+   "caption": "Across 2,943 counties, places with higher residents in disadvantaged communities tend to have more cigarette smoking (Spearman ρ = 0.59). It holds within states too (ρ = 0.63), but both may still track something else, such as how urban a county is.",
    "captionBy": "template"
   },
   {
@@ -690,6 +754,21 @@
    "captionBy": "template"
   },
   {
+   "id": "binge_drinking__cejst_pct_pop_disadvantaged",
+   "x": "binge_drinking",
+   "y": "cejst_pct_pop_disadvantaged",
+   "level": "county",
+   "n": 2943,
+   "r": -0.489,
+   "rho": -0.509,
+   "withinState": -0.394,
+   "status": "published",
+   "flags": [],
+   "headline": "Binge drinking and residents in disadvantaged communities move in opposite directions",
+   "caption": "Across 2,943 counties, places with higher binge drinking tend to have less residents in disadvantaged communities (Spearman ρ = -0.51). It holds within states too (ρ = -0.39), but both may still track something else, such as how urban a county is.",
+   "captionBy": "template"
+  },
+  {
    "id": "obesity__short_sleep",
    "x": "obesity",
    "y": "short_sleep",
@@ -705,6 +784,21 @@
    "headline": null,
    "caption": null,
    "captionBy": null
+  },
+  {
+   "id": "cejst_pct_pop_disadvantaged__short_sleep",
+   "x": "cejst_pct_pop_disadvantaged",
+   "y": "short_sleep",
+   "level": "county",
+   "n": 3130,
+   "r": 0.496,
+   "rho": 0.508,
+   "withinState": 0.426,
+   "status": "published",
+   "flags": [],
+   "headline": "Residents in disadvantaged communities and short sleep move together",
+   "caption": "Across 3,130 counties, places with higher residents in disadvantaged communities tend to have more short sleep (Spearman ρ = 0.51). It holds within states too (ρ = 0.43), but both may still track something else, such as how urban a county is.",
+   "captionBy": "template"
   },
   {
    "id": "mean_temperature__physical_inactivity",
@@ -793,6 +887,21 @@
    "headline": null,
    "caption": null,
    "captionBy": null
+  },
+  {
+   "id": "cejst_pct_pop_disadvantaged__loneliness",
+   "x": "cejst_pct_pop_disadvantaged",
+   "y": "loneliness",
+   "level": "county",
+   "n": 2287,
+   "r": 0.484,
+   "rho": 0.492,
+   "withinState": 0.465,
+   "status": "published",
+   "flags": [],
+   "headline": "Residents in disadvantaged communities and loneliness move together",
+   "caption": "Across 2,287 counties, places with higher residents in disadvantaged communities tend to have more loneliness (Spearman ρ = 0.49). It holds within states too (ρ = 0.47), but both may still track something else, such as how urban a county is.",
+   "captionBy": "template"
   },
   {
    "id": "annual_precipitation__short_sleep",
@@ -1167,6 +1276,21 @@
    "captionBy": "template"
   },
   {
+   "id": "cejst_pct_pop_disadvantaged__pct_work_from_home",
+   "x": "cejst_pct_pop_disadvantaged",
+   "y": "pct_work_from_home",
+   "level": "county",
+   "n": 3209,
+   "r": -0.374,
+   "rho": -0.409,
+   "withinState": -0.318,
+   "status": "published",
+   "flags": [],
+   "headline": "Residents in disadvantaged communities and work from home move in opposite directions",
+   "caption": "Across 3,209 counties, places with higher residents in disadvantaged communities tend to have less work from home (Spearman ρ = -0.41). It holds within states too (ρ = -0.32), but both may still track something else, such as how urban a county is.",
+   "captionBy": "template"
+  },
+  {
    "id": "july_high__traffic_fatalities",
    "x": "july_high",
    "y": "traffic_fatalities",
@@ -1179,6 +1303,23 @@
    "flags": [
     "regional only: within states ρ=0.09",
     "Pearson and Spearman disagree (r=0.06, ρ=0.41): outlier-driven"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null
+  },
+  {
+   "id": "cejst_pct_pop_disadvantaged__traffic_fatalities",
+   "x": "cejst_pct_pop_disadvantaged",
+   "y": "traffic_fatalities",
+   "level": "county",
+   "n": 3131,
+   "r": 0.007,
+   "rho": 0.409,
+   "withinState": 0.295,
+   "status": "flagged",
+   "flags": [
+    "Pearson and Spearman disagree (r=0.01, ρ=0.41): outlier-driven"
    ],
    "headline": null,
    "caption": null,
@@ -1232,6 +1373,21 @@
    "captionBy": "template"
   },
   {
+   "id": "cejst_pct_pop_disadvantaged__obesity",
+   "x": "cejst_pct_pop_disadvantaged",
+   "y": "obesity",
+   "level": "county",
+   "n": 2943,
+   "r": 0.406,
+   "rho": 0.399,
+   "withinState": 0.433,
+   "status": "published",
+   "flags": [],
+   "headline": "Residents in disadvantaged communities and obesity move together",
+   "caption": "Across 2,943 counties, places with higher residents in disadvantaged communities tend to have more obesity (Spearman ρ = 0.40). It holds within states too (ρ = 0.43), but both may still track something else, such as how urban a county is.",
+   "captionBy": "template"
+  },
+  {
    "id": "january_low__physical_inactivity",
    "x": "january_low",
    "y": "physical_inactivity",
@@ -1278,6 +1434,21 @@
    "flags": [],
    "headline": "Cigarette smoking and traffic deaths move together",
    "caption": "Across 2,947 counties, places with higher cigarette smoking tend to have more traffic deaths (Spearman ρ = 0.39). It holds within states too (ρ = 0.44), but both may still track something else, such as how urban a county is.",
+   "captionBy": "template"
+  },
+  {
+   "id": "cejst_pct_pop_disadvantaged__pct_zero_vehicle_households",
+   "x": "cejst_pct_pop_disadvantaged",
+   "y": "pct_zero_vehicle_households",
+   "level": "county",
+   "n": 3209,
+   "r": 0.285,
+   "rho": 0.393,
+   "withinState": 0.406,
+   "status": "published",
+   "flags": [],
+   "headline": "Residents in disadvantaged communities and households with no vehicle move together",
+   "caption": "Across 3,209 counties, places with higher residents in disadvantaged communities tend to have more households with no vehicle (Spearman ρ = 0.39). It holds within states too (ρ = 0.41), but both may still track something else, such as how urban a county is.",
    "captionBy": "template"
   },
   {
@@ -1363,6 +1534,40 @@
    "headline": "Job density and median household income move together",
    "caption": "Across 3,113 counties, places with higher job density tend to have more median household income (Spearman ρ = 0.38). It holds within states too (ρ = 0.48), but both may still track something else, such as how urban a county is.",
    "captionBy": "template"
+  },
+  {
+   "id": "cejst_pct_pop_disadvantaged__mean_temperature",
+   "x": "cejst_pct_pop_disadvantaged",
+   "y": "mean_temperature",
+   "level": "county",
+   "n": 3129,
+   "r": 0.349,
+   "rho": 0.382,
+   "withinState": 0.062,
+   "status": "flagged",
+   "flags": [
+    "regional only: within states ρ=0.06"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null
+  },
+  {
+   "id": "cejst_pct_pop_disadvantaged__january_low",
+   "x": "cejst_pct_pop_disadvantaged",
+   "y": "january_low",
+   "level": "county",
+   "n": 3129,
+   "r": 0.342,
+   "rho": 0.382,
+   "withinState": 0.036,
+   "status": "flagged",
+   "flags": [
+    "regional only: within states ρ=0.04"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null
   },
   {
    "id": "binge_drinking__pct_walk_commute",
@@ -1623,6 +1828,23 @@
    "status": "flagged",
    "flags": [
     "regional only: within states ρ=-0.02"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null
+  },
+  {
+   "id": "cejst_pct_pop_disadvantaged__july_high",
+   "x": "cejst_pct_pop_disadvantaged",
+   "y": "july_high",
+   "level": "county",
+   "n": 3129,
+   "r": 0.298,
+   "rho": 0.343,
+   "withinState": 0.076,
+   "status": "flagged",
+   "flags": [
+    "regional only: within states ρ=0.08"
    ],
    "headline": null,
    "caption": null,
@@ -2669,6 +2891,23 @@
    "captionBy": null
   },
   {
+   "id": "cejst_pct_pop_disadvantaged__pct_bike_commute",
+   "x": "cejst_pct_pop_disadvantaged",
+   "y": "pct_bike_commute",
+   "level": "county",
+   "n": 3209,
+   "r": -0.109,
+   "rho": -0.253,
+   "withinState": -0.128,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null
+  },
+  {
    "id": "pct_long_commute__traffic_fatalities",
    "x": "pct_long_commute",
    "y": "traffic_fatalities",
@@ -2711,6 +2950,23 @@
    "r": 0.167,
    "rho": 0.249,
    "withinState": 0.256,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null
+  },
+  {
+   "id": "cejst_pct_pop_disadvantaged__job_density",
+   "x": "cejst_pct_pop_disadvantaged",
+   "y": "job_density",
+   "level": "county",
+   "n": 3104,
+   "r": -0.025,
+   "rho": -0.247,
+   "withinState": -0.343,
    "status": "flagged",
    "flags": [
     "weak (|ρ|<0.3)"
@@ -2772,6 +3028,23 @@
    "captionBy": null
   },
   {
+   "id": "annual_precipitation__cejst_pct_pop_disadvantaged",
+   "x": "annual_precipitation",
+   "y": "cejst_pct_pop_disadvantaged",
+   "level": "county",
+   "n": 3129,
+   "r": 0.143,
+   "rho": 0.241,
+   "withinState": -0.016,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null
+  },
+  {
    "id": "annual_precipitation__vmt_per_capita",
    "x": "annual_precipitation",
    "y": "vmt_per_capita",
@@ -2814,6 +3087,23 @@
    "r": -0.106,
    "rho": -0.239,
    "withinState": 0.017,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null
+  },
+  {
+   "id": "cejst_pct_pop_disadvantaged__pct_long_commute",
+   "x": "cejst_pct_pop_disadvantaged",
+   "y": "pct_long_commute",
+   "level": "county",
+   "n": 3209,
+   "r": 0.214,
+   "rho": 0.238,
+   "withinState": 0.134,
    "status": "flagged",
    "flags": [
     "weak (|ρ|<0.3)"
@@ -3522,6 +3812,23 @@
    "captionBy": null
   },
   {
+   "id": "cejst_pct_pop_disadvantaged__pct_walk_commute",
+   "x": "cejst_pct_pop_disadvantaged",
+   "y": "pct_walk_commute",
+   "level": "county",
+   "n": 3209,
+   "r": -0.086,
+   "rho": -0.172,
+   "withinState": 0.04,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null
+  },
+  {
    "id": "bridges_poor_condition__pct_walk_commute",
    "x": "bridges_poor_condition",
    "y": "pct_walk_commute",
@@ -3583,6 +3890,23 @@
    "r": 0.073,
    "rho": 0.167,
    "withinState": 0.057,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null
+  },
+  {
+   "id": "cejst_pct_pop_disadvantaged__pct_transit_commute",
+   "x": "cejst_pct_pop_disadvantaged",
+   "y": "pct_transit_commute",
+   "level": "county",
+   "n": 3209,
+   "r": -0.067,
+   "rho": -0.166,
+   "withinState": -0.112,
    "status": "flagged",
    "flags": [
     "weak (|ρ|<0.3)"
@@ -3797,6 +4121,23 @@
    "captionBy": null
   },
   {
+   "id": "cejst_pct_pop_disadvantaged__population_density",
+   "x": "cejst_pct_pop_disadvantaged",
+   "y": "population_density",
+   "level": "county",
+   "n": 3209,
+   "r": -0.028,
+   "rho": -0.146,
+   "withinState": -0.341,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null
+  },
+  {
    "id": "binge_drinking__job_density",
    "x": "binge_drinking",
    "y": "job_density",
@@ -3839,6 +4180,23 @@
    "r": 0.008,
    "rho": 0.144,
    "withinState": 0.172,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null
+  },
+  {
+   "id": "cejst_pct_pop_disadvantaged__pct_renter_households",
+   "x": "cejst_pct_pop_disadvantaged",
+   "y": "pct_renter_households",
+   "level": "county",
+   "n": 3209,
+   "r": 0.095,
+   "rho": 0.144,
+   "withinState": 0.106,
    "status": "flagged",
    "flags": [
     "weak (|ρ|<0.3)"
@@ -3907,6 +4265,23 @@
    "r": 0.076,
    "rho": 0.141,
    "withinState": 0.15,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null
+  },
+  {
+   "id": "cejst_pct_pop_disadvantaged__mean_commute_minutes",
+   "x": "cejst_pct_pop_disadvantaged",
+   "y": "mean_commute_minutes",
+   "level": "county",
+   "n": 3208,
+   "r": 0.129,
+   "rho": 0.14,
+   "withinState": -0.028,
    "status": "flagged",
    "flags": [
     "weak (|ρ|<0.3)"
@@ -4652,6 +5027,23 @@
    "captionBy": null
   },
   {
+   "id": "cejst_pct_pop_disadvantaged__pct_age_65_plus",
+   "x": "cejst_pct_pop_disadvantaged",
+   "y": "pct_age_65_plus",
+   "level": "county",
+   "n": 3209,
+   "r": 0.077,
+   "rho": 0.07,
+   "withinState": 0.161,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null
+  },
+  {
    "id": "short_sleep__vmt_per_capita",
    "x": "short_sleep",
    "y": "vmt_per_capita",
@@ -5152,6 +5544,23 @@
    "captionBy": null
   },
   {
+   "id": "bridges_poor_condition__cejst_pct_pop_disadvantaged",
+   "x": "bridges_poor_condition",
+   "y": "cejst_pct_pop_disadvantaged",
+   "level": "county",
+   "n": 3149,
+   "r": 0.018,
+   "rho": -0.03,
+   "withinState": 0.05,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null
+  },
+  {
    "id": "mean_commute_minutes__obesity",
    "x": "mean_commute_minutes",
    "y": "obesity",
@@ -5160,6 +5569,23 @@
    "r": 0.017,
    "rho": 0.029,
    "withinState": -0.055,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null
+  },
+  {
+   "id": "cejst_pct_pop_disadvantaged__vmt_per_capita",
+   "x": "cejst_pct_pop_disadvantaged",
+   "y": "vmt_per_capita",
+   "level": "county",
+   "n": 3127,
+   "r": 0.002,
+   "rho": 0.027,
+   "withinState": 0.041,
    "status": "flagged",
    "flags": [
     "weak (|ρ|<0.3)"

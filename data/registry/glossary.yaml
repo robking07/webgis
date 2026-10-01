@@ -120,3 +120,20 @@
     Each color holds roughly the same number of places, so the map shows how places rank against each other.
   long: >-
     Most maps here split places into equal-sized groups (quantiles), from lightest (lowest) to darkest (highest). That makes patterns easy to see, but the value ranges of the groups can be uneven, so always check the legend. Traffic volume uses fixed, conventional ranges instead.
+
+- id: cejst
+  term: >-
+    Climate and Economic Justice Screening Tool (CEJST)
+  short: >-
+    A federal map (2022–2025) that flagged census tracts as "disadvantaged" when they were low income and overburdened in at least one of eight areas.
+  long: >-
+    CEJST was built to steer the Justice40 initiative, which aimed 40% of the benefits of certain federal climate and infrastructure programs to disadvantaged communities. A tract qualified if it was at or above a burden threshold in any of eight categories (climate change, energy, health, housing, legacy pollution, transportation, water and wastewater, workforce development) and met the matching low-income threshold, or if it was mostly within tribal lands. The tool and data were removed from federal websites in 2025; this copy comes from the Public Environmental Data Partners mirror of the final 2.0 release.
+  source: https://github.com/usds/justice40-tool
+
+- id: tract-2010
+  term: >-
+    2010 census tracts
+  short: >-
+    CEJST uses the 2010 tract boundaries, which differ in places from the 2020 tracts used by most other layers here.
+  long: >-
+    Census tracts are redrawn every ten years. CEJST 2.0 was built on 2010 tracts, so its tract shapes are drawn as published rather than matched to 2020 tracts. County and state roll-ups use the 2010 county codes, which still match today's counties everywhere except Connecticut (which switched to planning regions in 2022) and a few renamed or split areas.

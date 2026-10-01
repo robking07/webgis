@@ -13,6 +13,9 @@ export const BASEMAP = {
     '<a href="https://openfreemap.org" target="_blank">OpenFreeMap</a> © <a href="https://www.openmaptiles.org/" target="_blank">OpenMapTiles</a> Data from <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>',
 };
 
+/** The U.S. "focus land" fill (from the state boundary tiles) goes directly below this layer. */
+export const FOCUS_LAND_BEFORE_ID = "park";
+
 /** Thematic layers are inserted directly below this basemap layer: the reference overlays
  *  (rivers, interstates) and the labels stay on top of the data. */
 export const DATA_BEFORE_ID = "overlay-river-casing";
@@ -30,6 +33,12 @@ export function basemapStyle(themeName: ThemeName): StyleSpecification {
       id: "water", type: "fill", source: "omt", "source-layer": "water",
       paint: { "fill-color": m.water },
     },
+    // Shoreline: gives oceans, the Great Lakes and big rivers a crisp edge at every zoom.
+    {
+      id: "coastline", type: "line", source: "omt", "source-layer": "water",
+      filter: ["!=", ["get", "brunnel"], "tunnel"],
+      paint: { "line-color": m.coastline, "line-width": ["interpolate", ["linear"], ["zoom"], 2, 0.6, 6, 1, 12, 1.4] as never, "line-opacity": 0.9 },
+    },
     {
       id: "waterway", type: "line", source: "omt", "source-layer": "waterway", minzoom: 8,
       paint: { "line-color": m.waterLine, "line-width": zoomInterp(SIZE.line) as never },
@@ -43,6 +52,22 @@ export function basemapStyle(themeName: ThemeName): StyleSpecification {
       id: "road-major", type: "line", source: "omt", "source-layer": "transportation", minzoom: 5,
       filter: ["in", ["get", "class"], ["literal", ["motorway", "trunk", "primary"]]],
       paint: { "line-color": m.roadMajor, "line-width": zoomInterp(SIZE.lineMajor) as never },
+    },
+    // State lines and the national border: under thematic fills' labels, above land.
+    {
+      id: "boundary-state", type: "line", source: "omt", "source-layer": "boundary", minzoom: 2,
+      filter: ["all", ["==", ["get", "admin_level"], 4], ["!=", ["get", "maritime"], 1]],
+      paint: { "line-color": m.stateLine, "line-width": ["interpolate", ["linear"], ["zoom"], 3, 0.5, 8, 1.2] as never, "line-dasharray": [3, 2] },
+    },
+    {
+      id: "boundary-country-halo", type: "line", source: "omt", "source-layer": "boundary",
+      filter: ["all", ["==", ["get", "admin_level"], 2], ["!=", ["get", "maritime"], 1]],
+      paint: { "line-color": m.countryHalo, "line-width": ["interpolate", ["linear"], ["zoom"], 2, 2.5, 8, 5] as never, "line-opacity": 0.55 },
+    },
+    {
+      id: "boundary-country", type: "line", source: "omt", "source-layer": "boundary",
+      filter: ["all", ["==", ["get", "admin_level"], 2], ["!=", ["get", "maritime"], 1]],
+      paint: { "line-color": m.countryLine, "line-width": ["interpolate", ["linear"], ["zoom"], 2, 1, 8, 2] as never },
     },
     // Reference overlays: above thematic data (cased so they read over any fill), below labels.
     {
@@ -193,5 +218,24 @@ export function featureLineLayers(o: FeatureLineOptions): LayerSpecification[] {
   return [
     { id: `${o.id}-casing`, type: "line", ...base, layout, paint: { "line-color": m.featureOutline, "line-opacity": 0.75, "line-width": width(1.2) as never } },
     { id: `${o.id}-line`, type: "line", ...base, layout, paint: { "line-color": color as never, "line-width": width(0) as never } },
+  ];
+}
+
+/** U.S. land a step lighter than the rest of the continent, from the state tiles. */
+export function focusLandLayer(source: string, theme: ThemeName): LayerSpecification {
+  return { id: "us-focus-land", type: "fill", source, "source-layer": "state", paint: { "fill-color": THEMES[theme].map.focusLand } };
+}
+
+export interface FeaturePolygonOptions extends FeatureLineOptions {}
+
+/** Areas from their own geometry (e.g. CEJST tracts): step color by value, thin outline. */
+export function featurePolygonLayers(o: FeaturePolygonOptions): LayerSpecification[] {
+  const m = THEMES[o.theme].map;
+  const value = ["to-number", ["get", o.valueField], 0];
+  const color = ["step", value, o.colors[0], ...o.breaks.flatMap((b, i) => [b, o.colors[i + 1]])];
+  const base = { source: o.source, "source-layer": o.sourceLayer };
+  return [
+    { id: `${o.id}-fill`, type: "fill", ...base, paint: { "fill-color": color as never, "fill-opacity": 0.85 } },
+    { id: `${o.id}-casing`, type: "line", ...base, paint: { "line-color": m.featureOutline, "line-width": zoomInterp(SIZE.featureOutline) as never, "line-opacity": 0.6 } },
   ];
 }

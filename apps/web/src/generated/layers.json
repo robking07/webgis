@@ -35,5 +35,35 @@
   },
   "rankField": "f_system",
   "featureCount": 10680545
+ },
+ "cejst_disadvantaged_tracts": {
+  "tiles": "cejst_disadvantaged_tracts.pmtiles",
+  "sourceLayer": "cejst_disadvantaged_tracts",
+  "geometry": "polygon",
+  "valueField": "categories",
+  "fields": {
+   "place": {
+    "label": "Place"
+   },
+   "status": {
+    "label": "Status"
+   },
+   "categories": {
+    "label": "Burden categories exceeded",
+    "unit": "categories"
+   },
+   "burdens": {
+    "label": "Burdens"
+   },
+   "tribal": {
+    "label": "Disadvantaged due to tribal lands"
+   },
+   "population": {
+    "label": "Population",
+    "unit": "count"
+   }
+  },
+  "rankField": null,
+  "featureCount": 74134
  }
 }

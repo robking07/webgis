@@ -3,7 +3,7 @@
 // builds data/tiles/<id>.pmtiles (thinned by `rank` at low zoom), and
 // apps/web/src/generated/layers.json records what the map needs to draw it.
 import { spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { createReadStream, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { loadRegistry } from "@webgis/registry/load";
 import type { DatasetEntry } from "@webgis/registry";
@@ -17,6 +17,12 @@ function run(cmd: string, args: string[]): string {
   if (r.error) throw new Error(`${cmd} not found (${r.error.message}). GDAL: micromamba env "gis" linked into ~/.local/bin (see build-tiles skill).`);
   if (r.status !== 0) throw new Error(`${cmd} failed: ${r.stderr.slice(0, 500)}`);
   return r.stdout;
+}
+
+async function countLines(path: string): Promise<number> {
+  let n = 0;
+  for await (const chunk of createReadStream(path)) for (const b of chunk as Buffer) if (b === 10) n++;
+  return n;
 }
 
 /** tippecanoe feature filter: at zoom z, keep features whose rank field ≤ the threshold for z. */
@@ -41,9 +47,11 @@ export async function ingestFeatures(only?: string[]) {
     const m = e.measure;
     await registerDataset(pool, e);
     const zip = await cached(m.source.url, m.source.file);
-    const ds = `/vsizip/${zip}/${m.source.path}`;
+    // `path` may go through a zip inside the zip ("usa.zip/usa.shp"): GDAL nests /vsizip/.
+    const nested = m.source.path.match(/^(.*?\.zip)\/(.+)$/);
+    const ds = nested ? `/vsizip//vsizip/${zip}/${nested[1]}/${nested[2]}` : `/vsizip/${zip}/${m.source.path}`;
     const layers = run("ogrinfo", ["-ro", "-q", ds]).split("\n")
-      .map((l) => l.match(/^Layer: (\S+)/)?.[1]).filter((n): n is string => !!n && new RegExp(m.source.layerPattern).test(n));
+      .map((l) => l.match(/^(?:Layer: |\d+: )(\S+)/)?.[1]).filter((n): n is string => !!n && new RegExp(m.source.layerPattern).test(n));
     if (!layers.length) throw new Error(`${e.id}: no layers match ${m.source.layerPattern}`);
     const work = join(CACHE, `features-${e.id}`);
     rmSync(work, { recursive: true, force: true });
@@ -63,7 +71,7 @@ export async function ingestFeatures(only?: string[]) {
       } else {
         run("ogr2ogr", ["-f", "GeoJSONSeq", out, ds, layer, "-select", fields.join(","), ...common, ...(m.where ? ["-where", m.where] : [])]);
       }
-      const n = readFileSync(out, "utf8").split("\n").filter(Boolean).length;
+      const n = await countLines(out); // streamed: extracts can exceed Node's max string length
       total += n;
       if (n) files.push(out);
       log(e.id, `${layer}: ${n.toLocaleString()} features`);
@@ -72,7 +80,10 @@ export async function ingestFeatures(only?: string[]) {
     mkdirSync(TILES, { recursive: true });
     const args = [
       "-o", target, "--force", "-l", e.id, "-Z", String(m.zooms[0]), "-z", String(m.zooms[1]),
-      "--drop-densest-as-needed", "--extend-zooms-if-still-dropping", "--simplification=6",
+      // Polygons (areas) must never drop: like the boundary tiles, keep every feature.
+      ...(m.geometry === "polygon"
+        ? ["--no-feature-limit", "--no-tile-size-limit", "--detect-shared-borders", "--no-tiny-polygon-reduction", "--simplification=4"]
+        : ["--drop-densest-as-needed", "--extend-zooms-if-still-dropping", "--simplification=6"]),
       ...(m.rank ? ["-j", rankFilter(m.rank, e.id)] : []),
       ...files,
     ];

@@ -3,7 +3,7 @@
 import { z } from "zod";
 
 const Ramp = z.enum(["blues", "ylgnbu", "oranges", "purples", "viridis", "cividis", "rdbu", "puor", "brbg"]);
-const Unit = z.enum(["dollars", "percent", "minutes", "count", "per_sq_mi", "ratio", "years", "deg_f", "inches", "per_100k", "vehicles_per_day", "miles_per_day"]);
+const Unit = z.enum(["dollars", "percent", "minutes", "count", "per_sq_mi", "ratio", "years", "deg_f", "inches", "per_100k", "vehicles_per_day", "miles_per_day", "categories"]);
 export const GeoLevel = z.enum(["state", "county", "tract"]);
 
 /** How the value is computed from source variables. */
@@ -66,6 +66,14 @@ const FarsMeasure = z.object({
   perPopulation: z.number().default(100000),
 });
 
+/** CEJST (Justice40) roll-up: share of residents living in tracts identified as disadvantaged,
+ *  by state and county, from the CEJST 2.0 communities CSV (2010 tracts). */
+const CejstMeasure = z.object({
+  kind: z.literal("cejst"),
+  url: z.url(),
+  file: z.string(),
+});
+
 /** Daily vehicle miles traveled from HPMS: Σ AADT × section length (milepoints), by county,
  *  divided by residents. Counted roads only; uncounted local roads are missing. */
 const HpmsVmtMeasure = z.object({
@@ -78,7 +86,7 @@ const HpmsVmtMeasure = z.object({
  *  choropleth on Census geography. Values live in the tiles; breaks are computed at ingest. */
 const FeaturesMeasure = z.object({
   kind: z.literal("features"),
-  geometry: z.enum(["line", "point"]),
+  geometry: z.enum(["line", "point", "polygon"]),
   source: z.object({
     /** Download URL (cached in data/cache). */
     url: z.url(),
@@ -126,7 +134,7 @@ export const DatasetEntry = z.object({
   title: z.string(),
   /** One sentence shown in the browser and popups. */
   description: z.string(),
-  category: z.enum(["Income & poverty", "Commuting", "Vehicles", "Housing", "Population", "Jobs", "Transportation", "Environment", "Health", "Climate"]),
+  category: z.enum(["Income & poverty", "Commuting", "Vehicles", "Housing", "Population", "Jobs", "Transportation", "Environment", "Environmental justice", "Health", "Climate"]),
   tags: z.array(z.string()).default([]),
   source: z.object({
     name: z.string(),
@@ -141,7 +149,7 @@ export const DatasetEntry = z.object({
   unit: Unit,
   /** For insights: the population the value describes. Pairs that share one are flagged. */
   universe: z.string(),
-  measure: z.discriminatedUnion("kind", [AcsMeasure, LodesMeasure, PlacesMeasure, ClimdivMeasure, NbiMeasure, FarsMeasure, FeaturesMeasure, HpmsVmtMeasure]),
+  measure: z.discriminatedUnion("kind", [AcsMeasure, LodesMeasure, PlacesMeasure, ClimdivMeasure, NbiMeasure, FarsMeasure, FeaturesMeasure, HpmsVmtMeasure, CejstMeasure]),
   /** Other registry datasets used as inputs to this dataset's model (e.g. PLACES uses county poverty).
    *  Insight pairs with these are flagged: they correlate partly by construction. */
   modelInputs: z.array(z.string()).default([]),

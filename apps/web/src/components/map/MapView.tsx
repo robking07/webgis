@@ -4,7 +4,7 @@
 import { useEffect, useRef } from "react";
 import { AttributionControl, Map as MlMap, ScaleControl, addProtocol, setWorkerUrl, type MapGeoJSONFeature } from "maplibre-gl";
 import { Protocol } from "pmtiles";
-import { basemapStyle, choroplethFill, DATA_BEFORE_ID, featureLineLayers, GEO_LEVELS, MOTION, thematicLayers, type GeoLevel, type ThemeName } from "@webgis/design";
+import { basemapStyle, choroplethFill, DATA_BEFORE_ID, featureLineLayers, featurePolygonLayers, focusLandLayer, FOCUS_LAND_BEFORE_ID, GEO_LEVELS, MOTION, thematicLayers, type GeoLevel, type ThemeName } from "@webgis/design";
 import type { FeatureLayerSpec } from "@/lib/layers";
 import type { ViewState } from "@/lib/url-state";
 
@@ -157,9 +157,10 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
     /** Lines are thin: hit-test a small box around the pointer, busiest (top-drawn) first. */
     const featureAt = (pt: { x: number; y: number }): FeatureHit | null => {
       const fl = latest.current.featureLayer;
-      if (!fl || !m.getLayer(`${fl.id}-line`)) return null;
-      const r = 6;
-      const hits = m.queryRenderedFeatures([[pt.x - r, pt.y - r], [pt.x + r, pt.y + r]], { layers: [`${fl.id}-line`] });
+      const hitLayer = fl ? `${fl.id}-${fl.geometry === "polygon" ? "fill" : "line"}` : "";
+      if (!fl || !m.getLayer(hitLayer)) return null;
+      const r = fl.geometry === "polygon" ? 0 : 6;
+      const hits = m.queryRenderedFeatures([[pt.x - r, pt.y - r], [pt.x + r, pt.y + r]], { layers: [hitLayer] });
       const f = hits.sort((a, b) => Number(b.properties[fl.valueField] ?? 0) - Number(a.properties[fl.valueField] ?? 0))[0];
       return f ? { layerId: fl.id, properties: f.properties, x: pt.x, y: pt.y } : null;
     };
@@ -250,6 +251,8 @@ function addThematic(m: MlMap, theme: ThemeName) {
   for (const level of LEVELS) {
     if (!m.getSource(`b-${level}`)) m.addSource(`b-${level}`, { type: "vector", url: tilesUrl(level), promoteId: "geoid" });
   }
+  // U.S. land a step lighter than neighbors, under water and parks (always on).
+  if (!m.getLayer("us-focus-land")) m.addLayer(focusLandLayer("b-state", theme), m.getLayer(FOCUS_LAND_BEFORE_ID) ? FOCUS_LAND_BEFORE_ID : undefined);
   // Placeholder colors; the real ones come from syncPaint.
   for (const level of LEVELS) {
     for (const layer of thematicLayers({ source: `b-${level}`, sourceLayer: level, level, colors: [], theme })) {
@@ -285,15 +288,23 @@ const FEATURE_SRC = "feature-layer";
 /** Show exactly one feature layer (or none), placed above the choropleth and basemap overlays, below labels. */
 function syncFeatureLayer(m: MlMap, spec: FeatureLayerSpec | null, theme: ThemeName) {
   const current = m.getStyle().layers.filter((l) => "source" in l && l.source === FEATURE_SRC).map((l) => l.id);
-  const wantedIds = spec ? [`${spec.id}-casing`, `${spec.id}-line`] : [];
+  const wantedIds = spec ? (spec.geometry === "polygon" ? [`${spec.id}-fill`, `${spec.id}-casing`] : [`${spec.id}-casing`, `${spec.id}-line`]) : [];
   if (current.length && current.join() === wantedIds.join()) return;
   for (const id of current) m.removeLayer(id);
   if (m.getSource(FEATURE_SRC)) m.removeSource(FEATURE_SRC);
-  for (const id of HIDDEN_WITH_LINES) if (m.getLayer(id)) m.setLayoutProperty(id, "visibility", spec ? "none" : "visible");
+  for (const id of HIDDEN_WITH_LINES) if (m.getLayer(id)) m.setLayoutProperty(id, "visibility", spec?.geometry === "line" ? "none" : "visible");
   if (!spec) return;
   const base = TILES_BASE.startsWith("http") ? TILES_BASE : `${window.location.origin}${TILES_BASE}`;
   m.addSource(FEATURE_SRC, { type: "vector", url: `pmtiles://${base}/${spec.tiles}` });
-  const before = m.getLayer("label-water") ? "label-water" : undefined;
+  // Lines sit above the overlays they replace; areas sit with the data, under rivers/interstates.
+  const before = spec.geometry === "polygon"
+    ? (m.getLayer(DATA_BEFORE_ID) ? DATA_BEFORE_ID : undefined)
+    : (m.getLayer("label-water") ? "label-water" : undefined);
+  if (spec.geometry === "polygon") {
+    for (const layer of featurePolygonLayers({ id: spec.id, source: FEATURE_SRC, sourceLayer: spec.sourceLayer, valueField: spec.valueField, breaks: spec.breaks, colors: spec.colors, rankField: spec.rankField, theme })) {
+      m.addLayer(layer, before);
+    }
+  }
   if (spec.geometry === "line") {
     for (const layer of featureLineLayers({ id: spec.id, source: FEATURE_SRC, sourceLayer: spec.sourceLayer, valueField: spec.valueField, breaks: spec.breaks, colors: spec.colors, rankField: spec.rankField, theme })) {
       m.addLayer(layer, before);
@@ -308,5 +319,5 @@ function applyFeatureFilter(m: MlMap, spec: FeatureLayerSpec | null, filter?: Re
     "in", ["to-string", ["get", field]], ["literal", vals.map(String)],
   ]);
   const expr = clauses.length ? ["all", ...clauses] : null;
-  for (const id of [`${spec.id}-casing`, `${spec.id}-line`]) if (m.getLayer(id)) m.setFilter(id, expr as never);
+  for (const id of [`${spec.id}-casing`, `${spec.id}-line`, `${spec.id}-fill`]) if (m.getLayer(id)) m.setFilter(id, expr as never);
 }

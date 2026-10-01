@@ -109,3 +109,11 @@
 .wg-on-map {
   text-shadow: 0 0 2px var(--map-label-halo), 0 0 6px var(--map-label-halo), 0 0 12px var(--map-label-halo);
 }
+/* Docked filters (D-28): no card, just halo'd text and glass chips over the map. */
+.wg-dock { pointer-events: auto; }
+/* Immersed legend: a lighter card so it gives context without blocking the map. */
+.wg-legend-immersed {
+  background: color-mix(in srgb, var(--ui-surface) 78%, transparent) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}

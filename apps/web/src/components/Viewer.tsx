@@ -121,14 +121,18 @@ export function Viewer({ search }: { search: string }) {
     ? [`< ${formatValue(featureSpec.breaks[0], primary!.unit)}`, `≥ ${formatValue(featureSpec.breaks[featureSpec.breaks.length - 1], primary!.unit)}`]
     : current?.breaks?.length ? [`< ${formatValue(current.breaks[0], primary!.unit)}`, `≥ ${formatValue(current.breaks[current.breaks.length - 1], primary!.unit)}`] : null;
   const chromeShown = !immersed || peek;
-  // The legend shrinks to its strip when immersed, or when Display options needs the room.
-  const compactLegend = immersed || optionsOpen;
-  const meta = primary ? [isFeature ? "Road segments" : GEO_LEVELS[level].label, primary.vintage, primary.source.name.split(",")[0].split(" (")[0]].join(" · ") : "";
+  // Legend: once the user is exploring (immersed), desktop shows it in full for context;
+  // it shrinks to its strip only while Display options needs the room. Phones keep the strip
+  // (tap to expand) so the map isn't covered.
+  const desktopStrip = optionsOpen && !immersed;
+  const filtersActive = Object.values(hidden).some((h) => h.size > 0);
+  const featureNoun = featureSpec?.geometry === "polygon" ? "Census tracts (2010)" : "Road segments";
+  const meta = primary ? [isFeature ? featureNoun : GEO_LEVELS[level].label, primary.vintage, primary.source.name.split(",")[0].split(" (")[0]].join(" · ") : "";
   const legendBody = (
     <>
       {primary && isFeature ? (featureSpec ? (
-          <Legend title={primary.title} unit={primary.unit} colors={featureSpec.colors} breaks={featureSpec.breaks} showNoData={false} swatch="line"
-            caption={`${primary.vintage} · ${featureSpec.featureCount.toLocaleString()} segments · wider lines = higher road class${primary.coverageNote ? `. ${primary.coverageNote}` : ""}`} />
+          <Legend title={primary.title} unit={primary.unit} colors={featureSpec.colors} breaks={featureSpec.breaks} showNoData={false} swatch={featureSpec.geometry === "line" ? "line" : "area"}
+            caption={`${primary.vintage} · ${featureSpec.featureCount.toLocaleString()} ${featureSpec.geometry === "line" ? "segments · wider lines = higher road class" : "areas"}${primary.coverageNote ? `. ${primary.coverageNote}` : ""}`} />
         ) : <StatusState status="empty" message="This layer hasn't been built yet." />)
         : error ? <StatusState status="error" message={error} />
         : primary && !available ? <StatusState status="empty" message="These two datasets don't share a geography level, so they can't be compared." />
@@ -274,9 +278,20 @@ export function Viewer({ search }: { search: string }) {
           </div>
           <button type="button" onClick={() => setBrowserOpen(true)} className="pointer-events-auto ml-0.5 flex items-baseline gap-2 text-left focus-visible:outline-2 focus-visible:outline-ring rounded">
             <span className="wg-on-map text-base font-bold text-foreground md:text-[17px]">{primary.title}</span>
-            <span className="wg-on-map text-[13px] font-semibold text-foreground/80">{isFeature ? "Roads" : GEO_LEVELS[level].label} ▾</span>
+            <span className="wg-on-map text-[13px] font-semibold text-foreground/80">{isFeature ? (featureSpec?.geometry === "polygon" ? "Tracts" : "Roads") : GEO_LEVELS[level].label} ▾</span>
           </button>
         </div>
+      )}
+
+      {/* Docked filters: the user set a filter, then zoomed in; keep it within reach (D-28).
+          Transparent, with text halos and glass chips, under the immersed title. */}
+      {primary && immersed && filtersActive && primary.facets.length > 0 && (
+        <section aria-label="Active filters" className="wg-dock absolute left-3 top-[124px] z-20 max-h-[calc(100%-220px)] w-[min(18rem,calc(100%-1.5rem))] space-y-3 overflow-y-auto md:left-4">
+          {primary.facets.map((f) => (
+            <FacetFilter key={f.field} facet={f} hidden={hidden[f.field]} docked onToggle={(v) => toggleFacet(f.field, v)}
+              onAll={() => setHidden((cur) => ({ ...cur, [f.field]: new Set() }))} />
+          ))}
+        </section>
       )}
 
       {/* Zoom: frosted pill (desktop; phones pinch-zoom). */}
@@ -289,7 +304,7 @@ export function Viewer({ search }: { search: string }) {
       {/* Legend: full card at rest on desktop; a strip when immersed or on phones (tap to expand). */}
       {legendStrip && legendEnds && !legendOpen && (
         <button type="button" onClick={() => setLegendOpen(true)} aria-expanded={false} aria-label={`Show legend for ${primary!.title}`}
-          className={`wg-glass absolute bottom-6 left-3 z-20 items-center gap-2 rounded-full px-3 py-2 text-xs tabular-nums text-foreground focus-visible:outline-2 focus-visible:outline-ring md:left-4 ${compactLegend ? "flex" : "flex md:hidden"}`}>
+          className={`wg-glass absolute bottom-6 left-3 z-20 items-center gap-2 rounded-full px-3 py-2 text-xs tabular-nums text-foreground focus-visible:outline-2 focus-visible:outline-ring md:left-4 ${desktopStrip ? "flex" : "flex md:hidden"}`}>
           <span>{legendEnds[0]}</span>
           <span className="flex overflow-hidden rounded-sm" aria-hidden>
             {(secondary && current ? [current.colors[0], current.colors[4], current.colors[8]] : legendStrip).map((c, i) => <span key={i} className={featureSpec ? "h-1.5 w-5 self-center" : "h-2 w-5"} style={{ background: c }} />)}
@@ -298,7 +313,7 @@ export function Viewer({ search }: { search: string }) {
         </button>
       )}
       <section aria-label="Legend"
-        className={`absolute bottom-6 left-3 right-3 z-20 max-h-[55%] overflow-y-auto rounded-lg border bg-card/95 p-3 shadow-sm backdrop-blur md:left-4 md:right-auto md:max-h-[60%] md:w-64 ${legendOpen || !(legendStrip && legendEnds) ? "block" : compactLegend ? "hidden" : "hidden md:block"}`}>
+        className={`absolute bottom-6 left-3 right-3 z-20 max-h-[55%] overflow-y-auto rounded-lg border bg-card/95 p-3 shadow-sm backdrop-blur md:left-4 md:right-auto md:max-h-[60%] md:w-64 ${legendOpen || !(legendStrip && legendEnds) ? "block" : desktopStrip ? "hidden" : "hidden md:block"} ${immersed ? "wg-legend-immersed" : ""}`}>
         {legendOpen && (
           <button type="button" onClick={() => setLegendOpen(false)} aria-label="Collapse legend"
             className="absolute right-2 top-2 rounded p-1 text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring">
@@ -458,6 +473,7 @@ function DetailPanel({ info, onClose, primary, secondary, xv, yv, onMapIt }: Det
 /** Readable title: the signed route ("I-35", "US 52"), else the street name, else the road class. */
 function featureTitle(h: FeatureHit, spec?: FeatureLayerSpec): string {
   const p = h.properties;
+  if (p.tract && p.place) return `Tract ${Number(String(p.tract).slice(5)) / 100}, ${p.place}`;
   if (p.route) return String(p.route);
   if (p.street) return titleCase(String(p.street));
   const fs = Number(p.f_system);
@@ -476,7 +492,7 @@ function featureRows(spec: FeatureLayerSpec, h: FeatureHit, facets: Facet[] = []
     const { label, unit } = typeof f === "string" ? { label: f, unit: undefined } : f;
     const v = h.properties[field];
     if (v == null || v === "") continue;
-    if (field === "route") continue; // it's the title
+    if (field === "route" || field === "place") continue; // part of the title
     if (field === "street" && !h.properties.route) continue; // already the title
     const facet = facets.find((x) => x.field === field);
     const facetLabel = facet?.values.find((x) => String(x.value) === String(v))?.label;
@@ -490,19 +506,19 @@ function featureRows(spec: FeatureLayerSpec, h: FeatureHit, facets: Facet[] = []
 }
 
 /** One facet as toggle chips with its plain-language explainer behind an info button. */
-function FacetFilter({ facet, hidden, onToggle, onAll }: { facet: Facet; hidden?: Set<string>; onToggle: (v: string) => void; onAll: () => void }) {
+function FacetFilter({ facet, hidden, onToggle, onAll, docked }: { facet: Facet; hidden?: Set<string>; onToggle: (v: string) => void; onAll: () => void; docked?: boolean }) {
   const [explain, setExplain] = useState(false);
   const term = facet.term ? TERM_BY_ID.get(facet.term) : undefined;
   return (
     <fieldset>
       <div className="mb-1.5 flex items-center gap-1.5">
-        <legend className="text-xs font-semibold">{facet.label}</legend>
+        <legend className={`text-xs font-semibold ${docked ? "wg-on-map" : ""}`}>{facet.label}</legend>
         <button type="button" onClick={() => setExplain((e) => !e)} aria-expanded={explain} aria-label={`What is ${facet.label.toLowerCase()}?`}
           className="rounded text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring"><Info className="size-3.5" aria-hidden /></button>
-        {hidden && hidden.size > 0 && <button type="button" onClick={onAll} className="ml-auto rounded text-[11px] text-primary hover:underline">Show all</button>}
+        {hidden && hidden.size > 0 && <button type="button" onClick={onAll} className={`ml-auto rounded text-[11px] font-semibold text-primary hover:underline ${docked ? "wg-on-map" : ""}`}>Show all</button>}
       </div>
       {explain && (
-        <div className="mb-2 rounded-md bg-muted p-2 text-[11px] leading-snug">
+        <div className={`mb-2 rounded-md p-2 text-[11px] leading-snug ${docked ? "wg-glass" : "bg-muted"}`}>
           <p>{facet.explainer}</p>
           {term && <p className="mt-1 text-muted-foreground">{term.short}</p>}
           <dl className="mt-1.5 space-y-0.5">
@@ -517,7 +533,7 @@ function FacetFilter({ facet, hidden, onToggle, onAll }: { facet: Facet; hidden?
           const on = !hidden?.has(String(v.value));
           return (
             <button key={String(v.value)} type="button" aria-pressed={on} onClick={() => onToggle(String(v.value))}
-              className="rounded-full border px-2.5 py-0.5 text-xs text-muted-foreground line-through aria-pressed:border-primary aria-pressed:text-foreground aria-pressed:no-underline focus-visible:outline-2 focus-visible:outline-ring">
+              className={`rounded-full border px-2.5 py-0.5 text-xs text-muted-foreground line-through aria-pressed:border-primary aria-pressed:text-foreground aria-pressed:no-underline focus-visible:outline-2 focus-visible:outline-ring ${docked ? "wg-glass border-transparent" : ""}`}>
               {v.label}
             </button>
           );

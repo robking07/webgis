@@ -42,6 +42,15 @@ export interface Theme {
     river: string;
     riverCasing: string;
     shieldText: string;
+    /** U.S. land, a step lighter than other countries so the lower 48 reads at a glance. */
+    focusLand: string;
+    /** Shoreline drawn around water bodies. */
+    coastline: string;
+    /** National boundary (and its halo). */
+    countryLine: string;
+    countryHalo: string;
+    /** State lines on the basemap (under data). */
+    stateLine: string;
   };
 }
 
@@ -61,9 +70,9 @@ export const THEMES: Record<ThemeName, Theme> = {
       danger: "#b3261e",
     },
     map: {
-      background: "#f2f0eb",
-      land: "#f2f0eb",
-      water: "#c9d7e3",
+      background: "#e6e3dc",
+      land: "#e6e3dc",
+      water: "#b9cee0",
       waterLine: "#a9bfd2",
       park: "#e4e8dc",
       road: "#ffffff",
@@ -81,6 +90,11 @@ export const THEMES: Record<ThemeName, Theme> = {
       river: "#5b8fbf",
       riverCasing: "#eef4f9",
       shieldText: "#ffffff",
+      focusLand: "#f6f4ef",
+      coastline: "#7f9fba",
+      countryLine: "#5d6169",
+      countryHalo: "#ffffff",
+      stateLine: "#b3aea5",
     },
   },
   dark: {
@@ -98,9 +112,9 @@ export const THEMES: Record<ThemeName, Theme> = {
       danger: "#f2b8b5",
     },
     map: {
-      background: "#16181b",
-      land: "#1c1e22",
-      water: "#0f1a24",
+      background: "#141619",
+      land: "#141619",
+      water: "#0a1824",
       waterLine: "#1e3346",
       park: "#1d2420",
       road: "#2b2e34",
@@ -118,6 +132,11 @@ export const THEMES: Record<ThemeName, Theme> = {
       river: "#6fa8dc",
       riverCasing: "#0f1a24",
       shieldText: "#16181b",
+      focusLand: "#22252b",
+      coastline: "#2f5878",
+      countryLine: "#8b919c",
+      countryHalo: "#0a1824",
+      stateLine: "#41454d",
     },
   },
 };
@@ -138,6 +157,8 @@ export const CONTRAST_RULES: Array<[keyof Theme["ui"] | `map.${keyof Theme["map"
   ["map.interstate", "map.interstateCasing", 4.5, "interstate line vs its casing (non-text, reads over any fill)"],
   ["map.river", "map.riverCasing", 3, "river line vs its casing (non-text)"],
   ["map.shieldText", "map.interstate", 4.5, "interstate route number text"],
+  ["map.countryLine", "map.focusLand", 3, "national boundary vs U.S. land (non-text)"],
+  ["map.coastline", "map.water", 1.5, "shoreline vs water (decorative)"],
 ];
 
 export function themeColor(theme: Theme, key: string): string {
