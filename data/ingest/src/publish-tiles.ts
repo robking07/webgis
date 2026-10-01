@@ -18,7 +18,7 @@ export async function publishTiles(only?: string[]) {
   await s3.send(new PutBucketCorsCommand({
     Bucket: R2_BUCKET,
     CORSConfiguration: { CORSRules: [{
-      AllowedOrigins: ["https://webgis-lac.vercel.app", "https://*.vercel.app", "http://localhost:3000"],
+      AllowedOrigins: ["https://mapwich.org", "https://www.mapwich.org", "https://webgis-lac.vercel.app", "https://*.vercel.app", "http://localhost:3000"],
       AllowedMethods: ["GET", "HEAD"],
       AllowedHeaders: ["range", "if-match"],
       ExposeHeaders: ["etag", "content-length", "content-range", "accept-ranges"],
