@@ -18,6 +18,7 @@ import { parseUrlState, useUrlState, type UrlState } from "@/lib/url-state";
 import { LANDING } from "@/lib/landing";
 import { readStoredTheme, useResolvedTheme } from "@/lib/theme";
 import { HeaderContent } from "./SiteHeader";
+import { LogoMark } from "./Logo";
 import { classifyBivariate, classifyUnivariate, useDatasetValues, type Values } from "@/lib/values";
 import { fetchDetail } from "@/lib/supabase";
 
@@ -268,7 +269,10 @@ export function Viewer({ search }: { search: string }) {
               className="wg-glass grid size-10 place-items-center rounded-xl text-foreground focus-visible:outline-2 focus-visible:outline-ring">
               <Menu className="size-[18px]" aria-hidden />
             </button>
-            <span className="wg-wordmark text-[28px] font-extrabold tracking-tight md:text-[34px]" aria-hidden>Mapwich</span>
+            <span className="flex items-center gap-2" aria-hidden>
+              <span className="wg-logo-on-map"><LogoMark size={34} /></span>
+              <span className="wg-wordmark hidden text-[34px] font-extrabold tracking-tight md:inline">Mapwich</span>
+            </span>
           </div>
           <button type="button" onClick={() => setBrowserOpen(true)} className="pointer-events-auto ml-0.5 flex items-baseline gap-2 text-left focus-visible:outline-2 focus-visible:outline-ring rounded">
             <span className="wg-on-map text-base font-bold text-foreground md:text-[17px]">{primary.title}</span>

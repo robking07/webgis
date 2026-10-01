@@ -7,6 +7,7 @@ import Link from "next/link";
 import { Moon, Search, Sun } from "lucide-react";
 import type { ThemeName } from "@webgis/design";
 import { readStoredTheme, useResolvedTheme } from "@/lib/theme";
+import { LogoMark } from "./Logo";
 
 type Section = "map" | "specials";
 
@@ -25,7 +26,11 @@ export function HeaderContent({ current, onSearch, theme, onTheme }: {
   return (
     <>
       <div className="flex min-w-0 items-center gap-5 md:gap-7">
-        <Link href="/" className="text-lg font-bold tracking-tight text-foreground">Mapwich</Link>
+        {/* Phones show the mark alone; wider screens pair it with the wordmark (D-34). */}
+        <Link href="/" aria-label="Mapwich" className="flex min-h-11 items-center gap-2 text-lg font-bold tracking-tight text-foreground">
+          <LogoMark size={30} />
+          <span className="hidden md:inline">Mapwich</span>
+        </Link>
         <nav aria-label="Sections" className="flex gap-4 text-sm md:gap-5">
           {nav("/", "Map", "map")}
           {nav("/specials", "Specials", "specials")}
