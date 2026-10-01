@@ -245,6 +245,11 @@
   "coverageNote": "Contiguous U.S. and Alaska; Hawaii has no county series. Connecticut uses pre-2022 county codes in nClimDiv, so it shows no data.",
   "facets": [],
   "excludeFromInsights": false,
+  "timeline": {
+   "from": 1991,
+   "to": 2025,
+   "step": 1
+  },
   "learnMore": [],
   "terms": [
    "climate-normal",
@@ -343,6 +348,11 @@
   "coverageNote": "Counties with fewer than 10 bridges show no data. Connecticut's NBI records still use pre-2022 counties, so CT counties show no data.",
   "facets": [],
   "excludeFromInsights": false,
+  "timeline": {
+   "from": 2019,
+   "to": 2025,
+   "step": 1
+  },
   "learnMore": [],
   "terms": [
    "bridge-condition",
@@ -780,6 +790,11 @@
   "coverageNote": "Contiguous U.S. and Alaska; Hawaii has no county series. Connecticut uses pre-2022 county codes in nClimDiv, so it shows no data.",
   "facets": [],
   "excludeFromInsights": false,
+  "timeline": {
+   "from": 1991,
+   "to": 2025,
+   "step": 1
+  },
   "learnMore": [],
   "terms": [
    "climate-normal",
@@ -829,6 +844,11 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "timeline": {
+   "from": 2010,
+   "to": 2023,
+   "step": 1
+  },
   "learnMore": [],
   "terms": [
    "lodes",
@@ -881,6 +901,11 @@
   "coverageNote": "Contiguous U.S. and Alaska; Hawaii has no county series. Connecticut uses pre-2022 county codes in nClimDiv, so it shows no data.",
   "facets": [],
   "excludeFromInsights": false,
+  "timeline": {
+   "from": 1991,
+   "to": 2025,
+   "step": 1
+  },
   "learnMore": [],
   "terms": [
    "climate-normal",
@@ -981,6 +1006,11 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
   "learnMore": [
    {
     "label": "See this place's full Census profile on Census Reporter",
@@ -1049,6 +1079,11 @@
   "coverageNote": "Contiguous U.S. and Alaska; Hawaii has no county series. Connecticut uses pre-2022 county codes in nClimDiv, so it shows no data.",
   "facets": [],
   "excludeFromInsights": false,
+  "timeline": {
+   "from": 1991,
+   "to": 2025,
+   "step": 1
+  },
   "learnMore": [],
   "terms": [
    "climate-normal",
@@ -1096,6 +1131,11 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
   "learnMore": [
    {
     "label": "See this place's full Census profile on Census Reporter",
@@ -1215,6 +1255,11 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
   "learnMore": [
    {
     "label": "See this place's full Census profile on Census Reporter",
@@ -1273,6 +1318,11 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
   "learnMore": [
    {
     "label": "See this place's full Census profile on Census Reporter",
@@ -1332,6 +1382,11 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
   "learnMore": [
    {
     "label": "See this place's full Census profile on Census Reporter",
@@ -1389,6 +1444,11 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
   "learnMore": [
    {
     "label": "See this place's full Census profile on Census Reporter",
@@ -1447,6 +1507,11 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
   "learnMore": [
    {
     "label": "See this place's full Census profile on Census Reporter",
@@ -1506,6 +1571,11 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
   "learnMore": [
    {
     "label": "See this place's full Census profile on Census Reporter",
@@ -1564,6 +1634,11 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
   "learnMore": [
    {
     "label": "See this place's full Census profile on Census Reporter",
@@ -1622,6 +1697,11 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
   "learnMore": [
    {
     "label": "See this place's full Census profile on Census Reporter",
@@ -1680,6 +1760,11 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
   "learnMore": [
    {
     "label": "See this place's full Census profile on Census Reporter",
@@ -1784,6 +1869,11 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
   "learnMore": [
    {
     "label": "See this place's full Census profile on Census Reporter",
@@ -1941,6 +2031,11 @@
   "coverageNote": "Counted where crashes happened, divided by residents, so counties with heavy through-traffic look high. Connecticut counties use pre-2022 codes and show no data.",
   "facets": [],
   "excludeFromInsights": false,
+  "timeline": {
+   "from": 2015,
+   "to": 2024,
+   "step": 1
+  },
   "learnMore": [],
   "terms": [
    "per-100k",

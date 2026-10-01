@@ -6,7 +6,8 @@
   "exports": {
     ".": "./schema.ts",
     "./load": "./load.ts",
-    "./describe": "./describe.ts"
+    "./describe": "./describe.ts",
+    "./timeline": "./timeline.ts"
   },
   "dependencies": {
     "yaml": "^2.8.0",

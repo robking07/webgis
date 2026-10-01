@@ -22,4 +22,5 @@ measure:
   numerator: [B01001_020, B01001_021, B01001_022, B01001_023, B01001_024, B01001_025, B01001_044, B01001_045, B01001_046, B01001_047, B01001_048, B01001_049]
   denominator: [B01001_001]
   scale: 100
+timeline: { from: 2014, to: 2024, step: 5 }
 symbology: { ramp: cividis, classification: quantile, classes: 5 }

@@ -16,4 +16,5 @@ coverageNote: Contiguous U.S. and Alaska; Hawaii has no county series. Connectic
 unit: inches
 terms: [climate-normal, quantile-classes]
 measure: { kind: climdiv, element: pcpn, months: [1,2,3,4,5,6,7,8,9,10,11,12], stat: sum, years: [1991, 2020] }
+timeline: { from: 1991, to: 2025 }
 symbology: { ramp: blues, classification: quantile, classes: 5 }

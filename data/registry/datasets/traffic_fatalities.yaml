@@ -17,4 +17,5 @@ modelInputs: [population_density]
 coverageNote: Counted where crashes happened, divided by residents, so counties with heavy through-traffic look high. Connecticut counties use pre-2022 codes and show no data.
 terms: [per-100k, quantile-classes]
 measure: { kind: fars, years: [2020, 2024], perPopulation: 100000 }
+timeline: { from: 2015, to: 2024 }
 symbology: { ramp: purples, classification: quantile, classes: 5 }

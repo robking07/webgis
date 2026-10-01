@@ -193,6 +193,12 @@ export const DatasetEntry = z.object({
   /** Level shown by default, at every zoom. Omitted = the finest level the data has
    *  (ACS → tract), which is how the source publishes it (Robbie, D-33). */
   defaultLevel: GeoLevel.optional(),
+  /** Earlier (or later) moments the map can step through (D-34), `from`…`to` by `step`. The
+   *  headline `vintage` stays the default and is what comparisons and Odd Pairings use.
+   *  acs5: 5-year periods named by their last year (2014 = 2010–2014; use step 5 so periods
+   *  don't overlap). fars, climdiv, nbi, lodes: single calendar years. Stops: registry/timeline.ts. */
+  timeline: z.object({ from: z.number().int(), to: z.number().int(), step: z.number().int().min(1).default(1) })
+    .refine((t) => t.to >= t.from, "timeline.to must be ≥ timeline.from").optional(),
   /** Popup links to readable resources about the clicked place or feature (D-33). */
   learnMore: z.array(LearnMore).default([]),
   /** Glossary term ids (data/registry/glossary.yaml) that explain this dataset's jargon. */

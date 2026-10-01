@@ -69,6 +69,9 @@ interface Props {
   onApi?: (api: MapApi) => void;
   /** Scale bar units (Settings). */
   scaleUnit?: "imperial" | "metric";
+  /** County and tract boundary vintage for a timeline stop (D-34): "2019" = 2010 tracts and
+   *  pre-2022 Connecticut counties; null = the current tiles. */
+  boundaries?: "2019" | null;
 }
 
 export interface MapApi {
@@ -89,17 +92,19 @@ const TILES_BASE = process.env.NEXT_PUBLIC_TILES_BASE_URL || "/tiles";
 const LEVELS = Object.keys(GEO_LEVELS) as GeoLevel[];
 let protocolReady = false;
 
-function tilesUrl(level: GeoLevel) {
+function tilesUrl(level: GeoLevel, boundaries?: string | null) {
   const base = TILES_BASE.startsWith("http") ? TILES_BASE : `${window.location.origin}${TILES_BASE}`;
-  return `pmtiles://${base}/${level}.pmtiles`;
+  return `pmtiles://${base}/${level !== "state" && boundaries ? `${level}-${boundaries}` : level}.pmtiles`;
 }
 
-export function MapView({ theme, initialView, paint, onViewChange, onHover, onSelect, onTilesError, ariaLabel, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, onApi, featureFilter, scaleUnit = "imperial" }: Props) {
+export function MapView({ theme, initialView, paint, onViewChange, onHover, onSelect, onTilesError, ariaLabel, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, onApi, featureFilter, scaleUnit = "imperial", boundaries = null }: Props) {
   const container = useRef<HTMLDivElement>(null);
   const map = useRef<MlMap | null>(null);
   const applied = useRef<Partial<Record<GeoLevel, LevelPaint>>>({});
-  const latest = useRef({ paint, theme, onViewChange, onHover, onSelect, onTilesError, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove });
-  latest.current = { paint, theme, onViewChange, onHover, onSelect, onTilesError, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove };
+  const latest = useRef({ paint, theme, onViewChange, onHover, onSelect, onTilesError, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, boundaries });
+  latest.current = { paint, theme, onViewChange, onHover, onSelect, onTilesError, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, boundaries };
+  /** Boundary vintage the county/tract sources currently point at. */
+  const shownBoundaries = useRef<string | null>(null);
   /** True once our sources/layers exist on the current style. isStyleLoaded() can't be used:
    *  it stays false while tiles are loading, which silently dropped paint updates. */
   const ready = useRef(false);
@@ -159,7 +164,8 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
     m.getCanvas().setAttribute("aria-label", ariaLabel);
 
     m.on("style.load", () => {
-      addThematic(m, latest.current.theme);
+      addThematic(m, latest.current.theme, latest.current.boundaries);
+      shownBoundaries.current = latest.current.boundaries;
       applyBands(m, latest.current.levelZooms);
       ready.current = true;
       applied.current = {};
@@ -232,6 +238,18 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
     const m = map.current;
     if (m && ready.current) applyBands(m, levelZooms);
   }, [levelZooms]);
+
+  // Boundary vintage (timeline stops before 2020): swap the county/tract sources, keep the layers.
+  // Runs before the paint effect, which then repaints the new sources.
+  useEffect(() => {
+    const m = map.current;
+    if (!m || !ready.current || shownBoundaries.current === boundaries) return;
+    swapBoundaries(m, boundaries);
+    shownBoundaries.current = boundaries;
+    delete applied.current.county; delete applied.current.tract;
+    syncPaint(m, latest.current.paint, applied.current, latest.current.theme);
+    restoreFlags(m, hovered.current, selected.current);
+  }, [boundaries]);
 
   // Paint: diff per level and push class indices into feature state.
   useEffect(() => {
@@ -311,9 +329,9 @@ function geometryBbox(g: GeoJSON.Geometry): Bbox | undefined {
   return Number.isFinite(w) ? [w, s, e, n] : undefined;
 }
 
-function addThematic(m: MlMap, theme: ThemeName) {
+function addThematic(m: MlMap, theme: ThemeName, boundaries: string | null) {
   for (const level of LEVELS) {
-    if (!m.getSource(`b-${level}`)) m.addSource(`b-${level}`, { type: "vector", url: tilesUrl(level), promoteId: "geoid" });
+    if (!m.getSource(`b-${level}`)) m.addSource(`b-${level}`, { type: "vector", url: tilesUrl(level, boundaries), promoteId: "geoid" });
   }
   // U.S. land a step lighter than neighbors, under water and parks (always on).
   if (!m.getLayer("us-focus-land")) m.addLayer(focusLandLayer("b-state", theme), m.getLayer(FOCUS_LAND_BEFORE_ID) ? FOCUS_LAND_BEFORE_ID : undefined);
@@ -326,6 +344,24 @@ function addThematic(m: MlMap, theme: ThemeName) {
   // Selection outlines go above every level's fill, so a county picked while tracts are drawn still shows.
   for (const level of LEVELS) for (const id of [`${level}-highlight-casing`, `${level}-highlight`]) {
     if (m.getLayer(id)) m.moveLayer(id, m.getLayer(DATA_BEFORE_ID) ? DATA_BEFORE_ID : undefined);
+  }
+}
+
+/** Point the county and tract sources at another boundary vintage. A source's URL can't be
+ *  changed in place, so its layers are lifted out (keeping their order, zoom bands and paint),
+ *  the source is replaced, and the layers go back where they were. */
+function swapBoundaries(m: MlMap, boundaries: string | null) {
+  for (const level of ["county", "tract"] as const) {
+    const src = `b-${level}`;
+    if (!m.getSource(src)) continue;
+    const all = m.getStyle().layers;
+    const mine = all.filter((l) => "source" in l && l.source === src);
+    const ids = new Set(mine.map((l) => l.id));
+    const before = mine.map((l) => all.slice(all.findIndex((x) => x.id === l.id) + 1).find((x) => !ids.has(x.id))?.id);
+    for (const l of mine) m.removeLayer(l.id);
+    m.removeSource(src);
+    m.addSource(src, { type: "vector", url: tilesUrl(level, boundaries), promoteId: "geoid" });
+    mine.forEach((l, i) => m.addLayer(l, before[i]));
   }
 }
 

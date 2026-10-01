@@ -15,4 +15,5 @@ unit: per_sq_mi
 universe: jobs (by workplace)
 terms: [lodes, census-geography, quantile-classes]
 measure: { kind: lodes, file: wac, column: C000, segment: S000, jobType: JT00, perSqMi: true }
+timeline: { from: 2010, to: 2023 }
 symbology: { ramp: blues, classification: quantile, classes: 7 }

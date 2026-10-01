@@ -29,6 +29,8 @@ export interface Theme {
     boundaryMajor: string;
     label: string;
     labelMuted: string;
+    /** Labels outside the U.S.: deliberately quiet (D-35). */
+    labelForeign: string;
     labelHalo: string;
     /** Outline drawn around every choropleth polygon. */
     featureOutline: string;
@@ -81,6 +83,7 @@ export const THEMES: Record<ThemeName, Theme> = {
       boundaryMajor: "#77736c",
       label: "#2e2f33",
       labelMuted: "#5f6168",
+      labelForeign: "#8b8d93",
       labelHalo: "#ffffff",
       featureOutline: "#ffffff",
       highlight: "#111111",
@@ -123,6 +126,7 @@ export const THEMES: Record<ThemeName, Theme> = {
       boundaryMajor: "#6b707a",
       label: "#d4d6da",
       labelMuted: "#9a9ea6",
+      labelForeign: "#73777f",
       labelHalo: "#16181b",
       featureOutline: "#16181b",
       highlight: "#ffffff",
@@ -153,6 +157,7 @@ export const CONTRAST_RULES: Array<[keyof Theme["ui"] | `map.${keyof Theme["map"
   ["border", "surface", 1.3, "panel borders (decorative)"],
   ["map.label", "map.labelHalo", 7, "map labels"],
   ["map.labelMuted", "map.labelHalo", 4.5, "minor map labels"],
+  ["map.labelForeign", "map.labelHalo", 3, "labels outside the U.S. (muted on purpose, still legible)"],
   ["map.highlight", "map.land", 3, "selection outline (non-text)"],
   ["map.interstate", "map.interstateCasing", 4.5, "interstate line vs its casing (non-text, reads over any fill)"],
   ["map.river", "map.riverCasing", 3, "river line vs its casing (non-text)"],

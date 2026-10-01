@@ -1,0 +1,709 @@
+{
+ "annual_precipitation": {
+  "1991": [
+   "county"
+  ],
+  "1992": [
+   "county"
+  ],
+  "1993": [
+   "county"
+  ],
+  "1994": [
+   "county"
+  ],
+  "1995": [
+   "county"
+  ],
+  "1996": [
+   "county"
+  ],
+  "1997": [
+   "county"
+  ],
+  "1998": [
+   "county"
+  ],
+  "1999": [
+   "county"
+  ],
+  "2000": [
+   "county"
+  ],
+  "2001": [
+   "county"
+  ],
+  "2002": [
+   "county"
+  ],
+  "2003": [
+   "county"
+  ],
+  "2004": [
+   "county"
+  ],
+  "2005": [
+   "county"
+  ],
+  "2006": [
+   "county"
+  ],
+  "2007": [
+   "county"
+  ],
+  "2008": [
+   "county"
+  ],
+  "2009": [
+   "county"
+  ],
+  "2010": [
+   "county"
+  ],
+  "2011": [
+   "county"
+  ],
+  "2012": [
+   "county"
+  ],
+  "2013": [
+   "county"
+  ],
+  "2014": [
+   "county"
+  ],
+  "2015": [
+   "county"
+  ],
+  "2016": [
+   "county"
+  ],
+  "2017": [
+   "county"
+  ],
+  "2018": [
+   "county"
+  ],
+  "2019": [
+   "county"
+  ],
+  "2020": [
+   "county"
+  ],
+  "2021": [
+   "county"
+  ],
+  "2022": [
+   "county"
+  ],
+  "2023": [
+   "county"
+  ],
+  "2024": [
+   "county"
+  ],
+  "2025": [
+   "county"
+  ]
+ },
+ "bridges_poor_condition": {
+  "2019": [
+   "county",
+   "state"
+  ],
+  "2020": [
+   "county",
+   "state"
+  ],
+  "2021": [
+   "county",
+   "state"
+  ],
+  "2022": [
+   "county",
+   "state"
+  ],
+  "2023": [
+   "county",
+   "state"
+  ],
+  "2024": [
+   "county",
+   "state"
+  ]
+ },
+ "january_low": {
+  "1991": [
+   "county"
+  ],
+  "1992": [
+   "county"
+  ],
+  "1993": [
+   "county"
+  ],
+  "1994": [
+   "county"
+  ],
+  "1995": [
+   "county"
+  ],
+  "1996": [
+   "county"
+  ],
+  "1997": [
+   "county"
+  ],
+  "1998": [
+   "county"
+  ],
+  "1999": [
+   "county"
+  ],
+  "2000": [
+   "county"
+  ],
+  "2001": [
+   "county"
+  ],
+  "2002": [
+   "county"
+  ],
+  "2003": [
+   "county"
+  ],
+  "2004": [
+   "county"
+  ],
+  "2005": [
+   "county"
+  ],
+  "2006": [
+   "county"
+  ],
+  "2007": [
+   "county"
+  ],
+  "2008": [
+   "county"
+  ],
+  "2009": [
+   "county"
+  ],
+  "2010": [
+   "county"
+  ],
+  "2011": [
+   "county"
+  ],
+  "2012": [
+   "county"
+  ],
+  "2013": [
+   "county"
+  ],
+  "2014": [
+   "county"
+  ],
+  "2015": [
+   "county"
+  ],
+  "2016": [
+   "county"
+  ],
+  "2017": [
+   "county"
+  ],
+  "2018": [
+   "county"
+  ],
+  "2019": [
+   "county"
+  ],
+  "2020": [
+   "county"
+  ],
+  "2021": [
+   "county"
+  ],
+  "2022": [
+   "county"
+  ],
+  "2023": [
+   "county"
+  ],
+  "2024": [
+   "county"
+  ],
+  "2025": [
+   "county"
+  ]
+ },
+ "job_density": {
+  "2010": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2011": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2012": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2013": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2015": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2016": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2017": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2018": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2020": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2021": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2022": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
+ "july_high": {
+  "1991": [
+   "county"
+  ],
+  "1992": [
+   "county"
+  ],
+  "1993": [
+   "county"
+  ],
+  "1994": [
+   "county"
+  ],
+  "1995": [
+   "county"
+  ],
+  "1996": [
+   "county"
+  ],
+  "1997": [
+   "county"
+  ],
+  "1998": [
+   "county"
+  ],
+  "1999": [
+   "county"
+  ],
+  "2000": [
+   "county"
+  ],
+  "2001": [
+   "county"
+  ],
+  "2002": [
+   "county"
+  ],
+  "2003": [
+   "county"
+  ],
+  "2004": [
+   "county"
+  ],
+  "2005": [
+   "county"
+  ],
+  "2006": [
+   "county"
+  ],
+  "2007": [
+   "county"
+  ],
+  "2008": [
+   "county"
+  ],
+  "2009": [
+   "county"
+  ],
+  "2010": [
+   "county"
+  ],
+  "2011": [
+   "county"
+  ],
+  "2012": [
+   "county"
+  ],
+  "2013": [
+   "county"
+  ],
+  "2014": [
+   "county"
+  ],
+  "2015": [
+   "county"
+  ],
+  "2016": [
+   "county"
+  ],
+  "2017": [
+   "county"
+  ],
+  "2018": [
+   "county"
+  ],
+  "2019": [
+   "county"
+  ],
+  "2020": [
+   "county"
+  ],
+  "2021": [
+   "county"
+  ],
+  "2022": [
+   "county"
+  ],
+  "2023": [
+   "county"
+  ],
+  "2024": [
+   "county"
+  ],
+  "2025": [
+   "county"
+  ]
+ },
+ "mean_commute_minutes": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
+ "mean_temperature": {
+  "1991": [
+   "county"
+  ],
+  "1992": [
+   "county"
+  ],
+  "1993": [
+   "county"
+  ],
+  "1994": [
+   "county"
+  ],
+  "1995": [
+   "county"
+  ],
+  "1996": [
+   "county"
+  ],
+  "1997": [
+   "county"
+  ],
+  "1998": [
+   "county"
+  ],
+  "1999": [
+   "county"
+  ],
+  "2000": [
+   "county"
+  ],
+  "2001": [
+   "county"
+  ],
+  "2002": [
+   "county"
+  ],
+  "2003": [
+   "county"
+  ],
+  "2004": [
+   "county"
+  ],
+  "2005": [
+   "county"
+  ],
+  "2006": [
+   "county"
+  ],
+  "2007": [
+   "county"
+  ],
+  "2008": [
+   "county"
+  ],
+  "2009": [
+   "county"
+  ],
+  "2010": [
+   "county"
+  ],
+  "2011": [
+   "county"
+  ],
+  "2012": [
+   "county"
+  ],
+  "2013": [
+   "county"
+  ],
+  "2014": [
+   "county"
+  ],
+  "2015": [
+   "county"
+  ],
+  "2016": [
+   "county"
+  ],
+  "2017": [
+   "county"
+  ],
+  "2018": [
+   "county"
+  ],
+  "2019": [
+   "county"
+  ],
+  "2020": [
+   "county"
+  ],
+  "2021": [
+   "county"
+  ],
+  "2022": [
+   "county"
+  ],
+  "2023": [
+   "county"
+  ],
+  "2024": [
+   "county"
+  ],
+  "2025": [
+   "county"
+  ]
+ },
+ "median_household_income": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
+ "pct_age_65_plus": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
+ "pct_bike_commute": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
+ "pct_long_commute": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
+ "pct_poverty": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
+ "pct_renter_households": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
+ "pct_transit_commute": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
+ "pct_walk_commute": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
+ "pct_work_from_home": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
+ "pct_zero_vehicle_households": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
+ "population_density": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
+ "traffic_fatalities": {
+  "2015": [
+   "county",
+   "state"
+  ],
+  "2016": [
+   "county",
+   "state"
+  ],
+  "2017": [
+   "county",
+   "state"
+  ],
+  "2018": [
+   "county",
+   "state"
+  ],
+  "2019": [
+   "county",
+   "state"
+  ],
+  "2020": [
+   "county",
+   "state"
+  ],
+  "2021": [
+   "county",
+   "state"
+  ],
+  "2022": [
+   "county",
+   "state"
+  ],
+  "2023": [
+   "county",
+   "state"
+  ],
+  "2024": [
+   "county",
+   "state"
+  ]
+ }
+}

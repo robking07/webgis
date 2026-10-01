@@ -61,8 +61,14 @@ export const LABEL = {
     country: [[2, 11], [6, 16]],
     state: [[3, 10], [6, 14]],
     city: [[4, 10], [8, 13], [12, 16]],
+    /** Cities outside the U.S.: a step smaller at every zoom. */
+    foreign: [[5, 9], [8, 11], [12, 13]],
+    stateForeign: [[4, 8.5], [6, 10.5]],
     place: [[10, 10], [14, 13]],
   },
+  /** Foreign cities with OpenMapTiles rank ≤ this show from z5 (Toronto, Monterrey, Tijuana…);
+   *  the rest of the cities wait for z8. */
+  foreignMajorRank: 4,
   /** Minimum on-screen spacing between repeated line labels, px. */
   symbolSpacing: 300,
 } as const;
