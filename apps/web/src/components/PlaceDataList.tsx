@@ -11,6 +11,9 @@ import type { Dataset } from "@/lib/registry";
 
 export type Detail = Record<string, { value: number | null; moe: number | null }>;
 
+/** One "Map it" per row reads as noise in a 28-row list: hidden until hover/focus on mouse devices. */
+const MAP_IT = "text-xs text-primary underline-offset-2 hover:underline [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-focus-within:opacity-100 focus-visible:opacity-100";
+
 interface Props {
   level: GeoLevel;
   detail: Detail;
@@ -55,7 +58,7 @@ export function PlaceDataList({ level, detail, mapHref, onMapIt, compact }: Prop
             {ds.map((d) => {
               const r = detail[d.id];
               return (
-                <li key={d.id} className={`flex items-center justify-between gap-3 ${compact ? "px-3 py-2" : "px-4 py-3"}`}>
+                <li key={d.id} className={`group flex items-center justify-between gap-3 ${compact ? "px-3 py-2" : "px-4 py-3"}`}>
                   <div className="min-w-0">
                     <p className="text-sm font-medium">{d.title}</p>
                     <p className="text-xs text-muted-foreground">{ranks[d.id] ? `${ranks[d.id]} · ` : ""}{d.vintage}</p>
@@ -65,10 +68,11 @@ export function PlaceDataList({ level, detail, mapHref, onMapIt, compact }: Prop
                       {formatValue(r.value, d.unit)}
                       {r.moe != null && r.moe > 0 && r.value != null && <span className="ml-1 text-xs font-normal text-muted-foreground">±{formatValue(r.moe, d.unit)}</span>}
                     </p>
+                    {/* "Map it" shows on row hover/focus where there's a mouse; touch screens always show it. */}
                     {onMapIt ? (
-                      <button type="button" onClick={() => onMapIt(d.id)} className="text-xs text-primary underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-ring rounded">Map it</button>
+                      <button type="button" onClick={() => onMapIt(d.id)} aria-label={`Map ${d.title}`} className={`${MAP_IT} rounded focus-visible:outline-2 focus-visible:outline-ring`}>Map it</button>
                     ) : mapHref ? (
-                      <a href={mapHref(d.id)} className="text-xs text-primary underline-offset-2 hover:underline">Map it</a>
+                      <a href={mapHref(d.id)} aria-label={`Map ${d.title}`} className={MAP_IT}>Map it</a>
                     ) : null}
                   </div>
                 </li>

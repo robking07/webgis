@@ -13,7 +13,7 @@ updateCadence: annual
 vintage: "2020–2024 average"
 geographyLevels: [state, county]
 unit: per_100k
-universe: crashes per resident (rate uses ACS population)
+universe: traffic deaths per resident, counted where the crash happened (rate uses ACS population)
 modelInputs: [population_density]
 coverageNote: Counted where crashes happened, divided by residents, so counties with heavy through-traffic look high. Connecticut counties use pre-2022 codes and show no data.
 terms: [per-100k, quantile-classes]

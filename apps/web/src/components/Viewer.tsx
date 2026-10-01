@@ -1,6 +1,6 @@
 "use client";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ChevronDown, Info, Menu, Minus, Moon, Plus, Search, SlidersHorizontal, Sun, X } from "lucide-react";
+import { ChevronDown, Info, Menu, Minus, Plus, SlidersHorizontal, X } from "lucide-react";
 import { BivariateLegend, Legend, Popup, StatusState } from "@webgis/design/components";
 import { featureLineColors, formatValue, GEO_LEVELS, levelAtZoom, levelBands, type GeoLevel, type ThemeName } from "@webgis/design";
 import { DatasetBrowser } from "./DatasetBrowser";
@@ -16,6 +16,8 @@ import { BottomSheet, useIsPhone } from "./BottomSheet";
 import { PlaceDataList, type Detail } from "./PlaceDataList";
 import { parseUrlState, useUrlState, type UrlState } from "@/lib/url-state";
 import { LANDING } from "@/lib/landing";
+import { readStoredTheme, useResolvedTheme } from "@/lib/theme";
+import { HeaderContent } from "./SiteHeader";
 import { classifyBivariate, classifyUnivariate, useDatasetValues, type Values } from "@/lib/values";
 import { fetchDetail } from "@/lib/supabase";
 
@@ -23,7 +25,9 @@ const LEVELS = Object.keys(GEO_LEVELS) as GeoLevel[];
 
 export function Viewer({ search }: { search: string }) {
   const [initial] = useState<UrlState>(() => {
-    const s = parseUrlState(search);
+    const parsed = parseUrlState(search);
+    // A theme chosen on another page carries over (client-only render, so storage is readable here).
+    const s = { ...parsed, theme: parsed.theme ?? readStoredTheme() };
     if (s.d && DATASET_BY_ID.has(s.d)) return { ...s, b: s.b && DATASET_BY_ID.has(s.b) ? s.b : null };
     // No dataset in the URL: the featured landing view (lib/landing.ts).
     const d = DATASET_BY_ID.has(LANDING.d) ? LANDING.d : DATASETS[0]?.id ?? null;
@@ -183,24 +187,7 @@ export function Viewer({ search }: { search: string }) {
       <header onMouseLeave={() => setPeek(false)}
         className={`absolute inset-x-0 top-0 z-30 flex h-14 items-center justify-between gap-3 border-b bg-background/95 px-4 backdrop-blur transition-transform duration-300 ease-out md:px-6 ${chromeShown ? "translate-y-0" : "-translate-y-full"}`}
         aria-hidden={!chromeShown || undefined} inert={!chromeShown || undefined}>
-        <div className="flex min-w-0 items-center gap-5 md:gap-7">
-          <a href="/" className="text-lg font-bold tracking-tight text-foreground">Mapwich</a>
-          <nav aria-label="Sections" className="flex gap-4 text-sm md:gap-5">
-            <span aria-current="page" className="font-semibold text-foreground shadow-[inset_0_-2px_0_var(--ui-accent)]">Map</span>
-            <a href="/specials" className="text-muted-foreground hover:text-foreground">Specials</a>
-          </nav>
-        </div>
-        <div className="flex items-center gap-2">
-          <button type="button" onClick={() => setBrowserOpen(true)}
-            className="hidden h-9 w-72 items-center gap-2 rounded-md border bg-card px-3 text-left text-sm text-muted-foreground hover:text-foreground md:flex focus-visible:outline-2 focus-visible:outline-ring">
-            <Search className="size-4" aria-hidden /> Search datasets
-          </button>
-          <button type="button" onClick={() => setBrowserOpen(true)} aria-label="Search datasets"
-            className="grid size-9 place-items-center rounded-md border bg-card text-muted-foreground md:hidden focus-visible:outline-2 focus-visible:outline-ring">
-            <Search className="size-4" aria-hidden />
-          </button>
-          <ThemeToggle theme={theme} onChange={(t) => update({ theme: t })} />
-        </div>
+        <HeaderContent current="map" onSearch={() => setBrowserOpen(true)} theme={theme} onTheme={(t) => update({ theme: t })} />
       </header>
 
       {/* At rest: the factual dataset card. */}
@@ -230,18 +217,20 @@ export function Viewer({ search }: { search: string }) {
               <a href={`/data/${primary.id}#explainers`} className="block pt-0.5 text-primary hover:underline">More on the data page →</a>
             </dl>
           )}
-          <div className="mt-3 hidden flex-wrap gap-2 md:flex">
+          {/* Actions, then Display options: one wrapping row on phones (so Table and Compare are
+              reachable there too, D-33 P3); on desktop Display options sits on its own line. */}
+          <div className="mt-3 flex flex-wrap items-center gap-2">
             {!isFeature && <button type="button" onClick={() => setBrowserOpen(true)} className="rounded-md border px-2.5 py-1 text-[13px] hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring">Compare</button>}
             {available && current && <button type="button" onClick={() => setTableOpen(true)} className="rounded-md border px-2.5 py-1 text-[13px] hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring">Table</button>}
-            <a href={`/data/${primary.id}`} className="rounded-md border px-2.5 py-1 text-[13px] text-foreground hover:bg-muted">About this data</a>
+            <a href={`/data/${primary.id}`} className="rounded-md border px-2.5 py-1 text-[13px] text-foreground hover:bg-muted"><span className="md:hidden">About</span><span className="hidden md:inline">About this data</span></a>
+            {/* Progressive disclosure: options stay tucked away until asked for. */}
+            {(availableLevels.length > 1 || primary.facets.length > 0) && (
+              <button type="button" onClick={() => setOptionsOpen((o) => !o)} aria-expanded={optionsOpen} aria-controls="display-options"
+                className="flex items-center gap-1.5 rounded px-1 text-xs font-medium text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring md:mt-1 md:basis-full md:px-0">
+                <SlidersHorizontal className="size-3.5" aria-hidden /> <span className="md:hidden">Options</span><span className="hidden md:inline">Display options</span> <ChevronDown className={`size-3.5 transition-transform ${optionsOpen ? "rotate-180" : ""}`} aria-hidden />
+              </button>
+            )}
           </div>
-          {/* Progressive disclosure: options stay tucked away until asked for. */}
-          {(availableLevels.length > 1 || primary.facets.length > 0) && (
-            <button type="button" onClick={() => setOptionsOpen((o) => !o)} aria-expanded={optionsOpen} aria-controls="display-options"
-              className="mt-3 flex items-center gap-1.5 rounded text-xs font-medium text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring">
-              <SlidersHorizontal className="size-3.5" aria-hidden /> Display options <ChevronDown className={`size-3.5 transition-transform ${optionsOpen ? "rotate-180" : ""}`} aria-hidden />
-            </button>
-          )}
           {optionsOpen && (
             <div id="display-options" className="mt-2 max-h-[45vh] space-y-4 overflow-y-auto border-t pt-3">
               {availableLevels.length > 1 && (
@@ -258,7 +247,6 @@ export function Viewer({ search }: { search: string }) {
                   </div>
                   <p className="mt-1.5 text-[11px] leading-snug text-muted-foreground">
                     {pinnedLevel ? `Showing ${GEO_LEVELS[pinnedLevel].label.toLowerCase()} data at every zoom.` : "Auto switches from states to counties to tracts as you zoom in."}
-                    {" "}Block groups and blocks are coming.
                   </p>
                 </fieldset>
               )}
@@ -310,12 +298,13 @@ export function Viewer({ search }: { search: string }) {
       {/* Legend: full card at rest on desktop; a strip when immersed or on phones (tap to expand). */}
       {legendStrip && legendEnds && !legendOpen && (
         <button type="button" onClick={() => setLegendOpen(true)} aria-expanded={false} aria-label={`Show legend for ${primary!.title}`}
-          className={`wg-glass absolute bottom-6 left-3 z-20 items-center gap-2 rounded-full px-3 py-2 text-xs tabular-nums text-foreground focus-visible:outline-2 focus-visible:outline-ring md:left-4 ${desktopStrip ? "flex" : "flex md:hidden"}`}>
-          <span>{legendEnds[0]}</span>
+          className={`wg-glass wg-glass-strong absolute bottom-6 left-3 z-20 max-w-[calc(100%-9rem)] items-center gap-2 whitespace-nowrap rounded-full px-3 py-2 text-xs tabular-nums text-foreground focus-visible:outline-2 focus-visible:outline-ring md:left-4 md:max-w-none ${desktopStrip ? "flex" : "flex md:hidden"}`}>
+          {/* The strip is a compact key: numbers only ("< 2.5K", "≥ 75K"); the unit is in the full legend. */}
+          <span>{stripEnd(legendEnds[0])}</span>
           <span className="flex overflow-hidden rounded-sm" aria-hidden>
-            {(secondary && current ? [current.colors[0], current.colors[4], current.colors[8]] : legendStrip).map((c, i) => <span key={i} className={featureSpec ? "h-1.5 w-5 self-center" : "h-2 w-5"} style={{ background: c }} />)}
+            {(secondary && current ? [current.colors[0], current.colors[4], current.colors[8]] : legendStrip).map((c, i) => <span key={i} className={featureSpec ? "h-1.5 w-4 self-center md:w-5" : "h-2 w-4 md:w-5"} style={{ background: c }} />)}
           </span>
-          <span>{legendEnds[1]}</span>
+          <span>{stripEnd(legendEnds[1])}</span>
         </button>
       )}
       <section aria-label="Legend"
@@ -399,6 +388,9 @@ interface DetailProps {
   /** The header is showing, so the desktop panel starts below it. */
   belowHeader: boolean;
 }
+
+/** "< 2.5K vehicles/day" → "< 2.5K": the legend strip keeps the comparison and number, drops unit words. */
+const stripEnd = (s: string) => s.replace(/^([<≥]\s*\S+).*$/, "$1");
 
 /** Desktop detail panels sit under the header when it shows (the dataset card's offset), else at the top. */
 const panelTop = (belowHeader: boolean) =>
@@ -577,29 +569,3 @@ function FeaturePanel({ hit, spec, facets, onClose, belowHeader }: { hit: Featur
   return <section aria-label={`Details for ${featureTitle(hit)}`} className={`absolute right-[72px] ${panelTop(belowHeader)} z-30 w-72 overflow-y-auto rounded-lg border bg-popover p-3 shadow-md`}>{body}</section>;
 }
 
-function useResolvedTheme(explicit: ThemeName | null): ThemeName {
-  const [system, setSystem] = useState<ThemeName>("light");
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-color-scheme: dark)");
-    const set = () => setSystem(mq.matches ? "dark" : "light");
-    set();
-    mq.addEventListener("change", set);
-    return () => mq.removeEventListener("change", set);
-  }, []);
-  const theme = explicit ?? system;
-  useEffect(() => {
-    if (explicit) document.documentElement.dataset.theme = explicit;
-    else delete document.documentElement.dataset.theme;
-  }, [explicit]);
-  return theme;
-}
-
-function ThemeToggle({ theme, onChange }: { theme: ThemeName; onChange: (t: ThemeName) => void }) {
-  const next = theme === "dark" ? "light" : "dark";
-  return (
-    <button type="button" onClick={() => onChange(next)} aria-label={`Switch to ${next} theme`}
-      className="rounded-md border p-1.5 text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring">
-      {theme === "dark" ? <Sun className="size-4" /> : <Moon className="size-4" />}
-    </button>
-  );
-}
