@@ -3,7 +3,8 @@
 Every dataset goes through Robbie. The scout researches; nothing is ingested without his approval.
 
 ```
-weekly scout routine ──► GitHub issue per candidate (label: data-candidate)
+weekly scout routine ─┬─ discovery ──► issue per candidate (data-candidate)
+                      └─ release watch ──► issue per gov release (gov-release; + data-candidate if mappable)
                               │  Robbie reads the screen, then labels:
                               ├─ approved ──► Claude builds on a branch ──► PR "Closes #N"
                               │                    │  Vercel preview link on the PR
@@ -12,13 +13,14 @@ weekly scout routine ──► GitHub issue per candidate (label: data-candidate
                               └─ declined (comment why; the scout won't re-propose it)
 ```
 
-## 1. Scout (automatic, weekly)
+## 1. Scout (automatic, weekly, two tracks in parallel)
 
-A Claude routine on claude.ai runs every Monday morning (Central). It follows `.claude/agents/data-scout.md`, then:
+A Claude routine on claude.ai runs every Monday morning (Central). It follows `.claude/agents/data-scout.md` and runs both tracks every time:
 
-- **Dedupes** against `data/registry/datasets/*.yaml`, `docs/research/*.md`, and every issue labeled `data-candidate` (open or closed).
-- **Files at most 3 issues per run**, using `.github/ISSUE_TEMPLATE/data-candidate.md`, labeled `data-candidate`.
-- **Never** edits code, pushes, ingests, or contacts anyone. Off-limits topics (below) go nowhere, not even into an issue.
+- **Discovery**: new datasets from any source, government or not. It files at most 3 issues per run, using `.github/ISSUE_TEMPLATE/data-candidate.md` and the label `data-candidate`.
+- **Government release watch**: new, revised, discontinued and removed federal datasets since the last run. For each, it reports what changed versus the prior vintage, whether the series is still comparable, independent cross-checks with numbers side by side, and archived copies of anything removed. It files at most 3 issues per run, using `.github/ISSUE_TEMPLATE/gov-release.md` and the label `gov-release`. Releases worth mapping also get `data-candidate`. The scout reports sourced facts and leaves interpretation to Robbie.
+- **Dedupes** against `data/registry/datasets/*.yaml`, `docs/research/*.md`, and every issue with either label, open or closed. For a release already filed, it comments on the existing issue only if something new happened.
+- **Never** edits code, pushes, ingests anything, or contacts anyone. Off-limits topics (listed under "Never ingest" below) don't go anywhere, not even into an issue.
 
 ## 2. Screen (in the issue, filled by the scout)
 
@@ -34,6 +36,8 @@ Each issue answers, with the source's own words quoted:
 | Fit | Map treatment, natural comparisons already on Mapwich, value 1–5. |
 
 The scout ends each issue with a verdict: **Recommend**, **Hold** (with the question to resolve), or **Not recommended**.
+
+`gov-release` issues are also material for Specials: they can stay open as story leads even when nothing gets mapped.
 
 ## 3. Approve (Robbie)
 
