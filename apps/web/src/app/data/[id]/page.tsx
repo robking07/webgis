@@ -16,7 +16,7 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps<"/data/[id]">): Promise<Metadata> {
   const { id } = await params;
   const d = DATASET_BY_ID.get(id);
-  return d ? { title: `${d.title} · Data · webgis`, description: d.description } : { title: "Data · webgis" };
+  return d ? { title: `${d.title} · Data · Mapwich`, description: d.description } : { title: "Data · Mapwich" };
 }
 
 const LEVEL_LABEL: Record<string, string> = { state: "States", county: "Counties", tract: "Census tracts" };

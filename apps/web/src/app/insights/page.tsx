@@ -4,7 +4,7 @@ import { DATASET_BY_ID } from "@/lib/registry";
 import { InsightCard } from "@/components/InsightCard";
 import { SiteNav } from "@/components/SiteNav";
 
-export const metadata: Metadata = { title: "Weird Insights · webgis" };
+export const metadata: Metadata = { title: "Weird Insights · Mapwich" };
 
 export default function InsightsPage() {
   return (

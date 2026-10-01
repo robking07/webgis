@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { SiteNav } from "@/components/SiteNav";
 import { DataDirectory } from "@/components/DataDirectory";
 
-export const metadata: Metadata = { title: "Data · webgis", description: "Every dataset on webgis: source, vintage, geography, license and method." };
+export const metadata: Metadata = { title: "Data · Mapwich", description: "Every dataset on Mapwich: source, vintage, geography, license and method." };
 
 export default function DataPage() {
   return (
@@ -13,7 +13,7 @@ export default function DataPage() {
         <p className="mt-2 text-muted-foreground">
           Every dataset on the map, with where it comes from, how each value is computed, and what to watch out for.
           Most of it is public-domain U.S. government data; academic sources are credited on each dataset&apos;s page.
-          webgis is a non-commercial, educational project.
+          Mapwich is a non-commercial, educational project.
         </p>
       </header>
       <DataDirectory />

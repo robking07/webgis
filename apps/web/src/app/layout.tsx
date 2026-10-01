@@ -7,7 +7,7 @@ const uiSans = Public_Sans({ variable: "--font-ui-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "webgis",
+  title: "Mapwich",
   description: "A map-first viewer for U.S. transportation, planning and Census data.",
 };
 

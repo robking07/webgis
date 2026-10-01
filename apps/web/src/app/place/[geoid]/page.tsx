@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { PlaceProfile } from "@/components/PlaceProfile";
 import { levelOfGeoid } from "@/lib/place";
 
-export const metadata: Metadata = { title: "Place profile · webgis" };
+export const metadata: Metadata = { title: "Place profile · Mapwich" };
 
 export default async function PlacePage({ params }: PageProps<"/place/[geoid]">) {
   const { geoid } = await params;

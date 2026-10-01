@@ -177,7 +177,7 @@ export function Viewer({ search }: { search: string }) {
         className={`absolute inset-x-0 top-0 z-30 flex h-14 items-center justify-between gap-3 border-b bg-background/95 px-4 backdrop-blur transition-transform duration-300 ease-out md:px-6 ${chromeShown ? "translate-y-0" : "-translate-y-full"}`}
         aria-hidden={!chromeShown || undefined} inert={!chromeShown || undefined}>
         <div className="flex min-w-0 items-center gap-5 md:gap-7">
-          <a href="/" className="text-lg font-bold tracking-tight text-foreground">webgis</a>
+          <a href="/" className="text-lg font-bold tracking-tight text-foreground">Mapwich</a>
           <nav aria-label="Sections" className="flex gap-4 text-sm md:gap-5">
             <span aria-current="page" className="font-semibold text-foreground shadow-[inset_0_-2px_0_var(--ui-accent)]">Map</span>
             <a href="/data" className="text-muted-foreground hover:text-foreground">Data</a>
@@ -274,7 +274,7 @@ export function Viewer({ search }: { search: string }) {
               className="wg-glass grid size-10 place-items-center rounded-xl text-foreground focus-visible:outline-2 focus-visible:outline-ring">
               <Menu className="size-[18px]" aria-hidden />
             </button>
-            <span className="wg-wordmark text-[28px] font-extrabold tracking-tight md:text-[34px]" aria-hidden>webgis</span>
+            <span className="wg-wordmark text-[28px] font-extrabold tracking-tight md:text-[34px]" aria-hidden>Mapwich</span>
           </div>
           <button type="button" onClick={() => setBrowserOpen(true)} className="pointer-events-auto ml-0.5 flex items-baseline gap-2 text-left focus-visible:outline-2 focus-visible:outline-ring rounded">
             <span className="wg-on-map text-base font-bold text-foreground md:text-[17px]">{primary.title}</span>

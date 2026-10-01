@@ -6,7 +6,7 @@ export function SiteNav({ current }: { current: "map" | "data" | "insights" }) {
   );
   return (
     <nav aria-label="Sections" className="mb-6 flex items-center gap-4 text-sm">
-      <a href="/" className="mr-2 font-semibold tracking-tight text-foreground">webgis</a>
+      <a href="/" className="mr-2 font-semibold tracking-tight text-foreground">Mapwich</a>
       {link("/", "Map", "map")}
       {link("/data", "Data", "data")}
       {link("/insights", "Weird Insights", "insights")}
