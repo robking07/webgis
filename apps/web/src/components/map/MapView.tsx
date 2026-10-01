@@ -2,7 +2,7 @@
 // The only module that touches the map library. Swapping in Mapbox GL JS (Q-1) means
 // reimplementing this component against the same props.
 import { useEffect, useRef } from "react";
-import { AttributionControl, Map as MlMap, NavigationControl, ScaleControl, addProtocol, setWorkerUrl, type MapGeoJSONFeature } from "maplibre-gl";
+import { AttributionControl, Map as MlMap, ScaleControl, addProtocol, setWorkerUrl, type MapGeoJSONFeature } from "maplibre-gl";
 import { Protocol } from "pmtiles";
 import { basemapStyle, choroplethFill, DATA_BEFORE_ID, featureLineLayers, GEO_LEVELS, MOTION, thematicLayers, type GeoLevel, type ThemeName } from "@webgis/design";
 import type { FeatureLayerSpec } from "@/lib/layers";
@@ -49,7 +49,13 @@ interface Props {
   featureLayer?: FeatureLayerSpec | null;
   onFeatureHover?: (h: FeatureHit | null) => void;
   onFeatureSelect?: (h: FeatureHit | null) => void;
+  /** First user-initiated pan/zoom/scroll on the map (not programmatic moves). */
+  onUserMove?: () => void;
+  /** Receives zoom controls for the page's own buttons. */
+  onApi?: (api: MapApi) => void;
 }
+
+export interface MapApi { zoomIn: () => void; zoomOut: () => void }
 
 const TILES_BASE = process.env.NEXT_PUBLIC_TILES_BASE_URL || "/tiles";
 const LEVELS = Object.keys(GEO_LEVELS) as GeoLevel[];
@@ -60,12 +66,12 @@ function tilesUrl(level: GeoLevel) {
   return `pmtiles://${base}/${level}.pmtiles`;
 }
 
-export function MapView({ theme, initialView, paint, onViewChange, onHover, onSelect, onTilesError, ariaLabel, levelZooms, featureLayer, onFeatureHover, onFeatureSelect }: Props) {
+export function MapView({ theme, initialView, paint, onViewChange, onHover, onSelect, onTilesError, ariaLabel, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, onApi }: Props) {
   const container = useRef<HTMLDivElement>(null);
   const map = useRef<MlMap | null>(null);
   const applied = useRef<Partial<Record<GeoLevel, LevelPaint>>>({});
-  const latest = useRef({ paint, theme, onViewChange, onHover, onSelect, onTilesError, levelZooms, featureLayer, onFeatureHover, onFeatureSelect });
-  latest.current = { paint, theme, onViewChange, onHover, onSelect, onTilesError, levelZooms, featureLayer, onFeatureHover, onFeatureSelect };
+  const latest = useRef({ paint, theme, onViewChange, onHover, onSelect, onTilesError, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove });
+  latest.current = { paint, theme, onViewChange, onHover, onSelect, onTilesError, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove };
   /** True once our sources/layers exist on the current style. isStyleLoaded() can't be used:
    *  it stays false while tiles are loading, which silently dropped paint updates. */
   const ready = useRef(false);
@@ -95,8 +101,18 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
     // ?debug exposes the map for inspection in devtools / headless checks.
     if (new URLSearchParams(window.location.search).has("debug")) (window as unknown as { __wgMap: MlMap }).__wgMap = m;
     m.touchZoomRotate.disableRotation();
-    m.addControl(new NavigationControl({ showCompass: false }), "top-right");
-    m.addControl(new ScaleControl({ unit: "imperial" }), "bottom-left");
+    // Zoom buttons are the page's own (frosted, design-token styled); see onApi.
+    m.addControl(new ScaleControl({ unit: "imperial" }), "bottom-right");
+    onApi?.({
+      zoomIn: () => m.zoomIn({ duration: reduceMotion ? 0 : 250 }),
+      zoomOut: () => m.zoomOut({ duration: reduceMotion ? 0 : 250 }),
+    });
+    // User gestures only (programmatic flyTo etc. must not immerse): wheel/trackpad scroll,
+    // drag-pan (mouse or touch), pinch and double-click zoom.
+    const userMove = () => latest.current.onUserMove?.();
+    m.getCanvasContainer().addEventListener("wheel", userMove, { passive: true });
+    m.on("dragstart", userMove);
+    m.on("zoomstart", (e) => { if ((e as { originalEvent?: unknown }).originalEvent) userMove(); });
     m.addControl(new AttributionControl({ compact: true, customAttribution: "Boundaries: U.S. Census Bureau TIGER/Line cartographic boundaries" }), "bottom-right");
     // Compact attribution starts expanded; start it collapsed to its ⓘ button on small screens.
     if (window.matchMedia("(max-width: 767px)").matches) {
