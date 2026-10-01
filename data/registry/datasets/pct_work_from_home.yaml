@@ -19,4 +19,5 @@ learnMore:
   - label: See this place's full Census profile on Census Reporter
     url: "https://censusreporter.org/profiles/{cr}/"
 measure: { kind: acs5, numerator: [B08301_021], denominator: [B08301_001], scale: 100 }
+timeline: { from: 2014, to: 2024, step: 5 }
 symbology: { ramp: ylgnbu, classification: quantile, classes: 5 }

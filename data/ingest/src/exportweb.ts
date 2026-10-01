@@ -1,9 +1,11 @@
 // Static exports for the web app (D-02: viewing never depends on the database being awake):
 //   apps/web/src/generated/registry.json      — validated registry entries
+//   apps/web/src/generated/periods.json       — timeline stops exported per dataset (D-36)
 //   apps/web/public/data/values/<id>/<level>.json — { geoid: value } for each dataset/level
-import { mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { loadRegistry } from "@webgis/registry/load";
+import { timelineStops } from "@webgis/registry/timeline";
 import { db, log, ROOT, STATES, WEB_DATA } from "./util.ts";
 import { readGazetteer } from "./geographies.ts";
 
@@ -15,6 +17,19 @@ export function exportRegistry() {
   const entries = loadRegistry();
   writeFileSync(join(dir, "registry.json"), JSON.stringify(entries, null, 1));
   log("export", `registry.json: ${entries.length} datasets`);
+  // Timeline stops whose values are on disk, with the levels each has, so the year control
+  // only offers what was exported: { dataset: { stop: [levels] } }.
+  const periods: Record<string, Record<string, string[]>> = {};
+  for (const e of entries) {
+    for (const s of timelineStops(e)) {
+      const dir = join(WEB_DATA, "values", e.id, s.id);
+      if (s.isDefault || !existsSync(dir)) continue;
+      const levels = readdirSync(dir).filter((f) => f.endsWith(".json")).map((f) => f.replace(/\.json$/, ""));
+      if (levels.length) (periods[e.id] ??= {})[s.id] = levels;
+    }
+  }
+  writeFileSync(join(dir, "periods.json"), JSON.stringify(periods, null, 1));
+  log("export", `periods.json: ${Object.values(periods).reduce((n, p) => n + Object.keys(p).length, 0)} timeline stops in ${Object.keys(periods).length} datasets`);
 }
 
 /** County names for chart tooltips (tracts and states get names from tiles on the map). */

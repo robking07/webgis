@@ -26,6 +26,8 @@ import { BottomSheet, useIsNarrow, useIsPhone } from "./BottomSheet";
 import { PlaceDataList, type Detail } from "./PlaceDataList";
 import { parseUrlState, useUrlState, type UrlState } from "@/lib/url-state";
 import { classifyBivariate, classifyUnivariate, useDatasetValues, type Values } from "@/lib/values";
+import { stopNote, stopsFor } from "@/lib/periods";
+import { TimeControl } from "./TimeControl";
 import { fetchDetail } from "@/lib/supabase";
 
 const LEVELS = Object.keys(GEO_LEVELS) as GeoLevel[];
@@ -96,8 +98,13 @@ export function Viewer({ search }: { search: string }) {
   const isFeature = isFeatureDataset(primary);
   const featureSpec = useMemo(() => (primary && isFeature ? featureLayerSpec(primary) : null), [primary, isFeature]);
   const secondary = state.b && !isFeature && !isFeatureDataset(DATASET_BY_ID.get(state.b)) ? DATASET_BY_ID.get(state.b)! : null;
-  // Levels both datasets have.
-  const availableLevels = useMemo(() => isFeature ? [] : LEVELS.filter((l) => (!primary || primary.geographyLevels.includes(l)) && (!secondary || secondary.geographyLevels.includes(l))), [primary, secondary, isFeature]);
+  // Year control (D-36): single-dataset maps only; comparisons use the default period.
+  const stops = useMemo(() => (secondary || isFeature ? [] : stopsFor(primary)), [primary, secondary, isFeature]);
+  const stop = stops.find((s) => s.id === state.t) ?? stops.find((s) => s.isDefault) ?? null;
+  /** The shown stop when it isn't the default; null = the default period. */
+  const stopId = stop && !stop.isDefault ? stop.id : null;
+  // Levels both datasets have (and the shown stop has).
+  const availableLevels = useMemo(() => isFeature ? [] : LEVELS.filter((l) => (!primary || primary.geographyLevels.includes(l)) && (!secondary || secondary.geographyLevels.includes(l)) && (!stopId || stop!.levels.includes(l))), [primary, secondary, isFeature, stopId, stop]);
   // Default level: how the source publishes the data, i.e. its finest level (ACS → tracts),
   // drawn at every zoom (D-35). "Switch with zoom" (lv=auto) restores the old zoom bands.
   const defaultLevel = primary?.defaultLevel && availableLevels.includes(primary.defaultLevel) ? primary.defaultLevel : availableLevels[availableLevels.length - 1] ?? null;
@@ -105,8 +112,10 @@ export function Viewer({ search }: { search: string }) {
   const bands = useMemo(() => (pinnedLevel ? { [pinnedLevel]: { minzoom: 0, maxzoom: 24 } } : levelBands(availableLevels)), [availableLevels, pinnedLevel]);
   // Start loading tract values a little before tracts appear.
   const wantTract = !!bands.tract && state.at.zoom >= bands.tract.minzoom - 1;
-  const x = useDatasetValues(primary, wantTract);
+  const x = useDatasetValues(primary, wantTract, stopId, stop?.levels);
   const y = useDatasetValues(secondary, wantTract);
+  // A non-default stop is colored with the default view's breaks, so stepping shows change.
+  const xBase = useDatasetValues(stopId ? primary : null, wantTract);
   const level = levelAtZoom(bands, state.at.zoom) ?? availableLevels[0] ?? "county";
 
   const classed = useMemo(() => {
@@ -118,12 +127,14 @@ export function Viewer({ search }: { search: string }) {
       if (secondary) {
         const yv = y.values[l];
         if (yv) out[l] = classifyBivariate(xv, yv);
+      } else if (stopId) {
+        if (xBase.values[l]) out[l] = classifyUnivariate(primary, xv, xBase.values[l]);
       } else {
         out[l] = classifyUnivariate(primary, xv);
       }
     }
     return out;
-  }, [primary, secondary, x.values, y.values]);
+  }, [primary, secondary, x.values, y.values, stopId, xBase.values]);
 
   const current = classed[level];
   const error = x.error ?? y.error;
@@ -224,8 +235,10 @@ export function Viewer({ search }: { search: string }) {
       .then((sqmi) => goToPlace({ geoid, level: tableLevel, name, lon, lat, sqmi }));
   }, [tableLevel, goToPlace]);
   const onSearchPlace = (p: PlaceHit) => { setSearchOpen(false); goToPlace(p); };
-  const onSearchDataset = (d: Dataset) => { setSearchOpen(false); update({ d: d.id, b: state.b === d.id ? null : state.b, lv: null }); };
-  const pickDataset = (id: string) => update({ d: id, b: state.b === id ? null : state.b, lv: null });
+  /** Keep the shown year when the next dataset has it too. */
+  const keepStop = (id: string) => (state.t && stopsFor(DATASET_BY_ID.get(id) ?? null).some((s) => s.id === state.t) ? state.t : null);
+  const onSearchDataset = (d: Dataset) => { setSearchOpen(false); update({ d: d.id, b: state.b === d.id ? null : state.b, lv: null, t: keepStop(d.id) }); };
+  const pickDataset = (id: string) => update({ d: id, b: state.b === id ? null : state.b, lv: null, t: keepStop(id) });
   const loading = available && !current && !error;
 
   // ── Map-first chrome (D-25) ─────────────────────────────────────────────────
@@ -245,7 +258,8 @@ export function Viewer({ search }: { search: string }) {
   const desktopStrip = optionsOpen && !immersed;
   const hasOptions = !!primary && (availableLevels.length > 1 || primary.facets.length > 0);
   const featureNoun = featureSpec?.geometry === "polygon" ? "Census tracts (2010)" : "Road segments";
-  const meta = primary ? [isFeature ? featureNoun : GEO_LEVELS[level].label, primary.vintage, primary.source.name.split(",")[0].split(" (")[0]].join(" · ") : "";
+  const periodLabel = primary ? (stopId ? stop!.label : primary.vintage) : "";
+  const meta = primary ? [isFeature ? featureNoun : GEO_LEVELS[level].label, periodLabel, primary.source.name.split(",")[0].split(" (")[0]].join(" · ") : "";
   const levelNote = pinnedLevel
     ? `Showing ${GEO_LEVELS[pinnedLevel].label.toLowerCase()}s at every zoom${pinnedLevel === defaultLevel ? ", how the source publishes this data" : ""}.`
     : "Switches from states to counties to tracts as you zoom in.";
@@ -261,8 +275,12 @@ export function Viewer({ search }: { search: string }) {
       ))}
     </>
   );
+  const timeControl = stops.length > 0 && stop && (
+    <TimeControl stops={stops} value={stop.id} onChange={(id) => update({ t: stops.find((s) => s.id === id)?.isDefault ? null : id })} />
+  );
   const legendBody = (
     <>
+      {timeControl && <div className="mb-3 border-b pb-3">{timeControl}</div>}
       {primary && isFeature ? (featureSpec ? (
           <Legend title={primary.title} unit={primary.unit} colors={featureColors!} breaks={featureSpec.breaks} showNoData={false} swatch={featureSpec.geometry === "line" ? "line" : "area"}
             caption={`${primary.vintage} · ${featureSpec.featureCount.toLocaleString()} ${featureSpec.geometry === "line" ? "segments · wider lines = higher road class" : "areas"}${primary.coverageNote ? `. ${primary.coverageNote}` : ""}`} />
@@ -274,7 +292,7 @@ export function Viewer({ search }: { search: string }) {
           <BivariateLegend xTitle={primary.title} yTitle={secondary.title} colors={current.colors} />
         ) : primary && current?.breaks ? (
           <Legend title={primary.title} unit={primary.unit} colors={current.colors} breaks={current.breaks} minClass={current.minClass}
-            caption={`${GEO_LEVELS[level].label} · ${primary.vintage}${primary.coverageNote ? `. ${primary.coverageNote}` : ""}`} />
+            caption={`${GEO_LEVELS[level].label} · ${periodLabel}${stop && stopNote(primary, stop, level) ? `. ${stopNote(primary, stop, level)}` : ""}${primary.coverageNote ? `. ${primary.coverageNote}` : ""}`} />
         ) : null}
     </>
   );
@@ -294,6 +312,7 @@ export function Viewer({ search }: { search: string }) {
           theme={theme}
           initialView={initial.at}
           paint={classed}
+          boundaries={stopId ? stop!.boundaries ?? null : null}
           onViewChange={(at) => update({ at })}
           onHover={setHover}
           onSelect={onMapSelect}
@@ -430,6 +449,7 @@ export function Viewer({ search }: { search: string }) {
         <button type="button" onClick={() => setLegendOpen(true)} aria-expanded={false} aria-label={`Show legend for ${primary!.title}`}
           className={`wg-glass wg-glass-strong absolute bottom-6 left-3 z-20 max-w-[calc(100%-9rem)] items-center gap-2 whitespace-nowrap rounded-full px-3 py-2 text-xs tabular-nums text-foreground focus-visible:outline-2 focus-visible:outline-ring md:left-4 md:max-w-none ${desktopStrip ? "flex" : "flex md:hidden"}`}>
           {/* The strip is a compact key: numbers only ("< 2.5K", "≥ 75K"); the unit is in the full legend. */}
+          {stopId && <span className="font-semibold">{stop!.label}</span>}
           <span>{stripEnd(legendEnds[0])}</span>
           <span className="flex overflow-hidden rounded-sm" aria-hidden>
             {(secondary && current ? [current.colors[0], current.colors[4], current.colors[8]] : legendStrip).map((c, i) => <span key={i} className={featureSpec ? "h-1.5 w-4 self-center md:w-5" : "h-2 w-4 md:w-5"} style={{ background: c }} />)}
@@ -466,7 +486,7 @@ export function Viewer({ search }: { search: string }) {
           </div>
           <DatasetBrowser primary={state.d} secondary={state.b}
             onPrimary={(id) => { pickDataset(id); setBrowserOpen(false); }}
-            onSecondary={(id) => { update({ b: id }); setBrowserOpen(false); }} />
+            onSecondary={(id) => { update({ b: id, t: null }); setBrowserOpen(false); }} />
           <a href="/data" className="text-xs text-primary hover:underline">Browse the full data directory →</a>
         </section>
       )}
@@ -474,7 +494,7 @@ export function Viewer({ search }: { search: string }) {
       {searchOpen && <SearchOverlay current={state.d} onClose={() => setSearchOpen(false)} onPlace={onSearchPlace} onDataset={onSearchDataset} />}
 
       {tableOpen && primary && tableLevel && (
-        <DataTable level={tableLevel} x={primary} xv={x.values[tableLevel]} y={secondary} yv={y.values[tableLevel]} selected={selected?.geoid ?? null}
+        <DataTable level={tableLevel} x={primary} xv={x.values[tableLevel]} y={secondary} yv={y.values[tableLevel]} period={stopId ? stop!.label : undefined} selected={selected?.geoid ?? null}
           onClose={onTableClose} onPick={onTablePick} />
       )}
 
@@ -486,7 +506,7 @@ export function Viewer({ search }: { search: string }) {
 
       {hover && !selected && primary && (
         <div className="pointer-events-none absolute z-30 rounded-md border bg-popover p-2.5 shadow-md" style={{ left: hover.x + 14, top: hover.y + 14 }}>
-          <Popup title={hover.name} subtitle={GEO_LEVELS[hover.level].label}
+          <Popup title={hover.name} subtitle={`${GEO_LEVELS[hover.level].label}${stopId ? ` · ${stop!.label}` : ""}`}
             rows={[primary, secondary].filter((d) => !!d).map((d) => ({
               label: d!.title, unit: d!.unit,
               value: (d === primary ? x : y).values[hover.level]?.[hover.geoid],
@@ -505,6 +525,7 @@ export function Viewer({ search }: { search: string }) {
       {selected && primary && !isFeature && !detailHidden && (
         <DetailPanel info={selected} top={panelTop} onClose={() => { setSelected(null); mapApi.current?.select("county", null); }} primary={primary} secondary={secondary}
           xv={x.values[selected.level]} yv={y.values[selected.level]}
+          period={stopId ? { label: stop!.label, defaultLabel: primary.vintage } : undefined}
           onMapIt={pickDataset} />
       )}
     </div>
@@ -523,9 +544,11 @@ interface DetailProps {
   yv?: Values;
   /** Switch the map to another dataset (from the drawer's full list). */
   onMapIt: (id: string) => void;
+  /** A timeline stop is shown (D-36): the primary value comes from `xv` for that period. */
+  period?: { label: string; defaultLabel: string };
 }
 
-function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, onMapIt }: DetailProps) {
+function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, onMapIt, period }: DetailProps) {
   const [rows, setRows] = useState<Detail | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const phone = useIsPhone();
@@ -560,6 +583,17 @@ function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, onMapIt }
           <div className="space-y-2">
             {featured.map((d, i) => {
               const r = rows[d.id];
+              if (i === 0 && period) {
+                const v = xv?.[info.geoid];
+                return (
+                  <div key={d.id} className="rounded-md bg-muted px-3 py-2">
+                    <p className="text-xs text-muted-foreground">{d.title}, {period.label}</p>
+                    <p className="text-xl font-semibold tabular-nums">{formatValue(v, d.unit)}</p>
+                    {rankText(xv, v, info.level) && <p className="text-xs text-muted-foreground">{rankText(xv, v, info.level)}</p>}
+                    {r?.value != null && <p className="mt-1 text-xs text-muted-foreground">{period.defaultLabel}: <span className="tabular-nums">{formatValue(r.value, d.unit)}</span></p>}
+                  </div>
+                );
+              }
               const rank = rankText(i === 0 ? xv : yv, r?.value, info.level);
               return (
                 <div key={d.id} className="rounded-md bg-muted px-3 py-2">
