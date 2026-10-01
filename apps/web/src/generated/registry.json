@@ -169,6 +169,7 @@
     ]
    }
   ],
+  "excludeFromInsights": false,
   "terms": [
    "aadt",
    "functional-class",
@@ -237,6 +238,7 @@
   "modelInputs": [],
   "coverageNote": "Contiguous U.S. and Alaska; Hawaii has no county series. Connecticut uses pre-2022 county codes in nClimDiv, so it shows no data.",
   "facets": [],
+  "excludeFromInsights": false,
   "terms": [
    "climate-normal",
    "quantile-classes"
@@ -283,6 +285,7 @@
   ],
   "coverageNote": "Model-based estimates; not every county is covered in every measure.",
   "facets": [],
+  "excludeFromInsights": false,
   "terms": [
    "model-based-estimate",
    "age-adjusted",
@@ -331,6 +334,7 @@
   "modelInputs": [],
   "coverageNote": "Counties with fewer than 10 bridges show no data. Connecticut's NBI records still use pre-2022 counties, so CT counties show no data.",
   "facets": [],
+  "excludeFromInsights": false,
   "terms": [
    "bridge-condition",
    "quantile-classes"
@@ -419,6 +423,7 @@
     ]
    }
   ],
+  "excludeFromInsights": false,
   "terms": [
    "cejst",
    "tract-2010"
@@ -472,6 +477,7 @@
   ],
   "coverageNote": "Built from 2010 tracts. Connecticut counties show no data (2022 county change).",
   "facets": [],
+  "excludeFromInsights": false,
   "terms": [
    "cejst",
    "tract-2010",
@@ -481,6 +487,61 @@
    "ramp": "purples",
    "classification": "quantile",
    "classes": 5
+  }
+ },
+ {
+  "id": "ice_287g_agreements",
+  "title": "287(g) agreements with ICE",
+  "description": "Active agreements that let local or state law enforcement agencies carry out immigration enforcement duties for ICE, counted by county.",
+  "category": "Immigration enforcement",
+  "tags": [
+   "ICE",
+   "immigration",
+   "287(g)",
+   "enforcement",
+   "sheriffs",
+   "police",
+   "deportation"
+  ],
+  "source": {
+   "name": "Deportation Data Project (UC Berkeley Law / UCLA)",
+   "url": "https://github.com/deportationdata/ice-287g",
+   "citation": "Deportation Data Project, ICE 287(g) agreements (compiled from ICE's participating-agencies lists), accessed Oct. 2026"
+  },
+  "license": "CC0 1.0 (no rights reserved), per the repository license",
+  "updateCadence": "irregular",
+  "vintage": "Active as of Oct. 2026",
+  "geographyLevels": [
+   "state",
+   "county"
+  ],
+  "unit": "agreements",
+  "universe": "active 287(g) agreements (by participating agency)",
+  "measure": {
+   "kind": "ddp_287g",
+   "url": "https://media.githubusercontent.com/media/deportationdata/ice-287g/main/data/agreements.xlsx",
+   "file": "ddp287g-agreements.xlsx",
+   "statuses": [
+    "Active"
+   ]
+  },
+  "modelInputs": [],
+  "coverageNote": "Counts agreements, not arrests. State agencies and regional task forces count toward their state only.",
+  "facets": [],
+  "excludeFromInsights": true,
+  "terms": [
+   "ice-287g"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "manual",
+   "classes": 5,
+   "breaks": [
+    1,
+    2,
+    4,
+    8
+   ]
   }
  },
  {
@@ -522,6 +583,7 @@
   "modelInputs": [],
   "coverageNote": "Contiguous U.S. and Alaska; Hawaii has no county series. Connecticut uses pre-2022 county codes in nClimDiv, so it shows no data.",
   "facets": [],
+  "excludeFromInsights": false,
   "terms": [
    "climate-normal",
    "quantile-classes"
@@ -569,6 +631,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "excludeFromInsights": false,
   "terms": [
    "lodes",
    "census-geography",
@@ -619,6 +682,7 @@
   "modelInputs": [],
   "coverageNote": "Contiguous U.S. and Alaska; Hawaii has no county series. Connecticut uses pre-2022 county codes in nClimDiv, so it shows no data.",
   "facets": [],
+  "excludeFromInsights": false,
   "terms": [
    "climate-normal",
    "quantile-classes"
@@ -664,6 +728,7 @@
   ],
   "coverageNote": "Model-based estimates; not every county is covered in every measure.",
   "facets": [],
+  "excludeFromInsights": false,
   "terms": [
    "model-based-estimate",
    "age-adjusted",
@@ -715,6 +780,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "excludeFromInsights": false,
   "terms": [
    "acs-5-year",
    "margin-of-error",
@@ -776,6 +842,7 @@
   "modelInputs": [],
   "coverageNote": "Contiguous U.S. and Alaska; Hawaii has no county series. Connecticut uses pre-2022 county codes in nClimDiv, so it shows no data.",
   "facets": [],
+  "excludeFromInsights": false,
   "terms": [
    "climate-normal",
    "quantile-classes"
@@ -821,6 +888,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "excludeFromInsights": false,
   "terms": [
    "acs-5-year",
    "margin-of-error",
@@ -869,6 +937,7 @@
   ],
   "coverageNote": "Model-based estimates; not every county is covered in every measure.",
   "facets": [],
+  "excludeFromInsights": false,
   "terms": [
    "model-based-estimate",
    "age-adjusted",
@@ -931,6 +1000,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "excludeFromInsights": false,
   "terms": [
    "acs-5-year",
    "margin-of-error",
@@ -982,6 +1052,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "excludeFromInsights": false,
   "terms": [
    "acs-5-year",
    "margin-of-error",
@@ -1034,6 +1105,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "excludeFromInsights": false,
   "terms": [
    "acs-5-year",
    "margin-of-error",
@@ -1084,6 +1156,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "excludeFromInsights": false,
   "terms": [
    "acs-5-year",
    "margin-of-error",
@@ -1135,6 +1208,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "excludeFromInsights": false,
   "terms": [
    "acs-5-year",
    "margin-of-error",
@@ -1187,6 +1261,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "excludeFromInsights": false,
   "terms": [
    "acs-5-year",
    "margin-of-error",
@@ -1238,6 +1313,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "excludeFromInsights": false,
   "terms": [
    "acs-5-year",
    "margin-of-error",
@@ -1289,6 +1365,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "excludeFromInsights": false,
   "terms": [
    "acs-5-year",
    "margin-of-error",
@@ -1340,6 +1417,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "excludeFromInsights": false,
   "terms": [
    "acs-5-year",
    "margin-of-error",
@@ -1388,6 +1466,7 @@
   ],
   "coverageNote": "Model-based estimates; not every county is covered in every measure.",
   "facets": [],
+  "excludeFromInsights": false,
   "terms": [
    "model-based-estimate",
    "age-adjusted",
@@ -1435,6 +1514,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "excludeFromInsights": false,
   "terms": [
    "acs-5-year",
    "margin-of-error",
@@ -1482,6 +1562,7 @@
   ],
   "coverageNote": "Model-based estimates; not every county is covered in every measure.",
   "facets": [],
+  "excludeFromInsights": false,
   "terms": [
    "model-based-estimate",
    "age-adjusted",
@@ -1530,6 +1611,7 @@
   ],
   "coverageNote": "Model-based estimates; not every county is covered in every measure.",
   "facets": [],
+  "excludeFromInsights": false,
   "terms": [
    "model-based-estimate",
    "age-adjusted",
@@ -1581,6 +1663,7 @@
   ],
   "coverageNote": "Counted where crashes happened, divided by residents, so counties with heavy through-traffic look high. Connecticut counties use pre-2022 codes and show no data.",
   "facets": [],
+  "excludeFromInsights": false,
   "terms": [
    "per-100k",
    "quantile-classes"
@@ -1633,6 +1716,7 @@
   ],
   "coverageNote": "Counts traffic where it drives, divided by residents, so counties on major through-routes look high. Counted roads only (about 10–15% below FHWA totals). Connecticut counties show no data.",
   "facets": [],
+  "excludeFromInsights": false,
   "terms": [
    "vmt",
    "aadt",

@@ -3,7 +3,7 @@
 import { z } from "zod";
 
 const Ramp = z.enum(["blues", "ylgnbu", "oranges", "purples", "viridis", "cividis", "rdbu", "puor", "brbg"]);
-const Unit = z.enum(["dollars", "percent", "minutes", "count", "per_sq_mi", "ratio", "years", "deg_f", "inches", "per_100k", "vehicles_per_day", "miles_per_day", "categories"]);
+const Unit = z.enum(["dollars", "percent", "minutes", "count", "per_sq_mi", "ratio", "years", "deg_f", "inches", "per_100k", "vehicles_per_day", "miles_per_day", "categories", "agreements"]);
 export const GeoLevel = z.enum(["state", "county", "tract"]);
 
 /** How the value is computed from source variables. */
@@ -64,6 +64,16 @@ const FarsMeasure = z.object({
   years: z.tuple([z.number().int(), z.number().int()]),
   /** Divide by population (from the population_density dataset × land area) per this many people. */
   perPopulation: z.number().default(100000),
+});
+
+/** Deportation Data Project 287(g) agreements (CC0): active agreements counted by the
+ *  agencies' county and state FIPS. */
+const Ddp287gMeasure = z.object({
+  kind: z.literal("ddp_287g"),
+  url: z.url(),
+  file: z.string(),
+  /** Agreement statuses counted (e.g. ["Active"]). */
+  statuses: z.array(z.string()).min(1),
 });
 
 /** CEJST (Justice40) roll-up: share of residents living in tracts identified as disadvantaged,
@@ -134,7 +144,7 @@ export const DatasetEntry = z.object({
   title: z.string(),
   /** One sentence shown in the browser and popups. */
   description: z.string(),
-  category: z.enum(["Income & poverty", "Commuting", "Vehicles", "Housing", "Population", "Jobs", "Transportation", "Environment", "Environmental justice", "Health", "Climate"]),
+  category: z.enum(["Income & poverty", "Commuting", "Vehicles", "Housing", "Population", "Jobs", "Transportation", "Environment", "Environmental justice", "Immigration enforcement", "Health", "Climate"]),
   tags: z.array(z.string()).default([]),
   source: z.object({
     name: z.string(),
@@ -149,7 +159,7 @@ export const DatasetEntry = z.object({
   unit: Unit,
   /** For insights: the population the value describes. Pairs that share one are flagged. */
   universe: z.string(),
-  measure: z.discriminatedUnion("kind", [AcsMeasure, LodesMeasure, PlacesMeasure, ClimdivMeasure, NbiMeasure, FarsMeasure, FeaturesMeasure, HpmsVmtMeasure, CejstMeasure]),
+  measure: z.discriminatedUnion("kind", [AcsMeasure, LodesMeasure, PlacesMeasure, ClimdivMeasure, NbiMeasure, FarsMeasure, FeaturesMeasure, HpmsVmtMeasure, CejstMeasure, Ddp287gMeasure]),
   /** Other registry datasets used as inputs to this dataset's model (e.g. PLACES uses county poverty).
    *  Insight pairs with these are flagged: they correlate partly by construction. */
   modelInputs: z.array(z.string()).default([]),
@@ -157,6 +167,8 @@ export const DatasetEntry = z.object({
   coverageNote: z.string().optional(),
   /** Filterable categorical fields (feature layers), each with an explainer. */
   facets: z.array(Facet).default([]),
+  /** Keep out of Weird Insights' playful pairings (sensitive subjects, e.g. enforcement). */
+  excludeFromInsights: z.boolean().default(false),
   /** Glossary term ids (data/registry/glossary.yaml) that explain this dataset's jargon. */
   terms: z.array(z.string()).default([]),
   symbology: z.object({

@@ -64,6 +64,7 @@ function vars(e: DatasetEntry): string[] {
   if (m.kind === "features") return [`FEATURES:${e.id}`];
   if (m.kind === "hpms_vmt") return ["HPMS:VMT"];
   if (m.kind === "cejst") return ["CEJST:SN_C"];
+  if (m.kind === "ddp_287g") return ["DDP:287G"];
   return ["FARS:FATALS"];
 }
 function perArea(e: DatasetEntry) {
@@ -156,7 +157,8 @@ export async function computeInsights() {
     if (!byDs.has(r.dataset_id)) byDs.set(r.dataset_id, new Map());
     byDs.get(r.dataset_id)!.set(r.geoid, r.value);
   }
-  const loaded = entries.filter((e) => byDs.has(e.id));
+  // Sensitive datasets (e.g. immigration enforcement) never enter playful pairings.
+  const loaded = entries.filter((e) => byDs.has(e.id) && !e.excludeFromInsights);
   const pairs: Pair[] = [];
   for (let i = 0; i < loaded.length; i++) for (let j = i + 1; j < loaded.length; j++) {
     const x = loaded[i], y = loaded[j];

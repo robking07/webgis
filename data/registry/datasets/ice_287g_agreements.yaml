@@ -1,0 +1,28 @@
+id: ice_287g_agreements
+title: 287(g) agreements with ICE
+description: Active agreements that let local or state law enforcement agencies carry out immigration enforcement duties for ICE, counted by county.
+category: Immigration enforcement
+tags: [ICE, immigration, 287(g), enforcement, sheriffs, police, deportation]
+source:
+  name: Deportation Data Project (UC Berkeley Law / UCLA)
+  url: https://github.com/deportationdata/ice-287g
+  citation: "Deportation Data Project, ICE 287(g) agreements (compiled from ICE's participating-agencies lists), accessed Oct. 2026"
+license: CC0 1.0 (no rights reserved), per the repository license
+updateCadence: irregular
+vintage: "Active as of Oct. 2026"
+geographyLevels: [state, county]
+unit: agreements
+universe: active 287(g) agreements (by participating agency)
+coverageNote: "Counts agreements, not arrests. State agencies and regional task forces count toward their state only."
+excludeFromInsights: true
+terms: [ice-287g]
+measure:
+  kind: ddp_287g
+  url: https://media.githubusercontent.com/media/deportationdata/ice-287g/main/data/agreements.xlsx
+  file: ddp287g-agreements.xlsx
+  statuses: [Active]
+symbology:
+  ramp: purples
+  classification: manual
+  classes: 5
+  breaks: [1, 2, 4, 8]

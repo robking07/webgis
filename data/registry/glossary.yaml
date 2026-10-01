@@ -137,3 +137,12 @@
     CEJST uses the 2010 tract boundaries, which differ in places from the 2020 tracts used by most other layers here.
   long: >-
     Census tracts are redrawn every ten years. CEJST 2.0 was built on 2010 tracts, so its tract shapes are drawn as published rather than matched to 2020 tracts. County and state roll-ups use the 2010 county codes, which still match today's counties everywhere except Connecticut (which switched to planning regions in 2022) and a few renamed or split areas.
+
+- id: ice-287g
+  term: >-
+    287(g) agreements
+  short: >-
+    Agreements that let local police or sheriffs carry out some federal immigration enforcement duties, under ICE supervision.
+  long: >-
+    Section 287(g) of the Immigration and Nationality Act lets ICE deputize state and local officers. In the Jail Enforcement model, jail staff check the immigration status of people already booked. In the Task Force model, officers can question and arrest people during regular policing. The Warrant Service Officer model lets jail staff serve ICE administrative warrants. A county with several agreements usually has several agencies (sheriff, city police) signed up. Counts here are agreements, not arrests.
+  source: https://deportationdata.org/

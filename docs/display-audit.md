@@ -28,6 +28,7 @@ Run with the `dataset-display-review` skill (`.claude/skills/dataset-display-rev
 | 6 CDC PLACES measures | ✓ | model-based, age-adjusted, MOE, classes | – | **family**: health behaviors; tract level exists in PLACES (needs 2020-tract check) |
 | CEJST disadvantaged tracts (2010 tracts) | ✓ burdens listed in words | CEJST, 2010 tracts | status | per-category facets (8 burdens), tract 2010→2020 crosswalk |
 | Residents in disadvantaged communities (CEJST) | ✓ | CEJST, 2010 tracts, classes | – | pairs naturally with poverty, PLACES health, climate |
+| 287(g) agreements (DDP) | ✓ "N agreements" | 287(g) | – | agreement model (Task Force / Jail / Warrant) family; time slider (history back to 2002); kept out of Weird Insights |
 | 4 NOAA climate normals | ✓ | climate normal, classes | – | **family** with a season/month selector |
 
 ## Opportunities, ranked

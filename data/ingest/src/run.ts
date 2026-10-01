@@ -1,5 +1,5 @@
 // npm run ingest -- <step> [dataset or level ids…]
-// Steps: geographies | acs | lodes | places | climdiv | nbi | fars | features | vmt | cejst | tiles | publish-tiles | export | insights | docs | mn-catalog | all
+// Steps: geographies | acs | lodes | places | climdiv | nbi | fars | features | vmt | cejst | ddp287g | tiles | publish-tiles | export | insights | docs | mn-catalog | all
 import { ingestGeographies } from "./geographies.ts";
 import { ingestAcs } from "./acs.ts";
 import { ingestLodes } from "./lodes.ts";
@@ -16,6 +16,7 @@ import { ingestFars } from "./fars.ts";
 import { ingestFeatures } from "./features.ts";
 import { ingestVmt } from "./vmt.ts";
 import { ingestCejst } from "./cejst.ts";
+import { ingestDdp287g } from "./ddp287g.ts";
 
 const [step, ...rest] = process.argv.slice(2);
 const only = rest.length ? rest : undefined;
@@ -30,6 +31,7 @@ const steps: Record<string, () => Promise<void> | void> = {
   features: () => ingestFeatures(only),
   vmt: () => ingestVmt(only),
   cejst: () => ingestCejst(only),
+  ddp287g: () => ingestDdp287g(only),
   tiles: () => buildTiles(only),
   "publish-tiles": () => publishTiles(only),
   docs: writeDataSourcesDoc,
