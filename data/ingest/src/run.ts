@@ -27,7 +27,7 @@ const steps: Record<string, () => Promise<void> | void> = {
   fars: () => ingestFars(only),
   features: () => ingestFeatures(only),
   tiles: () => buildTiles(only),
-  "publish-tiles": publishTiles,
+  "publish-tiles": () => publishTiles(only),
   docs: writeDataSourcesDoc,
   "mn-catalog": mnCatalog,
   export: async () => { exportRegistry(); await exportNames(); await exportValues(only); },
