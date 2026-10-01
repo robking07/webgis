@@ -15,7 +15,7 @@
 
 | Dataset | Levels (non-null / rows) | Unit | Vintage | Method |
 |---|---|---|---|---|
-| **Traffic volume (AADT)** (`aadt`) | road segments (feature layer) | vehicles_per_day | 2024 | Line layer from `HPMS2024.zip` (layers matching `^HPMS_FULL_[A-Z]{2}_2024$`); colored by `aadt`, sized and thinned by `f_system` (shown from zoom: ≤1 at z3, ≤2 at z5, ≤3 at z6, ≤4 at z8, ≤7 at z10). Built to PMTiles with tippecanoe; drawn from its own geometry, so it isn't part of county insights. |
+| **Traffic volume (AADT)** (`aadt`) | road segments (feature layer) | vehicles_per_day | 2024 | Line layer from `HPMS2024.zip` (layers matching `^HPMS_FULL_[A-Z]{2}_2024$`); colored by `aadt`, sized and thinned by `f_system` (shown from zoom: ≤1 at z2, ≤2 at z5, ≤3 at z6, ≤4 at z8, ≤7 at z10). Built to PMTiles with tippecanoe; drawn from its own geometry, so it isn't part of county insights. |
 | **Vehicle miles per resident** (`vmt_per_capita`) | state: 51 of 51<br>county: 3,130 of 3,144 | miles_per_day | 2024 | HPMS 2024 sections with AADT: Σ AADT × (end_point − begin_point) miles, grouped by state (from the layer name) and `county_id`, ÷ ACS population (population density × land area). Counted roads only, so it runs about 10–15% below FHWA's published totals, which estimate uncounted local roads (MN: 143M vs ≈163M vehicle-miles/day). Connecticut counties use pre-2022 codes and show no data. Modeled using: population_density (insight pairs with those are flagged). |
 
 ## NOAA NCEI nClimDiv county climate data

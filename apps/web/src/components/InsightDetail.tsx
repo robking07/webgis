@@ -25,7 +25,7 @@ export function InsightDetail({ insight }: { insight: Insight }) {
     setTheme(document.documentElement.dataset.theme === "dark" || (!document.documentElement.dataset.theme && mq.matches) ? "dark" : "light");
   }, [x.id, y.id]);
   const biv = useMemo(() => (vals ? classifyBivariate(vals[0], vals[1]) : null), [vals]);
-  const mapHref = `/${serializeUrlState({ d: x.id, b: y.id, at: { ...DEFAULT_VIEW, zoom: 5 }, theme: null, lv: null })}`;
+  const mapHref = `/${serializeUrlState({ d: x.id, b: y.id, at: { lon: DEFAULT_VIEW.lon, lat: DEFAULT_VIEW.lat, zoom: 5 }, theme: null, lv: null })}`;
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 md:px-8">

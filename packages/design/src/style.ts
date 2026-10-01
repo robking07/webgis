@@ -179,6 +179,15 @@ export function thematicLayers(o: ThematicLayerOptions): LayerSpecification[] {
       id: `${o.level}-outline`, type: "line", ...base,
       paint: { "line-color": m.featureOutline, "line-width": zoomInterp(SIZE.featureOutline) as never, "line-opacity": 0.7 },
     },
+    // A halo under the selection outline keeps it visible on the darkest classes (D-33).
+    {
+      id: `${o.level}-highlight-casing`, type: "line", ...base,
+      paint: {
+        "line-color": m.labelHalo,
+        "line-width": zoomInterp(SIZE.highlightCasing) as never,
+        "line-opacity": ["case", ["boolean", ["feature-state", "selected"], false], 0.9, 0],
+      },
+    },
     {
       id: `${o.level}-highlight`, type: "line", ...base,
       paint: {

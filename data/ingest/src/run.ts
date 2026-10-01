@@ -4,7 +4,7 @@ import { ingestGeographies } from "./geographies.ts";
 import { ingestAcs } from "./acs.ts";
 import { ingestLodes } from "./lodes.ts";
 import { buildTiles } from "./tiles.ts";
-import { exportNames, exportRegistry, exportValues } from "./exportweb.ts";
+import { exportNames, exportRegistry, exportSearch, exportValues } from "./exportweb.ts";
 import { computeInsights } from "./insights.ts";
 import { ingestPlaces } from "./places.ts";
 import { ingestClimdiv } from "./climdiv.ts";
@@ -36,7 +36,8 @@ const steps: Record<string, () => Promise<void> | void> = {
   "publish-tiles": () => publishTiles(only),
   docs: writeDataSourcesDoc,
   "mn-catalog": mnCatalog,
-  export: async () => { exportRegistry(); await exportNames(); await exportValues(only); },
+  export: async () => { exportRegistry(); await exportNames(); await exportSearch(); await exportValues(only); },
+  search: exportSearch,
   insights: computeInsights,
   all: async () => {
     await ingestGeographies(); await ingestAcs(); await ingestLodes(); await ingestPlaces(); await ingestClimdiv(); await ingestNbi(); await ingestFars(); await buildTiles();

@@ -2,7 +2,7 @@
 // The only module that touches the map library. Swapping in Mapbox GL JS (Q-1) means
 // reimplementing this component against the same props.
 import { useEffect, useRef } from "react";
-import { AttributionControl, Map as MlMap, ScaleControl, addProtocol, setWorkerUrl, type MapGeoJSONFeature } from "maplibre-gl";
+import { LngLatBounds, Map as MlMap, ScaleControl, addProtocol, setWorkerUrl, type MapGeoJSONFeature } from "maplibre-gl";
 import { Protocol } from "pmtiles";
 import { basemapStyle, choroplethFill, DATA_BEFORE_ID, featureLineLayers, featurePolygonLayers, focusLandLayer, FOCUS_LAND_BEFORE_ID, GEO_LEVELS, MOTION, thematicLayers, type GeoLevel, type ThemeName } from "@webgis/design";
 import type { FeatureLayerSpec } from "@/lib/layers";
@@ -20,6 +20,9 @@ export interface HoverInfo {
   level: GeoLevel;
   x: number;
   y: number;
+  /** Clicked point (click only). */
+  lon?: number;
+  lat?: number;
 }
 
 /** A hovered/clicked feature from a feature layer (road segment, stop…). */
@@ -28,7 +31,16 @@ export interface FeatureHit {
   properties: Record<string, unknown>;
   x: number;
   y: number;
+  /** Where it was clicked (for "learn more" links), and the feature's extent in the tile. */
+  lon: number;
+  lat: number;
+  bbox?: Bbox;
 }
+
+/** [west, south, east, north] */
+export type Bbox = [number, number, number, number];
+export interface Camera { center: [number, number]; zoom: number }
+export interface Padding { top: number; right: number; bottom: number; left: number }
 
 /** Basemap layers a feature layer replaces while it's shown (HPMS includes interstates). */
 const HIDDEN_WITH_LINES = ["overlay-interstate-casing", "overlay-interstate"];
@@ -55,15 +67,22 @@ interface Props {
   featureFilter?: Record<string, Array<string | number>>;
   /** Receives zoom controls for the page's own buttons. */
   onApi?: (api: MapApi) => void;
+  /** Scale bar units (Settings). */
+  scaleUnit?: "imperial" | "metric";
 }
 
 export interface MapApi {
   zoomIn: () => void;
   zoomOut: () => void;
-  /** Fly to a point (instant with reduced motion). */
-  flyTo: (lon: number, lat: number, zoom: number) => void;
+  /** Fly to a point (instant with reduced motion); padding keeps it clear of open panels. */
+  flyTo: (lon: number, lat: number, zoom: number, padding?: Padding) => void;
   /** Mark one geography as selected (outline), or clear with null. */
-  select: (level: GeoLevel, geoid: string) => void;
+  select: (level: GeoLevel, geoid: string | null) => void;
+  /** Frame one geography (its extent from the loaded tiles); false if it isn't loaded. */
+  fitGeography: (level: GeoLevel, geoid: string, padding?: Padding) => boolean;
+  fitBbox: (bbox: Bbox, padding?: Padding, maxZoom?: number) => void;
+  getCamera: () => Camera;
+  setCamera: (c: Camera) => void;
 }
 
 const TILES_BASE = process.env.NEXT_PUBLIC_TILES_BASE_URL || "/tiles";
@@ -75,7 +94,7 @@ function tilesUrl(level: GeoLevel) {
   return `pmtiles://${base}/${level}.pmtiles`;
 }
 
-export function MapView({ theme, initialView, paint, onViewChange, onHover, onSelect, onTilesError, ariaLabel, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, onApi, featureFilter }: Props) {
+export function MapView({ theme, initialView, paint, onViewChange, onHover, onSelect, onTilesError, ariaLabel, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, onApi, featureFilter, scaleUnit = "imperial" }: Props) {
   const container = useRef<HTMLDivElement>(null);
   const map = useRef<MlMap | null>(null);
   const applied = useRef<Partial<Record<GeoLevel, LevelPaint>>>({});
@@ -86,6 +105,7 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
   const ready = useRef(false);
   const hovered = useRef<{ level: GeoLevel; id: string } | null>(null);
   const selected = useRef<{ level: GeoLevel; id: string } | null>(null);
+  const scale = useRef<ScaleControl | null>(null);
 
   // Create the map once.
   useEffect(() => {
@@ -99,8 +119,8 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
     const m = new MlMap({
       container: container.current,
       style: basemapStyle(latest.current.theme),
-      center: [initialView.lon, initialView.lat],
-      zoom: initialView.zoom,
+      // No `at` in the URL: frame the lower 48 to the screen, so phones see the whole country too.
+      ...(initialView.fit ? { bounds: CONUS, fitBoundsOptions: { padding: 16 } } : { center: [initialView.lon, initialView.lat] as [number, number], zoom: initialView.zoom }),
       attributionControl: false,
       fadeDuration: reduceMotion ? 0 : MOTION.fade,
       dragRotate: false,
@@ -111,12 +131,23 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
     if (new URLSearchParams(window.location.search).has("debug")) (window as unknown as { __wgMap: MlMap }).__wgMap = m;
     m.touchZoomRotate.disableRotation();
     // Zoom buttons are the page's own (frosted, design-token styled); see onApi.
-    m.addControl(new ScaleControl({ unit: "imperial" }), "bottom-right");
+    scale.current = new ScaleControl({ unit: scaleUnit });
+    m.addControl(scale.current, "bottom-right");
+    const fly = reduceMotion ? 0 : MOTION.fly;
+    const fitBbox = (b: Bbox, padding?: Padding, maxZoom = 13) => m.fitBounds(b, { padding: safePadding(m, padding), maxZoom, duration: fly, essential: true });
     onApi?.({
       zoomIn: () => m.zoomIn({ duration: reduceMotion ? 0 : 250 }),
       zoomOut: () => m.zoomOut({ duration: reduceMotion ? 0 : 250 }),
-      flyTo: (lon, lat, zoom) => m.flyTo({ center: [lon, lat], zoom, duration: reduceMotion ? 0 : MOTION.fly, essential: true }),
-      select: (level, geoid) => setFlag(m, selected, { level, id: geoid }, "selected"),
+      flyTo: (lon, lat, zoom, padding) => m.flyTo({ center: [lon, lat], zoom, padding: safePadding(m, padding), duration: fly, essential: true }),
+      select: (level, geoid) => setFlag(m, selected, geoid ? { level, id: geoid } : null, "selected"),
+      fitGeography: (level, geoid, padding) => {
+        const b = geographyBbox(m, level, geoid);
+        if (b) fitBbox(b, padding);
+        return !!b;
+      },
+      fitBbox,
+      getCamera: () => ({ center: m.getCenter().toArray() as [number, number], zoom: m.getZoom() }),
+      setCamera: (c) => m.flyTo({ ...c, padding: 0, duration: fly, essential: true }),
     });
     // User gestures only (programmatic flyTo etc. must not immerse): wheel/trackpad scroll,
     // drag-pan (mouse or touch), pinch and double-click zoom.
@@ -124,11 +155,7 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
     m.getCanvasContainer().addEventListener("wheel", userMove, { passive: true });
     m.on("dragstart", userMove);
     m.on("zoomstart", (e) => { if ((e as { originalEvent?: unknown }).originalEvent) userMove(); });
-    m.addControl(new AttributionControl({ compact: true, customAttribution: "Boundaries: U.S. Census Bureau TIGER/Line cartographic boundaries" }), "bottom-right");
-    // Compact attribution starts expanded; start it collapsed to its ⓘ button on small screens.
-    if (window.matchMedia("(max-width: 767px)").matches) {
-      m.once("load", () => container.current?.querySelector(".maplibregl-ctrl-attrib")?.classList.remove("maplibregl-compact-show"));
-    }
+    // Attribution is the page's own footnote (MapCredits), under the legend and scale bar.
     m.getCanvas().setAttribute("aria-label", ariaLabel);
 
     m.on("style.load", () => {
@@ -139,7 +166,7 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
       syncPaint(m, latest.current.paint, applied.current, latest.current.theme);
       syncFeatureLayer(m, latest.current.featureLayer ?? null, latest.current.theme);
       applyFeatureFilter(m, latest.current.featureLayer ?? null, filterRef.current);
-      restoreState(m);
+      restoreFlags(m, hovered.current, selected.current);
     });
     m.on("moveend", () => {
       const c = m.getCenter();
@@ -162,7 +189,9 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
       const r = fl.geometry === "polygon" ? 0 : 6;
       const hits = m.queryRenderedFeatures([[pt.x - r, pt.y - r], [pt.x + r, pt.y + r]], { layers: [hitLayer] });
       const f = hits.sort((a, b) => Number(b.properties[fl.valueField] ?? 0) - Number(a.properties[fl.valueField] ?? 0))[0];
-      return f ? { layerId: fl.id, properties: f.properties, x: pt.x, y: pt.y } : null;
+      if (!f) return null;
+      const ll = m.unproject([pt.x, pt.y]);
+      return { layerId: fl.id, properties: f.properties, x: pt.x, y: pt.y, lon: ll.lng, lat: ll.lat, bbox: geometryBbox(f.geometry) };
     };
     m.on("mousemove", (e) => {
       if (latest.current.featureLayer) {
@@ -181,14 +210,9 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
       if (latest.current.featureLayer) { latest.current.onFeatureSelect?.(featureAt(e.point)); return; }
       const f = m.queryRenderedFeatures(e.point, { layers: fillIds.filter((id) => m.getLayer(id)) })[0];
       setFlag(m, selected, f ? { level: f.sourceLayer as GeoLevel, id: String(f.properties.geoid) } : null, "selected");
-      latest.current.onSelect(f ? infoOf(f, e.point.x, e.point.y) : null);
+      latest.current.onSelect(f ? { ...infoOf(f, e.point.x, e.point.y), lon: e.lngLat.lng, lat: e.lngLat.lat } : null);
     });
 
-    function restoreState(mm: MlMap) {
-      for (const [ref, key] of [[hovered, "hover"], [selected, "selected"]] as const) {
-        if (ref.current) mm.setFeatureState({ source: `b-${ref.current.level}`, sourceLayer: ref.current.level, id: ref.current.id }, { [key]: true });
-      }
-    }
     return () => { m.remove(); map.current = null; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -201,6 +225,8 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
     map.current?.setStyle(basemapStyle(theme));
   }, [theme]);
 
+  useEffect(() => { scale.current?.setUnit(scaleUnit); }, [scaleUnit]);
+
   // Zoom bands: depend on which levels the shown dataset(s) have.
   useEffect(() => {
     const m = map.current;
@@ -210,7 +236,7 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
   // Paint: diff per level and push class indices into feature state.
   useEffect(() => {
     const m = map.current;
-    if (m && ready.current) syncPaint(m, paint, applied.current, latest.current.theme);
+    if (m && ready.current) { syncPaint(m, paint, applied.current, latest.current.theme); restoreFlags(m, hovered.current, selected.current); }
   }, [paint]);
 
   // Feature layer (lines/points): swap in/out, then apply its filter.
@@ -234,17 +260,55 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
   );
 }
 
-/** Show each level only within its band; levels without a band are hidden. */
+/** Show each level only within its band; levels without a band are hidden. The selection
+ *  outline stays on at every zoom, so a county picked from the table or search still shows
+ *  while tracts are drawn (it only draws for the one selected/hovered feature). */
 function applyBands(m: MlMap, bands?: Props["levelZooms"]) {
   for (const level of LEVELS) {
     const band = bands ? bands[level] : GEO_LEVELS[level];
-    for (const suffix of ["fill", "outline", "highlight"]) {
+    for (const suffix of ["fill", "outline"]) {
       const id = `${level}-${suffix}`;
       if (!m.getLayer(id)) continue;
       m.setLayoutProperty(id, "visibility", band ? "visible" : "none");
       if (band) m.setLayerZoomRange(id, band.minzoom, band.maxzoom);
     }
+    for (const id of [`${level}-highlight-casing`, `${level}-highlight`]) if (m.getLayer(id)) m.setLayerZoomRange(id, 0, 24);
   }
+}
+
+/** The lower 48 (search and first load frame it; Alaska, Hawaii and PR are a pan away). */
+const CONUS: Bbox = [-124.8, 24.4, -66.9, 49.4];
+
+/** Panel padding can't leave the map less than ~120 px of room, or fitBounds gives up. */
+function safePadding(m: MlMap, p?: Padding): Padding | undefined {
+  if (!p) return undefined;
+  const { clientWidth: w, clientHeight: h } = m.getContainer();
+  const fit = (a: number, b: number, total: number) => (a + b > total - 120 ? [Math.max(0, (total - 120) * a / (a + b)), Math.max(0, (total - 120) * b / (a + b))] : [a, b]);
+  const [left, right] = fit(p.left, p.right, w);
+  const [top, bottom] = fit(p.top, p.bottom, h);
+  return { left, right, top, bottom };
+}
+
+/** Extent of one geography from every loaded tile that holds a piece of it. */
+function geographyBbox(m: MlMap, level: GeoLevel, geoid: string): Bbox | null {
+  if (!m.getSource(`b-${level}`)) return null;
+  const parts = m.querySourceFeatures(`b-${level}`, { sourceLayer: level, filter: ["==", ["get", "geoid"], geoid] });
+  if (!parts.length) return null;
+  const b = new LngLatBounds();
+  for (const f of parts) { const g = geometryBbox(f.geometry); if (g) b.extend(g); }
+  return b.isEmpty() ? null : (b.toArray().flat() as Bbox);
+}
+
+function geometryBbox(g: GeoJSON.Geometry): Bbox | undefined {
+  let w = Infinity, s = Infinity, e = -Infinity, n = -Infinity;
+  const walk = (c: unknown): void => {
+    if (typeof (c as number[])[0] === "number") {
+      const [x, y] = c as number[];
+      if (x < w) w = x; if (x > e) e = x; if (y < s) s = y; if (y > n) n = y;
+    } else (c as unknown[]).forEach(walk);
+  };
+  if ("coordinates" in g) walk(g.coordinates);
+  return Number.isFinite(w) ? [w, s, e, n] : undefined;
 }
 
 function addThematic(m: MlMap, theme: ThemeName) {
@@ -259,6 +323,10 @@ function addThematic(m: MlMap, theme: ThemeName) {
       if (!m.getLayer(layer.id)) m.addLayer(layer, m.getLayer(DATA_BEFORE_ID) ? DATA_BEFORE_ID : undefined);
     }
   }
+  // Selection outlines go above every level's fill, so a county picked while tracts are drawn still shows.
+  for (const level of LEVELS) for (const id of [`${level}-highlight-casing`, `${level}-highlight`]) {
+    if (m.getLayer(id)) m.moveLayer(id, m.getLayer(DATA_BEFORE_ID) ? DATA_BEFORE_ID : undefined);
+  }
 }
 
 function syncPaint(m: MlMap, paint: Partial<Record<GeoLevel, LevelPaint>>, applied: Partial<Record<GeoLevel, LevelPaint>>, theme: ThemeName) {
@@ -272,6 +340,13 @@ function syncPaint(m: MlMap, paint: Partial<Record<GeoLevel, LevelPaint>>, appli
       for (const [id, c] of next.classes) m.setFeatureState({ source, sourceLayer: level, id }, { c });
     }
     applied[level] = next;
+  }
+}
+
+/** Repainting clears feature state per source; put the hover/selection flags back. */
+function restoreFlags(m: MlMap, hover: { level: GeoLevel; id: string } | null, sel: { level: GeoLevel; id: string } | null) {
+  for (const [f, key] of [[hover, "hover"], [sel, "selected"]] as const) {
+    if (f && m.getSource(`b-${f.level}`)) m.setFeatureState({ source: `b-${f.level}`, sourceLayer: f.level, id: f.id }, { [key]: true });
   }
 }
 

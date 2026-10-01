@@ -14,6 +14,9 @@ unit: vehicles_per_day
 universe: road segments with a reported AADT
 coverageNote: "Segments are as states report them to FHWA; not every local road has a count. Not for navigation."
 terms: [aadt, functional-class, road-type]
+learnMore:
+  - label: See this road in Google Street View
+    url: "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint={lat},{lon}"
 facets:
   - field: road_type
     label: Road type
@@ -78,8 +81,8 @@ measure:
   # 5 major collector, 6 minor collector, 7 local
   rank:
     field: f_system
-    showUpTo: [[3, 1], [5, 2], [6, 3], [8, 4], [10, 7]]
-  zooms: [3, 12]
+    showUpTo: [[2, 1], [5, 2], [6, 3], [8, 4], [10, 7]]
+  zooms: [2, 12]
 symbology:
   ramp: ylgnbu
   classification: manual

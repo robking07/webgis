@@ -6,7 +6,7 @@ import { cached, db, log, STATES, upsert } from "./util.ts";
 
 const GAZ = "https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2024_Gazetteer";
 
-async function readGazetteer(file: string): Promise<Record<string, string>[]> {
+export async function readGazetteer(file: string): Promise<Record<string, string>[]> {
   const zip = await unzipper.Open.buffer(readFileSync(await cached(`${GAZ}/${file}.zip`)));
   const text = (await zip.files[0].buffer()).toString("utf8");
   const [head, ...lines] = text.trim().split(/\r?\n/);

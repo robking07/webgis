@@ -15,7 +15,7 @@ const CB = "https://www2.census.gov/geo/tiger/GENZ2024/shp";
 const LEVELS = [
   ["state", "cb_2024_us_state_500k", 0, 7],
   ["county", "cb_2024_us_county_500k", 0, 10],
-  ["tract", "cb_2024_us_tract_500k", 6, 12],
+  ["tract", "cb_2024_us_tract_500k", 2, 12],
 ] as const;
 
 function nameOf(level: string, p: Record<string, string>): string {

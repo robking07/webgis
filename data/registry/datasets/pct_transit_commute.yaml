@@ -14,5 +14,8 @@ geographyLevels: [state, county, tract]
 unit: percent
 universe: workers 16+
 terms: [acs-5-year, margin-of-error, census-geography, quantile-classes]
+learnMore:
+  - label: See this place's full Census profile on Census Reporter
+    url: "https://censusreporter.org/profiles/{cr}/"
 measure: { kind: acs5, numerator: [B08301_010], denominator: [B08301_001], scale: 100 }
 symbology: { ramp: purples, classification: quantile, classes: 5 }

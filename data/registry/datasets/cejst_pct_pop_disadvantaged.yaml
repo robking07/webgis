@@ -13,8 +13,12 @@ vintage: "Version 2.0 (Dec. 2024)"
 geographyLevels: [state, county]
 unit: percent
 universe: residents (CEJST tract population, 2010 tracts)
-coverageNote: "Built from 2010 tracts. Connecticut counties show no data (2022 county change)."
+coverageNote: "Built from 2010 tracts. Connecticut counties show no data (2022 county change). For each tract, map Disadvantaged communities (CEJST tracts)."
 terms: [cejst, tract-2010, quantile-classes]
+learnMore:
+  - label: See the tracts here in the CEJST tool (Public Environmental Data Partners)
+    url: "https://public-environmental-data-partners.github.io/j40-cejst-2/en/#8/{lat}/{lon}"
+    levels: [county]
 modelInputs: [pct_poverty, median_household_income]  # CEJST requires a low-income threshold (200% of poverty)
 measure:
   kind: cejst
