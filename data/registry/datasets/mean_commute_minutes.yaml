@@ -1,5 +1,6 @@
 id: mean_commute_minutes
 title: Mean travel time to work
+phrase: commute times
 description: Average one-way travel time to work for workers 16 and over who do not work from home.
 category: Commuting
 tags: [commute, travel time, congestion, transportation]

@@ -1,5 +1,6 @@
 id: mean_temperature
 title: Average temperature
+phrase: average temperatures
 description: "Mean annual air temperature. Average over 1991–2020."
 category: Climate
 tags: [temperature, climate, weather]

@@ -1,5 +1,6 @@
 id: annual_precipitation
 title: Annual precipitation
+phrase: yearly precipitation
 description: "Total yearly precipitation (rain plus melted snow). Average over 1991–2020."
 category: Climate
 tags: [rain, precipitation, climate, weather]

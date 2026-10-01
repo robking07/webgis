@@ -1,5 +1,6 @@
 id: cejst_pct_pop_disadvantaged
 title: Residents in disadvantaged communities
+phrase: shares of residents in disadvantaged communities
 description: Share of residents living in census tracts the Climate and Economic Justice Screening Tool identified as disadvantaged.
 category: Environmental justice
 tags: [Justice40, CEJST, environmental justice, disadvantaged communities, EJ]

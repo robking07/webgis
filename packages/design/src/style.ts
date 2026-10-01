@@ -202,11 +202,21 @@ export interface FeatureLineOptions {
   theme: ThemeName;
 }
 
+/**
+ * Line ramps run light → dark, which suits light land. On dark land the darkest (highest) class
+ * sinks into the background and the quietest roads glow, so dark themes reverse the ramp:
+ * the highest class is always the one that stands out. Map layers and legends both use this.
+ */
+export function featureLineColors(colors: string[], theme: ThemeName): string[] {
+  return theme === "dark" ? [...colors].reverse() : colors;
+}
+
 /** Cased lines colored by value class and sized by zoom × rank. Busier segments draw on top. */
 export function featureLineLayers(o: FeatureLineOptions): LayerSpecification[] {
   const m = THEMES[o.theme].map;
   const value = ["to-number", ["get", o.valueField], 0];
-  const color = ["step", value, o.colors[0], ...o.breaks.flatMap((b, i) => [b, o.colors[i + 1]])];
+  const colors = featureLineColors(o.colors, o.theme);
+  const color = ["step", value, colors[0], ...o.breaks.flatMap((b, i) => [b, colors[i + 1]])];
   const width = (extra: number) => [
     "interpolate", ["linear"], ["zoom"],
     ...SIZE.dataLine.flatMap(([z, w]) => [z, o.rankField

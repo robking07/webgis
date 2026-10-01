@@ -142,6 +142,11 @@ export const Facet = z.object({
 export const DatasetEntry = z.object({
   id: z.string().regex(/^[a-z0-9_]+$/),
   title: z.string(),
+  /**
+   * Plain noun phrase that reads after "higher" / "lower" in Odd Pairings captions,
+   * e.g. "work-from-home rates", "household incomes". Falls back to the title.
+   */
+  phrase: z.string().optional(),
   /** One sentence shown in the browser and popups. */
   description: z.string(),
   category: z.enum(["Income & poverty", "Commuting", "Vehicles", "Housing", "Population", "Jobs", "Transportation", "Environment", "Environmental justice", "Immigration enforcement", "Health", "Climate"]),

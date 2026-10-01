@@ -1,5 +1,6 @@
 id: traffic_fatalities
 title: Traffic deaths
+phrase: traffic death rates
 description: Average yearly deaths in motor vehicle crashes per 100,000 residents, 2020–2024, counted where the crash happened.
 category: Transportation
 tags: [safety, crashes, fatalities, FARS, Vision Zero]

@@ -6,15 +6,19 @@
 //   - diverging:  adjacent classes ≥ MIN_ADJ apart, lightness rises to the midpoint then falls
 //   - categorical: every pair ≥ MIN_CAT apart
 //   - bivariate:   every pair ≥ MIN_BIV apart
-// Plus WCAG contrast for every pair in CONTRAST_RULES, in both themes.
+// Plus WCAG contrast for every pair in CONTRAST_RULES, in both themes, and the top class of
+// every sequential ramp drawn as a feature line against focus land, in both themes.
 import {
   differenceCiede2000, filterDeficiencyDeuter, filterDeficiencyProt, filterDeficiencyTrit,
   formatHex, oklab, wcagContrast,
 } from "culori";
 import { RAMPS, rampColors, type RampDef, type RampId } from "../src/ramps.ts";
 import { CONTRAST_RULES, THEMES, themeColor } from "../src/themes.ts";
+import { featureLineColors } from "../src/style.ts";
 
 export const THRESHOLDS = { MIN_ADJ: 5, MIN_CAT: 10, MIN_BIV: 8 };
+/** WCAG non-text contrast for the top feature-line class against focus land. */
+const MIN_LINE_TOP = 3;
 
 const de = differenceCiede2000();
 const VISION = {
@@ -66,9 +70,22 @@ for (const theme of Object.values(THEMES)) {
   }
 }
 
+// Feature lines: the highest class (the busiest roads) must stand out from the land it is drawn
+// on, in both themes, as drawn (dark themes reverse the ramp; see featureLineColors).
+let lineCases = 0;
+for (const [id, r] of Object.entries(RAMPS) as Array<[RampId, RampDef]>) {
+  if (r.kind !== "sequential") continue;
+  for (let n = r.minClasses; n <= r.maxClasses; n++) for (const theme of Object.values(THEMES)) {
+    const drawn = featureLineColors(rampColors(id, n), theme.name);
+    const c = wcagContrast(drawn[n - 1], theme.map.focusLand);
+    lineCases++;
+    if (c < MIN_LINE_TOP) failures.push(`${id} n=${n} theme ${theme.name}: top line class on land contrast ${c.toFixed(2)} < ${MIN_LINE_TOP}`);
+  }
+}
+
 if (isMain && process.argv.includes("--verbose")) console.table(report);
 if (isMain && failures.length) {
   console.error(`✗ design check failed (${failures.length}):\n  ` + failures.join("\n  "));
   process.exit(1);
 }
-if (isMain) console.log(`✓ design check passed: ${Object.keys(RAMPS).length} ramps, ${report.length} ramp/class/vision cases, ${CONTRAST_RULES.length * 2} contrast pairs`);
+if (isMain) console.log(`✓ design check passed: ${Object.keys(RAMPS).length} ramps, ${report.length} ramp/class/vision cases, ${CONTRAST_RULES.length * 2} contrast pairs, ${lineCases} line-on-land cases`);

@@ -1,5 +1,6 @@
 id: bridges_poor_condition
 title: Bridge deck area in poor condition
+phrase: shares of bridges in poor condition
 description: Share of highway bridge deck area rated in poor condition (lowest of deck, superstructure, substructure or culvert rating 4 or below), the federal bridge performance measure.
 category: Transportation
 tags: [bridges, infrastructure, condition, NBI, asset management]

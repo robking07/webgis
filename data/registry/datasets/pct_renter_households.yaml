@@ -1,5 +1,6 @@
 id: pct_renter_households
 title: Renter-occupied households
+phrase: shares of renters
 description: Share of occupied housing units that are renter-occupied.
 category: Housing
 tags: [rent, tenure, housing]

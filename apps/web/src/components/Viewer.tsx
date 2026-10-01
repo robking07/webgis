@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ChevronDown, Info, Menu, Minus, Moon, Plus, Search, SlidersHorizontal, Sun, X } from "lucide-react";
 import { BivariateLegend, Legend, Popup, StatusState } from "@webgis/design/components";
-import { formatValue, GEO_LEVELS, levelAtZoom, levelBands, type GeoLevel, type ThemeName } from "@webgis/design";
+import { featureLineColors, formatValue, GEO_LEVELS, levelAtZoom, levelBands, type GeoLevel, type ThemeName } from "@webgis/design";
 import { DatasetBrowser } from "./DatasetBrowser";
 import { DataTable } from "./DataTable";
 import { TERM_BY_ID } from "@/lib/glossary";
@@ -116,7 +116,9 @@ export function Viewer({ search }: { search: string }) {
   // "immerses": the navigation falls away entirely, leaving the wordmark, the dataset
   // heading and the legend strip on the map. The menu button, the top screen edge,
   // or Esc brings it back.
-  const legendStrip = primary && (featureSpec ? featureSpec.colors : current?.colors);
+  // Line layers reverse their ramp on dark land (see featureLineColors); the legend follows the map.
+  const featureColors = featureSpec && (featureSpec.geometry === "line" ? featureLineColors(featureSpec.colors, theme) : featureSpec.colors);
+  const legendStrip = primary && (featureColors || current?.colors);
   const legendEnds = featureSpec
     ? [`< ${formatValue(featureSpec.breaks[0], primary!.unit)}`, `≥ ${formatValue(featureSpec.breaks[featureSpec.breaks.length - 1], primary!.unit)}`]
     : current?.breaks?.length ? [`< ${formatValue(current.breaks[0], primary!.unit)}`, `≥ ${formatValue(current.breaks[current.breaks.length - 1], primary!.unit)}`] : null;
@@ -131,7 +133,7 @@ export function Viewer({ search }: { search: string }) {
   const legendBody = (
     <>
       {primary && isFeature ? (featureSpec ? (
-          <Legend title={primary.title} unit={primary.unit} colors={featureSpec.colors} breaks={featureSpec.breaks} showNoData={false} swatch={featureSpec.geometry === "line" ? "line" : "area"}
+          <Legend title={primary.title} unit={primary.unit} colors={featureColors!} breaks={featureSpec.breaks} showNoData={false} swatch={featureSpec.geometry === "line" ? "line" : "area"}
             caption={`${primary.vintage} · ${featureSpec.featureCount.toLocaleString()} ${featureSpec.geometry === "line" ? "segments · wider lines = higher road class" : "areas"}${primary.coverageNote ? `. ${primary.coverageNote}` : ""}`} />
         ) : <StatusState status="empty" message="This layer hasn't been built yet." />)
         : error ? <StatusState status="error" message={error} />
@@ -368,10 +370,10 @@ export function Viewer({ search }: { search: string }) {
         </div>
       )}
       {featureSelected && featureSpec && (
-        <FeaturePanel hit={featureSelected} spec={featureSpec} facets={primary?.facets ?? []} onClose={() => setFeatureSelected(null)} />
+        <FeaturePanel hit={featureSelected} spec={featureSpec} facets={primary?.facets ?? []} onClose={() => setFeatureSelected(null)} belowHeader={chromeShown} />
       )}
       {selected && primary && (
-        <DetailPanel info={selected} onClose={() => setSelected(null)} primary={primary} secondary={secondary}
+        <DetailPanel info={selected} onClose={() => setSelected(null)} primary={primary} secondary={secondary} belowHeader={chromeShown}
           xv={x.values[selected.level]} yv={y.values[selected.level]}
           onMapIt={(id) => update({ d: id, b: state.b === id ? null : state.b })} />
       )}
@@ -389,9 +391,15 @@ interface DetailProps {
   yv?: Values;
   /** Switch the map to another dataset (from the drawer's full list). */
   onMapIt: (id: string) => void;
+  /** The header is showing, so the desktop panel starts below it. */
+  belowHeader: boolean;
 }
 
-function DetailPanel({ info, onClose, primary, secondary, xv, yv, onMapIt }: DetailProps) {
+/** Desktop detail panels sit under the header when it shows (the dataset card's offset), else at the top. */
+const panelTop = (belowHeader: boolean) =>
+  `transition-[top] duration-300 ${belowHeader ? "top-[68px] max-h-[calc(100%-80px)]" : "top-3 max-h-[calc(100%-1.5rem)]"}`;
+
+function DetailPanel({ info, onClose, primary, secondary, xv, yv, onMapIt, belowHeader }: DetailProps) {
   const [rows, setRows] = useState<Detail | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const phone = useIsPhone();
@@ -457,7 +465,7 @@ function DetailPanel({ info, onClose, primary, secondary, xv, yv, onMapIt }: Det
   }
   return (
     <section aria-label={`Details for ${info.name}`}
-      className="absolute right-[72px] top-3 z-30 max-h-[calc(100%-1.5rem)] w-80 overflow-y-auto rounded-lg border bg-popover p-3 shadow-md">
+      className={`absolute right-[72px] ${panelTop(belowHeader)} z-30 w-80 overflow-y-auto rounded-lg border bg-popover p-3 shadow-md`}>
       {summary}
       {rows && (
         <a href={placeHref(info.geoid)}
@@ -542,7 +550,7 @@ function FacetFilter({ facet, hidden, onToggle, onAll, docked }: { facet: Facet;
   );
 }
 
-function FeaturePanel({ hit, spec, facets, onClose }: { hit: FeatureHit; spec: FeatureLayerSpec; facets: Facet[]; onClose: () => void }) {
+function FeaturePanel({ hit, spec, facets, onClose, belowHeader }: { hit: FeatureHit; spec: FeatureLayerSpec; facets: Facet[]; onClose: () => void; belowHeader: boolean }) {
   const phone = useIsPhone();
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
@@ -561,7 +569,7 @@ function FeaturePanel({ hit, spec, facets, onClose }: { hit: FeatureHit; spec: F
     </>
   );
   if (phone) return <BottomSheet label={`Details for ${featureTitle(hit)}`} summary={body} onClose={onClose}>{null}</BottomSheet>;
-  return <section aria-label={`Details for ${featureTitle(hit)}`} className="absolute right-[72px] top-3 z-30 w-72 rounded-lg border bg-popover p-3 shadow-md">{body}</section>;
+  return <section aria-label={`Details for ${featureTitle(hit)}`} className={`absolute right-[72px] ${panelTop(belowHeader)} z-30 w-72 overflow-y-auto rounded-lg border bg-popover p-3 shadow-md`}>{body}</section>;
 }
 
 function useResolvedTheme(explicit: ThemeName | null): ThemeName {

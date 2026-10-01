@@ -6,8 +6,11 @@
 .wg-legend-list li { display: flex; align-items: center; gap: 0.5rem; font-variant-numeric: tabular-nums; }
 .wg-swatch { display: inline-block; border-radius: 3px; box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.12); flex: none; }
 .wg-swatch-nodata { background: repeating-linear-gradient(45deg, var(--map-no-data) 0 3px, var(--ui-surface) 3px 6px); }
-.wg-biv-grid { display: grid; grid-template-columns: repeat(3, 22px); grid-auto-rows: 22px; gap: 2px; transform: rotate(-45deg); margin: 18px; }
-.wg-legend-biv figcaption { display: flex; flex-direction: column; gap: 0.125rem; color: var(--ui-text-muted); font-size: 0.75rem; }
+/* Sized to its tracks so the rotation pivots on the diamond's own center; the margin holds the
+   rotated corners (a 70px square turned 45° spans 99px, so 15px a side). */
+.wg-biv-grid { display: grid; width: max-content; grid-template-columns: repeat(3, 22px); grid-auto-rows: 22px; gap: 2px; transform: rotate(-45deg); margin: 16px; }
+.wg-legend-biv { display: flex; align-items: center; gap: 0.5rem; }
+.wg-legend-biv figcaption { min-width: 0; display: flex; flex-direction: column; gap: 0.125rem; color: var(--ui-text-muted); font-size: 0.75rem; }
 .wg-popup { min-width: 200px; color: var(--ui-text); font-size: 0.8125rem; }
 .wg-popup-title { font-weight: 600; margin: 0; }
 .wg-popup-subtitle { color: var(--ui-text-muted); margin: 0 0 0.375rem; font-size: 0.75rem; }
@@ -26,3 +29,13 @@
 .wg-popup-group + .wg-popup-group { margin-top: 0.625rem; }
 .wg-popup-group-title { margin: 0 0 0.25rem; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ui-text-muted); }
 .wg-popup-footnote { margin: 0.625rem 0 0; font-size: 0.6875rem; color: var(--ui-text-muted); }
+
+/* MapLibre's own controls (credits, scale bar) follow the theme instead of their white defaults. */
+/* Selectors match or beat MapLibre's own specificity, so load order doesn't matter. */
+.maplibregl-ctrl.maplibregl-ctrl-attrib, .maplibregl-ctrl.maplibregl-ctrl-attrib.maplibregl-compact { background-color: color-mix(in srgb, var(--ui-surface) 88%, transparent); color: var(--ui-text-muted); }
+.maplibregl-ctrl.maplibregl-ctrl-attrib a { color: var(--ui-text-muted); }
+.maplibregl-ctrl.maplibregl-ctrl-attrib a:hover { color: var(--ui-text); }
+.maplibregl-ctrl.maplibregl-ctrl-scale { background: color-mix(in srgb, var(--ui-surface) 80%, transparent); color: var(--ui-text); border-color: var(--ui-text-muted); }
+/* The ⓘ button is a black SVG background; invert it on dark (same two selectors as theme.css). */
+:root[data-theme="dark"] .maplibregl-ctrl-attrib-button { filter: invert(1); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .maplibregl-ctrl-attrib-button { filter: invert(1); } }
