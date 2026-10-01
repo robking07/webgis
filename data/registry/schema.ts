@@ -4,7 +4,7 @@ import { z } from "zod";
 
 const Ramp = z.enum(["blues", "ylgnbu", "oranges", "purples", "viridis", "cividis", "rdbu", "puor", "brbg"]);
 const Unit = z.enum(["dollars", "percent", "minutes", "count", "per_sq_mi", "ratio", "years", "deg_f", "inches", "per_100k", "vehicles_per_day", "miles_per_day", "categories", "agreements", "percentile"]);
-export const GeoLevel = z.enum(["state", "county", "tract"]);
+export const GeoLevel = z.enum(["state", "county", "tract", "block_group"]);
 
 /** A feature-layer popup field with optional explainers (D-33). */
 const FeatureField = z.object({
@@ -26,6 +26,12 @@ const AcsMeasure = z.object({
   scale: z.number().default(1),
   /** Divide by land area to get a density. */
   perSqMi: z.boolean().default(false),
+  /** Same measure from tables the Census Bureau publishes at block-group level, when the
+   *  main tables stop at tracts (e.g. poverty: B17001 → C17002). */
+  blockGroup: z.object({
+    numerator: z.array(z.string().regex(/^[BC]\d{5}[A-Z]?_\d{3}$/)).min(1),
+    denominator: z.array(z.string().regex(/^[BC]\d{5}[A-Z]?_\d{3}$/)).optional(),
+  }).optional(),
 });
 const LodesMeasure = z.object({
   kind: z.literal("lodes"),

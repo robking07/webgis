@@ -5,7 +5,7 @@ import type { GeoLevel } from "@webgis/design";
 import type { Dataset } from "./registry";
 
 /** Census Reporter / data.census.gov summary-level prefixes. */
-const SUMLEV: Record<GeoLevel, string> = { state: "04000US", county: "05000US", tract: "14000US" };
+const SUMLEV: Record<GeoLevel, string> = { state: "04000US", county: "05000US", tract: "14000US", block_group: "15000US" };
 
 export interface LinkContext {
   level?: GeoLevel;

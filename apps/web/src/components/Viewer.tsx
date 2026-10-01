@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowUpRight, ChevronDown, CornerUpLeft, Info, Menu, Minus, Plus, Search, SlidersHorizontal, X } from "lucide-react";
 import { BivariateLegend, Legend, Popup, StatusState } from "@webgis/design/components";
-import { formatValue, GEO_LEVELS, levelAtZoom, levelBands, type GeoLevel, type ThemeName } from "@webgis/design";
+import { formatValue, GEO_LEVELS, LAZY_LEVELS, levelAtZoom, levelBands, STATIC_ONLY_LEVELS, type GeoLevel, type ThemeName } from "@webgis/design";
 import { DatasetBrowser } from "./DatasetBrowser";
 import { DataTable } from "./DataTable";
 import { DatasetHeading } from "./DatasetMenus";
@@ -21,7 +21,7 @@ import type { PopupRow } from "@webgis/design/components";
 import { BottomSheet, useIsNarrow, useIsPhone } from "./BottomSheet";
 import { PlaceDataList, type Detail } from "./PlaceDataList";
 import { parseUrlState, useUrlState, type UrlState } from "@/lib/url-state";
-import { classifyBivariate, classifyUnivariate, useDatasetValues, type Values } from "@/lib/values";
+import { classifyBivariate, classifyUnivariate, loadMoes, useDatasetValues, type Values } from "@/lib/values";
 import { fetchDetail } from "@/lib/supabase";
 
 const LEVELS = Object.keys(GEO_LEVELS) as GeoLevel[];
@@ -93,10 +93,10 @@ export function Viewer({ search }: { search: string }) {
   const defaultLevel = primary?.defaultLevel && availableLevels.includes(primary.defaultLevel) ? primary.defaultLevel : availableLevels[availableLevels.length - 1] ?? null;
   const pinnedLevel = state.lv === "auto" ? null : state.lv && availableLevels.includes(state.lv) ? state.lv : defaultLevel;
   const bands = useMemo(() => (pinnedLevel ? { [pinnedLevel]: { minzoom: 0, maxzoom: 24 } } : levelBands(availableLevels)), [availableLevels, pinnedLevel]);
-  // Start loading tract values a little before tracts appear.
-  const wantTract = !!bands.tract && state.at.zoom >= bands.tract.minzoom - 1;
-  const x = useDatasetValues(primary, wantTract);
-  const y = useDatasetValues(secondary, wantTract);
+  // Start loading tract / block-group values a little before they appear.
+  const want = LEVELS.filter((l) => LAZY_LEVELS.has(l) && !!bands[l] && state.at.zoom >= bands[l]!.minzoom - 1);
+  const x = useDatasetValues(primary, want);
+  const y = useDatasetValues(secondary, want);
   const level = levelAtZoom(bands, state.at.zoom) ?? availableLevels[0] ?? "county";
 
   const classed = useMemo(() => {
@@ -118,8 +118,8 @@ export function Viewer({ search }: { search: string }) {
   const current = classed[level];
   const error = x.error ?? y.error;
   const available = !!primary && !isFeature && availableLevels.includes(level);
-  // The table lists states or counties (tracts have no names to search); at tract level it shows counties.
-  const tableLevel: GeoLevel | null = level !== "tract" ? level : availableLevels.includes("county") ? "county" : null;
+  // The table lists states or counties (finer areas have no names to search); below counties it shows counties.
+  const tableLevel: GeoLevel | null = level === "state" || level === "county" ? level : availableLevels.includes("county") ? "county" : null;
   // Clear selections and filters when the dataset changes.
   useEffect(() => { setSelected(null); setFeatureSelected(null); setFeatureHover(null); setHidden({}); mapApi.current?.select("county", null); }, [state.d]);
   const featureFilter = useMemo(() => {
@@ -236,7 +236,7 @@ export function Viewer({ search }: { search: string }) {
   const meta = primary ? [isFeature ? featureNoun : GEO_LEVELS[level].label, primary.vintage, primary.source.name.split(",")[0].split(" (")[0]].join(" · ") : "";
   const levelNote = pinnedLevel
     ? `Showing ${GEO_LEVELS[pinnedLevel].label.toLowerCase()}s at every zoom${pinnedLevel === defaultLevel ? ", how the source publishes this data" : ""}.`
-    : "Switches from states to counties to tracts as you zoom in.";
+    : "Switches to smaller areas as you zoom in.";
   const displayOptions = (docked: boolean) => (
     <>
       {availableLevels.length > 1 && (
@@ -442,7 +442,7 @@ export function Viewer({ search }: { search: string }) {
         {tableReady && (
           <button type="button" onClick={() => setTableOpen(true)}
             className="mt-2 rounded text-xs text-primary underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-ring">
-            View as table{level === "tract" ? " (counties)" : ""}
+            View as table{tableLevel !== level ? " (counties)" : ""}
           </button>
         )}
       </section>
@@ -522,12 +522,21 @@ function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, onMapIt }
   const [rows, setRows] = useState<Detail | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const phone = useIsPhone();
+  // Block groups aren't in the database (D-34): the mapped values come from the static files,
+  // margins of error from their side files; there's no all-datasets list or place profile.
+  const staticOnly = STATIC_ONLY_LEVELS.has(info.level);
   useEffect(() => {
     let live = true;
     setRows(null); setErr(null);
-    fetchDetail(info.geoid).then((r) => live && setRows(r), (e) => live && setErr(String(e.message ?? e)));
+    const load = staticOnly
+      ? Promise.all([primary, secondary].filter((d): d is Dataset => !!d).map(async (d, i) => {
+          const moes = await loadMoes(d.id, info.level).catch(() => ({} as Values));
+          return [d.id, { value: (i === 0 ? xv : yv)?.[info.geoid] ?? null, moe: moes[info.geoid] ?? null }] as const;
+        })).then((e) => Object.fromEntries(e) as Detail)
+      : fetchDetail(info.geoid);
+    load.then((r) => live && setRows(r), (e) => live && setErr(String(e.message ?? e)));
     return () => { live = false; };
-  }, [info.geoid]);
+  }, [info.geoid, info.level, staticOnly, primary, secondary, xv, yv]);
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
     window.addEventListener("keydown", onKey);
@@ -568,14 +577,14 @@ function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, onMapIt }
           </div>
         )}
       <LearnMore links={links} />
-      {phone && rows && <p className="mt-2 text-center text-xs text-muted-foreground group-data-[snap=full]:hidden">Swipe up for all {Object.keys(rows).length} datasets here</p>}
+      {phone && rows && !staticOnly && <p className="mt-2 text-center text-xs text-muted-foreground group-data-[snap=full]:hidden">Swipe up for all {Object.keys(rows).length} datasets here</p>}
     </>
   );
 
   if (phone) {
     return (
       <BottomSheet label={`Details for ${info.name}`} summary={summary} onClose={onClose}>
-        {rows && (
+        {rows && !staticOnly && (
           <>
             <PlaceDataList level={info.level} detail={rows} onMapIt={onMapIt} compact />
             <a href={placeHref(info.geoid)} className="mt-4 block text-sm font-medium text-primary underline-offset-2 hover:underline">Open the full place profile →</a>
@@ -589,7 +598,7 @@ function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, onMapIt }
       className="absolute right-[72px] z-30 w-80 overflow-y-auto rounded-lg border bg-popover p-3 shadow-md transition-[top] duration-300"
       style={{ top, maxHeight: `calc(100% - ${top + 12}px)` }}>
       {summary}
-      {rows && (
+      {rows && !staticOnly && (
         <a href={placeHref(info.geoid)}
           className="mt-3 flex items-center justify-between rounded text-xs font-medium text-primary underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-ring">
           Full place profile: all datasets for {info.name.split(",")[0]} <span aria-hidden>→</span>
@@ -710,12 +719,12 @@ function LevelPicker({ levels, pinned, defaultLevel, note, docked, onChange }: {
         {([...levels, "auto"] as Array<GeoLevel | "auto">).map((l) => (
           <button key={l} type="button" role="radio" aria-checked={l === "auto" ? !pinned : pinned === l} onClick={() => onChange(l)}
             className={`rounded-full border px-2.5 py-0.5 text-xs text-muted-foreground aria-checked:border-primary aria-checked:bg-primary aria-checked:text-primary-foreground focus-visible:outline-2 focus-visible:outline-ring ${docked ? "wg-glass border-transparent text-foreground" : ""}`}>
-            {l === "auto" ? "Switch with zoom" : GEO_LEVELS[l].label.replace("Census tract", "Tract")}{l === defaultLevel ? " ·" : ""}
+            {l === "auto" ? "Switch with zoom" : GEO_LEVELS[l].label.replace("Census tract", "Tract")}{l === defaultLevel ? " (default)" : ""}
           </button>
         ))}
       </div>
       <p className={`mt-1.5 text-[11px] leading-snug text-muted-foreground ${docked ? "wg-on-map" : ""}`}>
-        {note} Block groups and blocks are coming.
+        {note}
       </p>
     </fieldset>
   );

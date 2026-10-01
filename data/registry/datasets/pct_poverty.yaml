@@ -10,12 +10,19 @@ source:
 license: Public domain (U.S. Government work, 17 U.S.C. § 105)
 updateCadence: annual
 vintage: "2020–2024 (5-year estimate)"
-geographyLevels: [state, county, tract]
+geographyLevels: [state, county, tract, block_group]
+defaultLevel: tract  # ACS: tracts keep margins of error low (Robbie, D-33)
 unit: percent
 universe: people for whom poverty status is determined
 terms: [acs-5-year, margin-of-error, census-geography, quantile-classes]
 learnMore:
   - label: See this place's full Census profile on Census Reporter
     url: "https://censusreporter.org/profiles/{cr}/"
-measure: { kind: acs5, numerator: [B17001_002], denominator: [B17001_001], scale: 100 }
+measure:
+  kind: acs5
+  numerator: [B17001_002]
+  denominator: [B17001_001]
+  scale: 100
+  # B17001 stops at tracts; C17002 (ratio of income to poverty) gives the same count at block groups.
+  blockGroup: { numerator: [C17002_002, C17002_003], denominator: [C17002_001] }
 symbology: { ramp: purples, classification: quantile, classes: 5, higherIsBetter: false }

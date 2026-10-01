@@ -7,7 +7,7 @@ import { join } from "node:path";
 import { spawnSync } from "node:child_process";
 import unzipper from "unzipper";
 import * as shapefile from "shapefile";
-import { cached, CACHE, log, STATES, TILES } from "./util.ts";
+import { cached, CACHE, log, STATES, TILES, WEB_DATA } from "./util.ts";
 
 const CB = "https://www2.census.gov/geo/tiger/GENZ2024/shp";
 
@@ -16,12 +16,22 @@ const LEVELS = [
   ["state", "cb_2024_us_state_500k", 0, 7],
   ["county", "cb_2024_us_county_500k", 0, 10],
   ["tract", "cb_2024_us_tract_500k", 2, 12],
+  ["block_group", "cb_2024_us_bg_500k", 2, 12],
 ] as const;
+
+/** County names ("Hennepin County, MN"), for block-group names; the BG file doesn't carry them. */
+const countyNames = (): Record<string, string> => JSON.parse(readFileSync(join(WEB_DATA, "geo/names.json"), "utf8"));
+let counties: Record<string, string> | null = null;
 
 function nameOf(level: string, p: Record<string, string>): string {
   const st = STATES[p.STATEFP]?.[1] ?? p.STATEFP;
   if (level === "state") return p.NAME;
   if (level === "county") return `${p.NAMELSAD}, ${st}`;
+  if (level === "block_group") {
+    counties ??= countyNames();
+    const tract = Number(p.TRACTCE) / 100;
+    return `${p.NAMELSAD}, Tract ${tract}, ${counties[p.STATEFP + p.COUNTYFP] ?? st}`;
+  }
   return `${p.NAMELSAD}, ${p.NAMELSADCO ?? ""}${p.NAMELSADCO ? ", " : ""}${st}`;
 }
 

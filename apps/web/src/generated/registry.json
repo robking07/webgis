@@ -981,6 +981,7 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "defaultLevel": "tract",
   "learnMore": [
    {
     "label": "See this place's full Census profile on Census Reporter",
@@ -1081,7 +1082,8 @@
   "geographyLevels": [
    "state",
    "county",
-   "tract"
+   "tract",
+   "block_group"
   ],
   "unit": "dollars",
   "universe": "households",
@@ -1096,6 +1098,7 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "defaultLevel": "tract",
   "learnMore": [
    {
     "label": "See this place's full Census profile on Census Reporter",
@@ -1186,7 +1189,8 @@
   "geographyLevels": [
    "state",
    "county",
-   "tract"
+   "tract",
+   "block_group"
   ],
   "unit": "percent",
   "universe": "total population",
@@ -1215,6 +1219,7 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "defaultLevel": "tract",
   "learnMore": [
    {
     "label": "See this place's full Census profile on Census Reporter",
@@ -1255,7 +1260,8 @@
   "geographyLevels": [
    "state",
    "county",
-   "tract"
+   "tract",
+   "block_group"
   ],
   "unit": "percent",
   "universe": "workers 16+",
@@ -1273,6 +1279,7 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "defaultLevel": "tract",
   "learnMore": [
    {
     "label": "See this place's full Census profile on Census Reporter",
@@ -1313,7 +1320,8 @@
   "geographyLevels": [
    "state",
    "county",
-   "tract"
+   "tract",
+   "block_group"
   ],
   "unit": "percent",
   "universe": "workers 16+ not working from home",
@@ -1332,6 +1340,7 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "defaultLevel": "tract",
   "learnMore": [
    {
     "label": "See this place's full Census profile on Census Reporter",
@@ -1371,7 +1380,8 @@
   "geographyLevels": [
    "state",
    "county",
-   "tract"
+   "tract",
+   "block_group"
   ],
   "unit": "percent",
   "universe": "people for whom poverty status is determined",
@@ -1384,11 +1394,21 @@
     "B17001_001"
    ],
    "scale": 100,
-   "perSqMi": false
+   "perSqMi": false,
+   "blockGroup": {
+    "numerator": [
+     "C17002_002",
+     "C17002_003"
+    ],
+    "denominator": [
+     "C17002_001"
+    ]
+   }
   },
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "defaultLevel": "tract",
   "learnMore": [
    {
     "label": "See this place's full Census profile on Census Reporter",
@@ -1429,7 +1449,8 @@
   "geographyLevels": [
    "state",
    "county",
-   "tract"
+   "tract",
+   "block_group"
   ],
   "unit": "percent",
   "universe": "households",
@@ -1447,6 +1468,7 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "defaultLevel": "tract",
   "learnMore": [
    {
     "label": "See this place's full Census profile on Census Reporter",
@@ -1488,7 +1510,8 @@
   "geographyLevels": [
    "state",
    "county",
-   "tract"
+   "tract",
+   "block_group"
   ],
   "unit": "percent",
   "universe": "workers 16+",
@@ -1506,6 +1529,7 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "defaultLevel": "tract",
   "learnMore": [
    {
     "label": "See this place's full Census profile on Census Reporter",
@@ -1546,7 +1570,8 @@
   "geographyLevels": [
    "state",
    "county",
-   "tract"
+   "tract",
+   "block_group"
   ],
   "unit": "percent",
   "universe": "workers 16+",
@@ -1564,6 +1589,7 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "defaultLevel": "tract",
   "learnMore": [
    {
     "label": "See this place's full Census profile on Census Reporter",
@@ -1604,7 +1630,8 @@
   "geographyLevels": [
    "state",
    "county",
-   "tract"
+   "tract",
+   "block_group"
   ],
   "unit": "percent",
   "universe": "workers 16+",
@@ -1622,6 +1649,7 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "defaultLevel": "tract",
   "learnMore": [
    {
     "label": "See this place's full Census profile on Census Reporter",
@@ -1662,7 +1690,8 @@
   "geographyLevels": [
    "state",
    "county",
-   "tract"
+   "tract",
+   "block_group"
   ],
   "unit": "percent",
   "universe": "households",
@@ -1675,11 +1704,21 @@
     "B08201_001"
    ],
    "scale": 100,
-   "perSqMi": false
+   "perSqMi": false,
+   "blockGroup": {
+    "numerator": [
+     "B25044_003",
+     "B25044_010"
+    ],
+    "denominator": [
+     "B25044_001"
+    ]
+   }
   },
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "defaultLevel": "tract",
   "learnMore": [
    {
     "label": "See this place's full Census profile on Census Reporter",
@@ -1769,7 +1808,8 @@
   "geographyLevels": [
    "state",
    "county",
-   "tract"
+   "tract",
+   "block_group"
   ],
   "unit": "per_sq_mi",
   "universe": "total population",
@@ -1784,6 +1824,7 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "defaultLevel": "tract",
   "learnMore": [
    {
     "label": "See this place's full Census profile on Census Reporter",

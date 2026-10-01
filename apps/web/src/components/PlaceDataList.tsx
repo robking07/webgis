@@ -25,9 +25,9 @@ export function PlaceDataList({ level, detail, mapHref, onMapIt, compact }: Prop
   const { q, setQ, cat, setCat, results } = useDatasetFilter();
   const [ranks, setRanks] = useState<Record<string, string>>({});
 
-  // Rank lines from the static exports. Tract files are large, so tracts skip ranks.
+  // Rank lines from the static exports. Tract and block-group files are large, so they skip ranks.
   useEffect(() => {
-    if (level === "tract") return;
+    if (level === "tract" || level === "block_group") return;
     let live = true;
     for (const [id, r] of Object.entries(detail)) {
       if (r.value == null) continue;

@@ -1,5 +1,5 @@
 // npm run ingest -- <step> [dataset or level ids…]
-// Steps: geographies | acs | lodes | places | climdiv | nbi | fars | features | vmt | cejst | ddp287g | tiles | publish-tiles | export | insights | docs | mn-catalog | all
+// Steps: geographies | acs | acs-bg | lodes | places | climdiv | nbi | fars | features | vmt | cejst | ddp287g | tiles | publish-tiles | publish-values | export | insights | docs | mn-catalog | all
 import { ingestGeographies } from "./geographies.ts";
 import { ingestAcs } from "./acs.ts";
 import { ingestLodes } from "./lodes.ts";
@@ -8,7 +8,7 @@ import { exportNames, exportRegistry, exportSearch, exportValues } from "./expor
 import { computeInsights } from "./insights.ts";
 import { ingestPlaces } from "./places.ts";
 import { ingestClimdiv } from "./climdiv.ts";
-import { publishTiles } from "./publish-tiles.ts";
+import { publishTiles, publishValues } from "./publish-tiles.ts";
 import { writeDataSourcesDoc } from "./docs.ts";
 import { mnCatalog } from "./mn-catalog.ts";
 import { ingestNbi } from "./nbi.ts";
@@ -23,6 +23,7 @@ const only = rest.length ? rest : undefined;
 const steps: Record<string, () => Promise<void> | void> = {
   geographies: ingestGeographies,
   acs: () => ingestAcs(only),
+  "acs-bg": () => ingestAcs(only, ["block_group"]),
   lodes: () => ingestLodes(only),
   places: () => ingestPlaces(only),
   climdiv: () => ingestClimdiv(only),
@@ -34,6 +35,7 @@ const steps: Record<string, () => Promise<void> | void> = {
   ddp287g: () => ingestDdp287g(only),
   tiles: () => buildTiles(only),
   "publish-tiles": () => publishTiles(only),
+  "publish-values": () => publishValues(only),
   docs: writeDataSourcesDoc,
   "mn-catalog": mnCatalog,
   export: async () => { exportRegistry(); await exportNames(); await exportSearch(); await exportValues(only); },

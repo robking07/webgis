@@ -7,8 +7,14 @@
 export const GEO_LEVELS = {
   state: { label: "State", minzoom: 0, maxzoom: 3 },
   county: { label: "County", minzoom: 3, maxzoom: 8.5 },
-  tract: { label: "Census tract", minzoom: 8.5, maxzoom: 24 },
+  tract: { label: "Census tract", minzoom: 8.5, maxzoom: 11 },
+  /** ACS publishes most tables here; values live only in static exports (D-34). */
+  block_group: { label: "Block group", minzoom: 11, maxzoom: 24 },
 } as const;
+/** Levels too large for the database (500 MB free tier): values are static files only. */
+export const STATIC_ONLY_LEVELS: ReadonlySet<GeoLevel> = new Set(["block_group"]);
+/** Levels whose values load only when they're about to be drawn. */
+export const LAZY_LEVELS: ReadonlySet<GeoLevel> = new Set(["tract", "block_group"]);
 export type GeoLevel = keyof typeof GEO_LEVELS;
 export type ZoomBand = { minzoom: number; maxzoom: number };
 

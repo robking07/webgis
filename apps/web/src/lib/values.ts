@@ -2,16 +2,20 @@
 // with the dataset's registry symbology and the design tokens.
 "use client";
 import { useEffect, useState } from "react";
-import { classify, classOf, rampColors, RAMPS, type GeoLevel, type RampId } from "@webgis/design";
+import { classify, classOf, LAZY_LEVELS, rampColors, RAMPS, STATIC_ONLY_LEVELS, type GeoLevel, type RampId } from "@webgis/design";
 import type { Dataset } from "./registry";
 
 export type Values = Record<string, number>;
 const cache = new Map<string, Promise<Values>>();
 
+/** Block-group files live with the tiles (R2 in production, the /tiles link locally; D-34). */
+const TILES_BASE = process.env.NEXT_PUBLIC_TILES_BASE_URL || "/tiles";
+
 export function loadValues(id: string, level: GeoLevel): Promise<Values> {
   const key = `${id}/${level}`;
+  const staticOnly = STATIC_ONLY_LEVELS.has(level.replace(/\.moe$/, "") as GeoLevel);
   if (!cache.has(key)) {
-    cache.set(key, fetch(`/data/values/${key}.json`).then((r) => {
+    cache.set(key, fetch(staticOnly ? `${TILES_BASE}/values/${key}.json` : `/data/values/${key}.json`).then((r) => {
       if (!r.ok) throw new Error(`No ${level} data for ${id} (${r.status})`);
       return r.json();
     }).catch((e) => { cache.delete(key); throw e; }));
@@ -21,13 +25,20 @@ export function loadValues(id: string, level: GeoLevel): Promise<Values> {
 
 export type LevelValues = Partial<Record<GeoLevel, Values>>;
 
-/** Loads state + county immediately; tract only once `wantTract` is true. */
-export function useDatasetValues(ds: Dataset | null, wantTract: boolean) {
+/** Margins of error for a static-only level (block groups), for the details panel. */
+export function loadMoes(id: string, level: GeoLevel): Promise<Values> {
+  return loadValues(id, `${level}.moe` as GeoLevel);
+}
+
+/** Loads state + county immediately; tracts and block groups only once they're wanted
+ *  (`want`: the fine levels about to be drawn). */
+export function useDatasetValues(ds: Dataset | null, want: GeoLevel[]) {
+  const wantKey = want.join();
   const [data, setData] = useState<{ id: string | null; values: LevelValues; error: string | null }>({ id: null, values: {}, error: null });
   useEffect(() => {
     if (!ds) return;
     let live = true;
-    const levels = ds.geographyLevels.filter((l) => l !== "tract" || wantTract) as GeoLevel[];
+    const levels = ds.geographyLevels.filter((l) => !LAZY_LEVELS.has(l) || wantKey.split(",").includes(l)) as GeoLevel[];
     for (const level of levels) {
       loadValues(ds.id, level).then(
         (v) => live && setData((d) => ({ id: ds.id, values: { ...(d.id === ds.id ? d.values : {}), [level]: v }, error: null })),
@@ -35,7 +46,7 @@ export function useDatasetValues(ds: Dataset | null, wantTract: boolean) {
       );
     }
     return () => { live = false; };
-  }, [ds, wantTract]);
+  }, [ds, wantKey]);
   return data.id === ds?.id ? data : { id: null, values: {} as LevelValues, error: null };
 }
 

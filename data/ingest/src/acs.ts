@@ -5,7 +5,8 @@
 import { loadRegistry } from "@webgis/registry/load";
 import type { DatasetEntry } from "@webgis/registry";
 import { db, log, STATES } from "./util.ts";
-import { landArea, registerDataset, writeValues, type Level, type Value } from "./values.ts";
+import { landArea, registerDataset, writeStatic, writeValues, type Level, type Value } from "./values.ts";
+import { blockGroupLandArea } from "./geographies.ts";
 
 const YEAR = 2024;
 const API = `https://api.census.gov/data/${YEAR}/acs/acs5`;
@@ -61,9 +62,11 @@ function sum(row: Row, vars: string[]): { e: number | null; m: number | null } {
   return { e, m: Math.sqrt(m2) };
 }
 
-function derive(entry: DatasetEntry, row: Row, area?: number): Value {
+function derive(entry: DatasetEntry, row: Row, area?: number, level?: Level): Value {
   if (entry.measure.kind !== "acs5") throw new Error("not acs5");
-  const { numerator, denominator, scale, perSqMi } = entry.measure;
+  const { scale, perSqMi } = entry.measure;
+  // Block groups may use other tables for the same measure (registry `blockGroup`).
+  const { numerator, denominator } = level === "block_group" && entry.measure.blockGroup ? entry.measure.blockGroup : entry.measure;
   const num = sum(row, numerator);
   if (num.e == null) return { value: null, moe: null };
   let value = num.e, moe = num.m;
@@ -86,11 +89,15 @@ function derive(entry: DatasetEntry, row: Row, area?: number): Value {
   return { value: value * scale, moe: moe == null ? null : moe * scale };
 }
 
-export async function ingestAcs(only?: string[]) {
+export async function ingestAcs(only?: string[], levelsOnly?: Level[]) {
   const entries = loadRegistry().filter((e) => e.measure.kind === "acs5" && (!only || only.includes(e.id)));
   if (!entries.length) return log("acs", "no acs5 entries selected");
-  const vars = [...new Set(entries.flatMap((e) => e.measure.kind === "acs5" ? [...e.measure.numerator, ...(e.measure.denominator ?? [])] : []))]
-    .flatMap((v) => [`${v}E`, `${v}M`]);
+  const varsOf = (level: Level) => [...new Set(entries.flatMap((e) => {
+    if (e.measure.kind !== "acs5") return [];
+    const m = level === "block_group" && e.measure.blockGroup ? e.measure.blockGroup : e.measure;
+    return [...m.numerator, ...(m.denominator ?? [])];
+  }))].flatMap((v) => [`${v}E`, `${v}M`]);
+  const vars = varsOf("state");
   log("acs", `${entries.length} datasets, ${vars.length} variables`);
   const pool = db();
   for (const e of entries) await registerDataset(pool, e);
@@ -105,17 +112,27 @@ export async function ingestAcs(only?: string[]) {
       }
       return all;
     }],
+    // Block groups: one call per state (every county and tract), with block-group tables.
+    ["block_group", async () => {
+      const all = new Map<string, Row>();
+      for (const s of Object.keys(STATES)) {
+        for (const [k, v] of await fetchTable(varsOf("block_group"), `for=block%20group:*&in=state:${s}&in=county:*&in=tract:*`)) all.set(k, v);
+      }
+      return all;
+    }],
   ];
   for (const [level, fetchLevel] of levels) {
+    if (levelsOnly && !levelsOnly.includes(level)) continue;
     const levelEntries = entries.filter((e) => e.geographyLevels.includes(level));
     if (!levelEntries.length) continue;
     log("acs", `fetching ${level}…`);
     const table = await fetchLevel();
-    const areas = await landArea(pool, level);
+    const areas = level === "block_group" ? await blockGroupLandArea() : await landArea(pool, level);
     for (const e of levelEntries) {
       const values = new Map<string, Value>();
-      for (const [geoid, row] of table) values.set(geoid, derive(e, row, areas.get(geoid)));
-      await writeValues(pool, e.id, level, values);
+      for (const [geoid, row] of table) values.set(geoid, derive(e, row, areas.get(geoid), level));
+      if (level === "block_group") writeStatic(e.id, level, values);
+      else await writeValues(pool, e.id, level, values);
     }
   }
   await pool.end();
