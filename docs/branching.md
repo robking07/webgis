@@ -2,6 +2,7 @@
 
 Several Claude sessions often work on Mapwich at once. These rules keep them from
 colliding. Robbie doesn't need to run any of this; every session follows it.
+The project lead (`claude --agent lead`, D-118) assigns tasks to workers and is the one that merges.
 
 ## The loop
 
