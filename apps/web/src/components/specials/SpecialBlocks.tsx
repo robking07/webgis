@@ -12,7 +12,7 @@ import { mapHref } from "./parts";
 const fmt = (v: number, unit: Ref["unit"]) => (unit === "percent" ? `${v.toFixed(1)}%` : formatValue(v, unit));
 const refLabel = (r: Ref) => (r.period ? `${r.title} (${r.period})` : r.title);
 
-const frame = "flex flex-col gap-3 rounded-xl border bg-card p-4 md:p-5";
+const frame = "flex flex-col gap-3 rounded-xl border bg-card p-3.5 md:p-5";
 const titleCls = "text-[15px] font-bold leading-snug text-foreground md:text-base";
 const captionCls = "text-[13px] leading-normal text-muted-foreground [&_a]:underline";
 const th = "px-1.5 py-1.5 text-left align-bottom text-xs font-semibold text-muted-foreground first:pl-0 last:pr-0 md:px-2";
@@ -25,7 +25,7 @@ function Caption({ html }: { html: string | null }) {
 function FocusMapBlock({ b }: { b: FocusMap }) {
   return (
     <figure className="flex flex-col gap-2">
-      <SpecialMap datasets={b.datasets} at={b.at} level={b.level} legendBelow className="aspect-[4/3] md:aspect-[3/2]">
+      <SpecialMap datasets={b.datasets} at={b.at} level={b.level} legendBelow designWidth={700} className="aspect-[4/3] md:aspect-[3/2]">
         <Link href={mapHref({ datasets: b.datasets, at: b.at })}
           className="wg-block-link absolute top-3 right-3 z-10 inline-flex min-h-9 items-center rounded-lg border bg-card/95 px-3 text-[13px] font-semibold text-foreground shadow-sm hover:bg-muted">
           Open in the full map
@@ -122,7 +122,7 @@ function CountiesBlock({ b }: { b: CountyTable }) {
     <div role="figure" aria-label={b.title} className={frame}>
       <p className={titleCls}>{b.title}</p>
       <div className="overflow-x-auto">
-        <table className="w-full border-collapse text-[13px] md:text-sm">
+        <table className="w-full border-collapse text-xs sm:text-[13px] md:text-sm">
           <caption className="sr-only">{b.title}</caption>
           <thead>
             <tr className="border-b">
