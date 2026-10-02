@@ -1,0 +1,69 @@
+"use client";
+// The map in a Special (D-115): one dataset as a choropleth or two as the bivariate map, by county,
+// with its legend. Cooperative gestures, so it never traps the page's scrolling.
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import dynamic from "next/dynamic";
+import { BivariateLegend, Legend, StatusState } from "@webgis/design/components";
+import type { ThemeName } from "@webgis/design";
+import { DATASET_BY_ID } from "@/lib/registry";
+import { classifyBivariate, classifyUnivariate, loadValues, type Values } from "@/lib/values";
+import { DEFAULT_VIEW } from "@/lib/url-state";
+
+const MapView = dynamic(() => import("../map/MapView").then((m) => m.MapView), { ssr: false });
+
+// The page's resolved theme: an explicit data-theme (Settings), else the system setting.
+function subscribeTheme(cb: () => void) {
+  const mq = window.matchMedia("(prefers-color-scheme: dark)");
+  const mo = new MutationObserver(cb);
+  mo.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  mq.addEventListener("change", cb);
+  return () => { mo.disconnect(); mq.removeEventListener("change", cb); };
+}
+const readTheme = (): ThemeName => {
+  const t = document.documentElement.dataset.theme;
+  return t === "dark" || t === "light" ? t : window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+};
+
+export function SpecialMap({ datasets, at, className, children }: {
+  datasets: readonly string[];
+  at: { lon: number; lat: number; zoom: number } | null;
+  /** Sizing (aspect ratio) for the map box. */
+  className?: string;
+  /** Overlays drawn on the map (a tag, a button). */
+  children?: React.ReactNode;
+}) {
+  const x = DATASET_BY_ID.get(datasets[0])!, y = datasets[1] ? DATASET_BY_ID.get(datasets[1])! : null;
+  const theme = useSyncExternalStore(subscribeTheme, readTheme, () => "light" as ThemeName);
+  const [vals, setVals] = useState<Values[] | null>(null);
+  const [err, setErr] = useState(false);
+  useEffect(() => {
+    Promise.all([x, ...(y ? [y] : [])].map((d) => loadValues(d.id, "county"))).then(setVals, () => setErr(true));
+  }, [x, y]);
+  const paint = useMemo(() => {
+    if (!vals) return null;
+    return y ? { kind: "biv" as const, ...classifyBivariate(vals[0], vals[1]) } : { kind: "uni" as const, ...classifyUnivariate(x, vals[0]) };
+  }, [vals, x, y]);
+  const label = y ? `Map of ${x.title} and ${y.title} by county` : `Map of ${x.title} by county`;
+  const legend = !paint ? null : paint.kind === "biv"
+    ? <BivariateLegend xTitle={x.title} yTitle={y!.title} colors={paint.colors} />
+    : <Legend title={x.title} unit={x.unit} colors={paint.colors} breaks={paint.breaks} minClass={paint.minClass} />;
+
+  // Wider screens float the legend on the map; phones put it below, where it doesn't cover the map.
+  return (
+    <div className="flex flex-col gap-2">
+      <div className={`relative overflow-hidden rounded-xl border bg-card ${className ?? ""}`}>
+        {err ? <div className="grid h-full place-items-center"><StatusState status="error" /></div>
+          : !paint ? <div className="grid h-full place-items-center"><StatusState status="loading" /></div> : (
+          <>
+            <MapView theme={theme} initialView={at ? { ...at } : { ...DEFAULT_VIEW }} paint={{ county: paint }}
+              levelZooms={{ county: { minzoom: 0, maxzoom: 24 } }} cooperative
+              onViewChange={() => {}} onHover={() => {}} onSelect={() => {}} ariaLabel={label} />
+            <div className="pointer-events-none absolute bottom-3 left-3 z-10 hidden rounded-lg border bg-card/95 p-2 text-xs shadow-sm md:block">{legend}</div>
+          </>
+        )}
+        {children}
+      </div>
+      {legend && <div className="text-xs md:hidden">{legend}</div>}
+    </div>
+  );
+}

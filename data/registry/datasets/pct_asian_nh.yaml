@@ -1,0 +1,22 @@
+id: pct_asian_nh
+title: "Asian (non-Hispanic) residents"
+description: "Share of residents who are Asian alone and not Hispanic or Latino."
+category: Race & ethnicity
+tags: [race, ethnicity, Asian, demographics]
+source:
+  name: U.S. Census Bureau, American Community Survey 5-Year Estimates
+  url: https://www.census.gov/programs-surveys/acs
+  citation: "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+license: Public domain (U.S. Government work, 17 U.S.C. § 105)
+updateCadence: annual
+vintage: "2020–2024 (5-year estimate)"
+geographyLevels: [state, county, tract]
+unit: percent
+universe: total population
+terms: [race-ethnicity, acs-5-year, margin-of-error, census-geography, quantile-classes]
+learnMore:
+  - label: See this place's full Census profile on Census Reporter
+    url: "https://censusreporter.org/profiles/{cr}/"
+measure: { kind: acs5, numerator: [B03002_006], denominator: [B03002_001], scale: 100 }
+timeline: { from: 2014, to: 2024, step: 5 }
+symbology: { ramp: blues, classification: quantile, classes: 5 }

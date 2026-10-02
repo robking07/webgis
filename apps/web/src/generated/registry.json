@@ -699,6 +699,68 @@
   }
  },
  {
+  "id": "gini_index",
+  "title": "Income inequality (Gini index)",
+  "description": "How unevenly household income is spread, from 0 (every household earns the same) to 1 (one household earns everything).",
+  "category": "Income & poverty",
+  "tags": [
+   "inequality",
+   "Gini",
+   "income",
+   "economy"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "ratio",
+  "universe": "households",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B19083_001"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [
+   {
+    "label": "See this place's full Census profile on Census Reporter",
+    "url": "https://censusreporter.org/profiles/{cr}/"
+   }
+  ],
+  "terms": [
+   "gini-index",
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": false
+  }
+ },
+ {
   "id": "ice_287g_agreements",
   "title": "287(g) agreements with ICE",
   "description": "Active agreements that let local or state law enforcement agencies carry out immigration enforcement duties for ICE, counted by county.",
@@ -737,7 +799,7 @@
   "modelInputs": [],
   "coverageNote": "Counts agreements, not arrests. State agencies and regional task forces count toward their state only.",
   "facets": [],
-  "excludeFromInsights": true,
+  "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
    "ice-287g"
@@ -925,6 +987,70 @@
   }
  },
  {
+  "id": "labor_force_participation",
+  "title": "People working or looking for work",
+  "description": "Share of people 16 and over who have a job or are looking for one (the labor force participation rate).",
+  "category": "Jobs",
+  "tags": [
+   "labor force participation",
+   "jobs",
+   "employment",
+   "economy"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "percent",
+  "universe": "population 16+",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B23025_002"
+   ],
+   "denominator": [
+    "B23025_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [
+   {
+    "label": "See this place's full Census profile on Census Reporter",
+    "url": "https://censusreporter.org/profiles/{cr}/"
+   }
+  ],
+  "terms": [
+   "unemployment-rate",
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
   "id": "loneliness",
   "title": "Loneliness",
   "phrase": "loneliness rates",
@@ -1101,6 +1227,192 @@
   ],
   "symbology": {
    "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "median_age",
+  "title": "Median age",
+  "description": "The age that splits residents into two equal halves: half are younger, half are older.",
+  "category": "Population",
+  "tags": [
+   "age",
+   "demographics",
+   "aging"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "years",
+  "universe": "total population",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B01002_001"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [
+   {
+    "label": "See this place's full Census profile on Census Reporter",
+    "url": "https://censusreporter.org/profiles/{cr}/"
+   }
+  ],
+  "terms": [
+   "median",
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "cividis",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "median_gross_rent",
+  "title": "Median rent",
+  "description": "Middle monthly rent paid by renter households, including utilities, in 2024 dollars.",
+  "category": "Housing",
+  "tags": [
+   "rent",
+   "housing",
+   "affordability",
+   "renters"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "dollars",
+  "universe": "renter-occupied housing units paying cash rent",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B25064_001"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "coverageNote": "The Census Bureau caps the top value ($3,500 or more) and the bottom value, so the most and least expensive areas show the cap rather than their true median.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [
+   {
+    "label": "See this place's full Census profile on Census Reporter",
+    "url": "https://censusreporter.org/profiles/{cr}/"
+   }
+  ],
+  "terms": [
+   "median",
+   "inflation-adjusted",
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "median_home_value",
+  "title": "Median home value",
+  "description": "Middle value of owner-occupied homes, as estimated by their owners, in 2024 dollars.",
+  "category": "Housing",
+  "tags": [
+   "home value",
+   "housing",
+   "real estate",
+   "affordability"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "dollars",
+  "universe": "owner-occupied housing units",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B25077_001"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "coverageNote": "The Census Bureau caps the top value (about $2 million) and the bottom value, so the most and least expensive areas show the cap rather than their true median.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [
+   {
+    "label": "See this place's full Census profile on Census Reporter",
+    "url": "https://censusreporter.org/profiles/{cr}/"
+   }
+  ],
+  "terms": [
+   "median",
+   "inflation-adjusted",
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
    "classification": "quantile",
    "classes": 5
   }
@@ -1292,6 +1604,204 @@
   }
  },
  {
+  "id": "pct_aian_nh",
+  "title": "American Indian and Alaska Native (non-Hispanic) residents",
+  "description": "Share of residents who are American Indian or Alaska Native alone and not Hispanic or Latino.",
+  "category": "Race & ethnicity",
+  "tags": [
+   "race",
+   "ethnicity",
+   "Native American",
+   "American Indian",
+   "Alaska Native",
+   "tribal",
+   "demographics"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "percent",
+  "universe": "total population",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B03002_005"
+   ],
+   "denominator": [
+    "B03002_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "coverageNote": "Counts only people who give this as their single race; many Native people also report another race and are counted under two or more races. Small numbers make tract estimates uncertain outside reservations and Alaska.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [
+   {
+    "label": "See this place's full Census profile on Census Reporter",
+    "url": "https://censusreporter.org/profiles/{cr}/"
+   }
+  ],
+  "terms": [
+   "race-ethnicity",
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_asian_nh",
+  "title": "Asian (non-Hispanic) residents",
+  "description": "Share of residents who are Asian alone and not Hispanic or Latino.",
+  "category": "Race & ethnicity",
+  "tags": [
+   "race",
+   "ethnicity",
+   "Asian",
+   "demographics"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "percent",
+  "universe": "total population",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B03002_006"
+   ],
+   "denominator": [
+    "B03002_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [
+   {
+    "label": "See this place's full Census profile on Census Reporter",
+    "url": "https://censusreporter.org/profiles/{cr}/"
+   }
+  ],
+  "terms": [
+   "race-ethnicity",
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_bachelors_plus",
+  "title": "Bachelor's degree or higher",
+  "description": "Share of adults 25 and over with at least a bachelor's degree.",
+  "category": "Education",
+  "tags": [
+   "education",
+   "college",
+   "degree",
+   "attainment"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "percent",
+  "universe": "population 25+",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B15003_022",
+    "B15003_023",
+    "B15003_024",
+    "B15003_025"
+   ],
+   "denominator": [
+    "B15003_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [
+   {
+    "label": "See this place's full Census profile on Census Reporter",
+    "url": "https://censusreporter.org/profiles/{cr}/"
+   }
+  ],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
   "id": "pct_bike_commute",
   "title": "Bike to work",
   "phrase": "bike commuting rates",
@@ -1351,6 +1861,523 @@
   ],
   "symbology": {
    "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_black_nh",
+  "title": "Black (non-Hispanic) residents",
+  "description": "Share of residents who are Black or African American alone and not Hispanic or Latino.",
+  "category": "Race & ethnicity",
+  "tags": [
+   "race",
+   "ethnicity",
+   "Black",
+   "African American",
+   "demographics"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "percent",
+  "universe": "total population",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B03002_004"
+   ],
+   "denominator": [
+    "B03002_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [
+   {
+    "label": "See this place's full Census profile on Census Reporter",
+    "url": "https://censusreporter.org/profiles/{cr}/"
+   }
+  ],
+  "terms": [
+   "race-ethnicity",
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_carpool",
+  "title": "Carpool to work",
+  "description": "Share of workers 16 and over who usually share a ride to work in a car, truck or van.",
+  "category": "Commuting",
+  "tags": [
+   "carpool",
+   "car",
+   "mode share",
+   "transportation"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "percent",
+  "universe": "workers 16+",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B08301_004"
+   ],
+   "denominator": [
+    "B08301_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [
+   {
+    "label": "See this place's full Census profile on Census Reporter",
+    "url": "https://censusreporter.org/profiles/{cr}/"
+   }
+  ],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_drive_alone",
+  "title": "Drive to work alone",
+  "description": "Share of workers 16 and over who usually drive to work alone in a car, truck or van.",
+  "category": "Commuting",
+  "tags": [
+   "driving",
+   "car",
+   "mode share",
+   "transportation"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "percent",
+  "universe": "workers 16+",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B08301_003"
+   ],
+   "denominator": [
+    "B08301_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [
+   {
+    "label": "See this place's full Census profile on Census Reporter",
+    "url": "https://censusreporter.org/profiles/{cr}/"
+   }
+  ],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "cividis",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_extreme_commute",
+  "title": "90-minute-plus commutes",
+  "description": "Share of workers who don't work from home whose one-way trip to work takes 90 minutes or more.",
+  "category": "Commuting",
+  "tags": [
+   "commute time",
+   "super commuters",
+   "travel time",
+   "transportation"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "percent",
+  "universe": "workers 16+ not working from home",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B08303_013"
+   ],
+   "denominator": [
+    "B08303_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [
+   {
+    "label": "See this place's full Census profile on Census Reporter",
+    "url": "https://censusreporter.org/profiles/{cr}/"
+   }
+  ],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_foreign_born",
+  "title": "Born outside the U.S.",
+  "description": "Share of residents who were not U.S. citizens at birth (immigrants), whatever their citizenship today.",
+  "category": "Population",
+  "tags": [
+   "immigrants",
+   "foreign-born",
+   "nativity",
+   "immigration"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "percent",
+  "universe": "total population",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B05002_013"
+   ],
+   "denominator": [
+    "B05002_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [
+   {
+    "label": "See this place's full Census profile on Census Reporter",
+    "url": "https://censusreporter.org/profiles/{cr}/"
+   }
+  ],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_hispanic_latino",
+  "title": "Hispanic or Latino residents",
+  "description": "Share of residents who are Hispanic or Latino, of any race.",
+  "category": "Race & ethnicity",
+  "tags": [
+   "race",
+   "ethnicity",
+   "Hispanic",
+   "Latino",
+   "demographics"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "percent",
+  "universe": "total population",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B03002_012"
+   ],
+   "denominator": [
+    "B03002_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [
+   {
+    "label": "See this place's full Census profile on Census Reporter",
+    "url": "https://censusreporter.org/profiles/{cr}/"
+   }
+  ],
+  "terms": [
+   "race-ethnicity",
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_leave_before_7am",
+  "title": "Leave for work before 7 a.m.",
+  "description": "Share of workers who don't work from home who usually leave for work before 7:00 a.m.",
+  "category": "Commuting",
+  "tags": [
+   "departure time",
+   "early shift",
+   "rush hour",
+   "transportation"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "percent",
+  "universe": "workers 16+ not working from home",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B08302_002",
+    "B08302_003",
+    "B08302_004",
+    "B08302_005",
+    "B08302_006"
+   ],
+   "denominator": [
+    "B08302_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [
+   {
+    "label": "See this place's full Census profile on Census Reporter",
+    "url": "https://censusreporter.org/profiles/{cr}/"
+   }
+  ],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "cividis",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_limited_english",
+  "title": "Households with limited English",
+  "description": "Share of households where no one 14 or older speaks English only or speaks it very well.",
+  "category": "Population",
+  "tags": [
+   "language",
+   "English",
+   "limited English proficiency",
+   "LEP",
+   "immigrants"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "percent",
+  "universe": "households",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "C16002_004",
+    "C16002_007",
+    "C16002_010",
+    "C16002_013"
+   ],
+   "denominator": [
+    "C16002_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2019,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [
+   {
+    "label": "See this place's full Census profile on Census Reporter",
+    "url": "https://censusreporter.org/profiles/{cr}/"
+   }
+  ],
+  "terms": [
+   "limited-english",
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
    "classification": "quantile",
    "classes": 5
   }
@@ -1421,6 +2448,285 @@
   }
  },
  {
+  "id": "pct_multiracial_nh",
+  "title": "Two or more races (non-Hispanic)",
+  "description": "Share of residents who report two or more races and are not Hispanic or Latino.",
+  "category": "Race & ethnicity",
+  "tags": [
+   "race",
+   "ethnicity",
+   "multiracial",
+   "demographics"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "percent",
+  "universe": "total population",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B03002_009"
+   ],
+   "denominator": [
+    "B03002_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "coverageNote": "The Census Bureau changed how it codes written-in race answers starting with 2020 data, so this share jumps between 2015–2019 and 2020–2024 partly because of the change, not only because of real change.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [
+   {
+    "label": "See this place's full Census profile on Census Reporter",
+    "url": "https://censusreporter.org/profiles/{cr}/"
+   }
+  ],
+  "terms": [
+   "race-ethnicity",
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_nhpi_nh",
+  "title": "Native Hawaiian and Pacific Islander (non-Hispanic) residents",
+  "description": "Share of residents who are Native Hawaiian or Other Pacific Islander alone and not Hispanic or Latino.",
+  "category": "Race & ethnicity",
+  "tags": [
+   "race",
+   "ethnicity",
+   "Native Hawaiian",
+   "Pacific Islander",
+   "demographics"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "percent",
+  "universe": "total population",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B03002_007"
+   ],
+   "denominator": [
+    "B03002_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "coverageNote": "A small group outside Hawaii and a few West Coast and Mountain West communities, so most tract and county estimates are near zero with wide margins of error.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [
+   {
+    "label": "See this place's full Census profile on Census Reporter",
+    "url": "https://censusreporter.org/profiles/{cr}/"
+   }
+  ],
+  "terms": [
+   "race-ethnicity",
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_no_hs_diploma",
+  "title": "No high school diploma",
+  "description": "Share of adults 25 and over who finished neither high school nor an equivalent such as the GED.",
+  "category": "Education",
+  "tags": [
+   "education",
+   "high school",
+   "GED",
+   "attainment"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "percent",
+  "universe": "population 25+",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B15003_002",
+    "B15003_003",
+    "B15003_004",
+    "B15003_005",
+    "B15003_006",
+    "B15003_007",
+    "B15003_008",
+    "B15003_009",
+    "B15003_010",
+    "B15003_011",
+    "B15003_012",
+    "B15003_013",
+    "B15003_014",
+    "B15003_015",
+    "B15003_016"
+   ],
+   "denominator": [
+    "B15003_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [
+   {
+    "label": "See this place's full Census profile on Census Reporter",
+    "url": "https://censusreporter.org/profiles/{cr}/"
+   }
+  ],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_people_of_color",
+  "title": "People of color",
+  "description": "Share of residents who are Hispanic or Latino, or of any race other than white alone (everyone except non-Hispanic white residents).",
+  "category": "Race & ethnicity",
+  "tags": [
+   "race",
+   "ethnicity",
+   "diversity",
+   "minority",
+   "demographics"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "percent",
+  "universe": "total population",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B03002_004",
+    "B03002_005",
+    "B03002_006",
+    "B03002_007",
+    "B03002_008",
+    "B03002_009",
+    "B03002_012"
+   ],
+   "denominator": [
+    "B03002_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [
+   {
+    "label": "See this place's full Census profile on Census Reporter",
+    "url": "https://censusreporter.org/profiles/{cr}/"
+   }
+  ],
+  "terms": [
+   "race-ethnicity",
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
   "id": "pct_poverty",
   "title": "Population below poverty",
   "phrase": "poverty rates",
@@ -1485,6 +2791,82 @@
   }
  },
  {
+  "id": "pct_rent_burdened",
+  "title": "Renters paying 30%+ of income on rent",
+  "description": "Share of renter households that spend 30 percent or more of their income on rent and utilities.",
+  "category": "Housing",
+  "tags": [
+   "rent burden",
+   "housing cost burden",
+   "affordability",
+   "renters"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "percent",
+  "universe": "renter households (rent burden computed)",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B25070_007",
+    "B25070_008",
+    "B25070_009",
+    "B25070_010"
+   ],
+   "denominator": [
+    "B25070_002",
+    "B25070_003",
+    "B25070_004",
+    "B25070_005",
+    "B25070_006",
+    "B25070_007",
+    "B25070_008",
+    "B25070_009",
+    "B25070_010"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [
+   {
+    "label": "See this place's full Census profile on Census Reporter",
+    "url": "https://censusreporter.org/profiles/{cr}/"
+   }
+  ],
+  "terms": [
+   "rent-burden",
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": false
+  }
+ },
+ {
   "id": "pct_renter_households",
   "title": "Renter-occupied households",
   "phrase": "shares of renters",
@@ -1543,6 +2925,70 @@
   ],
   "symbology": {
    "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_snap_households",
+  "title": "Households getting SNAP (food stamps)",
+  "description": "Share of households that received SNAP food assistance at some point in the past 12 months.",
+  "category": "Income & poverty",
+  "tags": [
+   "SNAP",
+   "food stamps",
+   "food assistance",
+   "poverty",
+   "benefits"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "percent",
+  "universe": "households",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B22010_002"
+   ],
+   "denominator": [
+    "B22010_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [
+   {
+    "label": "See this place's full Census profile on Census Reporter",
+    "url": "https://censusreporter.org/profiles/{cr}/"
+   }
+  ],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
    "classification": "quantile",
    "classes": 5
   }
@@ -1613,6 +3059,72 @@
   }
  },
  {
+  "id": "pct_uninsured",
+  "title": "No health insurance",
+  "description": "Share of residents with no health insurance coverage of any kind.",
+  "category": "Health",
+  "tags": [
+   "health insurance",
+   "uninsured",
+   "health care"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "percent",
+  "universe": "civilian noninstitutionalized population",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B27010_017",
+    "B27010_033",
+    "B27010_050",
+    "B27010_066"
+   ],
+   "denominator": [
+    "B27010_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [
+   {
+    "label": "See this place's full Census profile on Census Reporter",
+    "url": "https://censusreporter.org/profiles/{cr}/"
+   }
+  ],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": false
+  }
+ },
+ {
   "id": "pct_walk_commute",
   "title": "Walk to work",
   "phrase": "walk-to-work rates",
@@ -1677,6 +3189,70 @@
   }
  },
  {
+  "id": "pct_white_nh",
+  "title": "White (non-Hispanic) residents",
+  "description": "Share of residents who are white alone and not Hispanic or Latino.",
+  "category": "Race & ethnicity",
+  "tags": [
+   "race",
+   "ethnicity",
+   "white",
+   "demographics"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "percent",
+  "universe": "total population",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B03002_003"
+   ],
+   "denominator": [
+    "B03002_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [
+   {
+    "label": "See this place's full Census profile on Census Reporter",
+    "url": "https://censusreporter.org/profiles/{cr}/"
+   }
+  ],
+  "terms": [
+   "race-ethnicity",
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
   "id": "pct_work_from_home",
   "title": "Work from home",
   "phrase": "work-from-home rates",
@@ -1710,6 +3286,70 @@
    ],
    "denominator": [
     "B08301_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [
+   {
+    "label": "See this place's full Census profile on Census Reporter",
+    "url": "https://censusreporter.org/profiles/{cr}/"
+   }
+  ],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_work_outside_county",
+  "title": "Work outside their home county",
+  "description": "Share of workers 16 and over whose job is outside the county they live in, including in another state.",
+  "category": "Commuting",
+  "tags": [
+   "commute flows",
+   "regional travel",
+   "place of work",
+   "transportation"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "percent",
+  "universe": "workers 16+",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B08007_004",
+    "B08007_005"
+   ],
+   "denominator": [
+    "B08007_001"
    ],
    "scale": 100,
    "perSqMi": false
@@ -1802,6 +3442,68 @@
    "ramp": "oranges",
    "classification": "quantile",
    "classes": 5
+  }
+ },
+ {
+  "id": "per_capita_income",
+  "title": "Income per person",
+  "description": "Total income of all residents divided by the number of residents, in 2024 dollars.",
+  "category": "Income & poverty",
+  "tags": [
+   "income",
+   "per capita income",
+   "earnings",
+   "economy"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "dollars",
+  "universe": "total population",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B19301_001"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [
+   {
+    "label": "See this place's full Census profile on Census Reporter",
+    "url": "https://censusreporter.org/profiles/{cr}/"
+   }
+  ],
+  "terms": [
+   "inflation-adjusted",
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": true
   }
  },
  {
@@ -2071,6 +3773,71 @@
    "ramp": "purples",
    "classification": "quantile",
    "classes": 5
+  }
+ },
+ {
+  "id": "unemployment_rate",
+  "title": "Unemployment rate",
+  "description": "Share of people in the civilian labor force (working or looking for work) who had no job and were looking for one.",
+  "category": "Jobs",
+  "tags": [
+   "unemployment",
+   "jobs",
+   "labor force",
+   "economy"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "percent",
+  "universe": "civilian labor force 16+",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B23025_005"
+   ],
+   "denominator": [
+    "B23025_003"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [
+   {
+    "label": "See this place's full Census profile on Census Reporter",
+    "url": "https://censusreporter.org/profiles/{cr}/"
+   }
+  ],
+  "terms": [
+   "unemployment-rate",
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": false
   }
  },
  {
