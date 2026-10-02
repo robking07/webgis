@@ -132,6 +132,18 @@
    "state"
   ]
  },
+ "gini_index": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
  "january_low": {
   "1991": [
    "county"
@@ -413,6 +425,18 @@
    "county"
   ]
  },
+ "labor_force_participation": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
  "mean_commute_minutes": {
   "2014": [
    "county",
@@ -532,6 +556,42 @@
    "county"
   ]
  },
+ "median_age": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
+ "median_gross_rent": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
+ "median_home_value": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
  "median_household_income": {
   "2014": [
    "county",
@@ -556,6 +616,42 @@
    "tract"
   ]
  },
+ "pct_aian_nh": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
+ "pct_asian_nh": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
+ "pct_bachelors_plus": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
  "pct_bike_commute": {
   "2014": [
    "county",
@@ -568,7 +664,146 @@
    "tract"
   ]
  },
+ "pct_black_nh": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
+ "pct_carpool": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
+ "pct_drive_alone": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
+ "pct_extreme_commute": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
+ "pct_foreign_born": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
+ "pct_hispanic_latino": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
+ "pct_leave_before_7am": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
+ "pct_limited_english": {
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
  "pct_long_commute": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
+ "pct_multiracial_nh": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
+ "pct_nhpi_nh": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
+ "pct_no_hs_diploma": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
+ "pct_people_of_color": {
   "2014": [
    "county",
    "state",
@@ -592,7 +827,31 @@
    "tract"
   ]
  },
+ "pct_rent_burdened": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
  "pct_renter_households": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
+ "pct_snap_households": {
   "2014": [
    "county",
    "state",
@@ -616,7 +875,31 @@
    "tract"
   ]
  },
+ "pct_uninsured": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
  "pct_walk_commute": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
+ "pct_white_nh": {
   "2014": [
    "county",
    "state",
@@ -640,7 +923,31 @@
    "tract"
   ]
  },
+ "pct_work_outside_county": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
  "pct_zero_vehicle_households": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
+ "per_capita_income": {
   "2014": [
    "county",
    "state",
@@ -704,6 +1011,18 @@
   "2024": [
    "county",
    "state"
+  ]
+ },
+ "unemployment_rate": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
   ]
  }
 }

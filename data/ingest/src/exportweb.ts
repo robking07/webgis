@@ -1,10 +1,11 @@
 // Static exports for the web app (D-02: viewing never depends on the database being awake):
 //   apps/web/src/generated/registry.json      — validated registry entries
+//   apps/web/src/generated/glossary.json      — plain-language explainers (glossary.yaml)
 //   apps/web/src/generated/periods.json       — timeline stops exported per dataset (D-36)
 //   apps/web/public/data/values/<id>/<level>.json — { geoid: value } for each dataset/level
 import { existsSync, mkdirSync, readdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { loadRegistry } from "@webgis/registry/load";
+import { loadGlossary, loadRegistry } from "@webgis/registry/load";
 import { timelineStops } from "@webgis/registry/timeline";
 import { db, log, ROOT, STATES, WEB_DATA } from "./util.ts";
 import { readGazetteer } from "./geographies.ts";
@@ -17,6 +18,9 @@ export function exportRegistry() {
   const entries = loadRegistry();
   writeFileSync(join(dir, "registry.json"), JSON.stringify(entries, null, 1));
   log("export", `registry.json: ${entries.length} datasets`);
+  const glossary = loadGlossary();
+  writeFileSync(join(dir, "glossary.json"), JSON.stringify(glossary, null, 1));
+  log("export", `glossary.json: ${glossary.length} terms`);
   // Timeline stops whose values are on disk, with the levels each has, so the year control
   // only offers what was exported: { dataset: { stop: [levels] } }.
   const periods: Record<string, Record<string, string[]>> = {};

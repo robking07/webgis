@@ -1,0 +1,23 @@
+id: pct_limited_english
+title: "Households with limited English"
+description: "Share of households where no one 14 or older speaks English only or speaks it very well."
+category: Population
+tags: [language, English, limited English proficiency, LEP, immigrants]
+source:
+  name: U.S. Census Bureau, American Community Survey 5-Year Estimates
+  url: https://www.census.gov/programs-surveys/acs
+  citation: "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+license: Public domain (U.S. Government work, 17 U.S.C. § 105)
+updateCadence: annual
+vintage: "2020–2024 (5-year estimate)"
+geographyLevels: [state, county, tract]
+unit: percent
+universe: households
+excludeFromInsights: true
+terms: [limited-english, acs-5-year, margin-of-error, census-geography, quantile-classes]
+learnMore:
+  - label: See this place's full Census profile on Census Reporter
+    url: "https://censusreporter.org/profiles/{cr}/"
+measure: { kind: acs5, numerator: [C16002_004, C16002_007, C16002_010, C16002_013], denominator: [C16002_001], scale: 100 }
+timeline: { from: 2019, to: 2024, step: 5 }
+symbology: { ramp: purples, classification: quantile, classes: 5 }
