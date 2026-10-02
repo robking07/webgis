@@ -25,7 +25,7 @@ import type { PopupRow } from "@webgis/design/components";
 import { BottomSheet, useIsNarrow, useIsPhone } from "./BottomSheet";
 import { PlaceDataList, type Detail } from "./PlaceDataList";
 import { parseUrlState, useUrlState, type UrlState } from "@/lib/url-state";
-import { classifyBivariate, classifyUnivariate, useDatasetValues, type Values } from "@/lib/values";
+import { classifyBivariateCached, classifyUnivariateCached, useDatasetValues, type Values } from "@/lib/values";
 import { stopNote, stopsFor } from "@/lib/periods";
 import { TimeControl } from "./TimeControl";
 import { fetchDetail } from "@/lib/supabase";
@@ -126,11 +126,11 @@ export function Viewer({ search }: { search: string }) {
       if (!xv) continue;
       if (secondary) {
         const yv = y.values[l];
-        if (yv) out[l] = classifyBivariate(xv, yv);
+        if (yv) out[l] = classifyBivariateCached(xv, yv);
       } else if (stopId) {
-        if (xBase.values[l]) out[l] = classifyUnivariate(primary, xv, xBase.values[l]);
+        if (xBase.values[l]) out[l] = classifyUnivariateCached(primary, xv, xBase.values[l]);
       } else {
-        out[l] = classifyUnivariate(primary, xv);
+        out[l] = classifyUnivariateCached(primary, xv);
       }
     }
     return out;

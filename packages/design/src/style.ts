@@ -186,23 +186,64 @@ export interface ThematicLayerOptions {
   zooms?: { minzoom: number; maxzoom: number };
 }
 
-/** Fill-color expression: class index in feature state `c` → ramp color; missing → no-data. */
-export function choroplethFill(colors: string[], theme: ThemeName): unknown {
+/** Choropleth fill, evaluated in the tile workers (D-38). Per-feature state (one entry per
+ *  geoid) cost every new tile O(all geoids) on the main thread and froze zooming at
+ *  block-group scale, so feature state now holds only hover/selected.
+ *
+ *  Small levels (states, counties) use a plain `match` on geoid. Tracts and block groups
+ *  can't: MapLibre copies the paint expression into every tile the workers send back, and
+ *  unpacking a 240k-entry `match` cost the main thread tens of milliseconds per tile. So
+ *  their classes are packed into strings, one per class and geoid prefix (state plus two
+ *  county digits), listing the rest of each geoid between commas (",30001001,30001002,").
+ *  The expression picks the prefix's strings and tests membership with `in`, a native
+ *  `indexOf`; commas keep a match from straddling two ids. (`index-of` and `slice` spread
+ *  their whole input into an array first, so they're too slow on long strings.) */
+export function choroplethFill(colors: string[], classes: ReadonlyMap<string, number>, theme: ThemeName): unknown {
   const noData = THEMES[theme].map.noData;
-  if (colors.length === 0) return noData;
+  if (colors.length === 0 || classes.size === 0) return noData;
+  const len = (classes.keys().next().value as string).length;
+  const packed = len > PACK_MIN_LENGTH && [...classes.keys()].every((g) => g.length === len);
+  if (!packed) {
+    const byClass: string[][] = colors.map(() => []);
+    for (const [id, c] of classes) byClass[c]?.push(id);
+    const branches = byClass.flatMap((ids, i) => (ids.length ? [ids, colors[i]] : []));
+    return branches.length ? ["match", ["get", "geoid"], ...branches, noData] : noData;
+  }
+  // geoid prefix → per-class lists of the geoid's remainder
+  const byPrefix = new Map<string, string[][]>();
+  for (const [id, c] of classes) {
+    if (!(c >= 0 && c < colors.length)) continue;
+    const k = id.slice(0, PACK_GROUP);
+    let lists = byPrefix.get(k);
+    if (!lists) byPrefix.set(k, (lists = colors.map(() => [])));
+    lists[c].push(id.slice(PACK_GROUP));
+  }
+  const tests = colors.flatMap((color, c) => {
+    const cases = [...byPrefix].flatMap(([k, lists]) => (lists[c].length ? [k, `,${lists[c].join(",")},`] : []));
+    return cases.length ? [["in", ["var", "needle"], ["match", ["var", "prefix"], ...cases, ""]], color] : [];
+  });
+  if (tests.length === 0) return noData;
   return [
-    "case",
-    ["==", ["feature-state", "c"], null], noData,
-    ["match", ["feature-state", "c"], ...colors.flatMap((c, i) => [i, c]), noData],
+    "let", "g", ["to-string", ["get", "geoid"]],
+    [
+      "let", "prefix", ["slice", ["var", "g"], 0, PACK_GROUP], "needle", ["concat", ",", ["slice", ["var", "g"], PACK_GROUP], ","],
+      ["case", ["!=", ["length", ["var", "g"]], len], noData, ...tests, noData],
+    ],
   ];
 }
+/** Geoids longer than this (tracts, block groups) use the packed lookup. */
+const PACK_MIN_LENGTH = 5;
+/** Geoid prefix that groups the packed strings: state plus two county digits keeps each
+ *  string short (fast `in` in the workers) and the expression small (cheap to unpack). */
+const PACK_GROUP = 4;
 
 /** Fill, outline and hover/selection outline for one geography level. */
 export function thematicLayers(o: ThematicLayerOptions): LayerSpecification[] {
   const m = THEMES[o.theme].map;
   const { minzoom, maxzoom } = o.zooms ?? GEO_LEVELS[o.level];
   const base = { source: o.source, "source-layer": o.sourceLayer, minzoom, maxzoom };
-  const fillColor = choroplethFill(o.colors, o.theme);
+  // No-data until syncPaint sets the level's class expression.
+  const fillColor = choroplethFill(o.colors, new Map(), o.theme);
   const shown = ["case", ["any", ["boolean", ["feature-state", "hover"], false], ["boolean", ["feature-state", "selected"], false]], 1, 0];
   return [
     { id: `${o.level}-fill`, type: "fill", ...base, paint: { "fill-color": fillColor as never, "fill-opacity": 0.92 } },

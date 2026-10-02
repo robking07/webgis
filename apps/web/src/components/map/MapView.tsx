@@ -379,12 +379,9 @@ function syncPaint(m: MlMap, paint: Partial<Record<GeoLevel, LevelPaint>>, appli
   for (const level of LEVELS) {
     const next = paint[level];
     if (applied[level] === next || !m.getLayer(`${level}-fill`)) continue;
-    const source = `b-${level}`;
-    m.removeFeatureState({ source, sourceLayer: level });
-    if (next) {
-      m.setPaintProperty(`${level}-fill`, "fill-color", choroplethFill(next.colors, theme) as never);
-      for (const [id, c] of next.classes) m.setFeatureState({ source, sourceLayer: level, id }, { c });
-    }
+    // One data-driven expression per level, evaluated in the tile workers (D-1NN); no
+    // per-feature state.
+    m.setPaintProperty(`${level}-fill`, "fill-color", choroplethFill(next?.colors ?? [], next?.classes ?? new Map(), theme) as never);
     applied[level] = next;
   }
 }
@@ -399,7 +396,8 @@ function restoreFlags(m: MlMap, hover: { level: GeoLevel; id: string } | null, s
 function setFlag(m: MlMap, ref: { current: { level: GeoLevel; id: string } | null }, next: { level: GeoLevel; id: string } | null, key: string) {
   const cur = ref.current;
   if (cur && next && cur.level === next.level && cur.id === next.id) return;
-  if (cur) m.setFeatureState({ source: `b-${cur.level}`, sourceLayer: cur.level, id: cur.id }, { [key]: false });
+  // Remove rather than set false, so hover entries don't pile up in the source's state.
+  if (cur) m.removeFeatureState({ source: `b-${cur.level}`, sourceLayer: cur.level, id: cur.id }, key);
   if (next) m.setFeatureState({ source: `b-${next.level}`, sourceLayer: next.level, id: next.id }, { [key]: true });
   ref.current = next;
 }
