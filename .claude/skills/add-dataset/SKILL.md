@@ -9,7 +9,7 @@ The rule from CLAUDE.md: **adding a dataset = registry entry + ingest script onl
 
 ## 1. Check the source before writing anything (SPEC §10)
 
-Stop and log to `docs/DECISIONS.md` instead of continuing if the source needs a paid key or login, or if its license is unclear. Federal works are public domain (17 U.S.C. § 105). State and local data need the publisher's terms checked; record the license text in the entry. Publicly published Met Council open data is allowed (D-16); internal Met Council systems are not.
+Stop and log a decision (`docs/decisions/D-<PR number + 100>-<slug>.md`; see `docs/branching.md`) instead of continuing if the source needs a paid key or login, or if its license is unclear. Federal works are public domain (17 U.S.C. § 105). State and local data need the publisher's terms checked; record the license text in the entry. Publicly published Met Council open data is allowed (D-16); internal Met Council systems are not.
 
 ## 2. Write `data/registry/datasets/<id>.yaml`
 
