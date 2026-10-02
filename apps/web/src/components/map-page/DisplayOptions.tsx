@@ -15,12 +15,12 @@ function LevelPicker({ levels, pinned, defaultLevel, note, docked, onChange }: {
         {([...levels, "auto"] as Array<GeoLevel | "auto">).map((l) => (
           <button key={l} type="button" role="radio" aria-checked={l === "auto" ? !pinned : pinned === l} onClick={() => onChange(l)}
             className={`rounded-full border px-2.5 py-0.5 text-xs text-muted-foreground aria-checked:border-primary aria-checked:bg-primary aria-checked:text-primary-foreground focus-visible:outline-2 focus-visible:outline-ring ${docked ? "wg-glass border-transparent text-foreground" : ""}`}>
-            {l === "auto" ? "Switch with zoom" : GEO_LEVELS[l].label.replace("Census tract", "Tract")}{l === defaultLevel ? " ·" : ""}
+            {l === "auto" ? "Switch with zoom" : GEO_LEVELS[l].label.replace("Census tract", "Tract")}{l === defaultLevel ? " (default)" : ""}
           </button>
         ))}
       </div>
       <p className={`mt-1.5 text-[11px] leading-snug text-muted-foreground ${docked ? "wg-on-map" : ""}`}>
-        {note} Block groups and blocks are coming.
+        {note}
       </p>
     </fieldset>
   );
@@ -70,8 +70,8 @@ export function DisplayOptions({ levels, pinned, defaultLevel, facets, hidden, d
   onLevel: (l: GeoLevel | "auto") => void; onToggle: (field: string, value: string) => void; onAll: (field: string) => void;
 }) {
   const note = pinned
-    ? `Showing ${GEO_LEVELS[pinned].label.toLowerCase()}s at every zoom${pinned === defaultLevel ? ", how the source publishes this data" : ""}.`
-    : "Switches from states to counties to tracts as you zoom in.";
+    ? `Showing ${GEO_LEVELS[pinned].label.toLowerCase()}s at every zoom${pinned !== defaultLevel ? "" : pinned === levels[levels.length - 1] ? ", how the source publishes this data" : ", the default for this data"}.`
+    : "Switches to smaller areas as you zoom in.";
   return (
     <>
       {levels.length > 1 && (

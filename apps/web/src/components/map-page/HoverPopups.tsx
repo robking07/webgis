@@ -1,5 +1,5 @@
 import { Popup } from "@webgis/design/components";
-import { GEO_LEVELS } from "@webgis/design";
+import { GEO_LEVELS, TILE_VALUE_LEVELS } from "@webgis/design";
 import type { FeatureHit, HoverInfo } from "../map/MapView";
 import type { Dataset } from "@/lib/registry";
 import type { FeatureLayerSpec } from "@/lib/layers";
@@ -7,12 +7,14 @@ import type { LevelValues } from "@/lib/values";
 import { featureRows, featureTitle } from "./FeaturePanel";
 
 /** The hover card for a place (value for each mapped dataset), shown until something is clicked. */
-export function PlaceHoverPopup({ hover, primary, secondary, xValues, yValues, periodLabel }: {
+export function PlaceHoverPopup({ hover, primary, secondary, xValues, yValues, blockField, periodLabel }: {
   hover: HoverInfo;
   primary: Dataset;
   secondary: Dataset | null;
   xValues: LevelValues;
   yValues: LevelValues;
+  /** Blocks carry their value as this tile property (2020 Census). */
+  blockField?: string | null;
   /** The shown year stop's label, when it isn't the default period. */
   periodLabel?: string;
 }) {
@@ -21,7 +23,7 @@ export function PlaceHoverPopup({ hover, primary, secondary, xValues, yValues, p
       <Popup title={hover.name} subtitle={`${GEO_LEVELS[hover.level].label}${periodLabel ? ` · ${periodLabel}` : ""}`}
         rows={[primary, secondary].filter((d) => !!d).map((d) => ({
           label: d!.title, unit: d!.unit,
-          value: (d === primary ? xValues : yValues)[hover.level]?.[hover.geoid],
+          value: TILE_VALUE_LEVELS.has(hover.level) && blockField ? (hover.props?.[blockField] as number | undefined) : (d === primary ? xValues : yValues)[hover.level]?.[hover.geoid],
         }))} />
     </div>
   );

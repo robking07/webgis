@@ -7,7 +7,7 @@ import { join } from "node:path";
 import { spawnSync } from "node:child_process";
 import unzipper from "unzipper";
 import * as shapefile from "shapefile";
-import { cached, CACHE, log, STATES, TILES } from "./util.ts";
+import { cached, CACHE, log, STATES, TILES, WEB_DATA } from "./util.ts";
 import { readGazetteer } from "./geographies.ts";
 
 const CB = (year: number) => `https://www2.census.gov/geo/tiger/GENZ${year}/shp`;
@@ -20,9 +20,16 @@ const LEVELS = [
   ["state", "state", 2024, 0, 7],
   ["county", "county", 2024, 0, 10],
   ["tract", "tract", 2024, 2, 12],
+  ["block_group", "block_group", 2024, 2, 12],
   ["county-2019", "county", 2019, 0, 10],
   ["tract-2019", "tract", 2019, 2, 12],
 ] as const;
+
+/** Layer → cartographic boundary file name part, where they differ. */
+const CB_FILE: Record<string, string> = { block_group: "bg" };
+
+/** County names ("Hennepin County, MN") for block-group names; the BG file doesn't carry them (D-124). */
+let countyNames: Record<string, string> | null = null;
 
 /** 2019 CB files have no NAMELSAD, so names come from that year's Gazetteer. */
 async function names2019(): Promise<Map<string, string>> {
@@ -32,6 +39,10 @@ async function names2019(): Promise<Map<string, string>> {
 function nameOf(level: string, p: Record<string, string>, county?: Map<string, string>): string {
   const st = STATES[p.STATEFP]?.[1] ?? p.STATEFP;
   if (level === "state") return p.NAME;
+  if (level === "block_group") {
+    countyNames ??= JSON.parse(readFileSync(join(WEB_DATA, "geo/names.json"), "utf8")) as Record<string, string>;
+    return `${p.NAMELSAD}, Tract ${Number(p.TRACTCE) / 100}, ${countyNames[p.STATEFP + p.COUNTYFP] ?? st}`;
+  }
   const co = p.NAMELSADCO ?? (p.NAMELSAD ? undefined : county?.get(p.GEOID.slice(0, 5)));
   if (level === "county") return `${p.NAMELSAD ?? co ?? p.NAME}, ${st}`;
   return `${p.NAMELSAD ?? `Census Tract ${p.NAME}`}, ${co ?? ""}${co ? ", " : ""}${st}`;
@@ -43,7 +54,7 @@ export async function buildTiles(only?: string[]) {
   mkdirSync(TILES, { recursive: true });
   for (const [name, level, year, minz, maxz] of LEVELS) {
     if (only && !only.includes(name)) continue;
-    const file = `cb_${year}_us_${level}_500k`;
+    const file = `cb_${year}_us_${CB_FILE[level] ?? level}_500k`;
     const county = year === 2019 ? await names2019() : undefined;
     const zipPath = await cached(`${CB(year)}/${file}.zip`);
     const dir = join(CACHE, file);

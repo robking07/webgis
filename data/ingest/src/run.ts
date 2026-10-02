@@ -1,14 +1,15 @@
 // npm run ingest -- <step> [dataset or level ids…]
-// Steps: geographies | label-mask | timeline | acs | lodes | places | climdiv | nbi | fars | features | vmt | cejst | ddp287g | tiles | publish-tiles | export | insights | tracts-out | docs | mn-catalog | all
+// Steps: geographies | label-mask | timeline | acs | acs-bg | census2020 | lodes | places | climdiv | nbi | fars | features | vmt | cejst | ddp287g | tiles | publish-tiles | publish-values | export | insights | tracts-out | docs | mn-catalog | all
 import { ingestGeographies } from "./geographies.ts";
 import { ingestAcs, ingestAcsTimeline } from "./acs.ts";
+import { ingestCensus2020 } from "./census2020.ts";
 import { ingestLodes, ingestLodesTimeline } from "./lodes.ts";
 import { buildTiles } from "./tiles.ts";
 import { exportNames, exportRegistry, exportSearch, exportValues } from "./exportweb.ts";
 import { computeInsights } from "./insights.ts";
 import { ingestPlaces } from "./places.ts";
 import { ingestClimdiv, ingestClimdivTimeline } from "./climdiv.ts";
-import { publishTiles } from "./publish-tiles.ts";
+import { publishTiles, publishValues } from "./publish-tiles.ts";
 import { writeDataSourcesDoc } from "./docs.ts";
 import { mnCatalog } from "./mn-catalog.ts";
 import { ingestNbi, ingestNbiTimeline } from "./nbi.ts";
@@ -25,6 +26,8 @@ const only = rest.length ? rest : undefined;
 const steps: Record<string, () => Promise<void> | void> = {
   geographies: ingestGeographies,
   acs: () => ingestAcs(only),
+  "acs-bg": () => ingestAcs(only, ["block_group"]),
+  census2020: () => ingestCensus2020(only),
   lodes: () => ingestLodes(only),
   places: () => ingestPlaces(only),
   climdiv: () => ingestClimdiv(only),
@@ -41,6 +44,7 @@ const steps: Record<string, () => Promise<void> | void> = {
   timeline: async () => { await ingestAcsTimeline(only); await ingestFarsTimeline(only); await ingestClimdivTimeline(only);
     await ingestNbiTimeline(only); await ingestLodesTimeline(only); exportRegistry(); },
   "publish-tiles": () => publishTiles(only),
+  "publish-values": () => publishValues(only),
   docs: writeDataSourcesDoc,
   "mn-catalog": mnCatalog,
   export: async () => { exportRegistry(); await exportNames(); await exportSearch(); await exportValues(only); },

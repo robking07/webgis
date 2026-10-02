@@ -72,9 +72,9 @@
  },
  {
   "id": "census-geography",
-  "term": "States, counties and census tracts",
-  "short": "The nested areas the Census Bureau reports data for. Tracts are neighborhoods of roughly 4,000 people.",
-  "long": "Every state is divided into counties (or equivalents), and every county into census tracts. Tracts are drawn to hold about 1,200 to 8,000 people, so they are small in cities and large in rural areas. Block groups and blocks are smaller still; they're planned for later."
+  "term": "States, counties, tracts, block groups and blocks",
+  "short": "The nested areas the Census Bureau reports data for. Tracts are neighborhoods of roughly 4,000 people; block groups and blocks are smaller still.",
+  "long": "Every state is divided into counties (or equivalents), and every county into census tracts. Tracts are drawn to hold about 1,200 to 8,000 people, so they are small in cities and large in rural areas. Each tract splits into a few block groups (usually 600 to 3,000 people), and each block group into blocks, often a single city block. Smaller areas show more detail, but survey estimates for them are less certain (wider margins of error)."
  },
  {
   "id": "lodes",
@@ -156,5 +156,12 @@
   "short": "A household where nobody 14 or older speaks only English or speaks it \"very well.\"",
   "long": "The Census Bureau uses this to find households that may need help in other languages, for example with public notices, voting materials or emergency alerts. It is about the household as a whole: one fluent teenager or adult is enough for the household not to count. The Census Bureau regrouped this table in 2016, so this map starts with 2015–2019.",
   "source": "https://www.census.gov/topics/population/language-use/about.html"
+ },
+ {
+  "id": "decennial-census",
+  "term": "2020 Census",
+  "short": "A count of every person and home, not a survey sample, so there's no margin of error.",
+  "long": "The decennial Census counts every resident and housing unit as of April 1, 2020. Its redistricting file (P.L. 94-171) is published down to census blocks, often a single city block. To protect privacy, the Census Bureau adds statistical noise to small-area counts (differential privacy), so a single block's numbers can be off by a few people; block groups and larger areas are reliable.",
+  "source": "https://www.census.gov/programs-surveys/decennial-census/about/rdo/summary-files.html"
  }
 ]

@@ -12,10 +12,12 @@ The guiding rule (D-25, D-26): **the landing map is clean and authoritative; eve
 | Hovers / clicks a place | Its value and rank; then the full place profile | ✓ |
 | Opens the table | Every place, sortable; click to fly there | ✓ |
 | Picks a comparison | Bivariate map + legend | ✓ (desktop card) |
-| Picks a finer level | Block groups, then blocks | Planned, below |
+| Picks a finer level | Block groups (ACS + 2020 Census), blocks (2020 Census) | ✓ (D-124) |
 | Starts from a place | A place-first page | Planned, below |
 
-## Finer geography: block groups and blocks (D-27, planned)
+## Finer geography: block groups and blocks (D-27; built in D-124)
+
+> **Built 2026-10-01 (D-124; first logged as D-39 on an unmerged branch).** What changed from this plan: block-group values live in static files beside the tiles (R2), not the database; blocks carry values in their tiles; the 2020 Census datasets are built from blocks up. The notes below are the original plan.
 
 - **Block groups** (~240k): ACS 5-year publishes most tables at block-group level. Work: Gazetteer has no block groups, so land area and internal points come from the TIGER BG shapefiles; boundaries are `cb_<year>_<st>_bg_500k` per state (or TIGER BG national); values ≈ 240k rows × N datasets, so the 500 MB database budget needs checking (store BG values in static exports only, or a separate table without MOE).
 - **Blocks** (~8M): only 2020 Census counts (population, housing units), not ACS. Tiles only at high zoom; values would live only in tiles (a different pattern from feature state). Probably limited to a handful of decennial measures.

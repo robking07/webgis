@@ -11,13 +11,20 @@ source:
 license: Public domain (U.S. Government work, 17 U.S.C. § 105)
 updateCadence: annual
 vintage: "2020–2024 (5-year estimate)"
-geographyLevels: [state, county, tract]
+geographyLevels: [state, county, tract, block_group]
+defaultLevel: tract  # ACS: tracts keep margins of error low (Robbie, D-35)
 unit: percent
 universe: households
 terms: [acs-5-year, margin-of-error, census-geography, quantile-classes]
 learnMore:
   - label: See this place's full Census profile on Census Reporter
     url: "https://censusreporter.org/profiles/{cr}/"
-measure: { kind: acs5, numerator: [B08201_002], denominator: [B08201_001], scale: 100 }
+measure:
+  kind: acs5
+  numerator: [B08201_002]
+  denominator: [B08201_001]
+  scale: 100
+  # B08201 stops at tracts; B25044 (tenure by vehicles) gives owners + renters with none at block groups.
+  blockGroup: { numerator: [B25044_003, B25044_010], denominator: [B25044_001] }
 timeline: { from: 2014, to: 2024, step: 5 }
 symbology: { ramp: oranges, classification: quantile, classes: 5 }

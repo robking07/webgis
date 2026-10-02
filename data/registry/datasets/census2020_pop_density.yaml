@@ -1,0 +1,24 @@
+id: census2020_pop_density
+title: Residents per square mile (2020 Census)
+description: Everyone counted in the 2020 Census, per square mile of land. Down to single blocks.
+category: Population
+tags: [population, density, 2020 Census, decennial, blocks]
+source:
+  name: U.S. Census Bureau, 2020 Census Redistricting Data (P.L. 94-171)
+  url: https://www.census.gov/programs-surveys/decennial-census/about/rdo/summary-files.html
+  citation: "U.S. Census Bureau, 2020 Census Redistricting Data (Public Law 94-171) Summary File; 2020 TIGER/Line census blocks"
+license: Public domain (U.S. Government work, 17 U.S.C. § 105)
+updateCadence: static
+vintage: "2020 count"
+geographyLevels: [state, county, tract, block_group, block]
+defaultLevel: block_group  # Census: block groups by default, blocks one click away (Robbie, D-124)
+coverageNote: "Built from 2020 blocks. Block counts include Census Bureau privacy noise; block groups and larger are reliable."
+terms: [decennial-census, census-geography, quantile-classes]
+learnMore:
+  - label: See this place's full Census profile on Census Reporter
+    url: "https://censusreporter.org/profiles/{cr}/"
+    levels: [state, county, tract, block_group]
+unit: per_sq_mi
+universe: total population (2020 Census count)
+measure: { kind: census2020, value: pop_density }
+symbology: { ramp: viridis, classification: quantile, classes: 7 }

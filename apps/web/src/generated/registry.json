@@ -699,6 +699,193 @@
   }
  },
  {
+  "id": "census2020_housing_density",
+  "title": "Homes per square mile (2020 Census)",
+  "description": "Every housing unit (occupied or vacant) counted in the 2020 Census, per square mile of land. Shows built form, including places where few people live.",
+  "category": "Housing",
+  "tags": [
+   "housing units",
+   "homes",
+   "density",
+   "built form",
+   "2020 Census",
+   "decennial",
+   "blocks"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, 2020 Census Redistricting Data (P.L. 94-171)",
+   "url": "https://www.census.gov/programs-surveys/decennial-census/about/rdo/summary-files.html",
+   "citation": "U.S. Census Bureau, 2020 Census Redistricting Data (Public Law 94-171) Summary File; 2020 TIGER/Line census blocks"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "static",
+  "vintage": "2020 count",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract",
+   "block_group",
+   "block"
+  ],
+  "unit": "per_sq_mi",
+  "universe": "housing units (2020 Census count)",
+  "measure": {
+   "kind": "census2020",
+   "value": "hu_density"
+  },
+  "modelInputs": [],
+  "coverageNote": "Built from 2020 blocks. Block counts include Census Bureau privacy noise; block groups and larger are reliable.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "defaultLevel": "block_group",
+  "learnMore": [
+   {
+    "label": "See this place's full Census profile on Census Reporter",
+    "url": "https://censusreporter.org/profiles/{cr}/",
+    "levels": [
+     "state",
+     "county",
+     "tract",
+     "block_group"
+    ]
+   }
+  ],
+  "terms": [
+   "decennial-census",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "viridis",
+   "classification": "quantile",
+   "classes": 7
+  }
+ },
+ {
+  "id": "census2020_pct_vacant",
+  "title": "Share of homes vacant (2020 Census)",
+  "description": "Vacant housing units as a share of all housing units on April 1, 2020. Includes seasonal and vacation homes, so resort and cabin areas run high.",
+  "category": "Housing",
+  "tags": [
+   "vacancy",
+   "vacant homes",
+   "seasonal homes",
+   "housing",
+   "2020 Census",
+   "decennial",
+   "blocks"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, 2020 Census Redistricting Data (P.L. 94-171)",
+   "url": "https://www.census.gov/programs-surveys/decennial-census/about/rdo/summary-files.html",
+   "citation": "U.S. Census Bureau, 2020 Census Redistricting Data (Public Law 94-171) Summary File; 2020 TIGER/Line census blocks"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "static",
+  "vintage": "2020 count",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract",
+   "block_group",
+   "block"
+  ],
+  "unit": "percent",
+  "universe": "housing units (2020 Census count)",
+  "measure": {
+   "kind": "census2020",
+   "value": "pct_vacant"
+  },
+  "modelInputs": [],
+  "coverageNote": "Built from 2020 blocks. Block counts include Census Bureau privacy noise; block groups and larger are reliable.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "defaultLevel": "block_group",
+  "learnMore": [
+   {
+    "label": "See this place's full Census profile on Census Reporter",
+    "url": "https://censusreporter.org/profiles/{cr}/",
+    "levels": [
+     "state",
+     "county",
+     "tract",
+     "block_group"
+    ]
+   }
+  ],
+  "terms": [
+   "decennial-census",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "census2020_pop_density",
+  "title": "Residents per square mile (2020 Census)",
+  "description": "Everyone counted in the 2020 Census, per square mile of land. Down to single blocks.",
+  "category": "Population",
+  "tags": [
+   "population",
+   "density",
+   "2020 Census",
+   "decennial",
+   "blocks"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, 2020 Census Redistricting Data (P.L. 94-171)",
+   "url": "https://www.census.gov/programs-surveys/decennial-census/about/rdo/summary-files.html",
+   "citation": "U.S. Census Bureau, 2020 Census Redistricting Data (Public Law 94-171) Summary File; 2020 TIGER/Line census blocks"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "static",
+  "vintage": "2020 count",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract",
+   "block_group",
+   "block"
+  ],
+  "unit": "per_sq_mi",
+  "universe": "total population (2020 Census count)",
+  "measure": {
+   "kind": "census2020",
+   "value": "pop_density"
+  },
+  "modelInputs": [],
+  "coverageNote": "Built from 2020 blocks. Block counts include Census Bureau privacy noise; block groups and larger are reliable.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "defaultLevel": "block_group",
+  "learnMore": [
+   {
+    "label": "See this place's full Census profile on Census Reporter",
+    "url": "https://censusreporter.org/profiles/{cr}/",
+    "levels": [
+     "state",
+     "county",
+     "tract",
+     "block_group"
+    ]
+   }
+  ],
+  "terms": [
+   "decennial-census",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "viridis",
+   "classification": "quantile",
+   "classes": 7
+  }
+ },
+ {
   "id": "gini_index",
   "title": "Income inequality (Gini index)",
   "description": "How unevenly household income is spread, from 0 (every household earns the same) to 1 (one household earns everything).",
@@ -1141,6 +1328,7 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -1439,7 +1627,8 @@
   "geographyLevels": [
    "state",
    "county",
-   "tract"
+   "tract",
+   "block_group"
   ],
   "unit": "dollars",
   "universe": "households",
@@ -1454,6 +1643,7 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -1551,7 +1741,8 @@
   "geographyLevels": [
    "state",
    "county",
-   "tract"
+   "tract",
+   "block_group"
   ],
   "unit": "percent",
   "universe": "total population",
@@ -1580,6 +1771,7 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -1824,7 +2016,8 @@
   "geographyLevels": [
    "state",
    "county",
-   "tract"
+   "tract",
+   "block_group"
   ],
   "unit": "percent",
   "universe": "workers 16+",
@@ -1842,6 +2035,7 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -2405,7 +2599,8 @@
   "geographyLevels": [
    "state",
    "county",
-   "tract"
+   "tract",
+   "block_group"
   ],
   "unit": "percent",
   "universe": "workers 16+ not working from home",
@@ -2424,6 +2619,7 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -2748,7 +2944,8 @@
   "geographyLevels": [
    "state",
    "county",
-   "tract"
+   "tract",
+   "block_group"
   ],
   "unit": "percent",
   "universe": "people for whom poverty status is determined",
@@ -2761,11 +2958,21 @@
     "B17001_001"
    ],
    "scale": 100,
-   "perSqMi": false
+   "perSqMi": false,
+   "blockGroup": {
+    "numerator": [
+     "C17002_002",
+     "C17002_003"
+    ],
+    "denominator": [
+     "C17002_001"
+    ]
+   }
   },
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -2888,7 +3095,8 @@
   "geographyLevels": [
    "state",
    "county",
-   "tract"
+   "tract",
+   "block_group"
   ],
   "unit": "percent",
   "universe": "households",
@@ -2906,6 +3114,7 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -3017,7 +3226,8 @@
   "geographyLevels": [
    "state",
    "county",
-   "tract"
+   "tract",
+   "block_group"
   ],
   "unit": "percent",
   "universe": "workers 16+",
@@ -3035,6 +3245,7 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -3147,7 +3358,8 @@
   "geographyLevels": [
    "state",
    "county",
-   "tract"
+   "tract",
+   "block_group"
   ],
   "unit": "percent",
   "universe": "workers 16+",
@@ -3165,6 +3377,7 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -3275,7 +3488,8 @@
   "geographyLevels": [
    "state",
    "county",
-   "tract"
+   "tract",
+   "block_group"
   ],
   "unit": "percent",
   "universe": "workers 16+",
@@ -3293,6 +3507,7 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -3403,7 +3618,8 @@
   "geographyLevels": [
    "state",
    "county",
-   "tract"
+   "tract",
+   "block_group"
   ],
   "unit": "percent",
   "universe": "households",
@@ -3416,11 +3632,21 @@
     "B08201_001"
    ],
    "scale": 100,
-   "perSqMi": false
+   "perSqMi": false,
+   "blockGroup": {
+    "numerator": [
+     "B25044_003",
+     "B25044_010"
+    ],
+    "denominator": [
+     "B25044_001"
+    ]
+   }
   },
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -3579,7 +3805,8 @@
   "geographyLevels": [
    "state",
    "county",
-   "tract"
+   "tract",
+   "block_group"
   ],
   "unit": "per_sq_mi",
   "universe": "total population",
@@ -3594,6 +3821,7 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,

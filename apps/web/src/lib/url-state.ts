@@ -16,7 +16,7 @@ export interface UrlState {
   theme: "light" | "dark" | null;
   /** Geography level ("Display options"): a fixed level, "auto" (switch with zoom), or
    *  null = the dataset's default (how the source publishes it; D-35). */
-  lv: "state" | "county" | "tract" | "auto" | null;
+  lv: "state" | "county" | "tract" | "block_group" | "block" | "auto" | null;
   /** Timeline stop (D-36), e.g. "2019" (ACS 2015–2019) or "2021"; null = the default period. */
   t?: string | null;
 }
@@ -32,7 +32,7 @@ export function parseUrlState(search: string): UrlState {
     b: p.get("b"),
     at: at && at.length === 3 && at.every(Number.isFinite) ? { lon: at[0], lat: at[1], zoom: at[2] } : DEFAULT_VIEW,
     theme: theme === "light" || theme === "dark" ? theme : null,
-    lv: (["state", "county", "tract", "auto"] as const).find((l) => l === p.get("lv")) ?? null,
+    lv: (["state", "county", "tract", "block_group", "block", "auto"] as const).find((l) => l === p.get("lv")) ?? null,
     t: p.get("t")?.match(/^[a-z0-9]{1,12}$/)?.[0] ?? null,
   };
 }
