@@ -28,7 +28,7 @@ const LEVELS = [
 /** Layer → cartographic boundary file name part, where they differ. */
 const CB_FILE: Record<string, string> = { block_group: "bg" };
 
-/** County names ("Hennepin County, MN") for block-group names; the BG file doesn't carry them (D-39). */
+/** County names ("Hennepin County, MN") for block-group names; the BG file doesn't carry them (D-124). */
 let countyNames: Record<string, string> | null = null;
 
 /** 2019 CB files have no NAMELSAD, so names come from that year's Gazetteer. */

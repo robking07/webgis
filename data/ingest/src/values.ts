@@ -41,7 +41,7 @@ export async function writeValues(pool: pg.Pool, datasetId: string, level: Level
   return { rows: rows.length, unmatched };
 }
 
-/** Block groups are too many for the free database (D-39): write static files directly,
+/** Block groups are too many for the free database (D-124): write static files directly,
  *  with MOEs in a side file the details panel loads on demand. They're ~5 MB each, so they
  *  live with the tiles (data/tiles/values, R2 via `publish-values`), not in git. */
 export function writeStatic(datasetId: string, level: Level, values: Map<string, Value>) {

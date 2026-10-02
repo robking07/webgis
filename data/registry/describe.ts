@@ -10,7 +10,7 @@ export function describeMethod(e: DatasetEntry): string {
   }
   if (m.kind === "census2020") {
     const what = { pop_density: "`P1_001N` (total population) ÷ land area (sq mi)", hu_density: "`H1_001N` (housing units) ÷ land area (sq mi)", pct_vacant: "`H1_003N` (vacant units) ÷ `H1_001N` × 100" }[m.value];
-    return `2020 Census P.L. 94-171 API, every block (\`for=block:*\`, one call per state), joined to TIGER/Line 2020 block shapes (\`ALAND20\`). ${what}. Blocks are summed into block groups, tracts, counties and states, so every level adds up; Connecticut blocks are re-keyed to planning-region tracts through \`ct_xwalk\`. Block values live in the block tiles; block groups in static files (D-39). No margin of error (a full count), but block counts include the Census Bureau's privacy noise.`;
+    return `2020 Census P.L. 94-171 API, every block (\`for=block:*\`, one call per state), joined to TIGER/Line 2020 block shapes (\`ALAND20\`). ${what}. Blocks are summed into block groups, tracts, counties and states, so every level adds up; Connecticut blocks are re-keyed to planning-region tracts through \`ct_xwalk\`. Block values live in the block tiles; block groups in static files (D-124). No margin of error (a full count), but block counts include the Census Bureau's privacy noise.`;
   }
   if (m.kind === "lodes") return `LODES 8 ${m.file.toUpperCase()} \`${m.segment}_${m.jobType}\`, column \`${m.column}\`, blocks summed to tract/county/state${m.perSqMi ? ", ÷ land area (sq mi)" : ""}. Connecticut blocks remapped through \`ct_xwalk\` to planning-region geography.`;
   if (m.kind === "places") return `data.cdc.gov dataset \`${m.socrata}\`, measure \`${m.measureId}\`, \`${m.valueType}\`. The "MOE" column stores half the 95% confidence interval.`;

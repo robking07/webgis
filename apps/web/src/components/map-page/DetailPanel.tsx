@@ -35,7 +35,7 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
   const [rows, setRows] = useState<Detail | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const phone = useIsPhone();
-  // Block groups and blocks aren't in the database (D-39): the mapped values come from the static
+  // Block groups and blocks aren't in the database (D-124): the mapped values come from the static
   // files (block groups, with margins of error from side files) or the tiles (blocks); there's no
   // all-datasets list or place profile below tracts.
   const staticOnly = STATIC_ONLY_LEVELS.has(info.level);

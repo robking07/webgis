@@ -1,4 +1,4 @@
-// 2020 Census counts (P.L. 94-171), built from blocks up (D-39). For each state: block
+// 2020 Census counts (P.L. 94-171), built from blocks up (D-124). For each state: block
 // counts from the Census API (population, housing units, vacant units) are joined to the
 // TIGER/Line 2020 block shapes (land area). Blocks are summed into block groups, tracts,
 // counties and states, so every level adds up; Connecticut's 2020 blocks are re-keyed to

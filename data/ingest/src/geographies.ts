@@ -17,7 +17,7 @@ export async function readGazetteer(file: string): Promise<Record<string, string
 }
 
 /** Block-group land area (sq mi) from the cartographic boundary file; the Gazetteer has no
- *  block groups and block groups aren't in the database (D-39). */
+ *  block groups and block groups aren't in the database (D-124). */
 export async function blockGroupLandArea(): Promise<Map<string, number>> {
   const zip = await unzipper.Open.buffer(readFileSync(await cached("https://www2.census.gov/geo/tiger/GENZ2024/shp/cb_2024_us_bg_500k.zip")));
   const dbf = zip.files.find((f) => f.path.endsWith(".dbf"))!;

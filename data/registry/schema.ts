@@ -33,7 +33,7 @@ const AcsMeasure = z.object({
     denominator: z.array(z.string().regex(/^[BC]\d{5}[A-Z]?_\d{3}$/)).optional(),
   }).optional(),
 });
-/** 2020 Census counts (P.L. 94-171), built from blocks up so every level adds up (D-39).
+/** 2020 Census counts (P.L. 94-171), built from blocks up so every level adds up (D-124).
  *  One ingest computes every `value`; block values live in the block tiles. */
 const Census2020Measure = z.object({
   kind: z.literal("census2020"),

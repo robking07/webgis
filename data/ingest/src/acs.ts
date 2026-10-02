@@ -93,7 +93,7 @@ function derive(entry: DatasetEntry, row: Row, area?: number, level?: Level): Va
   return { value: value * scale, moe: moe == null ? null : moe * scale };
 }
 
-/** Every variable the entries need; block groups use each entry's `blockGroup` tables (D-39). */
+/** Every variable the entries need; block groups use each entry's `blockGroup` tables (D-124). */
 function varsOf(entries: DatasetEntry[], level?: Level): string[] {
   return [...new Set(entries.flatMap((e) => {
     if (e.measure.kind !== "acs5") return [];

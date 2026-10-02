@@ -36,7 +36,7 @@ export function useViewerData(state: UrlState) {
   // with the block-group classes, so block groups load when blocks are near too.
   const nearBlocks = !!bands.block && state.at.zoom >= bands.block.minzoom - 1;
   const want = LEVELS.filter((l) => LAZY_LEVELS.has(l) && ((!!bands[l] && state.at.zoom >= bands[l]!.minzoom - 1) || (l === "block_group" && nearBlocks)));
-  // Blocks carry their values as a tile property (2020 Census only; D-39 → D-1xx).
+  // Blocks carry their values as a tile property (2020 Census only; D-124).
   const blockField = primary?.measure.kind === "census2020" ? primary.measure.value : null;
   const x = useDatasetValues(primary, want, stopId, stop?.levels);
   const y = useDatasetValues(secondary, want);

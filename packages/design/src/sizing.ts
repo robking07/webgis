@@ -8,9 +8,9 @@ export const GEO_LEVELS = {
   state: { label: "State", minzoom: 0, maxzoom: 3 },
   county: { label: "County", minzoom: 3, maxzoom: 8.5 },
   tract: { label: "Census tract", minzoom: 8.5, maxzoom: 11 },
-  /** ACS publishes most tables here; values live only in static exports (D-39). */
+  /** ACS publishes most tables here; values live only in static exports (D-124). */
   block_group: { label: "Block group", minzoom: 11, maxzoom: 13 },
-  /** 2020 Census only; values are baked into the block tiles, not joined (D-39). */
+  /** 2020 Census only; values are baked into the block tiles, not joined (D-124). */
   block: { label: "Block", minzoom: 13, maxzoom: 24 },
 } as const;
 /** Levels too large for the database (500 MB free tier): values are static files only. */

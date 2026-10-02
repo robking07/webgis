@@ -8,7 +8,7 @@ import type { Dataset } from "./registry";
 export type Values = Record<string, number>;
 const cache = new Map<string, Promise<Values>>();
 
-/** Block-group files live with the tiles (R2 in production, the /tiles link locally; D-39). */
+/** Block-group files live with the tiles (R2 in production, the /tiles link locally; D-124). */
 const TILES_BASE = process.env.NEXT_PUBLIC_TILES_BASE_URL || "/tiles";
 
 /** `stop`: a timeline stop id (D-36); omitted = the default (headline) values. */
