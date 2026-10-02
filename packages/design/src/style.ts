@@ -186,7 +186,7 @@ export interface ThematicLayerOptions {
   zooms?: { minzoom: number; maxzoom: number };
 }
 
-/** Choropleth fill, evaluated in the tile workers (D-38). Per-feature state (one entry per
+/** Choropleth fill, evaluated in the tile workers (D-114). Per-feature state (one entry per
  *  geoid) cost every new tile O(all geoids) on the main thread and froze zooming at
  *  block-group scale, so feature state now holds only hover/selected.
  *

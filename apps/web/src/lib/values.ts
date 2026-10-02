@@ -87,7 +87,7 @@ export function classifyBivariate(x: Values, y: Values): BivariateClassed {
   return { colors: rampColors("bivBlueGold", 9), xBreaks, yBreaks, classes };
 }
 
-// Classification results are cached per loaded values object (D-38): each level is
+// Classification results are cached per loaded values object (D-114): each level is
 // classified once, and its result keeps the same identity across renders, so the map only
 // repaints a level when that level's data actually changes.
 const uniCache = new WeakMap<Values, Map<string, WeakMap<Values, Classed>>>();

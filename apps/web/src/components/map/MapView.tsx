@@ -379,7 +379,7 @@ function syncPaint(m: MlMap, paint: Partial<Record<GeoLevel, LevelPaint>>, appli
   for (const level of LEVELS) {
     const next = paint[level];
     if (applied[level] === next || !m.getLayer(`${level}-fill`)) continue;
-    // One data-driven expression per level, evaluated in the tile workers (D-1NN); no
+    // One data-driven expression per level, evaluated in the tile workers (D-114); no
     // per-feature state.
     m.setPaintProperty(`${level}-fill`, "fill-color", choroplethFill(next?.colors ?? [], next?.classes ?? new Map(), theme) as never);
     applied[level] = next;
