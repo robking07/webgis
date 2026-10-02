@@ -14,6 +14,7 @@ geographyLevels: [state, county, tract]
 unit: percent
 universe: total population
 coverageNote: "Counts only people who give this as their single race; many Native people also report another race and are counted under two or more races. Small numbers make tract estimates uncertain outside reservations and Alaska."
+excludeFromInsights: true
 terms: [race-ethnicity, acs-5-year, margin-of-error, census-geography, quantile-classes]
 learnMore:
   - label: See this place's full Census profile on Census Reporter

@@ -1,10 +1,12 @@
-// docs/data-sources.md, generated from the registry plus row counts in the database.
+// docs/data-sources.md, generated from the registry plus row counts in the database
+// (tract counts from the static files, D-113).
 import { writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { loadRegistry } from "@webgis/registry/load";
 import type { DatasetEntry } from "@webgis/registry";
 import { describeMethod as method } from "@webgis/registry/describe";
 import { db, log, ROOT } from "./util.ts";
+import { tractValueCount } from "./values.ts";
 
 export async function writeDataSourcesDoc() {
   const entries = loadRegistry();
@@ -13,6 +15,10 @@ export async function writeDataSourcesDoc() {
     "select dataset_id, level, count(*) n, count(value) nv from public.dataset_values group by 1, 2");
   await pool.end();
   const counts = new Map(rows.map((r) => [`${r.dataset_id}/${r.level}`, `${(+r.nv).toLocaleString()} of ${(+r.n).toLocaleString()}`]));
+  for (const e of entries) {
+    const n = e.geographyLevels.includes("tract") && !counts.has(`${e.id}/tract`) ? tractValueCount(e.id) : null;
+    if (n != null) counts.set(`${e.id}/tract`, `${n.toLocaleString()} values`);
+  }
   const bySource = new Map<string, DatasetEntry[]>();
   for (const e of entries) (bySource.get(e.source.name) ?? bySource.set(e.source.name, []).get(e.source.name)!).push(e);
 
