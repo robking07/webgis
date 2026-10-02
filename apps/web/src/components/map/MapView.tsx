@@ -4,7 +4,7 @@
 import { useEffect, useRef } from "react";
 import { AttributionControl, LngLatBounds, Map as MlMap, ScaleControl, addProtocol, setWorkerUrl, type LayerSpecification, type MapGeoJSONFeature } from "maplibre-gl";
 import { Protocol } from "pmtiles";
-import { basemapStyle, choroplethFill, DATA_BEFORE_ID, featureLineLayers, featurePolygonLayers, focusLandLayer, FOCUS_LAND_BEFORE_ID, GEO_LEVELS, MOTION, thematicLayers, type GeoLevel, type ThemeName } from "@webgis/design";
+import { basemapStyle, choroplethFill, choroplethFillsByState, DATA_BEFORE_ID, featureLineLayers, featurePolygonLayers, fillLayerIds, focusLandLayer, FOCUS_LAND_BEFORE_ID, GEO_LEVELS, MOTION, PER_STATE_LEVELS, thematicLayers, type GeoLevel, type ThemeName } from "@webgis/design";
 import type { FeatureLayerSpec } from "@/lib/layers";
 import type { ViewState } from "@/lib/url-state";
 
@@ -294,8 +294,7 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
 function applyBands(m: MlMap, bands?: Props["levelZooms"]) {
   for (const level of LEVELS) {
     const band = bands ? bands[level] : GEO_LEVELS[level];
-    for (const suffix of ["fill", "outline"]) {
-      const id = `${level}-${suffix}`;
+    for (const id of [...fillLayerIds(level), `${level}-outline`]) {
       if (!m.getLayer(id)) continue;
       m.setLayoutProperty(id, "visibility", band ? "visible" : "none");
       if (band) m.setLayerZoomRange(id, band.minzoom, band.maxzoom);
@@ -379,9 +378,13 @@ function syncPaint(m: MlMap, paint: Partial<Record<GeoLevel, LevelPaint>>, appli
   for (const level of LEVELS) {
     const next = paint[level];
     if (applied[level] === next || !m.getLayer(`${level}-fill`)) continue;
-    // One data-driven expression per level, evaluated in the tile workers (D-114); no
-    // per-feature state.
-    m.setPaintProperty(`${level}-fill`, "fill-color", choroplethFill(next?.colors ?? [], next?.classes ?? new Map(), theme) as never);
+    // Data-driven expressions evaluated in the tile workers, no per-feature state (D-114).
+    if (PER_STATE_LEVELS.has(level)) {
+      const fills = choroplethFillsByState(level, next?.colors ?? [], next?.classes ?? new Map(), theme);
+      for (const [id, color] of Object.entries(fills)) if (m.getLayer(id)) m.setPaintProperty(id, "fill-color", color as never);
+    } else {
+      m.setPaintProperty(`${level}-fill`, "fill-color", choroplethFill(next?.colors ?? [], next?.classes ?? new Map(), theme) as never);
+    }
     applied[level] = next;
   }
 }
