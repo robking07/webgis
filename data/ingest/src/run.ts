@@ -1,5 +1,5 @@
 // npm run ingest -- <step> [dataset or level ids…]
-// Steps: geographies | label-mask | timeline | acs | lodes | places | climdiv | nbi | fars | features | vmt | cejst | ddp287g | tiles | publish-tiles | export | insights | docs | mn-catalog | all
+// Steps: geographies | label-mask | timeline | acs | lodes | places | climdiv | nbi | fars | features | vmt | cejst | ddp287g | tiles | publish-tiles | export | insights | tracts-out | docs | mn-catalog | all
 import { ingestGeographies } from "./geographies.ts";
 import { ingestAcs, ingestAcsTimeline } from "./acs.ts";
 import { ingestLodes, ingestLodesTimeline } from "./lodes.ts";
@@ -18,6 +18,7 @@ import { ingestVmt } from "./vmt.ts";
 import { ingestCejst } from "./cejst.ts";
 import { ingestDdp287g } from "./ddp287g.ts";
 import { buildLabelMask } from "./label-mask.ts";
+import { tractsOut } from "./tracts.ts";
 
 const [step, ...rest] = process.argv.slice(2);
 const only = rest.length ? rest : undefined;
@@ -45,6 +46,8 @@ const steps: Record<string, () => Promise<void> | void> = {
   export: async () => { exportRegistry(); await exportNames(); await exportSearch(); await exportValues(only); },
   search: exportSearch,
   insights: computeInsights,
+  // D-113: tract values live in static files; moves the database's tract rows out (--drop deletes them).
+  "tracts-out": () => tractsOut(rest),
   all: async () => {
     await ingestGeographies(); await ingestAcs(); await ingestLodes(); await ingestPlaces(); await ingestClimdiv(); await ingestNbi(); await ingestFars();
     await ingestAcsTimeline(); await ingestFarsTimeline(); await ingestClimdivTimeline(); await ingestNbiTimeline(); await ingestLodesTimeline(); await buildTiles();

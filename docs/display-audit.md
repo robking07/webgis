@@ -1,6 +1,6 @@
 # Dataset display audit
 
-Run with the `dataset-display-review` skill (`.claude/skills/dataset-display-review/SKILL.md`). Last full pass: **2026-10-01**, 27 datasets (D-26).
+Run with the `dataset-display-review` skill (`.claude/skills/dataset-display-review/SKILL.md`). Last full pass: **2026-10-01**, 27 datasets (D-26). 2026-10-01: 27 ACS datasets added and reviewed in a browser (D-113).
 
 ## Fixed in this pass
 
@@ -30,6 +30,8 @@ Run with the `dataset-display-review` skill (`.claude/skills/dataset-display-rev
 | Residents in disadvantaged communities (CEJST) | ✓ | CEJST, 2010 tracts, classes | – | pairs naturally with poverty, PLACES health, climate |
 | 287(g) agreements (DDP) | ✓ "N agreements" | 287(g) | – | agreement model (Task Force / Jail / Warrant) family; time slider (history back to 2002); kept out of Weird Insights |
 | 4 NOAA climate normals | ✓ | climate normal, classes | – | **family** with a season/month selector |
+| 8 race & ethnicity shares (ACS B03002, D-113) | ✓ plain group names, "(non-Hispanic)" spelled out | race and Hispanic origin (incl. 2020 coding change), ACS 5-year, MOE, geography, classes | – | **family** (switch group from the card); a diversity index; dot-density view; kept out of Odd Pairings |
+| 19 more ACS measures: nativity, language, age, income, jobs, education, housing costs, insurance, commuting (D-113) | ✓ | median, inflation-adjusted, Gini, unemployment rate, rent burden, limited English, plus the ACS set | – | **families**: commute mode now also drive alone/carpool; education ladder; housing cost (rent, value, burden) |
 
 ## Opportunities, ranked
 
