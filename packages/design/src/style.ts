@@ -186,15 +186,87 @@ export interface ThematicLayerOptions {
   zooms?: { minzoom: number; maxzoom: number };
 }
 
-/** Fill-color expression: class index in feature state `c` → ramp color; missing → no-data. */
-export function choroplethFill(colors: string[], theme: ThemeName): unknown {
+/** Choropleth fill for small levels (states, counties): a `match` on geoid, evaluated in
+ *  the tile workers. Feature state holds only hover/selected (D-114). */
+export function choroplethFill(colors: string[], classes: ReadonlyMap<string, number>, theme: ThemeName): unknown {
   const noData = THEMES[theme].map.noData;
-  if (colors.length === 0) return noData;
-  return [
-    "case",
-    ["==", ["feature-state", "c"], null], noData,
-    ["match", ["feature-state", "c"], ...colors.flatMap((c, i) => [i, c]), noData],
-  ];
+  if (colors.length === 0 || classes.size === 0) return noData;
+  const byClass: string[][] = colors.map(() => []);
+  for (const [id, c] of classes) byClass[c]?.push(id);
+  const branches = byClass.flatMap((ids, i) => (ids.length ? [ids, colors[i]] : []));
+  return branches.length ? ["match", ["get", "geoid"], ...branches, noData] : noData;
+}
+
+/** Levels with too many areas for one expression; drawn as one fill layer per state (D-114).
+ *
+ *  Coloring ~240k block groups through feature state cost every new tile O(all geoids) on
+ *  the main thread. A single expression doesn't work either: MapLibre copies a layer's
+ *  paint expression into every tile the workers send back and keeps that copy per cached
+ *  tile, so a 2 MB expression meant tens of ms of unpacking and ~5 MB of memory per tile.
+ *  One layer per state, filtered by geoid prefix, carries only that state's classes, and
+ *  tiles only hold the layers they have features for. */
+// Typed as strings so it can name block groups before that level exists on every branch.
+export const PER_STATE_LEVELS: ReadonlySet<string> = new Set(["tract", "block_group"]);
+/** State FIPS codes that start tract and block-group geoids (50 states, DC, Puerto Rico). */
+export const STATE_PREFIXES = [
+  "01", "02", "04", "05", "06", "08", "09", "10", "11", "12", "13", "15", "16", "17", "18", "19", "20", "21",
+  "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39",
+  "40", "41", "42", "44", "45", "46", "47", "48", "49", "50", "51", "53", "54", "55", "56", "72",
+] as const;
+/** Every fill layer of a level: the base layer (hit-testing; invisible for per-state levels),
+ *  then per state, then one for geoids outside STATE_PREFIXES. */
+export function fillLayerIds(level: GeoLevel): string[] {
+  if (!PER_STATE_LEVELS.has(level)) return [`${level}-fill`];
+  return [`${level}-fill`, ...STATE_PREFIXES.map((st) => `${level}-fill-${st}`), `${level}-fill-other`];
+}
+
+/** Per-state fill colors for a per-state level: { layer id → fill-color }.
+ *
+ *  Within a state the classes are packed into short strings, one per class and 4-digit
+ *  geoid prefix (state plus two county digits), listing the rest of each geoid between
+ *  commas (",30001001,30001002,"). The expression picks the prefix's strings and tests
+ *  membership with `in`, a native `indexOf`. The commas make a hit an exact match of the
+ *  whole remainder, never part of a longer or neighboring id. (`index-of` and `slice`
+ *  spread their whole input into an array first, so they're only used on the geoid.) */
+export function choroplethFillsByState(level: GeoLevel, colors: string[], classes: ReadonlyMap<string, number>, theme: ThemeName): Record<string, unknown> {
+  const noData = THEMES[theme].map.noData;
+  // state → county prefix → per-class lists of the geoid's remainder
+  const byState = new Map<string, Map<string, string[][]>>();
+  if (colors.length) for (const [id, c] of classes) {
+    if (!(c >= 0 && c < colors.length) || id.length <= PACK_GROUP) continue;
+    const st = id.slice(0, 2), k = id.slice(0, PACK_GROUP);
+    let byPrefix = byState.get(st);
+    if (!byPrefix) byState.set(st, (byPrefix = new Map()));
+    let lists = byPrefix.get(k);
+    if (!lists) byPrefix.set(k, (lists = colors.map(() => [])));
+    lists[c].push(id.slice(PACK_GROUP));
+  }
+  const out: Record<string, unknown> = { [`${level}-fill`]: noData, [`${level}-fill-other`]: noData };
+  for (const st of STATE_PREFIXES) {
+    const byPrefix = byState.get(st);
+    const tests = byPrefix ? colors.flatMap((color, c) => {
+      const cases = [...byPrefix].flatMap(([k, lists]) => (lists[c].length ? [k, `,${lists[c].join(",")},`] : []));
+      return cases.length ? [["in", ["var", "needle"], ["match", ["var", "prefix"], ...cases, ""]], color] : [];
+    }) : [];
+    out[`${level}-fill-${st}`] = tests.length === 0 ? noData : [
+      "let", "g", ["to-string", ["get", "geoid"]],
+      [
+        "let", "prefix", ["slice", ["var", "g"], 0, PACK_GROUP], "needle", ["concat", ",", ["slice", ["var", "g"], PACK_GROUP], ","],
+        ["case", ...tests, noData],
+      ],
+    ];
+  }
+  return out;
+}
+/** Geoid prefix that groups the packed strings: state plus two county digits keeps each
+ *  string short (fast `in` in the workers) and the expression small (cheap to unpack). */
+const PACK_GROUP = 4;
+
+/** Geoids that start with `st` (string range, so the filter needs no `slice`). */
+function stateFilter(st: string): unknown {
+  const next = String(Number(st) + 1).padStart(2, "0");
+  const g = ["to-string", ["get", "geoid"]];
+  return ["all", [">=", g, st], ["<", g, next]];
 }
 
 /** Fill, outline and hover/selection outline for one geography level. */
@@ -202,10 +274,22 @@ export function thematicLayers(o: ThematicLayerOptions): LayerSpecification[] {
   const m = THEMES[o.theme].map;
   const { minzoom, maxzoom } = o.zooms ?? GEO_LEVELS[o.level];
   const base = { source: o.source, "source-layer": o.sourceLayer, minzoom, maxzoom };
-  const fillColor = choroplethFill(o.colors, o.theme);
+  // No-data until syncPaint sets the level's class expression.
+  const fillColor = choroplethFill(o.colors, new Map(), o.theme);
   const shown = ["case", ["any", ["boolean", ["feature-state", "hover"], false], ["boolean", ["feature-state", "selected"], false]], 1, 0];
+  const perState = PER_STATE_LEVELS.has(o.level);
+  const fills: LayerSpecification[] = [
+    // Per-state levels keep this layer for hit-testing only (fills draw nothing at opacity 0).
+    { id: `${o.level}-fill`, type: "fill", ...base, paint: { "fill-color": fillColor as never, "fill-opacity": perState ? 0 : 0.92 } },
+  ];
+  if (perState) {
+    const fill = { "fill-color": THEMES[o.theme].map.noData, "fill-opacity": 0.92 };
+    for (const st of STATE_PREFIXES) fills.push({ id: `${o.level}-fill-${st}`, type: "fill", ...base, filter: stateFilter(st) as never, paint: fill });
+    const known = ["match", ["slice", ["to-string", ["get", "geoid"]], 0, 2], [...STATE_PREFIXES], false, true];
+    fills.push({ id: `${o.level}-fill-other`, type: "fill", ...base, filter: known as never, paint: fill });
+  }
   return [
-    { id: `${o.level}-fill`, type: "fill", ...base, paint: { "fill-color": fillColor as never, "fill-opacity": 0.92 } },
+    ...fills,
     {
       id: `${o.level}-outline`, type: "line", ...base,
       paint: { "line-color": m.featureOutline, "line-width": zoomInterp(SIZE.featureOutline) as never,
