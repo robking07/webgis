@@ -14,7 +14,6 @@ geographyLevels: [state, county, tract]
 unit: percent
 universe: total population
 coverageNote: "A small group outside Hawaii and a few West Coast and Mountain West communities, so most tract and county estimates are near zero with wide margins of error."
-excludeFromInsights: true
 terms: [race-ethnicity, acs-5-year, margin-of-error, census-geography, quantile-classes]
 learnMore:
   - label: See this place's full Census profile on Census Reporter

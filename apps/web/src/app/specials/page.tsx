@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { PUBLISHED } from "@/lib/insights";
+import { approvedInsights } from "@/lib/approvals";
 import { LANDING } from "@/lib/landing";
 import { SPECIALS, formatDate } from "@/lib/specials";
 import { SiteFooter } from "@/components/SiteNav";
@@ -12,7 +12,9 @@ export const metadata: Metadata = { title: "Specials · Mapwich" };
 
 // The Specials front page, direction A (D-115): the latest piece over its map, earlier pieces, then
 // the Odd Pairings index. With no piece published yet it opens on Odd Pairings.
-export default function SpecialsPage() {
+export default async function SpecialsPage() {
+  // Only cards Robbie approved (D-116).
+  const published = await approvedInsights();
   const [lead, ...earlier] = SPECIALS;
   return (
     <>
@@ -69,14 +71,14 @@ export default function SpecialsPage() {
             <div className="flex flex-col gap-1.5">
               <h2 id="pairings" className="text-[19px] font-bold md:text-xl">Odd Pairings</h2>
               <p className="max-w-[640px] text-[13px] leading-normal text-muted-foreground md:text-sm">
-                Datasets that line up across U.S. counties. Correlation is not causation; each pair passed automatic checks before it got here.
+                Datasets that line up across U.S. counties. Correlation is not causation; each pair passed automatic checks, then was read and approved by hand.
               </p>
               <PairingsKey />
             </div>
-            <Link href="/specials/pairings" className="hidden whitespace-nowrap text-sm font-semibold text-primary hover:underline md:inline">All {PUBLISHED.length} pairings →</Link>
+            <Link href="/specials/pairings" className="hidden whitespace-nowrap text-sm font-semibold text-primary hover:underline md:inline">All {published.length} pairings →</Link>
           </div>
-          <PairingsList pairs={PUBLISHED.slice(0, 6)} />
-          <Link href="/specials/pairings" className="flex h-12 items-center justify-center text-[15px] font-semibold text-primary hover:underline md:hidden">All {PUBLISHED.length} pairings →</Link>
+          <PairingsList pairs={published.slice(0, 6)} />
+          <Link href="/specials/pairings" className="flex h-12 items-center justify-center text-[15px] font-semibold text-primary hover:underline md:hidden">All {published.length} pairings →</Link>
         </section>
 
         <SiteFooter />

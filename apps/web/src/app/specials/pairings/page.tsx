@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { FLAGGED, PUBLISHED, RULES } from "@/lib/insights";
+import { FLAGGED, RULES } from "@/lib/insights";
+import { approvedInsights } from "@/lib/approvals";
 import { DATASET_BY_ID } from "@/lib/registry";
 import { InsightCard } from "@/components/InsightCard";
 import { SiteFooter } from "@/components/SiteNav";
@@ -11,7 +12,9 @@ export const metadata: Metadata = { title: "Odd Pairings · Specials · Mapwich"
 
 // Every published Odd Pairing with its scatter plot, and the pairs held back (D-115; this was the
 // whole Specials page before the front page).
-export default function PairingsPage() {
+export default async function PairingsPage() {
+  // Only cards Robbie approved (D-116).
+  const published = await approvedInsights();
   return (
     <>
       <SiteHeader current="specials" />
@@ -22,15 +25,15 @@ export default function PairingsPage() {
           <p className="text-muted-foreground">
             Pairs of datasets that line up across U.S. counties. <strong className="text-foreground">Correlation is not causation:</strong>{" "}
             two things that rise together often both follow a third, like how urban a place is. Each pair passed automatic checks for
-            tiny samples, shared denominators, outlier-driven results and purely regional patterns before it got here.
+            tiny samples, shared denominators, outlier-driven results and purely regional patterns, then was read and approved by hand.
           </p>
           <PairingsKey />
         </header>
-        {PUBLISHED.length === 0 ? (
-          <p className="text-muted-foreground">No pairs have passed the checks yet.</p>
+        {published.length === 0 ? (
+          <p className="text-muted-foreground">No pairs have been approved yet.</p>
         ) : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {PUBLISHED.map((i) => <InsightCard key={i.id} insight={i} />)}
+            {published.map((i) => <InsightCard key={i.id} insight={i} />)}
           </div>
         )}
         <details className="mt-10 rounded-xl border bg-card p-4 text-sm">
