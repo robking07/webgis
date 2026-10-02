@@ -13,6 +13,7 @@ vintage: "2020–2024 (5-year estimate)"
 geographyLevels: [state, county, tract]
 unit: ratio
 universe: households
+coverageNote: "The Census Bureau doesn't publish this measure below census tracts, so there's no block-group view."
 terms: [gini-index, acs-5-year, margin-of-error, census-geography, quantile-classes]
 learnMore:
   - label: See this place's full Census profile on Census Reporter
