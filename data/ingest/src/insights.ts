@@ -4,6 +4,7 @@
 // Any flag keeps the pair out of the published set (status "flagged", reason kept).
 // Published pairs get a headline + caption written once at build time (D-08) by
 // Claude, or a plain template when no API key is available. Viewers never call the API.
+import { createHash } from "node:crypto";
 import { writeFileSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
 import Anthropic from "@anthropic-ai/sdk";
@@ -191,8 +192,11 @@ export async function computeInsights() {
     const published = p.flags.length === 0;
     const cap = published ? await writeCaption(client, p) : null;
     out.push([id, p.x.id, p.y.id, LEVEL, p.n, p.r, p.rho, published ? "published" : "flagged", p.flags, cap?.c.headline ?? null, cap?.c.caption ?? null]);
-    exported.push({ id, x: p.x.id, y: p.y.id, level: LEVEL, n: p.n, r: +p.r.toFixed(3), rho: +p.rho.toFixed(3), withinState: +p.withinState.toFixed(3),
-      status: published ? "published" : "flagged", flags: p.flags, headline: cap?.c.headline ?? null, caption: cap?.c.caption ?? null, captionBy: cap?.by ?? null });
+    const card = { id, x: p.x.id, y: p.y.id, level: LEVEL, n: p.n, r: +p.r.toFixed(3), rho: +p.rho.toFixed(3), withinState: +p.withinState.toFixed(3),
+      status: published ? "published" : "flagged", flags: p.flags, headline: cap?.c.headline ?? null, caption: cap?.c.caption ?? null, captionBy: cap?.by ?? null };
+    // What a reviewer approves (D-116): if the numbers or wording change, the card needs review again.
+    const fingerprint = createHash("sha256").update(JSON.stringify([card.x, card.y, card.n, card.r, card.rho, card.withinState, card.headline, card.caption])).digest("hex").slice(0, 16);
+    exported.push({ ...card, fingerprint });
   }
   await pool.query("delete from public.insights where level = $1", [LEVEL]);
   await upsert(pool, "public.insights", ["id", "x_dataset", "y_dataset", "level", "n", "pearson_r", "spearman_rho", "status", "flags", "headline", "caption"], ["id"], out);

@@ -1,4 +1,4 @@
--- Hand vetting of Odd Pairings (D-1xx, see docs/decisions): a pair reaches /specials only
+-- Hand vetting of Odd Pairings (D-116): a pair reaches /specials only
 -- after a reviewer approves it, and only while its numbers and caption are unchanged
 -- (`fingerprint` from the insights export). Reviewers sign in with Supabase Auth.
 

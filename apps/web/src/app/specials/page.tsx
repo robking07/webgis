@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { FLAGGED, PUBLISHED, RULES } from "@/lib/insights";
+import { FLAGGED, RULES } from "@/lib/insights";
+import { approvedInsights } from "@/lib/approvals";
 import { DATASET_BY_ID } from "@/lib/registry";
 import { InsightCard } from "@/components/InsightCard";
 import { SiteFooter } from "@/components/SiteNav";
@@ -7,7 +8,8 @@ import { SiteHeader } from "@/components/SiteHeader";
 
 export const metadata: Metadata = { title: "Specials · Mapwich" };
 
-export default function SpecialsPage() {
+export default async function SpecialsPage() {
+  const published = await approvedInsights();
   return (
     <>
     <SiteHeader current="specials" />
@@ -18,14 +20,14 @@ export default function SpecialsPage() {
         <p className="mt-1 text-muted-foreground">
           Pairs of datasets that line up across U.S. counties. <strong className="text-foreground">Correlation is not causation:</strong>{" "}
           two things that rise together often both follow a third, like how urban a place is. Each pair passed automatic checks for
-          tiny samples, shared denominators, outlier-driven results and purely regional patterns before it got here.
+          tiny samples, shared denominators, outlier-driven results and purely regional patterns, then was read and approved by hand.
         </p>
       </header>
-      {PUBLISHED.length === 0 ? (
-        <p className="text-muted-foreground">No pairs have passed the checks yet.</p>
+      {published.length === 0 ? (
+        <p className="text-muted-foreground">No pairs have been approved yet.</p>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {PUBLISHED.map((i) => <InsightCard key={i.id} insight={i} />)}
+          {published.map((i) => <InsightCard key={i.id} insight={i} />)}
         </div>
       )}
       <details className="mt-10 rounded-xl border bg-card p-4 text-sm">
