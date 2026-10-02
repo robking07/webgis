@@ -6,7 +6,7 @@ import { SPECIALS, formatDate } from "@/lib/specials";
 import { SiteFooter } from "@/components/SiteNav";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SpecialMap } from "@/components/specials/SpecialMap";
-import { DataBox, DraftTag, PairingsKey, PairingsList, SpecialCard, mapHref, pairName } from "@/components/specials/parts";
+import { DataBox, DraftTag, PairingsKey, PairingsList, SpecialCard, byline, mapHref, pairName } from "@/components/specials/parts";
 
 export const metadata: Metadata = { title: "Specials · Mapwich" };
 
@@ -33,7 +33,7 @@ export default async function SpecialsPage() {
                     <Link href={`/specials/${lead.slug}`} className="hover:underline">{lead.title}</Link>
                   </h2>
                   <p className="max-w-[680px] text-[17px] leading-normal text-foreground/80 md:text-[19px]">{lead.dek}</p>
-                  <p className="text-[13px] text-muted-foreground md:text-sm">By {lead.author} · {lead.minutes} min read</p>
+                  <p className="text-[13px] text-muted-foreground md:text-sm">{byline(lead.author)} · {lead.minutes} min read</p>
                   <div className="mt-1 flex flex-col gap-2.5 sm:flex-row sm:gap-3 md:mt-2">
                     <Link href={`/specials/${lead.slug}`} className="inline-flex h-12 items-center justify-center rounded-lg bg-primary px-[18px] text-base font-semibold text-primary-foreground hover:opacity-90 md:h-11 md:text-[15px]">Read the piece</Link>
                     <Link href={mapHref(lead)} className="inline-flex h-12 items-center justify-center rounded-lg border bg-card px-[18px] text-base font-medium text-foreground hover:bg-muted md:h-11 md:text-[15px]">Open this map</Link>
@@ -42,7 +42,7 @@ export default async function SpecialsPage() {
                 <aside aria-label="Data in this piece" className="hidden md:block"><DataBox special={lead} showOrigin /></aside>
               </div>
               <figure className="flex flex-col gap-3">
-                <SpecialMap datasets={lead.datasets} at={lead.at} className="aspect-[4/3] md:aspect-[5/2]">
+                <SpecialMap datasets={lead.datasets} at={lead.at} poster={lead.image} className="aspect-[4/3] md:aspect-[5/2]">
                   {LANDING.special === lead.slug && (
                     <span className="pointer-events-none absolute top-3 left-3 z-10 rounded-full bg-card/95 px-2.5 py-1 text-xs font-semibold tracking-wide md:top-4 md:left-4">On the map now</span>
                   )}
