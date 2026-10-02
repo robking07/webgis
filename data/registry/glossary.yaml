@@ -208,3 +208,9 @@
   long: >-
     The Census Bureau uses this to find households that may need help in other languages, for example with public notices, voting materials or emergency alerts. It is about the household as a whole: one fluent teenager or adult is enough for the household not to count. The Census Bureau regrouped this table in 2016, so this map starts with 2015–2019.
   source: https://www.census.gov/topics/population/language-use/about.html
+
+- id: decennial-census
+  term: 2020 Census
+  short: "A count of every person and home, not a survey sample, so there's no margin of error."
+  long: "The decennial Census counts every resident and housing unit as of April 1, 2020. Its redistricting file (P.L. 94-171) is published down to census blocks, often a single city block. To protect privacy, the Census Bureau adds statistical noise to small-area counts (differential privacy), so a single block's numbers can be off by a few people; block groups and larger areas are reliable."
+  source: https://www.census.gov/programs-surveys/decennial-census/about/rdo/summary-files.html

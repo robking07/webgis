@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { StatusState } from "@webgis/design/components";
-import { formatValue, GEO_LEVELS } from "@webgis/design";
+import { formatValue, GEO_LEVELS, STATIC_ONLY_LEVELS, TILE_VALUE_LEVELS } from "@webgis/design";
 import type { HoverInfo } from "../map/MapView";
 import type { Dataset } from "@/lib/registry";
 import { placeHref, rankText } from "@/lib/place";
 import { learnMoreLinks, type Link } from "@/lib/learn-more";
 import { fetchDetail } from "@/lib/supabase";
-import type { Values } from "@/lib/values";
+import { loadMoes, type Values } from "@/lib/values";
 import { BottomSheet, useIsPhone } from "../BottomSheet";
 import { PlaceDataList, type Detail } from "../PlaceDataList";
 import { LearnMore } from "./LearnMore";
@@ -35,12 +35,25 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
   const [rows, setRows] = useState<Detail | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const phone = useIsPhone();
+  // Block groups and blocks aren't in the database (D-39): the mapped values come from the static
+  // files (block groups, with margins of error from side files) or the tiles (blocks); there's no
+  // all-datasets list or place profile below tracts.
+  const staticOnly = STATIC_ONLY_LEVELS.has(info.level);
   useEffect(() => {
     let live = true;
     setRows(null); setErr(null);
-    fetchDetail(info.geoid).then((r) => live && setRows(r), (e) => live && setErr(String(e.message ?? e)));
+    const load = staticOnly
+      ? Promise.all([primary, secondary].filter((d): d is Dataset => !!d).map(async (d, i) => {
+          const inTile = TILE_VALUE_LEVELS.has(info.level);
+          const moes = inTile ? ({} as Values) : await loadMoes(d.id, info.level).catch(() => ({} as Values));
+          // Blocks: the value is in the tile; 2020 Census counts have no margin of error.
+          const fromTile = inTile && d.measure.kind === "census2020" ? (info.props?.[d.measure.value] as number | undefined) : undefined;
+          return [d.id, { value: fromTile ?? (i === 0 ? xv : yv)?.[info.geoid] ?? null, moe: moes[info.geoid] ?? null }] as const;
+        })).then((e) => Object.fromEntries(e) as Detail)
+      : fetchDetail(info.geoid);
+    load.then((r) => live && setRows(r), (e) => live && setErr(String(e.message ?? e)));
     return () => { live = false; };
-  }, [info.geoid]);
+  }, [info.geoid, info.level, info.props, staticOnly, primary, secondary, xv, yv]);
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
     window.addEventListener("keydown", onKey);
@@ -92,14 +105,14 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
           </div>
         )}
       <LearnMore links={links} />
-      {phone && rows && <p className="mt-2 text-center text-xs text-muted-foreground group-data-[snap=full]:hidden">Swipe up for all {Object.keys(rows).length} datasets here</p>}
+      {phone && rows && !staticOnly && <p className="mt-2 text-center text-xs text-muted-foreground group-data-[snap=full]:hidden">Swipe up for all {Object.keys(rows).length} datasets here</p>}
     </>
   );
 
   if (phone) {
     return (
       <BottomSheet label={`Details for ${info.name}`} summary={summary} onClose={onClose}>
-        {rows && (
+        {rows && !staticOnly && (
           <>
             <PlaceDataList level={info.level} detail={rows} onMapIt={onMapIt} compact />
             <a href={placeHref(info.geoid)} className="mt-4 block text-sm font-medium text-primary underline-offset-2 hover:underline">Open the full place profile →</a>
@@ -113,7 +126,7 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
       className="absolute right-[72px] z-30 w-80 overflow-y-auto rounded-lg border bg-popover p-3 shadow-md transition-[top] duration-300"
       style={{ top, maxHeight: `calc(100% - ${top + 12}px)` }}>
       {summary}
-      {rows && (
+      {rows && !staticOnly && (
         <a href={placeHref(info.geoid)}
           className="mt-3 flex items-center justify-between rounded text-xs font-medium text-primary underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-ring">
           Full place profile: all datasets for {info.name.split(",")[0]} <span aria-hidden>→</span>

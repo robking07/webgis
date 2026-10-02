@@ -91,7 +91,7 @@ export function MapLegend({ theme, primary, secondary, isFeature, featureSpec, c
         {tableReady && (
           <button type="button" onClick={onTable}
             className="mt-2 rounded text-xs text-primary underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-ring">
-            View as table{level === "tract" ? " (counties)" : ""}
+            View as table{level !== "state" && level !== "county" ? " (counties)" : ""}
           </button>
         )}
       </section>

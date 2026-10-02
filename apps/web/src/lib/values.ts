@@ -2,17 +2,21 @@
 // with the dataset's registry symbology and the design tokens.
 "use client";
 import { useEffect, useState } from "react";
-import { classify, classOf, rampColors, RAMPS, type GeoLevel, type RampId } from "@webgis/design";
+import { classify, classOf, LAZY_LEVELS, rampColors, RAMPS, STATIC_ONLY_LEVELS, type GeoLevel, type RampId } from "@webgis/design";
 import type { Dataset } from "./registry";
 
 export type Values = Record<string, number>;
 const cache = new Map<string, Promise<Values>>();
 
+/** Block-group files live with the tiles (R2 in production, the /tiles link locally; D-39). */
+const TILES_BASE = process.env.NEXT_PUBLIC_TILES_BASE_URL || "/tiles";
+
 /** `stop`: a timeline stop id (D-36); omitted = the default (headline) values. */
 export function loadValues(id: string, level: GeoLevel, stop?: string | null): Promise<Values> {
   const key = stop ? `${id}/${stop}/${level}` : `${id}/${level}`;
+  const staticOnly = STATIC_ONLY_LEVELS.has(level.replace(/\.moe$/, "") as GeoLevel);
   if (!cache.has(key)) {
-    cache.set(key, fetch(`/data/values/${key}.json`).then((r) => {
+    cache.set(key, fetch(staticOnly ? `${TILES_BASE}/values/${key}.json` : `/data/values/${key}.json`).then((r) => {
       if (!r.ok) throw new Error(`No ${level} data for ${id} (${r.status})`);
       return r.json();
     }).catch((e) => { cache.delete(key); throw e; }));
@@ -22,24 +26,32 @@ export function loadValues(id: string, level: GeoLevel, stop?: string | null): P
 
 export type LevelValues = Partial<Record<GeoLevel, Values>>;
 
-/** Loads state + county immediately; tract only once `wantTract` is true. `stop` picks a
- *  timeline stop (null = default); `levels` limits loading to the levels that stop has. */
-export function useDatasetValues(ds: Dataset | null, wantTract: boolean, stop: string | null = null, levels?: GeoLevel[]) {
+/** Margins of error for a static-only level (block groups), for the details panel. */
+export function loadMoes(id: string, level: GeoLevel): Promise<Values> {
+  return loadValues(id, `${level}.moe` as GeoLevel);
+}
+
+/** Loads state + county immediately; tracts and block groups only once they're wanted
+ *  (`want`: the fine levels about to be drawn). `stop` picks a timeline stop (null = default);
+ *  `levels` limits loading to the levels that stop has. */
+export function useDatasetValues(ds: Dataset | null, want: GeoLevel[], stop: string | null = null, levels?: GeoLevel[]) {
+  const wantKey = want.join(",");
   const key = ds ? `${ds.id}@${stop ?? ""}` : null;
   const [data, setData] = useState<{ key: string | null; values: LevelValues; error: string | null }>({ key: null, values: {}, error: null });
   const levelKey = (levels ?? ds?.geographyLevels ?? []).join(",");
   useEffect(() => {
     if (!ds || !key) return;
     let live = true;
-    const want = (levelKey ? levelKey.split(",") : []).filter((l) => l !== "tract" || wantTract) as GeoLevel[];
-    for (const level of want) {
+    const wanted = wantKey.split(",");
+    const load = (levelKey ? levelKey.split(",") : []).filter((l) => !LAZY_LEVELS.has(l as GeoLevel) || wanted.includes(l)) as GeoLevel[];
+    for (const level of load) {
       loadValues(ds.id, level, stop).then(
         (v) => live && setData((d) => ({ key, values: { ...(d.key === key ? d.values : {}), [level]: v }, error: null })),
         (e: Error) => live && setData((d) => ({ ...d, key, error: e.message })),
       );
     }
     return () => { live = false; };
-  }, [ds, key, stop, levelKey, wantTract]);
+  }, [ds, key, stop, levelKey, wantKey]);
   return data.key === key && key ? data : { key: null, values: {} as LevelValues, error: null };
 }
 
@@ -92,6 +104,7 @@ export function classifyBivariate(x: Values, y: Values): BivariateClassed {
 // repaints a level when that level's data actually changes.
 const uniCache = new WeakMap<Values, Map<string, WeakMap<Values, Classed>>>();
 const biCache = new WeakMap<Values, WeakMap<Values, BivariateClassed>>();
+const blockCache = new WeakMap<Classed, Map<string, Classed & { field: string }>>();
 
 export function classifyUnivariateCached(ds: Dataset, values: Values, breaksFrom?: Values): Classed {
   let byDs = uniCache.get(values);
@@ -109,5 +122,14 @@ export function classifyBivariateCached(x: Values, y: Values): BivariateClassed 
   if (!byY) biCache.set(x, (byY = new WeakMap()));
   let c = byY.get(y);
   if (!c) byY.set(y, (c = classifyBivariate(x, y)));
+  return c;
+}
+
+/** Blocks reuse the block-group classes, colored from a tile property (`field`). */
+export function blockPaintFrom(bg: Classed, field: string): Classed & { field: string } {
+  let byField = blockCache.get(bg);
+  if (!byField) blockCache.set(bg, (byField = new Map()));
+  let c = byField.get(field);
+  if (!c) byField.set(field, (c = { colors: bg.colors, breaks: bg.breaks, classes: new Map(), field }));
   return c;
 }

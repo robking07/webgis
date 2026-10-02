@@ -4,7 +4,7 @@
 import { useEffect, useRef } from "react";
 import { AttributionControl, LngLatBounds, Map as MlMap, ScaleControl, addProtocol, setWorkerUrl, type LayerSpecification, type MapGeoJSONFeature } from "maplibre-gl";
 import { Protocol } from "pmtiles";
-import { basemapStyle, choroplethFill, choroplethFillsByState, DATA_BEFORE_ID, featureLineLayers, featurePolygonLayers, fillLayerIds, focusLandLayer, FOCUS_LAND_BEFORE_ID, GEO_LEVELS, MOTION, PER_STATE_LEVELS, thematicLayers, type GeoLevel, type ThemeName } from "@webgis/design";
+import { basemapStyle, choroplethFill, choroplethFillsByState, DATA_BEFORE_ID, TILE_VALUE_LEVELS, THEMES, featureLineLayers, featurePolygonLayers, fillLayerIds, focusLandLayer, FOCUS_LAND_BEFORE_ID, GEO_LEVELS, MOTION, PER_STATE_LEVELS, thematicLayers, type GeoLevel, type ThemeName } from "@webgis/design";
 import type { FeatureLayerSpec } from "@/lib/layers";
 import type { ViewState } from "@/lib/url-state";
 
@@ -12,6 +12,9 @@ export interface LevelPaint {
   colors: string[];
   /** geoid → class index into `colors` */
   classes: Map<string, number>;
+  /** Levels with values in the tiles (blocks): color by this property with `breaks`. */
+  field?: string;
+  breaks?: number[];
 }
 
 export interface HoverInfo {
@@ -23,6 +26,8 @@ export interface HoverInfo {
   /** Clicked point (click only). */
   lon?: number;
   lat?: number;
+  /** Tile properties (blocks carry their values here). */
+  props?: Record<string, unknown>;
 }
 
 /** A hovered/clicked feature from a feature layer (road segment, stop…). */
@@ -199,7 +204,8 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
 
     const fillIds = LEVELS.map((l) => `${l}-fill`);
     const infoOf = (f: MapGeoJSONFeature, x: number, y: number): HoverInfo => ({
-      geoid: String(f.properties.geoid), name: String(f.properties.name), level: f.sourceLayer as GeoLevel, x, y,
+      geoid: String(f.properties.geoid), name: f.properties.name ? String(f.properties.name) : blockName(String(f.properties.geoid)),
+      level: f.sourceLayer as GeoLevel, x, y, props: f.properties,
     });
     /** Lines are thin: hit-test a small box around the pointer, busiest (top-drawn) first. */
     const featureAt = (pt: { x: number; y: number }): FeatureHit | null => {
@@ -382,6 +388,16 @@ function syncPaint(m: MlMap, paint: Partial<Record<GeoLevel, LevelPaint>>, appli
   for (const level of LEVELS) {
     const next = paint[level];
     if (applied[level] === next || !m.getLayer(`${level}-fill`)) continue;
+    if (TILE_VALUE_LEVELS.has(level)) {
+      // Values are tile properties: one step expression, no per-feature state.
+      const noData = THEMES[theme].map.noData;
+      const expr = next?.field && next.breaks
+        ? ["case", ["has", next.field], ["step", ["get", next.field], next.colors[0], ...next.breaks.flatMap((b, i) => [b, next.colors[i + 1]])], noData]
+        : noData;
+      m.setPaintProperty(`${level}-fill`, "fill-color", expr as never);
+      applied[level] = next;
+      continue;
+    }
     // Data-driven expressions evaluated in the tile workers, no per-feature state (D-114).
     if (PER_STATE_LEVELS.has(level)) {
       const fills = choroplethFillsByState(level, next?.colors ?? [], next?.classes ?? new Map(), theme);
@@ -391,6 +407,11 @@ function syncPaint(m: MlMap, paint: Partial<Record<GeoLevel, LevelPaint>>, appli
     }
     applied[level] = next;
   }
+}
+
+/** Blocks carry no names in the tiles (8 million of them): "Block 1001, Tract 101.02". */
+function blockName(geoid: string) {
+  return `Block ${geoid.slice(11)}, Tract ${Number(geoid.slice(5, 11)) / 100}`;
 }
 
 /** Repainting clears feature state per source; put the hover/selection flags back. */

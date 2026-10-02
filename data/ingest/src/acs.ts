@@ -6,8 +6,8 @@ import { loadRegistry } from "@webgis/registry/load";
 import type { DatasetEntry } from "@webgis/registry";
 import { ACS_HEADLINE_YEAR, timelineStops } from "@webgis/registry/timeline";
 import { db, FIPS_RENAMES, log, STATES } from "./util.ts";
-import { areas2019 } from "./geographies.ts";
-import { landArea, registerDataset, writeStopValues, writeValues, type Level, type Value } from "./values.ts";
+import { areas2019, blockGroupLandArea } from "./geographies.ts";
+import { landArea, registerDataset, writeStatic, writeStopValues, writeValues, type Level, type Value } from "./values.ts";
 
 const YEAR = ACS_HEADLINE_YEAR;
 const API = (year: number) => `https://api.census.gov/data/${year}/acs/acs5`;
@@ -66,9 +66,11 @@ function sum(row: Row, vars: string[]): { e: number | null; m: number | null } {
   return { e, m: Math.sqrt(m2) };
 }
 
-function derive(entry: DatasetEntry, row: Row, area?: number): Value {
+function derive(entry: DatasetEntry, row: Row, area?: number, level?: Level): Value {
   if (entry.measure.kind !== "acs5") throw new Error("not acs5");
-  const { numerator, denominator, scale, perSqMi } = entry.measure;
+  const { scale, perSqMi } = entry.measure;
+  // Block groups may use other tables for the same measure (registry `blockGroup`).
+  const { numerator, denominator } = level === "block_group" && entry.measure.blockGroup ? entry.measure.blockGroup : entry.measure;
   const num = sum(row, numerator);
   if (num.e == null) return { value: null, moe: null };
   let value = num.e, moe = num.m;
@@ -91,17 +93,23 @@ function derive(entry: DatasetEntry, row: Row, area?: number): Value {
   return { value: value * scale, moe: moe == null ? null : moe * scale };
 }
 
-function varsOf(entries: DatasetEntry[]): string[] {
-  return [...new Set(entries.flatMap((e) => e.measure.kind === "acs5" ? [...e.measure.numerator, ...(e.measure.denominator ?? [])] : []))]
-    .flatMap((v) => [`${v}E`, `${v}M`]);
+/** Every variable the entries need; block groups use each entry's `blockGroup` tables (D-39). */
+function varsOf(entries: DatasetEntry[], level?: Level): string[] {
+  return [...new Set(entries.flatMap((e) => {
+    if (e.measure.kind !== "acs5") return [];
+    const m = level === "block_group" && e.measure.blockGroup ? e.measure.blockGroup : e.measure;
+    return [...m.numerator, ...(m.denominator ?? [])];
+  }))].flatMap((v) => [`${v}E`, `${v}M`]);
 }
 
 function fetchLevel(level: Level, vars: string[], year = YEAR): Promise<Map<string, Row>> {
   if (level === "state") return fetchTable(vars, "for=state:*", year);
   if (level === "county") return fetchTable(vars, "for=county:*", year);
+  // Tracts and block groups: one call per state (block groups across every county and tract).
+  const geo = level === "block_group" ? "for=block%20group:*&in=state:{s}&in=county:*&in=tract:*" : "for=tract:*&in=state:{s}";
   return (async () => {
     const all = new Map<string, Row>();
-    for (const s of Object.keys(STATES)) for (const [k, v] of await fetchTable(vars, `for=tract:*&in=state:${s}`, year)) all.set(k, v);
+    for (const s of Object.keys(STATES)) for (const [k, v] of await fetchTable(vars, geo.replace("{s}", s), year)) all.set(k, v);
     return all;
   })();
 }
@@ -149,7 +157,8 @@ export async function ingestAcsTimeline(only?: string[]) {
   await pool.end();
 }
 
-export async function ingestAcs(only?: string[]) {
+/** `levelsOnly`: e.g. ["block_group"] for `ingest acs-bg`, without re-fetching the other levels. */
+export async function ingestAcs(only?: string[], levelsOnly?: Level[]) {
   const entries = loadRegistry().filter((e) => e.measure.kind === "acs5" && (!only || only.includes(e.id)));
   if (!entries.length) return log("acs", "no acs5 entries selected");
   const vars = varsOf(entries);
@@ -157,16 +166,18 @@ export async function ingestAcs(only?: string[]) {
   const pool = db();
   for (const e of entries) await registerDataset(pool, e);
 
-  for (const level of ["state", "county", "tract"] as const) {
+  for (const level of ["state", "county", "tract", "block_group"] as const) {
+    if (levelsOnly && !levelsOnly.includes(level)) continue;
     const levelEntries = entries.filter((e) => e.geographyLevels.includes(level));
     if (!levelEntries.length) continue;
     log("acs", `fetching ${level}…`);
-    const table = await fetchLevel(level, vars);
-    const areas = await landArea(pool, level);
+    const table = await fetchLevel(level, level === "block_group" ? varsOf(entries, level) : vars);
+    const areas = level === "block_group" ? await blockGroupLandArea() : await landArea(pool, level);
     for (const e of levelEntries) {
       const values = new Map<string, Value>();
-      for (const [geoid, row] of table) values.set(geoid, derive(e, row, areas.get(geoid)));
-      await writeValues(pool, e.id, level, values);
+      for (const [geoid, row] of table) values.set(geoid, derive(e, row, areas.get(geoid), level));
+      if (level === "block_group") writeStatic(e.id, level, values);
+      else await writeValues(pool, e.id, level, values);
     }
   }
   await pool.end();

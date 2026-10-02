@@ -85,12 +85,12 @@ export function Viewer({ search }: { search: string }) {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  const { primary, secondary, isFeature, featureSpec, stops, stop, stopId, availableLevels, defaultLevel, pinnedLevel, bands, x, y, level, classed } = useViewerData(state);
+  const { primary, secondary, isFeature, featureSpec, stops, stop, stopId, availableLevels, defaultLevel, pinnedLevel, bands, x, y, level, classed, blockField } = useViewerData(state);
   const current = classed[level];
   const error = x.error ?? y.error;
   const available = !!primary && !isFeature && availableLevels.includes(level);
-  // The table lists states or counties (tracts have no names to search); at tract level it shows counties.
-  const tableLevel: GeoLevel | null = level !== "tract" ? level : availableLevels.includes("county") ? "county" : null;
+  // The table lists states or counties (finer areas have no names to search); below counties it shows counties.
+  const tableLevel: GeoLevel | null = level === "state" || level === "county" ? level : availableLevels.includes("county") ? "county" : null;
   // Clear selections and filters when the dataset changes.
   useEffect(() => { setSelected(null); setFeatureSelected(null); setFeatureHover(null); setHidden({}); mapApi.current?.select("county", null); }, [state.d]);
   const featureFilter = useMemo(() => {
@@ -236,7 +236,7 @@ export function Viewer({ search }: { search: string }) {
       )}
 
       {hover && !selected && primary && (
-        <PlaceHoverPopup hover={hover} primary={primary} secondary={secondary} xValues={x.values} yValues={y.values} periodLabel={stopId ? stop!.label : undefined} />
+        <PlaceHoverPopup hover={hover} primary={primary} secondary={secondary} xValues={x.values} yValues={y.values} blockField={blockField} periodLabel={stopId ? stop!.label : undefined} />
       )}
       {featureHover && !featureSelected && featureSpec && <FeatureHoverPopup hit={featureHover} spec={featureSpec} primary={primary} />}
       {featureSelected && featureSpec && primary && (

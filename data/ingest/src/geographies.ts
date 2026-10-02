@@ -1,6 +1,7 @@
 // Geography lookup table (no geometry): states, counties and tracts with names,
 // land area and an internal point, from the 2024 Census Gazetteer files.
 import { readFileSync } from "node:fs";
+import * as shapefile from "shapefile";
 import unzipper from "unzipper";
 import { cached, db, log, STATES, upsert } from "./util.ts";
 
@@ -13,6 +14,20 @@ export async function readGazetteer(file: string): Promise<Record<string, string
   const [head, ...lines] = text.trim().split(/\r?\n/);
   const cols = head.split("\t").map((c) => c.trim());
   return lines.map((l) => Object.fromEntries(l.split("\t").map((v, i) => [cols[i], v.trim()])));
+}
+
+/** Block-group land area (sq mi) from the cartographic boundary file; the Gazetteer has no
+ *  block groups and block groups aren't in the database (D-39). */
+export async function blockGroupLandArea(): Promise<Map<string, number>> {
+  const zip = await unzipper.Open.buffer(readFileSync(await cached("https://www2.census.gov/geo/tiger/GENZ2024/shp/cb_2024_us_bg_500k.zip")));
+  const dbf = zip.files.find((f) => f.path.endsWith(".dbf"))!;
+  const src = await shapefile.openDbf(await dbf.buffer());
+  const out = new Map<string, number>();
+  for (let r = await src.read(); !r.done; r = await src.read()) {
+    const p = r.value as Record<string, string | number>;
+    out.set(String(p.GEOID), Number(p.ALAND) / 2_589_988.11);
+  }
+  return out;
 }
 
 export async function ingestGeographies() {
