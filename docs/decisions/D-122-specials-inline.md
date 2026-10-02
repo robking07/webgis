@@ -1,7 +1,7 @@
 # D-122 · Specials: the format, maps and charts inside the text, and agent-drafted bylines
 
 - **Date:** 2026-10-02
-- **Status:** DECIDED (Robbie: the format) / DEFAULTED (the syntax and build, by the worker; the byline, by the lead, pending Robbie)
+- **Status:** DECIDED (Robbie: the format; the byline and headline, 2026-10-02) / DEFAULTED (the syntax and build, by the worker)
 - **PR:** #22 (issue #20)
 - **Follows:** D-115 (Specials pages; pieces are Markdown in the repo)
 
@@ -46,14 +46,21 @@ every dataset the piece uses, not only the main map's. The thumbnail (`image`) a
 while the live map loads. Every number in the piece is reproduced by
 `apps/web/scripts/specials-numbers/work-from-home-and-exercise.mjs`.
 
-**Defaulted by the lead, pending Robbie: bylines on agent-drafted pieces.** A piece an AI agent drafted
+**Bylines on agent-drafted pieces (the lead's default, kept by Robbie).** A piece an AI agent drafted
 says so: `author: "Drafted by Claude for Robbie King"`, shown as written (no "By" in front), and its
 "How this was made" box says it was drafted by Claude from Mapwich data. It must never read as if
-Robbie wrote it. Open for Robbie: keep this wording, or e.g. "By Robbie King, with Claude" once he has
-edited a piece himself.
+Robbie wrote it. Robbie kept this wording on 2026-10-02 (amendment below).
 
 **Open.**
 - Kentucky and Pennsylvania have no county values for CDC PLACES no-leisure-time-exercise in Mapwich's
   data (120 and 67 counties), so they are blank on this piece's maps; the caption says so.
 - After editing a piece, `npm run dev` has to be restarted (or `npm run prepare:assets -w web` run) to
   see the change, since the pieces are now compiled before the app starts.
+
+**Amendment (2026-10-02, Robbie).** Byline "Drafted by Claude for Robbie King" kept for agent-drafted
+pieces; headline kept; the Todd/Oglala Lakota passage adds cited historical context (colonialism,
+federal policy) per Robbie: "Yes add context. It's obvious hundreds of years of oppression by the US
+government us a stronger reason why native communities have poor health. They have been economically
+depressed because of colonialism". Sources: Oglala Lakota County, the Bureau of Indian Affairs (Rosebud
+Agency), *United States v. Sioux Nation of Indians* (1980), and the U.S. Commission on Civil Rights,
+*Broken Promises* (2018). The piece is now 1,596 words, a 7-minute read.

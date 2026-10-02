@@ -7,7 +7,7 @@ datasets: [pct_work_from_home, physical_inactivity]
 pairing: pct_work_from_home__physical_inactivity
 caption: "Work from home (2020–2024) against adults with no leisure-time exercise (2023), by county. Blue counties have many home workers and few non-exercisers; gold counties the reverse. 2,956 counties have both values; Kentucky and Pennsylvania are blank because the inactivity data has no county values for them."
 method: |
-  Every number in the text was computed from Mapwich's exported county values with a script kept in the repository (`apps/web/scripts/specials-numbers/work-from-home-and-exercise.mjs`); the chart and tables are computed from the same files when the site is built. Correlations are Spearman rank correlations (ρ). "Within states" removes each state's average rank first. "Holding income and education equal" is a partial rank correlation: both measures' ranks are adjusted for the ranks of median household income and the bachelor's degree share before they are compared. Virginia's independent cities count as counties, as the Census Bureau treats them. The inactivity estimates come from a statistical model ([CDC PLACES methodology](https://www.cdc.gov/places/methodology/index.html)); the survey question is on [CDC's measure definitions page](https://www.cdc.gov/places/measure-definitions/health-risk-behaviors.html). This piece was drafted by Claude, an AI model, from Mapwich data, and checked against that data before publication.
+  Every number from Mapwich data in the text was computed from Mapwich's exported county values with a script kept in the repository (`apps/web/scripts/specials-numbers/work-from-home-and-exercise.mjs`); the chart and tables are computed from the same files when the site is built. Correlations are Spearman rank correlations (ρ). "Within states" removes each state's average rank first. "Holding income and education equal" is a partial rank correlation: both measures' ranks are adjusted for the ranks of median household income and the bachelor's degree share before they are compared. Virginia's independent cities count as counties, as the Census Bureau treats them. The inactivity estimates come from a statistical model ([CDC PLACES methodology](https://www.cdc.gov/places/methodology/index.html)); the survey question is on [CDC's measure definitions page](https://www.cdc.gov/places/measure-definitions/health-risk-behaviors.html). The history of Pine Ridge and Rosebud draws on [Oglala Lakota County](https://oglalalakotacountysd.gov/about-3/), the [Bureau of Indian Affairs](https://www.bia.gov/regional-offices/great-plains/south-dakota/rosebud-agency), [*United States v. Sioux Nation of Indians*, 448 U.S. 371 (1980)](https://www.law.cornell.edu/supremecourt/text/448/371) and the U.S. Commission on Civil Rights, [*Broken Promises: Continuing Federal Funding Shortfall for Native Americans*](https://www.usccr.gov/reports/2018/broken-promises-continuing-federal-funding-shortfall-native-americans) (2018). This piece was drafted by Claude, an AI model, from Mapwich data, and checked against that data before publication.
 image: /specials/work-from-home-and-exercise.png
 author: "Drafted by Claude for Robbie King"
 draft: true
@@ -21,7 +21,7 @@ So does working from home get people moving? The tempting story writes itself: n
 
 ## How big the gap is
 
-Sort the counties by their work-from-home share and cut them into ten equal groups of about 296 counties each. In the tenth with the fewest home workers (under 4.2% of workers), an average of 33.1% of adults report no leisure-time exercise. In the tenth with the most (16.4% and up), it's 20.8%. The steps in between fall almost without a break.
+Sort the counties by their work-from-home share and cut them into ten equal groups of about 296 counties each. In the tenth with the fewest home workers (under 4.2% of workers), an average of 33.1% of adults report no leisure-time exercise. In the tenth with the most (16.4% and up), it's 20.8%.
 
 ```chart
 type: bins
@@ -32,7 +32,7 @@ title: "Fewer adults skip exercise in counties where more people work from home"
 caption: "Work from home is the share of workers 16 and over who usually worked from home (ACS 2020–2024). No leisure-time exercise is the age-adjusted share of adults who answered no to any exercise outside their job in the past month (CDC PLACES, 2023)."
 ```
 
-That's a gap of about 12 percentage points, in a measure where the typical county sits at 26.5%. It's a big difference. What it doesn't tell us is why.
+That's a gap of about 12 percentage points, in a measure where the typical county sits at 26.5%. It's a big difference, but it doesn't tell us why.
 
 ## Virginia, where the two line up
 
@@ -46,7 +46,7 @@ caption: "Virginia and West Virginia, by county. Northern Virginia, at top right
 
 In Arlington County, 35.3% of workers work from home and 15.1% of adults report no leisure-time exercise. In Giles County, in the southwest, 2.5% work from home and 24.9% report no exercise. Grayson County, also in the southwest, is at 5.2% and 31.3%.
 
-But the same counties differ in plenty of other ways, and the table shows how much.
+The table shows how else these counties differ.
 
 ```table
 type: counties
@@ -73,6 +73,8 @@ Some of the highest work-from-home shares in the country are here, in places wit
 These numbers likely mean something different from home office work in a suburb. The data here can't say what Perkins County's home workers do, but Census Bureau research has long found [self-employed workers overrepresented among home-based workers](https://www.census.gov/library/publications/2012/demo/p70-132.html), and in the 1960s most were family farmers and professionals. The exercise question matters too. It asks about activity "other than your regular job." Someone who works hard all day outdoors can answer no. Across the 417 counties nationwide with fewer than six people per square mile, the correlation is −0.33, about half the national figure.
 
 In the region, inactivity follows income far more closely than working from home. Within South Dakota, the correlation between median household income and inactivity is −0.78. The two South Dakota counties with the highest inactivity rates, Todd (42.3%) and Oglala Lakota (41.7%), have median household incomes near $42,000 and work-from-home shares under 4%.
+
+Oglala Lakota County lies [entirely within the Pine Ridge Reservation](https://oglalalakotacountysd.gov/about-3/), and Todd County within the [Rosebud Sioux Reservation](https://www.bia.gov/regional-offices/great-plains/south-dakota/rosebud-agency). Their low incomes and poor health have a much stronger explanation than anything about work: generations of U.S. policy toward Native nations. The Fort Laramie Treaty of 1868 set the Black Hills apart for the Sioux; in 1877 Congress took them without the consent of three-fourths of adult men that the treaty required, a taking the [Supreme Court ruled in 1980](https://www.law.cornell.edu/supremecourt/text/448/371) must be paid for, with interest. In exchange for the "forced dispossession" of Native land and the removal of tribes from their homelands, the government promised services, but the [U.S. Commission on Civil Rights found in 2018](https://www.usccr.gov/reports/2018/broken-promises-continuing-federal-funding-shortfall-native-americans) that those programs "remain chronically underfunded": in 2016 the Indian Health Service spent $2,834 per person, against $9,990 per person in federal health spending nationwide.
 
 ## It's older than the pandemic
 
