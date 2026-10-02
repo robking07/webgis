@@ -11,7 +11,9 @@
 - Source: https://geodata.bts.gov/datasets/5e6a977c2d7c4ec1bdc82e684d3384f2
 - License: Public domain (U.S. Government work; NTAD "available for unrestricted public use"). Credit FHWA and BTS.
 - Update cadence: annual
-- Coverage: Segments are as states report them to FHWA; not every local road has a count. Not for navigation.
+- Coverage:
+  - Traffic volume (AADT): Segments are as states report them to FHWA; not every local road has a count. Not for navigation.
+  - Vehicle miles per resident: Counts traffic where it drives, divided by residents, so counties on major through-routes look high. Counted roads only (about 10–15% below FHWA totals). Connecticut counties show no data.
 
 | Dataset | Levels (non-null / rows) | Unit | Vintage | Method |
 |---|---|---|---|---|
@@ -37,7 +39,13 @@
 - Source: https://www.cdc.gov/places/
 - License: Public domain (U.S. Government work; data.cdc.gov license field "Public Domain")
 - Update cadence: annual
-- Coverage: Model-based estimates; not every county is covered in every measure.
+- Coverage:
+  - Binge drinking: No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.
+  - Loneliness: Only states that asked CDC's optional loneliness question in their 2023 survey have data. No data for Colorado, Florida, Kentucky, Oregon, Pennsylvania, South Dakota, Tennessee, Texas, Vermont, Washington or Wyoming.
+  - Obesity: No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.
+  - No leisure-time exercise: No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.
+  - Short sleep: From the 2022 survey (CDC asks about sleep every other year), so every state has data, Kentucky and Pennsylvania included. Loving County, Texas, has too few residents to estimate.
+  - Cigarette smoking: No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.
 
 | Dataset | Levels (non-null / rows) | Unit | Vintage | Method |
 |---|---|---|---|---|
@@ -64,7 +72,9 @@
 - Source: https://github.com/usds/justice40-tool
 - License: Public domain (U.S. Government work); the tool's code is CC0 (usds/justice40-tool).
 - Update cadence: static
-- Coverage: 2010 tract boundaries. Removed from federal websites in 2025; this is the final 2.0 data from the PEDP mirror.
+- Coverage:
+  - Disadvantaged communities (CEJST tracts): 2010 tract boundaries. Removed from federal websites in 2025; this is the final 2.0 data from the PEDP mirror.
+  - Residents in disadvantaged communities: Built from 2010 tracts. Connecticut counties show no data (2022 county change). For each tract, map Disadvantaged communities (CEJST tracts).
 
 | Dataset | Levels (non-null / rows) | Unit | Vintage | Method |
 |---|---|---|---|---|
@@ -89,6 +99,12 @@
 - Source: https://www.census.gov/programs-surveys/acs
 - License: Public domain (U.S. Government work, 17 U.S.C. § 105)
 - Update cadence: annual
+- Coverage:
+  - Median rent: The Census Bureau caps the top value ($3,500 or more) and the bottom value, so the most and least expensive areas show the cap rather than their true median.
+  - Median home value: The Census Bureau caps the top value (about $2 million) and the bottom value, so the most and least expensive areas show the cap rather than their true median.
+  - American Indian and Alaska Native (non-Hispanic) residents: Counts only people who give this as their single race; many Native people also report another race and are counted under two or more races. Small numbers make tract estimates uncertain outside reservations and Alaska.
+  - Two or more races (non-Hispanic): The Census Bureau changed how it codes written-in race answers starting with 2020 data, so this share jumps between 2015–2019 and 2020–2024 partly because of the change, not only because of real change.
+  - Native Hawaiian and Pacific Islander (non-Hispanic) residents: A small group outside Hawaii and a few West Coast and Mountain West communities, so most tract and county estimates are near zero with wide margins of error.
 
 | Dataset | Levels (non-null / rows) | Unit | Vintage | Method |
 |---|---|---|---|---|
@@ -167,6 +183,6 @@
 ## Known gaps and caveats
 
 - **LODES:** Alaska has no WAC file since 2016 (shown as no data); Michigan's latest is 2021; Puerto Rico isn't covered (D-14).
-- **PLACES:** model-based small-area estimates (BRFSS + multilevel regression and poststratification), not direct counts. County poverty is a model input, so PLACES × poverty/income correlations are partly by construction (D-17).
+- **PLACES:** model-based small-area estimates (BRFSS + multilevel regression and poststratification), not direct counts. County poverty is a model input, so PLACES × poverty/income correlations are partly by construction (D-17). The 2025 release has no 2023-based estimates for Kentucky or Pennsylvania: CDC says they "were unable to collect enough data to meet the minimum requirements" for the 2023 BRFSS. Only the five every-other-year measures (short sleep among them) have 2022 values there ([PLACES release notes](https://www.cdc.gov/places/current-release-notes/index.html), [BRFSS 2023](https://www.cdc.gov/brfss/annual_data/annual_2023.html)).
 - **nClimDiv:** Connecticut uses pre-2022 county codes and Hawaii has no county series, so both show no data for climate.
 - **ACS:** 5-year estimates describe 2020–2024 as a period, not a single year. Small tracts carry large margins of error, which the detail panel shows.

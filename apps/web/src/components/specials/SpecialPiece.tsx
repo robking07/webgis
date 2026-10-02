@@ -5,13 +5,16 @@ import { DATASET_BY_ID } from "@/lib/registry";
 import { INSIGHT_BY_ID } from "@/lib/insights";
 import { SPECIALS, formatDate, renderMarkdown, type Special } from "@/lib/specials";
 import { SiteFooter } from "@/components/SiteNav";
+import { SpecialBlock } from "./SpecialBlocks";
 import { SpecialMap } from "./SpecialMap";
-import { DataBox, DraftTag, LineUpBox, SpecialCard, mapHref, midSentence } from "./parts";
+import { DataBox, DraftTag, LineUpBox, SpecialCard, byline, mapHref, midSentence } from "./parts";
 
 export function SpecialPiece({ special: s }: { special: Special }) {
   const [x, y] = s.datasets.map((id) => DATASET_BY_ID.get(id)!);
   const pairing = s.pairing ? INSIGHT_BY_ID.get(s.pairing) ?? null : null;
   const caption = s.caption ?? `${x.title}${y ? ` and ${midSentence(y.title)}` : ""} by county${pairing ? `, for ${pairing.n.toLocaleString()} counties with both values` : ""}.`;
+  // Every dataset in the piece (main map, focus maps, charts, tables), one line per citation.
+  const sources = [...new Map(s.allDatasets.map((id) => DATASET_BY_ID.get(id)!.source).map((src) => [src.citation, src])).values()];
   const more = SPECIALS.filter((o) => o.slug !== s.slug).slice(0, 3);
   const openMap = "h-12 items-center justify-center rounded-lg bg-primary px-4 text-base font-semibold text-primary-foreground hover:opacity-90 md:h-11 md:text-[15px]";
 
@@ -24,11 +27,11 @@ export function SpecialPiece({ special: s }: { special: Special }) {
         </p>
         <h1 className="text-[32px] leading-[1.12] font-extrabold tracking-tight md:text-[52px] md:leading-[1.08]">{s.title}</h1>
         <p className="text-lg leading-normal text-foreground/80 md:text-[21px]">{s.dek}</p>
-        <p className="text-[13px] text-muted-foreground md:text-sm">By {s.author} · {formatDate(s.date)} · {s.minutes} min read</p>
+        <p className="text-[13px] text-muted-foreground md:text-sm">{byline(s.author)} · {formatDate(s.date)} · {s.minutes} min read</p>
       </div>
 
       <figure className="flex flex-col gap-2.5">
-        <SpecialMap datasets={s.datasets} at={s.at} className="aspect-[4/3] md:aspect-[16/7]">
+        <SpecialMap datasets={s.datasets} at={s.at} poster={s.image} className="aspect-[4/3] md:aspect-[16/7]">
           <Link href={mapHref(s)} className={`absolute top-4 right-4 z-10 hidden md:inline-flex ${openMap}`}>Open in the full map</Link>
         </SpecialMap>
         <Link href={mapHref(s)} className={`flex md:hidden ${openMap}`}>Open in the full map</Link>
@@ -36,7 +39,12 @@ export function SpecialPiece({ special: s }: { special: Special }) {
       </figure>
 
       <div className="grid gap-7 md:grid-cols-[minmax(0,1fr)_320px] md:items-start md:gap-16">
-        <article className="wg-prose min-w-0 max-w-[700px]" dangerouslySetInnerHTML={{ __html: s.html }} />
+        <article className="wg-prose min-w-0 max-w-[700px]">
+          {s.body.map((seg, i) => seg.kind === "html"
+            // display: contents keeps the prose's paragraphs in the article's spacing.
+            ? <div key={i} className="contents" dangerouslySetInnerHTML={{ __html: seg.html }} />
+            : <SpecialBlock key={i} block={seg} />)}
+        </article>
         <aside aria-label="About the data" className="flex flex-col gap-4">
           <DataBox special={s} />
           {pairing && <LineUpBox insight={pairing} />}
@@ -54,8 +62,8 @@ export function SpecialPiece({ special: s }: { special: Special }) {
         {s.method && <div className="wg-prose wg-prose-sm" dangerouslySetInnerHTML={{ __html: renderMarkdown(s.method) }} />}
         <p className="mt-1.5 text-xs font-semibold uppercase tracking-[0.05em] text-muted-foreground">Sources</p>
         <ul className="flex list-disc flex-col gap-1.5 pl-[18px] text-sm leading-normal text-foreground/85">
-          {[x, y].filter(Boolean).map((d) => (
-            <li key={d!.id}><a href={d!.source.url} className="hover:underline">{d!.source.citation}</a></li>
+          {sources.map((src) => (
+            <li key={src.citation}><a href={src.url} className="hover:underline">{src.citation}</a></li>
           ))}
         </ul>
       </section>

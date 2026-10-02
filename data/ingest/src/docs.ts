@@ -8,6 +8,14 @@ import { describeMethod as method } from "@webgis/registry/describe";
 import { db, log, ROOT, TILES } from "./util.ts";
 import { tractValueCount } from "./values.ts";
 
+/** One coverage line when a source's datasets share it; otherwise one per dataset. */
+function coverage(es: DatasetEntry[]) {
+  const notes = es.filter((e) => e.coverageNote);
+  if (!notes.length) return "";
+  if (notes.length === es.length && notes.every((e) => e.coverageNote === notes[0].coverageNote)) return `- Coverage: ${notes[0].coverageNote}\n`;
+  return `- Coverage:\n${notes.map((e) => `  - ${e.title}: ${e.coverageNote}`).join("\n")}\n`;
+}
+
 export async function writeDataSourcesDoc() {
   const entries = loadRegistry();
   const pool = db();
@@ -39,7 +47,7 @@ ${[...bySource].map(([src, es]) => `## ${src}
 - Source: ${es[0].source.url}
 - License: ${es[0].license}
 - Update cadence: ${es[0].updateCadence}
-${es[0].coverageNote ? `- Coverage: ${es[0].coverageNote}\n` : ""}
+${coverage(es)}
 | Dataset | Levels (non-null / rows) | Unit | Vintage | Method |
 |---|---|---|---|---|
 ${es.map((e) => `| **${e.title}** (\`${e.id}\`) | ${e.measure.kind === "features" ? "road segments (feature layer)" : ""}${e.geographyLevels.map((l) => `${l}: ${counts.get(`${e.id}/${l}`) ?? "not loaded"}`).join("<br>")} | ${e.unit} | ${e.vintage} | ${method(e)}${e.modelInputs.length ? ` Modeled using: ${e.modelInputs.join(", ")} (insight pairs with those are flagged).` : ""} |`).join("\n")}
@@ -47,7 +55,7 @@ ${es.map((e) => `| **${e.title}** (\`${e.id}\`) | ${e.measure.kind === "features
 ## Known gaps and caveats
 
 - **LODES:** Alaska has no WAC file since 2016 (shown as no data); Michigan's latest is 2021; Puerto Rico isn't covered (D-14).
-- **PLACES:** model-based small-area estimates (BRFSS + multilevel regression and poststratification), not direct counts. County poverty is a model input, so PLACES × poverty/income correlations are partly by construction (D-17).
+- **PLACES:** model-based small-area estimates (BRFSS + multilevel regression and poststratification), not direct counts. County poverty is a model input, so PLACES × poverty/income correlations are partly by construction (D-17). The 2025 release has no 2023-based estimates for Kentucky or Pennsylvania: CDC says they "were unable to collect enough data to meet the minimum requirements" for the 2023 BRFSS. Only the five every-other-year measures (short sleep among them) have 2022 values there ([PLACES release notes](https://www.cdc.gov/places/current-release-notes/index.html), [BRFSS 2023](https://www.cdc.gov/brfss/annual_data/annual_2023.html)).
 - **nClimDiv:** Connecticut uses pre-2022 county codes and Hawaii has no county series, so both show no data for climate.
 - **ACS:** 5-year estimates describe 2020–2024 as a period, not a single year. Small tracts carry large margins of error, which the detail panel shows.
 `;

@@ -134,6 +134,10 @@ export const midSentence = (t: string) =>
 /** "Binge drinking × January lows". */
 export const pairName = (s: Special) => s.datasets.map((id) => DATASET_BY_ID.get(id)!.title).join(" × ");
 
+/** "By Robbie King", but an author line that already says how it was made ("Drafted by Claude for
+ *  Robbie King", D-122) is shown as written. */
+export const byline = (author: string) => (/^(drafted|written|reported|compiled|by)\b/i.test(author) ? author : `By ${author}`);
+
 export function DraftTag() {
   return <span className="rounded-full border border-dashed px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">Draft</span>;
 }

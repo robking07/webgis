@@ -4,7 +4,7 @@
 import { useEffect, useRef } from "react";
 import { AttributionControl, LngLatBounds, Map as MlMap, ScaleControl, addProtocol, setWorkerUrl, type LayerSpecification, type MapGeoJSONFeature } from "maplibre-gl";
 import { Protocol } from "pmtiles";
-import { basemapStyle, choroplethFill, choroplethFillsByState, DATA_BEFORE_ID, TILE_VALUE_LEVELS, THEMES, featureLineLayers, featurePolygonLayers, fillLayerIds, focusLandLayer, FOCUS_LAND_BEFORE_ID, GEO_LEVELS, MOTION, PER_STATE_LEVELS, thematicLayers, type GeoLevel, type ThemeName } from "@webgis/design";
+import { basemapStyle, choroplethFill, choroplethFillsByState, DATA_BEFORE_ID, STATIC_ONLY_LEVELS, TILE_VALUE_LEVELS, THEMES, featureLineLayers, featurePolygonLayers, fillLayerIds, focusLandLayer, FOCUS_LAND_BEFORE_ID, GEO_LEVELS, MOTION, PER_STATE_LEVELS, thematicLayers, type GeoLevel, type ThemeName } from "@webgis/design";
 import type { FeatureLayerSpec } from "@/lib/layers";
 import type { ViewState } from "@/lib/url-state";
 
@@ -309,7 +309,15 @@ function applyBands(m: MlMap, bands?: Props["levelZooms"]) {
       m.setLayoutProperty(id, "visibility", band ? "visible" : "none");
       if (band) m.setLayerZoomRange(id, band.minzoom, band.maxzoom);
     }
-    for (const id of [`${level}-highlight-halo`, `${level}-highlight`]) if (m.getLayer(id)) m.setLayerZoomRange(id, 0, 24);
+    for (const id of [`${level}-highlight-halo`, `${level}-highlight`]) {
+      if (!m.getLayer(id)) continue;
+      // Block groups and blocks are never picked from the table or search, and an always-on
+      // outline would load their heavy tiles at every zoom (D-124): only within their band.
+      if (STATIC_ONLY_LEVELS.has(level)) {
+        m.setLayoutProperty(id, "visibility", band ? "visible" : "none");
+        if (band) m.setLayerZoomRange(id, band.minzoom, band.maxzoom);
+      } else m.setLayerZoomRange(id, 0, 24);
+    }
   }
 }
 

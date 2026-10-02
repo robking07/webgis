@@ -24,9 +24,17 @@ const readTheme = (): ThemeName => {
   return t === "dark" || t === "light" ? t : window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 };
 
-export function SpecialMap({ datasets, at, className, children }: {
+export function SpecialMap({ datasets, at, level = "county", legendBelow = false, designWidth, poster, className, children }: {
   datasets: readonly string[];
   at: { lon: number; lat: number; zoom: number } | null;
+  /** Geography drawn: county (default), or tract for a single dataset that has tracts (D-122). */
+  level?: "county" | "tract";
+  /** Always put the legend under the map (inline focus maps, where an overlay would cover too much). */
+  legendBelow?: boolean;
+  /** Width (px) the `at` zoom was chosen for. A narrower box (a phone) zooms out to keep the same area in view. */
+  designWidth?: number;
+  /** The piece's thumbnail (a screenshot of this map), shown while the live map loads. */
+  poster?: string | null;
   /** Sizing (aspect ratio) for the map box. */
   className?: string;
   /** Overlays drawn on the map (a tag, a button). */
@@ -37,33 +45,42 @@ export function SpecialMap({ datasets, at, className, children }: {
   const [vals, setVals] = useState<Values[] | null>(null);
   const [err, setErr] = useState(false);
   useEffect(() => {
-    Promise.all([x, ...(y ? [y] : [])].map((d) => loadValues(d.id, "county"))).then(setVals, () => setErr(true));
-  }, [x, y]);
+    Promise.all([x, ...(y ? [y] : [])].map((d) => loadValues(d.id, level))).then(setVals, () => setErr(true));
+  }, [x, y, level]);
   const paint = useMemo(() => {
     if (!vals) return null;
     return y ? { kind: "biv" as const, ...classifyBivariate(vals[0], vals[1]) } : { kind: "uni" as const, ...classifyUnivariate(x, vals[0]) };
   }, [vals, x, y]);
-  const label = y ? `Map of ${x.title} and ${y.title} by county` : `Map of ${x.title} by county`;
+  // The box's width once it's on the page, to fit `at` to narrower screens.
+  const [width, setWidth] = useState<number | null>(null);
+  const measure = (el: HTMLDivElement | null) => { if (el && width == null) setWidth(el.clientWidth); };
+  const view = !at ? { ...DEFAULT_VIEW }
+    : designWidth && width ? { ...at, zoom: at.zoom + Math.log2(Math.min(1, width / designWidth)) } : { ...at };
+  const by = level === "tract" ? "by census tract" : "by county";
+  const label = y ? `Map of ${x.title} and ${y.title} ${by}` : `Map of ${x.title} ${by}`;
   const legend = !paint ? null : paint.kind === "biv"
     ? <BivariateLegend xTitle={x.title} yTitle={y!.title} colors={paint.colors} />
     : <Legend title={x.title} unit={x.unit} colors={paint.colors} breaks={paint.breaks} minClass={paint.minClass} />;
 
-  // Wider screens float the legend on the map; phones put it below, where it doesn't cover the map.
+  // Wider screens float the legend on the map; phones (and inline maps) put it below, where it doesn't cover the map.
   return (
     <div className="flex flex-col gap-2">
-      <div className={`relative overflow-hidden rounded-xl border bg-card ${className ?? ""}`}>
+      <div ref={measure} className={`relative overflow-hidden rounded-xl border bg-card ${className ?? ""}`}>
+        {/* The thumbnail sits under the live map, so the box shows the map at once and the live one draws over it. */}
+        {/* eslint-disable-next-line @next/next/no-img-element -- static thumbnail, same box as the map */}
+        {poster && !err && <img src={poster} alt="" aria-hidden className="absolute inset-0 h-full w-full object-cover" />}
         {err ? <div className="grid h-full place-items-center"><StatusState status="error" /></div>
-          : !paint ? <div className="grid h-full place-items-center"><StatusState status="loading" /></div> : (
+          : !paint || (designWidth && width == null) ? (poster ? null : <div className="grid h-full place-items-center"><StatusState status="loading" /></div>) : (
           <>
-            <MapView theme={theme} initialView={at ? { ...at } : { ...DEFAULT_VIEW }} paint={{ county: paint }}
-              levelZooms={{ county: { minzoom: 0, maxzoom: 24 } }} cooperative
+            <MapView theme={theme} initialView={view} paint={{ [level]: paint }}
+              levelZooms={{ [level]: { minzoom: 0, maxzoom: 24 } }} cooperative
               onViewChange={() => {}} onHover={() => {}} onSelect={() => {}} ariaLabel={label} />
-            <div className="pointer-events-none absolute bottom-3 left-3 z-10 hidden rounded-lg border bg-card/95 p-2 text-xs shadow-sm md:block">{legend}</div>
+            {!legendBelow && <div className="pointer-events-none absolute bottom-3 left-3 z-10 hidden rounded-lg border bg-card/95 p-2 text-xs shadow-sm md:block">{legend}</div>}
           </>
         )}
         {children}
       </div>
-      {legend && <div className="text-xs md:hidden">{legend}</div>}
+      {legend && <div className={`text-xs ${legendBelow ? "" : "md:hidden"}`}>{legend}</div>}
     </div>
   );
 }
