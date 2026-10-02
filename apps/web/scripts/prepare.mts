@@ -4,12 +4,13 @@
 //  3. public/tiles → data/tiles symlink for local PMTiles during development
 //  4. src/generated/registry.json, regenerated from data/registry/datasets/*.yaml on every
 //     build, so a new registry entry can never be missing from the app
-import { copyFileSync, existsSync, mkdirSync, symlinkSync, writeFileSync, lstatSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, readFileSync, symlinkSync, writeFileSync, lstatSync } from "node:fs";
 import { createRequire } from "node:module";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { THEMES, themeCssVars } from "@webgis/design";
 import { loadGlossary, loadRegistry } from "@webgis/registry/load";
+import { loadSpecials } from "../src/lib/specials-load.mts";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const app = join(here, "..");
@@ -37,4 +38,9 @@ if (!existsSync(link) && !(() => { try { return lstatSync(link).isSymbolicLink()
 const entries = loadRegistry();
 writeFileSync(join(app, "src/generated/registry.json"), JSON.stringify(entries, null, 1));
 writeFileSync(join(app, "src/generated/glossary.json"), JSON.stringify(loadGlossary(), null, 1));
-console.log(`prepare: theme.css, maplibre worker, tiles link, registry.json (${entries.length} datasets) ready`);
+// 5. src/generated/specials.json: the Specials, checked and with their charts and tables computed
+//    from public/data/values (D-120). A bad piece stops here with a message naming the file.
+const insights = JSON.parse(readFileSync(join(app, "src/generated/insights.json"), "utf8")).insights;
+const specials = loadSpecials(app, entries, insights);
+writeFileSync(join(app, "src/generated/specials.json"), JSON.stringify(specials, null, 1));
+console.log(`prepare: theme.css, maplibre worker, tiles link, registry.json (${entries.length} datasets), specials.json (${specials.length} pieces) ready`);

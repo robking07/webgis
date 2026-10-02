@@ -1,0 +1,32 @@
+[
+ {
+  "slug": "work-from-home-and-exercise",
+  "title": "[Headline of your first Special]",
+  "dek": "[One or two sentences on what this map shows and why it matters.]",
+  "topic": "Health",
+  "date": "2026-10-01",
+  "author": "Robbie King",
+  "datasets": [
+   "pct_work_from_home",
+   "physical_inactivity"
+  ],
+  "pairing": "pct_work_from_home__physical_inactivity",
+  "at": null,
+  "caption": null,
+  "method": null,
+  "image": null,
+  "draft": true,
+  "body": [
+   {
+    "kind": "html",
+    "html": "<p>[Opening paragraph: what you noticed on the map, and the question it raised.]</p>\n<p>[Paragraph: walk the reader through the pattern. Name places they can find on the map.]</p>\n<h2>[Subhead]</h2>\n<p>[Paragraph: what might explain it, and what the data can&#39;t tell us.]</p>\n<p>[Closing paragraph: what you&#39;d look at next.]</p>\n"
+   }
+  ],
+  "allDatasets": [
+   "pct_work_from_home",
+   "physical_inactivity"
+  ],
+  "words": 49,
+  "minutes": 1
+ }
+]
