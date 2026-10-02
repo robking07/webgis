@@ -4,7 +4,7 @@
 import { useEffect, useRef } from "react";
 import { AttributionControl, LngLatBounds, Map as MlMap, ScaleControl, addProtocol, setWorkerUrl, type LayerSpecification, type MapGeoJSONFeature } from "maplibre-gl";
 import { Protocol } from "pmtiles";
-import { basemapStyle, choroplethFill, DATA_BEFORE_ID, TILE_VALUE_LEVELS, THEMES, featureLineLayers, featurePolygonLayers, focusLandLayer, FOCUS_LAND_BEFORE_ID, GEO_LEVELS, MOTION, thematicLayers, type GeoLevel, type ThemeName } from "@webgis/design";
+import { basemapStyle, choroplethFill, choroplethFillsByState, DATA_BEFORE_ID, TILE_VALUE_LEVELS, THEMES, featureLineLayers, featurePolygonLayers, fillLayerIds, focusLandLayer, FOCUS_LAND_BEFORE_ID, GEO_LEVELS, MOTION, PER_STATE_LEVELS, thematicLayers, type GeoLevel, type ThemeName } from "@webgis/design";
 import type { FeatureLayerSpec } from "@/lib/layers";
 import type { ViewState } from "@/lib/url-state";
 
@@ -80,6 +80,9 @@ interface Props {
   /** County and tract boundary vintage for a timeline stop (D-36): "2019" = 2010 tracts and
    *  pre-2022 Connecticut counties; null = the current tiles. */
   boundaries?: "2019" | null;
+  /** Maps inside a scrolling page (Specials, D-115): the page scrolls, and zooming needs
+   *  Ctrl/⌘ + scroll or two fingers. */
+  cooperative?: boolean;
 }
 
 export interface MapApi {
@@ -105,7 +108,7 @@ function tilesUrl(level: GeoLevel, boundaries?: string | null) {
   return `pmtiles://${base}/${level !== "state" && boundaries ? `${level}-${boundaries}` : level}.pmtiles`;
 }
 
-export function MapView({ theme, initialView, paint, onViewChange, onHover, onSelect, onTilesError, ariaLabel, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, onApi, featureFilter, scaleUnit = "imperial", attribution = true, boundaries = null }: Props) {
+export function MapView({ theme, initialView, paint, onViewChange, onHover, onSelect, onTilesError, ariaLabel, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, onApi, featureFilter, scaleUnit = "imperial", attribution = true, boundaries = null, cooperative = false }: Props) {
   const container = useRef<HTMLDivElement>(null);
   const map = useRef<MlMap | null>(null);
   const applied = useRef<Partial<Record<GeoLevel, LevelPaint>>>({});
@@ -138,6 +141,7 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
       fadeDuration: reduceMotion ? 0 : MOTION.fade,
       dragRotate: false,
       pitchWithRotate: false,
+      cooperativeGestures: cooperative,
     });
     map.current = m;
     // ?debug exposes the map for inspection in devtools / headless checks.
@@ -300,8 +304,7 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
 function applyBands(m: MlMap, bands?: Props["levelZooms"]) {
   for (const level of LEVELS) {
     const band = bands ? bands[level] : GEO_LEVELS[level];
-    for (const suffix of ["fill", "outline"]) {
-      const id = `${level}-${suffix}`;
+    for (const id of [...fillLayerIds(level), `${level}-outline`]) {
       if (!m.getLayer(id)) continue;
       m.setLayoutProperty(id, "visibility", band ? "visible" : "none");
       if (band) m.setLayerZoomRange(id, band.minzoom, band.maxzoom);
@@ -385,7 +388,6 @@ function syncPaint(m: MlMap, paint: Partial<Record<GeoLevel, LevelPaint>>, appli
   for (const level of LEVELS) {
     const next = paint[level];
     if (applied[level] === next || !m.getLayer(`${level}-fill`)) continue;
-    const source = `b-${level}`;
     if (TILE_VALUE_LEVELS.has(level)) {
       // Values are tile properties: one step expression, no per-feature state.
       const noData = THEMES[theme].map.noData;
@@ -396,10 +398,12 @@ function syncPaint(m: MlMap, paint: Partial<Record<GeoLevel, LevelPaint>>, appli
       applied[level] = next;
       continue;
     }
-    m.removeFeatureState({ source, sourceLayer: level });
-    if (next) {
-      m.setPaintProperty(`${level}-fill`, "fill-color", choroplethFill(next.colors, theme) as never);
-      for (const [id, c] of next.classes) m.setFeatureState({ source, sourceLayer: level, id }, { c });
+    // Data-driven expressions evaluated in the tile workers, no per-feature state (D-114).
+    if (PER_STATE_LEVELS.has(level)) {
+      const fills = choroplethFillsByState(level, next?.colors ?? [], next?.classes ?? new Map(), theme);
+      for (const [id, color] of Object.entries(fills)) if (m.getLayer(id)) m.setPaintProperty(id, "fill-color", color as never);
+    } else {
+      m.setPaintProperty(`${level}-fill`, "fill-color", choroplethFill(next?.colors ?? [], next?.classes ?? new Map(), theme) as never);
     }
     applied[level] = next;
   }
@@ -420,7 +424,8 @@ function restoreFlags(m: MlMap, hover: { level: GeoLevel; id: string } | null, s
 function setFlag(m: MlMap, ref: { current: { level: GeoLevel; id: string } | null }, next: { level: GeoLevel; id: string } | null, key: string) {
   const cur = ref.current;
   if (cur && next && cur.level === next.level && cur.id === next.id) return;
-  if (cur) m.setFeatureState({ source: `b-${cur.level}`, sourceLayer: cur.level, id: cur.id }, { [key]: false });
+  // Remove rather than set false, so hover entries don't pile up in the source's state.
+  if (cur) m.removeFeatureState({ source: `b-${cur.level}`, sourceLayer: cur.level, id: cur.id }, key);
   if (next) m.setFeatureState({ source: `b-${next.level}`, sourceLayer: next.level, id: next.id }, { [key]: true });
   ref.current = next;
 }

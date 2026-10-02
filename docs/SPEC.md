@@ -2,7 +2,8 @@
 
 Self-contained handoff for Claude Code (or any agent). Read all of it before writing code.
 
-> Assumptions verified 2026-09-30. Findings are logged in `docs/DECISIONS.md`. Inline
+> Assumptions verified 2026-09-30. Findings are logged as decisions: D-01 to D-99 in `docs/DECISIONS.md`,
+> later ones one file each in `docs/decisions/` (`docs/branching.md`). Inline
 > notes marked **[verified]** were added during that review.
 
 ## 1. What this is
@@ -84,7 +85,7 @@ Verify each exists and is current before relying on it; names and install comman
 /packages/design     tokens, ramps, legend/popup components
 /data/registry       dataset registry entries
 /data/ingest         ingestion scripts (one per source)
-/docs                design-system.md, data-sources.md, DECISIONS.md
+/docs                design-system.md, data-sources.md, DECISIONS.md (frozen), decisions/, branching.md
 /.claude/skills      project-local skills
 CLAUDE.md            short pointer to this spec + conventions
 ```
@@ -113,7 +114,7 @@ Get a free Census API key at https://api.census.gov/data/key_signup.html and sto
 
 ## 10. Failure conditions (stop and log, don't improvise)
 
-Stop and write the issue to `docs/DECISIONS.md` rather than guessing if:
+Stop and log the issue as a decision (`docs/decisions/`, ID = PR number + 100; `docs/branching.md`) rather than guessing if:
 
 - A data source requires a paid key, login, or has unclear license terms
 - A ramp fails the colorblind/contrast check and no safe alternative exists
@@ -129,7 +130,7 @@ Stop and write the issue to `docs/DECISIONS.md` rather than guessing if:
 - [ ] Design system doc exists and all ramps pass the accessibility check
 - [ ] Bivariate view works
 - [ ] Weird Insights v0 shows at least 10 vetted, captioned insights
-- [ ] `docs/DECISIONS.md` lists every open question and every stop-condition hit
+- [ ] The decision log (`docs/DECISIONS.md` + `docs/decisions/`) lists every open question and every stop-condition hit
 
 ## 12. Open decisions for Robbie (do not decide unilaterally)
 

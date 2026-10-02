@@ -14,7 +14,6 @@ geographyLevels: [state, county]
 unit: agreements
 universe: active 287(g) agreements (by participating agency)
 coverageNote: "Counts agreements, not arrests. State agencies and regional task forces count toward their state only."
-excludeFromInsights: true
 terms: [ice-287g]
 measure:
   kind: ddp_287g

@@ -98,3 +98,38 @@ export function classifyBivariate(x: Values, y: Values): BivariateClassed {
   for (const g of shared) classes.set(g, 3 * Math.min(classOf(y[g], yBreaks), 2) + Math.min(classOf(x[g], xBreaks), 2));
   return { colors: rampColors("bivBlueGold", 9), xBreaks, yBreaks, classes };
 }
+
+// Classification results are cached per loaded values object (D-114): each level is
+// classified once, and its result keeps the same identity across renders, so the map only
+// repaints a level when that level's data actually changes.
+const uniCache = new WeakMap<Values, Map<string, WeakMap<Values, Classed>>>();
+const biCache = new WeakMap<Values, WeakMap<Values, BivariateClassed>>();
+const blockCache = new WeakMap<Classed, Map<string, Classed & { field: string }>>();
+
+export function classifyUnivariateCached(ds: Dataset, values: Values, breaksFrom?: Values): Classed {
+  let byDs = uniCache.get(values);
+  if (!byDs) uniCache.set(values, (byDs = new Map()));
+  let byBase = byDs.get(ds.id);
+  if (!byBase) byDs.set(ds.id, (byBase = new WeakMap()));
+  const key = breaksFrom ?? values;
+  let c = byBase.get(key);
+  if (!c) byBase.set(key, (c = classifyUnivariate(ds, values, breaksFrom)));
+  return c;
+}
+
+export function classifyBivariateCached(x: Values, y: Values): BivariateClassed {
+  let byY = biCache.get(x);
+  if (!byY) biCache.set(x, (byY = new WeakMap()));
+  let c = byY.get(y);
+  if (!c) byY.set(y, (c = classifyBivariate(x, y)));
+  return c;
+}
+
+/** Blocks reuse the block-group classes, colored from a tile property (`field`). */
+export function blockPaintFrom(bg: Classed, field: string): Classed & { field: string } {
+  let byField = blockCache.get(bg);
+  if (!byField) blockCache.set(bg, (byField = new Map()));
+  let c = byField.get(field);
+  if (!c) byField.set(field, (c = { colors: bg.colors, breaks: bg.breaks, classes: new Map(), field }));
+  return c;
+}

@@ -47,13 +47,13 @@ Add the `approved` label (or comment "approve"). Add notes in a comment if you w
 
 Ingest needs GDAL, tippecanoe and the R2 keys, so builds run locally, not in the routine. At the start of a session, Claude lists `approved` issues and, per issue:
 
-1. Branch `data/<dataset-id>`; registry entry + ingest script (no UI code); glossary terms; facets if useful.
+1. Worktree on a new branch `data/<dataset-id>` from the latest `main` (`docs/branching.md`); open the PR as a draft after the first commit, so any decision can take its number (PR + 100). Registry entry + ingest script (no UI code); glossary terms; facets if useful.
 2. `npm run check:design`, the `dataset-display-review` skill, sanity checks against a published total.
-3. PR titled with the dataset name, body "Closes #N", with the sanity numbers. Label the issue `building` while in progress.
+3. Mark the PR ready: titled with the dataset name, body "Closes #N", with the sanity numbers. Label the issue `building` while in progress.
 
 ## 5. Review and publish (Robbie)
 
-Open the Vercel preview link on the PR, look at the map and `/data/<id>`, then merge. Merging to `main` deploys to mapwich.org.
+Open the Vercel preview link on the PR, look at the map and `/data/<id>`, then merge (or tell Claude to; it merges with `bash scripts/merge-pr.sh <n>`, which refuses if the branch is behind `main` or a check is red). Merging to `main` deploys to mapwich.org.
 
 ## Never ingest
 

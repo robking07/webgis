@@ -110,6 +110,54 @@
   "source": "https://deportationdata.org/"
  },
  {
+  "id": "race-ethnicity",
+  "term": "Race and Hispanic origin",
+  "short": "The Census asks two separate questions: whether someone is Hispanic or Latino, and their race. People answer for themselves.",
+  "long": "Because Hispanic origin is asked separately, a Hispanic person can be of any race. These maps count everyone once: Hispanic or Latino residents of any race, then non-Hispanic residents by race (\"alone\" means one race reported). Those shares add up to 100% for each place. Starting with 2020 data, the Census Bureau codes written-in answers more completely, so more people are counted as two or more races; compare earlier periods with care.",
+  "source": "https://www.census.gov/topics/population/race/about.html"
+ },
+ {
+  "id": "median",
+  "term": "Median",
+  "short": "The middle value: half of the people, homes or households are above it and half are below.",
+  "long": "A median isn't pulled up by a few very large values the way an average is, which is why the Census uses it for age, income, home values and rent. A place's median can't be added or averaged with its neighbors' to get a regional median; the county and state values here are computed from the full data, not from their tracts."
+ },
+ {
+  "id": "inflation-adjusted",
+  "term": "Inflation-adjusted dollars",
+  "short": "Dollar amounts are restated in 2024 dollars, so earlier periods can be compared without inflation getting in the way.",
+  "long": "The Census Bureau reports each 5-year period in its own last year's dollars. When you step back to earlier periods on the map, those values are converted to 2024 dollars with the Consumer Price Index (CPI-U), so a change you see reflects a real change in buying power rather than rising prices.",
+  "source": "https://www.bls.gov/cpi/"
+ },
+ {
+  "id": "gini-index",
+  "term": "Gini index",
+  "short": "A score for income inequality from 0 (every household earns the same) to 1 (one household has all the income).",
+  "long": "The Gini index summarizes how far a place's household incomes are from being equal. Most U.S. counties fall between about 0.35 and 0.55. A higher value means a wider gap between high- and low-income households; it says nothing about whether a place is rich or poor overall, so read it next to median income.",
+  "source": "https://www.census.gov/topics/income-poverty/income-inequality/about/metrics/gini-index.html"
+ },
+ {
+  "id": "unemployment-rate",
+  "term": "Labor force and unemployment rate",
+  "short": "The labor force is everyone working or actively looking for work. The unemployment rate is the share of them without a job.",
+  "long": "Retirees, students and others not looking for work are outside the labor force, so they don't count as unemployed. That's why a place can have low unemployment and also few people working. These survey figures are averaged over five years, so they won't match the monthly rates in the news from the Bureau of Labor Statistics.",
+  "source": "https://www.census.gov/topics/employment/labor-force/about.html"
+ },
+ {
+  "id": "rent-burden",
+  "term": "Rent burden",
+  "short": "A renter household is \"burdened\" when rent and utilities take 30% or more of its income.",
+  "long": "The 30% line is the long-standing federal benchmark for housing affordability (HUD). Households spending more than half their income are considered severely burdened. Households with no income or no cash rent are left out because the share can't be computed.",
+  "source": "https://www.huduser.gov/portal/pdredge/pdr_edge_featd_article_092214.html"
+ },
+ {
+  "id": "limited-english",
+  "term": "Limited English household",
+  "short": "A household where nobody 14 or older speaks only English or speaks it \"very well.\"",
+  "long": "The Census Bureau uses this to find households that may need help in other languages, for example with public notices, voting materials or emergency alerts. It is about the household as a whole: one fluent teenager or adult is enough for the household not to count. The Census Bureau regrouped this table in 2016, so this map starts with 2015–2019.",
+  "source": "https://www.census.gov/topics/population/language-use/about.html"
+ },
+ {
   "id": "decennial-census",
   "term": "2020 Census",
   "short": "A count of every person and home, not a survey sample, so there's no margin of error.",
