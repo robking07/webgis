@@ -14,7 +14,7 @@ geographyLevels: [county]
 unit: percent
 universe: adults 18+ (model-based estimate)
 modelInputs: [pct_poverty, median_household_income]  # PLACES models county poverty; median income is near-collinear with it
-coverageNote: Model-based estimates; not every county is covered in every measure.
+coverageNote: "From the 2022 survey (CDC asks about sleep every other year), so every state has data, Kentucky and Pennsylvania included. Loving County, Texas, has too few residents to estimate."
 vintage: "2022 data"
 terms: [model-based-estimate, age-adjusted, margin-of-error, quantile-classes]
 measure: { kind: places, socrata: swc5-untb, measureId: SLEEP, valueType: AgeAdjPrv }

@@ -297,7 +297,7 @@
    "pct_poverty",
    "median_household_income"
   ],
-  "coverageNote": "Model-based estimates; not every county is covered in every measure.",
+  "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
   "facets": [],
   "excludeFromInsights": false,
   "learnMore": [],
@@ -1084,7 +1084,7 @@
    "pct_poverty",
    "median_household_income"
   ],
-  "coverageNote": "Model-based estimates; not every county is covered in every measure.",
+  "coverageNote": "Only states that asked CDC's optional loneliness question in their 2023 survey have data. No data for Colorado, Florida, Kentucky, Oregon, Pennsylvania, South Dakota, Tennessee, Texas, Vermont, Washington or Wyoming.",
   "facets": [],
   "excludeFromInsights": false,
   "learnMore": [],
@@ -1512,7 +1512,7 @@
    "pct_poverty",
    "median_household_income"
   ],
-  "coverageNote": "Model-based estimates; not every county is covered in every measure.",
+  "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
   "facets": [],
   "excludeFromInsights": false,
   "learnMore": [],
@@ -3541,7 +3541,7 @@
    "pct_poverty",
    "median_household_income"
   ],
-  "coverageNote": "Model-based estimates; not every county is covered in every measure.",
+  "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
   "facets": [],
   "excludeFromInsights": false,
   "learnMore": [],
@@ -3651,7 +3651,7 @@
    "pct_poverty",
    "median_household_income"
   ],
-  "coverageNote": "Model-based estimates; not every county is covered in every measure.",
+  "coverageNote": "From the 2022 survey (CDC asks about sleep every other year), so every state has data, Kentucky and Pennsylvania included. Loving County, Texas, has too few residents to estimate.",
   "facets": [],
   "excludeFromInsights": false,
   "learnMore": [],
@@ -3702,7 +3702,7 @@
    "pct_poverty",
    "median_household_income"
   ],
-  "coverageNote": "Model-based estimates; not every county is covered in every measure.",
+  "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
   "facets": [],
   "excludeFromInsights": false,
   "learnMore": [],
