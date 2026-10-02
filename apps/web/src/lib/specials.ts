@@ -1,4 +1,4 @@
-// Specials: Robbie's pieces, one Markdown file each in apps/web/content/specials/ (D-113).
+// Specials: Robbie's pieces, one Markdown file each in apps/web/content/specials/ (D-115).
 // Read at build time only (server components). Frontmatter is checked against the registry and the
 // Odd Pairings, and any mistake fails the build, so a typo can't publish a broken page.
 // Format and fields: content/specials/README.md.
@@ -103,7 +103,8 @@ function load(): Special[] {
   try { files = readdirSync(DIR).filter((f) => f.endsWith(".md") && f !== "README.md"); } catch { return []; }
   const all = files.map(parseFile);
   // Pieces and Odd Pairings share /specials/<id>; a clash would hide one of them.
-  const pairingIds = new Set(INSIGHTS.map((i) => i.id));
+  // "pairings" is the Odd Pairings list page.
+  const pairingIds = new Set([...INSIGHTS.map((i) => i.id), "pairings"]);
   for (const s of all) if (pairingIds.has(s.slug)) fail(`${s.slug}.md`, "file name matches an Odd Pairing id; rename it");
   return all.filter((s) => SHOW_DRAFTS || !s.draft).sort((a, b) => b.date.localeCompare(a.date) || a.slug.localeCompare(b.slug));
 }

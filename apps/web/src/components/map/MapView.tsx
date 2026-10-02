@@ -75,6 +75,9 @@ interface Props {
   /** County and tract boundary vintage for a timeline stop (D-36): "2019" = 2010 tracts and
    *  pre-2022 Connecticut counties; null = the current tiles. */
   boundaries?: "2019" | null;
+  /** Maps inside a scrolling page (Specials, D-115): the page scrolls, and zooming needs
+   *  Ctrl/⌘ + scroll or two fingers. */
+  cooperative?: boolean;
 }
 
 export interface MapApi {
@@ -100,7 +103,7 @@ function tilesUrl(level: GeoLevel, boundaries?: string | null) {
   return `pmtiles://${base}/${level !== "state" && boundaries ? `${level}-${boundaries}` : level}.pmtiles`;
 }
 
-export function MapView({ theme, initialView, paint, onViewChange, onHover, onSelect, onTilesError, ariaLabel, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, onApi, featureFilter, scaleUnit = "imperial", attribution = true, boundaries = null }: Props) {
+export function MapView({ theme, initialView, paint, onViewChange, onHover, onSelect, onTilesError, ariaLabel, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, onApi, featureFilter, scaleUnit = "imperial", attribution = true, boundaries = null, cooperative = false }: Props) {
   const container = useRef<HTMLDivElement>(null);
   const map = useRef<MlMap | null>(null);
   const applied = useRef<Partial<Record<GeoLevel, LevelPaint>>>({});
@@ -133,6 +136,7 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
       fadeDuration: reduceMotion ? 0 : MOTION.fade,
       dragRotate: false,
       pitchWithRotate: false,
+      cooperativeGestures: cooperative,
     });
     map.current = m;
     // ?debug exposes the map for inspection in devtools / headless checks.
