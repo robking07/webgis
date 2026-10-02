@@ -920,6 +920,7 @@
    "perSqMi": false
   },
   "modelInputs": [],
+  "coverageNote": "The Census Bureau doesn't publish this measure below census tracts, so there's no block-group view.",
   "facets": [],
   "excludeFromInsights": false,
   "timeline": {
@@ -1195,7 +1196,8 @@
   "geographyLevels": [
    "state",
    "county",
-   "tract"
+   "tract",
+   "block_group"
   ],
   "unit": "percent",
   "universe": "population 16+",
@@ -1213,6 +1215,7 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -1326,6 +1329,7 @@
    "perSqMi": false
   },
   "modelInputs": [],
+  "coverageNote": "The Census Bureau doesn't publish this measure below census tracts, so there's no block-group view.",
   "facets": [],
   "excludeFromInsights": false,
   "defaultLevel": "tract",
@@ -1440,7 +1444,8 @@
   "geographyLevels": [
    "state",
    "county",
-   "tract"
+   "tract",
+   "block_group"
   ],
   "unit": "years",
   "universe": "total population",
@@ -1455,6 +1460,7 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -1501,7 +1507,8 @@
   "geographyLevels": [
    "state",
    "county",
-   "tract"
+   "tract",
+   "block_group"
   ],
   "unit": "dollars",
   "universe": "renter-occupied housing units paying cash rent",
@@ -1514,9 +1521,10 @@
    "perSqMi": false
   },
   "modelInputs": [],
-  "coverageNote": "The Census Bureau caps the top value ($3,500 or more) and the bottom value, so the most and least expensive areas show the cap rather than their true median.",
+  "coverageNote": "The Census Bureau caps the top value ($3,500 or more) and the bottom value, so the most and least expensive areas show the cap rather than their true median. Block groups with too few renters paying cash rent show no median.",
   "facets": [],
   "excludeFromInsights": false,
+  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -1564,7 +1572,8 @@
   "geographyLevels": [
    "state",
    "county",
-   "tract"
+   "tract",
+   "block_group"
   ],
   "unit": "dollars",
   "universe": "owner-occupied housing units",
@@ -1577,9 +1586,10 @@
    "perSqMi": false
   },
   "modelInputs": [],
-  "coverageNote": "The Census Bureau caps the top value (about $2 million) and the bottom value, so the most and least expensive areas show the cap rather than their true median.",
+  "coverageNote": "The Census Bureau caps the top value (about $2 million) and the bottom value, so the most and least expensive areas show the cap rather than their true median. Block groups with too few owner-occupied homes show no median.",
   "facets": [],
   "excludeFromInsights": false,
+  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -1820,7 +1830,8 @@
   "geographyLevels": [
    "state",
    "county",
-   "tract"
+   "tract",
+   "block_group"
   ],
   "unit": "percent",
   "universe": "total population",
@@ -1836,9 +1847,10 @@
    "perSqMi": false
   },
   "modelInputs": [],
-  "coverageNote": "Counts only people who give this as their single race; many Native people also report another race and are counted under two or more races. Small numbers make tract estimates uncertain outside reservations and Alaska.",
+  "coverageNote": "Counts only people who give this as their single race; many Native people also report another race and are counted under two or more races. Small numbers make tract and block-group estimates uncertain outside reservations and Alaska.",
   "facets": [],
   "excludeFromInsights": false,
+  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -1885,7 +1897,8 @@
   "geographyLevels": [
    "state",
    "county",
-   "tract"
+   "tract",
+   "block_group"
   ],
   "unit": "percent",
   "universe": "total population",
@@ -1903,6 +1916,7 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -1949,7 +1963,8 @@
   "geographyLevels": [
    "state",
    "county",
-   "tract"
+   "tract",
+   "block_group"
   ],
   "unit": "percent",
   "universe": "population 25+",
@@ -1970,6 +1985,7 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -2082,7 +2098,8 @@
   "geographyLevels": [
    "state",
    "county",
-   "tract"
+   "tract",
+   "block_group"
   ],
   "unit": "percent",
   "universe": "total population",
@@ -2100,6 +2117,7 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -2146,7 +2164,8 @@
   "geographyLevels": [
    "state",
    "county",
-   "tract"
+   "tract",
+   "block_group"
   ],
   "unit": "percent",
   "universe": "workers 16+",
@@ -2164,6 +2183,7 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -2209,7 +2229,8 @@
   "geographyLevels": [
    "state",
    "county",
-   "tract"
+   "tract",
+   "block_group"
   ],
   "unit": "percent",
   "universe": "workers 16+",
@@ -2227,6 +2248,7 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -2272,7 +2294,8 @@
   "geographyLevels": [
    "state",
    "county",
-   "tract"
+   "tract",
+   "block_group"
   ],
   "unit": "percent",
   "universe": "workers 16+ not working from home",
@@ -2290,6 +2313,7 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -2351,6 +2375,7 @@
    "perSqMi": false
   },
   "modelInputs": [],
+  "coverageNote": "The Census Bureau doesn't publish this measure below census tracts, so there's no block-group view.",
   "facets": [],
   "excludeFromInsights": false,
   "timeline": {
@@ -2399,7 +2424,8 @@
   "geographyLevels": [
    "state",
    "county",
-   "tract"
+   "tract",
+   "block_group"
   ],
   "unit": "percent",
   "universe": "total population",
@@ -2417,6 +2443,7 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -2463,7 +2490,8 @@
   "geographyLevels": [
    "state",
    "county",
-   "tract"
+   "tract",
+   "block_group"
   ],
   "unit": "percent",
   "universe": "workers 16+ not working from home",
@@ -2485,6 +2513,7 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -2531,7 +2560,8 @@
   "geographyLevels": [
    "state",
    "county",
-   "tract"
+   "tract",
+   "block_group"
   ],
   "unit": "percent",
   "universe": "households",
@@ -2552,6 +2582,7 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "defaultLevel": "tract",
   "timeline": {
    "from": 2019,
    "to": 2024,
@@ -2665,7 +2696,8 @@
   "geographyLevels": [
    "state",
    "county",
-   "tract"
+   "tract",
+   "block_group"
   ],
   "unit": "percent",
   "universe": "total population",
@@ -2684,6 +2716,7 @@
   "coverageNote": "The Census Bureau changed how it codes written-in race answers starting with 2020 data, so this share jumps between 2015–2019 and 2020–2024 partly because of the change, not only because of real change.",
   "facets": [],
   "excludeFromInsights": false,
+  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -2731,7 +2764,8 @@
   "geographyLevels": [
    "state",
    "county",
-   "tract"
+   "tract",
+   "block_group"
   ],
   "unit": "percent",
   "universe": "total population",
@@ -2747,9 +2781,10 @@
    "perSqMi": false
   },
   "modelInputs": [],
-  "coverageNote": "A small group outside Hawaii and a few West Coast and Mountain West communities, so most tract and county estimates are near zero with wide margins of error.",
+  "coverageNote": "A small group outside Hawaii and a few West Coast and Mountain West communities, so most block-group, tract and county estimates are near zero with wide margins of error.",
   "facets": [],
   "excludeFromInsights": false,
+  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -2796,7 +2831,8 @@
   "geographyLevels": [
    "state",
    "county",
-   "tract"
+   "tract",
+   "block_group"
   ],
   "unit": "percent",
   "universe": "population 25+",
@@ -2828,6 +2864,7 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -2874,7 +2911,8 @@
   "geographyLevels": [
    "state",
    "county",
-   "tract"
+   "tract",
+   "block_group"
   ],
   "unit": "percent",
   "universe": "total population",
@@ -2898,6 +2936,7 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -3019,7 +3058,8 @@
   "geographyLevels": [
    "state",
    "county",
-   "tract"
+   "tract",
+   "block_group"
   ],
   "unit": "percent",
   "universe": "renter households (rent burden computed)",
@@ -3048,6 +3088,7 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -3161,7 +3202,8 @@
   "geographyLevels": [
    "state",
    "county",
-   "tract"
+   "tract",
+   "block_group"
   ],
   "unit": "percent",
   "universe": "households",
@@ -3179,6 +3221,7 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -3290,7 +3333,8 @@
   "geographyLevels": [
    "state",
    "county",
-   "tract"
+   "tract",
+   "block_group"
   ],
   "unit": "percent",
   "universe": "civilian noninstitutionalized population",
@@ -3311,6 +3355,7 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -3423,7 +3468,8 @@
   "geographyLevels": [
    "state",
    "county",
-   "tract"
+   "tract",
+   "block_group"
   ],
   "unit": "percent",
   "universe": "total population",
@@ -3441,6 +3487,7 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -3553,7 +3600,8 @@
   "geographyLevels": [
    "state",
    "county",
-   "tract"
+   "tract",
+   "block_group"
   ],
   "unit": "percent",
   "universe": "workers 16+",
@@ -3572,6 +3620,7 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -3692,7 +3741,8 @@
   "geographyLevels": [
    "state",
    "county",
-   "tract"
+   "tract",
+   "block_group"
   ],
   "unit": "dollars",
   "universe": "total population",
@@ -3707,6 +3757,7 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -4025,7 +4076,8 @@
   "geographyLevels": [
    "state",
    "county",
-   "tract"
+   "tract",
+   "block_group"
   ],
   "unit": "percent",
   "universe": "civilian labor force 16+",
@@ -4043,6 +4095,7 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
+  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,

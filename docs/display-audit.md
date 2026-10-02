@@ -1,6 +1,6 @@
 # Dataset display audit
 
-Run with the `dataset-display-review` skill (`.claude/skills/dataset-display-review/SKILL.md`). Last full pass: **2026-10-01**, 27 datasets (D-26). 2026-10-01: 27 ACS datasets added and reviewed in a browser (D-113). 2026-10-02: the three 2020 Census datasets and block-group/block levels (D-124).
+Run with the `dataset-display-review` skill (`.claude/skills/dataset-display-review/SKILL.md`). Last full pass: **2026-10-01**, 27 datasets (D-26). 2026-10-01: 27 ACS datasets added and reviewed in a browser (D-113). 2026-10-02: the three 2020 Census datasets and block-group/block levels (D-124). 2026-10-02: block groups for 25 more ACS datasets; coverage notes for the 3 that stop at tracts (D-131).
 
 ## Fixed in this pass
 
@@ -24,19 +24,19 @@ Run with the `dataset-display-review` skill (`.claude/skills/dataset-display-rev
 | Traffic deaths | ✓ | rate per 100k, classes | – | **FARS crash points** underneath (facets: year, person type, light/weather, road type) |
 | Bridge deck area in poor condition | ✓ | bridge condition, classes | – | **NBI bridge points** underneath (facets: condition, owner, year built, carries interstate?) |
 | Job density | ✓ | LODES, geography, classes | – | jobs by industry/wage family (LODES CNS/CE columns) |
-| 12 ACS measures | ✓ | ACS 5-year, MOE, geography, classes | – | **families**: commute mode (transit/walk/bike/WFH), commute time. Block groups built for 11 (D-124; mean commute has no block-group table) |
+| 12 ACS measures | ✓ | ACS 5-year, MOE, geography, classes | – | **families**: commute mode (transit/walk/bike/WFH), commute time. Block groups built for 11 (D-124; mean commute has no block-group table, said in its coverage note, D-131) |
 | 6 CDC PLACES measures | ✓; coverage notes name the missing states (KY/PA have no 2023 survey data; loneliness covers 40 states + DC), #25 | model-based, age-adjusted, MOE, classes | – | **family**: health behaviors; tract level exists in PLACES (needs 2020-tract check); KY/PA backfill from the 2024 release (2022 data) if Robbie wants mixed years |
 | CEJST disadvantaged tracts (2010 tracts) | ✓ burdens listed in words | CEJST, 2010 tracts | status | per-category facets (8 burdens), tract 2010→2020 crosswalk |
 | Residents in disadvantaged communities (CEJST) | ✓ | CEJST, 2010 tracts, classes | – | pairs naturally with poverty, PLACES health, climate |
 | 287(g) agreements (DDP) | ✓ "N agreements" | 287(g) | – | agreement model (Task Force / Jail / Warrant) family; time slider (history back to 2002); kept out of Weird Insights |
 | 4 NOAA climate normals | ✓ | climate normal, classes | – | **family** with a season/month selector |
 | 8 race & ethnicity shares (ACS B03002, D-113) | ✓ plain group names, "(non-Hispanic)" spelled out | race and Hispanic origin (incl. 2020 coding change), ACS 5-year, MOE, geography, classes | – | **family** (switch group from the card); a diversity index; dot-density view; kept out of Odd Pairings |
-| 19 more ACS measures: nativity, language, age, income, jobs, education, housing costs, insurance, commuting (D-113) | ✓ | median, inflation-adjusted, Gini, unemployment rate, rent burden, limited English, plus the ACS set | – | **families**: commute mode now also drive alone/carpool; education ladder; housing cost (rent, value, burden). Block groups: published for 25 of the 27 D-113 datasets, not built yet (D-124) |
+| 19 more ACS measures: nativity, language, age, income, jobs, education, housing costs, insurance, commuting (D-113) | ✓ | median, inflation-adjusted, Gini, unemployment rate, rent burden, limited English, plus the ACS set | – | **families**: commute mode now also drive alone/carpool; education ladder; housing cost (rent, value, burden). Block groups built for 25 of the 27 (D-131); Gini and foreign-born have no block-group table, said in their coverage notes |
 | 3 2020 Census counts: residents per sq mi, homes per sq mi, share of homes vacant (D-124) | ✓ vintage "2020 count"; blocks named "Block 1001, Tract 101.02" | 2020 Census (privacy noise in block counts), geography (now covers block groups and blocks), classes | – | **family** with the ACS population density (same idea, survey vs count); vacancy split (seasonal vs for rent/sale) needs the DHC file, not P.L. 94-171 |
 
 ## Opportunities, ranked
 
 1. **Point layers under rates** (crashes under traffic deaths, bridges under bridge condition): the most natural "dig deeper" step. Needs point styling on the feature-layer kind.
 2. **Dataset families** (switch commute mode, health behavior or climate month from the card instead of the list).
-3. **Finer geography**: built (D-124): block groups for ACS and the 2020 Census, blocks for the 2020 Census. Left: block groups for the D-113 ACS datasets.
+3. **Finer geography**: built (D-124): block groups for ACS and the 2020 Census, blocks for the 2020 Census. Block groups for 25 of the 27 D-113 ACS datasets followed (D-131); Gini, foreign-born and mean commute stop at tracts because the Census Bureau publishes no block-group table for them.
 4. **Place-first entry** (pick a place, then see a short, curated set of its numbers). See `docs/roadmap.md`.
