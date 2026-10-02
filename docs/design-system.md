@@ -117,6 +117,7 @@ Light and dark come from the same token structure; the basemap and the UI chrome
 | light | panel borders (decorative) | `border` on `surface` | 1.45 | 1.3 |
 | light | map labels | `map.label` on `map.labelHalo` | 13.37 | 7 |
 | light | minor map labels | `map.labelMuted` on `map.labelHalo` | 6.18 | 4.5 |
+| light | labels outside the U.S. (muted on purpose, still legible) | `map.labelForeign` on `map.labelHalo` | 3.32 | 3 |
 | light | selection outline (non-text) | `map.highlight` on `map.land` | 14.73 | 3 |
 | light | selection outline vs its halo (reads over the darkest and lightest classes) | `map.highlight` on `map.highlightHalo` | 18.88 | 7 |
 | light | data-line casing vs U.S. land (non-text; keeps the quietest class visible) | `map.featureLineCasing` on `map.focusLand` | 3.25 | 3 |
@@ -138,6 +139,7 @@ Light and dark come from the same token structure; the basemap and the UI chrome
 | dark | panel borders (decorative) | `border` on `surface` | 1.46 | 1.3 |
 | dark | map labels | `map.label` on `map.labelHalo` | 12.22 | 7 |
 | dark | minor map labels | `map.labelMuted` on `map.labelHalo` | 6.62 | 4.5 |
+| dark | labels outside the U.S. (muted on purpose, still legible) | `map.labelForeign` on `map.labelHalo` | 3.96 | 3 |
 | dark | selection outline (non-text) | `map.highlight` on `map.land` | 18.13 | 3 |
 | dark | selection outline vs its halo (reads over the darkest and lightest classes) | `map.highlight` on `map.highlightHalo` | 18.88 | 7 |
 | dark | data-line casing vs U.S. land (non-text; keeps the quietest class visible) | `map.featureLineCasing` on `map.focusLand` | 3.23 | 3 |
@@ -158,11 +160,15 @@ Light and dark come from the same token structure; the basemap and the UI chrome
 
 ## Geography levels and zoom
 
-| Level | Shown at zoom |
-|---|---|
-| State | 0 – 3 |
-| County | 3 – 8.5 |
-| Census tract | 8.5 – max |
+"Switch with zoom" is the default for every dataset. Zooms are for a map 1440 px across; smaller screens shift every band down by `bandShift` (about 2 zooms on a 390 px phone), so each level covers the same ground on any screen. A pinned level draws at every zoom except below its floor, where the finest coarser level stands in.
+
+| Level | Shown at zoom (switch with zoom) | Never below zoom (pinned) |
+|---|---|---|
+| State | 0 – 4.6 | – |
+| County | 4.6 – 8.5 | – |
+| Census tract | 8.5 – 11 | – |
+| Block group | 11 – 13 | 7 |
+| Block | 13 – max | 7 |
 
 Line widths and outlines scale with zoom (`SIZE`: featureOutline, fineOutlineOpacity, highlightOutline, line, lineMajor, point, dataLine, interstate, interstateCasing, river, riverCasing, pointStroke). Labels use Noto Sans Regular with a 1.4px halo that matches the basemap tone. Thematic fills are inserted **below** the basemap's label layers, so place names stay readable over any fill.
 

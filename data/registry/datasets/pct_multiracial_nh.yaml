@@ -11,7 +11,6 @@ license: Public domain (U.S. Government work, 17 U.S.C. § 105)
 updateCadence: annual
 vintage: "2020–2024 (5-year estimate)"
 geographyLevels: [state, county, tract, block_group]
-defaultLevel: tract  # ACS: tracts keep margins of error low (Robbie, D-35)
 unit: percent
 universe: total population
 coverageNote: "The Census Bureau changed how it codes written-in race answers starting with 2020 data, so this share jumps between 2015–2019 and 2020–2024 partly because of the change, not only because of real change."

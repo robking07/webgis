@@ -1,5 +1,5 @@
-import { useMemo } from "react";
-import { GEO_LEVELS, LAZY_LEVELS, levelAtZoom, levelBands, TILE_VALUE_LEVELS, type GeoLevel } from "@webgis/design";
+import { useMemo, useSyncExternalStore } from "react";
+import { bandShift, GEO_LEVELS, LAZY_LEVELS, levelAtZoom, levelBands, pinnedBands, TILE_VALUE_LEVELS, type GeoLevel } from "@webgis/design";
 import type { LevelPaint } from "../map/MapView";
 import { DATASET_BY_ID } from "@/lib/registry";
 import { featureLayerSpec, isFeatureDataset } from "@/lib/layers";
@@ -27,11 +27,12 @@ export function useViewerData(state: UrlState) {
   // Levels both datasets have (and the shown stop has). Blocks (values in the tiles) can't be
   // compared: no bivariate join.
   const availableLevels = useMemo(() => isFeature ? [] : LEVELS.filter((l) => (!primary || primary.geographyLevels.includes(l)) && (!secondary || (secondary.geographyLevels.includes(l) && !TILE_VALUE_LEVELS.has(l))) && (!stopId || stop!.levels.includes(l))), [primary, secondary, isFeature, stopId, stop]);
-  // Default level: how the source publishes the data, i.e. its finest level (ACS → tracts),
-  // drawn at every zoom (D-35). "Switch with zoom" (lv=auto) restores the old zoom bands.
-  const defaultLevel = primary?.defaultLevel && availableLevels.includes(primary.defaultLevel) ? primary.defaultLevel : availableLevels[availableLevels.length - 1] ?? null;
-  const pinnedLevel = state.lv === "auto" ? null : state.lv && availableLevels.includes(state.lv) ? state.lv : defaultLevel;
-  const bands = useMemo(() => (pinnedLevel ? { [pinnedLevel]: { minzoom: 0, maxzoom: 24 } } : levelBands(availableLevels)), [availableLevels, pinnedLevel]);
+  // Switch with zoom is the default for every dataset (Robbie, 2026-10-02; replaces D-35's
+  // "finest level at every zoom"). lv=<level> pins one; lv=auto is the old spelling of the default.
+  // A pinned block group or block never draws at national or multi-state zoom (pinFloor).
+  const pinnedLevel = state.lv && state.lv !== "auto" && availableLevels.includes(state.lv) ? state.lv : null;
+  const shift = useBandShift();
+  const bands = useMemo(() => (pinnedLevel ? pinnedBands(availableLevels, pinnedLevel, shift) : levelBands(availableLevels, shift)), [availableLevels, pinnedLevel, shift]);
   // Start loading tract / block-group values a little before they appear. Blocks are colored
   // with the block-group classes, so block groups load when blocks are near too.
   const nearBlocks = !!bands.block && state.at.zoom >= bands.block.minzoom - 1;
@@ -65,5 +66,11 @@ export function useViewerData(state: UrlState) {
     return out;
   }, [primary, secondary, x.values, y.values, stopId, xBase.values, blockField]);
 
-  return { primary, secondary, isFeature, featureSpec, stops, stop, stopId, availableLevels, defaultLevel, pinnedLevel, bands, x, y, level, classed, blockField };
+  return { primary, secondary, isFeature, featureSpec, stops, stop, stopId, availableLevels, pinnedLevel, bands, x, y, level, classed, blockField };
+}
+
+const onResize = (cb: () => void) => { window.addEventListener("resize", cb); return () => window.removeEventListener("resize", cb); };
+/** Zoom-band offset for this screen (the map is full-bleed), in quarter zooms. */
+function useBandShift(): number {
+  return useSyncExternalStore(onResize, () => bandShift(window.innerWidth, window.innerHeight), () => 0);
 }
