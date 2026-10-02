@@ -25,7 +25,7 @@ Run with the `dataset-display-review` skill (`.claude/skills/dataset-display-rev
 | Bridge deck area in poor condition | ✓ | bridge condition, classes | – | **NBI bridge points** underneath (facets: condition, owner, year built, carries interstate?) |
 | Job density | ✓ | LODES, geography, classes | – | jobs by industry/wage family (LODES CNS/CE columns) |
 | 12 ACS measures | ✓ | ACS 5-year, MOE, geography, classes | – | **families**: commute mode (transit/walk/bike/WFH), commute time; block group level (D-27) |
-| 6 CDC PLACES measures | ✓ | model-based, age-adjusted, MOE, classes | – | **family**: health behaviors; tract level exists in PLACES (needs 2020-tract check) |
+| 6 CDC PLACES measures | ✓; coverage notes name the missing states (KY/PA have no 2023 survey data; loneliness covers 40 states + DC), #25 | model-based, age-adjusted, MOE, classes | – | **family**: health behaviors; tract level exists in PLACES (needs 2020-tract check); KY/PA backfill from the 2024 release (2022 data) if Robbie wants mixed years |
 | CEJST disadvantaged tracts (2010 tracts) | ✓ burdens listed in words | CEJST, 2010 tracts | status | per-category facets (8 burdens), tract 2010→2020 crosswalk |
 | Residents in disadvantaged communities (CEJST) | ✓ | CEJST, 2010 tracts, classes | – | pairs naturally with poverty, PLACES health, climate |
 | 287(g) agreements (DDP) | ✓ "N agreements" | 287(g) | – | agreement model (Task Force / Jail / Warrant) family; time slider (history back to 2002); kept out of Weird Insights |
