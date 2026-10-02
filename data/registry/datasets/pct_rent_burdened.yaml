@@ -1,0 +1,22 @@
+id: pct_rent_burdened
+title: "Renters paying 30%+ of income on rent"
+description: "Share of renter households that spend 30 percent or more of their income on rent and utilities."
+category: Housing
+tags: [rent burden, housing cost burden, affordability, renters]
+source:
+  name: U.S. Census Bureau, American Community Survey 5-Year Estimates
+  url: https://www.census.gov/programs-surveys/acs
+  citation: "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+license: Public domain (U.S. Government work, 17 U.S.C. § 105)
+updateCadence: annual
+vintage: "2020–2024 (5-year estimate)"
+geographyLevels: [state, county, tract]
+unit: percent
+universe: renter households (rent burden computed)
+terms: [rent-burden, acs-5-year, margin-of-error, census-geography, quantile-classes]
+learnMore:
+  - label: See this place's full Census profile on Census Reporter
+    url: "https://censusreporter.org/profiles/{cr}/"
+measure: { kind: acs5, numerator: [B25070_007, B25070_008, B25070_009, B25070_010], denominator: [B25070_002, B25070_003, B25070_004, B25070_005, B25070_006, B25070_007, B25070_008, B25070_009, B25070_010], scale: 100 }
+timeline: { from: 2014, to: 2024, step: 5 }
+symbology: { ramp: oranges, classification: quantile, classes: 5, higherIsBetter: false }
