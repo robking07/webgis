@@ -24,13 +24,15 @@ const readTheme = (): ThemeName => {
   return t === "dark" || t === "light" ? t : window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 };
 
-export function SpecialMap({ datasets, at, level = "county", legendBelow = false, className, children }: {
+export function SpecialMap({ datasets, at, level = "county", legendBelow = false, poster, className, children }: {
   datasets: readonly string[];
   at: { lon: number; lat: number; zoom: number } | null;
-  /** Geography drawn: county (default), or tract for a single dataset that has tracts (D-120). */
+  /** Geography drawn: county (default), or tract for a single dataset that has tracts (D-122). */
   level?: "county" | "tract";
   /** Always put the legend under the map (inline focus maps, where an overlay would cover too much). */
   legendBelow?: boolean;
+  /** The piece's thumbnail (a screenshot of this map), shown while the live map loads. */
+  poster?: string | null;
   /** Sizing (aspect ratio) for the map box. */
   className?: string;
   /** Overlays drawn on the map (a tag, a button). */
@@ -57,8 +59,11 @@ export function SpecialMap({ datasets, at, level = "county", legendBelow = false
   return (
     <div className="flex flex-col gap-2">
       <div className={`relative overflow-hidden rounded-xl border bg-card ${className ?? ""}`}>
+        {/* The thumbnail sits under the live map, so the box shows the map at once and the live one draws over it. */}
+        {/* eslint-disable-next-line @next/next/no-img-element -- static thumbnail, same box as the map */}
+        {poster && !err && <img src={poster} alt="" aria-hidden className="absolute inset-0 h-full w-full object-cover" />}
         {err ? <div className="grid h-full place-items-center"><StatusState status="error" /></div>
-          : !paint ? <div className="grid h-full place-items-center"><StatusState status="loading" /></div> : (
+          : !paint ? (poster ? null : <div className="grid h-full place-items-center"><StatusState status="loading" /></div>) : (
           <>
             <MapView theme={theme} initialView={at ? { ...at } : { ...DEFAULT_VIEW }} paint={{ [level]: paint }}
               levelZooms={{ [level]: { minzoom: 0, maxzoom: 24 } }} cooperative

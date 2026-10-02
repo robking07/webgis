@@ -7,7 +7,7 @@ import { SPECIALS, formatDate, renderMarkdown, type Special } from "@/lib/specia
 import { SiteFooter } from "@/components/SiteNav";
 import { SpecialBlock } from "./SpecialBlocks";
 import { SpecialMap } from "./SpecialMap";
-import { DataBox, DraftTag, LineUpBox, SpecialCard, mapHref, midSentence } from "./parts";
+import { DataBox, DraftTag, LineUpBox, SpecialCard, byline, mapHref, midSentence } from "./parts";
 
 export function SpecialPiece({ special: s }: { special: Special }) {
   const [x, y] = s.datasets.map((id) => DATASET_BY_ID.get(id)!);
@@ -27,11 +27,11 @@ export function SpecialPiece({ special: s }: { special: Special }) {
         </p>
         <h1 className="text-[32px] leading-[1.12] font-extrabold tracking-tight md:text-[52px] md:leading-[1.08]">{s.title}</h1>
         <p className="text-lg leading-normal text-foreground/80 md:text-[21px]">{s.dek}</p>
-        <p className="text-[13px] text-muted-foreground md:text-sm">By {s.author} · {formatDate(s.date)} · {s.minutes} min read</p>
+        <p className="text-[13px] text-muted-foreground md:text-sm">{byline(s.author)} · {formatDate(s.date)} · {s.minutes} min read</p>
       </div>
 
       <figure className="flex flex-col gap-2.5">
-        <SpecialMap datasets={s.datasets} at={s.at} className="aspect-[4/3] md:aspect-[16/7]">
+        <SpecialMap datasets={s.datasets} at={s.at} poster={s.image} className="aspect-[4/3] md:aspect-[16/7]">
           <Link href={mapHref(s)} className={`absolute top-4 right-4 z-10 hidden md:inline-flex ${openMap}`}>Open in the full map</Link>
         </SpecialMap>
         <Link href={mapHref(s)} className={`flex md:hidden ${openMap}`}>Open in the full map</Link>

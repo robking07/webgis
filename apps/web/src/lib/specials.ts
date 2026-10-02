@@ -1,7 +1,7 @@
 // Specials: pieces written as one Markdown file each in apps/web/content/specials/ (D-115).
 // scripts/prepare.mts reads and checks them before every dev and build (lib/specials-load.mts) and
 // writes src/generated/specials.json; this module serves that file to the pages, so nothing here
-// reads the disk. Inline maps, charts and tables: D-120. Format: content/specials/README.md.
+// reads the disk. Inline maps, charts and tables: D-122. Format: content/specials/README.md.
 import { marked } from "marked";
 import data from "@/generated/specials.json";
 import type { Special } from "./specials-load.mts";

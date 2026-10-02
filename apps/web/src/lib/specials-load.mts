@@ -1,4 +1,4 @@
-// Specials loader (D-115, D-120). Node-only: runs in scripts/prepare.mts before every dev and build,
+// Specials loader (D-115, D-122). Node-only: runs in scripts/prepare.mts before every dev and build,
 // reads content/specials/*.md, checks the frontmatter and inline blocks against the registry and the
 // Odd Pairings, computes the charts and tables from the exported values, and writes
 // src/generated/specials.json. Any mistake fails the build with a message naming the file.
@@ -12,7 +12,7 @@ import { marked } from "marked";
 import type { DatasetEntry } from "@webgis/registry";
 import { blockDatasets, blockWords, parseBlock, setBlockContext, type Block } from "./special-blocks.mts";
 
-/** The body in reading order: Markdown rendered to HTML, and inline maps, charts and tables (D-120). */
+/** The body in reading order: Markdown rendered to HTML, and inline maps, charts and tables (D-122). */
 export type Segment = { kind: "html"; html: string } | Block;
 
 export interface Special {
@@ -57,7 +57,8 @@ function fail(file: string, msg: string): never {
   throw new Error(`content/specials/${file}: ${msg}`);
 }
 
-function parseBody(file: string, body: string) {
+/** `firstLine`: the file line the body starts on, so messages point at the right line. */
+function parseBody(file: string, body: string, firstLine: number) {
   const out: Array<{ kind: "html"; html: string; words: number } | Block> = [];
   const prose = (md: string) => {
     if (!md.trim()) return;
@@ -67,7 +68,7 @@ function parseBody(file: string, body: string) {
   for (const m of body.matchAll(FENCE)) {
     prose(body.slice(last, m.index));
     n++;
-    const where = `the ${m[1]} block on body line ${body.slice(0, m.index).split("\n").length} (inline block ${n})`;
+    const where = `the ${m[1]} block at line ${firstLine + body.slice(0, m.index).split("\n").length - 1} (inline block ${n})`;
     out.push(parseBlock(m[1], m[2], (msg) => fail(file, `${where}: ${msg}`), (md) => marked.parseInline(md, { async: false })));
     last = m.index + m[0].length;
   }
@@ -118,7 +119,7 @@ function parseFile(appDir: string, byId: Map<string, DatasetEntry>, pairings: Pa
   const image = str("image", false);
   if (image && (!image.startsWith("/") || !existsSync(join(appDir, "public", image)))) fail(file, `"image" ${image} is not a file in apps/web/public/ (write it as /specials/name.png)`);
 
-  const segments = parseBody(file, body);
+  const segments = parseBody(file, body, raw.length === body.length ? 1 : raw.slice(0, raw.length - body.length).split("\n").length);
   const words = segments.reduce((t, sg) => t + (sg.kind === "html" ? sg.words : blockWords(sg)), 0);
   const allDatasets = [...new Set([...datasets.map(String), ...segments.flatMap((sg) => (sg.kind === "html" ? [] : blockDatasets(sg)))])];
   return {

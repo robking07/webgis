@@ -155,7 +155,7 @@
 .wg-prose figure { display: flex; flex-direction: column; gap: 0.5rem; }
 .wg-prose figcaption, .wg-prose img + em { font-size: 0.8125rem; line-height: 1.5; color: var(--ui-text-muted); font-style: normal; }
 .wg-prose hr { border: 0; border-top: 1px solid var(--ui-border); }
-/* Links that are controls or table entries inside a Special's inline blocks (D-120), not prose links. */
+/* Links that are controls or table entries inside a Special's inline blocks (D-122), not prose links. */
 .wg-prose a.wg-block-link { color: var(--ui-text); text-decoration: none; }
 .wg-prose a.wg-block-link:hover { text-decoration: underline; }
 .wg-prose-sm { gap: 0.75rem; font-size: 0.9375rem; line-height: 1.6; }

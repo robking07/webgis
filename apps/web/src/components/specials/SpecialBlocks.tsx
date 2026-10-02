@@ -1,4 +1,4 @@
-// Inline elements in a Special's text (D-120): focus maps, a bar chart by groups, and tables.
+// Inline elements in a Special's text (D-122): focus maps, a bar chart by groups, and tables.
 // Numbers are computed at build time (lib/special-blocks.mts, run by scripts/prepare.mts). Charts are real tables with bars
 // drawn in, so screen readers and phones get the same numbers; colors are theme tokens only.
 import Link from "next/link";
@@ -15,8 +15,8 @@ const refLabel = (r: Ref) => (r.period ? `${r.title} (${r.period})` : r.title);
 const frame = "flex flex-col gap-3 rounded-xl border bg-card p-4 md:p-5";
 const titleCls = "text-[15px] font-bold leading-snug text-foreground md:text-base";
 const captionCls = "text-[13px] leading-normal text-muted-foreground [&_a]:underline";
-const th = "px-2 py-1.5 text-left text-xs font-semibold text-muted-foreground first:pl-0 last:pr-0";
-const td = "px-2 py-1.5 align-middle tabular-nums first:pl-0 last:pr-0";
+const th = "px-1.5 py-1.5 text-left align-bottom text-xs font-semibold text-muted-foreground first:pl-0 last:pr-0 md:px-2";
+const td = "px-1.5 py-1.5 align-middle tabular-nums first:pl-0 last:pr-0 md:px-2";
 
 function Caption({ html }: { html: string | null }) {
   return html ? <p className={captionCls} dangerouslySetInnerHTML={{ __html: html }} /> : null;
@@ -56,7 +56,7 @@ function BinsBlock({ b }: { b: BinsChart }) {
         <tbody>
           {b.rows.map((r, i) => (
             <tr key={i}>
-              <th scope="row" className={`${td} whitespace-nowrap font-normal text-foreground/85`}>
+              <th scope="row" className={`${td} text-left whitespace-nowrap font-normal text-foreground/85`}>
                 <span className="sr-only">{i === 0 ? "Lowest" : i === b.rows.length - 1 ? "Highest" : `Group ${i + 1}`}: </span>
                 {fmt(r.lo, b.x.unit)}–{fmt(r.hi, b.x.unit)}
               </th>
@@ -94,7 +94,7 @@ function CorrelationsBlock({ b }: { b: CorrelationTable }) {
           <tbody>
             {b.rows.map((r) => (
               <tr key={r.ref.id + r.ref.stop} className="border-b border-[color-mix(in_srgb,var(--ui-border)_50%,transparent)] last:border-0">
-                <th scope="row" className={`${td} font-normal text-foreground`}>{refLabel(r.ref)}</th>
+                <th scope="row" className={`${td} text-left font-normal text-foreground`}>{refLabel(r.ref)}</th>
                 {r.cells.map((c, i) => (
                   <td key={i} className={`${td} text-right ${c ? "font-semibold text-foreground" : "text-muted-foreground"}`}>
                     {c ? rhoText(c.rho) : "—"}
@@ -114,6 +114,10 @@ function CorrelationsBlock({ b }: { b: CorrelationTable }) {
 }
 
 function CountiesBlock({ b }: { b: CountyTable }) {
+  // All in one state: say it once in the header and keep the names short, so four columns fit a phone.
+  const states = new Set(b.rows.map((r) => r.name.match(/, ([A-Z]{2})$/)?.[1]));
+  const one = states.size === 1 ? [...states][0] ?? null : null;
+  const short = (n: string) => (one ? n.replace(/, [A-Z]{2}$/, "").replace(/ County$/, "") : n);
   return (
     <div role="figure" aria-label={b.title} className={frame}>
       <p className={titleCls}>{b.title}</p>
@@ -122,15 +126,15 @@ function CountiesBlock({ b }: { b: CountyTable }) {
           <caption className="sr-only">{b.title}</caption>
           <thead>
             <tr className="border-b">
-              <th scope="col" className={th}>County</th>
+              <th scope="col" className={th}>{one ? `County (${one})` : "County"}</th>
               {b.columns.map((c) => <th key={c.id + c.stop} scope="col" className={`${th} text-right`}>{refLabel(c)}</th>)}
             </tr>
           </thead>
           <tbody>
             {b.rows.map((r) => (
               <tr key={r.geoid} className="border-b border-[color-mix(in_srgb,var(--ui-border)_50%,transparent)] last:border-0">
-                <th scope="row" className={`${td} font-normal`}>
-                  <Link href={`/place/${r.geoid}`} className="wg-block-link">{r.name}</Link>
+                <th scope="row" className={`${td} text-left font-normal`}>
+                  <Link href={`/place/${r.geoid}`} className="wg-block-link" aria-label={r.name}>{short(r.name)}</Link>
                 </th>
                 {r.values.map((v, i) => (
                   <td key={i} className={`${td} text-right text-foreground`}>{v == null ? "No data" : fmt(v, b.columns[i].unit)}</td>

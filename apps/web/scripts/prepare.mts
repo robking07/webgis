@@ -39,7 +39,7 @@ const entries = loadRegistry();
 writeFileSync(join(app, "src/generated/registry.json"), JSON.stringify(entries, null, 1));
 writeFileSync(join(app, "src/generated/glossary.json"), JSON.stringify(loadGlossary(), null, 1));
 // 5. src/generated/specials.json: the Specials, checked and with their charts and tables computed
-//    from public/data/values (D-120). A bad piece stops here with a message naming the file.
+//    from public/data/values (D-122). A bad piece stops here with a message naming the file.
 const insights = JSON.parse(readFileSync(join(app, "src/generated/insights.json"), "utf8")).insights;
 const specials = loadSpecials(app, entries, insights);
 writeFileSync(join(app, "src/generated/specials.json"), JSON.stringify(specials, null, 1));

@@ -1,4 +1,4 @@
-// Inline elements in a Special's body (D-120): focus maps, charts and tables, written as fenced
+// Inline elements in a Special's body (D-122): focus maps, charts and tables, written as fenced
 // blocks (```map, ```chart, ```table) with YAML inside. Parsed and computed before the build (scripts/prepare.mts) from the
 // exported county values (public/data/values/<id>/county.json), so every number on the page comes
 // from Mapwich's own data. Any mistake fails the build with a message naming the file.
