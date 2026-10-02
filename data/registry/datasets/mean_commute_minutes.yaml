@@ -15,6 +15,7 @@ geographyLevels: [state, county, tract]
 defaultLevel: tract  # ACS: tracts keep margins of error low (Robbie, D-35)
 unit: minutes
 universe: workers 16+ not working from home
+coverageNote: "The Census Bureau doesn't publish this measure below census tracts, so there's no block-group view."
 terms: [acs-5-year, margin-of-error, census-geography, quantile-classes]
 learnMore:
   - label: See this place's full Census profile on Census Reporter
