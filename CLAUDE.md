@@ -21,6 +21,17 @@ Current mode: **REFINEMENT** (since 2026-10-01). Ask and wait before decisions. 
 prototype-style momentum only for a full new feature buildout or a similarly large task, and say so
 when you do.
 
+## Project lead (`claude --agent lead`)
+
+Robbie brings ideas, UX notes and feedback to one project-lead agent (`.claude/agents/lead.md`).
+It files them as GitHub issues (`idea` → `queued` → `building` → closed; `needs-robbie` while it
+waits on him) and assigns each one to a worker, then verifies and merges the work. The lead batches its
+questions to Robbie in plain language instead of following the one-question rule above.
+
+**If you are a worker the lead briefed:** don't ask Robbie anything and don't merge. Open a
+draft PR with "Closes #N" in it. Put any choice that is Robbie's (what users see, scope,
+editorial, data judgment, cost) in your final report for the lead, with the options you see.
+
 ## Conventions
 
 - Adding a dataset = registry entry + ingest script only. No UI code.
