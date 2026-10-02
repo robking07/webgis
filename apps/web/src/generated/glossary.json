@@ -72,9 +72,9 @@
  },
  {
   "id": "census-geography",
-  "term": "States, counties and census tracts",
-  "short": "The nested areas the Census Bureau reports data for. Tracts are neighborhoods of roughly 4,000 people.",
-  "long": "Every state is divided into counties (or equivalents), and every county into census tracts. Tracts are drawn to hold about 1,200 to 8,000 people, so they are small in cities and large in rural areas. Block groups and blocks are smaller still; they're planned for later."
+  "term": "States, counties, tracts, block groups and blocks",
+  "short": "The nested areas the Census Bureau reports data for. Tracts are neighborhoods of roughly 4,000 people; block groups and blocks are smaller still.",
+  "long": "Every state is divided into counties (or equivalents), and every county into census tracts. Tracts are drawn to hold about 1,200 to 8,000 people, so they are small in cities and large in rural areas. Each tract splits into a few block groups (usually 600 to 3,000 people), and each block group into blocks, often a single city block. Smaller areas show more detail, but survey estimates for them are less certain (wider margins of error)."
  },
  {
   "id": "lodes",

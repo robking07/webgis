@@ -1,11 +1,11 @@
 // docs/data-sources.md, generated from the registry plus row counts in the database
 // (tract counts from the static files, D-113).
-import { writeFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { loadRegistry } from "@webgis/registry/load";
 import type { DatasetEntry } from "@webgis/registry";
 import { describeMethod as method } from "@webgis/registry/describe";
-import { db, log, ROOT } from "./util.ts";
+import { db, log, ROOT, TILES } from "./util.ts";
 import { tractValueCount } from "./values.ts";
 
 export async function writeDataSourcesDoc() {
@@ -18,6 +18,10 @@ export async function writeDataSourcesDoc() {
   for (const e of entries) {
     const n = e.geographyLevels.includes("tract") && !counts.has(`${e.id}/tract`) ? tractValueCount(e.id) : null;
     if (n != null) counts.set(`${e.id}/tract`, `${n.toLocaleString()} values`);
+    // Block groups: static files with the tiles; blocks: values inside the block tiles (D-124).
+    const bg = join(TILES, "values", e.id, "block_group.json");
+    if (e.geographyLevels.includes("block_group") && existsSync(bg)) counts.set(`${e.id}/block_group`, `${Object.keys(JSON.parse(readFileSync(bg, "utf8"))).length.toLocaleString()} values (static file)`);
+    if (e.geographyLevels.includes("block")) counts.set(`${e.id}/block`, "in the block tiles");
   }
   const bySource = new Map<string, DatasetEntry[]>();
   for (const e of entries) (bySource.get(e.source.name) ?? bySource.set(e.source.name, []).get(e.source.name)!).push(e);

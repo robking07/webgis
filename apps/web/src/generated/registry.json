@@ -719,7 +719,7 @@
   },
   "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
   "updateCadence": "static",
-  "vintage": "2020",
+  "vintage": "2020 count",
   "geographyLevels": [
    "state",
    "county",
@@ -782,7 +782,7 @@
   },
   "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
   "updateCadence": "static",
-  "vintage": "2020",
+  "vintage": "2020 count",
   "geographyLevels": [
    "state",
    "county",
@@ -843,7 +843,7 @@
   },
   "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
   "updateCadence": "static",
-  "vintage": "2020",
+  "vintage": "2020 count",
   "geographyLevels": [
    "state",
    "county",

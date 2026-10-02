@@ -9,7 +9,7 @@ source:
   citation: "U.S. Census Bureau, 2020 Census Redistricting Data (Public Law 94-171) Summary File; 2020 TIGER/Line census blocks"
 license: Public domain (U.S. Government work, 17 U.S.C. § 105)
 updateCadence: static
-vintage: "2020"
+vintage: "2020 count"
 geographyLevels: [state, county, tract, block_group, block]
 defaultLevel: block_group  # Census: block groups by default, blocks one click away (Robbie, D-124)
 coverageNote: "Built from 2020 blocks. Block counts include Census Bureau privacy noise; block groups and larger are reliable."
