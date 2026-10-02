@@ -1,7 +1,8 @@
 # CLAUDE.md
 
 Full build spec: `docs/SPEC.md` (read it before writing code). Open questions and
-stop-conditions are logged in `docs/DECISIONS.md`.
+stop-conditions are logged as decisions: one file each in `docs/decisions/` (D-100 and up);
+D-01 to D-99 are in `docs/DECISIONS.md` and frozen.
 
 ## Core Directive — one clarifying question, continually reevaluated
 
@@ -11,7 +12,7 @@ ONE clarifying question about the highest-value open uncertainty (use AskUserQue
 Never ask something already answered. Never ask filler.
 
 - **Prototype mode (now → first review session):** the question must not block. Ask
-  it, state the default you're taking, and keep building. Log it in `docs/DECISIONS.md`.
+  it, state the default you're taking, and keep building. Log it as a decision.
   The only time to stop and wait is a SPEC §10 stop-condition or a §12 open decision.
 - **Refinement mode (after Robbie says the review is done):** ask the question and
   wait for the answer before continuing.
@@ -29,3 +30,15 @@ when you do.
   under the same license checks as any other source (Robbie, 2026-10-01; DECISIONS D-16).
 - Secrets live in `.env.local` only (Supabase, Census, Anthropic, R2, Vercel; names in `.env.example`). Never commit them,
   never print them, and never pass them as command-line arguments.
+
+## Branches, PRs and decision numbers (`docs/branching.md`)
+
+Other Claude sessions are often working in parallel. To avoid collisions:
+
+- Every task gets its own worktree on a new branch from the latest `origin/main`. Never
+  stack on an unmerged branch, and never commit to `main` or edit the main checkout.
+- Open the PR (draft) right after the first commit. **Decision ID = PR number + 100**
+  (PR #12 → D-112), in its own file `docs/decisions/D-112-<slug>.md`. Never pick the
+  "next" number by reading the log.
+- Before merging, merge `origin/main` into the branch and push. Merge only with
+  `bash scripts/merge-pr.sh <n>`, then remove the worktree and local branch.

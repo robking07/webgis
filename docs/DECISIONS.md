@@ -1,5 +1,8 @@
 # Decisions & Open Questions
 
+**Frozen at D-99.** New decisions go in `docs/decisions/`, one file each, numbered PR number + 100
+(`docs/branching.md`). Amend the entries below in place; don't add new ones here.
+
 Every open question, stop-condition hit, and default taken goes here (see `CLAUDE.md` and SPEC §10).
 
 Format: `ID · date · status (OPEN / DEFAULTED / DECIDED) · summary`, then details.
