@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { ChevronDown, Menu, SlidersHorizontal } from "lucide-react";
 import type { Dataset } from "@/lib/registry";
 import { DatasetHeading } from "../DatasetMenus";
@@ -5,7 +6,7 @@ import { LogoMark } from "../Logo";
 
 /** Immersed: menu button and wordmark, then the category above the dataset name (both open menus),
  *  then the display options chip. */
-export function ImmersedHeading({ primary, secondary, immersed, hasOptions, dockShown, chipLabel, onShowNav, onPick, onToggleDock }: {
+export function ImmersedHeading({ primary, secondary, immersed, hasOptions, dockShown, chipLabel, onShowNav, onPick, onToggleDock, onMenuChange }: {
   primary: Dataset;
   secondary: Dataset | null;
   immersed: boolean;
@@ -16,10 +17,14 @@ export function ImmersedHeading({ primary, secondary, immersed, hasOptions, dock
   onShowNav: () => void;
   onPick: (id: string) => void;
   onToggleDock: () => void;
+  /** A category or dataset menu opened or closed. */
+  onMenuChange: (open: boolean) => void;
 }) {
+  // An open menu sits above every other map panel (legend, controls, details), never under one.
+  const [menuOpen, setMenuOpen] = useState(false);
   return (
     <div data-obstructs={immersed ? "" : undefined}
-      className={`pointer-events-none absolute left-3 top-3 z-20 flex flex-col gap-1 transition-opacity duration-300 md:left-4 ${immersed ? "opacity-100" : "opacity-0"}`}
+      className={`pointer-events-none absolute left-3 top-3 ${menuOpen ? "z-40" : "z-20"} flex flex-col gap-1 transition-opacity duration-300 md:left-4 ${immersed ? "opacity-100" : "opacity-0"}`}
       inert={!immersed || undefined} aria-hidden={!immersed || undefined}>
       <div className="pointer-events-auto flex items-center gap-3">
         <button type="button" onClick={onShowNav} aria-label="Show navigation"
@@ -32,7 +37,8 @@ export function ImmersedHeading({ primary, secondary, immersed, hasOptions, dock
         </span>
       </div>
       <div className="mt-1">
-        <DatasetHeading key={primary.id} primary={primary} secondary={secondary} onPick={onPick} />
+        <DatasetHeading key={primary.id} primary={primary} secondary={secondary} onPick={onPick}
+          onOpenChange={(o) => { setMenuOpen(o); onMenuChange(o); }} />
       </div>
       {hasOptions && (
         <button type="button" onClick={onToggleDock} aria-expanded={dockShown} aria-controls="display-dock"

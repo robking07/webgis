@@ -4,22 +4,31 @@ import { GEO_LEVELS, type GeoLevel } from "@webgis/design";
 import type { Facet } from "@webgis/registry";
 import { TERM_BY_ID } from "@/lib/glossary";
 
-/** Geography level: the dataset's own level by default, any other level at every zoom, or switch with zoom. */
-function LevelPicker({ levels, pinned, defaultLevel, note, docked, onChange }: {
-  levels: GeoLevel[]; pinned: GeoLevel | null; defaultLevel: GeoLevel | null; note: string; docked?: boolean; onChange: (l: GeoLevel | "auto") => void;
+/** Geography level: switch with zoom (the default), or one level pinned at every zoom. A pinned
+ *  block group or block waits until the map is zoomed in past multi-state views (`pinFloor`);
+ *  its chip says "zoom in" until then. */
+function LevelPicker({ levels, pinned, shown, note, docked, onChange }: {
+  levels: GeoLevel[]; pinned: GeoLevel | null; shown: GeoLevel; note: string; docked?: boolean; onChange: (l: GeoLevel | "auto") => void;
 }) {
   return (
     <fieldset>
       <legend className={`mb-1.5 text-xs font-semibold ${docked ? "wg-on-map" : ""}`}>Geography level</legend>
       <div role="radiogroup" aria-label="Geography level" className="flex flex-wrap gap-1.5">
-        {([...levels, "auto"] as Array<GeoLevel | "auto">).map((l) => (
-          <button key={l} type="button" role="radio" aria-checked={l === "auto" ? !pinned : pinned === l} onClick={() => onChange(l)}
-            className={`rounded-full border px-2.5 py-0.5 text-xs text-muted-foreground aria-checked:border-primary aria-checked:bg-primary aria-checked:text-primary-foreground focus-visible:outline-2 focus-visible:outline-ring ${docked ? "wg-glass border-transparent text-foreground" : ""}`}>
-            {l === "auto" ? "Switch with zoom" : GEO_LEVELS[l].label.replace("Census tract", "Tract")}{l === defaultLevel ? " (default)" : ""}
-          </button>
-        ))}
+        {(["auto", ...levels] as Array<GeoLevel | "auto">).map((l) => {
+          const on = l === "auto" ? !pinned : pinned === l;
+          // The selected chip is solid in both places: .wg-glass is unlayered CSS and would
+          // override its fill (the blank chip in the dock, issue #32).
+          const look = on ? "border-primary bg-primary text-primary-foreground" : docked ? "wg-glass border-transparent text-foreground" : "text-muted-foreground";
+          return (
+            <button key={l} type="button" role="radio" aria-checked={on} onClick={() => onChange(l)}
+              className={`rounded-full border px-2.5 py-0.5 text-xs focus-visible:outline-2 focus-visible:outline-ring ${look}`}>
+              {l === "auto" ? "Switch with zoom" : GEO_LEVELS[l].label.replace("Census tract", "Tract")}{on && l !== "auto" && l !== shown ? " (zoom in)" : ""}
+            </button>
+          );
+        })}
       </div>
-      <p className={`mt-1.5 text-[11px] leading-snug text-muted-foreground ${docked ? "wg-on-map" : ""}`}>
+      {/* Over the map the muted gray loses to busy fills and labels: full text color plus the halo. */}
+      <p className={`mt-1.5 text-[11px] leading-snug ${docked ? "wg-on-map font-medium text-foreground" : "text-muted-foreground"}`}>
         {note}
       </p>
     </fieldset>
@@ -64,18 +73,21 @@ function FacetFilter({ facet, hidden, onToggle, onAll, docked }: { facet: Facet;
 }
 
 /** Display options (geography level, then facet filters): in the dataset card at rest, in the dock when immersed. */
-export function DisplayOptions({ levels, pinned, defaultLevel, facets, hidden, docked, onLevel, onToggle, onAll }: {
-  levels: GeoLevel[]; pinned: GeoLevel | null; defaultLevel: GeoLevel | null; facets: Facet[] | undefined;
+export function DisplayOptions({ levels, pinned, shown, facets, hidden, docked, onLevel, onToggle, onAll }: {
+  levels: GeoLevel[]; pinned: GeoLevel | null; shown: GeoLevel; facets: Facet[] | undefined;
   hidden: Record<string, Set<string>>; docked: boolean;
   onLevel: (l: GeoLevel | "auto") => void; onToggle: (field: string, value: string) => void; onAll: (field: string) => void;
 }) {
-  const note = pinned
-    ? `Showing ${GEO_LEVELS[pinned].label.toLowerCase()}s at every zoom${pinned !== defaultLevel ? "" : pinned === levels[levels.length - 1] ? ", how the source publishes this data" : ", the default for this data"}.`
-    : "Switches to smaller areas as you zoom in.";
+  const plural = (l: GeoLevel) => GEO_LEVELS[l].plural.toLowerCase();
+  const note = !pinned
+    ? "States, then counties, tracts and smaller areas as you zoom in."
+    : pinned === shown
+      ? `Showing ${plural(pinned)} at every zoom${"pinFloor" in GEO_LEVELS[pinned] ? " closer than a few states" : ""}.`
+      : `${GEO_LEVELS[pinned].plural} show once you zoom in closer than a few states. Showing ${plural(shown)} until then.`;
   return (
     <>
       {levels.length > 1 && (
-        <LevelPicker levels={levels} pinned={pinned} defaultLevel={defaultLevel} note={note} docked={docked} onChange={onLevel} />
+        <LevelPicker levels={levels} pinned={pinned} shown={shown} note={note} docked={docked} onChange={onLevel} />
       )}
       {facets?.map((f) => (
         <FacetFilter key={f.field} facet={f} hidden={hidden[f.field]} docked={docked} onToggle={(v) => onToggle(f.field, v)}

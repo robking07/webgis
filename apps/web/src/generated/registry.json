@@ -737,7 +737,6 @@
   "coverageNote": "Built from 2020 blocks. Block counts include Census Bureau privacy noise; block groups and larger are reliable.",
   "facets": [],
   "excludeFromInsights": false,
-  "defaultLevel": "block_group",
   "learnMore": [
    {
     "label": "See this place's full Census profile on Census Reporter",
@@ -800,7 +799,6 @@
   "coverageNote": "Built from 2020 blocks. Block counts include Census Bureau privacy noise; block groups and larger are reliable.",
   "facets": [],
   "excludeFromInsights": false,
-  "defaultLevel": "block_group",
   "learnMore": [
    {
     "label": "See this place's full Census profile on Census Reporter",
@@ -861,7 +859,6 @@
   "coverageNote": "Built from 2020 blocks. Block counts include Census Bureau privacy noise; block groups and larger are reliable.",
   "facets": [],
   "excludeFromInsights": false,
-  "defaultLevel": "block_group",
   "learnMore": [
    {
     "label": "See this place's full Census profile on Census Reporter",
@@ -1215,7 +1212,6 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
-  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -1332,7 +1328,6 @@
   "coverageNote": "The Census Bureau doesn't publish this measure below census tracts, so there's no block-group view.",
   "facets": [],
   "excludeFromInsights": false,
-  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -1460,7 +1455,6 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
-  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -1524,7 +1518,6 @@
   "coverageNote": "The Census Bureau caps the top value ($3,500 or more) and the bottom value, so the most and least expensive areas show the cap rather than their true median. Block groups with too few renters paying cash rent show no median.",
   "facets": [],
   "excludeFromInsights": false,
-  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -1589,7 +1582,6 @@
   "coverageNote": "The Census Bureau caps the top value (about $2 million) and the bottom value, so the most and least expensive areas show the cap rather than their true median. Block groups with too few owner-occupied homes show no median.",
   "facets": [],
   "excludeFromInsights": false,
-  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -1653,7 +1645,6 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
-  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -1781,7 +1772,6 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
-  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -1850,7 +1840,6 @@
   "coverageNote": "Counts only people who give this as their single race; many Native people also report another race and are counted under two or more races. Small numbers make tract and block-group estimates uncertain outside reservations and Alaska.",
   "facets": [],
   "excludeFromInsights": false,
-  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -1916,7 +1905,6 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
-  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -1985,7 +1973,6 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
-  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -2051,7 +2038,6 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
-  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -2117,7 +2103,6 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
-  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -2183,7 +2168,6 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
-  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -2248,7 +2232,6 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
-  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -2313,7 +2296,6 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
-  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -2443,7 +2425,6 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
-  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -2513,7 +2494,6 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
-  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -2582,7 +2562,6 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
-  "defaultLevel": "tract",
   "timeline": {
    "from": 2019,
    "to": 2024,
@@ -2650,7 +2629,6 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
-  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -2716,7 +2694,6 @@
   "coverageNote": "The Census Bureau changed how it codes written-in race answers starting with 2020 data, so this share jumps between 2015–2019 and 2020–2024 partly because of the change, not only because of real change.",
   "facets": [],
   "excludeFromInsights": false,
-  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -2784,7 +2761,6 @@
   "coverageNote": "A small group outside Hawaii and a few West Coast and Mountain West communities, so most block-group, tract and county estimates are near zero with wide margins of error.",
   "facets": [],
   "excludeFromInsights": false,
-  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -2864,7 +2840,6 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
-  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -2936,7 +2911,6 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
-  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -3011,7 +2985,6 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
-  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -3088,7 +3061,6 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
-  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -3155,7 +3127,6 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
-  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -3221,7 +3192,6 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
-  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -3288,7 +3258,6 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
-  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -3355,7 +3324,6 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
-  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -3422,7 +3390,6 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
-  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -3487,7 +3454,6 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
-  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -3554,7 +3520,6 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
-  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -3620,7 +3585,6 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
-  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -3695,7 +3659,6 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
-  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -3757,7 +3720,6 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
-  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -3872,7 +3834,6 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
-  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,
@@ -4095,7 +4056,6 @@
   "modelInputs": [],
   "facets": [],
   "excludeFromInsights": false,
-  "defaultLevel": "tract",
   "timeline": {
    "from": 2014,
    "to": 2024,

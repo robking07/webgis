@@ -11,13 +11,22 @@ interface Props {
   primary: Dataset;
   secondary: Dataset | null;
   onPick: (id: string) => void;
+  /** Told when a menu opens or closes, so the page can hide panels the menu would cover (issue #32). */
+  onOpenChange?: (open: boolean) => void;
 }
 
 type Menu = null | { kind: "category" } | { kind: "datasets"; category: string };
 
-export function DatasetHeading({ primary, secondary, onPick }: Props) {
+export function DatasetHeading({ primary, secondary, onPick, onOpenChange }: Props) {
   const [menu, setMenu] = useState<Menu>(null);
   const ref = useRef<HTMLDivElement>(null);
+  const open = !!menu;
+  const report = useRef(onOpenChange);
+  report.current = onOpenChange;
+  useEffect(() => {
+    report.current?.(open);
+    return () => { if (open) report.current?.(false); };
+  }, [open]);
   useEffect(() => {
     if (!menu) return;
     const close = (e: PointerEvent) => { if (!ref.current?.contains(e.target as Node)) setMenu(null); };

@@ -8,7 +8,7 @@ import {
 } from "culori";
 import { RAMPS, rampColors, type RampDef, type RampId } from "../src/ramps.ts";
 import { CONTRAST_RULES, THEMES, themeColor } from "../src/themes.ts";
-import { GEO_LEVELS, SIZE, LABEL } from "../src/sizing.ts";
+import { BAND_REFERENCE_WIDTH, GEO_LEVELS, SIZE, LABEL } from "../src/sizing.ts";
 import { LEGEND } from "../src/format.ts";
 import { THRESHOLDS } from "./check.ts";
 
@@ -143,9 +143,11 @@ ${contrastRows.join("\n")}
 
 ## Geography levels and zoom
 
-| Level | Shown at zoom |
-|---|---|
-${Object.entries(GEO_LEVELS).map(([, v]) => `| ${v.label} | ${v.minzoom} – ${v.maxzoom === 24 ? "max" : v.maxzoom} |`).join("\n")}
+"Switch with zoom" is the default for every dataset. Zooms are for a map ${BAND_REFERENCE_WIDTH} px across; smaller screens shift every band down by \`bandShift\` (about 2 zooms on a 390 px phone), so each level covers the same ground on any screen. A pinned level draws at every zoom except below its floor, where the finest coarser level stands in.
+
+| Level | Shown at zoom (switch with zoom) | Never below zoom (pinned) |
+|---|---|---|
+${Object.entries(GEO_LEVELS).map(([, v]) => `| ${v.label} | ${v.minzoom} – ${v.maxzoom === 24 ? "max" : v.maxzoom} | ${"pinFloor" in v ? v.pinFloor : "–"} |`).join("\n")}
 
 Line widths and outlines scale with zoom (\`SIZE\`: ${Object.keys(SIZE).join(", ")}). Labels use ${LABEL.font.join(", ")} with a ${LABEL.haloWidth}px halo that matches the basemap tone. Thematic fills are inserted **below** the basemap's label layers, so place names stay readable over any fill.
 

@@ -57,6 +57,8 @@ export function Viewer({ search }: { search: string }) {
   const [optionsOpen, setOptionsOpen] = useState(false);
   /** Immersed: the display options dock (level + filters) under the heading. */
   const [dockOpen, setDockOpen] = useState(false);
+  /** Immersed: the category or dataset menu is open. */
+  const [headingMenu, setHeadingMenu] = useState(false);
   /** Feature-layer facet filters: field → values HIDDEN by the user. */
   const [hidden, setHidden] = useState<Record<string, Set<string>>>({});
   const [peek, setPeek] = useState(false);
@@ -85,7 +87,7 @@ export function Viewer({ search }: { search: string }) {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  const { primary, secondary, isFeature, featureSpec, stops, stop, stopId, availableLevels, defaultLevel, pinnedLevel, bands, x, y, level, classed, blockField } = useViewerData(state);
+  const { primary, secondary, isFeature, featureSpec, stops, stop, stopId, availableLevels, pinnedLevel, bands, x, y, level, classed, blockField } = useViewerData(state);
   const current = classed[level];
   const error = x.error ?? y.error;
   const available = !!primary && !isFeature && availableLevels.includes(level);
@@ -138,12 +140,14 @@ export function Viewer({ search }: { search: string }) {
   const periodLabel = primary ? (stopId ? stop!.label : primary.vintage) : "";
   const meta = primary ? [isFeature ? featureNoun : GEO_LEVELS[level].label, periodLabel, primary.source.name.split(",")[0].split(" (")[0]].join(" · ") : "";
   const displayOptions = (docked: boolean) => (
-    <DisplayOptions levels={availableLevels} pinned={pinnedLevel} defaultLevel={defaultLevel} facets={primary?.facets} hidden={hidden} docked={docked}
-      onLevel={(l) => update({ lv: l === defaultLevel ? null : l })} onToggle={toggleFacet}
+    <DisplayOptions levels={availableLevels} pinned={pinnedLevel} shown={level} facets={primary?.facets} hidden={hidden} docked={docked}
+      onLevel={(l) => update({ lv: l === "auto" ? null : l })} onToggle={toggleFacet}
       onAll={(field) => setHidden((cur) => ({ ...cur, [field]: new Set() }))} />
   );
   const tableReady = !!primary && !isFeature && !!tableLevel && !!x.values[tableLevel];
-  const dockShown = !!primary && immersed && hasOptions && (dockOpen || filtersActive);
+  // One panel at a time (issue #32): the dock's halo'd text has no backing, so it hides while a
+  // dataset menu is open over it.
+  const dockShown = !!primary && immersed && hasOptions && (dockOpen || filtersActive) && !headingMenu;
   // Narrow screens dock the table at the bottom; the details panel waits until it closes.
   const detailHidden = tableOpen && narrow;
 
@@ -192,9 +196,9 @@ export function Viewer({ search }: { search: string }) {
 
       {primary && (
         <ImmersedHeading primary={primary} secondary={secondary} immersed={immersed} hasOptions={hasOptions} dockShown={dockShown}
-          chipLabel={isFeature ? (filtersActive ? "Filters on" : "Filters") : `${GEO_LEVELS[level].label}s`}
+          chipLabel={isFeature ? (filtersActive ? "Filters on" : "Filters") : GEO_LEVELS[level].plural}
           onShowNav={() => { setImmersed(false); setPeek(false); }} onPick={pickDataset}
-          onToggleDock={() => setDockOpen((o) => !(o || filtersActive))} />
+          onToggleDock={() => setDockOpen((o) => !(o || filtersActive))} onMenuChange={setHeadingMenu} />
       )}
 
       {/* Display dock (immersed): geography level and filters stay reachable after zooming in (D-28, D-35).
@@ -212,7 +216,7 @@ export function Viewer({ search }: { search: string }) {
       <MapLegend theme={theme} primary={primary} secondary={secondary} isFeature={isFeature} featureSpec={featureSpec} current={current}
         error={error} available={available} loading={loading} level={level} periodLabel={periodLabel}
         stops={stops} stop={stop} stopId={stopId} onStop={(id) => update({ t: stops.find((s) => s.id === id)?.isDefault ? null : id })}
-        desktopStrip={desktopStrip} immersed={immersed} tableReady={tableReady} onTable={() => setTableOpen(true)} />
+        desktopStrip={desktopStrip} immersed={immersed} covered={phone && (!!selected || !!featureSelected || tableOpen)} tableReady={tableReady} onTable={() => setTableOpen(true)} />
 
       <MapCredits datasets={[primary, secondary].filter((d): d is Dataset => !!d)} />
 
@@ -225,7 +229,7 @@ export function Viewer({ search }: { search: string }) {
       {searchOpen && <SearchOverlay current={state.d} onClose={() => setSearchOpen(false)} onPlace={onSearchPlace} onDataset={onSearchDataset} />}
 
       {tableOpen && primary && tableLevel && (
-        <DataTable level={tableLevel} x={primary} xv={x.values[tableLevel]} y={secondary} yv={y.values[tableLevel]} period={stopId ? stop!.label : undefined} selected={selected?.geoid ?? null}
+        <DataTable top={panelTop} level={tableLevel} x={primary} xv={x.values[tableLevel]} y={secondary} yv={y.values[tableLevel]} period={stopId ? stop!.label : undefined} selected={selected?.geoid ?? null}
           onClose={onTableClose} onPick={onTablePick} />
       )}
 

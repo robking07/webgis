@@ -13,7 +13,7 @@ const stripEnd = (s: string) => s.replace(/^([<≥]\s*\S+).*$/, "$1");
 
 /** Legend: full card at rest on desktop; a strip when immersed or on phones (tap to expand).
  *  The year control (D-36) sits at the top of the card. */
-export function MapLegend({ theme, primary, secondary, isFeature, featureSpec, current, error, available, loading, level, periodLabel, stops, stop, stopId, onStop, desktopStrip, immersed, tableReady, onTable }: {
+export function MapLegend({ theme, primary, secondary, isFeature, featureSpec, current, error, available, loading, level, periodLabel, stops, stop, stopId, onStop, desktopStrip, immersed, covered, tableReady, onTable }: {
   theme: ThemeName;
   primary: Dataset | null;
   secondary: Dataset | null;
@@ -33,10 +33,14 @@ export function MapLegend({ theme, primary, secondary, isFeature, featureSpec, c
   /** Desktop shows the strip only while Display options needs the room. */
   desktopStrip: boolean;
   immersed: boolean;
+  /** Phones: a bottom sheet (details, table) is open, so the expanded legend folds back to its
+   *  strip instead of peeking out above the sheet. */
+  covered?: boolean;
   tableReady: boolean;
   onTable: () => void;
 }) {
-  const [legendOpen, setLegendOpen] = useState(false);
+  const [openPicked, setLegendOpen] = useState(false);
+  const legendOpen = openPicked && !covered;
   // Line layers reverse their ramp on dark land (see featureLineColors); the legend follows the map.
   const featureColors = featureSpec && (featureSpec.geometry === "line" ? featureLineColors(featureSpec.colors, theme) : featureSpec.colors);
   const legendStrip = primary && (featureColors || current?.colors);

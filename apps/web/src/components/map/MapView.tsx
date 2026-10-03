@@ -197,6 +197,13 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
       const c = m.getCenter();
       latest.current.onViewChange({ lon: c.lng, lat: c.lat, zoom: m.getZoom() });
     });
+    // A fitted first view (no `at` in the URL) fires no moveend: report the zoom it landed on, so
+    // the level shown in the card and dock matches the map (phones fit the country near z2, desktops
+    // near z4). Still `fit`, so the URL stays clean.
+    if (initialView.fit) {
+      const c = m.getCenter();
+      latest.current.onViewChange({ lon: c.lng, lat: c.lat, zoom: m.getZoom(), fit: true });
+    }
     m.on("error", (e) => {
       const msg = String(e.error?.message ?? e.error ?? "");
       if (/pmtiles|tiles\//i.test(msg) || /404/.test(msg)) latest.current.onTilesError?.(msg);

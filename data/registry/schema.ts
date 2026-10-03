@@ -207,9 +207,6 @@ export const DatasetEntry = z.object({
   facets: z.array(Facet).default([]),
   /** Keep out of Odd Pairings (Specials)' playful pairings (sensitive subjects, e.g. enforcement). */
   excludeFromInsights: z.boolean().default(false),
-  /** Level shown by default, at every zoom. Omitted = the finest level the data has
-   *  (ACS → tract), which is how the source publishes it (Robbie, D-35). */
-  defaultLevel: GeoLevel.optional(),
   /** Earlier (or later) moments the map can step through (D-36), `from`…`to` by `step`. The
    *  headline `vintage` stays the default and is what comparisons and Odd Pairings use.
    *  acs5: 5-year periods named by their last year (2014 = 2010–2014; use step 5 so periods
