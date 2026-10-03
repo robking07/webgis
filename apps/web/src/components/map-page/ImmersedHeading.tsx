@@ -1,53 +1,69 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { ChevronDown, Menu, SlidersHorizontal } from "lucide-react";
 import type { Dataset } from "@/lib/registry";
 import { DatasetHeading } from "../DatasetMenus";
 import { LogoMark } from "../Logo";
 
-/** Immersed: menu button and wordmark, then the category above the dataset name (both open menus),
- *  then the display options chip. */
-export function ImmersedHeading({ primary, secondary, immersed, hasOptions, dockShown, chipLabel, onShowNav, onPick, onToggleDock, onMenuChange }: {
+/** Immersed: menu button and wordmark, then the category above the dataset name (both open the
+ *  dataset list), then the display options chip and, when open, the dock under it. Phones drop
+ *  the wordmark and put the heading beside the menu button, on one row (issue #34). */
+export function ImmersedHeading({ primary, secondary, immersed, hasOptions, dockShown, chipLabel, chipHint, phone, motion, closeKey, dock, onShowNav, onPick, onToggleDock, onMenuChange, onOpenSheet }: {
   primary: Dataset;
   secondary: Dataset | null;
   immersed: boolean;
   hasOptions: boolean;
   dockShown: boolean;
-  /** The display options chip: the level ("Census tracts") or the filter state. */
+  /** The display options chip: the level ("Census tracts") or the filters ("2 road types hidden"). */
   chipLabel: string;
+  /** Near a band edge: the next level ("block groups closer in"). */
+  chipHint?: string | null;
+  phone: boolean;
+  /** The map is moving on a smaller screen: "hide" (phones) or "dim" (laptops) the menu button and wordmark. */
+  motion: "hide" | "dim" | null;
+  closeKey: number;
+  /** The display dock, shown under the chip. */
+  dock: ReactNode;
   onShowNav: () => void;
   onPick: (id: string) => void;
   onToggleDock: () => void;
-  /** A category or dataset menu opened or closed. */
+  /** A dataset drop-down opened or closed. */
   onMenuChange: (open: boolean) => void;
+  /** Phones: open the dataset list sheet. */
+  onOpenSheet?: () => void;
 }) {
   // An open menu sits above every other map panel (legend, controls, details), never under one.
   const [menuOpen, setMenuOpen] = useState(false);
+  const motionClass = motion === "hide" ? "wg-step-aside" : motion === "dim" ? "wg-dim" : "";
+  const heading = (
+    <DatasetHeading key={primary.id} primary={primary} secondary={secondary} onPick={onPick} compact={phone} closeKey={closeKey}
+      onOpenSheet={onOpenSheet} onOpenChange={(o) => { setMenuOpen(o); onMenuChange(o); }} />
+  );
   return (
     <div data-obstructs={immersed ? "" : undefined}
-      className={`pointer-events-none absolute left-3 top-3 ${menuOpen ? "z-40" : "z-20"} flex flex-col gap-1 transition-opacity duration-300 md:left-4 ${immersed ? "opacity-100" : "opacity-0"}`}
+      className={`pointer-events-none absolute left-3 top-3 ${menuOpen ? "z-40" : "z-20"} flex max-h-[calc(100%-1.5rem)] flex-col gap-1 transition-opacity duration-300 md:left-4 ${immersed ? "opacity-100" : "opacity-0"}`}
       inert={!immersed || undefined} aria-hidden={!immersed || undefined}>
       <div className="pointer-events-auto flex items-center gap-3">
         <button type="button" onClick={onShowNav} aria-label="Show navigation"
-          className="wg-glass grid size-10 place-items-center rounded-xl text-foreground focus-visible:outline-2 focus-visible:outline-ring">
+          className={`wg-panel grid size-10 shrink-0 place-items-center rounded-xl text-foreground transition-opacity duration-200 focus-visible:outline-2 focus-visible:outline-ring ${motionClass}`}>
           <Menu className="size-[18px]" aria-hidden />
         </button>
-        <span className="flex items-center gap-2" aria-hidden>
-          <span className="wg-logo-on-map"><LogoMark size={34} /></span>
-          <span className="wg-wordmark hidden text-[34px] font-extrabold tracking-tight md:inline">Mapwich</span>
-        </span>
+        {phone ? heading : (
+          <span className={`flex items-center gap-2 transition-opacity duration-200 ${motionClass}`} aria-hidden>
+            <span className="wg-logo-on-map"><LogoMark size={34} /></span>
+            <span className="wg-wordmark text-[34px] font-extrabold tracking-tight">Mapwich</span>
+          </span>
+        )}
       </div>
-      <div className="mt-1">
-        <DatasetHeading key={primary.id} primary={primary} secondary={secondary} onPick={onPick}
-          onOpenChange={(o) => { setMenuOpen(o); onMenuChange(o); }} />
-      </div>
+      {!phone && <div className="mt-1">{heading}</div>}
       {hasOptions && (
         <button type="button" onClick={onToggleDock} aria-expanded={dockShown} aria-controls="display-dock"
-          className="wg-glass pointer-events-auto mt-1 flex w-fit items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium text-foreground focus-visible:outline-2 focus-visible:outline-ring">
-          <SlidersHorizontal className="size-3.5" aria-hidden />
-          {chipLabel}
-          <ChevronDown className={`size-3.5 transition-transform ${dockShown ? "rotate-180" : ""}`} aria-hidden />
+          className="wg-panel pointer-events-auto mt-1 flex w-fit max-w-[calc(100vw-1.5rem)] items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium text-foreground focus-visible:outline-2 focus-visible:outline-ring">
+          <SlidersHorizontal className="size-3.5 shrink-0" aria-hidden />
+          <span className="truncate">{chipLabel}{chipHint && <span className="font-normal text-muted-foreground"> · {chipHint}</span>}</span>
+          <ChevronDown className={`size-3.5 shrink-0 transition-transform ${dockShown ? "rotate-180" : ""}`} aria-hidden />
         </button>
       )}
+      {dock}
     </div>
   );
 }

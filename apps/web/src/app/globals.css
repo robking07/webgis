@@ -89,15 +89,13 @@
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
 
-/* Map-first chrome (D-25). Derived from theme tokens so light/dark both work. */
-.wg-glass {
-  background: color-mix(in srgb, var(--ui-surface) 74%, transparent);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 6px 18px rgb(0 0 0 / 0.14), 0 0 0 1px color-mix(in srgb, var(--ui-text) 9%, transparent);
+/* Map-first chrome (D-25). Controls over the map are flat, solid panels that match the dataset
+   card: the panel color, a 1 px border and a faint shadow. No frosted glass (Robbie, 2026-10-02, issue #34). */
+.wg-panel {
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
 }
-/* Small text over busy map labels (the legend strip) needs a more solid backing. */
-.wg-glass.wg-glass-strong { background: color-mix(in srgb, var(--ui-surface) 90%, transparent); }
 .wg-zbtn { background: transparent; cursor: pointer; }
 .wg-zbtn:hover { background: color-mix(in srgb, var(--ui-text) 7%, transparent); }
 .wg-zbtn:active { background: color-mix(in srgb, var(--ui-text) 13%, transparent); }
@@ -118,14 +116,11 @@
 }
 /* Year control slider (D-36): accent thumb and track from the theme. */
 .wg-range { accent-color: var(--ui-accent); height: 1.25rem; cursor: pointer; }
-/* Docked filters (D-28): no card, just halo'd text and glass chips over the map. */
+/* Docked filters (D-28): on a solid panel, so road and place labels never run through the text. */
 .wg-dock { pointer-events: auto; }
-/* Immersed legend: a lighter card so it gives context without blocking the map. */
-.wg-legend-immersed {
-  background: color-mix(in srgb, var(--ui-surface) 78%, transparent) !important;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-}
+/* While the map moves on smaller screens (issue #34), chrome that isn't the map's key steps aside. */
+.wg-step-aside { opacity: 0; pointer-events: none; }
+.wg-dim { opacity: 0.45; }
 
 /* Credits footnote (D-35): small and quiet, with a label halo so it reads over the map. */
 .wg-credits {

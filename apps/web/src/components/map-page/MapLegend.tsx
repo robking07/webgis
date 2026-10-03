@@ -11,9 +11,10 @@ import type { ClassedLevel } from "./useViewerData";
 /** "< 2.5K vehicles/day" → "< 2.5K": the legend strip keeps the comparison and number, drops unit words. */
 const stripEnd = (s: string) => s.replace(/^([<≥]\s*\S+).*$/, "$1");
 
-/** Legend: full card at rest on desktop; a strip when immersed or on phones (tap to expand).
+/** Legend: full card on desktop; a strip on phones (tap to expand). Both carry `data-legend`, so
+ *  the dock above can stop before it reaches them.
  *  The year control (D-36) sits at the top of the card. */
-export function MapLegend({ theme, primary, secondary, isFeature, featureSpec, current, error, available, loading, level, periodLabel, stops, stop, stopId, onStop, desktopStrip, immersed, covered, tableReady, onTable }: {
+export function MapLegend({ theme, primary, secondary, isFeature, featureSpec, current, error, available, loading, level, periodLabel, stops, stop, stopId, onStop, desktopStrip, mark, covered, tableReady, onTable }: {
   theme: ThemeName;
   primary: Dataset | null;
   secondary: Dataset | null;
@@ -32,7 +33,8 @@ export function MapLegend({ theme, primary, secondary, isFeature, featureSpec, c
   onStop: (id: string) => void;
   /** Desktop shows the strip only while Display options needs the room. */
   desktopStrip: boolean;
-  immersed: boolean;
+  /** Class index of the selected place, marked in the full legend. */
+  mark?: number | null;
   /** Phones: a bottom sheet (details, table) is open, so the expanded legend folds back to its
    *  strip instead of peeking out above the sheet. */
   covered?: boolean;
@@ -63,7 +65,7 @@ export function MapLegend({ theme, primary, secondary, isFeature, featureSpec, c
         : primary && secondary && current?.xBreaks ? (
           <BivariateLegend xTitle={primary.title} yTitle={secondary.title} colors={current.colors} />
         ) : primary && current?.breaks ? (
-          <Legend title={primary.title} unit={primary.unit} colors={current.colors} breaks={current.breaks} minClass={current.minClass}
+          <Legend title={primary.title} unit={primary.unit} colors={current.colors} breaks={current.breaks} minClass={current.minClass} mark={mark}
             caption={`${GEO_LEVELS[level].label} · ${periodLabel}${stop && stopNote(primary, stop, level) ? `. ${stopNote(primary, stop, level)}` : ""}${primary.coverageNote ? `. ${primary.coverageNote}` : ""}`} />
         ) : null}
     </>
@@ -72,8 +74,8 @@ export function MapLegend({ theme, primary, secondary, isFeature, featureSpec, c
   return (
     <>
       {legendStrip && legendEnds && !legendOpen && (
-        <button type="button" onClick={() => setLegendOpen(true)} aria-expanded={false} aria-label={`Show legend for ${primary!.title}`}
-          className={`wg-glass wg-glass-strong absolute bottom-6 left-3 z-20 max-w-[calc(100%-9rem)] items-center gap-2 whitespace-nowrap rounded-full px-3 py-2 text-xs tabular-nums text-foreground focus-visible:outline-2 focus-visible:outline-ring md:left-4 md:max-w-none ${desktopStrip ? "flex" : "flex md:hidden"}`}>
+        <button type="button" data-legend="" onClick={() => setLegendOpen(true)} aria-expanded={false} aria-label={`Show legend for ${primary!.title}`}
+          className={`wg-panel absolute bottom-6 left-3 z-20 max-w-[calc(100%-9rem)] items-center gap-2 whitespace-nowrap rounded-full px-3 py-2 text-xs tabular-nums text-foreground focus-visible:outline-2 focus-visible:outline-ring md:left-4 md:max-w-none ${desktopStrip ? "flex" : "flex md:hidden"}`}>
           {/* The strip is a compact key: numbers only ("< 2.5K", "≥ 75K"); the unit is in the full legend. */}
           {stopId && <span className="font-semibold">{stop!.label}</span>}
           <span>{stripEnd(legendEnds[0])}</span>
@@ -83,8 +85,8 @@ export function MapLegend({ theme, primary, secondary, isFeature, featureSpec, c
           <span>{stripEnd(legendEnds[1])}</span>
         </button>
       )}
-      <section aria-label="Legend"
-        className={`absolute bottom-6 left-3 right-3 z-20 max-h-[55%] overflow-y-auto rounded-lg border bg-card/95 p-3 shadow-sm backdrop-blur md:left-4 md:right-auto md:max-h-[60%] md:w-64 ${legendOpen || !(legendStrip && legendEnds) ? "block" : desktopStrip ? "hidden" : "hidden md:block"} ${immersed ? "wg-legend-immersed" : ""}`}>
+      <section aria-label="Legend" data-legend=""
+        className={`absolute bottom-6 left-3 right-3 z-20 max-h-[55%] overflow-y-auto rounded-lg border bg-card p-3 shadow-sm md:left-4 md:right-auto md:max-h-[60%] md:w-64 ${legendOpen || !(legendStrip && legendEnds) ? "block" : desktopStrip ? "hidden" : "hidden md:block"}`}>
         {legendOpen && (
           <button type="button" onClick={() => setLegendOpen(false)} aria-label="Collapse legend"
             className="absolute right-2 top-2 rounded p-1 text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring">

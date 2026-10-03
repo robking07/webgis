@@ -97,6 +97,8 @@ export interface MapApi {
   fitBbox: (bbox: Bbox, padding?: Padding, maxZoom?: number) => void;
   getCamera: () => Camera;
   setCamera: (c: Camera) => void;
+  /** A gesture or camera animation is in progress (a finger held down mid-drag counts). */
+  isMoving: () => boolean;
 }
 
 const TILES_BASE = process.env.NEXT_PUBLIC_TILES_BASE_URL || "/tiles";
@@ -165,6 +167,7 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
       fitBbox,
       getCamera: () => ({ center: m.getCenter().toArray() as [number, number], zoom: m.getZoom() }),
       setCamera: (c) => m.flyTo({ ...c, padding: 0, duration: fly, essential: true }),
+      isMoving: () => m.isMoving(),
     });
     // User gestures only (programmatic flyTo etc. must not immerse): wheel/trackpad scroll,
     // drag-pan (mouse or touch), pinch and double-click zoom.

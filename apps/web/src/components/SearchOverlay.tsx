@@ -70,7 +70,7 @@ export function SearchOverlay({ onClose, onPlace, onDataset, current }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-center bg-black/55 px-3 pt-[8vh] backdrop-blur-[2px] md:pt-[12vh]" onPointerDown={(e) => { if (e.target === e.currentTarget) onClose(); }}>
+    <div className="fixed inset-0 z-50 flex justify-center bg-black/55 px-3 pt-[8vh] md:pt-[12vh]" onPointerDown={(e) => { if (e.target === e.currentTarget) onClose(); }}>
       <div role="dialog" aria-modal="true" aria-label="Search places and datasets" className="flex max-h-[80vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border bg-background shadow-2xl">
         <div className="flex items-center gap-3 border-b px-4">
           <Search className="size-5 shrink-0 text-muted-foreground" aria-hidden />
