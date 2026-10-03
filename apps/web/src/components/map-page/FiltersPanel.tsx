@@ -54,7 +54,7 @@ interface ControlsProps {
   onChange: (v: FilterValue) => void;
 }
 
-const sectionTitle = "text-[11px] font-semibold uppercase tracking-wider text-muted-foreground";
+const sectionTitle = "text-xs font-semibold";
 
 /** The panel's sections: year, geography level, then each facet as a checkbox list. */
 function FilterControls({ levels, shown, facets, stops, value, onChange }: ControlsProps) {

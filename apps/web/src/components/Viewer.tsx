@@ -291,10 +291,11 @@ export function Viewer({ search }: { search: string }) {
         </div>
       )}
 
-      {hover && !selected && primary && (
+      {/* Hover popups wait while the map moves (issue #34). */}
+      {hover && !selected && !moving && primary && (
         <PlaceHoverPopup hover={hover} primary={primary} secondary={secondary} xValues={x.values} yValues={y.values} blockField={blockField} periodLabel={stopId ? stop!.label : undefined} />
       )}
-      {featureHover && !featureSelected && featureSpec && <FeatureHoverPopup hit={featureHover} spec={featureSpec} primary={primary} />}
+      {featureHover && !featureSelected && !moving && featureSpec && <FeatureHoverPopup hit={featureHover} spec={featureSpec} primary={primary} />}
       {featureSelected && featureSpec && primary && (
         <FeaturePanel hit={featureSelected} spec={featureSpec} dataset={primary} top={panelTop}
           onClose={() => setFeatureSelected(null)} />
