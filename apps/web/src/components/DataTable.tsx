@@ -3,7 +3,7 @@
 // sortable, searchable, and clickable (a row flies the map there and opens its details).
 // Rows are windowed (only the visible ones render), so 3,000+ counties scroll smoothly.
 // Tract level is too large and has no name lookup, so the table offers state and county.
-import { memo, useEffect, useMemo, useRef, useState } from "react";
+import { memo, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { X } from "lucide-react";
 import { formatValue, type GeoLevel } from "@webgis/design";
 import { StatusState } from "@webgis/design/components";
@@ -25,6 +25,8 @@ interface Props {
   y?: Dataset | null; yv?: Values;
   /** Timeline stop shown (D-36), e.g. "2015–2019"; omitted = the default period. */
   period?: string;
+  /** Desktop: top edge of the side panel, so it starts below the header while that shows. */
+  top?: number;
   onClose: () => void;
   /** The selected place's geoid, highlighted in the list. */
   selected?: string | null;
@@ -33,7 +35,7 @@ interface Props {
 }
 
 /** Memoized: the map page re-renders on every hover; the table must not. */
-export const DataTable = memo(function DataTable({ level, x, xv, y, yv, period, selected, onClose, onPick }: Props) {
+export const DataTable = memo(function DataTable({ top = 12, level, x, xv, y, yv, period, selected, onClose, onPick }: Props) {
   const [places, setPlaces] = useState<Places | null>(null);
   const [q, setQ] = useState("");
   const [sort, setSort] = useState<{ col: "name" | "x" | "y"; desc: boolean }>({ col: "x", desc: true });
@@ -87,7 +89,8 @@ export const DataTable = memo(function DataTable({ level, x, xv, y, yv, period, 
   return (
     // Phones and tablets: docked to the bottom 42% so a picked place stays visible above it (D-35).
     <section role="dialog" aria-modal="false" aria-label={`Table of ${x.title}`} data-obstructs=""
-      className="absolute inset-x-0 bottom-0 z-40 flex h-[42%] flex-col gap-2 rounded-t-2xl border bg-card p-3 shadow-lg lg:inset-y-3 lg:bottom-3 lg:left-3 lg:right-auto lg:h-auto lg:w-[28rem] lg:rounded-lg">
+      style={{ "--table-top": `${top}px` } as CSSProperties}
+      className="absolute inset-x-0 bottom-0 z-40 flex h-[42%] flex-col gap-2 rounded-t-2xl border bg-card p-3 shadow-lg lg:bottom-3 lg:left-3 lg:right-auto lg:top-[var(--table-top)] lg:h-auto lg:w-[28rem] lg:rounded-lg">
       <header className="flex items-start justify-between gap-2">
         <div>
           <h2 className="text-sm font-semibold">{x.title}{y ? ` × ${y.title}` : ""}</h2>

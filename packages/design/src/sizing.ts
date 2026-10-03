@@ -3,19 +3,19 @@
 
 /** Geography levels and their zoom bands (min inclusive, max exclusive) on a map
  *  BAND_REFERENCE_WIDTH px across; `bandShift` moves them for other screens. "Switch with zoom"
- *  is the default for every dataset (Robbie, 2026-10-02, D-132): states at the national view,
+ *  is the default for every dataset (Robbie, 2026-10-02, D-133): states at the national view,
  *  counties at multi-state and regional zoom, tracts over a metro, block groups inside a city,
  *  blocks at neighborhood zoom. `pinFloor`: a level never draws below this zoom, even when the
  *  visitor pins it (no block groups or blocks at national or multi-state zoom); the finest
  *  coarser level without a floor stands in. */
 export const GEO_LEVELS = {
-  state: { label: "State", minzoom: 0, maxzoom: 4.6 },
-  county: { label: "County", minzoom: 4.6, maxzoom: 8.5 },
-  tract: { label: "Census tract", minzoom: 8.5, maxzoom: 11 },
+  state: { label: "State", plural: "States", minzoom: 0, maxzoom: 4.6 },
+  county: { label: "County", plural: "Counties", minzoom: 4.6, maxzoom: 8.5 },
+  tract: { label: "Census tract", plural: "Census tracts", minzoom: 8.5, maxzoom: 11 },
   /** ACS publishes most tables here; values live only in static exports (D-124). */
-  block_group: { label: "Block group", minzoom: 11, maxzoom: 13, pinFloor: 7 },
+  block_group: { label: "Block group", plural: "Block groups", minzoom: 11, maxzoom: 13, pinFloor: 7 },
   /** 2020 Census only; values are baked into the block tiles, not joined (D-124). */
-  block: { label: "Block", minzoom: 13, maxzoom: 24, pinFloor: 7 },
+  block: { label: "Block", plural: "Blocks", minzoom: 13, maxzoom: 24, pinFloor: 7 },
 } as const;
 /** Levels too large for the database (500 MB free tier): values are static files only. */
 export const STATIC_ONLY_LEVELS: ReadonlySet<GeoLevel> = new Set(["block_group", "block"]);

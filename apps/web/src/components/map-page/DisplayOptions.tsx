@@ -27,7 +27,8 @@ function LevelPicker({ levels, pinned, shown, note, docked, onChange }: {
           );
         })}
       </div>
-      <p className={`mt-1.5 text-[11px] leading-snug text-muted-foreground ${docked ? "wg-on-map" : ""}`}>
+      {/* Over the map the muted gray loses to busy fills and labels: full text color plus the halo. */}
+      <p className={`mt-1.5 text-[11px] leading-snug ${docked ? "wg-on-map font-medium text-foreground" : "text-muted-foreground"}`}>
         {note}
       </p>
     </fieldset>
@@ -77,12 +78,12 @@ export function DisplayOptions({ levels, pinned, shown, facets, hidden, docked, 
   hidden: Record<string, Set<string>>; docked: boolean;
   onLevel: (l: GeoLevel | "auto") => void; onToggle: (field: string, value: string) => void; onAll: (field: string) => void;
 }) {
-  const plural = (l: GeoLevel) => `${GEO_LEVELS[l].label.toLowerCase()}s`;
+  const plural = (l: GeoLevel) => GEO_LEVELS[l].plural.toLowerCase();
   const note = !pinned
     ? "States, then counties, tracts and smaller areas as you zoom in."
     : pinned === shown
       ? `Showing ${plural(pinned)} at every zoom${"pinFloor" in GEO_LEVELS[pinned] ? " closer than a few states" : ""}.`
-      : `${GEO_LEVELS[pinned].label}s show once you zoom in closer than a few states. Showing ${plural(shown)} until then.`;
+      : `${GEO_LEVELS[pinned].plural} show once you zoom in closer than a few states. Showing ${plural(shown)} until then.`;
   return (
     <>
       {levels.length > 1 && (

@@ -196,7 +196,7 @@ export function Viewer({ search }: { search: string }) {
 
       {primary && (
         <ImmersedHeading primary={primary} secondary={secondary} immersed={immersed} hasOptions={hasOptions} dockShown={dockShown}
-          chipLabel={isFeature ? (filtersActive ? "Filters on" : "Filters") : `${GEO_LEVELS[level].label}s`}
+          chipLabel={isFeature ? (filtersActive ? "Filters on" : "Filters") : GEO_LEVELS[level].plural}
           onShowNav={() => { setImmersed(false); setPeek(false); }} onPick={pickDataset}
           onToggleDock={() => setDockOpen((o) => !(o || filtersActive))} onMenuChange={setHeadingMenu} />
       )}
@@ -216,7 +216,7 @@ export function Viewer({ search }: { search: string }) {
       <MapLegend theme={theme} primary={primary} secondary={secondary} isFeature={isFeature} featureSpec={featureSpec} current={current}
         error={error} available={available} loading={loading} level={level} periodLabel={periodLabel}
         stops={stops} stop={stop} stopId={stopId} onStop={(id) => update({ t: stops.find((s) => s.id === id)?.isDefault ? null : id })}
-        desktopStrip={desktopStrip} immersed={immersed} tableReady={tableReady} onTable={() => setTableOpen(true)} />
+        desktopStrip={desktopStrip} immersed={immersed} covered={phone && (!!selected || !!featureSelected || tableOpen)} tableReady={tableReady} onTable={() => setTableOpen(true)} />
 
       <MapCredits datasets={[primary, secondary].filter((d): d is Dataset => !!d)} />
 
@@ -229,7 +229,7 @@ export function Viewer({ search }: { search: string }) {
       {searchOpen && <SearchOverlay current={state.d} onClose={() => setSearchOpen(false)} onPlace={onSearchPlace} onDataset={onSearchDataset} />}
 
       {tableOpen && primary && tableLevel && (
-        <DataTable level={tableLevel} x={primary} xv={x.values[tableLevel]} y={secondary} yv={y.values[tableLevel]} period={stopId ? stop!.label : undefined} selected={selected?.geoid ?? null}
+        <DataTable top={panelTop} level={tableLevel} x={primary} xv={x.values[tableLevel]} y={secondary} yv={y.values[tableLevel]} period={stopId ? stop!.label : undefined} selected={selected?.geoid ?? null}
           onClose={onTableClose} onPick={onTablePick} />
       )}
 
