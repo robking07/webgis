@@ -24,7 +24,7 @@ import { useFraming } from "./map-page/useFraming";
 import { HEADER_GAP } from "./map-page/layout";
 import { DatasetCard } from "./map-page/DatasetCard";
 import { ImmersedHeading } from "./map-page/ImmersedHeading";
-import { DisplayOptions, pluralLabel } from "./map-page/DisplayOptions";
+import { filterCount, FiltersSheet, FiltersSidebar, pluralLabel, type FilterValue } from "./map-page/FiltersPanel";
 import { useMapMotion } from "./map-page/useMapMotion";
 import { MapControls } from "./map-page/MapControls";
 import { MapLegend } from "./map-page/MapLegend";
@@ -56,9 +56,9 @@ export function Viewer({ search }: { search: string }) {
   const [browserOpen, setBrowserOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [immersed, setImmersed] = useState(false);
-  const [optionsOpen, setOptionsOpen] = useState(false);
-  /** Immersed: the display options dock (level + filters) under the heading. */
-  const [dockOpen, setDockOpen] = useState(false);
+  /** The filters panel (issue #34): a sidebar on desktop, a full-screen sheet on phones. `anchor`
+   *  is the filter button it grows from and shrinks back into. */
+  const [filters, setFilters] = useState<{ anchor: HTMLElement | null } | null>(null);
   /** Immersed: the category or dataset menu is open. */
   const [headingMenu, setHeadingMenu] = useState(false);
   /** Feature-layer facet filters: field → values HIDDEN by the user. */
@@ -83,8 +83,8 @@ export function Viewer({ search }: { search: string }) {
   /** Bumped to close an open dataset drop-down when the map starts moving. */
   const [closeKey, setCloseKey] = useState(0);
   // "The map wins while it moves" (issue #34): on smaller screens a pan, pinch or scroll closes
-  // menus and folds the dock into its chip until the map settles; larger monitors keep the dock
-  // and legend, and only an open dataset list closes.
+  // menus and sets the filters sidebar aside until the map settles; larger monitors keep the
+  // sidebar and legend, and only an open dataset list closes.
   const { moving, start: startMotion } = useMapMotion(mapApi);
   const stepAside = moving && compact;
 
@@ -116,13 +116,7 @@ export function Viewer({ search }: { search: string }) {
     }
     return out;
   }, [primary, hidden]);
-  const toggleFacet = (field: string, value: string) => setHidden((cur) => {
-    const next = new Set(cur[field] ?? []);
-    if (next.has(value)) next.delete(value); else next.add(value);
-    return { ...cur, [field]: next };
-  });
-  const filtersActive = Object.values(hidden).some((h) => h.size > 0);
-  /** The folded dock's summary: "2 road types hidden" (one filter) or "5 values hidden". */
+  /** Beside the filter button: "2 road types hidden" (one filter) or "5 values hidden". */
   const filterSummary = useMemo(() => {
     const set = (primary?.facets ?? []).filter((f) => hidden[f.field]?.size);
     if (!set.length) return null;
@@ -138,6 +132,13 @@ export function Viewer({ search }: { search: string }) {
     loadPlaceIndex().then((rows) => placeByGeoid(rows, geoid)?.sqmi, () => undefined)
       .then((sqmi) => goToPlace({ geoid, level: tableLevel, name, lon, lat, sqmi }));
   }, [tableLevel, goToPlace]);
+  const filterValue: FilterValue = { pinned: pinnedLevel, stop: stopId, hidden };
+  const nFilters = filterCount(filterValue);
+  const toggleFilters = (el: HTMLElement) => setFilters((f) => (f ? null : { anchor: el }));
+  const applyFilters = (v: FilterValue) => {
+    setHidden(v.hidden);
+    if (v.pinned !== pinnedLevel || v.stop !== stopId) update({ lv: v.pinned, t: v.stop });
+  };
   const onSearchPlace = (p: PlaceHit) => { setSearchOpen(false); goToPlace(p); };
   /** Phones: the dataset list and the details share the bottom sheet; opening one closes the other. */
   const openSheet = () => { setListOpen(true); setSelected(null); setFeatureSelected(null); setTableOpen(false); mapApi.current?.select("county", null); };
@@ -155,25 +156,15 @@ export function Viewer({ search }: { search: string }) {
   const chromeShown = !immersed || peek;
   // Popups sit under the header while it's showing and move back up when it falls away.
   const panelTop = chromeShown ? HEADER_GAP : 12;
-  // Legend: desktop shows it in full; it shrinks to its strip only while Display options needs the room.
-  const desktopStrip = optionsOpen && !immersed;
-  const hasOptions = !!primary && (availableLevels.length > 1 || primary.facets.length > 0);
+  // Legend: desktop shows it in full; it shrinks to its strip while the filters sidebar needs the room.
+  const desktopStrip = !!filters && !phone;
+  const hasFilters = !!primary && (availableLevels.length > 1 || primary.facets.length > 0 || stops.length > 0);
   const featureNoun = featureSpec?.geometry === "polygon" ? "Census tracts (2010)" : "Road segments";
   const periodLabel = primary ? (stopId ? stop!.label : primary.vintage) : "";
   const meta = primary ? [isFeature ? featureNoun : GEO_LEVELS[level].label, phone ? periodLabel.replace(/ \(.*\)$/, "") : periodLabel, primary.source.name.split(",")[0].split(" (")[0]].join(" · ") : "";
-  const displayOptions = (docked: boolean) => (
-    <DisplayOptions levels={availableLevels} pinned={pinnedLevel} shown={level} facets={primary?.facets} hidden={hidden} docked={docked}
-      onLevel={(l) => update({ lv: l === "auto" ? null : l })} onToggle={toggleFacet}
-      onAll={(field) => setHidden((cur) => ({ ...cur, [field]: new Set() }))} />
-  );
   const tableReady = !!primary && !isFeature && !!tableLevel && !!x.values[tableLevel];
   const placeOpen = !!selected || !!featureSelected;
-  // One panel at a time (issue #32): the dock hides while a dataset menu is open over it. It folds
-  // into its chip while the map moves on smaller screens, and on phones while details are open
-  // (one panel per zone, issue #34).
-  const dockFolded = stepAside || (phone && placeOpen);
-  const dockShown = !!primary && immersed && hasOptions && (dockOpen || filtersActive) && !headingMenu && !dockFolded;
-  // The level chip hints at the next level near a band edge ("block groups closer in"), while
+  // The level caption hints at the next level near a band edge ("block groups closer in"), while
   // switching with zoom.
   const chipHint = useMemo(() => {
     if (isFeature || pinnedLevel) return null;
@@ -182,16 +173,15 @@ export function Viewer({ search }: { search: string }) {
     const z = state.at.zoom;
     return b && z >= b.minzoom - 0.75 && z < b.minzoom ? `${GEO_LEVELS[next].plural.toLowerCase()} closer in` : null;
   }, [isFeature, pinnedLevel, availableLevels, level, bands, state.at.zoom]);
-  // Left column (desktop): the dock scrolls before it would reach the legend.
-  const [dockMax, setDockMax] = useState<number | undefined>(undefined);
+  // Left column (desktop): the filters sidebar opens below the title (or the at-rest card) and
+  // stops above the legend strip.
+  const [sidebarTop, setSidebarTop] = useState(160);
   useLayoutEffect(() => {
     const el = root.current;
-    const dock = el?.querySelector<HTMLElement>("#display-dock");
-    if (!el || !dock) return;
-    const legends = [...el.querySelectorAll<HTMLElement>("[data-legend]")].map((n) => n.getBoundingClientRect()).filter((r) => r.height > 0);
-    const bottom = legends.length ? Math.min(...legends.map((r) => r.top)) - 12 : el.clientHeight - 24;
-    const max = Math.max(120, Math.floor(bottom - dock.getBoundingClientRect().top));
-    if (max !== dockMax) setDockMax(max);
+    if (!el || !filters || phone) return;
+    const owner = immersed ? el.querySelector<HTMLElement>("[data-immersed-heading]") : card.current;
+    const top = Math.round((owner?.getBoundingClientRect().bottom ?? 148) + 10);
+    if (top !== sidebarTop) setSidebarTop(top);
   });
   // The selected place's class, marked in the legend (desktop) or the sheet's key (phones).
   const selClassed = selected ? classed[selected.level] : undefined;
@@ -228,7 +218,7 @@ export function Viewer({ search }: { search: string }) {
             startMotion();
             if (headingMenu) setCloseKey((k) => k + 1);
             setListOpen(false);
-            if (!browserOpen) { setImmersed(true); setPeek(false); if (filtersActive) setDockOpen(true); }
+            if (!browserOpen) { setImmersed(true); setPeek(false); }
           }}
           onApi={(api) => { mapApi.current = api; }}
           scaleUnit={scaleUnit}
@@ -247,34 +237,34 @@ export function Viewer({ search }: { search: string }) {
 
       {primary && (
         <DatasetCard cardRef={card} primary={primary} secondary={secondary} meta={meta} immersed={immersed} isFeature={isFeature}
-          tableReady={tableReady} hasOptions={hasOptions} optionsOpen={optionsOpen} onToggleOptions={() => setOptionsOpen((o) => !o)}
-          onBrowse={() => setBrowserOpen(true)} onTable={() => setTableOpen(true)} options={displayOptions(false)}
+          tableReady={tableReady} hasFilters={hasFilters} filtersOpen={!!filters} filterCount={nFilters} onOpenFilters={toggleFilters}
+          onBrowse={() => setBrowserOpen(true)} onTable={() => setTableOpen(true)}
           phone={phone} onOpenSheet={openSheet} />
       )}
 
       {primary && (
-        <ImmersedHeading primary={primary} secondary={secondary} immersed={immersed} hasOptions={hasOptions} dockShown={dockShown}
-          chipLabel={isFeature ? filterSummary ?? "Filters" : GEO_LEVELS[level].plural} chipHint={chipHint}
+        <ImmersedHeading primary={primary} secondary={secondary} immersed={immersed} hasFilters={hasFilters} filtersOpen={!!filters} filterCount={nFilters}
+          caption={isFeature ? filterSummary ?? "All roads shown" : GEO_LEVELS[level].plural} captionHint={isFeature ? null : chipHint}
           phone={phone} motion={stepAside ? (phone ? "hide" : "dim") : null} closeKey={closeKey}
           onShowNav={() => { setImmersed(false); setPeek(false); }} onPick={pickDataset}
-          onToggleDock={() => setDockOpen((o) => !(o || filtersActive) || dockFolded)} onMenuChange={setHeadingMenu}
-          onOpenSheet={phone ? openSheet : undefined}
-          dock={dockShown && (
-            // Display dock (immersed): geography level and filters stay reachable after zooming in
-            // (D-28, D-35), on a solid panel under the chip.
-            <section id="display-dock" aria-label="Display options"
-              className="wg-dock wg-panel mt-1 w-[min(18rem,calc(100vw-1.5rem))] shrink-0 space-y-3 overflow-y-auto rounded-lg p-3"
-              style={{ maxHeight: dockMax }}>
-              {displayOptions(true)}
-            </section>
-          )} />
+          onOpenFilters={toggleFilters} onMenuChange={setHeadingMenu}
+          onOpenSheet={phone ? openSheet : undefined} />
+      )}
+
+      {filters && primary && !phone && (
+        <FiltersSidebar top={sidebarTop} bottom={84} levels={availableLevels} shown={level} facets={primary.facets} stops={stops}
+          value={filterValue} onChange={applyFilters} onClose={() => setFilters(null)} hiddenWhileMoving={stepAside} />
+      )}
+      {filters && primary && phone && (
+        <FiltersSheet anchor={filters.anchor} title={primary.title} levels={availableLevels} shown={level} facets={primary.facets} stops={stops}
+          value={filterValue} onApply={applyFilters} onClose={() => setFilters(null)} />
       )}
 
       <MapControls mapApi={mapApi} atRest={chromeShown && !immersed} canGoBack={canGoBack} onBack={goBack} phone={phone} cardH={cardH} />
 
       <MapLegend theme={theme} primary={primary} secondary={secondary} isFeature={isFeature} featureSpec={featureSpec} current={current}
         error={error} available={available} loading={loading} level={level} periodLabel={periodLabel}
-        stops={stops} stop={stop} stopId={stopId} onStop={(id) => update({ t: stops.find((s) => s.id === id)?.isDefault ? null : id })}
+        stop={stop} stopId={stopId}
         desktopStrip={desktopStrip} mark={selected && selected.level === level ? selClass : null}
         covered={phone && (placeOpen || tableOpen || listOpen || stepAside)} tableReady={tableReady} onTable={() => setTableOpen(true)} />
 

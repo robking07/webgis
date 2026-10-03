@@ -127,7 +127,7 @@ export function DatasetSheet({ primary, onPick, onClose }: { primary: Dataset; o
     </>
   );
   return (
-    <BottomSheet label="Dataset list" summary={summary} onClose={onClose} initialSnap="full" fullRatio={0.62}>
+    <BottomSheet label="Dataset list" summary={summary} onClose={onClose} initialSnap="full" fullRatio={0.58}>
       <DatasetList category={category} primary={primary} onPick={(id) => { onPick(id); onClose(); }} className="-mx-1.5 -mt-2" />
     </BottomSheet>
   );

@@ -30,9 +30,9 @@ function LevelPicker({ levels, pinned, shown, note, onChange }: {
             const look = on ? "border-primary bg-primary text-primary-foreground" : here ? "border-primary font-semibold text-foreground" : "border-transparent text-muted-foreground hover:text-foreground";
             return (
               <li key={l} className="flex items-center">
-                {i > 0 && <ChevronRight className="mx-0.5 size-3 text-muted-foreground" aria-hidden />}
+                {i > 0 && <ChevronRight className="size-3 text-muted-foreground" aria-hidden />}
                 <button type="button" role="radio" aria-checked={on} onClick={() => onChange(l)} aria-current={here ? "true" : undefined}
-                  className={`rounded-full border px-2 py-0.5 focus-visible:outline-2 focus-visible:outline-ring ${look}`}>
+                  className={`rounded-full border px-1.5 py-0.5 whitespace-nowrap focus-visible:outline-2 focus-visible:outline-ring ${look}`}>
                   {short(l)}{on && !here ? " (zoom in)" : ""}
                 </button>
               </li>

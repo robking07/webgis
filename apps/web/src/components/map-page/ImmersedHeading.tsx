@@ -1,31 +1,31 @@
-import { useState, type ReactNode } from "react";
-import { ChevronDown, Menu, SlidersHorizontal } from "lucide-react";
+import { useState } from "react";
+import { Menu } from "lucide-react";
 import type { Dataset } from "@/lib/registry";
 import { DatasetHeading } from "../DatasetMenus";
 import { LogoMark } from "../Logo";
+import { FilterButton } from "./FiltersPanel";
 
 /** Immersed: menu button and wordmark, then the category above the dataset name (both open the
- *  dataset list), then the display options chip and, when open, the dock under it. Phones drop
- *  the wordmark and put the heading beside the menu button, on one row (issue #34). */
-export function ImmersedHeading({ primary, secondary, immersed, hasOptions, dockShown, chipLabel, chipHint, phone, motion, closeKey, dock, onShowNav, onPick, onToggleDock, onMenuChange, onOpenSheet }: {
+ *  dataset list), then the filter button with a caption (the level shown, or what's filtered).
+ *  Phones drop the wordmark and put the heading beside the menu button, on one row (issue #34). */
+export function ImmersedHeading({ primary, secondary, immersed, hasFilters, filtersOpen, filterCount, caption, captionHint, phone, motion, closeKey, onShowNav, onPick, onOpenFilters, onMenuChange, onOpenSheet }: {
   primary: Dataset;
   secondary: Dataset | null;
   immersed: boolean;
-  hasOptions: boolean;
-  dockShown: boolean;
-  /** The display options chip: the level ("Census tracts") or the filters ("2 road types hidden"). */
-  chipLabel: string;
+  hasFilters: boolean;
+  filtersOpen: boolean;
+  filterCount: number;
+  /** Beside the filter button: the level ("Census tracts") or the filters ("2 road types hidden"). */
+  caption: string;
   /** Near a band edge: the next level ("block groups closer in"). */
-  chipHint?: string | null;
+  captionHint?: string | null;
   phone: boolean;
   /** The map is moving on a smaller screen: "hide" (phones) or "dim" (laptops) the menu button and wordmark. */
   motion: "hide" | "dim" | null;
   closeKey: number;
-  /** The display dock, shown under the chip. */
-  dock: ReactNode;
   onShowNav: () => void;
   onPick: (id: string) => void;
-  onToggleDock: () => void;
+  onOpenFilters: (el: HTMLElement) => void;
   /** A dataset drop-down opened or closed. */
   onMenuChange: (open: boolean) => void;
   /** Phones: open the dataset list sheet. */
@@ -39,8 +39,8 @@ export function ImmersedHeading({ primary, secondary, immersed, hasOptions, dock
       onOpenSheet={onOpenSheet} onOpenChange={(o) => { setMenuOpen(o); onMenuChange(o); }} />
   );
   return (
-    <div data-obstructs={immersed ? "" : undefined}
-      className={`pointer-events-none absolute left-3 top-3 ${menuOpen ? "z-40" : "z-20"} flex max-h-[calc(100%-1.5rem)] flex-col gap-1 transition-opacity duration-300 md:left-4 ${immersed ? "opacity-100" : "opacity-0"}`}
+    <div data-immersed-heading="" data-obstructs={immersed ? "" : undefined}
+      className={`pointer-events-none absolute left-3 top-3 ${menuOpen ? "z-40" : "z-20"} flex flex-col gap-1 transition-opacity duration-300 md:left-4 ${immersed ? "opacity-100" : "opacity-0"}`}
       inert={!immersed || undefined} aria-hidden={!immersed || undefined}>
       <div className="pointer-events-auto flex items-center gap-3">
         <button type="button" onClick={onShowNav} aria-label="Show navigation"
@@ -55,15 +55,12 @@ export function ImmersedHeading({ primary, secondary, immersed, hasOptions, dock
         )}
       </div>
       {!phone && <div className="mt-1">{heading}</div>}
-      {hasOptions && (
-        <button type="button" onClick={onToggleDock} aria-expanded={dockShown} aria-controls="display-dock"
-          className="wg-panel pointer-events-auto mt-1 flex w-fit max-w-[calc(100vw-1.5rem)] items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium text-foreground focus-visible:outline-2 focus-visible:outline-ring">
-          <SlidersHorizontal className="size-3.5 shrink-0" aria-hidden />
-          <span className="truncate">{chipLabel}{chipHint && <span className="font-normal text-muted-foreground"> · {chipHint}</span>}</span>
-          <ChevronDown className={`size-3.5 shrink-0 transition-transform ${dockShown ? "rotate-180" : ""}`} aria-hidden />
-        </button>
-      )}
-      {dock}
+      <div className={`mt-1 flex max-w-[calc(100vw-1.5rem)] items-center gap-2 ${phone ? "pl-[52px]" : "pl-0.5"}`}>
+        {hasFilters && <FilterButton count={filterCount} open={filtersOpen} onOpen={onOpenFilters} />}
+        <span className="wg-on-map truncate text-xs font-semibold text-foreground">
+          {caption}{captionHint && <span className="font-medium text-foreground/70"> · {captionHint}</span>}
+        </span>
+      </div>
     </div>
   );
 }

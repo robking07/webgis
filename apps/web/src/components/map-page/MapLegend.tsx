@@ -5,7 +5,6 @@ import { featureLineColors, formatValue, GEO_LEVELS, type GeoLevel, type ThemeNa
 import type { Dataset } from "@/lib/registry";
 import type { FeatureLayerSpec } from "@/lib/layers";
 import { stopNote, type Stop } from "@/lib/periods";
-import { TimeControl } from "../TimeControl";
 import type { ClassedLevel } from "./useViewerData";
 
 /** "< 2.5K vehicles/day" → "< 2.5K": the legend strip keeps the comparison and number, drops unit words. */
@@ -13,8 +12,8 @@ const stripEnd = (s: string) => s.replace(/^([<≥]\s*\S+).*$/, "$1");
 
 /** Legend: full card on desktop; a strip on phones (tap to expand). Both carry `data-legend`, so
  *  the dock above can stop before it reaches them.
- *  The year control (D-36) sits at the top of the card. */
-export function MapLegend({ theme, primary, secondary, isFeature, featureSpec, current, error, available, loading, level, periodLabel, stops, stop, stopId, onStop, desktopStrip, mark, covered, tableReady, onTable }: {
+ *  The year control (D-36) lives in the filters panel (issue #34). */
+export function MapLegend({ theme, primary, secondary, isFeature, featureSpec, current, error, available, loading, level, periodLabel, stop, stopId, desktopStrip, mark, covered, tableReady, onTable }: {
   theme: ThemeName;
   primary: Dataset | null;
   secondary: Dataset | null;
@@ -27,11 +26,9 @@ export function MapLegend({ theme, primary, secondary, isFeature, featureSpec, c
   loading: boolean;
   level: GeoLevel;
   periodLabel: string;
-  stops: Stop[];
   stop: Stop | null;
   stopId: string | null;
-  onStop: (id: string) => void;
-  /** Desktop shows the strip only while Display options needs the room. */
+  /** Desktop shows the strip only while the filters sidebar needs the room. */
   desktopStrip: boolean;
   /** Class index of the selected place, marked in the full legend. */
   mark?: number | null;
@@ -49,12 +46,8 @@ export function MapLegend({ theme, primary, secondary, isFeature, featureSpec, c
   const legendEnds = featureSpec
     ? [`< ${formatValue(featureSpec.breaks[0], primary!.unit)}`, `≥ ${formatValue(featureSpec.breaks[featureSpec.breaks.length - 1], primary!.unit)}`]
     : current?.breaks?.length ? [`< ${formatValue(current.breaks[0], primary!.unit)}`, `≥ ${formatValue(current.breaks[current.breaks.length - 1], primary!.unit)}`] : null;
-  const timeControl = stops.length > 0 && stop && (
-    <TimeControl stops={stops} value={stop.id} onChange={onStop} />
-  );
   const legendBody = (
     <>
-      {timeControl && <div className="mb-3 border-b pb-3">{timeControl}</div>}
       {primary && isFeature ? (featureSpec ? (
           <Legend title={primary.title} unit={primary.unit} colors={featureColors!} breaks={featureSpec.breaks} showNoData={false} swatch={featureSpec.geometry === "line" ? "line" : "area"}
             caption={`${primary.vintage} · ${featureSpec.featureCount.toLocaleString()} ${featureSpec.geometry === "line" ? "segments · wider lines = higher road class" : "areas"}${primary.coverageNote ? `. ${primary.coverageNote}` : ""}`} />
