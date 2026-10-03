@@ -210,7 +210,8 @@ export function FiltersSidebar({ top, bottom, value, onChange, onClose, hiddenWh
   top: number;
   bottom: number;
   onClose: () => void;
-  /** Smaller screens: the sidebar steps aside while the map moves. */
+  /** Smaller screens: the sidebar steps aside while the map moves. It also steps aside while the
+   *  dataset drop-down is open, so the two never overlap. */
   hiddenWhileMoving: boolean;
 }) {
   const ref = useRef<HTMLElement>(null);

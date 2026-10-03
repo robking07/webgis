@@ -161,7 +161,9 @@ export function Viewer({ search }: { search: string }) {
   const hasFilters = !!primary && (availableLevels.length > 1 || primary.facets.length > 0 || stops.length > 0);
   const featureNoun = featureSpec?.geometry === "polygon" ? "Census tracts (2010)" : "Road segments";
   const periodLabel = primary ? (stopId ? stop!.label : primary.vintage) : "";
-  const meta = primary ? [isFeature ? featureNoun : GEO_LEVELS[level].label, phone ? periodLabel.replace(/ \(.*\)$/, "") : periodLabel, primary.source.name.split(",")[0].split(" (")[0]].join(" · ") : "";
+  // Phones keep the meta on one line (issue #34): the period without its note, the short source name.
+  const sourceLabel = primary ? (phone && primary.source.shortName) || primary.source.name.split(",")[0].split(" (")[0] : "";
+  const meta = primary ? [isFeature ? featureNoun : GEO_LEVELS[level].label, phone ? periodLabel.replace(/ \(.*\)$/, "") : periodLabel, sourceLabel].join(" · ") : "";
   const tableReady = !!primary && !isFeature && !!tableLevel && !!x.values[tableLevel];
   const placeOpen = !!selected || !!featureSelected;
   // The level caption hints at the next level near a band edge ("block groups closer in"), while
@@ -253,7 +255,7 @@ export function Viewer({ search }: { search: string }) {
 
       {filters && primary && !phone && (
         <FiltersSidebar top={sidebarTop} bottom={84} levels={availableLevels} shown={level} facets={primary.facets} stops={stops}
-          value={filterValue} onChange={applyFilters} onClose={() => setFilters(null)} hiddenWhileMoving={stepAside} />
+          value={filterValue} onChange={applyFilters} onClose={() => setFilters(null)} hiddenWhileMoving={stepAside || headingMenu} />
       )}
       {filters && primary && phone && (
         <FiltersSheet anchor={filters.anchor} title={primary.title} levels={availableLevels} shown={level} facets={primary.facets} stops={stops}

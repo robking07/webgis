@@ -54,11 +54,12 @@ export function ImmersedHeading({ primary, secondary, immersed, hasFilters, filt
           </span>
         )}
       </div>
-      {!phone && <div className="mt-1">{heading}</div>}
+      {!phone && <div className="mt-1.5">{heading}</div>}
       <div className={`mt-1 flex max-w-[calc(100vw-1.5rem)] items-center gap-2 ${phone ? "pl-[52px]" : "pl-0.5"}`}>
         {hasFilters && <FilterButton count={filterCount} open={filtersOpen} onOpen={onOpenFilters} />}
-        <span className="wg-on-map truncate text-xs font-semibold text-foreground">
-          {caption}{captionHint && <span className="font-medium text-foreground/70"> · {captionHint}</span>}
+        {/* The note sits on a solid pill like the button, never halo text over the map (issue #34). */}
+        <span data-filter-note="" className="wg-panel inline-flex h-7 min-w-0 items-center rounded-full px-2.5 text-xs font-semibold text-foreground">
+          <span className="truncate">{caption}{captionHint && <span className="font-medium text-muted-foreground"> · {captionHint}</span>}</span>
         </span>
       </div>
     </div>

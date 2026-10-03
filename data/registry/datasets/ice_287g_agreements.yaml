@@ -5,6 +5,7 @@ category: Immigration enforcement
 tags: [ICE, immigration, 287(g), enforcement, sheriffs, police, deportation]
 source:
   name: Deportation Data Project (UC Berkeley Law / UCLA)
+  shortName: Deportation Data Project
   url: https://github.com/deportationdata/ice-287g
   citation: "Deportation Data Project, ICE 287(g) agreements (compiled from ICE's participating-agencies lists), accessed Oct. 2026"
 license: CC0 1.0 (no rights reserved), per the repository license

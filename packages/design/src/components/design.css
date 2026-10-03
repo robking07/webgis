@@ -47,7 +47,9 @@
 
 /* Frosted glass (Robbie, 2026-10-02, issue #34): the desktop filters sidebar only. The panel color
    at high opacity over a strong blur, so text and checkboxes stay legible over any map, plus the
-   1 px border token and a faint shadow. Without backdrop-filter support it falls back to solid. */
+   1 px border token and a faint shadow. Without backdrop-filter support it falls back to solid.
+   The opacities must match GLASS_ALPHA in themes.ts: the design gate checks text on this glass
+   over the lightest and darkest map colors (dark went 80% → 88% when muted text failed it). */
 .wg-glass {
   --wg-glass-alpha: 84%;
   background: color-mix(in srgb, var(--ui-surface) var(--wg-glass-alpha), transparent);
@@ -56,6 +58,6 @@
   border: 1px solid var(--ui-border);
   box-shadow: 0 4px 16px rgb(0 0 0 / 0.12), 0 1px 2px rgb(0 0 0 / 0.08);
 }
-:root[data-theme="dark"] .wg-glass { --wg-glass-alpha: 80%; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .wg-glass { --wg-glass-alpha: 80%; } }
+:root[data-theme="dark"] .wg-glass { --wg-glass-alpha: 88%; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .wg-glass { --wg-glass-alpha: 88%; } }
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) { .wg-glass { background: var(--ui-surface); } }

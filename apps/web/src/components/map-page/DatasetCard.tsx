@@ -37,30 +37,37 @@ export function DatasetCard({ cardRef, primary, secondary, meta, immersed, isFea
   );
   const infoButton = primary.terms.length > 0 && (
     <button type="button" onClick={() => setExplainOpen((o) => !o)} aria-expanded={explainOpen} aria-label="What do these numbers mean?"
-      className="ml-1 rounded align-[-2px] text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring"><Info className="size-3.5" aria-hidden /></button>
+      className="ml-1 shrink-0 rounded align-[-2px] text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring"><Info className="size-3.5" aria-hidden /></button>
   );
   const filterButton = hasFilters && <FilterButton count={filterCount} open={filtersOpen} onOpen={onOpenFilters} className="mt-1.5" />;
   const shell = `absolute left-3 right-3 top-[68px] z-20 rounded-lg border bg-card shadow-sm transition-all duration-300 ${immersed ? "pointer-events-none -translate-y-3 opacity-0" : "opacity-100"}`;
 
   if (phone) {
+    // Robbie (2026-10-03): "Text wrapping here is a bad look". The meta and the actions each get
+    // one line that never wraps: the meta uses the period without its note and the short source
+    // name (and ellipsizes as a last resort); the actions sit on their own line.
     const link = "rounded font-semibold text-primary hover:underline focus-visible:outline-2 focus-visible:outline-ring";
-    const dot = <span aria-hidden> · </span>;
+    const actions = [
+      !isFeature && <button key="c" type="button" onClick={onBrowse} className={link}>Compare</button>,
+      tableReady && <button key="t" type="button" onClick={onTable} className={link}>Table</button>,
+      <a key="a" href={`/data/${primary.id}`} className={link}>About</a>,
+    ].filter(Boolean);
     return (
-      <section ref={cardRef} aria-label="Mapped dataset" data-obstructs={!immersed ? "" : undefined} className={`${shell} px-3 py-2.5`} inert={immersed || undefined}>
+      <section ref={cardRef} aria-label="Mapped dataset" data-obstructs={!immersed ? "" : undefined} className={`${shell} wg-panel px-3 py-2.5`} inert={immersed || undefined}>
         <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">{primary.category}</span>
         <h1>
           <button type="button" onClick={onOpenSheet} aria-haspopup="dialog" aria-label={`${primary.title}: choose another dataset`}
-            className="flex items-center gap-1 rounded text-left text-lg font-bold leading-snug tracking-tight focus-visible:outline-2 focus-visible:outline-ring">
+            className="flex items-center gap-1 rounded text-left text-lg font-bold leading-snug tracking-tight text-balance focus-visible:outline-2 focus-visible:outline-ring">
             <span>{primary.title}{secondary && <span className="font-semibold text-muted-foreground"> × {secondary.title}</span>}</span>
             <ChevronDown className="size-4 shrink-0" aria-hidden />
           </button>
         </h1>
         {filterButton}
-        <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
-          {meta}{infoButton}
-          {!isFeature && <>{dot}<button type="button" onClick={onBrowse} className={link}>Compare</button></>}
-          {tableReady && <>{dot}<button type="button" onClick={onTable} className={link}>Table</button></>}
-          {dot}<a href={`/data/${primary.id}`} className={link}>About</a>
+        <p data-card-meta="" className="mt-1.5 flex items-center whitespace-nowrap text-xs leading-relaxed text-muted-foreground">
+          <span className="min-w-0 truncate">{meta}</span>{infoButton}
+        </p>
+        <p data-card-actions="" className="mt-0.5 whitespace-nowrap text-xs leading-relaxed text-muted-foreground">
+          {actions.map((a, i) => <span key={i}>{i > 0 && <span aria-hidden> · </span>}{a}</span>)}
         </p>
         {explain}
       </section>

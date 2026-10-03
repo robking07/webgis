@@ -5,6 +5,7 @@ category: Transportation
 tags: [traffic, AADT, volume, roads, highways, HPMS, congestion, trucks, interstate, US highway, state highway, county road]
 source:
   name: FHWA Highway Performance Monitoring System (HPMS) 2024
+  shortName: FHWA
   url: https://geodata.bts.gov/datasets/5e6a977c2d7c4ec1bdc82e684d3384f2
   citation: "Federal Highway Administration, Highway Performance Monitoring System 2024, via the BTS National Transportation Atlas Database"
 license: Public domain (U.S. Government work; NTAD "available for unrestricted public use"). Credit FHWA and BTS.

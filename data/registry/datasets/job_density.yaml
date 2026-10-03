@@ -6,6 +6,7 @@ category: Jobs
 tags: [jobs, employment, workplace, LODES, LEHD]
 source:
   name: U.S. Census Bureau, LEHD Origin-Destination Employment Statistics (LODES 8)
+  shortName: Census Bureau
   url: https://lehd.ces.census.gov/data/
   citation: "U.S. Census Bureau, LEHD Origin-Destination Employment Statistics (LODES8), 2023 Workplace Area Characteristics"
 license: Public domain (U.S. Government work, 17 U.S.C. § 105)

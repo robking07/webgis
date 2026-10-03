@@ -186,6 +186,9 @@ export const DatasetEntry = z.object({
   tags: z.array(z.string()).default([]),
   source: z.object({
     name: z.string(),
+    /** A few words for the map card's one-line meta ("Census Bureau", "CDC PLACES"), so it never
+     *  wraps on a phone (issue #34). Falls back to `name` up to its first comma or parenthesis. */
+    shortName: z.string().max(24).optional(),
     url: z.url(),
     citation: z.string(),
   }),

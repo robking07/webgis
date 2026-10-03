@@ -10,10 +10,10 @@
 // every sequential ramp drawn as a feature line against focus land, in both themes.
 import {
   differenceCiede2000, filterDeficiencyDeuter, filterDeficiencyProt, filterDeficiencyTrit,
-  formatHex, oklab, wcagContrast,
+  formatHex, interpolate, oklab, wcagContrast,
 } from "culori";
 import { RAMPS, rampColors, type RampDef, type RampId } from "../src/ramps.ts";
-import { CONTRAST_RULES, THEMES, themeColor } from "../src/themes.ts";
+import { CONTRAST_RULES, GLASS_ALPHA, THEMES, themeColor } from "../src/themes.ts";
 import { featureLineColors } from "../src/style.ts";
 
 export const THRESHOLDS = { MIN_ADJ: 5, MIN_CAT: 10, MIN_BIV: 8 };
@@ -72,6 +72,27 @@ for (const theme of Object.values(THEMES)) {
   }
 }
 
+// Frosted glass (the desktop filters sidebar, issue #34): the panel color at GLASS_ALPHA over
+// whatever map is behind it. Its text and secondary text must keep 4.5:1 over the darkest and
+// lightest thing the map can draw there: black, white, and the ends of every ramp.
+let glassCases = 0;
+for (const theme of Object.values(THEMES)) {
+  const behind = new Set<string>(["#000000", "#ffffff", ...Object.values(theme.map)]);
+  for (const [id, r] of Object.entries(RAMPS) as Array<[RampId, RampDef]>) {
+    const cs = rampColors(id, r.maxClasses);
+    behind.add(cs[0]); behind.add(cs[cs.length - 1]);
+  }
+  for (const b of behind) {
+    // sRGB alpha compositing, as the browser draws it (blur only averages what's behind).
+    const panel = formatHex(interpolate([b, theme.ui.surface], "rgb")(GLASS_ALPHA[theme.name]))!;
+    for (const [fg, purpose] of [["text", "glass sidebar text"], ["textMuted", "glass sidebar secondary text"]] as const) {
+      glassCases++;
+      const c = wcagContrast(theme.ui[fg], panel);
+      if (c < 4.5) failures.push(`theme ${theme.name}: ${fg} on glass over ${b} (${purpose}) contrast ${c.toFixed(2)} < 4.5`);
+    }
+  }
+}
+
 // Area fills: every class of every sequential ramp stays clear of focus land and of the no-data
 // fill, in both themes (a pale first class used to read as "no data"). Diverging ramps are exempt:
 // their neutral middle is near-white by design; give a diverging map a distinct no-data treatment.
@@ -107,4 +128,4 @@ if (isMain && failures.length) {
   console.error(`✗ design check failed (${failures.length}):\n  ` + failures.join("\n  "));
   process.exit(1);
 }
-if (isMain) console.log(`✓ design check passed: ${Object.keys(RAMPS).length} ramps, ${report.length} ramp/class/vision cases, ${CONTRAST_RULES.length * 2} contrast pairs, ${landCases} class-vs-land cases, ${lineCases} line-on-land cases`);
+if (isMain) console.log(`✓ design check passed: ${Object.keys(RAMPS).length} ramps, ${report.length} ramp/class/vision cases, ${CONTRAST_RULES.length * 2} contrast pairs, ${glassCases} glass-over-map cases, ${landCases} class-vs-land cases, ${lineCases} line-on-land cases`);

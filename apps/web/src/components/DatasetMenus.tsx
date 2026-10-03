@@ -46,18 +46,21 @@ export function DatasetHeading({ primary, secondary, onPick, onOpenChange, onOpe
   const toggle = () => (onOpenSheet ? onOpenSheet() : setMenu(menu ? null : primary.category));
 
   return (
-    <div ref={ref} className={`relative pointer-events-auto w-fit ${compact ? "min-w-0 max-w-[calc(100vw-8rem)]" : "ml-0.5 max-w-[calc(100vw-1.5rem)]"}`}>
+    // The heading sits on a solid panel with full-contrast text, never halo-only text over the map
+    // (Robbie, 2026-10-03, issue #34: "get serious about making this easier to see on mobile"; the
+    // halo read just as badly over dark classes on laptops and monitors, so every size gets it).
+    <div ref={ref} data-dataset-heading="" className={`wg-panel relative pointer-events-auto w-fit rounded-xl px-2.5 py-1 ${compact ? "min-w-0 max-w-[calc(100vw-5.25rem)]" : "max-w-[calc(100vw-1.5rem)]"}`}>
       <button type="button" onClick={toggle} aria-expanded={open} aria-haspopup="menu" aria-label={`${primary.category}: choose a category`}
-        className="wg-on-map flex items-center gap-1 rounded text-[11px] font-semibold uppercase tracking-wider text-foreground/75 hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring">
+        className="flex items-center gap-1 rounded text-[11px] font-semibold uppercase tracking-wider text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring">
         {primary.category} <ChevronDown className="size-3" aria-hidden />
       </button>
       <button type="button" onClick={toggle}
         aria-expanded={open} aria-haspopup="menu" aria-label={`${primary.title}: other ${primary.category.toLowerCase()} datasets`}
         className="flex items-center gap-1.5 rounded text-left focus-visible:outline-2 focus-visible:outline-ring">
-        <span className={`wg-on-map font-bold leading-snug text-foreground ${compact ? "line-clamp-2 text-[15px]" : "text-base md:text-[17px]"}`}>
-          {primary.title}{secondary && <span className="font-semibold text-foreground/75"> × {secondary.title}</span>}
+        <span className={`font-bold leading-snug text-foreground ${compact ? "line-clamp-2 text-[15px]" : "text-base md:text-[17px]"}`}>
+          {primary.title}{secondary && <span className="font-semibold text-muted-foreground"> × {secondary.title}</span>}
         </span>
-        <ChevronDown className={`wg-on-map size-4 shrink-0 text-foreground transition-transform ${open ? "rotate-180" : ""}`} aria-hidden />
+        <ChevronDown className={`size-4 shrink-0 text-foreground transition-transform ${open ? "rotate-180" : ""}`} aria-hidden />
       </button>
 
       {menu && (
