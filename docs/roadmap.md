@@ -1,6 +1,6 @@
 # Mapwich roadmap
 
-**Approved by Robbie, 2026-10-03.** The living version, which the lead keeps current, is the
+**Draft under review (Robbie, 2026-10-03): not yet approved for building.** The living version, which the lead keeps current, is the
 Claude Doc "Mapwich Roadmap": https://claude.ai/code/artifact/c2211bac-8fd8-47a3-a28c-6af3799d1fdc
 (tab *Roadmap* = what and why; tab *Build plan* = tasks, sizes, order, practices). This file is
 a compact mirror for agents. If they disagree, the doc wins.
