@@ -44,3 +44,18 @@
 /* The ⓘ button is a black SVG background; invert it on dark (same two selectors as theme.css). */
 :root[data-theme="dark"] .maplibregl-ctrl-attrib-button { filter: invert(1); }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .maplibregl-ctrl-attrib-button { filter: invert(1); } }
+
+/* Frosted glass (Robbie, 2026-10-02, issue #34): the desktop filters sidebar only. The panel color
+   at high opacity over a strong blur, so text and checkboxes stay legible over any map, plus the
+   1 px border token and a faint shadow. Without backdrop-filter support it falls back to solid. */
+.wg-glass {
+  --wg-glass-alpha: 84%;
+  background: color-mix(in srgb, var(--ui-surface) var(--wg-glass-alpha), transparent);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+  backdrop-filter: blur(16px) saturate(1.2);
+  border: 1px solid var(--ui-border);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 0.12), 0 1px 2px rgb(0 0 0 / 0.08);
+}
+:root[data-theme="dark"] .wg-glass { --wg-glass-alpha: 80%; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .wg-glass { --wg-glass-alpha: 80%; } }
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) { .wg-glass { background: var(--ui-surface); } }

@@ -90,7 +90,8 @@
 }
 
 /* Map-first chrome (D-25). Controls over the map are flat, solid panels that match the dataset
-   card: the panel color, a 1 px border and a faint shadow. No frosted glass (Robbie, 2026-10-02, issue #34). */
+   card: the panel color, a 1 px border and a faint shadow. The one exception is the desktop filters
+   sidebar, which is frosted glass (`.wg-glass` in packages/design; Robbie, 2026-10-02, issue #34). */
 .wg-panel {
   background: var(--ui-surface);
   border: 1px solid var(--ui-border);

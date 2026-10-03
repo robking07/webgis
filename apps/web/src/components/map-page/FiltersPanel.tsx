@@ -174,7 +174,7 @@ export function FiltersSheet({ anchor, title, value, onApply, onClose, ...contro
   return (
     <div id="filters-panel" role="dialog" aria-modal="true" aria-label={`Filters for ${title}`} style={style}
       className="fixed inset-0 z-50 flex flex-col bg-background">
-      <div className={`flex min-h-0 flex-1 flex-col transition-opacity ${phase === "open" ? "opacity-100 duration-200" : "opacity-0 duration-100"}`}>
+      <div className={`flex min-h-0 flex-1 flex-col transition-opacity ${phase === "from" ? "opacity-0 duration-100" : "opacity-100 duration-200"}`}>
         <header className="flex items-center gap-3 border-b px-4 py-3">
           <ListFilter className="size-5 text-muted-foreground" aria-hidden />
           <div className="min-w-0 flex-1">
@@ -205,7 +205,7 @@ const growMs = () => {
 };
 
 /** Desktop: a sidebar over the left of the map, between the title and the legend strip.
- *  Changes apply live. A solid panel, like every other control over the map. */
+ *  Changes apply live. Frosted glass (`.wg-glass`, Robbie 2026-10-02): the only glass over the map. */
 export function FiltersSidebar({ top, bottom, value, onChange, onClose, hiddenWhileMoving, ...controls }: ControlsProps & {
   top: number;
   bottom: number;
@@ -222,7 +222,7 @@ export function FiltersSidebar({ top, bottom, value, onChange, onClose, hiddenWh
   const n = filterCount(value);
   return (
     <section ref={ref} id="filters-panel" aria-label="Filters" data-obstructs={hiddenWhileMoving ? undefined : ""}
-      className={`wg-panel absolute left-3 z-30 flex w-80 flex-col overflow-hidden rounded-xl transition-opacity duration-200 md:left-4 ${hiddenWhileMoving ? "pointer-events-none opacity-0" : "opacity-100"}`}
+      className={`wg-glass absolute left-3 z-30 flex w-80 flex-col overflow-hidden rounded-xl transition-opacity duration-200 md:left-4 ${hiddenWhileMoving ? "pointer-events-none opacity-0" : "opacity-100"}`}
       style={{ top, maxHeight: `calc(100% - ${top + bottom}px)` }}>
       <header className="flex items-center gap-2 border-b px-4 py-2.5">
         <ListFilter className="size-4 text-muted-foreground" aria-hidden />
