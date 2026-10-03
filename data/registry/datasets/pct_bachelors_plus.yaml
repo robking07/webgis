@@ -5,6 +5,7 @@ category: Education
 tags: [education, college, degree, attainment]
 source:
   name: U.S. Census Bureau, American Community Survey 5-Year Estimates
+  shortName: Census Bureau
   url: https://www.census.gov/programs-surveys/acs
   citation: "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
 license: Public domain (U.S. Government work, 17 U.S.C. § 105)
@@ -14,9 +15,6 @@ geographyLevels: [state, county, tract, block_group]
 unit: percent
 universe: population 25+
 terms: [acs-5-year, margin-of-error, census-geography, quantile-classes]
-learnMore:
-  - label: See this place's full Census profile on Census Reporter
-    url: "https://censusreporter.org/profiles/{cr}/"
 measure: { kind: acs5, numerator: [B15003_022, B15003_023, B15003_024, B15003_025], denominator: [B15003_001], scale: 100 }
 timeline: { from: 2014, to: 2024, step: 5 }
 symbology: { ramp: ylgnbu, classification: quantile, classes: 5 }

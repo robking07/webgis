@@ -7,7 +7,7 @@ import { StatusState } from "@webgis/design/components";
 import { DatasetFilter, useDatasetFilter } from "./DatasetFilter";
 import { loadValues, type Values } from "@/lib/values";
 import { rankText } from "@/lib/place";
-import type { Dataset } from "@/lib/registry";
+import { DATASET_BY_ID, type Dataset } from "@/lib/registry";
 
 export type Detail = Record<string, { value: number | null; moe: number | null }>;
 
@@ -34,6 +34,8 @@ export function PlaceDataList({ level, detail, mapHref, onMapIt, compact }: Prop
     let live = true;
     for (const [id, r] of Object.entries(detail)) {
       if (r.value == null) continue;
+      // Only levels the dataset exports (county-only datasets have no state file to rank against).
+      if (!DATASET_BY_ID.get(id)?.geographyLevels.includes(level)) continue;
       loadValues(id, level).then((vals: Values) => {
         const t = rankText(vals, r.value, level);
         if (live && t) setRanks((s) => ({ ...s, [id]: t }));

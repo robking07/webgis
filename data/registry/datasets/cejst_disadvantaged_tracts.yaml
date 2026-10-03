@@ -5,6 +5,7 @@ category: Environmental justice
 tags: [Justice40, CEJST, environmental justice, disadvantaged communities, climate, pollution, energy burden, EJ]
 source:
   name: Climate and Economic Justice Screening Tool 2.0 (CEQ; mirrored by Public Environmental Data Partners)
+  shortName: CEJST
   url: https://github.com/usds/justice40-tool
   citation: "Council on Environmental Quality, Climate and Economic Justice Screening Tool v2.0 (Dec. 2024); archived copy via Public Environmental Data Partners"
 license: Public domain (U.S. Government work); the tool's code is CC0 (usds/justice40-tool).

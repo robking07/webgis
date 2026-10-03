@@ -6,6 +6,7 @@ category: Transportation
 tags: [safety, crashes, fatalities, FARS, Vision Zero]
 source:
   name: NHTSA Fatality Analysis Reporting System (FARS)
+  shortName: NHTSA
   url: https://www.nhtsa.gov/research-data/fatality-analysis-reporting-system-fars
   citation: "National Highway Traffic Safety Administration, Fatality Analysis Reporting System, 2020–2024"
 license: Public domain (U.S. Government work, 17 U.S.C. § 105)

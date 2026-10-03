@@ -6,6 +6,7 @@ category: Transportation
 tags: [bridges, infrastructure, condition, NBI, asset management]
 source:
   name: FHWA National Bridge Inventory
+  shortName: FHWA
   url: https://www.fhwa.dot.gov/bridge/nbi.cfm
   citation: "Federal Highway Administration, National Bridge Inventory, 2025 highway bridge file"
 license: Public domain (U.S. Government work, 17 U.S.C. § 105)

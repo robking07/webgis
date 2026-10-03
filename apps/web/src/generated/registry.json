@@ -20,6 +20,7 @@
   ],
   "source": {
    "name": "FHWA Highway Performance Monitoring System (HPMS) 2024",
+   "shortName": "FHWA",
    "url": "https://geodata.bts.gov/datasets/5e6a977c2d7c4ec1bdc82e684d3384f2",
    "citation": "Federal Highway Administration, Highway Performance Monitoring System 2024, via the BTS National Transportation Atlas Database"
   },
@@ -208,6 +209,7 @@
   ],
   "source": {
    "name": "NOAA NCEI nClimDiv county climate data",
+   "shortName": "NOAA",
    "url": "https://www.ncei.noaa.gov/pub/data/cirs/climdiv/",
    "citation": "NOAA National Centers for Environmental Information, nClimDiv county monthly data (Vose et al. 2014), 1991–2020 normals computed by this site"
   },
@@ -276,6 +278,7 @@
   ],
   "source": {
    "name": "CDC PLACES (Local Data for Better Health), 2025 release",
+   "shortName": "CDC PLACES",
    "url": "https://www.cdc.gov/places/",
    "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
   },
@@ -328,6 +331,7 @@
   ],
   "source": {
    "name": "FHWA National Bridge Inventory",
+   "shortName": "FHWA",
    "url": "https://www.fhwa.dot.gov/bridge/nbi.cfm",
    "citation": "Federal Highway Administration, National Bridge Inventory, 2025 highway bridge file"
   },
@@ -384,6 +388,7 @@
   ],
   "source": {
    "name": "Climate and Economic Justice Screening Tool 2.0 (CEQ; mirrored by Public Environmental Data Partners)",
+   "shortName": "CEJST",
    "url": "https://github.com/usds/justice40-tool",
    "citation": "Council on Environmental Quality, Climate and Economic Justice Screening Tool v2.0 (Dec. 2024); archived copy via Public Environmental Data Partners"
   },
@@ -654,6 +659,7 @@
   ],
   "source": {
    "name": "Climate and Economic Justice Screening Tool 2.0 (CEQ; mirrored by Public Environmental Data Partners)",
+   "shortName": "CEJST",
    "url": "https://github.com/usds/justice40-tool",
    "citation": "Council on Environmental Quality, Climate and Economic Justice Screening Tool v2.0 (Dec. 2024); archived copy via Public Environmental Data Partners"
   },
@@ -714,6 +720,7 @@
   ],
   "source": {
    "name": "U.S. Census Bureau, 2020 Census Redistricting Data (P.L. 94-171)",
+   "shortName": "Census Bureau",
    "url": "https://www.census.gov/programs-surveys/decennial-census/about/rdo/summary-files.html",
    "citation": "U.S. Census Bureau, 2020 Census Redistricting Data (Public Law 94-171) Summary File; 2020 TIGER/Line census blocks"
   },
@@ -737,18 +744,7 @@
   "coverageNote": "Built from 2020 blocks. Block counts include Census Bureau privacy noise; block groups and larger are reliable.",
   "facets": [],
   "excludeFromInsights": false,
-  "learnMore": [
-   {
-    "label": "See this place's full Census profile on Census Reporter",
-    "url": "https://censusreporter.org/profiles/{cr}/",
-    "levels": [
-     "state",
-     "county",
-     "tract",
-     "block_group"
-    ]
-   }
-  ],
+  "learnMore": [],
   "terms": [
    "decennial-census",
    "census-geography",
@@ -776,6 +772,7 @@
   ],
   "source": {
    "name": "U.S. Census Bureau, 2020 Census Redistricting Data (P.L. 94-171)",
+   "shortName": "Census Bureau",
    "url": "https://www.census.gov/programs-surveys/decennial-census/about/rdo/summary-files.html",
    "citation": "U.S. Census Bureau, 2020 Census Redistricting Data (Public Law 94-171) Summary File; 2020 TIGER/Line census blocks"
   },
@@ -799,18 +796,7 @@
   "coverageNote": "Built from 2020 blocks. Block counts include Census Bureau privacy noise; block groups and larger are reliable.",
   "facets": [],
   "excludeFromInsights": false,
-  "learnMore": [
-   {
-    "label": "See this place's full Census profile on Census Reporter",
-    "url": "https://censusreporter.org/profiles/{cr}/",
-    "levels": [
-     "state",
-     "county",
-     "tract",
-     "block_group"
-    ]
-   }
-  ],
+  "learnMore": [],
   "terms": [
    "decennial-census",
    "census-geography",
@@ -836,6 +822,7 @@
   ],
   "source": {
    "name": "U.S. Census Bureau, 2020 Census Redistricting Data (P.L. 94-171)",
+   "shortName": "Census Bureau",
    "url": "https://www.census.gov/programs-surveys/decennial-census/about/rdo/summary-files.html",
    "citation": "U.S. Census Bureau, 2020 Census Redistricting Data (Public Law 94-171) Summary File; 2020 TIGER/Line census blocks"
   },
@@ -859,18 +846,7 @@
   "coverageNote": "Built from 2020 blocks. Block counts include Census Bureau privacy noise; block groups and larger are reliable.",
   "facets": [],
   "excludeFromInsights": false,
-  "learnMore": [
-   {
-    "label": "See this place's full Census profile on Census Reporter",
-    "url": "https://censusreporter.org/profiles/{cr}/",
-    "levels": [
-     "state",
-     "county",
-     "tract",
-     "block_group"
-    ]
-   }
-  ],
+  "learnMore": [],
   "terms": [
    "decennial-census",
    "census-geography",
@@ -895,6 +871,7 @@
   ],
   "source": {
    "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
    "url": "https://www.census.gov/programs-surveys/acs",
    "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
   },
@@ -925,12 +902,7 @@
    "to": 2024,
    "step": 5
   },
-  "learnMore": [
-   {
-    "label": "See this place's full Census profile on Census Reporter",
-    "url": "https://censusreporter.org/profiles/{cr}/"
-   }
-  ],
+  "learnMore": [],
   "terms": [
    "gini-index",
    "acs-5-year",
@@ -961,6 +933,7 @@
   ],
   "source": {
    "name": "Deportation Data Project (UC Berkeley Law / UCLA)",
+   "shortName": "Deportation Data Project",
    "url": "https://github.com/deportationdata/ice-287g",
    "citation": "Deportation Data Project, ICE 287(g) agreements (compiled from ICE's participating-agencies lists), accessed Oct. 2026"
   },
@@ -1015,6 +988,7 @@
   ],
   "source": {
    "name": "NOAA NCEI nClimDiv county climate data",
+   "shortName": "NOAA",
    "url": "https://www.ncei.noaa.gov/pub/data/cirs/climdiv/",
    "citation": "NOAA National Centers for Environmental Information, nClimDiv county monthly data (Vose et al. 2014), 1991–2020 normals computed by this site"
   },
@@ -1073,6 +1047,7 @@
   ],
   "source": {
    "name": "U.S. Census Bureau, LEHD Origin-Destination Employment Statistics (LODES 8)",
+   "shortName": "Census Bureau",
    "url": "https://lehd.ces.census.gov/data/",
    "citation": "U.S. Census Bureau, LEHD Origin-Destination Employment Statistics (LODES8), 2023 Workplace Area Characteristics"
   },
@@ -1128,6 +1103,7 @@
   ],
   "source": {
    "name": "NOAA NCEI nClimDiv county climate data",
+   "shortName": "NOAA",
    "url": "https://www.ncei.noaa.gov/pub/data/cirs/climdiv/",
    "citation": "NOAA National Centers for Environmental Information, nClimDiv county monthly data (Vose et al. 2014), 1991–2020 normals computed by this site"
   },
@@ -1184,6 +1160,7 @@
   ],
   "source": {
    "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
    "url": "https://www.census.gov/programs-surveys/acs",
    "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
   },
@@ -1217,12 +1194,7 @@
    "to": 2024,
    "step": 5
   },
-  "learnMore": [
-   {
-    "label": "See this place's full Census profile on Census Reporter",
-    "url": "https://censusreporter.org/profiles/{cr}/"
-   }
-  ],
+  "learnMore": [],
   "terms": [
    "unemployment-rate",
    "acs-5-year",
@@ -1249,6 +1221,7 @@
   ],
   "source": {
    "name": "CDC PLACES (Local Data for Better Health), 2025 release",
+   "shortName": "CDC PLACES",
    "url": "https://www.cdc.gov/places/",
    "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
   },
@@ -1300,6 +1273,7 @@
   ],
   "source": {
    "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
    "url": "https://www.census.gov/programs-surveys/acs",
    "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
   },
@@ -1333,12 +1307,7 @@
    "to": 2024,
    "step": 5
   },
-  "learnMore": [
-   {
-    "label": "See this place's full Census profile on Census Reporter",
-    "url": "https://censusreporter.org/profiles/{cr}/"
-   }
-  ],
+  "learnMore": [],
   "terms": [
    "acs-5-year",
    "margin-of-error",
@@ -1364,6 +1333,7 @@
   ],
   "source": {
    "name": "NOAA NCEI nClimDiv county climate data",
+   "shortName": "NOAA",
    "url": "https://www.ncei.noaa.gov/pub/data/cirs/climdiv/",
    "citation": "NOAA National Centers for Environmental Information, nClimDiv county monthly data (Vose et al. 2014), 1991–2020 normals computed by this site"
   },
@@ -1430,6 +1400,7 @@
   ],
   "source": {
    "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
    "url": "https://www.census.gov/programs-surveys/acs",
    "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
   },
@@ -1460,12 +1431,7 @@
    "to": 2024,
    "step": 5
   },
-  "learnMore": [
-   {
-    "label": "See this place's full Census profile on Census Reporter",
-    "url": "https://censusreporter.org/profiles/{cr}/"
-   }
-  ],
+  "learnMore": [],
   "terms": [
    "median",
    "acs-5-year",
@@ -1492,6 +1458,7 @@
   ],
   "source": {
    "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
    "url": "https://www.census.gov/programs-surveys/acs",
    "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
   },
@@ -1523,12 +1490,7 @@
    "to": 2024,
    "step": 5
   },
-  "learnMore": [
-   {
-    "label": "See this place's full Census profile on Census Reporter",
-    "url": "https://censusreporter.org/profiles/{cr}/"
-   }
-  ],
+  "learnMore": [],
   "terms": [
    "median",
    "inflation-adjusted",
@@ -1556,6 +1518,7 @@
   ],
   "source": {
    "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
    "url": "https://www.census.gov/programs-surveys/acs",
    "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
   },
@@ -1587,12 +1550,7 @@
    "to": 2024,
    "step": 5
   },
-  "learnMore": [
-   {
-    "label": "See this place's full Census profile on Census Reporter",
-    "url": "https://censusreporter.org/profiles/{cr}/"
-   }
-  ],
+  "learnMore": [],
   "terms": [
    "median",
    "inflation-adjusted",
@@ -1620,6 +1578,7 @@
   ],
   "source": {
    "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
    "url": "https://www.census.gov/programs-surveys/acs",
    "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
   },
@@ -1650,12 +1609,7 @@
    "to": 2024,
    "step": 5
   },
-  "learnMore": [
-   {
-    "label": "See this place's full Census profile on Census Reporter",
-    "url": "https://censusreporter.org/profiles/{cr}/"
-   }
-  ],
+  "learnMore": [],
   "terms": [
    "acs-5-year",
    "margin-of-error",
@@ -1682,6 +1636,7 @@
   ],
   "source": {
    "name": "CDC PLACES (Local Data for Better Health), 2025 release",
+   "shortName": "CDC PLACES",
    "url": "https://www.cdc.gov/places/",
    "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
   },
@@ -1733,6 +1688,7 @@
   ],
   "source": {
    "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
    "url": "https://www.census.gov/programs-surveys/acs",
    "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
   },
@@ -1777,12 +1733,7 @@
    "to": 2024,
    "step": 5
   },
-  "learnMore": [
-   {
-    "label": "See this place's full Census profile on Census Reporter",
-    "url": "https://censusreporter.org/profiles/{cr}/"
-   }
-  ],
+  "learnMore": [],
   "terms": [
    "acs-5-year",
    "margin-of-error",
@@ -1811,6 +1762,7 @@
   ],
   "source": {
    "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
    "url": "https://www.census.gov/programs-surveys/acs",
    "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
   },
@@ -1845,12 +1797,7 @@
    "to": 2024,
    "step": 5
   },
-  "learnMore": [
-   {
-    "label": "See this place's full Census profile on Census Reporter",
-    "url": "https://censusreporter.org/profiles/{cr}/"
-   }
-  ],
+  "learnMore": [],
   "terms": [
    "race-ethnicity",
    "acs-5-year",
@@ -1877,6 +1824,7 @@
   ],
   "source": {
    "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
    "url": "https://www.census.gov/programs-surveys/acs",
    "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
   },
@@ -1910,12 +1858,7 @@
    "to": 2024,
    "step": 5
   },
-  "learnMore": [
-   {
-    "label": "See this place's full Census profile on Census Reporter",
-    "url": "https://censusreporter.org/profiles/{cr}/"
-   }
-  ],
+  "learnMore": [],
   "terms": [
    "race-ethnicity",
    "acs-5-year",
@@ -1942,6 +1885,7 @@
   ],
   "source": {
    "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
    "url": "https://www.census.gov/programs-surveys/acs",
    "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
   },
@@ -1978,12 +1922,7 @@
    "to": 2024,
    "step": 5
   },
-  "learnMore": [
-   {
-    "label": "See this place's full Census profile on Census Reporter",
-    "url": "https://censusreporter.org/profiles/{cr}/"
-   }
-  ],
+  "learnMore": [],
   "terms": [
    "acs-5-year",
    "margin-of-error",
@@ -2010,6 +1949,7 @@
   ],
   "source": {
    "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
    "url": "https://www.census.gov/programs-surveys/acs",
    "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
   },
@@ -2043,12 +1983,7 @@
    "to": 2024,
    "step": 5
   },
-  "learnMore": [
-   {
-    "label": "See this place's full Census profile on Census Reporter",
-    "url": "https://censusreporter.org/profiles/{cr}/"
-   }
-  ],
+  "learnMore": [],
   "terms": [
    "acs-5-year",
    "margin-of-error",
@@ -2075,6 +2010,7 @@
   ],
   "source": {
    "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
    "url": "https://www.census.gov/programs-surveys/acs",
    "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
   },
@@ -2108,12 +2044,7 @@
    "to": 2024,
    "step": 5
   },
-  "learnMore": [
-   {
-    "label": "See this place's full Census profile on Census Reporter",
-    "url": "https://censusreporter.org/profiles/{cr}/"
-   }
-  ],
+  "learnMore": [],
   "terms": [
    "race-ethnicity",
    "acs-5-year",
@@ -2140,6 +2071,7 @@
   ],
   "source": {
    "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
    "url": "https://www.census.gov/programs-surveys/acs",
    "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
   },
@@ -2173,12 +2105,7 @@
    "to": 2024,
    "step": 5
   },
-  "learnMore": [
-   {
-    "label": "See this place's full Census profile on Census Reporter",
-    "url": "https://censusreporter.org/profiles/{cr}/"
-   }
-  ],
+  "learnMore": [],
   "terms": [
    "acs-5-year",
    "margin-of-error",
@@ -2204,6 +2131,7 @@
   ],
   "source": {
    "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
    "url": "https://www.census.gov/programs-surveys/acs",
    "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
   },
@@ -2237,12 +2165,7 @@
    "to": 2024,
    "step": 5
   },
-  "learnMore": [
-   {
-    "label": "See this place's full Census profile on Census Reporter",
-    "url": "https://censusreporter.org/profiles/{cr}/"
-   }
-  ],
+  "learnMore": [],
   "terms": [
    "acs-5-year",
    "margin-of-error",
@@ -2268,6 +2191,7 @@
   ],
   "source": {
    "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
    "url": "https://www.census.gov/programs-surveys/acs",
    "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
   },
@@ -2301,12 +2225,7 @@
    "to": 2024,
    "step": 5
   },
-  "learnMore": [
-   {
-    "label": "See this place's full Census profile on Census Reporter",
-    "url": "https://censusreporter.org/profiles/{cr}/"
-   }
-  ],
+  "learnMore": [],
   "terms": [
    "acs-5-year",
    "margin-of-error",
@@ -2332,6 +2251,7 @@
   ],
   "source": {
    "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
    "url": "https://www.census.gov/programs-surveys/acs",
    "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
   },
@@ -2365,12 +2285,7 @@
    "to": 2024,
    "step": 5
   },
-  "learnMore": [
-   {
-    "label": "See this place's full Census profile on Census Reporter",
-    "url": "https://censusreporter.org/profiles/{cr}/"
-   }
-  ],
+  "learnMore": [],
   "terms": [
    "acs-5-year",
    "margin-of-error",
@@ -2397,6 +2312,7 @@
   ],
   "source": {
    "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
    "url": "https://www.census.gov/programs-surveys/acs",
    "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
   },
@@ -2430,12 +2346,7 @@
    "to": 2024,
    "step": 5
   },
-  "learnMore": [
-   {
-    "label": "See this place's full Census profile on Census Reporter",
-    "url": "https://censusreporter.org/profiles/{cr}/"
-   }
-  ],
+  "learnMore": [],
   "terms": [
    "race-ethnicity",
    "acs-5-year",
@@ -2462,6 +2373,7 @@
   ],
   "source": {
    "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
    "url": "https://www.census.gov/programs-surveys/acs",
    "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
   },
@@ -2499,12 +2411,7 @@
    "to": 2024,
    "step": 5
   },
-  "learnMore": [
-   {
-    "label": "See this place's full Census profile on Census Reporter",
-    "url": "https://censusreporter.org/profiles/{cr}/"
-   }
-  ],
+  "learnMore": [],
   "terms": [
    "acs-5-year",
    "margin-of-error",
@@ -2531,6 +2438,7 @@
   ],
   "source": {
    "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
    "url": "https://www.census.gov/programs-surveys/acs",
    "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
   },
@@ -2567,12 +2475,7 @@
    "to": 2024,
    "step": 5
   },
-  "learnMore": [
-   {
-    "label": "See this place's full Census profile on Census Reporter",
-    "url": "https://censusreporter.org/profiles/{cr}/"
-   }
-  ],
+  "learnMore": [],
   "terms": [
    "limited-english",
    "acs-5-year",
@@ -2600,6 +2503,7 @@
   ],
   "source": {
    "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
    "url": "https://www.census.gov/programs-surveys/acs",
    "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
   },
@@ -2634,12 +2538,7 @@
    "to": 2024,
    "step": 5
   },
-  "learnMore": [
-   {
-    "label": "See this place's full Census profile on Census Reporter",
-    "url": "https://censusreporter.org/profiles/{cr}/"
-   }
-  ],
+  "learnMore": [],
   "terms": [
    "acs-5-year",
    "margin-of-error",
@@ -2665,6 +2564,7 @@
   ],
   "source": {
    "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
    "url": "https://www.census.gov/programs-surveys/acs",
    "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
   },
@@ -2699,12 +2599,7 @@
    "to": 2024,
    "step": 5
   },
-  "learnMore": [
-   {
-    "label": "See this place's full Census profile on Census Reporter",
-    "url": "https://censusreporter.org/profiles/{cr}/"
-   }
-  ],
+  "learnMore": [],
   "terms": [
    "race-ethnicity",
    "acs-5-year",
@@ -2732,6 +2627,7 @@
   ],
   "source": {
    "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
    "url": "https://www.census.gov/programs-surveys/acs",
    "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
   },
@@ -2766,12 +2662,7 @@
    "to": 2024,
    "step": 5
   },
-  "learnMore": [
-   {
-    "label": "See this place's full Census profile on Census Reporter",
-    "url": "https://censusreporter.org/profiles/{cr}/"
-   }
-  ],
+  "learnMore": [],
   "terms": [
    "race-ethnicity",
    "acs-5-year",
@@ -2798,6 +2689,7 @@
   ],
   "source": {
    "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
    "url": "https://www.census.gov/programs-surveys/acs",
    "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
   },
@@ -2845,12 +2737,7 @@
    "to": 2024,
    "step": 5
   },
-  "learnMore": [
-   {
-    "label": "See this place's full Census profile on Census Reporter",
-    "url": "https://censusreporter.org/profiles/{cr}/"
-   }
-  ],
+  "learnMore": [],
   "terms": [
    "acs-5-year",
    "margin-of-error",
@@ -2877,6 +2764,7 @@
   ],
   "source": {
    "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
    "url": "https://www.census.gov/programs-surveys/acs",
    "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
   },
@@ -2916,12 +2804,7 @@
    "to": 2024,
    "step": 5
   },
-  "learnMore": [
-   {
-    "label": "See this place's full Census profile on Census Reporter",
-    "url": "https://censusreporter.org/profiles/{cr}/"
-   }
-  ],
+  "learnMore": [],
   "terms": [
    "race-ethnicity",
    "acs-5-year",
@@ -2948,6 +2831,7 @@
   ],
   "source": {
    "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
    "url": "https://www.census.gov/programs-surveys/acs",
    "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
   },
@@ -2990,12 +2874,7 @@
    "to": 2024,
    "step": 5
   },
-  "learnMore": [
-   {
-    "label": "See this place's full Census profile on Census Reporter",
-    "url": "https://censusreporter.org/profiles/{cr}/"
-   }
-  ],
+  "learnMore": [],
   "terms": [
    "acs-5-year",
    "margin-of-error",
@@ -3022,6 +2901,7 @@
   ],
   "source": {
    "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
    "url": "https://www.census.gov/programs-surveys/acs",
    "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
   },
@@ -3066,12 +2946,7 @@
    "to": 2024,
    "step": 5
   },
-  "learnMore": [
-   {
-    "label": "See this place's full Census profile on Census Reporter",
-    "url": "https://censusreporter.org/profiles/{cr}/"
-   }
-  ],
+  "learnMore": [],
   "terms": [
    "rent-burden",
    "acs-5-year",
@@ -3099,6 +2974,7 @@
   ],
   "source": {
    "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
    "url": "https://www.census.gov/programs-surveys/acs",
    "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
   },
@@ -3132,12 +3008,7 @@
    "to": 2024,
    "step": 5
   },
-  "learnMore": [
-   {
-    "label": "See this place's full Census profile on Census Reporter",
-    "url": "https://censusreporter.org/profiles/{cr}/"
-   }
-  ],
+  "learnMore": [],
   "terms": [
    "acs-5-year",
    "margin-of-error",
@@ -3164,6 +3035,7 @@
   ],
   "source": {
    "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
    "url": "https://www.census.gov/programs-surveys/acs",
    "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
   },
@@ -3197,12 +3069,7 @@
    "to": 2024,
    "step": 5
   },
-  "learnMore": [
-   {
-    "label": "See this place's full Census profile on Census Reporter",
-    "url": "https://censusreporter.org/profiles/{cr}/"
-   }
-  ],
+  "learnMore": [],
   "terms": [
    "acs-5-year",
    "margin-of-error",
@@ -3230,6 +3097,7 @@
   ],
   "source": {
    "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
    "url": "https://www.census.gov/programs-surveys/acs",
    "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
   },
@@ -3263,12 +3131,7 @@
    "to": 2024,
    "step": 5
   },
-  "learnMore": [
-   {
-    "label": "See this place's full Census profile on Census Reporter",
-    "url": "https://censusreporter.org/profiles/{cr}/"
-   }
-  ],
+  "learnMore": [],
   "terms": [
    "acs-5-year",
    "margin-of-error",
@@ -3293,6 +3156,7 @@
   ],
   "source": {
    "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
    "url": "https://www.census.gov/programs-surveys/acs",
    "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
   },
@@ -3329,12 +3193,7 @@
    "to": 2024,
    "step": 5
   },
-  "learnMore": [
-   {
-    "label": "See this place's full Census profile on Census Reporter",
-    "url": "https://censusreporter.org/profiles/{cr}/"
-   }
-  ],
+  "learnMore": [],
   "terms": [
    "acs-5-year",
    "margin-of-error",
@@ -3362,6 +3221,7 @@
   ],
   "source": {
    "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
    "url": "https://www.census.gov/programs-surveys/acs",
    "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
   },
@@ -3395,12 +3255,7 @@
    "to": 2024,
    "step": 5
   },
-  "learnMore": [
-   {
-    "label": "See this place's full Census profile on Census Reporter",
-    "url": "https://censusreporter.org/profiles/{cr}/"
-   }
-  ],
+  "learnMore": [],
   "terms": [
    "acs-5-year",
    "margin-of-error",
@@ -3426,6 +3281,7 @@
   ],
   "source": {
    "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
    "url": "https://www.census.gov/programs-surveys/acs",
    "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
   },
@@ -3459,12 +3315,7 @@
    "to": 2024,
    "step": 5
   },
-  "learnMore": [
-   {
-    "label": "See this place's full Census profile on Census Reporter",
-    "url": "https://censusreporter.org/profiles/{cr}/"
-   }
-  ],
+  "learnMore": [],
   "terms": [
    "race-ethnicity",
    "acs-5-year",
@@ -3492,6 +3343,7 @@
   ],
   "source": {
    "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
    "url": "https://www.census.gov/programs-surveys/acs",
    "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
   },
@@ -3525,12 +3377,7 @@
    "to": 2024,
    "step": 5
   },
-  "learnMore": [
-   {
-    "label": "See this place's full Census profile on Census Reporter",
-    "url": "https://censusreporter.org/profiles/{cr}/"
-   }
-  ],
+  "learnMore": [],
   "terms": [
    "acs-5-year",
    "margin-of-error",
@@ -3556,6 +3403,7 @@
   ],
   "source": {
    "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
    "url": "https://www.census.gov/programs-surveys/acs",
    "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
   },
@@ -3590,12 +3438,7 @@
    "to": 2024,
    "step": 5
   },
-  "learnMore": [
-   {
-    "label": "See this place's full Census profile on Census Reporter",
-    "url": "https://censusreporter.org/profiles/{cr}/"
-   }
-  ],
+  "learnMore": [],
   "terms": [
    "acs-5-year",
    "margin-of-error",
@@ -3622,6 +3465,7 @@
   ],
   "source": {
    "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
    "url": "https://www.census.gov/programs-surveys/acs",
    "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
   },
@@ -3664,12 +3508,7 @@
    "to": 2024,
    "step": 5
   },
-  "learnMore": [
-   {
-    "label": "See this place's full Census profile on Census Reporter",
-    "url": "https://censusreporter.org/profiles/{cr}/"
-   }
-  ],
+  "learnMore": [],
   "terms": [
    "acs-5-year",
    "margin-of-error",
@@ -3695,6 +3534,7 @@
   ],
   "source": {
    "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
    "url": "https://www.census.gov/programs-surveys/acs",
    "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
   },
@@ -3725,12 +3565,7 @@
    "to": 2024,
    "step": 5
   },
-  "learnMore": [
-   {
-    "label": "See this place's full Census profile on Census Reporter",
-    "url": "https://censusreporter.org/profiles/{cr}/"
-   }
-  ],
+  "learnMore": [],
   "terms": [
    "inflation-adjusted",
    "acs-5-year",
@@ -3759,6 +3594,7 @@
   ],
   "source": {
    "name": "CDC PLACES (Local Data for Better Health), 2025 release",
+   "shortName": "CDC PLACES",
    "url": "https://www.cdc.gov/places/",
    "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
   },
@@ -3809,6 +3645,7 @@
   ],
   "source": {
    "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
    "url": "https://www.census.gov/programs-surveys/acs",
    "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
   },
@@ -3839,12 +3676,7 @@
    "to": 2024,
    "step": 5
   },
-  "learnMore": [
-   {
-    "label": "See this place's full Census profile on Census Reporter",
-    "url": "https://censusreporter.org/profiles/{cr}/"
-   }
-  ],
+  "learnMore": [],
   "terms": [
    "acs-5-year",
    "margin-of-error",
@@ -3870,6 +3702,7 @@
   ],
   "source": {
    "name": "CDC PLACES (Local Data for Better Health), 2025 release",
+   "shortName": "CDC PLACES",
    "url": "https://www.cdc.gov/places/",
    "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
   },
@@ -3921,6 +3754,7 @@
   ],
   "source": {
    "name": "CDC PLACES (Local Data for Better Health), 2025 release",
+   "shortName": "CDC PLACES",
    "url": "https://www.cdc.gov/places/",
    "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
   },
@@ -3973,6 +3807,7 @@
   ],
   "source": {
    "name": "NHTSA Fatality Analysis Reporting System (FARS)",
+   "shortName": "NHTSA",
    "url": "https://www.nhtsa.gov/research-data/fatality-analysis-reporting-system-fars",
    "citation": "National Highway Traffic Safety Administration, Fatality Analysis Reporting System, 2020–2024"
   },
@@ -4028,6 +3863,7 @@
   ],
   "source": {
    "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
    "url": "https://www.census.gov/programs-surveys/acs",
    "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
   },
@@ -4061,12 +3897,7 @@
    "to": 2024,
    "step": 5
   },
-  "learnMore": [
-   {
-    "label": "See this place's full Census profile on Census Reporter",
-    "url": "https://censusreporter.org/profiles/{cr}/"
-   }
-  ],
+  "learnMore": [],
   "terms": [
    "unemployment-rate",
    "acs-5-year",
@@ -4097,6 +3928,7 @@
   ],
   "source": {
    "name": "FHWA Highway Performance Monitoring System (HPMS) 2024",
+   "shortName": "FHWA",
    "url": "https://geodata.bts.gov/datasets/5e6a977c2d7c4ec1bdc82e684d3384f2",
    "citation": "Federal Highway Administration, Highway Performance Monitoring System 2024 (via BTS NTAD); ACS 2020–2024 population"
   },

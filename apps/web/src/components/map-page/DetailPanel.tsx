@@ -11,6 +11,7 @@ import { loadMoes, type Values } from "@/lib/values";
 import { BottomSheet, useIsPhone } from "../BottomSheet";
 import { PlaceDataList, type Detail } from "../PlaceDataList";
 import { LearnMore } from "./LearnMore";
+import { loadPlaceIndex, placeByGeoid, type PlaceHit } from "@/lib/search";
 
 const dedupe = (links: Link[]) => links.filter((l, i) => links.findIndex((m) => m.url === l.url) === i);
 
@@ -28,10 +29,62 @@ interface DetailProps {
   onMapIt: (id: string) => void;
   /** A timeline stop is shown (D-36): the primary value comes from `xv` for that period. */
   period?: { label: string; defaultLabel: string };
+  /** Select and frame a place this one sits inside (the "inside" links, issue #34). */
+  onPlace?: (p: PlaceHit) => void;
+  /** Phones: the legend key, shown in the sheet with this place's class outlined. */
+  legendKey?: { colors: string[]; cls: number | null; ends: [string, string] } | null;
+}
+
+/** The state and county a place sits inside (from its GEOID), coarse first. */
+function useInside(geoid: string, level: string) {
+  const [inside, setInside] = useState<PlaceHit[]>([]);
+  useEffect(() => {
+    let live = true;
+    const ids = level === "state" ? [] : level === "county" ? [geoid.slice(0, 2)] : [geoid.slice(0, 2), geoid.slice(0, 5)];
+    setInside([]);
+    if (!ids.length) return;
+    loadPlaceIndex().then((rows) => live && setInside(ids.map((id) => placeByGeoid(rows, id)).filter((p): p is PlaceHit => !!p)), () => {});
+    return () => { live = false; };
+  }, [geoid, level]);
+  return inside;
+}
+
+/** "Minnesota › Hennepin County": tap a place to select it and frame it (digging back up). */
+function InsideLinks({ inside, name, onPlace }: { inside: PlaceHit[]; name: string; onPlace?: (p: PlaceHit) => void }) {
+  if (!inside.length) return null;
+  return (
+    <nav aria-label="Places this sits inside" className="mb-1 flex flex-wrap items-center gap-x-1 text-xs">
+      {inside.map((p) => (
+        <span key={p.geoid} className="flex items-center gap-1">
+          <button type="button" onClick={() => onPlace?.(p)} onPointerDown={(e) => e.stopPropagation()}
+            className="rounded font-medium text-primary underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-ring">
+            {p.name.split(",")[0]}
+          </button>
+          <span aria-hidden className="text-muted-foreground">›</span>
+        </span>
+      ))}
+      <span className="text-muted-foreground" aria-current="location">{name.split(",")[0]}</span>
+    </nav>
+  );
+}
+
+/** The legend key inside the phone sheet: the place's class outlined, so its value reads against the key. */
+function SheetKey({ colors, cls, ends }: { colors: string[]; cls: number | null; ends: [string, string] }) {
+  return (
+    <div className="mt-2 flex items-center gap-2 text-xs tabular-nums text-muted-foreground">
+      <span>{ends[0]}</span>
+      <span className="flex items-center" aria-hidden>
+        {colors.map((c, i) => (
+          <span key={i} className={i === cls ? "relative z-10 h-3.5 w-6 rounded-[3px] ring-2 ring-foreground ring-offset-1 ring-offset-popover" : "h-2.5 w-5"} style={{ background: c }} />
+        ))}
+      </span>
+      <span>{ends[1]}</span>
+    </div>
+  );
 }
 
 /** A clicked place: its values, ranks and links (desktop panel; a BottomSheet on phones). */
-export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, onMapIt, period }: DetailProps) {
+export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, onMapIt, period, onPlace, legendKey }: DetailProps) {
   const [rows, setRows] = useState<Detail | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const phone = useIsPhone();
@@ -60,10 +113,12 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
 
+  const inside = useInside(info.geoid, info.level);
   const featured = [primary, secondary].filter((d): d is Dataset => !!d);
   const links = dedupe(featured.flatMap((d) => learnMoreLinks(d, { level: info.level, geoid: info.geoid, lon: info.lon, lat: info.lat })));
   const summary = (
     <>
+      <InsideLinks inside={inside} name={info.name} onPlace={onPlace} />
       <div className="mb-2 flex items-start justify-between gap-2">
         <div>
           <h2 className="text-sm font-semibold leading-snug">{info.name}</h2>
@@ -98,7 +153,8 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
                     {formatValue(r?.value, d.unit)}
                     {r?.moe != null && r.moe > 0 && r.value != null && <span className="ml-1 text-xs font-normal text-muted-foreground">±{formatValue(r.moe, d.unit)}</span>}
                   </p>
-                  {rank && <p className="text-xs text-muted-foreground">{rank}</p>}
+                  {i === 0 && phone && legendKey && <SheetKey {...legendKey} />}
+                  {rank && <p className="mt-1 text-xs text-muted-foreground">{rank}</p>}
                 </div>
               );
             })}

@@ -6,6 +6,7 @@ category: Health
 tags: [sleep, health, behavior]
 source:
   name: CDC PLACES (Local Data for Better Health), 2025 release
+  shortName: CDC PLACES
   url: https://www.cdc.gov/places/
   citation: "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
 license: Public domain (U.S. Government work; data.cdc.gov license field "Public Domain")

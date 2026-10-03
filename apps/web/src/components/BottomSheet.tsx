@@ -12,16 +12,20 @@ interface Props {
   children: ReactNode;
   onClose: () => void;
   label: string;
+  /** Where it opens: "peek" (details) or "full" (the dataset list). */
+  initialSnap?: "peek" | "full";
+  /** Full height as a share of the map area (the dataset list stops lower, so the map shows above). */
+  fullRatio?: number;
 }
 
 const DRAG_THRESHOLD = 40; // px of travel that counts as a deliberate swipe
 const FULL_RATIO = 0.9;    // full height as a share of the map area
 const PEEK_MAX = 0.55;
 
-export function BottomSheet({ summary, children, onClose, label }: Props) {
+export function BottomSheet({ summary, children, onClose, label, initialSnap = "peek", fullRatio = FULL_RATIO }: Props) {
   const sheet = useRef<HTMLDivElement>(null);
   const peekRef = useRef<HTMLDivElement>(null);
-  const [snap, setSnap] = useState<"peek" | "full">("peek");
+  const [snap, setSnap] = useState<"peek" | "full">(initialSnap);
   const [heights, setHeights] = useState({ peek: 220, full: 600 });
   const [drag, setDrag] = useState<{ startY: number; startH: number; dy: number } | null>(null);
   /** A swipe also fires a click on release; this swallows that click. */
@@ -32,14 +36,14 @@ export function BottomSheet({ summary, children, onClose, label }: Props) {
     const measure = () => {
       const parent = sheet.current?.parentElement?.clientHeight ?? 800;
       const peek = Math.min((peekRef.current?.offsetHeight ?? 200) + 28, parent * PEEK_MAX);
-      setHeights({ peek, full: Math.max(parent * FULL_RATIO, peek) });
+      setHeights({ peek, full: Math.max(parent * fullRatio, peek) });
     };
     measure();
     const ro = new ResizeObserver(measure);
     if (peekRef.current) ro.observe(peekRef.current);
     if (sheet.current?.parentElement) ro.observe(sheet.current.parentElement);
     return () => ro.disconnect();
-  }, []);
+  }, [fullRatio]);
 
   useEffect(() => { if (snap === "peek" && sheet.current) sheet.current.querySelector("[data-sheet-scroll]")?.scrollTo({ top: 0 }); }, [snap]);
 
@@ -70,7 +74,7 @@ export function BottomSheet({ summary, children, onClose, label }: Props) {
     <section ref={sheet} aria-label={label} data-snap={snap} data-obstructs=""
       className={`group absolute inset-x-0 bottom-0 z-20 flex flex-col overflow-hidden rounded-t-2xl border-t bg-popover shadow-[0_-8px_24px_rgb(0_0_0/0.18)] ${drag ? "" : "transition-[height] duration-200 ease-out"}`}
       style={{ height }}>
-      <button type="button" aria-expanded={snap === "full"} aria-label={snap === "full" ? "Collapse details" : "Expand details"}
+      <button type="button" aria-expanded={snap === "full"} aria-label={snap === "full" ? `Collapse: ${label}` : `Expand: ${label}`}
         onClick={() => { if (dragged.current) { dragged.current = false; return; } setSnap((s) => (s === "full" ? "peek" : "full")); }}
         className="flex w-full shrink-0 touch-none justify-center pb-1 pt-2.5 focus-visible:outline-2 focus-visible:outline-ring" {...dragProps}>
         <span className="h-1.5 w-10 rounded-full bg-border" aria-hidden />
@@ -88,7 +92,11 @@ export const useIsPhone = () => useMedia("(max-width: 767px)");
 /** True below Tailwind's lg breakpoint (phones and tablets): the table docks at the bottom. */
 export const useIsNarrow = () => useMedia("(max-width: 1023px)");
 
-function useMedia(query: string) {
+/** Smaller screens (issue #34): narrower than 1440 px or shorter than 900 px — phones, tablets and
+ *  laptops. Here menus step aside while the map moves; larger monitors keep them in place. */
+export const useIsCompact = () => useMedia("(max-width: 1439px), (max-height: 899px)");
+
+export function useMedia(query: string) {
   const [on, setOn] = useState(false);
   useEffect(() => {
     const mq = window.matchMedia(query);

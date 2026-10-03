@@ -69,7 +69,7 @@ export function SiteHeader({ current }: { current?: Section }) {
   // undefined = no choice made on this page yet; null = "System".
   const [chosen, setChosen] = useState<ThemeName | null | undefined>(undefined);
   return (
-    <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-3 border-b bg-background/95 px-4 backdrop-blur md:px-6">
+    <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-3 border-b bg-background px-4 md:px-6">
       {initial !== undefined ? <ThemedContent current={current} explicit={chosen === undefined ? initial : chosen} onTheme={setChosen} />
         : <HeaderContent current={current} explicitTheme={null} onTheme={() => {}} />}
     </header>

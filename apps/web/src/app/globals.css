@@ -89,19 +89,29 @@
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
 
-/* Map-first chrome (D-25). Derived from theme tokens so light/dark both work. */
-.wg-glass {
-  background: color-mix(in srgb, var(--ui-surface) 74%, transparent);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 6px 18px rgb(0 0 0 / 0.14), 0 0 0 1px color-mix(in srgb, var(--ui-text) 9%, transparent);
+/* Map-first chrome (D-25). Controls over the map are flat, solid panels that match the dataset
+   card: the panel color, a 1 px border and a faint shadow. The one exception is the desktop filters
+   sidebar, which is frosted glass (`.wg-glass` in packages/design; Robbie, 2026-10-02, issue #34). */
+.wg-panel {
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
 }
-/* Small text over busy map labels (the legend strip) needs a more solid backing. */
-.wg-glass.wg-glass-strong { background: color-mix(in srgb, var(--ui-surface) 90%, transparent); }
+/* Phones (Robbie, 2026-10-03, issue #34: "get serious about making this easier to see on mobile"):
+   every control and label over the map sits on one of these panels, and the panel takes a strong
+   edge (3:1 against the panel and the land; CONTRAST_RULES in packages/design) so it stands out of
+   any map. Halo-only text over the map isn't used on phones. */
+@media (max-width: 767px) {
+  .wg-panel { border-color: var(--ui-control-edge); box-shadow: 0 1px 4px rgb(0 0 0 / 0.18); }
+}
 .wg-zbtn { background: transparent; cursor: pointer; }
 .wg-zbtn:hover { background: color-mix(in srgb, var(--ui-text) 7%, transparent); }
 .wg-zbtn:active { background: color-mix(in srgb, var(--ui-text) 13%, transparent); }
 .wg-zbtn:focus-visible { outline: 2px solid var(--ui-focus); outline-offset: -3px; }
+/* A single solid button (Back) keeps its panel fill under the hover tint. */
+.wg-panel.wg-zbtn { background: var(--ui-surface); }
+.wg-panel.wg-zbtn:hover { background: color-mix(in srgb, var(--ui-text) 7%, var(--ui-surface)); }
+.wg-panel.wg-zbtn:active { background: color-mix(in srgb, var(--ui-text) 13%, var(--ui-surface)); }
 /* The wordmark lets the map show through; a shadow keeps it legible. */
 .wg-wordmark {
   color: color-mix(in srgb, var(--ui-text) 36%, transparent);
@@ -112,25 +122,19 @@
   display: inline-flex;
   filter: drop-shadow(0 0 1.5px var(--map-label-halo)) drop-shadow(0 3px 8px rgb(0 0 0 / 0.25));
 }
-/* Solid text placed directly on the map gets the basemap label halo. */
-.wg-on-map {
-  text-shadow: 0 0 2px var(--map-label-halo), 0 0 6px var(--map-label-halo), 0 0 12px var(--map-label-halo);
-}
 /* Year control slider (D-36): accent thumb and track from the theme. */
 .wg-range { accent-color: var(--ui-accent); height: 1.25rem; cursor: pointer; }
-/* Docked filters (D-28): no card, just halo'd text and glass chips over the map. */
+/* Docked filters (D-28): on a solid panel, so road and place labels never run through the text. */
 .wg-dock { pointer-events: auto; }
-/* Immersed legend: a lighter card so it gives context without blocking the map. */
-.wg-legend-immersed {
-  background: color-mix(in srgb, var(--ui-surface) 78%, transparent) !important;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-}
+/* While the map moves on smaller screens (issue #34), chrome that isn't the map's key steps aside. */
+.wg-step-aside { opacity: 0; pointer-events: none; }
+.wg-dim { opacity: 0.45; }
 
-/* Credits footnote (D-35): small and quiet, with a label halo so it reads over the map. */
+/* Credits footnote (D-35): small and quiet, on a solid backing with the secondary text color so
+   it stays legible over dark classes (issue #34; the old halo text vanished on them). */
 .wg-credits {
-  color: color-mix(in srgb, var(--ui-text) 52%, transparent);
-  text-shadow: 0 0 2px var(--map-label-halo), 0 0 4px var(--map-label-halo);
+  color: var(--ui-text-muted);
+  background: var(--ui-surface);
 }
 .wg-credits a { color: inherit; text-decoration: none; }
 .wg-credits a:hover { color: var(--ui-text); text-decoration: underline; }

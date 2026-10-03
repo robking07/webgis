@@ -19,7 +19,7 @@ export function TimeControl({ stops, value, onChange, docked }: {
   const summary = stops.find((s) => s.isDefault && !DATED.test(s.id));
   const dated = stops.filter((s) => s !== summary);
   const chip = (on: boolean) =>
-    `rounded-md px-2 py-1 text-xs font-medium tabular-nums focus-visible:outline-2 focus-visible:outline-ring ${on ? "bg-primary text-primary-foreground" : docked ? "wg-glass text-foreground" : "border hover:bg-muted"}`;
+    `rounded-md px-2 py-1 text-xs font-medium tabular-nums focus-visible:outline-2 focus-visible:outline-ring ${on ? "bg-primary text-primary-foreground" : docked ? "wg-panel text-foreground" : "border hover:bg-muted"}`;
 
   if (stops.length <= 4) {
     return (
@@ -41,7 +41,7 @@ export function TimeControl({ stops, value, onChange, docked }: {
   // The slider rests at the newest year while the summary is shown.
   const pos = i >= 0 ? i : dated.length - 1;
   const step = (d: number) => onChange(dated[Math.min(dated.length - 1, Math.max(0, (onSummary ? dated.length : pos) + d))].id);
-  const btn = `grid size-7 shrink-0 place-items-center rounded-md text-foreground disabled:opacity-35 focus-visible:outline-2 focus-visible:outline-ring ${docked ? "wg-glass" : "hover:bg-muted"}`;
+  const btn = `grid size-7 shrink-0 place-items-center rounded-md text-foreground disabled:opacity-35 focus-visible:outline-2 focus-visible:outline-ring ${docked ? "wg-panel" : "hover:bg-muted"}`;
   return (
     <div className="space-y-1.5">
       <div className="flex items-baseline justify-between gap-2">

@@ -2,7 +2,7 @@
 // with the dataset's registry symbology and the design tokens.
 "use client";
 import { useEffect, useState } from "react";
-import { classify, classOf, LAZY_LEVELS, rampColors, RAMPS, STATIC_ONLY_LEVELS, type GeoLevel, type RampId } from "@webgis/design";
+import { classify, classOf, LAZY_LEVELS, rampColors, RAMPS, STATIC_ONLY_LEVELS, TILE_VALUE_LEVELS, type GeoLevel, type RampId } from "@webgis/design";
 import type { Dataset } from "./registry";
 
 export type Values = Record<string, number>;
@@ -43,7 +43,8 @@ export function useDatasetValues(ds: Dataset | null, want: GeoLevel[], stop: str
     if (!ds || !key) return;
     let live = true;
     const wanted = wantKey.split(",");
-    const load = (levelKey ? levelKey.split(",") : []).filter((l) => !LAZY_LEVELS.has(l as GeoLevel) || wanted.includes(l)) as GeoLevel[];
+    // Blocks carry their values in the tiles (D-124): there is no values file to fetch.
+    const load = (levelKey ? levelKey.split(",") : []).filter((l) => !TILE_VALUE_LEVELS.has(l as GeoLevel) && (!LAZY_LEVELS.has(l as GeoLevel) || wanted.includes(l))) as GeoLevel[];
     for (const level of load) {
       loadValues(ds.id, level, stop).then(
         (v) => live && setData((d) => ({ key, values: { ...(d.key === key ? d.values : {}), [level]: v }, error: null })),

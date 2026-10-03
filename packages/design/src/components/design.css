@@ -4,6 +4,9 @@
 .wg-legend-caption { color: var(--ui-text-muted); margin: 0 0 0.5rem; font-size: 0.75rem; }
 .wg-legend-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.25rem; }
 .wg-legend-list li { display: flex; align-items: center; gap: 0.5rem; font-variant-numeric: tabular-nums; }
+/* The selected place's class: an outlined row with a label. */
+.wg-legend-list li.wg-legend-mark { margin: 0 -0.25rem; padding: 0.0625rem 0.25rem; border-radius: 0.25rem; outline: 1.5px solid var(--ui-text); font-weight: 600; }
+.wg-legend-mark-label { margin-left: auto; font-size: 0.6875rem; font-weight: 500; color: var(--ui-text-muted); }
 .wg-swatch { display: inline-block; border-radius: 3px; box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.12); flex: none; }
 /* Line samples carry the same casing as the map's data lines (featureLineCasing). */
 .wg-swatch-line { box-shadow: 0 0 0 1px var(--map-feature-line-casing); }
@@ -41,3 +44,20 @@
 /* The ⓘ button is a black SVG background; invert it on dark (same two selectors as theme.css). */
 :root[data-theme="dark"] .maplibregl-ctrl-attrib-button { filter: invert(1); }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .maplibregl-ctrl-attrib-button { filter: invert(1); } }
+
+/* Frosted glass (Robbie, 2026-10-02, issue #34): the desktop filters sidebar only. The panel color
+   at high opacity over a strong blur, so text and checkboxes stay legible over any map, plus the
+   1 px border token and a faint shadow. Without backdrop-filter support it falls back to solid.
+   The opacities must match GLASS_ALPHA in themes.ts: the design gate checks text on this glass
+   over the lightest and darkest map colors (dark went 80% → 88% when muted text failed it). */
+.wg-glass {
+  --wg-glass-alpha: 84%;
+  background: color-mix(in srgb, var(--ui-surface) var(--wg-glass-alpha), transparent);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+  backdrop-filter: blur(16px) saturate(1.2);
+  border: 1px solid var(--ui-border);
+  box-shadow: 0 4px 16px rgb(0 0 0 / 0.12), 0 1px 2px rgb(0 0 0 / 0.08);
+}
+:root[data-theme="dark"] .wg-glass { --wg-glass-alpha: 88%; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .wg-glass { --wg-glass-alpha: 88%; } }
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) { .wg-glass { background: var(--ui-surface); } }

@@ -4,7 +4,7 @@ import type { Dataset } from "@/lib/registry";
 
 export function MapCredits({ datasets }: { datasets: Dataset[] }) {
   return (
-    <p className="wg-credits pointer-events-auto absolute inset-x-3 bottom-1 z-10 truncate text-[10px] leading-tight md:left-4 md:right-4 lg:whitespace-normal">
+    <p className="wg-credits pointer-events-auto absolute bottom-1 left-3 z-10 max-w-[calc(100%-1.5rem)] truncate rounded px-1 text-[10px] leading-tight md:left-4 md:max-w-[calc(100%-2rem)] lg:whitespace-normal">
       {datasets.map((d) => (
         <span key={d.id}><a href={`/data/${d.id}`}>{d.source.name.split(" (")[0]}</a> · </span>
       ))}

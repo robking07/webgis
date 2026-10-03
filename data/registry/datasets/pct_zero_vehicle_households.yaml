@@ -6,6 +6,7 @@ category: Vehicles
 tags: [car-free, vehicles, mobility, transportation]
 source:
   name: U.S. Census Bureau, American Community Survey 5-Year Estimates
+  shortName: Census Bureau
   url: https://www.census.gov/programs-surveys/acs
   citation: "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
 license: Public domain (U.S. Government work, 17 U.S.C. § 105)
@@ -15,9 +16,6 @@ geographyLevels: [state, county, tract, block_group]
 unit: percent
 universe: households
 terms: [acs-5-year, margin-of-error, census-geography, quantile-classes]
-learnMore:
-  - label: See this place's full Census profile on Census Reporter
-    url: "https://censusreporter.org/profiles/{cr}/"
 measure:
   kind: acs5
   numerator: [B08201_002]

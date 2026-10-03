@@ -10,6 +10,9 @@ export interface Theme {
     surface: string;
     surfaceRaised: string;
     border: string;
+    /** Edge of a control drawn over the map on phones (issue #34): strong enough to pick the
+     *  control out of any map, where the quiet `border` disappears into the basemap. */
+    controlEdge: string;
     text: string;
     textMuted: string;
     accent: string;
@@ -70,6 +73,7 @@ export const THEMES: Record<ThemeName, Theme> = {
       surface: "#ffffff",
       surfaceRaised: "#ffffff",
       border: "#d9d6cf",
+      controlEdge: "#858179",
       text: "#1b1c1e",
       textMuted: "#5b5d63",
       accent: "#1f5fa8",
@@ -116,6 +120,7 @@ export const THEMES: Record<ThemeName, Theme> = {
       surface: "#1b1d21",
       surfaceRaised: "#24272c",
       border: "#353941",
+      controlEdge: "#767a83",
       text: "#ececee",
       textMuted: "#a3a6ad",
       accent: "#7fb2ec",
@@ -170,6 +175,16 @@ export const CONTRAST_RULES: Array<[keyof Theme["ui"] | `map.${keyof Theme["map"
   ["brandBread", "surface", 3, "logo bread on panels (non-text)"],
   ["accent", "bg", 3, "logo map layer on the page (non-text)"],
   ["border", "surface", 1.3, "panel borders (decorative)"],
+  // On-map controls on phones (Robbie, 2026-10-03, issue #34: "get serious about making this
+  // easier to see on mobile"). Every control and label over the map sits on a solid surface panel
+  // (.wg-panel); these are the pairs that panel has to carry (WCAG AA). See also GLASS below.
+  ["text", "surface", 4.5, "on-map text on its panel: dataset title, Filters button, level note, legend strip"],
+  ["textMuted", "surface", 4.5, "on-map secondary text on its panel: category, 'closer in' hint"],
+  ["text", "surface", 3, "on-map icons on their panel: menu, Back, zoom, carets (non-text)"],
+  ["accentText", "accent", 4.5, "filter count badge"],
+  ["controlEdge", "surface", 3, "on-map control edge vs its own panel (non-text, phones)"],
+  ["controlEdge", "map.focusLand", 3, "on-map control edge vs U.S. land (non-text, phones)"],
+  ["controlEdge", "map.land", 2, "on-map control edge vs land outside the U.S. (non-text, phones)"],
   ["map.label", "map.labelHalo", 7, "map labels"],
   ["map.labelMuted", "map.labelHalo", 4.5, "minor map labels"],
   ["map.labelForeign", "map.labelHalo", 3, "labels outside the U.S. (muted on purpose, still legible)"],
@@ -182,6 +197,11 @@ export const CONTRAST_RULES: Array<[keyof Theme["ui"] | `map.${keyof Theme["map"
   ["map.countryLine", "map.focusLand", 3, "national boundary vs U.S. land (non-text)"],
   ["map.coastline", "map.water", 1.5, "shoreline vs water (decorative)"],
 ];
+
+/** Opacity of the frosted-glass desktop filters sidebar (`.wg-glass` in components/design.css,
+ *  which must match). `scripts/check.ts` composites the panel over the darkest and lightest map
+ *  colors and requires its text and secondary text to keep 4.5:1 on top. */
+export const GLASS_ALPHA: Record<ThemeName, number> = { light: 0.84, dark: 0.88 };
 
 export function themeColor(theme: Theme, key: string): string {
   if (key.startsWith("map.")) return theme.map[key.slice(4) as keyof Theme["map"]];

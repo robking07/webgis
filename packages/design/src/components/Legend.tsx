@@ -13,10 +13,12 @@ export interface LegendProps {
   showNoData?: boolean;
   /** Swatch shape: area fill (default) or a line sample. */
   swatch?: "area" | "line";
+  /** Class index of a selected place: that row is outlined and labeled, so its value reads against the key. */
+  mark?: number | null;
 }
 
 /** The only choropleth legend. Labels are text, so the legend never relies on color alone. */
-export function Legend({ title, unit, colors, breaks, caption, minClass, showNoData = true, swatch = "area" }: LegendProps) {
+export function Legend({ title, unit, colors, breaks, caption, minClass, showNoData = true, swatch = "area", mark = null }: LegendProps) {
   const labels = classLabels(breaks, unit, minClass != null ? { min: minClass, minIsClass: true } : undefined);
   return (
     <figure className="wg-legend" aria-label={`Legend: ${title}`}>
@@ -24,9 +26,10 @@ export function Legend({ title, unit, colors, breaks, caption, minClass, showNoD
       {caption && <p className="wg-legend-caption">{caption}</p>}
       <ul className="wg-legend-list">
         {colors.map((c, i) => (
-          <li key={c + i}>
+          <li key={c + i} className={mark === i ? "wg-legend-mark" : undefined} aria-current={mark === i ? "true" : undefined}>
             <span className={swatch === "line" ? "wg-swatch wg-swatch-line" : "wg-swatch"} style={{ background: c, width: LEGEND.swatchSize, height: swatch === "line" ? 4 + i : LEGEND.swatchSize }} aria-hidden />
             <span>{labels[i] ?? ""}</span>
+            {mark === i && <span className="wg-legend-mark-label">◂ selected place</span>}
           </li>
         ))}
         {LEGEND.alwaysShowNoData && showNoData && (
