@@ -1,41 +1,81 @@
-# Roadmap: digging deeper without clutter
+# Mapwich roadmap
 
-The guiding rule (D-25, D-26): **the landing map is clean and authoritative; every user action unearths the next layer of options.** Nothing appears until the user's last action makes it relevant.
+**Approved by Robbie, 2026-10-03.** The living version, which the lead keeps current, is the
+Claude Doc "Mapwich Roadmap": https://claude.ai/code/artifact/c2211bac-8fd8-47a3-a28c-6af3799d1fdc
+(tab *Roadmap* = what and why; tab *Build plan* = tasks, sizes, order, practices). This file is
+a compact mirror for agents. If they disagree, the doc wins.
 
-## The progressive-disclosure ladder
+## Why
 
-| User action | What appears | Status |
+A free, non-commercial, map-first viewer of U.S. public data for **planners first, the public
+second**. The core job is to **explore and compare data**. It is also Robbie's portfolio: a GIS
+leader building with AI using agile and DevOps practice, not vibe coding.
+
+Success by the end of March 2027:
+- Robbie uses it weekly.
+- It's portfolio-ready.
+- 6 non-overlapping Specials are published.
+
+Budget: free tiers by default, under $50/month.
+
+## Responsible AI use, in every phase
+
+1. Plan before building: a written spec and a size for each task.
+2. Budget every task (S ≈ 100k, M ≈ 275k, L ≈ 500k agent tokens) on its issue and in its brief.
+3. Stop and re-plan past 1.5× budget.
+4. No agent when a script will do.
+5. Log budget vs actual on each issue. The disclosures page publishes totals.
+
+Every phase gate includes a usage check.
+
+## Phases
+
+Phases are gated on real use, not on dates. Each phase has: why, what we build, what it
+accomplishes, done when, and not in this phase (see the doc).
+
+| Phase | Tasks | Gate |
 |---|---|---|
-| Lands on the map | The map, one factual dataset card, legend | ✓ |
-| Pans/zooms | Chrome falls away; the map is everything | ✓ |
-| Opens ⓘ / Display options | Explainers; geography level; filters for the layer | ✓ (this pass) |
-| Hovers / clicks a place | Its value and rank; then the full place profile | ✓ |
-| Opens the table | Every place, sortable; click to fly there | ✓ |
-| Picks a comparison | Bivariate map + legend | ✓ (desktop card) |
-| Picks a finer level | Block groups (ACS + 2020 Census), blocks (2020 Census) | ✓ (D-124) |
-| Starts from a place | A place-first page | Planned, below |
+| **0 · Foundations** | F1 handbook + architecture map · F2 checks in GitHub CI · F3 code-checker cleanup · F4 scripts into repo · F5 usage log · F6 agent roles + review-lead verdict · F7 prune CLAUDE.md · F8 progress log · F9 prototype audit · F10 tag prototype release · S3 cost alerts + uptime email | CI passes on every PR; handbook, roles and progress log exist; prototype tagged and audited |
+| **1 · Compare reliably** | 1.1 side-by-side places · 1.2 change-over-time maps · 1.3 reliability warnings · 1.4 CSV download · 1.5 link previews (#37) · 1.6 disclosures page · 1.7 map polish (real phone) · 1.8 Specials pipeline · S1 static click details · S2 data files to R2 | Robbie uses compare and change maps in a real conversation; first Special in draft |
+| **2 · Depth for planners** | 2.4 transit (NTD) · 2.2 MPO boundaries + data · 2.8 MPO plans catalog (UPWP, TIP, grant program, CMP, LRTP; Minnesota pilot, public docs only) · 2.6 scout datasets · 2.5 commute flows (LODES) · 2.1 metros + cities · 2.3 place search (#36) | A planner compares metros and commutes; Minnesota MPO profiles link their five core products |
+| **3 · Portfolio-ready** | 3.1 About + Methods · 3.2 remaining Specials · 3.3 real-device + accessibility audit · 3.4 speed (#28) · 3.5 navigation · S4 self-hosted basemap · S5 1,000-user load test | Robbie would show it to a hiring manager without caveats; load test passes; 6 Specials live |
 
-## Finer geography: block groups and blocks (D-27; built in D-124)
+**Not now:** Mapbox, paid data, tablet layout, accounts/uploads, comparing plan contents (possible
+separate paid product), filter by value.
 
-> **Built 2026-10-01 (D-124; first logged as D-39 on an unmerged branch).** What changed from this plan: block-group values live in static files beside the tiles (R2), not the database; blocks carry values in their tiles; the 2020 Census datasets are built from blocks up. The notes below are the original plan.
+## Order of work
 
-- **Block groups** (~240k): ACS 5-year publishes most tables at block-group level. Work: Gazetteer has no block groups, so land area and internal points come from the TIGER BG shapefiles; boundaries are `cb_<year>_<st>_bg_500k` per state (or TIGER BG national); values ≈ 240k rows × N datasets, so the 500 MB database budget needs checking (store BG values in static exports only, or a separate table without MOE).
-- **Blocks** (~8M): only 2020 Census counts (population, housing units), not ACS. Tiles only at high zoom; values would live only in tiles (a different pattern from feature state). Probably limited to a handful of decennial measures.
-- **Tiles:** BG tiles from z9; block tiles from z12, built per state.
-- **UI:** the existing "Geography level" control gains Block group (and Block for decennial datasets); Auto extends the zoom bands.
-- **Other datasets on Census geography:** CDC PLACES publishes tracts (2020 tracts in recent releases); LODES aggregates to block groups and blocks directly; FARS/NBI/HPMS roll-ups can be recomputed at tract level from points/segments.
+At most two workers, never on the same files. Each wave starts when the one before it has merged.
 
-## Place-first entry (planned)
+1. F1 + F4 (F5 starts)
+2. F7 + F8, then F6
+3. F2 + 1.5, then S3
+4. F3 + 1.4, then the Phase 0 gate
+5. 1.3 + 1.1
+6. 1.2 + 1.6, then 1.8
+7. S1 + 1.7, then S2
+8. The Phase 1 gate
+9. Phase 2 in the order above
+10. Phase 3
 
-Like Data USA's "search a place", but **not an avalanche**:
+Robbie's nudge "next" means: take the next wave.
 
-1. **Entry:** a single search box on the landing map ("Search a place or a dataset"), with no forced choice; the map is still the default.
-2. **Selecting a place** flies the map there, outlines it, and opens a compact place card: name, population, and **three to five headline numbers** chosen by what's unusual about this place (largest percentile gaps from the national median), each with its rank line ("Ranks higher than 92% of counties").
-3. **One action per number:** "Map it" (switches the dataset), "Compare" (bivariate), "See all data" (the existing `/place/<geoid>` profile with the filter).
-4. **Places index:** `/places` lists states → counties → tracts with the same filter, for browsing without a map.
-5. **Data needed:** a search index of names (states, counties, places/cities, ZCTAs later) with coordinates, built at export time (`geo/places.json` is the start); "what's unusual" scores computed at export from the static values.
+## From prototype to project
 
-## Not yet decided
+Code from before this roadmap is the prototype (tag `v0.1-prototype`). There is no rewrite:
+- F9 marks each part **keep**, **harden** or **replace when touched**.
+- New code meets the new standards from day one.
+- Old code is upgraded only when a roadmap task touches it, inside that task's budget.
 
-- Editorial style for the Insights section (A/B/C concepts are campaign material).
-- Navigation model across Map / Data / Insights / Places (Robbie to lead).
+## Agent roles
+
+| Role | Job |
+|---|---|
+| Lead | Plans, briefs workers, verifies, merges, keeps the roadmap current |
+| Review lead | Skeptic; build / change / drop before phases and L tasks |
+| Data engineer | Data tasks |
+| UI engineer | UI tasks |
+| Data scout | Finds datasets; gathers MPO document links |
+| Editor | Drafts Specials in shared docs |
+
+Definitions live in `.claude/agents/` (F6).
