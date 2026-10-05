@@ -48,3 +48,29 @@ and is only updated with `git pull`.
 
 The repo is private on the free plan, so GitHub can't *require* checks before
 merging. `scripts/merge-pr.sh` is the gate instead; always merge through it.
+
+## Guardrails
+
+The rules above are also enforced for every Claude session and worker, not just
+asked for. `.claude/settings.json` registers a hook (`.claude/hooks/guardrails.mjs`)
+that checks each command before it runs and refuses these, with a message saying what
+to do instead:
+
+- **Pushing to `main`** (`git push origin main`, `HEAD:main`, or a bare `git push`
+  while on `main`). Push your branch with `git push -u origin <branch>`.
+- **Force pushes** (`--force`, `-f`, `--force-with-lease`, `+branch`). They can erase
+  other sessions' work. Merge `origin/main` into the branch instead.
+- **`--no-verify`** on any git command. It skips the checks.
+- **Merging a PR any other way** than `bash scripts/merge-pr.sh <n>` (so no
+  `gh pr merge`, no `gh api .../merge`). The script is the gate: it refuses when the
+  branch is behind `main` or a check is red. The script itself still works.
+- **Reading or printing `.env.local`** (the Read tool, or `cat`, `grep`, `source`,
+  `printenv` and the like). It holds secrets. Use `.env.example` to see variable
+  names. Scripts such as `bash scripts/db-push.sh` load it themselves and keep working.
+
+Everything else in the loop (worktrees, commits, `git push -u origin <branch>`,
+`git merge origin/main`, `gh pr create/ready/view/diff/checks`) is unaffected.
+
+This is a safety net against mistakes, not a security boundary: a determined shell
+trick can get around a text check. Run `npm run test:guardrails` after changing the hook.
+Because the hook ships in the repo, a new worktree gets it automatically.
