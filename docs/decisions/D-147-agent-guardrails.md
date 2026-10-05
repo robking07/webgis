@@ -1,4 +1,4 @@
-# D-147: Agent guardrails as a hook plus deny rules
+# D-147 - Agent guardrails as a hook plus deny rules
 
 - Date: 2026-10-05. Decided by: Robbie (approved task G1, issue #46). PR #47.
 
