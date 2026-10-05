@@ -1,0 +1,15 @@
+{
+  "title": "Example review",
+  "intro": "Live site on the left, proposal on the right. Same map position in every pair.",
+  "beforeLabel": "Today (live)",
+  "afterLabel": "Proposed (preview)",
+  "views": {
+    "twin-cities-income": {
+      "title": "Income map, Twin Cities",
+      "notes": [
+        { "n": 1, "x": 50, "y": 8, "text": "Plain-language note about the first thing to look at." },
+        { "n": 2, "x": 20, "y": 60, "text": "Second callout. x and y are percentages of the screenshot (optional); they place the numbered pin." }
+      ]
+    }
+  }
+}
