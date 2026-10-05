@@ -17,6 +17,7 @@
     "check:design": "npm run check -w @webgis/design",
     "registry:validate": "npm run validate -w @webgis/ingest",
     "ingest": "npm run ingest -w @webgis/ingest --",
-    "db:migrate": "bash scripts/db-push.sh"
+    "db:migrate": "bash scripts/db-push.sh",
+    "test:guardrails": "node scripts/test-guardrails.mjs"
   }
 }
