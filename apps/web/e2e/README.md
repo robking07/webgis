@@ -61,3 +61,29 @@ with `window.__wgMap` (the MapLibre map, exposed by `?debug=1`) ready and its ti
 `expect(condition, message)` for assertions. Helpers: `immerse`, `dragStart`/`dragEnd` (held
 mid-drag), `tapLonLat`, `mapIdle`, and `contrastInPage` (contrast of an element's text, icons and
 edge against the backing it actually sits on).
+
+## Screenshots and review pages
+
+For UI proposals Robbie reviews real screenshots, not mockups: today's live site next to the
+proposed version on a preview link. Two scripts (same Chromium setup as above, no new dependencies):
+
+- `screenshots.mjs` captures every view in a JSON file at a phone (390 × 844, 2x) and a laptop
+  (1440 × 900), after the map has finished drawing. Output goes to `e2e/shots/` (git-ignored).
+- `review-page.mjs` joins two runs and a notes file into one self-contained HTML file: each view
+  side by side, phone at true 1:1 (390 px wide), laptop at full width (click to zoom), with
+  numbered notes beside the pair. Light and dark.
+
+```sh
+cd apps/web
+npm run shots -- --base https://mapwich.org --views e2e/views.example.json --out e2e/shots/live
+npm run shots -- --base https://<preview>.vercel.app --views e2e/views.example.json --out e2e/shots/preview
+npm run review-page -- --before e2e/shots/live --after e2e/shots/preview \
+  --notes e2e/notes.example.json --out e2e/shots/review.html
+```
+
+Use the same views file for both runs so the map position matches. `shots` options: `--only a,b`
+(view names), `--sizes phone` or `laptop`. A view is `{ "name", "path", "theme"?, "steps"? }`;
+`path` is the app's URL (`/?d=<dataset>&at=<lon>,<lat>,<zoom>&lv=<level>`), `steps` are clicks and
+waits (`click`, `clickText`, `waitFor`, `press`, `wait`, `optional`); see `views.example.json`.
+In `notes.example.json` each note's optional `x`/`y` (percent of the screenshot) puts a numbered
+pin on both images. Previews behind Vercel login need a bypass link from the project settings.

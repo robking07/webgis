@@ -10,6 +10,8 @@
     "build": "next build",
     "start": "next start",
     "test:e2e": "node e2e/menus.spec.mjs",
+    "shots": "node e2e/screenshots.mjs",
+    "review-page": "node e2e/review-page.mjs",
     "lint": "eslint"
   },
   "dependencies": {
