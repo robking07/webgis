@@ -18,6 +18,12 @@ Full build spec: `docs/SPEC.md`. Project rules: `CLAUDE.md`.
     `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET`
   - If a task needs a key you don't have, stop and say so in your report. Don't hunt for it.
 - Docs-only work needs no install.
+- With no `.env.local`, `npm run build` and `npm run start -w web` still work (16 s build): Supabase
+  detail values come back empty, `/api/keepalive` returns 500, and the map reads tiles from
+  `/tiles/<level>.pmtiles`, which is empty because `data/tiles/` is git-ignored. Set
+  `NEXT_PUBLIC_TILES_BASE_URL=https://tiles.mapwich.org` to see boundaries.
+- Ingest also needs `ogr2ogr` (GDAL) and `tippecanoe` on the PATH (the `build-tiles` skill says how they
+  are installed on Robbie's machine). Check with `ogr2ogr --version` and `tippecanoe --version`.
 - Read `docs/progress.md` first (where things stand, lessons from earlier tasks).
 
 ## 2. House rules
@@ -105,7 +111,7 @@ You are a worker, not the decision maker. Don't ask Robbie anything; don't merge
      that are his: what users see, scope, editorial wording, data judgment, cost;
    - anything odd you found in the repo (listed, not fixed);
    - rough token use against your budget. Stop and report at 1.5x the budget;
-   - add your row and lesson to `docs/progress.md` in your PR.
+   - your token estimate and a one-line lesson in the report; the lead adds them to `docs/progress.md` at merge (don't edit it yourself).
 
 ## 5. Merging
 
@@ -128,6 +134,8 @@ and GitHub raises security alerts separately.
   gets a workaround or a written dismissal reason.
 
 ## 7. Alerts: where they go
+
+What to do when something breaks (rollback, services, secrets, rebuild): `docs/runbook.md`.
 
 | What | Watched by | Alert goes to |
 | --- | --- | --- |
