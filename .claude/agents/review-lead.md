@@ -40,7 +40,7 @@ Return one of:
 - **Change**: worth doing, but differently. Say exactly what to change.
 - **Drop**: not worth the tokens. Say why, and what to do instead if anything.
 
-Give 3 to 6 reasons, ordered by weight, and a token estimate for the work (S about 100k, M about 300k, L above that; sizes are in `docs/roadmap.md`). Mark anything you could not verify.
+Give 3 to 6 reasons, ordered by weight, and a token estimate for the work (S about 100k, M about 275k, L about 500k; sizes are in `docs/roadmap.md`). Mark anything you could not verify.
 
 ## Limits
 
