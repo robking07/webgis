@@ -31,12 +31,12 @@ export function HeaderContent({ current, onSearch, explicitTheme, onTheme, unit,
     <>
       <div className="flex min-w-0 items-center gap-5 md:gap-7">
         {/* Phones show the mark alone; wider screens pair it with the wordmark (D-34). */}
-        <Link href="/" aria-label="Mapwich" className="flex min-h-11 items-center gap-2 text-lg font-bold tracking-tight text-foreground">
+        <Link href="/map" aria-label="Mapwich" className="flex min-h-11 items-center gap-2 text-lg font-bold tracking-tight text-foreground">
           <LogoMark size={30} />
           <span className="hidden md:inline">Mapwich</span>
         </Link>
         <nav aria-label="Sections" className="flex gap-4 text-sm md:gap-5">
-          {nav("/", "Map", "map")}
+          {nav("/map", "Map", "map")}
           {nav("/specials", "Specials", "specials")}
         </nav>
       </div>

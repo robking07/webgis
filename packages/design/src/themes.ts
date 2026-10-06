@@ -21,6 +21,10 @@ export interface Theme {
     danger: string;
     /** Bread in the Mapwich logo (the map layer between the slices is `accent`). */
     brandBread: string;
+    /** Splash page at mapwich.org (D-1xx): always black with light ink, in both themes (Robbie's call). */
+    splashBg: string;
+    splashInk: string;
+    splashTagline: string;
   };
   map: {
     background: string;
@@ -81,6 +85,9 @@ export const THEMES: Record<ThemeName, Theme> = {
       focus: "#1f5fa8",
       danger: "#b3261e",
       brandBread: "#a8652a",
+      splashBg: "#000000",
+      splashInk: "#ececee",
+      splashTagline: "#a3a6ad",
     },
     map: {
       background: "#e6e3dc",
@@ -128,6 +135,9 @@ export const THEMES: Record<ThemeName, Theme> = {
       focus: "#7fb2ec",
       danger: "#f2b8b5",
       brandBread: "#e0a25c",
+      splashBg: "#000000",
+      splashInk: "#ececee",
+      splashTagline: "#a3a6ad",
     },
     map: {
       background: "#141619",
@@ -171,6 +181,8 @@ export const CONTRAST_RULES: Array<[keyof Theme["ui"] | `map.${keyof Theme["map"
   ["accent", "surface", 4.5, "links and accent text"],
   ["accentText", "accent", 4.5, "text on accent buttons"],
   ["focus", "surface", 3, "focus ring (non-text)"],
+  ["splashInk", "splashBg", 7, "splash logo on black"],
+  ["splashTagline", "splashBg", 4.5, "splash tagline on black"],
   ["brandBread", "bg", 3, "logo bread on the page (non-text)"],
   ["brandBread", "surface", 3, "logo bread on panels (non-text)"],
   ["accent", "bg", 3, "logo map layer on the page (non-text)"],

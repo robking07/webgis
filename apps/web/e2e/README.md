@@ -83,7 +83,7 @@ npm run review-page -- --before e2e/shots/live --after e2e/shots/preview \
 
 Use the same views file for both runs so the map position matches. `shots` options: `--only a,b`
 (view names), `--sizes phone` or `laptop`. A view is `{ "name", "path", "theme"?, "steps"? }`;
-`path` is the app's URL (`/?d=<dataset>&at=<lon>,<lat>,<zoom>&lv=<level>`), `steps` are clicks and
+`path` is the app's URL (`/map?d=<dataset>&at=<lon>,<lat>,<zoom>&lv=<level>`), `steps` are clicks and
 waits (`click`, `clickText`, `waitFor`, `press`, `wait`, `optional`); see `views.example.json`.
 In `notes.example.json` each note's optional `x`/`y` (percent of the screenshot) puts a numbered
 pin on both images. Previews behind Vercel login need a bypass link from the project settings.

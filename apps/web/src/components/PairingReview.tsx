@@ -173,7 +173,7 @@ function Queue({ session, reviews, setReviews }: { session: Session; reviews: Ma
         <StatusState status="empty" message={tab === "todo" ? "Nothing left to review." : "No cards here yet."} />
       ) : (
         <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_18rem]">
-          <InsightCard key={card.id} insight={card} href={`/?d=${card.x}&b=${card.y}`} />
+          <InsightCard key={card.id} insight={card} href={`/map?d=${card.x}&b=${card.y}`} />
           <aside className="flex flex-col gap-3">
             <p className="text-sm text-muted-foreground tabular-nums">Card {at + 1} of {list.length}</p>
             <p className="text-sm">

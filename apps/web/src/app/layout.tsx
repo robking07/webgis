@@ -13,6 +13,9 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: "Mapwich",
   description: DESCRIPTION,
+  // Pre-launch (D-1xx): keep every page out of search engines; the splash page at / overrides this.
+  // Undo at roadmap 3.6 "go public".
+  robots: { index: false, follow: false },
   ...shareMeta({ title: "Mapwich", description: DESCRIPTION, image: HOME_CARD }),
 };
 

@@ -16,7 +16,7 @@ export default function NotFound() {
           The link may be old, or a dataset or place ID may be mistyped.
         </p>
         <ul className="mt-6 flex flex-wrap gap-3 text-sm">
-          <li><Link href="/" className="inline-block rounded-md border bg-card px-3 py-1.5 hover:bg-muted">Back to the map</Link></li>
+          <li><Link href="/map" className="inline-block rounded-md border bg-card px-3 py-1.5 hover:bg-muted">Back to the map</Link></li>
           <li><Link href="/specials" className="inline-block rounded-md border bg-card px-3 py-1.5 hover:bg-muted">Specials</Link></li>
           <li><Link href="/data" className="inline-block rounded-md border bg-card px-3 py-1.5 hover:bg-muted">All datasets</Link></li>
         </ul>

@@ -1,10 +1,10 @@
 {
   "views": [
-    { "name": "twin-cities-income", "path": "/?d=median_household_income&at=-93.27,44.97,9" },
-    { "name": "county-poverty", "path": "/?d=pct_poverty&lv=county&at=-93.4752,45.0061,8", "theme": "dark" },
+    { "name": "twin-cities-income", "path": "/map?d=median_household_income&at=-93.27,44.97,9" },
+    { "name": "county-poverty", "path": "/map?d=pct_poverty&lv=county&at=-93.4752,45.0061,8", "theme": "dark" },
     {
       "name": "traffic-then-wait",
-      "path": "/?d=aadt&at=-93.27,44.97,11",
+      "path": "/map?d=aadt&at=-93.27,44.97,11",
       "steps": [
         { "click": "button[aria-label*='ilter' i]", "optional": true },
         { "wait": 500 }

@@ -216,7 +216,7 @@ console.log(`Map menus e2e against ${BASE}`);
 
 for (const vp of ["phone", "laptop", "monitor"]) {
   test(`${vp}: landing draws states and shows the Filters button`, async (o) => {
-    const { page } = await o(vp, "/");
+    const { page } = await o(vp, "/map");
     const states = await page.evaluate(() => window.__wgMap.queryRenderedFeatures({ layers: window.__wgMap.getStyle().layers.filter((l) => l.id.startsWith("state-fill")).map((l) => l.id) }).length);
     expect(states > 20, `expected states drawn, got ${states} features`);
     expect(await live(page).isVisible(), "Filters button not visible");
@@ -263,7 +263,7 @@ test("phone card: meta and actions never wrap at 360, 390 and 430 px, long names
   const ids = ["median_household_income", "pct_nhpi_nh", "pct_aian_nh", "cejst_disadvantaged_tracts", "census2020_pop_density", "ice_287g_agreements", "aadt", "bridges_poor_condition", "traffic_fatalities", "annual_precipitation", "obesity", "job_density"];
   const bad = [];
   for (const w of [360, 390, 430]) for (const id of ids) {
-    const { page, ctx } = await o(phoneAt(w), `/?d=${id}`, { ready: false });
+    const { page, ctx } = await o(phoneAt(w), `/map?d=${id}`, { ready: false });
     await page.waitForSelector("[data-card-meta]");
     await wait(300);
     const r = await cardLines(page);
@@ -282,7 +282,7 @@ test("phone card: meta and actions never wrap at 360, 390 and 430 px, long names
 });
 
 test("phone filters: staged until Apply, then the count and the map filter", async (o) => {
-  const { page } = await o("phone", "/?d=aadt&at=-93.27,44.97,11");
+  const { page } = await o("phone", "/map?d=aadt&at=-93.27,44.97,11");
   await immerse(page);
   await live(page).click();
   await page.waitForSelector('#filters-panel[role="dialog"]');
@@ -303,7 +303,7 @@ test("phone filters: staged until Apply, then the count and the map filter", asy
 
 for (const vp of ["laptop", "monitor"]) {
   test(`${vp} filters: sidebar applies live, closes, and the count stays`, async (o) => {
-    const { page } = await o(vp, "/?d=aadt&at=-93.27,44.97,11");
+    const { page } = await o(vp, "/map?d=aadt&at=-93.27,44.97,11");
     await live(page).click();
     const side = page.locator("section#filters-panel");
     await side.waitFor();
@@ -322,7 +322,7 @@ for (const vp of ["laptop", "monitor"]) {
 
 for (const vp of ["phone", "laptop", "monitor"]) {
   test(`${vp} filters: year and level change the map and the legend`, async (o) => {
-    const { page } = await o(vp, "/?d=median_household_income&at=-93.6,45.3,6.4");
+    const { page } = await o(vp, "/map?d=median_household_income&at=-93.6,45.3,6.4");
     await live(page).click();
     await page.locator("#filters-panel").waitFor();
     await wait(400);
@@ -355,7 +355,7 @@ for (const vp of ["phone", "laptop", "monitor"]) {
 
 for (const [vp, hides] of [["phone", true], ["laptop", true], ["monitor", false]]) {
   test(`${vp} mid-pan: menus ${hides ? "step aside and return" : "and sidebar stay put"}`, async (o) => {
-    const { page } = await o(vp, "/?d=median_household_income&at=-93.27,44.97,9");
+    const { page } = await o(vp, "/map?d=median_household_income&at=-93.27,44.97,9");
     await immerse(page);
     const menu = page.getByRole("button", { name: "Show navigation" });
     if (!page.isPhone) { await live(page).click(); await page.locator("section#filters-panel").waitFor(); await wait(300); }
@@ -382,7 +382,7 @@ for (const [vp, hides] of [["phone", true], ["laptop", true], ["monitor", false]
 }
 
 test("monitor: an open dataset drop-down closes on pan and sits above the sidebar", async (o) => {
-  const { page } = await o("monitor", "/?d=median_household_income&at=-93.27,44.97,9");
+  const { page } = await o("monitor", "/map?d=median_household_income&at=-93.27,44.97,9");
   await immerse(page);
   await live(page).click();
   await page.locator("section#filters-panel").waitFor();
@@ -415,7 +415,7 @@ test("monitor: an open dataset drop-down closes on pan and sits above the sideba
 });
 
 test("phone dataset sheet: chips, pick switches the map, sheet and details close each other", async (o) => {
-  const { page } = await o("phone", "/?d=median_household_income&lv=county&at=-93.4752,45.0061,7.2");
+  const { page } = await o("phone", "/map?d=median_household_income&lv=county&at=-93.4752,45.0061,7.2");
   await immerse(page);
   // Details first, then the list: opening the list closes the details.
   await tapLonLat(page, ...HENNEPIN);
@@ -450,7 +450,7 @@ test("phone dataset sheet: chips, pick switches the map, sheet and details close
 
 for (const vp of ["phone", "laptop"]) {
   test(`${vp} details: Hennepin County has "Minnesota ›", which frames Minnesota; no Census Reporter`, async (o) => {
-    const { page } = await o(vp, "/?d=median_household_income&lv=county&at=-93.4752,45.0061,8");
+    const { page } = await o(vp, "/map?d=median_household_income&lv=county&at=-93.4752,45.0061,8");
     await immerse(page);
     await tapLonLat(page, ...HENNEPIN);
     const det = page.locator('section[aria-label^="Details for Hennepin County"]');
@@ -480,8 +480,17 @@ test("no Census Reporter link for any ACS dataset (registry)", async (o) => {
   expect(keep.length === 0, `lost their Learn more links: ${keep.join(", ")}`);
 });
 
+test("splash at /, old map links forward to /map (D-1xx)", async (o) => {
+  const { page: splash } = await o("phone", "/", { ready: false });
+  expect((await splash.locator("main").innerText()).trim() === "which map?", "splash shows only 'which map?'");
+  expect((await splash.locator("a, nav, header, footer").count()) === 0, "splash has no links, nav, header or footer");
+  const { page } = await o("laptop", "/?d=median_household_income");
+  const u = new URL(page.url());
+  expect(u.pathname === "/map" && u.searchParams.get("d") === "median_household_income", `old link ended at ${u.pathname}${u.search}`);
+});
+
 test('details with no links show no "Learn more" heading', async (o) => {
-  const { page } = await o("laptop", "/?d=pct_poverty&lv=county&at=-93.4752,45.0061,8");
+  const { page } = await o("laptop", "/map?d=pct_poverty&lv=county&at=-93.4752,45.0061,8");
   await immerse(page);
   await tapLonLat(page, ...HENNEPIN);
   const det = page.locator('section[aria-label^="Details for"]');
@@ -492,7 +501,7 @@ test('details with no links show no "Learn more" heading', async (o) => {
 
 for (const vp of ["phone", "laptop", "monitor"]) {
   test(`${vp} zoom levels: block groups never draw at the national view, even pinned`, async (o) => {
-    const { page } = await o(vp, "/?d=median_household_income&lv=block_group");
+    const { page } = await o(vp, "/map?d=median_household_income&lv=block_group");
     const r = await page.evaluate(() => {
       const m = window.__wgMap;
       const ids = m.getStyle().layers.filter((l) => l.id.startsWith("block_group-fill")).map((l) => l.id);
@@ -510,7 +519,7 @@ const contrastLog = [];
 for (const scheme of ["light", "dark"]) {
   test(`phone contrast (${scheme}): on-map text ≥ 4.5:1, icons and edges ≥ 3:1, all on a backing`, async (o) => {
     // At rest (the card), then immersed with Back showing (after a click zoomed somewhere).
-    const { page } = await o("phone", "/?d=median_household_income&lv=county&at=-93.4752,45.0061,7.2", { scheme });
+    const { page } = await o("phone", "/map?d=median_household_income&lv=county&at=-93.4752,45.0061,7.2", { scheme });
     let rows = await page.evaluate(contrastInPage, 'section[aria-label="Mapped dataset"]');
     await immerse(page);
     await tapLonLat(page, ...HENNEPIN);
@@ -530,7 +539,7 @@ for (const scheme of ["light", "dark"]) {
 for (const vp of ["laptop", "monitor"]) {
   test(`${vp} contrast: heading, note, zoom and legend on backings (light and dark)`, async (o) => {
     for (const scheme of ["light", "dark"]) {
-      const { page, ctx } = await o(vp, "/?d=median_household_income&at=-93.27,44.97,9", { scheme });
+      const { page, ctx } = await o(vp, "/map?d=median_household_income&at=-93.27,44.97,9", { scheme });
       await immerse(page);
       let rows = [];
       for (const sel of ["[data-dataset-heading]", "[data-filter-button]:not([inert] *)", "[data-filter-note]:not([inert] *)", ".wg-panel.flex-col", 'button[aria-label="Show navigation"]', 'section[aria-label="Legend"]', ".wg-credits"]) rows = rows.concat(await page.evaluate(contrastInPage, sel));
