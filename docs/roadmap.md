@@ -99,4 +99,4 @@ Code from before this roadmap is the prototype (tag `v0.1-prototype`). There is 
 | Data scout | Finds datasets; gathers MPO document links |
 | Editor | Drafts Specials in shared docs |
 
-Definitions live in `.claude/agents/` (F6).
+Definitions live in `.claude/agents/`: `lead.md`, `review-lead.md`, `data-engineer.md`, `ui-engineer.md`, `data-scout.md`, `editor.md` (F6). Each sets `model` and `effort` in its frontmatter.
