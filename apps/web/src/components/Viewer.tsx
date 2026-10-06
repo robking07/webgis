@@ -137,6 +137,13 @@ export function Viewer({ search }: { search: string }) {
   const filterValue: FilterValue = { pinned: pinnedLevel, stop: stopId, hidden };
   const nFilters = filterCount(filterValue);
   const toggleFilters = (el: HTMLElement) => setFilters((f) => (f ? null : { anchor: el }));
+  /** The level pill: open (never toggle) Filters and bring the geography-level choice into view. */
+  const openLevelFilters = () => {
+    const btn = document.querySelector<HTMLElement>("[data-filter-button]:not([inert] *)");
+    setFilters({ anchor: btn });
+    // Two frames: the panel mounts, then lays out.
+    requestAnimationFrame(() => requestAnimationFrame(() => document.querySelector('[role="radiogroup"][aria-label="Geography level"]')?.scrollIntoView({ block: "nearest" })));
+  };
   const applyFilters = (v: FilterValue) => {
     setHidden(v.hidden);
     if (v.pinned !== pinnedLevel || v.stop !== stopId) update({ lv: v.pinned, t: v.stop });
@@ -256,7 +263,7 @@ export function Viewer({ search }: { search: string }) {
           caption={isFeature ? filterSummary ?? "All roads shown" : GEO_LEVELS[level].plural} captionHint={isFeature ? null : chipHint}
           phone={phone} motion={stepAside ? (phone ? "hide" : "dim") : null} closeKey={closeKey}
           onShowNav={() => { setImmersed(false); setPeek(false); }} onPick={pickDataset}
-          onOpenFilters={toggleFilters} onMenuChange={setHeadingMenu}
+          onOpenFilters={toggleFilters} onOpenLevel={openLevelFilters} levelPill={!isFeature} onMenuChange={setHeadingMenu}
           onOpenSheet={phone ? openSheet : undefined} />
       )}
 

@@ -473,6 +473,63 @@ for (const vp of ["phone", "laptop"]) {
   });
 }
 
+// Issue #100: the level pill is a real button; it opens Filters at the geography level and never reaches the map.
+for (const vp of ["laptop", "phone"]) {
+  test(`${vp} level pill opens Filters at the geography level without touching the map`, async (o) => {
+    const { page } = await o(vp, "/map?d=pct_poverty&at=-93.27,44.97,9.5");
+    await immerse(page);
+    const view = () => page.evaluate(() => { const m = window.__wgMap, c = m.getCenter(); return [c.lng, c.lat, m.getZoom()].map((n) => n.toFixed(4)).join(","); });
+    const v0 = await view(), u0 = page.url();
+    const pill = page.locator("[data-level-pill]:not([inert] *)");
+    await pill.waitFor();
+    expect(/^Geography level: /.test((await pill.getAttribute("aria-label")) ?? ""), "pill needs a Geography level aria-label");
+    expect(await pill.evaluate((el) => getComputedStyle(el).pointerEvents) === "auto", "pill must take pointer events");
+    if (page.isPhone) await pill.tap(); else await pill.click();
+    await page.locator('[role="radiogroup"][aria-label="Geography level"]').waitFor({ timeout: 5000 });
+    await wait(1500);
+    expect(await page.locator('[role="radiogroup"][aria-label="Geography level"]').isVisible(), "geography level choice not visible");
+    expect(await view() === v0, `map moved: ${v0} -> ${await view()}`);
+    expect(page.url() === u0, `URL changed: ${u0} -> ${page.url()}`);
+    expect(await page.locator('section[aria-label^="Details for"]').count() === 0, "a place got selected");
+    // Keyboard reachable: focus it and press Enter after closing.
+    await page.keyboard.press("Escape");
+    await pill.focus();
+    expect(await pill.evaluate((el) => document.activeElement === el), "pill not focusable");
+  });
+}
+
+// Issue #99: the hover (and the click) pick the level being drawn, not a finer layer queried under it.
+const NEBRASKA = [-99.8, 41.5];
+async function pointerAt(page, lon, lat) {
+  await page.evaluate(([lon, lat]) => window.__wgMap.jumpTo({ center: [lon, lat] }), [lon, lat]);
+  await mapIdle(page);
+  const [x, y] = await page.evaluate(([lon, lat]) => { const p = window.__wgMap.project([lon, lat]); return [p.x, p.y]; }, [lon, lat]);
+  return [x, y];
+}
+const hoverCard = (page) => page.locator("div.pointer-events-none.absolute.z-30");
+for (const vp of ["laptop", "phone"]) {
+  test(`${vp} hover/tap follows the drawn level: state at national zoom, county once zoomed in`, async (o) => {
+    const { page } = await o(vp, "/map?d=pct_carpool");
+    const z0 = await page.evaluate(() => window.__wgMap.getZoom());
+    const state0 = await page.evaluate(() => window.__wgMap.getStyle().layers.find((l) => l.id === "county-fill")?.minzoom);
+    expect(z0 < state0, `expected a national view below the county band (z${z0} vs ${state0})`);
+    const [x, y] = await pointerAt(page, ...NEBRASKA);
+    if (page.isPhone) await page.touchscreen.tap(x, y); else { await page.mouse.move(x - 5, y - 5); await page.mouse.move(x, y, { steps: 4 }); }
+    const card = page.isPhone ? page.locator('section[aria-label^="Details for"]') : hoverCard(page).first();
+    await card.waitFor({ timeout: 8000 });
+    let txt = await card.innerText();
+    expect(/Nebraska/.test(txt) && /State/.test(txt) && !/County/.test(txt), `national zoom reported: ${txt.replace(/\n/g, " | ")}`);
+    // Zoom in until counties draw: the same pointer now reports a county.
+    await page.evaluate(([lon, lat]) => window.__wgMap.jumpTo({ center: [lon, lat], zoom: 6.5 }), NEBRASKA);
+    await mapIdle(page);
+    const [x2, y2] = await page.evaluate(([lon, lat]) => { const p = window.__wgMap.project([lon, lat]); return [p.x, p.y]; }, NEBRASKA);
+    if (page.isPhone) await page.touchscreen.tap(x2, y2); else { await page.mouse.move(x2 - 5, y2 - 5); await page.mouse.move(x2, y2, { steps: 4 }); }
+    await wait(900);
+    txt = await card.innerText();
+    expect(/County/.test(txt), `county zoom reported: ${txt.replace(/\n/g, " | ")}`);
+  });
+}
+
 test("no Census Reporter link for any ACS dataset (registry)", async (o) => {
   void o;
   const { default: entries } = await import(join(app, "src/generated/registry.json"), { with: { type: "json" } });

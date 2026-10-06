@@ -218,6 +218,17 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
       geoid: String(f.properties.geoid), name: f.properties.name ? String(f.properties.name) : blockName(String(f.properties.geoid)),
       level: f.sourceLayer as GeoLevel, x, y, props: f.properties,
     });
+    /** The place under the pointer at the level being drawn. queryRenderedFeatures reports a fill layer
+     *  outside its zoom band too (a county under a state at national zoom), so keep only levels whose
+     *  band holds the current zoom. */
+    const placeAt = (pt: { x: number; y: number }): MapGeoJSONFeature | undefined => {
+      const z = m.getZoom();
+      const bands = latest.current.levelZooms;
+      return m.queryRenderedFeatures(pt as never, { layers: fillIds.filter((id) => m.getLayer(id)) }).find((f) => {
+        const band = bands ? bands[f.sourceLayer as GeoLevel] : GEO_LEVELS[f.sourceLayer as GeoLevel];
+        return !!band && z >= band.minzoom && z < band.maxzoom;
+      });
+    };
     /** Lines are thin: hit-test a small box around the pointer, busiest (top-drawn) first. */
     const featureAt = (pt: { x: number; y: number }): FeatureHit | null => {
       const fl = latest.current.featureLayer;
@@ -237,7 +248,7 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
         latest.current.onFeatureHover?.(hit);
         return;
       }
-      const f = m.queryRenderedFeatures(e.point, { layers: fillIds.filter((id) => m.getLayer(id)) })[0];
+      const f = placeAt(e.point);
       setFlag(m, hovered, f ? { level: f.sourceLayer as GeoLevel, id: String(f.properties.geoid) } : null, "hover");
       m.getCanvas().style.cursor = f ? "pointer" : "";
       latest.current.onHover(f ? infoOf(f, e.point.x, e.point.y) : null);
@@ -245,7 +256,7 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
     m.on("mouseout", () => { setFlag(m, hovered, null, "hover"); latest.current.onHover(null); latest.current.onFeatureHover?.(null); });
     m.on("click", (e) => {
       if (latest.current.featureLayer) { latest.current.onFeatureSelect?.(featureAt(e.point)); return; }
-      const f = m.queryRenderedFeatures(e.point, { layers: fillIds.filter((id) => m.getLayer(id)) })[0];
+      const f = placeAt(e.point);
       setFlag(m, selected, f ? { level: f.sourceLayer as GeoLevel, id: String(f.properties.geoid) } : null, "selected");
       latest.current.onSelect(f ? { ...infoOf(f, e.point.x, e.point.y), lon: e.lngLat.lng, lat: e.lngLat.lat } : null);
     });
