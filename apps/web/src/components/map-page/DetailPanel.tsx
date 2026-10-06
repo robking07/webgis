@@ -6,7 +6,7 @@ import type { HoverInfo } from "../map/MapView";
 import type { Dataset } from "@/lib/registry";
 import { placeHref, rankText } from "@/lib/place";
 import { learnMoreLinks, type Link } from "@/lib/learn-more";
-import { fetchDetail } from "@/lib/supabase";
+import { fetchDetail } from "@/lib/details";
 import { loadMoes, type Values } from "@/lib/values";
 import { BottomSheet, useIsPhone } from "../BottomSheet";
 import { PlaceDataList, type Detail } from "../PlaceDataList";
