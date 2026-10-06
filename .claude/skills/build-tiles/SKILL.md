@@ -37,10 +37,10 @@ This uploads `data/tiles/*.pmtiles` to the `R2_BUCKET` and sets the bucket CORS 
 
 ```bash
 B=$(grep '^NEXT_PUBLIC_TILES_BASE_URL=' .env.local | cut -d= -f2-)
-curl -s -o /dev/null -w "%{http_code}\n" -H "Range: bytes=0-126" -H "Origin: https://webgis-lac.vercel.app" "$B/county.pmtiles"   # expect 206
+curl -s -o /dev/null -w "%{http_code}\n" -H "Range: bytes=0-126" -H "Origin: https://mapwich.org" "$B/county.pmtiles"   # expect 206
 ```
 
-The r2.dev URL is rate-limited and meant for development. Move to a custom domain before launch (D-01, Q-2).
+Tiles are served from the custom domain `https://tiles.mapwich.org` (R2 custom domain; `NEXT_PUBLIC_TILES_BASE_URL`, also set in CI). The old r2.dev URL is rate-limited and development-only; don't use it (D-01, Q-2).
 
 ## Local dev
 
