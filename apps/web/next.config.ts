@@ -3,6 +3,10 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   // Workspace packages ship TypeScript source.
   transpilePackages: ["@webgis/design", "@webgis/registry"],
+  // Share cards read their font files with fs at request time (D-165); bundle them.
+  outputFileTracingIncludes: {
+    "/og/**": ["./src/assets/fonts/**"],
+  },
   // "Insights" became "Specials" (D-31); keep old links working.
   async redirects() {
     return [
