@@ -5,6 +5,7 @@ import { approvedInsights } from "@/lib/approvals";
 import { SPECIALS } from "@/lib/specials";
 import { InsightDetail } from "@/components/InsightDetail";
 import { SiteHeader } from "@/components/SiteHeader";
+import { shareMeta } from "@/lib/share-meta";
 import { SpecialPiece } from "@/components/specials/SpecialPiece";
 
 // /specials/<id> is a piece (content/specials/<id>.md) or an Odd Pairing (its pair id). The loader
@@ -18,9 +19,11 @@ export const dynamicParams = false;
 export async function generateMetadata({ params }: PageProps<"/specials/[id]">): Promise<Metadata> {
   const { id } = await params;
   const s = SPECIALS.find((p) => p.slug === id);
-  if (s) return { title: `${s.title} · Specials · Mapwich`, description: s.dek };
+  if (s) return { title: `${s.title} · Specials · Mapwich`, description: s.dek, ...shareMeta({ title: s.title, description: s.dek, path: `/specials/${s.slug}`, image: s.image ?? `/og/special/${s.slug}` }) };
   const i = (await approvedInsights()).find((p) => p.id === id);
-  return { title: i?.headline ? `${i.headline} · Odd Pairings · Mapwich` : "Odd Pairings · Mapwich" };
+  if (!i) return { title: "Odd Pairings · Mapwich" };
+  const title = i.headline ?? "Odd Pairings";
+  return { title: i.headline ? `${i.headline} · Odd Pairings · Mapwich` : "Odd Pairings · Mapwich", ...shareMeta({ title, description: i.caption ?? "Two things on the map that move together.", path: `/specials/${i.id}`, image: `/og/special/${i.id}` }) };
 }
 
 export default async function SpecialOrPairingPage({ params }: PageProps<"/specials/[id]">) {
