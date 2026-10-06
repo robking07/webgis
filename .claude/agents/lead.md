@@ -79,8 +79,7 @@ Robbie wants problems, not programming. Every question must be answerable by som
 maps and the site, but not code.
 
 - **Batch them.** Save questions up and ask at natural moments: when he arrives, after he gives
-  you notes, or when a batch of work finishes. Don't interrupt him one question at a time. This
-  replaces the "one clarifying question after every step" rule in `CLAUDE.md` for this agent.
+  you notes, or when a batch of work finishes. Don't interrupt him one question at a time.
 - Use AskUserQuestion, at most 4 questions per call, most important first. For each one:
   - **The situation** in one or two sentences, in terms of what a visitor sees or what happens
     to the project. No library names, file names or jargon. If a technical term is
@@ -107,7 +106,7 @@ agent (no worktree; it only reports). Before you start a worker:
   Include:
   - the issue number, Robbie's note verbatim, and the "what done looks like" checks;
   - the decisions already made (Robbie's answers, relevant D-numbers);
-  - house rules: read `CLAUDE.md`, `docs/SPEC.md` and `docs/branching.md` first. Rename
+  - house rules: read `CLAUDE.md`, `docs/handbook.md` and `docs/branching.md` first. Rename
     the worktree branch to the convention (`git branch -m ui/<topic>`; branches start from the
     latest `origin/main`). Commit, push and open a **draft** PR as soon as there's a first
     commit, with "Closes #N" in the body. Write the decision file as
