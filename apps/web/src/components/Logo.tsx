@@ -1,20 +1,24 @@
-// The Mapwich mark: a map layer sandwiched between two slices of bread (D-34). Colors come from
-// theme tokens (--ui-brand-bread, --ui-accent; seeds use the page ground), so it follows light/dark.
-// The same drawing, with fixed colors, is the favicon (app/icon.svg).
+// The Mapwich mark (D-34, amended 2026-10-05): a solid map layer and one open layer line below it, in one
+// ink color, with a toothpick through the middle that is cut out where it crosses the solid layer.
+// Color is the theme text token, so it follows light/dark. The same drawing, with fixed colors, is the
+// favicon (app/icon.svg) and the share cards (lib/og-card.tsx); keep them in sync.
+// Strokes are 4 on a 64 grid (about 1.5px at 24px) so lines stay crisp at 16-30px.
+import { useId } from "react";
+
 export function LogoMark({ size = 24, title }: { size?: number; title?: string }) {
+  const cut = useId();
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" role={title ? "img" : undefined} aria-label={title} aria-hidden={title ? undefined : true}
-      className="shrink-0" focusable="false">
-      {/* Top slice: a rounded crown with a flat underside, and three seeds. */}
-      <path d="M3 10.6C3 6.9 7 4.4 12 4.4s9 2.5 9 6.2v.4a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z" fill="var(--ui-brand-bread)" />
-      <ellipse cx="8.4" cy="8.3" rx="0.9" ry="0.55" fill="var(--ui-bg)" transform="rotate(-20 8.4 8.3)" />
-      <ellipse cx="12" cy="7" rx="0.9" ry="0.55" fill="var(--ui-bg)" />
-      <ellipse cx="15.6" cy="8.3" rx="0.9" ry="0.55" fill="var(--ui-bg)" transform="rotate(20 15.6 8.3)" />
-      {/* The filling: two stacked map layers. */}
-      <path d="M12 14.3l8 2.3-8 2.3-8-2.3z" fill="var(--ui-accent)" opacity="0.45" />
-      <path d="M12 12.6l8 2.3-8 2.3-8-2.3z" fill="var(--ui-accent)" />
-      {/* Bottom slice. */}
-      <rect x="3" y="19.6" width="18" height="3" rx="1.5" fill="var(--ui-brand-bread)" />
+    <svg width={size} height={size} viewBox="0 0 64 64" role={title ? "img" : undefined} aria-label={title} aria-hidden={title ? undefined : true}
+      className="shrink-0" focusable="false" fill="none" stroke="var(--ui-text)" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
+      {/* The cut-out is a mask, so it shows whatever is behind the mark (page or panel). */}
+      <mask id={cut} maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+        <rect width="64" height="64" fill="#fff" stroke="none" />
+        <line x1="32" y1="15.5" x2="32" y2="27" stroke="#000" />
+      </mask>
+      <line x1="32" y1="8" x2="32" y2="27" />
+      <path d="M9 27 L32 15.5 L55 27 L32 38.5 Z" fill="var(--ui-text)" stroke="none" mask={`url(#${cut})`} />
+      <path d="M10 35 L32 46 L54 35" />
+      <line x1="32" y1="47" x2="32" y2="56" />
     </svg>
   );
 }

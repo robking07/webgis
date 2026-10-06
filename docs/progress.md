@@ -27,6 +27,7 @@ rows into one summary line. Roadmap: `docs/roadmap.md`. Rules: `docs/handbook.md
 | Share-card font | #72 | #74 | S / ~50k | 40k | 0.8x | Sonnet / medium | 2026-10-05 |
 | S3 alerts | #73 | #75 | S / ~100k | 81k | 0.81x | Sonnet / medium | 2026-10-05 |
 | F2 checks in GitHub CI | #61 | #68 | M / ~275k | 230k | 0.84x | Opus / medium | 2026-10-05 |
+| Logo redo | #81 | tbd | S / ~60k | ~45k | 0.75x | Sonnet / low | 2026-10-05 |
 
 ## Lessons
 
@@ -53,6 +54,8 @@ One line per task. These feed the project kit (#53).
   for the state you assert (CSS transitions done), not a fixed delay. Heavy checks (~10 of a
   run's ~14 min) now run only on ready PRs; mark the PR ready before merging. A PR that
   conflicts with main gets no CI run at all, so check mergeability when CI seems silent.
+
+- **#81:** a cut-out in a one-color mark is safest as an SVG mask (shows the real background on panels); satori (share cards) gets a plain bg-colored stroke instead.
 
 ## How to update
 
