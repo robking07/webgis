@@ -1,6 +1,6 @@
 // npm run ingest -- <step> [dataset or level ids…]
-// Steps: geographies | label-mask | timeline | acs | acs-bg | census2020 | lodes | places | climdiv | nbi | fars | features | vmt | cejst | ddp287g | tiles | publish-tiles | publish-values | details | publish-details | export | insights | tracts-out | docs | mn-catalog | all
-import { ingestGeographies } from "./geographies.ts";
+// Steps: geographies | label-mask | timeline | acs | acs-bg | census2020 | lodes | places | climdiv | nbi | fars | features | vmt | cejst | ddp287g | tiles | publish-tiles | publish-values | publish-geo | publish-data | details | publish-details | tract-geo | export | insights | tracts-out | docs | mn-catalog | all
+import { ingestGeographies, tractGeography } from "./geographies.ts";
 import { ingestAcs, ingestAcsTimeline } from "./acs.ts";
 import { ingestCensus2020 } from "./census2020.ts";
 import { ingestLodes, ingestLodesTimeline } from "./lodes.ts";
@@ -9,7 +9,7 @@ import { exportNames, exportRegistry, exportSearch, exportValues } from "./expor
 import { computeInsights } from "./insights.ts";
 import { ingestPlaces } from "./places.ts";
 import { ingestClimdiv, ingestClimdivTimeline } from "./climdiv.ts";
-import { publishDetails, publishTiles, publishValues } from "./publish-tiles.ts";
+import { publishData, publishDetails, publishGeo, publishTiles, publishValues } from "./publish-tiles.ts";
 import { detailsOut } from "./details.ts";
 import { writeDataSourcesDoc } from "./docs.ts";
 import { mnCatalog } from "./mn-catalog.ts";
@@ -44,7 +44,12 @@ const steps: Record<string, () => Promise<void> | void> = {
   timeline: async () => { await ingestAcsTimeline(only); await ingestFarsTimeline(only); await ingestClimdivTimeline(only);
     await ingestNbiTimeline(only); await ingestLodesTimeline(only); exportRegistry(); },
   "publish-tiles": () => publishTiles(only),
+  // S2: every value file, names, search and tract geography live on R2 beside the tiles, not in
+  // the site's folder. `publish-data` uploads all of it (values/, geo/, details/); only changed files go up.
   "publish-values": () => publishValues(only),
+  "publish-geo": publishGeo,
+  "publish-data": () => publishData(only),
+  "tract-geo": tractGeography,
   // State and county click details as static files on R2 (S1): the browser no longer queries the database.
   details: detailsOut,
   "publish-details": publishDetails,

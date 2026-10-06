@@ -7,7 +7,7 @@ import { join } from "node:path";
 import { spawnSync } from "node:child_process";
 import unzipper from "unzipper";
 import * as shapefile from "shapefile";
-import { cached, CACHE, log, STATES, TILES, WEB_DATA } from "./util.ts";
+import { cached, CACHE, log, NAMES_JSON, STATES, TILES } from "./util.ts";
 import { readGazetteer } from "./geographies.ts";
 
 const CB = (year: number) => `https://www2.census.gov/geo/tiger/GENZ${year}/shp`;
@@ -40,7 +40,7 @@ function nameOf(level: string, p: Record<string, string>, county?: Map<string, s
   const st = STATES[p.STATEFP]?.[1] ?? p.STATEFP;
   if (level === "state") return p.NAME;
   if (level === "block_group") {
-    countyNames ??= JSON.parse(readFileSync(join(WEB_DATA, "geo/names.json"), "utf8")) as Record<string, string>;
+    countyNames ??= JSON.parse(readFileSync(NAMES_JSON, "utf8")) as Record<string, string>;
     return `${p.NAMELSAD}, Tract ${Number(p.TRACTCE) / 100}, ${countyNames[p.STATEFP + p.COUNTYFP] ?? st}`;
   }
   const co = p.NAMELSADCO ?? (p.NAMELSAD ? undefined : county?.get(p.GEOID.slice(0, 5)));

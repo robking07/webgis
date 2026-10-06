@@ -2,11 +2,12 @@
 // the browser needs for PMTiles range requests.
 import { createReadStream, existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { gzipSync } from "node:zlib";
+import { createHash } from "node:crypto";
 import { join } from "node:path";
-import { S3Client, PutBucketCorsCommand, PutObjectCommand } from "@aws-sdk/client-s3";
+import { ListObjectsV2Command, S3Client, PutBucketCorsCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { Upload } from "@aws-sdk/lib-storage";
 import { log, TILES } from "./util.ts";
-import { DETAILS_DIR, detailFiles } from "./details.ts";
+import { DETAILS_DIR } from "./details.ts";
 
 function r2() {
   const { R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_BUCKET } = process.env;
@@ -45,32 +46,56 @@ export async function publishTiles(only?: string[]) {
   }
 }
 
-/** Upload static-only values (block groups, D-124) from data/tiles/values, gzip-encoded. */
-export async function publishValues(only?: string[]) {
-  const { s3, bucket } = r2();
-  const root = join(TILES, "values");
-  if (!existsSync(root)) throw new Error("no data/tiles/values; run `ingest acs-bg` first");
-  let n = 0, bytes = 0;
-  for (const id of readdirSync(root).filter((d) => !only || only.includes(d))) {
-    for (const f of readdirSync(join(root, id))) {
-      const body = gzipSync(readFileSync(join(root, id, f)));
-      await s3.send(new PutObjectCommand({ Bucket: bucket, Key: `values/${id}/${f}`, Body: body, ContentType: "application/json", ContentEncoding: "gzip", CacheControl: "public, max-age=86400" }));
-      n++; bytes += body.length;
-    }
-  }
-  log("r2", `uploaded ${n} value files (${(bytes / 1e6).toFixed(1)} MB gzipped)`);
+// JSON beside the tiles (values/, geo/, details/) is uploaded gzip-encoded with a one-hour cache:
+// keys never change, so a re-upload reaches visitors within the hour without a code deploy (S2).
+const JSON_CACHE = "public, max-age=3600";
+
+function walk(dir: string, rel = ""): string[] {
+  return readdirSync(join(dir, rel), { withFileTypes: true }).flatMap((e) =>
+    e.isDirectory() ? walk(dir, join(rel, e.name)) : e.name.endsWith(".json") ? [join(rel, e.name)] : []);
 }
 
-/** Upload the state/county click details (data/tiles/details, from `ingest details`), gzip-encoded. */
-export async function publishDetails() {
+/** Upload every .json file under data/tiles/<prefix>/ (optionally only `dirs`, its top-level
+ *  folders) to R2 under the same key. Files whose gzipped bytes match what R2 already holds (by
+ *  ETag, the MD5 of a single-part upload) are skipped, so a re-run uploads only what changed. */
+async function publishJson(prefix: string, hint: string, dirs?: string[]) {
   const { s3, bucket } = r2();
-  if (!existsSync(DETAILS_DIR)) throw new Error("no data/tiles/details; run `ingest details` first");
-  let n = 0, bytes = 0;
-  for (const f of detailFiles()) {
-    const body = gzipSync(readFileSync(join(DETAILS_DIR, f)));
-    // Short cache: a re-run should reach visitors within the hour.
-    await s3.send(new PutObjectCommand({ Bucket: bucket, Key: `details/${f}`, Body: body, ContentType: "application/json", ContentEncoding: "gzip", CacheControl: "public, max-age=3600" }));
-    n++; bytes += body.length;
-  }
-  log("r2", `uploaded ${n} detail files (${(bytes / 1e6).toFixed(2)} MB gzipped)`);
+  const root = join(TILES, prefix);
+  if (!existsSync(root)) throw new Error(`no data/tiles/${prefix}; run \`ingest ${hint}\` first`);
+  const files = walk(root).filter((f) => !dirs || dirs.includes(f.split("/")[0]));
+  const etags = new Map<string, string>();
+  let token: string | undefined;
+  do {
+    const r = await s3.send(new ListObjectsV2Command({ Bucket: bucket, Prefix: `${prefix}/`, ContinuationToken: token }));
+    for (const o of r.Contents ?? []) if (o.Key && o.ETag) etags.set(o.Key, o.ETag.replace(/"/g, ""));
+    token = r.NextContinuationToken;
+  } while (token);
+  let sent = 0, skipped = 0, bytes = 0, next = 0;
+  const worker = async () => {
+    for (let i = next++; i < files.length; i = next++) {
+      const key = `${prefix}/${files[i]}`;
+      const body = gzipSync(readFileSync(join(root, files[i])), { level: 9 });
+      bytes += body.length;
+      if (etags.get(key) === createHash("md5").update(body).digest("hex")) { skipped++; continue; }
+      await s3.send(new PutObjectCommand({ Bucket: bucket, Key: key, Body: body, ContentType: "application/json", ContentEncoding: "gzip", CacheControl: JSON_CACHE }));
+      if (++sent % 500 === 0) log("r2", `${prefix}: ${sent} uploaded…`);
+    }
+  };
+  await Promise.all(Array.from({ length: 16 }, worker));
+  log("r2", `${prefix}: ${sent} uploaded, ${skipped} unchanged (${files.length} files, ${(bytes / 1e6).toFixed(1)} MB gzipped)`);
+}
+
+/** Every level's values (values/<id>/[<stop>/]<level>.json, values/tracts/<county>.json), gzip-encoded. */
+export const publishValues = (only?: string[]) => publishJson("values", "export", only);
+/** Names, map points, the place search index and tract geography (geo/), gzip-encoded. */
+export const publishGeo = () => publishJson("geo", "export` and `ingest tract-geo");
+/** The state/county click details (details/, from `ingest details`), gzip-encoded. */
+export const publishDetails = () => publishJson("details", "details");
+
+/** `ingest publish-data`: everything the web reads beside the tiles, in one command (S2). */
+export async function publishData(only?: string[]) {
+  await publishValues(only);
+  if (only) return;
+  await publishGeo();
+  if (existsSync(DETAILS_DIR)) await publishDetails();
 }

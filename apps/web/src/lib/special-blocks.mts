@@ -1,17 +1,20 @@
 // Inline elements in a Special's body (D-122): focus maps, charts and tables, written as fenced
 // blocks (```map, ```chart, ```table) with YAML inside. Parsed and computed before the build (scripts/prepare.mts) from the
-// exported county values (public/data/values/<id>/county.json), so every number on the page comes
+// exported county values (values/<id>/county.json beside the tiles, S2), so every number on the page comes
 // from Mapwich's own data. Any mistake fails the build with a message naming the file.
 // Format: content/specials/README.md.
-import { existsSync, readFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { parse as parseYaml } from "yaml";
 import type { Unit } from "@webgis/design";
 import type { DatasetEntry } from "@webgis/registry";
 import { timelineStops } from "@webgis/registry/timeline";
 
-/** What the parser needs from outside: the registry and where the app's exported values live. */
-export interface BlockContext { byId: Map<string, DatasetEntry>; appDir: string }
+/** What the parser needs from outside: the registry, the app folder (for the committed county
+ *  names in src/generated) and a reader for the exported values, `readData("values/<id>/county.json")`,
+ *  which returns the parsed file or null when there is none (S2: the files live beside the tiles,
+ *  so scripts/prepare.mts reads them from data/tiles or fetches them from R2). */
+export interface BlockContext { byId: Map<string, DatasetEntry>; appDir: string; readData: (path: string) => unknown }
 
 type Fail = (msg: string) => never;
 
@@ -71,7 +74,7 @@ let ctx: BlockContext | null = null;
 /** Call once before parsing. */
 export function setBlockContext(c: BlockContext) { ctx = c; valueCache.clear(); names = null; }
 const byId = () => ctx!.byId;
-const valuesDir = () => join(ctx!.appDir, "public/data/values");
+const valuesPath = (ref: { id: string; stop: string | null }) => ["values", ref.id, ...(ref.stop ? [ref.stop] : []), "county.json"].join("/");
 
 const valueCache = new Map<string, Record<string, number>>();
 let names: Record<string, string> | null = null;
@@ -79,14 +82,13 @@ let names: Record<string, string> | null = null;
 function countyValues(ref: Ref): Record<string, number> {
   const key = `${ref.id}@${ref.stop ?? ""}`;
   if (!valueCache.has(key)) {
-    const file = join(valuesDir(), ref.id, ...(ref.stop ? [ref.stop] : []), "county.json");
-    valueCache.set(key, JSON.parse(readFileSync(file, "utf8")));
+    valueCache.set(key, ctx!.readData(valuesPath(ref)) as Record<string, number>);
   }
   return valueCache.get(key)!;
 }
 
 function countyName(geoid: string) {
-  names ??= JSON.parse(readFileSync(join(ctx!.appDir, "public/data/geo/names.json"), "utf8")) as Record<string, string>;
+  names ??= JSON.parse(readFileSync(join(ctx!.appDir, "src/generated/names.json"), "utf8")) as Record<string, string>;
   return names[geoid];
 }
 
@@ -103,7 +105,7 @@ function ref(raw: unknown, fail: Fail, what: string): Ref {
     if (!s.isDefault) period = s.label;
   }
   const r: Ref = { id, stop: period ? stop : null, title: ds.title, unit: ds.unit as Unit, period };
-  if (!existsSync(join(valuesDir(), id, ...(r.stop ? [r.stop] : []), "county.json"))) fail(`${what}: no exported county values for "${raw}"`);
+  if (ctx!.readData(valuesPath(r)) == null) fail(`${what}: no exported county values for "${raw}"`);
   return r;
 }
 

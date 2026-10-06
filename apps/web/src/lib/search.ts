@@ -1,13 +1,14 @@
 // Place search index (exported by ingest `search`): states, counties, and Gazetteer
 // cities/towns/communities. Loaded the first time search (or the table) needs it.
 import type { GeoLevel } from "@webgis/design";
+import { staticUrl } from "@/lib/static-files";
 
 /** [name, kind, geoid ("" for cities), lon, lat, land sq mi] */
 export type PlaceRow = [string, string, string, number, number, number];
 export interface PlaceHit { name: string; kind: string; geoid: string | null; level: GeoLevel | null; lon: number; lat: number; sqmi: number }
 
 let cache: Promise<PlaceRow[]> | null = null;
-export const loadPlaceIndex = () => (cache ??= fetch("/data/geo/search.json").then((r) => r.json()).catch((e) => { cache = null; throw e; }));
+export const loadPlaceIndex = () => (cache ??= fetch(staticUrl("geo/search.json")).then((r) => r.json()).catch((e) => { cache = null; throw e; }));
 
 const toHit = (r: PlaceRow): PlaceHit => ({
   name: r[0], kind: r[1], geoid: r[2] || null,

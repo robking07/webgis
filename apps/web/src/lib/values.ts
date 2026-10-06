@@ -1,11 +1,11 @@
-// Loads exported values (public/data/values/<id>/<level>.json) and classifies them
+// Loads exported values (values/<id>/[<stop>/]<level>.json beside the tiles, S2) and classifies them
 // with the dataset's registry symbology and the design tokens.
 "use client";
 import { useEffect, useState } from "react";
-import { classify, classOf, LAZY_LEVELS, rampColors, RAMPS, STATIC_ONLY_LEVELS, TILE_VALUE_LEVELS, type GeoLevel, type RampId } from "@webgis/design";
+import { classify, classOf, LAZY_LEVELS, rampColors, RAMPS, TILE_VALUE_LEVELS, type GeoLevel, type RampId } from "@webgis/design";
 import type { Dataset } from "./registry";
-// Block-group files live with the tiles (R2 in production, the /tiles link locally; D-124).
-import { TILES_BASE } from "./details";
+// Every level's file lives with the tiles (R2 in production, the /tiles link locally; D-124, S2).
+import { staticUrl } from "./static-files";
 
 export type Values = Record<string, number>;
 const cache = new Map<string, Promise<Values>>();
@@ -14,9 +14,8 @@ const cache = new Map<string, Promise<Values>>();
 /** `stop`: a timeline stop id (D-36); omitted = the default (headline) values. */
 export function loadValues(id: string, level: GeoLevel, stop?: string | null): Promise<Values> {
   const key = stop ? `${id}/${stop}/${level}` : `${id}/${level}`;
-  const staticOnly = STATIC_ONLY_LEVELS.has(level.replace(/\.moe$/, "") as GeoLevel);
   if (!cache.has(key)) {
-    cache.set(key, fetch(staticOnly ? `${TILES_BASE}/values/${key}.json` : `/data/values/${key}.json`).then((r) => {
+    cache.set(key, fetch(staticUrl(`values/${key}.json`)).then((r) => {
       if (!r.ok) throw new Error(`No ${level} data for ${id} (${r.status})`);
       return r.json();
     }).catch((e) => { cache.delete(key); throw e; }));

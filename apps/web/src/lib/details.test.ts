@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { detailFromShard, detailUrl, fetchDetail, fetchGeography, geographyFromShard, type DetailShard } from "./details";
+import { detailFromShard, detailUrl, fetchDetail, fetchGeography, geographyFromShard, tractGeoUrl, tractUrl, type DetailShard } from "./details";
 
 const MN: DetailShard = {
   "27": { name: "Minnesota", lon: -94.3, lat: 46.2, aland_sqmi: 79631.562, values: { gini_index: [0.4525, 0.0019], census2020_pop_density: [71.67, null] } },
@@ -32,6 +32,8 @@ describe("shard lookups", () => {
 
 // The tiles base is "/tiles" locally and R2 in CI (NEXT_PUBLIC_TILES_BASE_URL).
 const MN_URL = detailUrl("27"), PR_URL = detailUrl("72");
+const TRACT_URL = tractUrl("27053026100"), TRACT_GEO_URL = tractGeoUrl("27053026100");
+const TRACT_GEO = { "026100": ["Tract 261, Hennepin County, MN", -93.2567, 44.9706, 0.512] };
 
 describe("fetchDetail / fetchGeography", () => {
   let calls: string[];
@@ -40,7 +42,8 @@ describe("fetchDetail / fetchGeography", () => {
     vi.stubGlobal("fetch", vi.fn(async (url: string) => {
       calls.push(url);
       if (url === MN_URL) return new Response(JSON.stringify(MN));
-      if (url === "/data/values/tracts/27053.json") return new Response(JSON.stringify(TRACTS));
+      if (url === TRACT_URL) return new Response(JSON.stringify(TRACTS));
+      if (url === TRACT_GEO_URL) return new Response(JSON.stringify(TRACT_GEO));
       if (url === PR_URL) return new Response("busy", { status: 503 });
       return new Response("not found", { status: 404 });
     }));
@@ -60,7 +63,14 @@ describe("fetchDetail / fetchGeography", () => {
   });
   it("reads a tract from its county's tract file", async () => {
     expect(await fetchDetail("27053026100")).toEqual({ gini_index: { value: 0.39, moe: 0.05 }, median_age: { value: 34.1, moe: 2.2 } });
-    expect(calls).toEqual(["/data/values/tracts/27053.json"]);
+    expect(calls).toEqual([TRACT_URL]);
+    expect(TRACT_URL).toMatch(/\/values\/tracts\/27053\.json$/);
+  });
+  it("reads a tract's name, point and land area from its county's geography file, not the database", async () => {
+    expect(await fetchGeography("27053026100")).toEqual({ geoid: "27053026100", level: "tract", name: "Tract 261, Hennepin County, MN", lon: -93.2567, lat: 44.9706, aland_sqmi: 0.512 });
+    expect(await fetchGeography("27053999999")).toBeNull();
+    expect(calls).toEqual([TRACT_GEO_URL]);
+    expect(TRACT_GEO_URL).toMatch(/\/geo\/tracts\/27053\.json$/);
   });
   it("treats a missing file as no data", async () => {
     expect(await fetchDetail("99")).toEqual({});
