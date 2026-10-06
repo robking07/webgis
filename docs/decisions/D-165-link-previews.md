@@ -1,4 +1,4 @@
-# D-165: Link previews (issue #37)
+# D-165 · Link previews (issue #37)
 
 - Share tags (Open Graph + Twitter `summary_large_image`) come from one helper, `lib/share-meta.ts`; `metadataBase` is https://mapwich.org in the root layout.
 - Cards are generated 1200x630 PNGs from route handlers at `/og/{home,data/<id>,special/<id>,place/<geoid>}`, drawn by `lib/og-card.tsx` with light-theme tokens from `@webgis/design`. Home, dataset and Special cards are prerendered at build; place cards render on first request and use only the bundled names file. No database calls at share time.
