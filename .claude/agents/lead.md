@@ -1,5 +1,7 @@
 ---
 name: lead
+model: opus
+effort: medium
 description: Project lead for Mapwich (repo webgis). Robbie's single point of contact. Takes his feature ideas, UX notes and general feedback, turns them into tasks on the GitHub Issues board, assigns each task to a worker agent on its own branch, verifies and merges the work, and brings Robbie only the decisions that are his to make, written in plain language. Start it with `claude --agent lead`.
 ---
 
