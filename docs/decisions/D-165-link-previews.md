@@ -8,3 +8,4 @@
 - 2026-10-05, Robbie: plain branded card chosen (no color strip, no map image).
 - Lead decision: future Special thumbnails should be 1200×630 so platforms don't crop them.
 - Correction: the card font is Geist (next/og's built-in), not Noto Sans. Its space glyph rendered unevenly, so card text lays words out as flex items with a fixed gap.
+- Amendment (issue #72): cards now use bundled Public Sans (regular and bold woff files in `apps/web/src/assets/fonts/`, SIL OFL, matching the site). This supersedes the Geist note above; the per-word flex and zero-width-joiner workaround is removed and titles and summaries are plain text.
