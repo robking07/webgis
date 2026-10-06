@@ -25,10 +25,13 @@ describe("shard lookups", () => {
     expect(geographyFromShard(MN, "06037")).toBeNull();
   });
   it("puts a county in its state's file", () => {
-    expect(detailUrl("27053")).toBe("/tiles/details/27.json");
-    expect(detailUrl("27")).toBe("/tiles/details/27.json");
+    expect(detailUrl("27053")).toMatch(/\/details\/27\.json$/);
+    expect(detailUrl("27")).toBe(detailUrl("27053"));
   });
 });
+
+// The tiles base is "/tiles" locally and R2 in CI (NEXT_PUBLIC_TILES_BASE_URL).
+const MN_URL = detailUrl("27"), PR_URL = detailUrl("72");
 
 describe("fetchDetail / fetchGeography", () => {
   let calls: string[];
@@ -36,9 +39,9 @@ describe("fetchDetail / fetchGeography", () => {
     calls = [];
     vi.stubGlobal("fetch", vi.fn(async (url: string) => {
       calls.push(url);
-      if (url === "/tiles/details/27.json") return new Response(JSON.stringify(MN));
+      if (url === MN_URL) return new Response(JSON.stringify(MN));
       if (url === "/data/values/tracts/27053.json") return new Response(JSON.stringify(TRACTS));
-      if (url === "/tiles/details/72.json") return new Response("busy", { status: 503 });
+      if (url === PR_URL) return new Response("busy", { status: 503 });
       return new Response("not found", { status: 404 });
     }));
   });
@@ -48,7 +51,7 @@ describe("fetchDetail / fetchGeography", () => {
     expect((await fetchDetail("27")).gini_index).toEqual({ value: 0.4525, moe: 0.0019 });
     expect((await fetchGeography("27053"))?.name).toBe("Hennepin County, MN");
     expect((await fetchDetail("27053")).gini_index).toEqual({ value: 0.48, moe: 0.004 });
-    expect(calls).toEqual(["/tiles/details/27.json"]);
+    expect(calls).toEqual([MN_URL]);
   });
   it("never calls the database for states and counties", async () => {
     await fetchDetail("27053");
@@ -66,7 +69,7 @@ describe("fetchDetail / fetchGeography", () => {
   it("throws on a server error and retries next time", async () => {
     await expect(fetchDetail("72")).rejects.toThrow("Place data couldn't be loaded (503)");
     await expect(fetchDetail("72")).rejects.toThrow();
-    expect(calls).toEqual(["/tiles/details/72.json", "/tiles/details/72.json"]);
+    expect(calls).toEqual([PR_URL, PR_URL]);
   });
   it("has nothing for block groups or blocks (they read their own files)", async () => {
     expect(await fetchDetail("270530261001")).toEqual({});
