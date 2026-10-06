@@ -1,14 +1,19 @@
 import type { Metadata, Viewport } from "next";
 import { Geist_Mono, Public_Sans } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import { HOME_CARD, SITE_URL, shareMeta } from "@/lib/share-meta";
 import "./globals.css";
 
 const uiSans = Public_Sans({ variable: "--font-ui-sans", subsets: ["latin"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
+const DESCRIPTION = "A map-first viewer for U.S. transportation, planning and Census data.";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "Mapwich",
-  description: "A map-first viewer for U.S. transportation, planning and Census data.",
+  description: DESCRIPTION,
+  ...shareMeta({ title: "Mapwich", description: DESCRIPTION, image: HOME_CARD }),
 };
 
 export const viewport: Viewport = {

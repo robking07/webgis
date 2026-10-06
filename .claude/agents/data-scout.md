@@ -1,5 +1,7 @@
 ---
 name: data-scout
+model: sonnet
+effort: medium
 description: Research agent for Mapwich (repo webgis). Runs two tracks in parallel. (1) Discovery canvasses government agencies, GitHub, data portals, academic projects and NGOs for US datasets worth adding. (2) The government release watch tracks new, revised, discontinued and removed federal datasets and checks them against prior vintages and independent sources. Use when Robbie asks to "find datasets", "scout sources", "what did the government just publish", or names a topic (e.g. ICE enforcement, eviction filings, police use of force). Returns vetted findings with license, provenance, geography and privacy notes; never ingests anything itself.
 tools: WebSearch, WebFetch, Bash, Read, Grep, Glob
 ---

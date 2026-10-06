@@ -56,7 +56,7 @@ More text, [a link](https://example.org), **bold**, *italic*, lists, and images:
 | `at` | no | Where the map opens: `[longitude, latitude, zoom]`, e.g. `[-93.3, 45.0, 6]`. Leave it out for the whole country. "Open this map" uses it too. |
 | `caption` | no | The line under the map. Without it, the page describes what's mapped. |
 | `method` | no | Anything extra for "How this was made" (filters, years, exclusions). Markdown. |
-| `image` | no | A thumbnail: a screenshot of the main map, about 1000 px wide. Put the file in `apps/web/public/specials/` and write `/specials/name.png`. It shows on the Earlier Specials cards and in the map box while the live map loads. |
+| `image` | no | A thumbnail: a screenshot of the main map, 1200×630 px (so link previews and platforms don't crop it). Put the file in `apps/web/public/specials/` and write `/specials/name.png`. It shows on the Earlier Specials cards and in the map box while the live map loads. |
 | `author` | no | Defaults to Robbie King. A piece an AI agent drafted says so: `"Drafted by Claude for Robbie King"`. |
 | `draft` | no | `true` keeps it off mapwich.org. Drafts still show on Vercel previews and local builds, marked "Draft". |
 
