@@ -132,7 +132,7 @@ Gaps found:
 | Handbook section 1 did not say ingest needs GDAL and tippecanoe or how to check | Fixed |
 | `add-dataset` skill step 4 says `git push` to `main`, which the branching rules and guardrails forbid | Follow-up (skill edit) |
 | `build-tiles` skill verify step uses `webgis-lac.vercel.app` as the origin; the live one is `mapwich.org` | Follow-up (skill edit) |
-| `build-tiles` skill and `publish-tiles.ts` still describe the r2.dev URL; the custom domain `tiles.mapwich.org` appears only in DECISIONS Q-2 | Follow-up (check CORS origins and update the skill) |
+| `build-tiles` skill and `publish-tiles.ts` described the r2.dev URL | Fixed in #91: skill uses `tiles.mapwich.org`; CORS verified for https://mapwich.org |
 | Vercel project settings (Root Directory, framework) and the Supabase project ref are written nowhere in the repo | Follow-up for Robbie: read them from the dashboards once and add to section 6 |
 | No backup or restore path for Supabase (free tier has none); restoring means re-running every ingest step | Follow-up (decide whether a periodic `pg_dump` is worth it) |
 | Whether `ingest -- all` covers every registry dataset was not checked | Follow-up |
