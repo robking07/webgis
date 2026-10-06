@@ -20,6 +20,7 @@ rows into one summary line. Roadmap: `docs/roadmap.md`. Rules: `docs/handbook.md
 | F1 handbook + architecture map | #48 | #50 | S / ~100k | 78k | 0.78x | Sonnet / medium | 2026-10-05 |
 | F4 screenshot + review-page tools | #49 | #52 | S / ~100k | 78k | 0.78x | Sonnet / medium | 2026-10-05 |
 | F8 progress log | #55 | #56 | S / ~100k | 55k | 0.55x | Sonnet / medium | 2026-10-05 |
+| F7 trim CLAUDE.md | #54 | #58 | S / ~100k | 62k | 0.62x | Sonnet / medium | 2026-10-05 |
 
 ## Lessons
 
@@ -33,6 +34,8 @@ One line per task. These feed the project kit (#53).
 - **F8:** a log only helps if workers actually update it, so the handbook now makes it part of
   setup (read first) and reporting (update last). A fresh worktree has no `node_modules`, so
   docs-only briefs should skip `npm run build` (CI and the Vercel preview build it anyway).
+- **F7:** CLAUDE.md went from 55 to 39 lines; it now points to docs instead of repeating them.
+  Deleting files means checking lock/manifest files too (`skills-lock.json`).
 
 ## How to update
 
