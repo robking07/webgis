@@ -8,7 +8,7 @@ import { FilterButton } from "./FiltersPanel";
 /** Immersed: menu button and wordmark, then the category above the dataset name (both open the
  *  dataset list), then the filter button with a caption (the level shown, or what's filtered).
  *  Phones drop the wordmark and put the heading beside the menu button, on one row (issue #34). */
-export function ImmersedHeading({ primary, secondary, immersed, hasFilters, filtersOpen, filterCount, caption, captionHint, phone, motion, closeKey, onShowNav, onPick, onOpenFilters, onMenuChange, onOpenSheet }: {
+export function ImmersedHeading({ primary, secondary, immersed, hasFilters, filtersOpen, filterCount, caption, captionHint, phone, motion, closeKey, onShowNav, onPick, onOpenFilters, onOpenLevel, levelPill, onMenuChange, onOpenSheet }: {
   primary: Dataset;
   secondary: Dataset | null;
   immersed: boolean;
@@ -26,6 +26,10 @@ export function ImmersedHeading({ primary, secondary, immersed, hasFilters, filt
   onShowNav: () => void;
   onPick: (id: string) => void;
   onOpenFilters: (el: HTMLElement) => void;
+  /** The caption pill: open Filters (not toggle) with the geography level in view. */
+  onOpenLevel: (el: HTMLElement) => void;
+  /** The caption names the geography level (false for road layers, where it summarizes filters). */
+  levelPill: boolean;
   /** A dataset drop-down opened or closed. */
   onMenuChange: (open: boolean) => void;
   /** Phones: open the dataset list sheet. */
@@ -57,10 +61,20 @@ export function ImmersedHeading({ primary, secondary, immersed, hasFilters, filt
       {!phone && <div className="mt-1.5">{heading}</div>}
       <div className={`mt-1 flex max-w-[calc(100vw-1.5rem)] items-center gap-2 ${phone ? "pl-[52px]" : "pl-0.5"}`}>
         {hasFilters && <FilterButton count={filterCount} open={filtersOpen} onOpen={onOpenFilters} />}
-        {/* The note sits on a solid pill like the button, never halo text over the map (issue #34). */}
-        <span data-filter-note="" className="wg-panel inline-flex h-7 min-w-0 items-center rounded-full px-2.5 text-xs font-semibold text-foreground">
-          <span className="truncate">{caption}{captionHint && <span className="font-medium text-muted-foreground"> · {captionHint}</span>}</span>
-        </span>
+        {/* The level pill is a real button: it opens Filters at the geography level (D-35), and being
+            interactive it keeps clicks off the map behind it (issue #100). It sits on a solid pill like
+            the Filters button, never halo text over the map (issue #34). */}
+        {hasFilters ? (
+          <button type="button" data-filter-note="" data-level-pill="" onClick={(e) => onOpenLevel(e.currentTarget)} aria-expanded={filtersOpen} aria-controls="filters-panel"
+            aria-label={`${levelPill ? "Geography level" : "Filter"}: ${caption}${captionHint ? `, ${captionHint}` : ""}`}
+            className="wg-panel pointer-events-auto inline-flex h-7 min-w-0 cursor-pointer items-center rounded-full px-2.5 text-xs font-semibold text-foreground focus-visible:outline-2 focus-visible:outline-ring">
+            <span className="truncate">{caption}{captionHint && <span className="font-medium text-muted-foreground"> · {captionHint}</span>}</span>
+          </button>
+        ) : (
+          <span data-filter-note="" className="wg-panel pointer-events-auto inline-flex h-7 min-w-0 items-center rounded-full px-2.5 text-xs font-semibold text-foreground">
+            <span className="truncate">{caption}{captionHint && <span className="font-medium text-muted-foreground"> · {captionHint}</span>}</span>
+          </span>
+        )}
       </div>
     </div>
   );

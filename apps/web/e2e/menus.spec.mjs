@@ -471,6 +471,31 @@ for (const vp of ["phone", "laptop"]) {
   });
 }
 
+// Issue #100: the level pill is a real button; it opens Filters at the geography level and never reaches the map.
+for (const vp of ["laptop", "phone"]) {
+  test(`${vp} level pill opens Filters at the geography level without touching the map`, async (o) => {
+    const { page } = await o(vp, "/map?d=pct_poverty&at=-93.27,44.97,9.5");
+    await immerse(page);
+    const view = () => page.evaluate(() => { const m = window.__wgMap, c = m.getCenter(); return [c.lng, c.lat, m.getZoom()].map((n) => n.toFixed(4)).join(","); });
+    const v0 = await view(), u0 = page.url();
+    const pill = page.locator("[data-level-pill]:not([inert] *)");
+    await pill.waitFor();
+    expect(/^Geography level: /.test((await pill.getAttribute("aria-label")) ?? ""), "pill needs a Geography level aria-label");
+    expect(await pill.evaluate((el) => getComputedStyle(el).pointerEvents) === "auto", "pill must take pointer events");
+    if (page.isPhone) await pill.tap(); else await pill.click();
+    await page.locator('[role="radiogroup"][aria-label="Geography level"]').waitFor({ timeout: 5000 });
+    await wait(1500);
+    expect(await page.locator('[role="radiogroup"][aria-label="Geography level"]').isVisible(), "geography level choice not visible");
+    expect(await view() === v0, `map moved: ${v0} -> ${await view()}`);
+    expect(page.url() === u0, `URL changed: ${u0} -> ${page.url()}`);
+    expect(await page.locator('section[aria-label^="Details for"]').count() === 0, "a place got selected");
+    // Keyboard reachable: focus it and press Enter after closing.
+    await page.keyboard.press("Escape");
+    await pill.focus();
+    expect(await pill.evaluate((el) => document.activeElement === el), "pill not focusable");
+  });
+}
+
 test("no Census Reporter link for any ACS dataset (registry)", async (o) => {
   void o;
   const { default: entries } = await import(join(app, "src/generated/registry.json"), { with: { type: "json" } });
