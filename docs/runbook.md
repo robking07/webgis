@@ -40,8 +40,8 @@ All accounts are owned by Robbie. Dashboards need his login.
 | --- | --- | --- | --- | --- |
 | GitHub (`robking07/webgis`, private) | Code, issues, PRs, CI, Dependabot | github.com/robking07/webgis | 2,000 Actions minutes a month (private repo) | Site keeps running; no merges or deploys |
 | Vercel (project `webgis`) | Hosts the site, preview per PR, daily keepalive cron | vercel.com (project `webgis`) | Hobby: non-commercial use only; hard limits, no bill | Site is down. Roll back or wait |
-| Supabase (Postgres + PostGIS) | Ingest's store for state and county values (the source of the R2 click-detail files), Odd Pairing approvals, reviewer sign-in, tract place-page geography | supabase.com/dashboard | 500 MB database; pauses after about a week idle (the keepalive cron prevents it) | Map, details panel and state/county place pages keep working (static files, D-198); tract place pages and reviewer login fail |
-| Cloudflare R2 (bucket `webgis`, domain `tiles.mapwich.org`) | Boundary and feature PMTiles (range requests from browsers), block-group values, state/county click details (`details/`) | dash.cloudflare.com, R2 | 10 GB stored, no egress fees; spend notification set | Map has no boundaries (blank choropleth); details panel and place pages fail |
+| Supabase (Postgres + PostGIS) | Ingest's store for state and county values (the source of the R2 value and click-detail files), Odd Pairing approvals, reviewer sign-in | supabase.com/dashboard | 500 MB database; pauses after about a week idle (the keepalive cron prevents it) | Map, details panel and every place page keep working (static files, D-198, D-210); reviewer login fails |
+| Cloudflare R2 (bucket `webgis`, domain `tiles.mapwich.org`) | Boundary and feature PMTiles (range requests from browsers), every value file (`values/`), names, search and tract geography (`geo/`), state/county click details (`details/`) | dash.cloudflare.com, R2 | 10 GB stored, no egress fees; spend notification set (≈4.2 GB used after D-210) | Map has no boundaries or colors; details panel, search, CSV downloads and place pages fail |
 | Cloudflare (registrar and DNS) | `mapwich.org` domain | dash.cloudflare.com | Domain renews yearly | Site and tiles unreachable by name |
 | Sentry (project `mapwich`) | Browser error reports, uptime monitor | sentry.io | Developer plan: small monthly error quota, 1 uptime monitor | No alerts; site unaffected |
 | OpenFreeMap | Basemap (streets, labels), no account | openfreemap.org | Free, no key | Basemap gone; the map looks empty |
@@ -91,15 +91,35 @@ Steps marked (drill) were run on 2026-10-05; the rest were read from the docs an
    (applies `supabase/migrations/`). Needs the DB password.
 4. **Data:** `npm run ingest -- geographies`, then one step per source kind for each dataset
    (`acs`, `lodes`, `places`, ... see `data/ingest/src/run.ts` or the `add-dataset` skill), then
-   `ingest -- export`, `ingest -- insights`, then `ingest -- details` and `ingest -- publish-details`
-   (state and county click details to R2, D-198). Needs `SUPABASE_DB_URL`, `CENSUS_API_KEY`
-   (optional `ANTHROPIC_API_KEY`), and GDAL for feature layers. The exported JSON is committed, so the
-   live site renders without this step; the database does not.
+   the timeline steps, `ingest -- export`, `ingest -- tract-geo`, `ingest -- insights`, `ingest -- details`, then
+   `ingest -- publish-data` (values, geo and details to R2; see "Re-upload the data files" below).
+   Needs `SUPABASE_DB_URL`, `CENSUS_API_KEY` (optional `ANTHROPIC_API_KEY`), and GDAL for feature
+   layers. The value files are not in git (D-210): R2 holds the published copy, so the live site keeps
+   rendering as long as the bucket is intact; tract and timeline values exist only there and on the
+   machine that ran the ingest, and rebuilding them means re-running their ingests.
 5. **Tiles:** `ingest -- tiles [state|county|tract]`, `ingest -- features <id>`, then
    `ingest -- publish-tiles` to the R2 bucket (sets CORS). Needs `tippecanoe`, `ogr2ogr` and the four
    `R2_*` names. `data/tiles/` is git-ignored and empty in a fresh clone, so tiles must be rebuilt.
    Bind `tiles.mapwich.org` to the bucket as an R2 custom domain.
 6. Sentry: the handbook section 7 checklist.
+
+### Re-upload the data files (D-210)
+
+The map's value files, names, search index, tract geography and click details live in `data/tiles/`
+(git-ignored) and are served from R2 at `https://tiles.mapwich.org/{values,geo,details}/...`,
+gzip-encoded with `Cache-Control: public, max-age=3600`. After any ingest that rewrites them:
+
+```sh
+npm run ingest -- publish-data            # everything: values/, geo/, details/
+npm run ingest -- publish-data <id> ...   # just these datasets' values/<id>/ folders
+```
+
+It needs the four `R2_*` names in `.env.local`. It compares each gzipped file with the object's
+ETag and uploads only what changed (a full first upload is about 3,800 value files, 87 MB gzipped).
+Visitors see new files within an hour; nothing needs a deploy unless the registry changed (a new
+dataset, level or timeline stop), and then the upload must come first, before the PR merges.
+Check one file: `curl -sI https://tiles.mapwich.org/values/median_household_income/county.json`
+(expect `200`, `content-encoding: gzip`, `cache-control: public, max-age=3600`).
 
 ## 7. Rebuild drill, 2026-10-05
 

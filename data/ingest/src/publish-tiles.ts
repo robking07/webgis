@@ -74,7 +74,7 @@ async function publishJson(prefix: string, hint: string, dirs?: string[]) {
   const worker = async () => {
     for (let i = next++; i < files.length; i = next++) {
       const key = `${prefix}/${files[i]}`;
-      const body = gzipSync(readFileSync(join(root, files[i])), { level: 9 });
+      const body = gzipSync(readFileSync(join(root, files[i])));
       bytes += body.length;
       if (etags.get(key) === createHash("md5").update(body).digest("hex")) { skipped++; continue; }
       await s3.send(new PutObjectCommand({ Bucket: bucket, Key: key, Body: body, ContentType: "application/json", ContentEncoding: "gzip", CacheControl: JSON_CACHE }));

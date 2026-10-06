@@ -5,7 +5,7 @@ description: Add a dataset to webgis via the registry: write the YAML entry, reu
 
 # Add a dataset
 
-**Data pause (Robbie, 2026-10-05):** until S2 moves data files to R2, don't add or refresh JSON under `apps/web/public/data`; stop and report instead.
+**Where data files live (S2, D-210):** every value file, names, search and tract geography are written to `data/tiles/` (git-ignored) and uploaded to R2 (`https://tiles.mapwich.org`) with `npm run ingest -- publish-data`. Nothing goes in `apps/web/public/data` any more (that folder is gone). A data refresh is an upload, not a code deploy; visitors see it within the hour (one-hour cache).
 
 The rule from CLAUDE.md: **adding a dataset = registry entry + ingest script only. No UI code.** The map, browser, legend, popups, URL state and Weird Insights all read the registry.
 
@@ -40,8 +40,9 @@ Then: `npm run registry:validate`.
 
 ```bash
 npm run ingest -- <acs|lodes|places|climdiv|nbi|fars|features> <id>   # writes public.datasets + public.dataset_values
-npm run ingest -- export                             # registry.json, names, public/data/values/<id>/<level>.json
-npm run ingest -- details && npm run ingest -- publish-details   # state/county click details to R2 (D-198)
+npm run ingest -- export                             # registry.json, names.json, data/tiles/values/<id>/<level>.json, data/tiles/geo/
+npm run ingest -- details                            # state/county click details, data/tiles/details/ (D-198)
+npm run ingest -- publish-data                       # upload values/, geo/, details/ to R2 (only changed files go up; D-210)
 npm run ingest -- insights                           # recompute pairs, checks, captions (needs ANTHROPIC_API_KEY for real captions)
 npm run ingest -- docs                               # regenerate docs/data-sources.md
 ```
@@ -50,4 +51,4 @@ Read the ingest log: row counts, nulls, and "geoids not in geographies (dropped)
 
 ## 4. Ship
 
-Work in a worktree on branch `data/<dataset-id>` from the latest `origin/main` (see `docs/branching.md`); never commit to `main`. Run `npm run build` locally (it runs the design check) and the other checks in `docs/handbook.md`. Commit the regenerated `apps/web/public/data/values/**` and `apps/web/src/generated/*.json`, because the Vercel build can't reach the database. For a feature layer, run `npm run ingest -- publish-tiles` first so its PMTiles are on R2. Open a draft PR with "Closes #N" right after the first commit. The lead merges it with `bash scripts/merge-pr.sh <n>`, and merging deploys production (D-23). Don't deploy by hand.
+Work in a worktree on branch `data/<dataset-id>` from the latest `origin/main` (see `docs/branching.md`); never commit to `main`. Run `npm run build` locally (it runs the design check) and the other checks in `docs/handbook.md`. Commit the regenerated `apps/web/src/generated/*.json` (registry, periods, names, insights), because the Vercel build can't reach the database. The value files are not in git: run `npm run ingest -- publish-data` **before** the PR merges, so the deployed registry never names a dataset whose files aren't on R2 yet (workers without R2 keys say so in their report and the lead runs it). For a feature layer, run `npm run ingest -- publish-tiles` first so its PMTiles are on R2. Open a draft PR with "Closes #N" right after the first commit. The lead merges it with `bash scripts/merge-pr.sh <n>`, and merging deploys production (D-23). Don't deploy by hand.

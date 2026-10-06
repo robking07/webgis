@@ -21,7 +21,7 @@ Options (environment variables):
 | Variable | What it does |
 | --- | --- |
 | `BASE=http://localhost:3000` | Test a server that's already running instead of starting one. |
-| `E2E_PORT=3199` | Port for the server the test starts. |
+| `E2E_PORT=3199` | Port for the server the test starts. If something already answers on it (another worktree's server), the test runs against that instead; pick a free port or use `BASE`. |
 | `ONLY=contrast` | Run only the tests whose names contain this text. |
 | `CHROMIUM_PATH=…` | The Chromium (or Chrome) binary to use. |
 | `CONTRAST_LOG=/tmp/contrast.json` | Write every measured contrast ratio to a file. |
@@ -44,7 +44,9 @@ The browser uses software WebGL (`--use-gl=swiftshader`), so no GPU is needed.
 
 ## Tiles from tiles.mapwich.org
 
-Boundary tiles and block-group values come from `https://tiles.mapwich.org` (Cloudflare R2), whose
+Boundary tiles and every data file (values, names, search, details; D-210) come from the tiles base:
+`/tiles` locally (the `public/tiles` link to `data/tiles`, so a filled `data/tiles` runs offline), or
+`https://tiles.mapwich.org` (Cloudflare R2) when the build sets `NEXT_PUBLIC_TILES_BASE_URL`, as CI does. R2's
 CORS rules only allow the production origins. A page on `localhost` would be refused, so the test
 intercepts every request to `tiles.mapwich.org`: it answers the CORS preflight itself and adds
 `Access-Control-Allow-Origin: *` to the real responses (the tiles are still fetched for real, so a
