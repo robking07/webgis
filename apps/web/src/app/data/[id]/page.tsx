@@ -9,6 +9,8 @@ import { DATASETS, DATASET_BY_ID } from "@/lib/registry";
 import { sourceOf, datasetHref } from "@/lib/sources";
 import { approvedInsights } from "@/lib/approvals";
 import { shareMeta } from "@/lib/share-meta";
+import { CsvDownload } from "@/components/CsvDownload";
+import { CSV_LEVELS } from "@/lib/csv";
 import layersManifest from "@/generated/layers.json";
 
 export function generateStaticParams() {
@@ -38,6 +40,8 @@ export default async function DatasetProfilePage({ params }: PageProps<"/data/[i
   const siblings = source.datasets.filter((s) => s.id !== d.id);
   const featureCount = (layersManifest as Record<string, { featureCount?: number }>)[d.id]?.featureCount;
   const modelInputs = d.modelInputs.map((m) => DATASET_BY_ID.get(m)).filter((x) => !!x);
+
+  const csvLevels = d.measure.kind === "features" ? [] : CSV_LEVELS.filter((l) => d.geographyLevels.includes(l));
 
   const facts: Array<[string, React.ReactNode]> = [
     ["Source", <a key="s" href={d.source.url} rel="noopener" className="text-primary underline-offset-2 hover:underline">{d.source.name} ↗</a>],
@@ -76,6 +80,8 @@ export default async function DatasetProfilePage({ params }: PageProps<"/data/[i
           ))}
         </dl>
       </section>
+
+      {csvLevels.length > 0 && <CsvDownload dataset={d} levels={csvLevels} />}
 
       <section aria-labelledby="method" className="mb-8">
         <h2 id="method" className="mb-2 text-base font-semibold">How it’s computed</h2>
