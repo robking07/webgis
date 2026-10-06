@@ -18,6 +18,7 @@ Full build spec: `docs/SPEC.md`. Project rules: `CLAUDE.md`.
     `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET`
   - If a task needs a key you don't have, stop and say so in your report. Don't hunt for it.
 - Docs-only work needs no install.
+- Read `docs/progress.md` first (where things stand, lessons from earlier tasks).
 
 ## 2. House rules
 
@@ -89,7 +90,8 @@ You are a worker, not the decision maker. Don't ask Robbie anything; don't merge
    - **Questions for Robbie**, listed with the options you see and the default you took. Choices
      that are his: what users see, scope, editorial wording, data judgment, cost;
    - anything odd you found in the repo (listed, not fixed);
-   - rough token use against your budget. Stop and report at 1.5x the budget.
+   - rough token use against your budget. Stop and report at 1.5x the budget;
+   - add your row and lesson to `docs/progress.md` in your PR.
 
 ## 5. Merging
 
