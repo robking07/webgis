@@ -364,6 +364,8 @@ for (const [vp, hides] of [["phone", true], ["laptop", true], ["monitor", false]
     const during = { menu: await opacityOf(menu), side: page.isPhone ? null : await opacityOf(side) };
     await dragEnd(page);
     await wait(1500);
+    // Slow machines (CI's software WebGL) can still be mid-fade here; let CSS transitions finish.
+    await page.waitForFunction(() => document.getAnimations().every((a) => a.playState !== "running"), null, { timeout: 5000 }).catch(() => {});
     const after = { menu: await opacityOf(menu), side: page.isPhone ? null : await opacityOf(side) };
     if (vp === "phone") {
       expect(during.menu === 0, `menu button visible mid-pan (${during.menu})`);

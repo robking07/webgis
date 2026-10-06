@@ -26,7 +26,8 @@ rows into one summary line. Roadmap: `docs/roadmap.md`. Rules: `docs/handbook.md
 | 1.5 link previews | #37 | #65 | S / ~100k | 116k | 1.16x | Sonnet / medium | 2026-10-05 |
 | Share-card font | #72 | #74 | S / ~50k | 40k | 0.8x | Sonnet / medium | 2026-10-05 |
 | S3 alerts | #73 | #75 | S / ~100k | 81k | 0.81x | Sonnet / medium | 2026-10-05 |
-| 1.4 CSV download | #78 | #79 | S / ~100k | ~95k | 0.95x | Sonnet / medium | 2026-10-05 |
+| F2 checks in GitHub CI | #61 | #68 | M / ~275k | 230k | 0.84x | Opus / medium | 2026-10-05 |
+| 1.4 CSV download | #78 | #79 | S / ~100k | 59k | 0.59x | Sonnet / medium | 2026-10-05 |
 
 ## Lessons
 
@@ -50,6 +51,10 @@ One line per task. These feed the project kit (#53).
 - **F6:** Claude Code agent frontmatter supports `model` and `effort`, so routing lives in the agent files, not prose. The lead's brief can still override the model per task (opus for M/L).
 - **1.4:** the sandbox has no Chromium system libs (libnspr4), so `npm run shots` and e2e cannot run here; check that early and run the real CSV function from a node script instead. Excel treats leading `#` lines as data, so notes go after the rows.
 - **Decision files:** two workers (#65, #75) wrote `# D-1xx: Title`; the check wants `# D-1xx · Title`. Briefs now give the exact first line; run `PR_NUMBER=<n> node scripts/check-decisions.mjs` before pushing.
+- **F2:** the e2e suite passes locally but one fade check flaked on the slower CI runner; wait
+  for the state you assert (CSS transitions done), not a fixed delay. Heavy checks (~10 of a
+  run's ~14 min) now run only on ready PRs; mark the PR ready before merging. A PR that
+  conflicts with main gets no CI run at all, so check mergeability when CI seems silent.
 
 ## How to update
 

@@ -64,6 +64,20 @@ Run from your worktree root unless noted.
 | `npm run test:guardrails` | Tests the guardrails hook. | Only if you change `.claude/hooks/guardrails.mjs` or the deny rules. |
 | `node scripts/check-decisions.mjs` | The decision-number check CI runs. | If you add or rename a decision file (CI also runs it). |
 
+CI runs these on every PR (`.github/workflows/ci.yml`, D-168); `scripts/merge-pr.sh` won't
+merge while one is red. Docs-only PRs (only `docs/`, `.claude/` or top-level `*.md`) skip the
+ones marked *, which counts as passing. Checks marked † run on ready PRs only, not drafts: the
+lead runs `gh pr ready <n>` before merging, and `merge-pr.sh` refuses a code PR until they pass.
+
+| CI check | What it covers | Blocking? |
+| --- | --- | --- |
+| `branch-rules` | Branch includes the latest `main`; decision numbers match the PR. | Yes |
+| `build` * | `npm ci` + `npm run build` (design check + `next build`). | Yes |
+| `lint (report-only)` * | `npm run lint -w web`; the problem count shows as a warning. | No, until F3 clears the backlog |
+| `click-through` * † | `npm run test:e2e -w web` on the CI build (about 10 min). Runs on ready PRs only. | Yes |
+| `secret scan` | gitleaks over the PR's commits. | Yes |
+| `speed + accessibility` * † | Lighthouse on `/`, a dataset page and a Special (local build). Runs on ready PRs only. | Accessibility < 90 fails; performance, best practices, SEO only warn |
+
 Skills to use (invoke by name):
 
 - `run`: launch the app and see a change working in the real browser. Use for any visible
