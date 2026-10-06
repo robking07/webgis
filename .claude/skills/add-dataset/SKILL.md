@@ -41,6 +41,7 @@ Then: `npm run registry:validate`.
 ```bash
 npm run ingest -- <acs|lodes|places|climdiv|nbi|fars|features> <id>   # writes public.datasets + public.dataset_values
 npm run ingest -- export                             # registry.json, names, public/data/values/<id>/<level>.json
+npm run ingest -- details && npm run ingest -- publish-details   # state/county click details to R2 (D-198)
 npm run ingest -- insights                           # recompute pairs, checks, captions (needs ANTHROPIC_API_KEY for real captions)
 npm run ingest -- docs                               # regenerate docs/data-sources.md
 ```

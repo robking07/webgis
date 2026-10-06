@@ -40,8 +40,8 @@ All accounts are owned by Robbie. Dashboards need his login.
 | --- | --- | --- | --- | --- |
 | GitHub (`robking07/webgis`, private) | Code, issues, PRs, CI, Dependabot | github.com/robking07/webgis | 2,000 Actions minutes a month (private repo) | Site keeps running; no merges or deploys |
 | Vercel (project `webgis`) | Hosts the site, preview per PR, daily keepalive cron | vercel.com (project `webgis`) | Hobby: non-commercial use only; hard limits, no bill | Site is down. Roll back or wait |
-| Supabase (Postgres + PostGIS) | State and county click details, place pages, Odd Pairing approvals, reviewer sign-in | supabase.com/dashboard | 500 MB database; pauses after about a week idle (the keepalive cron prevents it) | Map still draws from static JSON and tiles; detail panels, place pages and reviewer login fail |
-| Cloudflare R2 (bucket `webgis`, domain `tiles.mapwich.org`) | Boundary and feature PMTiles, range requests from browsers | dash.cloudflare.com, R2 | 10 GB stored, no egress fees; spend notification set | Map has no boundaries (blank choropleth) |
+| Supabase (Postgres + PostGIS) | Ingest's store for state and county values (the source of the R2 click-detail files), Odd Pairing approvals, reviewer sign-in, tract place-page geography | supabase.com/dashboard | 500 MB database; pauses after about a week idle (the keepalive cron prevents it) | Map, details panel and state/county place pages keep working (static files, D-198); tract place pages and reviewer login fail |
+| Cloudflare R2 (bucket `webgis`, domain `tiles.mapwich.org`) | Boundary and feature PMTiles (range requests from browsers), block-group values, state/county click details (`details/`) | dash.cloudflare.com, R2 | 10 GB stored, no egress fees; spend notification set | Map has no boundaries (blank choropleth); details panel and place pages fail |
 | Cloudflare (registrar and DNS) | `mapwich.org` domain | dash.cloudflare.com | Domain renews yearly | Site and tiles unreachable by name |
 | Sentry (project `mapwich`) | Browser error reports, uptime monitor | sentry.io | Developer plan: small monthly error quota, 1 uptime monitor | No alerts; site unaffected |
 | OpenFreeMap | Basemap (streets, labels), no account | openfreemap.org | Free, no key | Basemap gone; the map looks empty |
@@ -91,7 +91,8 @@ Steps marked (drill) were run on 2026-10-05; the rest were read from the docs an
    (applies `supabase/migrations/`). Needs the DB password.
 4. **Data:** `npm run ingest -- geographies`, then one step per source kind for each dataset
    (`acs`, `lodes`, `places`, ... see `data/ingest/src/run.ts` or the `add-dataset` skill), then
-   `ingest -- export` and `ingest -- insights`. Needs `SUPABASE_DB_URL`, `CENSUS_API_KEY`
+   `ingest -- export`, `ingest -- insights`, then `ingest -- details` and `ingest -- publish-details`
+   (state and county click details to R2, D-198). Needs `SUPABASE_DB_URL`, `CENSUS_API_KEY`
    (optional `ANTHROPIC_API_KEY`), and GDAL for feature layers. The exported JSON is committed, so the
    live site renders without this step; the database does not.
 5. **Tiles:** `ingest -- tiles [state|county|tract]`, `ingest -- features <id>`, then

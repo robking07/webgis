@@ -4,7 +4,8 @@
 asserts how the map menus behave (issue #34, D-135) at a phone (390 × 844), a laptop (1366 × 768)
 and a monitor (1920 × 1080): filters, mid-pan behavior, the phone dataset sheet, the details'
 "inside" links, zoom levels, contrast of on-map chrome (light and dark), console errors, and a few
-earlier regressions. It checks behavior, not screenshots.
+earlier regressions, and that state and county details and place pages never call the database
+(D-198). It checks behavior, not screenshots.
 
 ## Run it
 
