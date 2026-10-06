@@ -28,7 +28,7 @@ rows into one summary line. Roadmap: `docs/roadmap.md`. Rules: `docs/handbook.md
 | S3 alerts | #73 | #75 | S / ~100k | 81k | 0.81x | Sonnet / medium | 2026-10-05 |
 | F2 checks in GitHub CI | #61 | #68 | M / ~275k | 230k | 0.84x | Opus / medium | 2026-10-05 |
 | 1.4 CSV download | #78 | #79 | S / ~100k | 59k | 0.59x | Sonnet / medium | 2026-10-05 |
-| F3 lint cleanup + blocking | #83, #80 | tbd | S / ~100k | ~90k | ~0.9x | Sonnet / medium | 2026-10-05 |
+| F3 lint cleanup + blocking | #83, #80 | #84 | S / ~100k | ~90k | ~0.9x | Sonnet / medium | 2026-10-05 |
 
 ## Lessons
 
