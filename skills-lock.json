@@ -1,30 +1,6 @@
 {
   "version": 1,
   "skills": {
-    "mapbox-style-patterns": {
-      "source": "mapbox/mapbox-agent-skills",
-      "sourceType": "github",
-      "skillPath": "skills/mapbox-style-patterns/SKILL.md",
-      "computedHash": "06c9d2f181ca1d8466cbcb236f79185b0cf5d26fb03ef4c00b6aeca785762caf"
-    },
-    "mapbox-style-quality": {
-      "source": "mapbox/mapbox-agent-skills",
-      "sourceType": "github",
-      "skillPath": "skills/mapbox-style-quality/SKILL.md",
-      "computedHash": "f15c2874eb42e857f831a20186879be33a3d41e8032f1d0ed32488d36f496950"
-    },
-    "mapbox-web-integration-patterns": {
-      "source": "mapbox/mapbox-agent-skills",
-      "sourceType": "github",
-      "skillPath": "skills/mapbox-web-integration-patterns/SKILL.md",
-      "computedHash": "936a51260ab4a1da35ae146dde7a2e420599eafec23f2a99725033ffc76a0af0"
-    },
-    "mapbox-web-performance-patterns": {
-      "source": "mapbox/mapbox-agent-skills",
-      "sourceType": "github",
-      "skillPath": "skills/mapbox-web-performance-patterns/SKILL.md",
-      "computedHash": "d44a8b74714c43ecad1bed4755c86b2319934797719e8fab8ed2bf50bd8b7878"
-    },
     "maplibre-cartography": {
       "source": "maplibre/maplibre-agent-skills",
       "sourceType": "github",
