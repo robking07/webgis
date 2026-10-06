@@ -15,7 +15,8 @@ export function LogoMark({ size = 24, title, ink = "var(--ui-text)" }: { size?: 
         <rect width="64" height="64" fill="#fff" stroke="none" />
         <line x1="32" y1="15.5" x2="32" y2="27" stroke="#000" />
       </mask>
-      <line x1="32" y1="8" x2="32" y2="27" />
+      {/* The pick stops at the layer edge; inside the layer it shows only as the cut-out. */}
+      <line x1="32" y1="8" x2="32" y2="13.5" />
       <path d="M9 27 L32 15.5 L55 27 L32 38.5 Z" fill={ink} stroke="none" mask={`url(#${cut})`} />
       <path d="M10 35 L32 46 L54 35" />
       <line x1="32" y1="47" x2="32" y2="56" />

@@ -4,5 +4,6 @@ import type { MetadataRoute } from "next";
 // Google and Bing support, so "Allow: /$" is exactly "/" and "Disallow: /" covers the rest.
 // Every other page also carries a noindex meta tag (root layout). No sitemap. Undo at roadmap 3.6.
 export default function robots(): MetadataRoute.Robots {
-  return { rules: { userAgent: "*", allow: "/$", disallow: "/" } };
+  // /og/ stays crawlable: link-preview bots (e.g. X) obey robots.txt and fetch the share-card images.
+  return { rules: { userAgent: "*", allow: ["/$", "/og/"], disallow: "/" } };
 }
