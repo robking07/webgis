@@ -71,7 +71,7 @@ jobs:
           retention-days: 1
 
   lint:
-    name: lint (report-only)
+    name: lint
     needs: changes
     if: needs.changes.outputs.code == 'true'
     runs-on: ubuntu-latest
@@ -83,17 +83,8 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
-      # Non-blocking until roadmap task F3 clears the existing problems; then drop `|| …`.
       - name: ESLint (apps/web)
-        run: |
-          set -o pipefail
-          if npm run lint -w web 2>&1 | tee lint.log; then
-            echo "Lint: clean" >> "$GITHUB_STEP_SUMMARY"
-          else
-            summary=$(grep -E '✖ [0-9]+ problems?' lint.log | tail -1 || true)
-            echo "::warning title=Lint (report-only)::${summary:-ESLint reported problems}. Not blocking until F3."
-            echo "Lint (report-only): ${summary:-ESLint reported problems}" >> "$GITHUB_STEP_SUMMARY"
-          fi
+        run: npm run lint -w web
 
   click-through:
     name: click-through

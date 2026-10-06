@@ -106,7 +106,9 @@ export function Viewer({ search }: { search: string }) {
   // The table lists states or counties (finer areas have no names to search); below counties it shows counties.
   const tableLevel: GeoLevel | null = level === "state" || level === "county" ? level : availableLevels.includes("county") ? "county" : null;
   // Clear selections and filters when the dataset changes.
-  useEffect(() => { setSelected(null); setFeatureSelected(null); setFeatureHover(null); setHidden({}); mapApi.current?.select("county", null); }, [state.d]);
+  const [seenDataset, setSeenDataset] = useState(state.d);
+  if (seenDataset !== state.d) { setSeenDataset(state.d); setSelected(null); setFeatureSelected(null); setFeatureHover(null); setHidden({}); }
+  useEffect(() => { mapApi.current?.select("county", null); }, [state.d]);
   const featureFilter = useMemo(() => {
     if (!primary) return undefined;
     const out: Record<string, Array<string | number>> = {};
@@ -142,7 +144,8 @@ export function Viewer({ search }: { search: string }) {
   const onSearchPlace = (p: PlaceHit) => { setSearchOpen(false); goToPlace(p); };
   /** Phones: the dataset list and the details share the bottom sheet; opening one closes the other. */
   const openSheet = () => { setListOpen(true); setSelected(null); setFeatureSelected(null); setTableOpen(false); mapApi.current?.select("county", null); };
-  useEffect(() => { if (selected || featureSelected || tableOpen) setListOpen(false); }, [selected, featureSelected, tableOpen]);
+  // Opening a place or the table closes the dataset list (adjusted during render, not in an effect).
+  if (listOpen && (selected || featureSelected || tableOpen)) setListOpen(false);
   /** Keep the shown year when the next dataset has it too. */
   const keepStop = (id: string) => (state.t && stopsFor(DATASET_BY_ID.get(id) ?? null).some((s) => s.id === state.t) ? state.t : null);
   const onSearchDataset = (d: Dataset) => { setSearchOpen(false); update({ d: d.id, b: state.b === d.id ? null : state.b, lv: null, t: keepStop(d.id) }); };
@@ -178,6 +181,9 @@ export function Viewer({ search }: { search: string }) {
   // Left column (desktop): the filters sidebar opens below the title (or the at-rest card) and
   // stops above the legend strip.
   const [sidebarTop, setSidebarTop] = useState(160);
+  // Re-measures after every render on purpose (it follows layout changes no dependency list covers); the
+  // `top !== sidebarTop` guard stops the loop.
+  /* eslint-disable react-hooks/exhaustive-deps */
   useLayoutEffect(() => {
     const el = root.current;
     if (!el || !filters || phone) return;
@@ -185,6 +191,7 @@ export function Viewer({ search }: { search: string }) {
     const top = Math.round((owner?.getBoundingClientRect().bottom ?? 148) + 10);
     if (top !== sidebarTop) setSidebarTop(top);
   });
+  /* eslint-enable react-hooks/exhaustive-deps */
   // The selected place's class, marked in the legend (desktop) or the sheet's key (phones).
   const selClassed = selected ? classed[selected.level] : undefined;
   const selClass = selected && selClassed && !secondary ? selClassed.classes.get(selected.geoid) ?? null : null;

@@ -28,12 +28,14 @@ export function DatasetHeading({ primary, secondary, onPick, onOpenChange, onOpe
   const ref = useRef<HTMLDivElement>(null);
   const open = !!menu;
   const report = useRef(onOpenChange);
-  report.current = onOpenChange;
+  useEffect(() => { report.current = onOpenChange; });
   useEffect(() => {
     report.current?.(open);
     return () => { if (open) report.current?.(false); };
   }, [open]);
-  useEffect(() => { setMenu(null); }, [closeKey]);
+  // Close when the parent bumps closeKey (state adjusted during render, not in an effect).
+  const [seenCloseKey, setSeenCloseKey] = useState(closeKey);
+  if (seenCloseKey !== closeKey) { setSeenCloseKey(closeKey); setMenu(null); }
   useEffect(() => {
     if (!menu) return;
     const close = (e: PointerEvent) => { if (!ref.current?.contains(e.target as Node)) setMenu(null); };

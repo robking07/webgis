@@ -73,7 +73,7 @@ lead runs `gh pr ready <n>` before merging, and `merge-pr.sh` refuses a code PR 
 | --- | --- | --- |
 | `branch-rules` | Branch includes the latest `main`; decision numbers match the PR. | Yes |
 | `build` * | `npm ci` + `npm run build` (design check + `next build`). | Yes |
-| `lint (report-only)` * | `npm run lint -w web`; the problem count shows as a warning. | No, until F3 clears the backlog |
+| `lint` * | `npm run lint -w web`; any ESLint error fails the job. | Yes |
 | `click-through` * † | `npm run test:e2e -w web` on the CI build (about 10 min). Runs on ready PRs only. | Yes |
 | `secret scan` | gitleaks over the PR's commits. | Yes |
 | `speed + accessibility` * † | Lighthouse on `/`, a dataset page and a Special (local build). Runs on ready PRs only. | Accessibility < 90 fails; performance, best practices, SEO only warn |

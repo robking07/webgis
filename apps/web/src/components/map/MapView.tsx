@@ -1,7 +1,7 @@
 "use client";
 // The only module that touches the map library. Swapping in Mapbox GL JS (Q-1) means
 // reimplementing this component against the same props.
-import { useEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import { AttributionControl, LngLatBounds, Map as MlMap, ScaleControl, addProtocol, setWorkerUrl, type LayerSpecification, type MapGeoJSONFeature } from "maplibre-gl";
 import { Protocol } from "pmtiles";
 import { basemapStyle, choroplethFill, choroplethFillsByState, DATA_BEFORE_ID, STATIC_ONLY_LEVELS, TILE_VALUE_LEVELS, THEMES, featureLineLayers, featurePolygonLayers, fillLayerIds, focusLandLayer, FOCUS_LAND_BEFORE_ID, GEO_LEVELS, MOTION, PER_STATE_LEVELS, thematicLayers, type GeoLevel, type ThemeName } from "@webgis/design";
@@ -114,8 +114,9 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
   const container = useRef<HTMLDivElement>(null);
   const map = useRef<MlMap | null>(null);
   const applied = useRef<Partial<Record<GeoLevel, LevelPaint>>>({});
-  const latest = useRef({ paint, theme, onViewChange, onHover, onSelect, onTilesError, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, boundaries });
-  latest.current = { paint, theme, onViewChange, onHover, onSelect, onTilesError, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, boundaries };
+  const latest = useRef({ paint, theme, onViewChange, onHover, onSelect, onTilesError, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, boundaries, featureFilter });
+  // Refresh after every render, before any effect or event handler reads it.
+  useLayoutEffect(() => { latest.current = { paint, theme, onViewChange, onHover, onSelect, onTilesError, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, boundaries, featureFilter }; });
   /** Boundary vintage the county/tract sources currently point at. */
   const shownBoundaries = useRef<string | null>(null);
   /** True once our sources/layers exist on the current style. isStyleLoaded() can't be used:
@@ -193,7 +194,7 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
       applied.current = {};
       syncPaint(m, latest.current.paint, applied.current, latest.current.theme);
       syncFeatureLayer(m, latest.current.featureLayer ?? null, latest.current.theme);
-      applyFeatureFilter(m, latest.current.featureLayer ?? null, filterRef.current);
+      applyFeatureFilter(m, latest.current.featureLayer ?? null, latest.current.featureFilter);
       restoreFlags(m, hovered.current, selected.current);
     });
     m.on("moveend", () => {
@@ -288,11 +289,9 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
   }, [paint]);
 
   // Feature layer (lines/points): swap in/out, then apply its filter.
-  const filterRef = useRef(featureFilter);
-  filterRef.current = featureFilter;
   useEffect(() => {
     const m = map.current;
-    if (m && ready.current) { syncFeatureLayer(m, featureLayer ?? null, latest.current.theme); applyFeatureFilter(m, featureLayer ?? null, filterRef.current); }
+    if (m && ready.current) { syncFeatureLayer(m, featureLayer ?? null, latest.current.theme); applyFeatureFilter(m, featureLayer ?? null, latest.current.featureFilter); }
   }, [featureLayer]);
   useEffect(() => {
     const m = map.current;

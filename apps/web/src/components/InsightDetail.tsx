@@ -1,6 +1,7 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import { BivariateLegend, StatusState } from "@webgis/design/components";
 import type { ThemeName } from "@webgis/design";
 import { Scatter } from "./Scatter";
@@ -12,17 +13,22 @@ import { DEFAULT_VIEW, serializeUrlState } from "@/lib/url-state";
 
 const MapView = dynamic(() => import("./map/MapView").then((m) => m.MapView), { ssr: false });
 
+const noopSubscribe = () => () => {};
+function readTheme(): ThemeName {
+  const t = document.documentElement.dataset.theme;
+  return t === "dark" || (!t && window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
+}
+
 export function InsightDetail({ insight }: { insight: Insight }) {
   const x = DATASET_BY_ID.get(insight.x)!, y = DATASET_BY_ID.get(insight.y)!;
   const [vals, setVals] = useState<[Values, Values] | null>(null);
   const [names, setNames] = useState<Record<string, string>>();
   const [err, setErr] = useState(false);
-  const [theme, setTheme] = useState<ThemeName>("light");
+  // Read the page theme after hydration ("light" on the server); nothing to subscribe to.
+  const theme = useSyncExternalStore<ThemeName>(noopSubscribe, readTheme, () => "light");
   useEffect(() => {
     Promise.all([loadValues(x.id, "county"), loadValues(y.id, "county")]).then(setVals, () => setErr(true));
     fetch("/data/geo/names.json").then((r) => r.json()).then(setNames, () => {});
-    const mq = window.matchMedia("(prefers-color-scheme: dark)");
-    setTheme(document.documentElement.dataset.theme === "dark" || (!document.documentElement.dataset.theme && mq.matches) ? "dark" : "light");
   }, [x.id, y.id]);
   const biv = useMemo(() => (vals ? classifyBivariate(vals[0], vals[1]) : null), [vals]);
   const mapHref = `/${serializeUrlState({ d: x.id, b: y.id, at: { lon: DEFAULT_VIEW.lon, lat: DEFAULT_VIEW.lat, zoom: 5 }, theme: null, lv: null })}`;
@@ -30,7 +36,7 @@ export function InsightDetail({ insight }: { insight: Insight }) {
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 md:px-8">
       <nav className="mb-6 flex gap-4 text-sm">
-        <a href="/specials/pairings" className="text-primary underline-offset-2 hover:underline">← All Odd Pairings</a>
+        <Link href="/specials/pairings" className="text-primary underline-offset-2 hover:underline">← All Odd Pairings</Link>
         <a href={mapHref} className="text-primary underline-offset-2 hover:underline">Explore in the full map →</a>
       </nav>
       <header className="mb-6 max-w-3xl">

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import { rampColors, RAMPS, UNIT_LABEL, type RampId, type Unit } from "@webgis/design";
 import { TERM_BY_ID } from "@/lib/glossary";
 import { describeMethod } from "@webgis/registry/describe";
@@ -25,7 +26,7 @@ export async function generateMetadata({ params }: PageProps<"/data/[id]">): Pro
     : { title: "Data · Mapwich" };
 }
 
-const LEVEL_LABEL: Record<string, string> = { state: "States", county: "Counties", tract: "Census tracts" };
+const LEVEL_LABEL: Record<string, string> = { state: "States", county: "Counties", tract: "Census tracts", block_group: "Block groups" };
 const CLASSIFY_LABEL: Record<string, string> = { quantile: "Quantile", equalInterval: "Equal interval", jenks: "Natural breaks (Jenks)", manual: "Fixed breaks" };
 
 export default async function DatasetProfilePage({ params }: PageProps<"/data/[id]">) {
@@ -59,7 +60,7 @@ export default async function DatasetProfilePage({ params }: PageProps<"/data/[i
     <>
     <SiteHeader />
     <main className="mx-auto max-w-3xl px-4 py-6 md:px-8 md:py-8">
-      <p className="text-sm"><a href="/data" className="text-primary underline-offset-2 hover:underline">← All data</a></p>
+      <p className="text-sm"><Link href="/data" className="text-primary underline-offset-2 hover:underline">← All data</Link></p>
       <header className="mb-6 mt-3">
         <p className="text-xs uppercase tracking-wide text-muted-foreground">{d.category} · {source.name}</p>
         <h1 className="mt-1 text-2xl font-semibold tracking-tight">{d.title}</h1>

@@ -3,6 +3,8 @@
 - Date: 2026-10-05. Decided by: worker on roadmap task F2 (issue #61), defaults from the lead's
   brief. PR #68.
 
+2026-10-05: lint now blocking (F3, #83).
+
 ## Decision
 
 Every PR to `main` runs `.github/workflows/ci.yml` beside the existing `branch-rules` job.
