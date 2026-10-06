@@ -8,7 +8,7 @@ export const CSV_LEVELS: GeoLevel[] = ["state", "county", "tract", "block_group"
 export const CSV_LEVEL_LABEL: Record<string, string> = { state: "States", county: "Counties", tract: "Census tracts", block_group: "Block groups" };
 
 export function csvFileName(d: Pick<Dataset, "id" | "vintage">, level: string): string {
-  const vintage = d.vintage.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  const vintage = d.vintage.replace(/\s*\(.*$/, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
   return `mapwich-${d.id}-${level}-${vintage}.csv`;
 }
 
@@ -48,10 +48,10 @@ export async function buildCsv(d: Dataset, level: GeoLevel, load = loadValues, n
   }
   // Notes go after the data, not before it: lines above the header would break Excel's header detection.
   parts.push("\r\n" + [
-    `# Source: ${d.source.name} (${d.vintage})`,
+    `# Source: ${d.source.name}, ${d.vintage}`,
     `# Cite as: ${d.source.citation}`,
     `# License: ${d.license}`,
     `# Downloaded from Mapwich: https://mapwich.org/data/${d.id}`,
-  ].map((l) => csvField(l) + "\r\n").join(""));
+  ].map((l) => `"${l.replace(/"/g, '""')}"\r\n`).join(""));
   return { blob: new Blob(parts, { type: "text/csv;charset=utf-8" }), rows: ids.length };
 }
