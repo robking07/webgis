@@ -28,6 +28,16 @@ the merge gate. The table of checks is in `docs/handbook.md` §3.
   mobile emulation. Accessibility < 0.9 fails. Performance, best practices and SEO < 0.9
   only warn. Reports are kept as a 7-day artifact; scores go to the job summary.
 
+## Heavy checks run on ready PRs only
+
+Click-through and speed + accessibility (most of a run's minutes) skip draft PRs. Workers
+push to drafts many times; the lead marks the PR ready (`gh pr ready <n>`) just before
+merging, and the `ready_for_review` event runs them. Build, lint, secret scan and "what
+changed" run on every push, drafts included. Because skipped counts as passing,
+`scripts/merge-pr.sh` also refuses a code PR (`build` passed, not skipped) unless
+click-through and speed + accessibility both passed; docs-only PRs (build skipped) merge as
+before. (Lead's review of PR #68.)
+
 ## Baseline (PR #68, first run)
 
 | Page | Performance | Accessibility | Best practices | SEO |
@@ -43,8 +53,8 @@ later decision, once there is a target the map page can meet.
 ## CI minutes
 
 Free private-repo budget is about 2,000 minutes a month. A full run costs about 15 runner
-minutes (click-through is most of it). To keep it modest: a newer push cancels the run it
-supersedes; docs-only PRs (only `docs/`, `.claude/` or top-level `*.md` changed) skip build,
+minutes (click-through is most of it); a draft push costs about 3. To keep it modest: heavy
+checks wait for the ready PR (above); a newer push cancels the run it supersedes; docs-only PRs (only `docs/`, `.claude/` or top-level `*.md` changed) skip build,
 lint, click-through and Lighthouse; those show as "skipping", which `gh pr checks` (and so
 `merge-pr.sh`) treats as passing. The secret scan always runs. Actions are pinned to major
 versions.

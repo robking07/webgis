@@ -18,6 +18,21 @@ fi
 # Waits for running checks; exits non-zero if any fail.
 gh pr checks "$pr" --watch --fail-fast
 
+# Skipped counts as passing above. The heavy checks only run on ready (non-draft) PRs
+# (D-168), so a code PR (build passed, not skipped) must also have them passed.
+checks=$(gh pr checks "$pr" || true)   # tab-separated when piped: name, status, ...
+status_of() { awk -F'\t' -v n="$1" '$1 == n { print $2; exit }' <<<"$checks"; }
+if [ "$(status_of build)" = "pass" ]; then
+  for heavy in "click-through" "speed + accessibility"; do
+    s=$(status_of "$heavy")
+    if [ "$s" != "pass" ]; then
+      echo "PR #$pr: heavy checks haven't run on the ready PR yet; wait for them (\"$heavy\" is ${s:-missing})." >&2
+      echo "Mark the PR ready (gh pr ready $pr) if it's still a draft, wait for CI, then retry." >&2
+      exit 1
+    fi
+  done
+fi
+
 # The repo deletes the branch on GitHub after merging (delete_branch_on_merge).
 gh pr merge "$pr" --merge
 echo "Merged PR #$pr. Remove its worktree: git worktree remove .claude/worktrees/<name>"

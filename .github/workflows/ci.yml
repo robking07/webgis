@@ -1,10 +1,13 @@
 # Checks every PR runs (handbook §3, D-168). scripts/merge-pr.sh refuses to merge while
-# any of these is red. Skipped jobs (docs-only PRs) count as passing there.
+# any of these is red. Skipped jobs (docs-only PRs) count as passing there, except that a
+# code PR must have click-through and Lighthouse passed (they run on ready PRs only).
 name: CI
 
 on:
   pull_request:
     branches: [main]
+    # ready_for_review: marking a draft ready runs the heavy checks.
+    types: [opened, synchronize, reopened, ready_for_review]
 
 # A new push to the same PR cancels the run it supersedes (saves CI minutes).
 concurrency:
@@ -95,6 +98,8 @@ jobs:
   click-through:
     name: click-through
     needs: build
+    # Heavy (~10 min): ready PRs only, not every draft push.
+    if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -136,6 +141,8 @@ jobs:
   lighthouse:
     name: speed + accessibility
     needs: build
+    # Ready PRs only, like click-through.
+    if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:

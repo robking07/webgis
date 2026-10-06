@@ -24,7 +24,7 @@ rows into one summary line. Roadmap: `docs/roadmap.md`. Rules: `docs/handbook.md
 | G2 dependency alerts | #51 | #57 | S / ~100k | 55k | 0.55x | Sonnet / medium | 2026-10-05 |
 | F6 agent roles | #59 | #60 | S / ~100k | 70k | 0.70x | Sonnet / medium | 2026-10-05 |
 | 1.5 link previews | #37 | #65 | S / ~100k | 116k | 1.16x | Sonnet / medium | 2026-10-05 |
-| F2 checks in GitHub CI | #61 | #68 | M / ~275k | tbd | – | Opus / low | 2026-10-05 |
+| F2 checks in GitHub CI | #61 | #68 | M / ~275k | ~150k | 0.55x | Opus / low | 2026-10-05 |
 
 ## Lessons
 
@@ -45,7 +45,9 @@ One line per task. These feed the project kit (#53).
   `npm view <pkg> versions` before trying a bump or override.
 - **F6:** Claude Code agent frontmatter supports `model` and `effort`, so routing lives in the agent files, not prose. The lead's brief can still override the model per task (opus for M/L).
 - **F2:** the e2e suite passes locally but one fade check flaked on the slower CI runner; wait
-  for the state you assert (CSS transitions done), not a fixed delay. A full CI run is ~15 min.
+  for the state you assert (CSS transitions done), not a fixed delay. Heavy checks (~10 of a
+  run's ~14 min) now run only on ready PRs; mark the PR ready before merging. A PR that
+  conflicts with main gets no CI run at all, so check mergeability when CI seems silent.
 
 ## How to update
 
