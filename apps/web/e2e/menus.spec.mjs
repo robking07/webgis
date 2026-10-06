@@ -67,6 +67,8 @@ async function open(vp, path, { scheme = "light", ready = true } = {}) {
   });
   const page = await ctx.newPage();
   page.errors = [];
+  page.requests = [];
+  page.on("request", (r) => page.requests.push(r.url()));
   page.on("pageerror", (e) => page.errors.push(`pageerror: ${e.message}`));
   page.on("console", (m) => {
     if (m.type() !== "error") return;
@@ -498,6 +500,33 @@ test('details with no links show no "Learn more" heading', async (o) => {
   await wait(800);
   expect(!/Learn more/i.test(await det.innerText()), "an empty Learn more heading rendered");
 });
+
+/** State and county details come from static files (S1, D-198): no request may reach the database. */
+const dbCalls = (page) => page.requests.filter((u) => /supabase\.co|\/rest\/v1\//.test(u));
+for (const vp of ["phone", "laptop"]) {
+  test(`${vp} static details: state and county clicks and place pages never call the database`, async (o) => {
+    for (const [path, at, want] of [["/map?d=median_household_income&lv=county&at=-93.4752,45.0061,8", HENNEPIN, "Hennepin"],
+      ["/map?d=median_household_income&lv=state&at=-94.32,46.22,5", [-94.32, 46.22], "Minnesota"]]) {
+      const { page } = await o(vp, path);
+      await immerse(page);
+      await tapLonLat(page, ...at);
+      const det = page.locator('section[aria-label^="Details for"]');
+      await det.waitFor();
+      expect((await det.getAttribute("aria-label")).includes(want), `details opened for ${await det.getAttribute("aria-label")}, not ${want}`);
+      await page.waitForFunction(() => /\$\d/.test(document.querySelector('section[aria-label^="Details for"]')?.innerText ?? ""), null, { timeout: 15000 });
+      expect(page.requests.some((u) => u.includes("/details/27.json")), "no request for the state's details file");
+      expect(!dbCalls(page).length, `database calls: ${dbCalls(page).join(", ")}`);
+    }
+    for (const [geoid, name] of [["27053", "Hennepin County, MN"], ["27", "Minnesota"]]) {
+      const { page } = await o(vp, `/place/${geoid}`, { ready: false });
+      await page.locator("main h1").waitFor({ timeout: 20000 });
+      expect((await page.locator("main h1").innerText()) === name, `place ${geoid}: heading "${await page.locator("main h1").innerText()}"`);
+      const meta = await page.locator("main header p").last().innerText();
+      expect(/^[1-9]\d* datasets · [\d,.]+ sq mi of land$/.test(meta), `place ${geoid}: "${meta}"`);
+      expect(!dbCalls(page).length, `database calls: ${dbCalls(page).join(", ")}`);
+    }
+  });
+}
 
 for (const vp of ["phone", "laptop", "monitor"]) {
   test(`${vp} zoom levels: block groups never draw at the national view, even pinned`, async (o) => {

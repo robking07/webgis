@@ -1,4 +1,4 @@
-// State and county click details as static files (D-<n>, S1): the details panel and place pages
+// State and county click details as static files (D-198, S1): the details panel and place pages
 // read these instead of querying the database from every visitor's browser.
 //   npm run ingest -- details             write data/tiles/details/<state fips>.json from the database
 //   npm run ingest -- publish-details     upload them to R2 (details/<state fips>.json, gzip-encoded)
