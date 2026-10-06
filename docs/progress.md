@@ -6,11 +6,11 @@ rows into one summary line. Roadmap: `docs/roadmap.md`. Rules: `docs/handbook.md
 ## Now
 
 - **Phase:** 0 · Foundations.
-- **Wave 2 (running in parallel):** F7 prune CLAUDE.md (#54), F8 progress log (#55), G2 dependency
-  alerts (#51). That is three workers, one over the roadmap's two-worker limit, on Robbie's say-so
-  (2026-10-05, "spin up as much work as you can").
-- **Next:** F6 agent roles once F7 + F8 merge. Then wave 3: F2 (CI checks) + 1.5, then S3.
-  Then F3 + 1.4 and the Phase 0 gate (F11 project kit, #53, lands there).
+- **Wave 2 done** (F7, F8, G2, F6 all merged 2026-10-05, all under budget). Ran three workers at
+  once on Robbie's say-so ("spin up as much work as you can"), one over the roadmap's limit.
+- **Wave 3 running:** F2 CI checks (#61, M, Opus) and 1.5 link previews (#37, S, Sonnet).
+- **Next:** S3 (cost alerts, uptime email, browser error reporting), then F3 + 1.4 and the Phase 0
+  gate (F11 project kit, #53, lands there).
 
 ## Finished
 
@@ -21,7 +21,8 @@ rows into one summary line. Roadmap: `docs/roadmap.md`. Rules: `docs/handbook.md
 | F4 screenshot + review-page tools | #49 | #52 | S / ~100k | 78k | 0.78x | Sonnet / medium | 2026-10-05 |
 | F8 progress log | #55 | #56 | S / ~100k | 55k | 0.55x | Sonnet / medium | 2026-10-05 |
 | F7 trim CLAUDE.md | #54 | #58 | S / ~100k | 62k | 0.62x | Sonnet / medium | 2026-10-05 |
-| F6 agent roles | #59 | tbd | S / ~100k | tbd | tbd | Sonnet / medium | 2026-10-05 |
+| G2 dependency alerts | #51 | #57 | S / ~100k | 55k | 0.55x | Sonnet / medium | 2026-10-05 |
+| F6 agent roles | #59 | #60 | S / ~100k | 70k | 0.70x | Sonnet / medium | 2026-10-05 |
 
 ## Lessons
 
@@ -37,6 +38,8 @@ One line per task. These feed the project kit (#53).
   docs-only briefs should skip `npm run build` (CI and the Vercel preview build it anyway).
 - **F7:** CLAUDE.md went from 55 to 39 lines; it now points to docs instead of repeating them.
   Deleting files means checking lock/manifest files too (`skills-lock.json`).
+- **G2:** an alert can have no patched version (braces 3.0.3). Check `first_patched_version` and
+  `npm view <pkg> versions` before trying a bump or override.
 - **F6:** Claude Code agent frontmatter supports `model` and `effort`, so routing lives in the agent files, not prose. The lead's brief can still override the model per task (opus for M/L).
 
 ## How to update
