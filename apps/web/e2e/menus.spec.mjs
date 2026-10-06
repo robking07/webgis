@@ -480,7 +480,7 @@ test("no Census Reporter link for any ACS dataset (registry)", async (o) => {
   expect(keep.length === 0, `lost their Learn more links: ${keep.join(", ")}`);
 });
 
-test("splash at /, old map links forward to /map (D-1xx)", async (o) => {
+test("splash at /, old map links forward to /map (D-193)", async (o) => {
   const { page: splash } = await o("phone", "/", { ready: false });
   expect((await splash.locator("main").innerText()).trim() === "which map?", "splash shows only 'which map?'");
   expect((await splash.locator("a, nav, header, footer").count()) === 0, "splash has no links, nav, header or footer");

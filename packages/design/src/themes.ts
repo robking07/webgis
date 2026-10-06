@@ -21,7 +21,7 @@ export interface Theme {
     danger: string;
     /** Bread in the Mapwich logo (the map layer between the slices is `accent`). */
     brandBread: string;
-    /** Splash page at mapwich.org (D-1xx): always black with light ink, in both themes (Robbie's call). */
+    /** Splash page at mapwich.org (D-193): always black with light ink, in both themes (Robbie's call). */
     splashBg: string;
     splashInk: string;
     splashTagline: string;

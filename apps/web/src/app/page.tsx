@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { LogoMark } from "@/components/Logo";
 
-// The splash page (D-1xx): the logo on black and a tagline, nothing else. The only indexable page.
+// The splash page (D-193): the logo on black and a tagline, nothing else. The only indexable page.
 // Title and share card come from the root layout.
 export const metadata: Metadata = { robots: { index: true, follow: false } };
 
