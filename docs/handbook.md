@@ -97,3 +97,18 @@ You are a worker, not the decision maker. Don't ask Robbie anything; don't merge
 
 Workers never merge. The lead merges, only with `bash scripts/merge-pr.sh <n>` (it refuses if the
 branch is behind `main` or a check is red), then removes the worktree and local branch.
+
+## 6. Dependency alerts and Dependabot PRs
+
+Dependabot (`.github/dependabot.yml`) opens a few grouped PRs each week for npm and GitHub Actions,
+and GitHub raises security alerts separately.
+
+- The lead reviews a Dependabot PR like any worker PR: checks must be green, then merge with
+  `bash scripts/merge-pr.sh <n>`.
+- Triage an alert by where the package runs. One that ships to browsers or runs on the server
+  (`npm ls <pkg>` shows it under a runtime dependency) comes first. A build-time-only one (dev tools,
+  `shadcn`, bundlers) is lower priority.
+- Fix by updating the parent package; use a root `overrides` entry only if no parent release fixes it.
+- If no patched version exists, don't dismiss the alert yourself; report it. The lead decides: a
+  build-time-only alert stays open (Dependabot opens the fix PR once a patch ships); a runtime one
+  gets a workaround or a written dismissal reason.

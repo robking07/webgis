@@ -21,6 +21,7 @@ rows into one summary line. Roadmap: `docs/roadmap.md`. Rules: `docs/handbook.md
 | F4 screenshot + review-page tools | #49 | #52 | S / ~100k | 78k | 0.78x | Sonnet / medium | 2026-10-05 |
 | F8 progress log | #55 | #56 | S / ~100k | 55k | 0.55x | Sonnet / medium | 2026-10-05 |
 | F7 trim CLAUDE.md | #54 | #58 | S / ~100k | 62k | 0.62x | Sonnet / medium | 2026-10-05 |
+| G2 dependency alerts | #51 | #57 | S / ~100k | 55k | 0.55x | Sonnet / medium | 2026-10-05 |
 
 ## Lessons
 
@@ -36,6 +37,8 @@ One line per task. These feed the project kit (#53).
   docs-only briefs should skip `npm run build` (CI and the Vercel preview build it anyway).
 - **F7:** CLAUDE.md went from 55 to 39 lines; it now points to docs instead of repeating them.
   Deleting files means checking lock/manifest files too (`skills-lock.json`).
+- **G2:** an alert can have no patched version (braces 3.0.3). Check `first_patched_version` and
+  `npm view <pkg> versions` before trying a bump or override.
 
 ## How to update
 
