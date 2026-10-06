@@ -21,20 +21,6 @@ import { ingestCejst } from "./cejst.ts";
 import { ingestDdp287g } from "./ddp287g.ts";
 import { buildLabelMask } from "./label-mask.ts";
 import { tractsOut } from "./tracts.ts";
-import { execFileSync } from "node:child_process";
-import { existsSync } from "node:fs";
-import { dirname, join } from "node:path";
-
-// In a worktree (.claude/worktrees/<name>) there's no .env.local of its own: fall back to the main
-// checkout's, so ingest steps can run from a task branch. Never printed.
-if (!process.env.SUPABASE_DB_URL) {
-  try {
-    const common = execFileSync("git", ["rev-parse", "--path-format=absolute", "--git-common-dir"], { encoding: "utf8" }).trim();
-    const main = join(dirname(common), ".env.local");
-    if (existsSync(main)) process.loadEnvFile(main);
-  } catch { /* not a git checkout: the step reports what's missing */ }
-}
-
 const [step, ...rest] = process.argv.slice(2);
 const only = rest.length ? rest : undefined;
 const steps: Record<string, () => Promise<void> | void> = {

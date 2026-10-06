@@ -38,8 +38,8 @@ that is the first thing to fail on the free tier, and a paused database broke th
 
 **Not changed.** Tract place pages still read tract geography (name, centroid, land area) from
 Supabase; the details panel never needed it. Supabase tables, migrations and the keep-alive cron
-are untouched. `ingest run` now also loads the main checkout's `.env.local` when run from a worktree
-that has none (the variables are never printed).
+are untouched. (A fallback that let `ingest run` load the main checkout's secrets from a worktree was
+taken out before merge by the lead; whether workers may do that is a separate question, filed as its own issue.)
 
 **Checked.** Live mapwich.org and this build gave identical text for `/place/27053`, `/place/27` and
 the Hennepin and Minnesota details panels at phone and laptop sizes (58 datasets, every value and
