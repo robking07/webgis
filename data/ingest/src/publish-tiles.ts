@@ -6,6 +6,7 @@ import { join } from "node:path";
 import { S3Client, PutBucketCorsCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { Upload } from "@aws-sdk/lib-storage";
 import { log, TILES } from "./util.ts";
+import { DETAILS_DIR, detailFiles } from "./details.ts";
 
 function r2() {
   const { R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_BUCKET } = process.env;
@@ -58,4 +59,18 @@ export async function publishValues(only?: string[]) {
     }
   }
   log("r2", `uploaded ${n} value files (${(bytes / 1e6).toFixed(1)} MB gzipped)`);
+}
+
+/** Upload the state/county click details (data/tiles/details, from `ingest details`), gzip-encoded. */
+export async function publishDetails() {
+  const { s3, bucket } = r2();
+  if (!existsSync(DETAILS_DIR)) throw new Error("no data/tiles/details; run `ingest details` first");
+  let n = 0, bytes = 0;
+  for (const f of detailFiles()) {
+    const body = gzipSync(readFileSync(join(DETAILS_DIR, f)));
+    // Short cache: a re-run should reach visitors within the hour.
+    await s3.send(new PutObjectCommand({ Bucket: bucket, Key: `details/${f}`, Body: body, ContentType: "application/json", ContentEncoding: "gzip", CacheControl: "public, max-age=3600" }));
+    n++; bytes += body.length;
+  }
+  log("r2", `uploaded ${n} detail files (${(bytes / 1e6).toFixed(2)} MB gzipped)`);
 }
