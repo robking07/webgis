@@ -25,7 +25,7 @@ export function CsvDownload({ dataset, levels }: { dataset: Dataset; levels: Geo
 
   return (
     <section aria-labelledby="download" className="mb-8">
-      <h2 id="download" className="mb-2 text-base font-semibold">Download the numbers</h2>
+      <h2 id="download" className="mb-2 text-base font-semibold">Download</h2>
       <ul className="flex flex-wrap gap-2">
         {levels.map((l) => (
           <li key={l}>
