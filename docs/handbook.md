@@ -12,7 +12,7 @@ Full build spec: `docs/SPEC.md`. Project rules: `CLAUDE.md`.
   If a merged PR added a dependency and the build says a module is missing, run `npm ci` again.
 - **Secrets** live in `.env.local` at the repo root. It is git-ignored. **Never open, print or
   commit it, and never pass a secret on a command line.** The guardrails hook blocks reading it.
-  There is no `.env.example` in the repo, so these are the names the code reads (names only):
+  `.env.example` lists these names (names only, empty values):
   - Site: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `NEXT_PUBLIC_TILES_BASE_URL`, `CRON_SECRET`
   - Ingest (Robbie's machine only): `SUPABASE_DB_URL`, `CENSUS_API_KEY`, `ANTHROPIC_API_KEY`,
     `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET`

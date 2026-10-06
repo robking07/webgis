@@ -136,5 +136,5 @@ Gaps found:
 | Vercel project settings (Root Directory, framework) and the Supabase project ref are written nowhere in the repo | Follow-up for Robbie: read them from the dashboards once and add to section 6 |
 | No backup or restore path for Supabase (free tier has none); restoring means re-running every ingest step | Follow-up (decide whether a periodic `pg_dump` is worth it) |
 | Whether `ingest -- all` covers every registry dataset was not checked | Follow-up |
-| No `.env.example`; a names-only template would make setup safer | Follow-up (small PR) |
+| No `.env.example`; a names-only template would make setup safer | Fixed (names-only `.env.example` added) |
 | Handbook section 7 had no pointer to this runbook | Fixed |

@@ -5,6 +5,8 @@ description: Add a dataset to webgis via the registry: write the YAML entry, reu
 
 # Add a dataset
 
+**Data pause (Robbie, 2026-10-05):** until S2 moves data files to R2, don't add or refresh JSON under `apps/web/public/data`; stop and report instead.
+
 The rule from CLAUDE.md: **adding a dataset = registry entry + ingest script only. No UI code.** The map, browser, legend, popups, URL state and Weird Insights all read the registry.
 
 ## 1. Check the source before writing anything (SPEC §10)
@@ -47,4 +49,4 @@ Read the ingest log: row counts, nulls, and "geoids not in geographies (dropped)
 
 ## 4. Ship
 
-`npm run build` locally (it runs the design check), then commit and `git push` to `main`: Vercel builds and deploys production automatically (D-23). Commit the regenerated `apps/web/public/data/values/**` and `apps/web/src/generated/*.json`, because the Vercel build can't reach the database. For a feature layer, run `npm run ingest -- publish-tiles` first so its PMTiles are on R2. Fallback: `vercel deploy --prod -y` with `VERCEL_ORG_ID`/`VERCEL_PROJECT_ID` from `.env.local` (D-18).
+Work in a worktree on branch `data/<dataset-id>` from the latest `origin/main` (see `docs/branching.md`); never commit to `main`. Run `npm run build` locally (it runs the design check) and the other checks in `docs/handbook.md`. Commit the regenerated `apps/web/public/data/values/**` and `apps/web/src/generated/*.json`, because the Vercel build can't reach the database. For a feature layer, run `npm run ingest -- publish-tiles` first so its PMTiles are on R2. Open a draft PR with "Closes #N" right after the first commit. The lead merges it with `bash scripts/merge-pr.sh <n>`, and merging deploys production (D-23). Don't deploy by hand.
