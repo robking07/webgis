@@ -1,0 +1,167 @@
+# Checks every PR runs (handbook §3, D-<PR+100>). scripts/merge-pr.sh refuses to merge while
+# any of these is red. Skipped jobs (docs-only PRs) count as passing there.
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+
+# A new push to the same PR cancels the run it supersedes (saves CI minutes).
+concurrency:
+  group: ci-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  # Public values only. Supabase is optional: without it the app builds and runs with
+  # county/state detail values empty (lib/supabase.ts returns null).
+  NEXT_PUBLIC_TILES_BASE_URL: https://tiles.mapwich.org
+  NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+  NEXT_TELEMETRY_DISABLED: 1
+
+jobs:
+  changes:
+    name: what changed
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      code: ${{ steps.diff.outputs.code }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - id: diff
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          # Docs-only = every changed file is under docs/ or .claude/, or a top-level *.md.
+          # Anything else (including apps/web/content/*.md, which the build reads) runs it all.
+          other=$(git diff --name-only "$BASE...$HEAD" | grep -Ev '^(docs/|\.claude/)|^[^/]+\.md$' || true)
+          if [ -n "$other" ]; then echo "code=true" >> "$GITHUB_OUTPUT"; else echo "code=false" >> "$GITHUB_OUTPUT"; fi
+          echo "Code-affecting files:"; echo "${other:-(none: docs-only, build/e2e/Lighthouse skipped)}"
+
+  build:
+    name: build
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      # Hand the production build to click-through and Lighthouse so they don't rebuild.
+      - name: Pack build output
+        run: tar -czf build.tgz --exclude=apps/web/.next/cache apps/web/.next apps/web/public/maplibre
+      - uses: actions/upload-artifact@v4
+        with:
+          name: web-build
+          path: build.tgz
+          retention-days: 1
+
+  lint:
+    name: lint (report-only)
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      # Non-blocking until roadmap task F3 clears the existing problems; then drop `|| …`.
+      - name: ESLint (apps/web)
+        run: |
+          set -o pipefail
+          if npm run lint -w web 2>&1 | tee lint.log; then
+            echo "Lint: clean" >> "$GITHUB_STEP_SUMMARY"
+          else
+            summary=$(grep -E '✖ [0-9]+ problems?' lint.log | tail -1 || true)
+            echo "::warning title=Lint (report-only)::${summary:-ESLint reported problems}. Not blocking until F3."
+            echo "Lint (report-only): ${summary:-ESLint reported problems}" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+  click-through:
+    name: click-through
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - uses: actions/download-artifact@v4
+        with:
+          name: web-build
+      - run: tar -xzf build.tgz
+      - name: Install Chromium
+        run: npx playwright-core install --with-deps chromium
+      # Starts `next start` on the production build and runs every test (apps/web/e2e/README.md).
+      - run: npm run test:e2e -w web
+
+  secret-scan:
+    name: secret scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GITLEAKS_VERSION: 8.30.1
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install gitleaks
+        run: curl -sSfL "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" | tar -xz -C /usr/local/bin gitleaks
+      - name: Scan this PR's commits
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        # --redact keeps any real secret out of the log. Allowlist (only for proven false
+        # positives) goes in .gitleaks.toml, which gitleaks reads automatically.
+        run: gitleaks git --log-opts="$BASE..$HEAD" --redact --verbose --no-banner --exit-code 1 .
+
+  lighthouse:
+    name: speed + accessibility
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - uses: actions/download-artifact@v4
+        with:
+          name: web-build
+      - run: tar -xzf build.tgz
+      # Local production server (lighthouserc.json starts it); Vercel previews sit behind login.
+      # Accessibility < 0.9 fails; performance, best practices and SEO only warn for now.
+      - name: Lighthouse CI
+        env:
+          CHROME_PATH: /usr/bin/google-chrome
+        run: npx --yes @lhci/cli@0.15.1 autorun
+      - name: Scores
+        if: always()
+        run: node scripts/lighthouse-summary.mjs .lighthouseci >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lighthouse-reports
+          path: .lighthouseci
+          include-hidden-files: true
+          retention-days: 7
