@@ -19,6 +19,7 @@ rows into one summary line. Roadmap: `docs/roadmap.md`. Rules: `docs/handbook.md
 | G1 agent guardrails | #46 | #47 | S / ~100k | 163k | 1.6x | Sonnet / medium | 2026-10-05 |
 | F1 handbook + architecture map | #48 | #50 | S / ~100k | 78k | 0.78x | Sonnet / medium | 2026-10-05 |
 | F4 screenshot + review-page tools | #49 | #52 | S / ~100k | 78k | 0.78x | Sonnet / medium | 2026-10-05 |
+| F8 progress log | #55 | #56 | S / ~100k | 55k | 0.55x | Sonnet / medium | 2026-10-05 |
 
 ## Lessons
 
@@ -30,7 +31,8 @@ One line per task. These feed the project kit (#53).
 - **Merge script:** `scripts/merge-pr.sh` can fail on its first run (a missing local commit, or a
   GitHub 502 "merge in progress"). Run `git fetch` and retry before assuming something is wrong.
 - **F8:** a log only helps if workers actually update it, so the handbook now makes it part of
-  setup (read first) and reporting (update last).
+  setup (read first) and reporting (update last). A fresh worktree has no `node_modules`, so
+  docs-only briefs should skip `npm run build` (CI and the Vercel preview build it anyway).
 
 ## How to update
 
