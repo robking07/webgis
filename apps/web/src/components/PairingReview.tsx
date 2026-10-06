@@ -118,7 +118,10 @@ function Queue({ session, reviews, setReviews }: { session: Session; reviews: Ma
   const existing = card ? reviews.get(card.id) : undefined;
   const changed = card ? statusOf(card, reviews).changed : false;
 
-  useEffect(() => { setNote(existing?.note ?? ""); setErr(null); }, [card?.id, existing?.note]);
+  // Reset the note/error when the card or its saved note changes (adjusted during render, not in an effect).
+  const noteKey = `${card?.id}\n${existing?.note}`;
+  const [seenNoteKey, setSeenNoteKey] = useState(noteKey);
+  if (seenNoteKey !== noteKey) { setSeenNoteKey(noteKey); setNote(existing?.note ?? ""); setErr(null); }
 
   const decide = useCallback(async (verdict: Verdict) => {
     if (!card || saving) return;

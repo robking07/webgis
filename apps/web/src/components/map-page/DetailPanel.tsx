@@ -38,10 +38,12 @@ interface DetailProps {
 /** The state and county a place sits inside (from its GEOID), coarse first. */
 function useInside(geoid: string, level: string) {
   const [inside, setInside] = useState<PlaceHit[]>([]);
+  // Clear the list when the place changes (state adjusted during render, not in an effect).
+  const [seen, setSeen] = useState({ geoid, level });
+  if (seen.geoid !== geoid || seen.level !== level) { setSeen({ geoid, level }); setInside([]); }
   useEffect(() => {
     let live = true;
     const ids = level === "state" ? [] : level === "county" ? [geoid.slice(0, 2)] : [geoid.slice(0, 2), geoid.slice(0, 5)];
-    setInside([]);
     if (!ids.length) return;
     loadPlaceIndex().then((rows) => live && setInside(ids.map((id) => placeByGeoid(rows, id)).filter((p): p is PlaceHit => !!p)), () => {});
     return () => { live = false; };
@@ -92,9 +94,12 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
   // files (block groups, with margins of error from side files) or the tiles (blocks); there's no
   // all-datasets list or place profile below tracts.
   const staticOnly = STATIC_ONLY_LEVELS.has(info.level);
+  // Back to "loading" whenever any input of the load below changes (adjusted during render, not in an effect).
+  const loadDeps = [info.geoid, info.level, info.props, staticOnly, primary, secondary, xv, yv];
+  const [seenDeps, setSeenDeps] = useState(loadDeps);
+  if (seenDeps.some((v, i) => v !== loadDeps[i])) { setSeenDeps(loadDeps); setRows(null); setErr(null); }
   useEffect(() => {
     let live = true;
-    setRows(null); setErr(null);
     const load = staticOnly
       ? Promise.all([primary, secondary].filter((d): d is Dataset => !!d).map(async (d, i) => {
           const inTile = TILE_VALUE_LEVELS.has(info.level);

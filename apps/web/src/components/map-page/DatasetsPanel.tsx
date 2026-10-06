@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { X } from "lucide-react";
 import { DatasetBrowser } from "../DatasetBrowser";
 
@@ -17,7 +18,7 @@ export function DatasetsPanel({ primary, secondary, onPrimary, onSecondary, onCl
         <button type="button" onClick={onClose} aria-label="Close datasets" className="rounded p-1 text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring"><X className="size-4" /></button>
       </div>
       <DatasetBrowser primary={primary} secondary={secondary} onPrimary={onPrimary} onSecondary={onSecondary} />
-      <a href="/data" className="text-xs text-primary hover:underline">Browse the full data directory →</a>
+      <Link href="/data" className="text-xs text-primary hover:underline">Browse the full data directory →</Link>
     </section>
   );
 }
