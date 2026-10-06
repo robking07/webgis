@@ -18,6 +18,10 @@
     "registry:validate": "npm run validate -w @webgis/ingest",
     "ingest": "npm run ingest -w @webgis/ingest --",
     "db:migrate": "bash scripts/db-push.sh",
+    "test": "vitest run",
     "test:guardrails": "node scripts/test-guardrails.mjs"
+  },
+  "devDependencies": {
+    "vitest": "^5.0.3"
   }
 }

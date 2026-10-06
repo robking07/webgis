@@ -18,8 +18,8 @@ permissions:
   contents: read
 
 env:
-  # Public values only. Supabase is optional: without it the app builds and runs with
-  # county/state detail values empty (lib/supabase.ts returns null).
+  # Public values only. Supabase is optional: place details come from static files on the tiles
+  # host (lib/details.ts); without it only tract geography and reviewer pages go empty.
   NEXT_PUBLIC_TILES_BASE_URL: https://tiles.mapwich.org
   NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
   NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
@@ -85,6 +85,9 @@ jobs:
       - run: npm ci
       - name: ESLint (apps/web)
         run: npm run lint -w web
+      # Vitest (S1), a few seconds; shares this job's npm ci instead of starting another runner.
+      - name: Unit tests (npm test)
+        run: npm test
 
   click-through:
     name: click-through

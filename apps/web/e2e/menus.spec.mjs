@@ -67,6 +67,8 @@ async function open(vp, path, { scheme = "light", ready = true } = {}) {
   });
   const page = await ctx.newPage();
   page.errors = [];
+  page.requests = [];
+  page.on("request", (r) => page.requests.push(r.url()));
   page.on("pageerror", (e) => page.errors.push(`pageerror: ${e.message}`));
   page.on("console", (m) => {
     if (m.type() !== "error") return;
@@ -496,6 +498,38 @@ for (const vp of ["laptop", "phone"]) {
   });
 }
 
+// Issue #99: the hover (and the click) pick the level being drawn, not a finer layer queried under it.
+const NEBRASKA = [-99.8, 41.5];
+async function pointerAt(page, lon, lat) {
+  await page.evaluate(([lon, lat]) => window.__wgMap.jumpTo({ center: [lon, lat] }), [lon, lat]);
+  await mapIdle(page);
+  const [x, y] = await page.evaluate(([lon, lat]) => { const p = window.__wgMap.project([lon, lat]); return [p.x, p.y]; }, [lon, lat]);
+  return [x, y];
+}
+const hoverCard = (page) => page.locator("div.pointer-events-none.absolute.z-30");
+for (const vp of ["laptop", "phone"]) {
+  test(`${vp} hover/tap follows the drawn level: state at national zoom, county once zoomed in`, async (o) => {
+    const { page } = await o(vp, "/map?d=pct_carpool");
+    const z0 = await page.evaluate(() => window.__wgMap.getZoom());
+    const state0 = await page.evaluate(() => window.__wgMap.getStyle().layers.find((l) => l.id === "county-fill")?.minzoom);
+    expect(z0 < state0, `expected a national view below the county band (z${z0} vs ${state0})`);
+    const [x, y] = await pointerAt(page, ...NEBRASKA);
+    if (page.isPhone) await page.touchscreen.tap(x, y); else { await page.mouse.move(x - 5, y - 5); await page.mouse.move(x, y, { steps: 4 }); }
+    const card = page.isPhone ? page.locator('section[aria-label^="Details for"]') : hoverCard(page).first();
+    await card.waitFor({ timeout: 8000 });
+    let txt = await card.innerText();
+    expect(/Nebraska/.test(txt) && /State/.test(txt) && !/County/.test(txt), `national zoom reported: ${txt.replace(/\n/g, " | ")}`);
+    // Zoom in until counties draw: the same pointer now reports a county.
+    await page.evaluate(([lon, lat]) => window.__wgMap.jumpTo({ center: [lon, lat], zoom: 6.5 }), NEBRASKA);
+    await mapIdle(page);
+    const [x2, y2] = await page.evaluate(([lon, lat]) => { const p = window.__wgMap.project([lon, lat]); return [p.x, p.y]; }, NEBRASKA);
+    if (page.isPhone) await page.touchscreen.tap(x2, y2); else { await page.mouse.move(x2 - 5, y2 - 5); await page.mouse.move(x2, y2, { steps: 4 }); }
+    await wait(900);
+    txt = await card.innerText();
+    expect(/County/.test(txt), `county zoom reported: ${txt.replace(/\n/g, " | ")}`);
+  });
+}
+
 test("no Census Reporter link for any ACS dataset (registry)", async (o) => {
   void o;
   const { default: entries } = await import(join(app, "src/generated/registry.json"), { with: { type: "json" } });
@@ -523,6 +557,33 @@ test('details with no links show no "Learn more" heading', async (o) => {
   await wait(800);
   expect(!/Learn more/i.test(await det.innerText()), "an empty Learn more heading rendered");
 });
+
+/** State and county details come from static files (S1, D-198): no request may reach the database. */
+const dbCalls = (page) => page.requests.filter((u) => /supabase\.co|\/rest\/v1\//.test(u));
+for (const vp of ["phone", "laptop"]) {
+  test(`${vp} static details: state and county clicks and place pages never call the database`, async (o) => {
+    for (const [path, at, want] of [["/map?d=median_household_income&lv=county&at=-93.4752,45.0061,8", HENNEPIN, "Hennepin"],
+      ["/map?d=median_household_income&lv=state&at=-94.32,46.22,5", [-94.32, 46.22], "Minnesota"]]) {
+      const { page } = await o(vp, path);
+      await immerse(page);
+      await tapLonLat(page, ...at);
+      const det = page.locator('section[aria-label^="Details for"]');
+      await det.waitFor();
+      expect((await det.getAttribute("aria-label")).includes(want), `details opened for ${await det.getAttribute("aria-label")}, not ${want}`);
+      await page.waitForFunction(() => /\$\d/.test(document.querySelector('section[aria-label^="Details for"]')?.innerText ?? ""), null, { timeout: 15000 });
+      expect(page.requests.some((u) => u.includes("/details/27.json")), "no request for the state's details file");
+      expect(!dbCalls(page).length, `database calls: ${dbCalls(page).join(", ")}`);
+    }
+    for (const [geoid, name] of [["27053", "Hennepin County, MN"], ["27", "Minnesota"]]) {
+      const { page } = await o(vp, `/place/${geoid}`, { ready: false });
+      await page.locator("main h1").waitFor({ timeout: 20000 });
+      expect((await page.locator("main h1").innerText()) === name, `place ${geoid}: heading "${await page.locator("main h1").innerText()}"`);
+      const meta = await page.locator("main header p").last().innerText();
+      expect(/^[1-9]\d* datasets · [\d,.]+ sq mi of land$/.test(meta), `place ${geoid}: "${meta}"`);
+      expect(!dbCalls(page).length, `database calls: ${dbCalls(page).join(", ")}`);
+    }
+  });
+}
 
 for (const vp of ["phone", "laptop", "monitor"]) {
   test(`${vp} zoom levels: block groups never draw at the national view, even pinned`, async (o) => {
