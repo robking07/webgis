@@ -47,6 +47,7 @@ One line per task. These feed the project kit (#53).
 - **G2:** an alert can have no patched version (braces 3.0.3). Check `first_patched_version` and
   `npm view <pkg> versions` before trying a bump or override.
 - **F6:** Claude Code agent frontmatter supports `model` and `effort`, so routing lives in the agent files, not prose. The lead's brief can still override the model per task (opus for M/L).
+- **Decision files:** two workers (#65, #75) wrote `# D-1xx: Title`; the check wants `# D-1xx · Title`. Briefs now give the exact first line; run `PR_NUMBER=<n> node scripts/check-decisions.mjs` before pushing.
 
 ## How to update
 

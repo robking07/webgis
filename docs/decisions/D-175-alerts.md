@@ -1,4 +1,4 @@
-# D-175: Alerts, uptime and browser error reporting (S3, #73, PR #75)
+# D-175 · Alerts, uptime and browser error reporting (S3, #73, PR #75)
 
 Date: 2026-10-05. Decided by Robbie (Sentry) and the lead (the rest).
 
