@@ -112,3 +112,29 @@ and GitHub raises security alerts separately.
 - If no patched version exists, don't dismiss the alert yourself; report it. The lead decides: a
   build-time-only alert stays open (Dependabot opens the fix PR once a patch ships); a runtime one
   gets a workaround or a written dismissal reason.
+
+## 7. Alerts: where they go
+
+| What | Watched by | Alert goes to |
+| --- | --- | --- |
+| Browser errors visitors hit | Sentry (free Developer plan), client side only | Robbie's email (Sentry default issue alerts); the lead reads the issue list |
+| mapwich.org not loading | Sentry Uptime Monitoring (1 monitor is included free on every plan; checks about every minute, an issue opens after 3 failures from different regions) | Robbie's email |
+| Cloudflare R2 bill (tiles) | Cloudflare spend notification | Robbie's email |
+| Vercel Hobby, Supabase free | Nothing to set: both stop at their hard limits and can't bill | n/a |
+
+Error reporting is off until `NEXT_PUBLIC_SENTRY_DSN` is set; with it unset (CI, local dev) the code
+does nothing and no Sentry code ships to browsers. It is errors only: no session replay, no
+performance tracing, no user context, no cookies, headers or query strings. Source maps are not
+uploaded, so stack traces show minified code; uploading them later needs a Sentry auth token
+secret. There is deliberately no scheduled GitHub Action for uptime: the repo is private and a
+15-minute check would use about 2,900 of the 2,000 free Actions minutes a month.
+
+### Robbie's setup checklist
+
+1. Create a free Sentry account (sentry.io) and a Next.js project named `mapwich`.
+2. Put the project's DSN in Vercel as `NEXT_PUBLIC_SENTRY_DSN` (Production and Preview) and in
+   `.env.local`. Redeploy; the value is read at build time.
+3. Sentry project settings, Security and Privacy: turn on **Prevent Storing of IP Addresses**.
+4. Sentry, Alerts: confirm an issue alert emails you on new issues.
+5. Sentry, Uptime Monitors: add one monitor for `https://mapwich.org` with email alerts to you.
+6. Cloudflare dashboard, Billing: set a spend notification for R2 (for example $5).
