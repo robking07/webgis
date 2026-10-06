@@ -71,10 +71,10 @@ At most two workers, never on the same files. Each wave starts when the one befo
 1. G1 guardrails (F5 starts), then F1 + F4
 2. F7 + F8, then F6
 3. F2 + 1.5, then S3
-4. F3 + 1.4, then the Phase 0 gate
-5. 1.3 + 1.1
-6. 1.2 + 1.6, then 1.8
-7. S1 + 1.7, then S2
+4. F3 + 1.4, then the Phase 0 gate (passed with conditions 2026-10-05; Phase 1 reordered after the review lead's check)
+5. S1 (+ unit-test runner), then S2 (no new data files in git until S2; Robbie, 2026-10-05)
+6. 1.3 + 1.1 (1.1 after S1: same files)
+7. 1.2, then 1.6 + 1.8, then 1.7
 8. The Phase 1 gate
 9. Phase 2 in the order above
 10. Phase 3

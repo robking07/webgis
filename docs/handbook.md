@@ -111,7 +111,7 @@ You are a worker, not the decision maker. Don't ask Robbie anything; don't merge
      that are his: what users see, scope, editorial wording, data judgment, cost;
    - anything odd you found in the repo (listed, not fixed);
    - rough token use against your budget. Stop and report at 1.5x the budget;
-   - add your row and lesson to `docs/progress.md` in your PR.
+   - your token estimate and a one-line lesson in the report; the lead adds them to `docs/progress.md` at merge (don't edit it yourself).
 
 ## 5. Merging
 

@@ -1,3 +1,7 @@
+> **History.** This is the original prototype build spec (tag `v0.1-prototype`), kept as a record.
+> The roadmap (`docs/roadmap.md`) and the handbook (`docs/handbook.md`) now govern; the part-by-part
+> status of the prototype is in `docs/prototype-audit.md`.
+
 # Data Viewer Site — Build Spec (Phase 1)
 
 Self-contained handoff for Claude Code (or any agent). Read all of it before writing code.

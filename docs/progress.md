@@ -5,12 +5,10 @@ rows into one summary line. Roadmap: `docs/roadmap.md`. Rules: `docs/handbook.md
 
 ## Now
 
-- **Phase:** 0 · Foundations.
-- **Wave 2 done** (F7, F8, G2, F6 all merged 2026-10-05, all under budget). Ran three workers at
-  once on Robbie's say-so ("spin up as much work as you can"), one over the roadmap's limit.
-- **Wave 3 running:** F2 CI checks (#61, M, Opus) and 1.5 link previews (#37, S, Sonnet).
-- **Next:** S3 (cost alerts, uptime email, browser error reporting), then F3 + 1.4 and the Phase 0
-  gate (F11 project kit, #53, lands there).
+- **Phase 0 gate: passed with conditions** (review lead, 2026-10-05). Conditions: Robbie's Sentry/Cloudflare setup (#76); fix drifted skills (#89) before any data-engineer task.
+- **Phase 1 order (lead, after review):** S1 static click details + unit-test runner → S2 data files to R2 → 1.3 + 1.1 → 1.2 → 1.6, 1.8, 1.7. S1 and 1.1 touch the same files, so they run in sequence.
+- **Data pause (Robbie, 2026-10-05):** no new or refreshed JSON in `apps/web/public/data` until S2 lands.
+- **Progress rows:** the lead adds Finished rows and Lessons at merge time from the worker's report (workers no longer edit this file; it conflicted on almost every merge).
 
 ## Finished
 
@@ -31,6 +29,7 @@ rows into one summary line. Roadmap: `docs/roadmap.md`. Rules: `docs/handbook.md
 | Logo redo | #81 | #82 | S / ~60k | 39k | 0.65x | Sonnet / low | 2026-10-05 |
 | F3 lint cleanup + blocking | #83, #80 | #84 | S / ~100k | 53k | 0.53x | Sonnet / medium | 2026-10-05 |
 | G3 runbook + rebuild drill | #85 | #87 | S / ~100k | 95k | 0.95x | Sonnet / medium | 2026-10-05 |
+| F9 prototype audit + F10 changelog | #86 | #88 | S / ~100k | 97k + 40k review | 1.37x | Opus / low | 2026-10-05 |
 
 ## Lessons
 
@@ -62,11 +61,11 @@ One line per task. These feed the project kit (#53).
 
 - **G3:** a no-key fresh clone builds and serves in under a minute, so the real rebuild risk is the data side (empty git-ignored `data/tiles/`, the database, unwritten Vercel/Supabase settings). Skills had drifted (push to main, old vercel.app origin); a drill is the cheapest way to find that.
 - **#81:** a cut-out in a one-color mark is safest as an SVG mask (shows the real background on panels); satori (share cards) gets a plain bg-colored stroke instead.
+- **F9:** an audit is cheap when every verdict rests on a command (`wc -l`, `git ls-files`, a grep for `supabase`); the code beat the prior view on two points (search index, place pages hitting the database per view).
 - **Progress log:** every worker adding its own row makes `docs/progress.md` conflict on almost every merge. Consider letting the lead add rows at merge time instead.
 
 ## How to update
 
-- In your own PR, add a row to **Finished** and one line to **Lessons**.
-- If you can't know your final token count, write "tbd" and the lead fills it in at merge.
-- Move **Now** forward only if your task changes it (the lead normally does this).
-- Ratio = actual / budget. Under 1.0 is good; over 1.5 means you should have stopped and reported.
+- Workers: read this first; put your token estimate and one lesson in your final report. Don't edit this file.
+- The lead adds the Finished row and Lessons line at merge, and moves **Now** forward.
+- Ratio = actual / budget. Under 1.0 is good; over 1.5 means stop and report.
