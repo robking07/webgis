@@ -1,12 +1,23 @@
 // The 1200x630 link-preview card (issue #37): Mapwich name, a page title and a one-line summary.
 // Colors come from the light theme tokens in @webgis/design; the font is ImageResponse's built-in
-// Noto Sans, the same family the map labels use (LABEL.font). Cards are static or computed from
+// Geist that next/og ships. Cards are static or computed from
 // data shipped in the build, so nothing is fetched at share time.
 import { ImageResponse } from "next/og";
 import { THEMES } from "@webgis/design";
 
 export const OG_SIZE = { width: 1200, height: 630 };
 const T = THEMES.light;
+
+// The renderer measures words without ligatures (ffi, ti...) but draws them with, which left doubled
+// gaps after those words. A zero-width non-joiner between letters turns ligatures off; words are
+// flex items with a fixed gap.
+function Words({ text, size, style }: { text: string; size: number; style: React.CSSProperties }) {
+  return (
+    <div style={{ display: "flex", flexWrap: "wrap", columnGap: Math.round(size * 0.26), letterSpacing: 0.01, ...style, fontSize: size }}>
+      {text.split(/\s+/).filter(Boolean).map((w, i) => <span key={i}>{[...w].join("‌")}</span>)}
+    </div>
+  );
+}
 
 const clip = (s: string, n: number) => (s.length > n ? `${s.slice(0, n - 1).trimEnd()}…` : s);
 
@@ -26,8 +37,8 @@ export function ogCard({ kicker, title, summary }: { kicker: string; title: stri
           <div style={{ fontSize: 28, color: T.ui.textMuted, marginLeft: "auto" }}>{kicker}</div>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-          <div style={{ fontSize: long ? 64 : 80, fontWeight: 700, lineHeight: 1.08, letterSpacing: -1.5 }}>{clip(title, 90)}</div>
-          <div style={{ fontSize: 34, lineHeight: 1.3, color: T.ui.textMuted }}>{clip(summary, 150)}</div>
+          <Words text={clip(title, 90)} size={long ? 64 : 80} style={{ fontWeight: 700, lineHeight: 1.08, letterSpacing: -1.49 }} />
+          <Words text={clip(summary, 150)} size={34} style={{ lineHeight: 1.3, color: T.ui.textMuted }} />
         </div>
         <div style={{ display: "flex", fontSize: 28, color: T.ui.accent, fontWeight: 600 }}>mapwich.org</div>
       </div>
