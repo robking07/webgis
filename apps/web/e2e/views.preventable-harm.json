@@ -1,0 +1,62 @@
+{
+  "views": [
+    { "name": "traffic-closed", "path": "/map?d=traffic_fatalities" },
+    {
+      "name": "traffic-open",
+      "path": "/map?d=traffic_fatalities",
+      "steps": [{ "click": "[data-context-entry]", "optional": true }, { "wait": 500 }]
+    },
+    {
+      "name": "traffic-open-full",
+      "path": "/map?d=traffic_fatalities",
+      "steps": [
+        { "click": "[data-context-entry]", "optional": true },
+        { "wait": 400 },
+        { "click": "button[aria-label^='Expand: Traffic deaths']", "optional": true },
+        { "wait": 500 }
+      ]
+    },
+    {
+      "name": "traffic-linked-map",
+      "path": "/map?d=traffic_fatalities",
+      "steps": [
+        { "click": "[data-context-entry]", "optional": true },
+        { "wait": 400 },
+        { "click": "button[aria-label^='Expand: Traffic deaths']", "optional": true },
+        { "wait": 400 },
+        { "click": "[data-linked-map='vmt_per_capita']", "optional": true },
+        { "wait": 1500 }
+      ]
+    },
+    { "name": "smoking-closed", "path": "/map?d=smoking" },
+    {
+      "name": "smoking-open",
+      "path": "/map?d=smoking",
+      "steps": [{ "click": "[data-context-entry]", "optional": true }, { "wait": 500 }]
+    },
+    {
+      "name": "smoking-open-full",
+      "path": "/map?d=smoking",
+      "steps": [
+        { "click": "[data-context-entry]", "optional": true },
+        { "wait": 400 },
+        { "click": "button[aria-label^='Expand: Cigarette smoking']", "optional": true },
+        { "wait": 500 }
+      ]
+    },
+    { "name": "population-unchanged", "path": "/map?d=population_density" },
+    {
+      "name": "option-b-inline",
+      "path": "/map?d=traffic_fatalities&ctxv=inline",
+      "steps": [{ "click": "[data-context-entry]", "optional": true }, { "wait": 500 }]
+    },
+    {
+      "name": "option-c-legend",
+      "path": "/map?d=traffic_fatalities&ctxv=legend",
+      "steps": [
+        { "click": "button[aria-label^='Show legend']", "optional": true },
+        { "wait": 400 }
+      ]
+    }
+  ]
+}

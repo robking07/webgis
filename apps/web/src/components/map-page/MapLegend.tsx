@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { ChevronDown } from "lucide-react";
 import { BivariateLegend, Legend, StatusState } from "@webgis/design/components";
 import { featureLineColors, formatValue, GEO_LEVELS, type GeoLevel, type ThemeName } from "@webgis/design";
@@ -13,7 +13,7 @@ const stripEnd = (s: string) => s.replace(/^([<≥]\s*\S+).*$/, "$1");
 /** Legend: full card on desktop; a strip on phones (tap to expand). Both carry `data-legend`, so
  *  the dock above can stop before it reaches them.
  *  The year control (D-36) lives in the filters panel (issue #34). */
-export function MapLegend({ theme, primary, secondary, isFeature, featureSpec, current, error, available, loading, level, periodLabel, stop, stopId, desktopStrip, mark, covered, tableReady, onTable }: {
+export function MapLegend({ theme, primary, secondary, isFeature, featureSpec, current, error, available, loading, level, periodLabel, stop, stopId, desktopStrip, mark, covered, tableReady, onTable, contextLink }: {
   theme: ThemeName;
   primary: Dataset | null;
   secondary: Dataset | null;
@@ -37,6 +37,8 @@ export function MapLegend({ theme, primary, secondary, isFeature, featureSpec, c
   covered?: boolean;
   tableReady: boolean;
   onTable: () => void;
+  /** PROTOTYPE (#104), option C: "Why this matters" at the foot of the legend. */
+  contextLink?: ReactNode;
 }) {
   const [openPicked, setLegendOpen] = useState(false);
   const legendOpen = openPicked && !covered;
@@ -93,6 +95,7 @@ export function MapLegend({ theme, primary, secondary, isFeature, featureSpec, c
             View as table{level !== "state" && level !== "county" ? " (counties)" : ""}
           </button>
         )}
+        {contextLink && <div className="mt-1.5 border-t pt-1.5">{contextLink}</div>}
       </section>
     </>
   );

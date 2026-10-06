@@ -32,6 +32,8 @@ import { DatasetsPanel } from "./map-page/DatasetsPanel";
 import { FeatureHoverPopup, PlaceHoverPopup } from "./map-page/HoverPopups";
 import { DetailPanel } from "./map-page/DetailPanel";
 import { FeaturePanel } from "./map-page/FeaturePanel";
+import { ContextBody, ContextEntry, DraftBadge, HarmContextPanel } from "./map-page/HarmContextPanel";
+import { CONTEXT_BY_ID } from "@/lib/harm-context";
 
 export function Viewer({ search }: { search: string }) {
   const [initial] = useState<UrlState>(() => {
@@ -64,6 +66,10 @@ export function Viewer({ search }: { search: string }) {
   /** Feature-layer facet filters: field → values HIDDEN by the user. */
   const [hidden, setHidden] = useState<Record<string, Set<string>>>({});
   const [peek, setPeek] = useState(false);
+  /** PROTOTYPE (#104): the "Why this matters" context is open. `?ctxv=inline|legend` shows the
+   *  alternative designs (B: inside the card; C: entry in the legend); the default is A. */
+  const [ctxOpen, setCtxOpen] = useState(false);
+  const [ctxVariant] = useState(() => new URLSearchParams(search).get("ctxv") ?? "panel");
   const mapApi = useRef<MapApi | null>(null);
   // The dataset card's height, so phone controls can sit just below it.
   const card = useRef<HTMLElement>(null);
@@ -107,7 +113,7 @@ export function Viewer({ search }: { search: string }) {
   const tableLevel: GeoLevel | null = level === "state" || level === "county" ? level : availableLevels.includes("county") ? "county" : null;
   // Clear selections and filters when the dataset changes.
   const [seenDataset, setSeenDataset] = useState(state.d);
-  if (seenDataset !== state.d) { setSeenDataset(state.d); setSelected(null); setFeatureSelected(null); setFeatureHover(null); setHidden({}); }
+  if (seenDataset !== state.d) { setSeenDataset(state.d); setSelected(null); setFeatureSelected(null); setFeatureHover(null); setHidden({}); setCtxOpen(false); }
   useEffect(() => { mapApi.current?.select("county", null); }, [state.d]);
   const featureFilter = useMemo(() => {
     if (!primary) return undefined;
@@ -158,6 +164,12 @@ export function Viewer({ search }: { search: string }) {
   const onSearchDataset = (d: Dataset) => { setSearchOpen(false); update({ d: d.id, b: state.b === d.id ? null : state.b, lv: null, t: keepStop(d.id) }); };
   const pickDataset = (id: string) => update({ d: id, b: state.b === id ? null : state.b, lv: null, t: keepStop(id) });
   const loading = available && !current && !error;
+  // PROTOTYPE (#104): context only on maps of preventable harm, and only for the map on its own
+  // (a comparison is about the pair, not one map).
+  const ctx = primary && !secondary ? CONTEXT_BY_ID.get(primary.id) ?? null : null;
+  const openCtx = () => { setCtxOpen((o) => !o); setSelected(null); setFeatureSelected(null); setListOpen(false); mapApi.current?.select("county", null); };
+  if (ctxOpen && (selected || featureSelected || (phone && tableOpen))) setCtxOpen(false);
+  const ctxEntry = ctx && <ContextEntry open={ctxOpen} onOpen={openCtx} />;
 
   // ── Map-first chrome (D-25) ─────────────────────────────────────────────────
   // At rest: slim header, dataset card, full legend. The first user pan/zoom/scroll
@@ -255,7 +267,11 @@ export function Viewer({ search }: { search: string }) {
         <DatasetCard cardRef={card} primary={primary} secondary={secondary} meta={meta} immersed={immersed} isFeature={isFeature}
           tableReady={tableReady} hasFilters={hasFilters} filtersOpen={!!filters} filterCount={nFilters} onOpenFilters={toggleFilters}
           onBrowse={() => setBrowserOpen(true)} onTable={() => setTableOpen(true)}
-          phone={phone} onOpenSheet={openSheet} />
+          phone={phone} onOpenSheet={openSheet}
+          contextEntry={ctxVariant === "legend" ? undefined : ctxEntry}
+          contextInline={ctx && ctxOpen && ctxVariant === "inline" ? (
+            <div data-context-inline="" className="mt-2 max-h-[45vh] overflow-y-auto rounded-md bg-muted p-2.5"><DraftBadge /><div className="mt-1.5"><ContextBody ctx={ctx} onMapIt={pickDataset} ns="ctxi" /></div></div>
+          ) : undefined} />
       )}
 
       {primary && (
@@ -282,7 +298,8 @@ export function Viewer({ search }: { search: string }) {
         error={error} available={available} loading={loading} level={level} periodLabel={periodLabel}
         stop={stop} stopId={stopId}
         desktopStrip={desktopStrip} mark={selected && selected.level === level ? selClass : null}
-        covered={phone && (placeOpen || tableOpen || listOpen || stepAside)} tableReady={tableReady} onTable={() => setTableOpen(true)} />
+        covered={phone && (placeOpen || tableOpen || listOpen || stepAside || (ctxOpen && ctxVariant !== "inline"))} tableReady={tableReady} onTable={() => setTableOpen(true)}
+        contextLink={ctxVariant === "legend" ? ctxEntry : undefined} />
 
       <MapCredits datasets={[primary, secondary].filter((d): d is Dataset => !!d)} />
 
@@ -312,6 +329,9 @@ export function Viewer({ search }: { search: string }) {
         <PlaceHoverPopup hover={hover} primary={primary} secondary={secondary} xValues={x.values} yValues={y.values} blockField={blockField} periodLabel={stopId ? stop!.label : undefined} />
       )}
       {featureHover && !featureSelected && !moving && featureSpec && <FeatureHoverPopup hit={featureHover} spec={featureSpec} primary={primary} />}
+      {ctx && ctxOpen && ctxVariant !== "inline" && (
+        <HarmContextPanel ctx={ctx} title={primary!.title} top={panelTop} onClose={() => setCtxOpen(false)} onMapIt={pickDataset} />
+      )}
       {featureSelected && featureSpec && primary && (
         <FeaturePanel hit={featureSelected} spec={featureSpec} dataset={primary} top={panelTop}
           onClose={() => setFeatureSelected(null)} />
