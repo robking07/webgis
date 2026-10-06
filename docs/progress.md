@@ -31,6 +31,7 @@ rows into one summary line. Roadmap: `docs/roadmap.md`. Rules: `docs/handbook.md
 | G3 runbook + rebuild drill | #85 | #87 | S / ~100k | 95k | 0.95x | Sonnet / medium | 2026-10-05 |
 | F9 prototype audit + F10 changelog | #86 | #88 | S / ~100k | 97k + 40k review | 1.37x | Opus / low | 2026-10-05 |
 | Skill drift + README + .env.example | #89 | #91 | S / ~50k | 66k | 1.3x | Sonnet / medium | 2026-10-05 |
+| Splash page, map at /map, noindex | #92 | #93 | S / ~100k | 74k | 0.74x | Sonnet / medium | 2026-10-05 |
 
 ## Lessons
 
@@ -66,6 +67,7 @@ One line per task. These feed the project kit (#53).
 - **Progress log:** every worker adding its own row makes `docs/progress.md` conflict on almost every merge. Consider letting the lead add rows at merge time instead.
 - **#89:** `.env.*` in `.gitignore` silently swallowed `.env.example`; check `git check-ignore` before adding a dotfile.
 - **Gate review:** a fresh-context review lead (40k) caught a wrong claim and a phase-ordering flaw the builders missed; worth it at every gate.
+- **#92:** the e2e runner reuses whatever server holds its port; an orphan server from the rebuild drill caused 26 false failures. Stop every server you start.
 
 ## How to update
 

@@ -9,7 +9,7 @@ import { formatDate, type Special } from "@/lib/specials";
 export function mapHref(s: Pick<Special, "datasets" | "at">) {
   const q = [`d=${s.datasets[0]}`, ...(s.datasets[1] ? [`b=${s.datasets[1]}`] : [])];
   if (s.at) q.push(`at=${s.at.lon.toFixed(4)},${s.at.lat.toFixed(4)},${s.at.zoom.toFixed(2)}`);
-  return `/?${q.join("&")}`;
+  return `/map?${q.join("&")}`;
 }
 
 /** "U.S. Census Bureau · 2020–2024": publisher and years, short. */

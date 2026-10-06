@@ -1,22 +1,17 @@
 import type { Metadata } from "next";
-import { ViewerShell } from "@/components/ViewerShell";
-import { DATASET_BY_ID } from "@/lib/registry";
-import { shareMeta } from "@/lib/share-meta";
+import { LogoMark } from "@/components/Logo";
 
-// A map link with a dataset in it (?d=<id>) previews as that dataset. Only the share tags change,
-// never the tab title. The map's place and zoom (?at=) are in the query too, but the preview card
-// is the dataset's, not a rendering of that view.
-export async function generateMetadata({ searchParams }: PageProps<"/">): Promise<Metadata> {
-  const { d } = await searchParams;
-  const ds = typeof d === "string" ? DATASET_BY_ID.get(d) : undefined;
-  if (!ds) return {};
-  return shareMeta({ title: `${ds.title} · Mapwich`, description: ds.description, image: `/og/data/${ds.id}` });
-}
+// The splash page (D-193): the logo on black and a tagline, nothing else. The only indexable page.
+// Title and share card come from the root layout.
+export const metadata: Metadata = { robots: { index: true, follow: false } };
 
-export default async function Page({ searchParams }: PageProps<"/">) {
-  const sp = await searchParams;
-  const search = new URLSearchParams(
-    Object.entries(sp).flatMap(([k, v]) => (typeof v === "string" ? [[k, v]] : [])),
-  ).toString();
-  return <ViewerShell search={search} />;
+export default function Splash() {
+  return (
+    <main className="fixed inset-0 grid place-items-center overflow-hidden" style={{ background: "var(--ui-splash-bg)" }}>
+      <div className="flex flex-col items-center gap-6 px-6">
+        <LogoMark size={120} title="Mapwich" ink="var(--ui-splash-ink)" />
+        <p className="text-2xl font-medium tracking-tight sm:text-3xl" style={{ color: "var(--ui-splash-tagline)" }}>which map?</p>
+      </div>
+    </main>
+  );
 }
