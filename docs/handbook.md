@@ -18,8 +18,8 @@ Full build spec: `docs/SPEC.md`. Project rules: `CLAUDE.md`.
     `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET`
   - If a task needs a key you don't have, stop and say so in your report. Don't hunt for it.
 - Docs-only work needs no install.
-- With no `.env.local`, `npm run build` and `npm run start -w web` still work (16 s build): Supabase
-  detail values come back empty, `/api/keepalive` returns 500, and the map reads tiles from
+- With no `.env.local`, `npm run build` and `npm run start -w web` still work (16 s build): details for
+  states and counties come from `details/` under the tiles base (empty locally unless the base is R2), `/api/keepalive` returns 500, and the map reads tiles from
   `/tiles/<level>.pmtiles`, which is empty because `data/tiles/` is git-ignored. Set
   `NEXT_PUBLIC_TILES_BASE_URL=https://tiles.mapwich.org` to see boundaries.
 - Ingest also needs `ogr2ogr` (GDAL) and `tippecanoe` on the PATH (the `build-tiles` skill says how they
@@ -66,6 +66,7 @@ Run from your worktree root unless noted.
 | `npm run check:design` | Colorblind and contrast gate for the design tokens (`packages/design/scripts/check.ts`). | Any change to `packages/design` (also part of `build`). |
 | `npm run registry:validate` | Validates every `data/registry/datasets/*.yaml` against `schema.ts`. | Any dataset or registry change. |
 | `npm run lint -w web` | ESLint for `apps/web`. | Any change under `apps/web`. |
+| `npm test` | Vitest unit tests (`**/src/**/*.test.ts` in `apps`, `packages`, `data`); about a second. Config: `vitest.config.ts`. | Any code change; add a test next to new lookup or parsing code. |
 | `npm run test:e2e -w web` | Playwright (Chromium) menu and map behavior tests at phone, laptop and monitor sizes. Needs a prior `npm run build`; takes about 5 minutes. Options in `apps/web/e2e/README.md`. | UI changes to menus, panels, the map page or on-map chrome. |
 | `npm run test:guardrails` | Tests the guardrails hook. | Only if you change `.claude/hooks/guardrails.mjs` or the deny rules. |
 | `node scripts/check-decisions.mjs` | The decision-number check CI runs. | If you add or rename a decision file (CI also runs it). |
@@ -79,7 +80,7 @@ lead runs `gh pr ready <n>` before merging, and `merge-pr.sh` refuses a code PR 
 | --- | --- | --- |
 | `branch-rules` | Branch includes the latest `main`; decision numbers match the PR. | Yes |
 | `build` * | `npm ci` + `npm run build` (design check + `next build`). | Yes |
-| `lint` * | `npm run lint -w web`; any ESLint error fails the job. | Yes |
+| `lint` * | `npm run lint -w web` (any ESLint error fails the job), then `npm test`. | Yes |
 | `click-through` * † | `npm run test:e2e -w web` on the CI build (about 10 min). Runs on ready PRs only. | Yes |
 | `secret scan` | gitleaks over the PR's commits. | Yes |
 | `speed + accessibility` * † | Lighthouse on `/`, a dataset page and a Special (local build). Runs on ready PRs only. | Accessibility < 90 fails; performance, best practices, SEO only warn |

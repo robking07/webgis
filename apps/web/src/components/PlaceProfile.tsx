@@ -1,9 +1,9 @@
 "use client";
-// Every dataset for one place. Values and MOEs come live from Supabase.
+// Every dataset for one place. Values, margins of error and geography come from static files (lib/details.ts).
 import { useEffect, useState } from "react";
 import { StatusState } from "@webgis/design/components";
 import { PlaceDataList, type Detail } from "./PlaceDataList";
-import { fetchDetail, fetchGeography, type Geography } from "@/lib/supabase";
+import { fetchDetail, fetchGeography, type Geography } from "@/lib/details";
 import { levelOfGeoid, PLACE_ZOOM } from "@/lib/place";
 import { serializeUrlState } from "@/lib/url-state";
 import { LANDING } from "@/lib/landing";
