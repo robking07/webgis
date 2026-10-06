@@ -17,7 +17,7 @@ All notable changes to Mapwich (mapwich.org). The format follows
 - Checks in GitHub CI: build, lint, e2e click-through, leaked-secret scan, Lighthouse (F2, #68).
 - Alerts: Sentry browser errors, uptime and spend runbook (S3, #75).
 - Download a dataset as CSV (1.4, #79).
-- Prototype audit and this changelog (F9, F10, #86).
+- Prototype audit and this changelog (F9, F10, #88).
 
 ### Changed
 - Approved roadmap mirrored into `docs/roadmap.md` (#45).

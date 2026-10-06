@@ -30,7 +30,7 @@ rows into one summary line. Roadmap: `docs/roadmap.md`. Rules: `docs/handbook.md
 | 1.4 CSV download | #78 | #79 | S / ~100k | 59k | 0.59x | Sonnet / medium | 2026-10-05 |
 | Logo redo | #81 | #82 | S / ~60k | 39k | 0.65x | Sonnet / low | 2026-10-05 |
 | F3 lint cleanup + blocking | #83, #80 | #84 | S / ~100k | 53k | 0.53x | Sonnet / medium | 2026-10-05 |
-| F9 prototype audit + F10 changelog | #86 | tbd | S / ~100k | ~60k | 0.6x | Opus / low | 2026-10-05 |
+| F9 prototype audit + F10 changelog | #86 | #88 | S / ~100k | ~60k | 0.6x | Opus / low | 2026-10-05 |
 
 ## Lessons
 
