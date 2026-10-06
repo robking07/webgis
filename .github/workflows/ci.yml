@@ -1,4 +1,4 @@
-# Checks every PR runs (handbook §3, D-<PR+100>). scripts/merge-pr.sh refuses to merge while
+# Checks every PR runs (handbook §3, D-168). scripts/merge-pr.sh refuses to merge while
 # any of these is red. Skipped jobs (docs-only PRs) count as passing there.
 name: CI
 
