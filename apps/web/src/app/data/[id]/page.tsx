@@ -8,6 +8,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { DATASETS, DATASET_BY_ID } from "@/lib/registry";
 import { sourceOf, datasetHref } from "@/lib/sources";
 import { approvedInsights } from "@/lib/approvals";
+import { shareMeta } from "@/lib/share-meta";
 import layersManifest from "@/generated/layers.json";
 
 export function generateStaticParams() {
@@ -17,7 +18,9 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps<"/data/[id]">): Promise<Metadata> {
   const { id } = await params;
   const d = DATASET_BY_ID.get(id);
-  return d ? { title: `${d.title} · Data · Mapwich`, description: d.description } : { title: "Data · Mapwich" };
+  return d
+    ? { title: `${d.title} · Data · Mapwich`, description: d.description, ...shareMeta({ title: `${d.title} · Mapwich`, description: d.description, path: `/data/${d.id}`, image: `/og/data/${d.id}` }) }
+    : { title: "Data · Mapwich" };
 }
 
 const LEVEL_LABEL: Record<string, string> = { state: "States", county: "Counties", tract: "Census tracts" };
