@@ -109,5 +109,6 @@ and GitHub raises security alerts separately.
   (`npm ls <pkg>` shows it under a runtime dependency) comes first. A build-time-only one (dev tools,
   `shadcn`, bundlers) is lower priority.
 - Fix by updating the parent package; use a root `overrides` entry only if no parent release fixes it.
-- If no patched version exists, don't dismiss the alert yourself. Report it to the lead, who takes the
-  dismissal and its written reason to Robbie.
+- If no patched version exists, don't dismiss the alert yourself; report it. The lead decides: a
+  build-time-only alert stays open (Dependabot opens the fix PR once a patch ships); a runtime one
+  gets a workaround or a written dismissal reason.
