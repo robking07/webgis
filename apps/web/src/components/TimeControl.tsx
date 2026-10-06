@@ -1,6 +1,6 @@
 // Year control (D-36): step the map through a dataset's timeline stops. A few stops are a
-// segmented row; many (single years) are a slider with step buttons, and an average or normal
-// that isn't a moment in time gets its own chip.
+// segmented row; many (single years) are a notched slider with step buttons (the thumb lands only on a year; no filled track, so it never
+// reads as a range), and an average or normal that isn't a moment in time is its own choice.
 "use client";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { Stop } from "@/lib/periods";
@@ -38,32 +38,42 @@ export function TimeControl({ stops, value, onChange, docked }: {
 
   const i = dated.findIndex((s) => s.id === current.id);
   const onSummary = current === summary;
-  // The slider rests at the newest year while the summary is shown.
+  // The slider rests at the newest year while the summary is shown, with its thumb hidden.
   const pos = i >= 0 ? i : dated.length - 1;
-  const step = (d: number) => onChange(dated[Math.min(dated.length - 1, Math.max(0, (onSummary ? dated.length : pos) + d))].id);
+  const last = dated.length - 1;
+  const step = (d: number) => onChange(dated[Math.min(last, Math.max(0, (onSummary ? dated.length : pos) + d))].id);
   const btn = `grid size-7 shrink-0 place-items-center rounded-md text-foreground disabled:opacity-35 focus-visible:outline-2 focus-visible:outline-ring ${docked ? "wg-panel" : "hover:bg-muted"}`;
   return (
     <div className="space-y-1.5">
       <div className="flex items-baseline justify-between gap-2">
-        <span className="text-xs font-semibold" id="time-label">Year</span>
+        <span className="text-xs font-semibold" id="time-label">{summary ? "Show" : "Year"}</span>
         <span className="text-sm font-semibold tabular-nums" aria-live="polite">{current.label}</span>
       </div>
+      {summary && (
+        <div role="radiogroup" aria-label="Show" className="flex flex-wrap gap-1">
+          <button type="button" role="radio" aria-checked={!onSummary} onClick={() => onSummary && onChange(dated[last].id)} className={chip(!onSummary)}>One year</button>
+          <button type="button" role="radio" aria-checked={onSummary} onClick={() => onChange(summary.id)} className={chip(onSummary)}>{summary.label}</button>
+        </div>
+      )}
       <div className="flex items-center gap-1.5">
         <button type="button" onClick={() => step(-1)} disabled={!onSummary && pos === 0} aria-label="Previous year" className={btn}><ChevronLeft className="size-4" aria-hidden /></button>
-        <input type="range" min={0} max={dated.length - 1} step={1} value={pos} aria-labelledby="time-label"
-          aria-valuetext={onSummary ? summary!.label : dated[pos].label}
-          onChange={(e) => onChange(dated[+e.target.value].id)}
-          className={`wg-range min-w-0 flex-1 ${onSummary ? "opacity-50" : ""}`} />
-        <button type="button" onClick={() => step(1)} disabled={onSummary || pos === dated.length - 1} aria-label="Next year" className={btn}><ChevronRight className="size-4" aria-hidden /></button>
+        <div className="wg-notches relative min-w-0 flex-1" data-off={onSummary || undefined}>
+          <div className="pointer-events-none absolute inset-x-0 top-1/2 h-0" aria-hidden>
+            {dated.map((s, k) => (
+              <span key={s.id} data-notch={s.id} className={`wg-notch ${k === pos && !onSummary ? "wg-notch-on" : ""}`} style={{ left: `calc(0.5rem + (100% - 1rem) * ${last ? k / last : 0})` }} />
+            ))}
+          </div>
+          <input type="range" min={0} max={last} step={1} value={pos} aria-label="Year"
+            aria-valuetext={onSummary ? summary!.label : dated[pos].label}
+            onChange={(e) => onChange(dated[+e.target.value].id)}
+            onClick={(e) => onSummary && onChange(dated[+e.currentTarget.value].id)}
+            className="wg-range relative w-full" />
+        </div>
+        <button type="button" onClick={() => step(1)} disabled={onSummary || pos === last} aria-label="Next year" className={btn}><ChevronRight className="size-4" aria-hidden /></button>
       </div>
       <div className="flex items-center justify-between gap-2 text-[11px] tabular-nums text-muted-foreground">
         <span>{dated[0].label}</span>
-        {summary && (
-          <button type="button" aria-pressed={onSummary} onClick={() => onChange(summary.id)} className={chip(onSummary)}>
-            {summary.label}
-          </button>
-        )}
-        <span>{dated[dated.length - 1].label}</span>
+        <span>{dated[last].label}</span>
       </div>
     </div>
   );

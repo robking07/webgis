@@ -694,6 +694,94 @@ test("laptop CSV download: state, county, tract and block group files have rows"
   expect(!ownDataFiles(page).length, `requests to the site's data folder: ${ownDataFiles(page).join(", ")}`);
 });
 
+// ── Year slider (issue #102): one notch per year, lands only on a notch, no range fill ─────────
+for (const vp of ["phone", "laptop"]) {
+  test(`${vp} year slider: notches, snap by tap, drag and keys, average and back`, async (o) => {
+    const { page } = await o(vp, "/map?d=traffic_fatalities&at=-93.6,45.3,6.4");
+    await live(page).click();
+    const panel = page.locator("#filters-panel");
+    await panel.waitFor();
+    await wait(400);
+    const slider = panel.locator("input[type=range]");
+    const notches = await panel.locator("[data-notch]").count();
+    expect(notches === 10, `expected 10 notches (2015-2024), got ${notches}`);
+    const bg = await slider.evaluate((el) => getComputedStyle(el, "::-webkit-slider-runnable-track").backgroundImage);
+    expect(bg === "none", `track has a fill: ${bg}`);
+    const urlYear = () => new URL(page.url()).searchParams.get("t");
+    const shown = async () => (await panel.locator("#time-label + span").innerText()).trim();
+    // Default is the average, with the slider resting.
+    expect((await shown()).includes("average"), `default label: ${await shown()}`);
+    expect(await slider.evaluate((el) => el.closest("[data-off]") !== null), "slider isn't marked off on the average");
+    // Tap the 2018 notch.
+    const box = async (sel) => (await panel.locator(sel).boundingBox());
+    const n18 = await box('[data-notch="2018"]');
+    const sb = await slider.boundingBox();
+    await page.mouse.click(n18.x + n18.width / 2, sb.y + sb.height / 2);
+    await wait(300);
+    expect((await shown()) === "2018", `after tap: ${await shown()}`);
+    // Click midway between two notches: it still lands on one.
+    const a = await box('[data-notch="2020"]'), b = await box('[data-notch="2021"]');
+    await page.mouse.click((a.x + b.x) / 2 + a.width / 2 + 1, sb.y + sb.height / 2);
+    await wait(300);
+    expect(/^202[01]$/.test(await shown()), `between notches: ${await shown()}`);
+    // Drag the thumb to 2024 end.
+    const tb = await slider.boundingBox();
+    const cur = await slider.evaluate((el) => +el.value);
+    const thumbX = tb.x + 8 + (tb.width - 16) * (cur / 9);
+    await page.mouse.move(thumbX, tb.y + tb.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(tb.x + tb.width + 20, tb.y + tb.height / 2, { steps: 8 });
+    await page.mouse.up();
+    await wait(300);
+    expect((await shown()) === "2024", `after drag: ${await shown()}`);
+    // Keyboard and arrow buttons.
+    await slider.focus();
+    await page.keyboard.press("ArrowLeft");
+    await wait(200);
+    expect((await shown()) === "2023", `after ArrowLeft: ${await shown()}`);
+    await panel.getByRole("button", { name: "Previous year" }).click();
+    await wait(200);
+    expect((await shown()) === "2022", `after Previous: ${await shown()}`);
+    await panel.getByRole("button", { name: "Next year" }).click();
+    await wait(200);
+    expect((await shown()) === "2023", `after Next: ${await shown()}`);
+    const sliderAt = await slider.evaluate((el) => +el.value);
+    expect(sliderAt === 8, `thumb index ${sliderAt}`);
+    // The map, legend and URL agree with the notch.
+    if (page.isPhone) await page.getByRole("button", { name: /^Apply filters/ }).click();
+    else await page.getByRole("button", { name: "Close filters" }).click();
+    await panel.waitFor({ state: "detached" });
+    await wait(800);
+    await mapIdle(page);
+    if (page.isPhone) {
+      const strip = await page.locator("button[data-legend]").innerText();
+      expect(strip.includes("2023"), `legend strip: ${strip}`);
+      await page.locator("button[data-legend]").click();
+    }
+    const legend = await page.locator('section[aria-label="Legend"]').innerText();
+    expect(legend.includes("2023") && !legend.includes("average"), `legend: ${legend.slice(0, 160)}`);
+    // The average, then back to a year.
+    await live(page).click();
+    await panel.waitFor();
+    await wait(300);
+    await panel.getByRole("radio", { name: /average/ }).click();
+    await wait(300);
+    expect((await shown()).includes("average"), `average: ${await shown()}`);
+    await panel.getByRole("radio", { name: "One year" }).click();
+    await wait(300);
+    expect((await shown()) === "2024", `back to a year: ${await shown()}`);
+    await panel.locator('input[type=range]').focus();
+    await page.keyboard.press("ArrowLeft");
+    await wait(200);
+    expect((await shown()) === "2023", `key after back: ${await shown()}`);
+    if (page.isPhone) await page.getByRole("button", { name: /^Apply filters/ }).click();
+    else await page.getByRole("button", { name: "Close filters" }).click();
+    await panel.waitFor({ state: "detached" });
+    await wait(800);
+    expect(urlYear() === "2023", `final URL year: ${urlYear()}`);
+  });
+}
+
 // ── Run ────────────────────────────────────────────────────────────────────────
 const t0 = Date.now();
 try {
