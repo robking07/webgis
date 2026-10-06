@@ -64,7 +64,7 @@ export const HARM_CONTEXT: HarmContext[] = [
       "Quitting helps: lung cancer risk goes down after a person quits.[2]",
     ],
     linked: [
-      { id: "obesity", why: "Another major health risk, same CDC survey" },
+      { id: "obesity", why: "Same CDC survey" },
       { id: "physical_inactivity", why: "Same CDC survey" },
       { id: "binge_drinking", why: "Same CDC survey" },
     ],

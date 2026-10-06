@@ -1,0 +1,274 @@
+{
+  "title": "Context for maps of preventable harm: plan + prototype (#104)",
+  "intro": "Live mapwich.org on the left, the prototype (draft PR #113, local build) on the right, with the same map position in each pair. Phones are shown at true size (390 px wide). Click a laptop shot to see it at 1:1. All context text is a DRAFT written by Claude from the cited sources and has not been reviewed by Robbie. Recommended design: A (the first seven sections). B and C are alternatives, shown at the end.",
+  "beforeLabel": "Today (mapwich.org)",
+  "afterLabel": "Prototype (option A)",
+  "views": {
+    "traffic-closed": {
+      "title": "1. Traffic deaths, context closed (how the map opens)",
+      "notes": [
+        {
+          "n": 1,
+          "at": {
+            "laptop": [
+              13,
+              25
+            ],
+            "phone": [
+              60,
+              23.4
+            ]
+          },
+          "text": "New: a quiet \"Why this matters ›\" link on the dataset card. It is the only change at rest, and it shows only on maps of preventable harm. Nothing opens by default, and the map itself is unchanged."
+        },
+        {
+          "n": 2,
+          "text": "Phone: the link joins the existing Compare · Table · About line, so the card is no taller. Laptop: it gets its own line under the source, so the card grows by about 30 px."
+        }
+      ]
+    },
+    "traffic-open": {
+      "title": "2. Traffic deaths, context opened",
+      "notes": [
+        {
+          "n": 1,
+          "at": {
+            "laptop": [
+              71,
+              40
+            ],
+            "phone": [
+              50,
+              75
+            ]
+          },
+          "text": "Laptop: the context opens on the right, where place details open, so the map and legend stay in view. Phone: a bottom sheet that shows the two-sentence summary, with the map still visible above. It closes with ×, Esc, tapping a place, or switching maps."
+        },
+        {
+          "n": 2,
+          "at": {
+            "laptop": [
+              86,
+              10.4
+            ],
+            "phone": [
+              44,
+              77.6
+            ]
+          },
+          "text": "Each drafted text carries a DRAFT badge until Robbie approves it. In the real build, unapproved text would never reach mapwich.org (it would show on preview links only)."
+        },
+        {
+          "n": 3,
+          "at": {
+            "laptop": [
+              71,
+              22
+            ],
+            "phone": [
+              97,
+              81
+            ]
+          },
+          "text": "Tone: the harm, its scale, and that it is preventable, in the source's own words. Each number has a superscript link to its source."
+        },
+        {
+          "n": 4,
+          "at": {
+            "laptop": [
+              71,
+              45
+            ]
+          },
+          "text": "What's behind it: four causes, with NHTSA's 2023 numbers (speed, alcohol, seat belts, rural roads)."
+        },
+        {
+          "n": 5,
+          "at": {
+            "laptop": [
+              71,
+              65
+            ]
+          },
+          "text": "Linked maps on Mapwich. Tapping one switches the map. The reasons are neutral descriptions, not causal claims."
+        },
+        {
+          "n": 6,
+          "at": {
+            "laptop": [
+              71,
+              77
+            ]
+          },
+          "text": "The Special slot. The traffic Special (#105) isn't written yet, so the slot says so. Once it is published, this becomes a link. Maps with no Special have no row (see smoking)."
+        },
+        {
+          "n": 7,
+          "at": {
+            "laptop": [
+              71,
+              90
+            ]
+          },
+          "text": "Sources: primary public documents only (here NHTSA's 2023 crash summary and the CDC), linked."
+        }
+      ]
+    },
+    "traffic-open-full": {
+      "title": "3. Traffic deaths, phone sheet swiped up",
+      "notes": [
+        {
+          "n": 1,
+          "at": {
+            "phone": [
+              3,
+              42
+            ]
+          },
+          "text": "Swiped up: the causes, linked maps, the Special slot and sources. Swiping down returns to the summary, and down again closes the sheet."
+        },
+        {
+          "n": 2,
+          "text": "Laptop: the same panel as in section 2. It scrolls if the window is short."
+        },
+        {
+          "n": 3,
+          "text": "Left (today): the live site has no link, so the shots are the plain map."
+        }
+      ]
+    },
+    "traffic-linked-map": {
+      "title": "4. Tapping a linked map (Vehicle miles per resident)",
+      "notes": [
+        {
+          "n": 1,
+          "text": "Right: tapping \"Vehicle miles per resident\" switched the map and closed the context. Vehicle miles isn't a harm map, so its card has no \"Why this matters\" link. It looks exactly as it does today."
+        },
+        {
+          "n": 2,
+          "text": "Left (today): the live site has no linked maps, so this shot stays on traffic deaths."
+        }
+      ]
+    },
+    "smoking-closed": {
+      "title": "5. Cigarette smoking (CDC PLACES), context closed",
+      "notes": [
+        {
+          "n": 1,
+          "at": {
+            "laptop": [
+              13,
+              19.3
+            ],
+            "phone": [
+              60,
+              19.4
+            ]
+          },
+          "text": "The same link on the health map. Smoking has no year control, so the card is shorter, and the link still fits on the phone's single action line."
+        }
+      ]
+    },
+    "smoking-open": {
+      "title": "6. Cigarette smoking, context opened",
+      "notes": [
+        {
+          "n": 1,
+          "at": {
+            "laptop": [
+              71,
+              20
+            ],
+            "phone": [
+              50,
+              77
+            ]
+          },
+          "text": "The CDC's own wording: the leading preventable cause of disease, death and disability, and more than 480,000 deaths a year."
+        },
+        {
+          "n": 2,
+          "at": {
+            "laptop": [
+              71,
+              38
+            ]
+          },
+          "text": "For a behavior map the list is \"What it leads to\": lung cancer (about 80% of deaths linked to smoking), heart disease and stroke, COPD and diabetes. It ends with the fact that quitting lowers the risk."
+        },
+        {
+          "n": 3,
+          "at": {
+            "laptop": [
+              71,
+              56
+            ]
+          },
+          "text": "Linked maps: three other measures from the same CDC survey. There is no Special yet, so there is no Special row."
+        }
+      ]
+    },
+    "smoking-open-full": {
+      "title": "7. Cigarette smoking, phone sheet swiped up",
+      "notes": [
+        {
+          "n": 1,
+          "at": {
+            "phone": [
+              3,
+              38
+            ]
+          },
+          "text": "The full context on a phone: still short (about 20 seconds to read), with two sources."
+        }
+      ]
+    },
+    "population-unchanged": {
+      "title": "8. A map that doesn't qualify: Population density",
+      "notes": [
+        {
+          "n": 1,
+          "text": "No link and no change. The phone screenshots are pixel-identical. The laptop pair differs in 275 scattered pixels, which is label anti-aliasing between two renders, not a design change."
+        }
+      ]
+    },
+    "option-b-inline": {
+      "title": "Option B (not recommended): context opens inside the dataset card",
+      "notes": [
+        {
+          "n": 1,
+          "at": {
+            "laptop": [
+              12,
+              50
+            ],
+            "phone": [
+              50,
+              50
+            ]
+          },
+          "text": "The same text, opened inside the card. This is simpler to build, but on phones it covers most of the map (and the map reframes around the taller card), and on laptops it runs under the legend. It breaks the clean, authoritative map rule."
+        }
+      ]
+    },
+    "option-c-legend": {
+      "title": "Option C: the link at the foot of the legend (legend tapped open on the phone)",
+      "notes": [
+        {
+          "n": 1,
+          "at": {
+            "laptop": [
+              11,
+              94.5
+            ],
+            "phone": [
+              30,
+              94
+            ]
+          },
+          "text": "The link sits under \"View as table\" and opens the same panel or sheet as A. Pro: the legend stays after zooming (immersed), so the link survives. Con: on phones the legend is a collapsed strip, so the link is hidden until the strip is tapped. This shot taps it open; at rest it can't be seen."
+        }
+      ]
+    }
+  }
+}

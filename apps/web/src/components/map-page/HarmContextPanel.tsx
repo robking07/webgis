@@ -65,7 +65,7 @@ export function ContextBody({ ctx, onMapIt, part = "all", ns = "ctx" }: { ctx: H
                 <button type="button" onClick={() => onMapIt(l.id)} data-linked-map={l.id}
                   className="group flex w-full items-baseline justify-between gap-2 rounded px-1 py-1 text-left hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring">
                   <span className="text-[13px] font-medium text-primary group-hover:underline">{d.title}</span>
-                  <span className="shrink-0 text-[11px] text-muted-foreground">{l.why}</span>
+                  <span className="text-right text-[11px] text-muted-foreground">{l.why}</span>
                 </button>
               </li>
             );

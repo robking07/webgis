@@ -11,7 +11,8 @@
 // Notes file: { "title", "intro", "beforeLabel", "afterLabel",
 //   "views": { "<view name>": { "title", "notes": [ { "n": 1, "text": "…", "x"?: 0-100, "y"?: 0-100 } ] } } }
 // x and y (percent of the screenshot) place a numbered pin on both images; leave them out for a
-// note with no pin. Views listed in the notes file but missing from a run are skipped with a warning.
+// note with no pin. "size": "phone" or "laptop" puts the pin on that size's shots only;
+// "at": { "phone": [x, y], "laptop": [x, y] } places it per size (the layouts differ). Views listed in the notes file but missing from a run are skipped with a warning.
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 
@@ -36,13 +37,14 @@ const img = (dir, file) => {
 const beforeLabel = notes.beforeLabel || "Before (live)";
 const afterLabel = notes.afterLabel || "After (preview)";
 
-function pins(list) {
-  return (list || []).filter((n) => n.x != null && n.y != null)
-    .map((n) => `<span class="pin" style="left:${+n.x}%;top:${+n.y}%">${esc(n.n)}</span>`).join("");
+function pins(list, cls) {
+  return (list || []).map((n) => ({ n: n.n, xy: n.at ? n.at[cls] : n.x != null && n.y != null && (!n.size || n.size === cls) ? [n.x, n.y] : null }))
+    .filter((p) => p.xy)
+    .map((p) => `<span class="pin" style="left:${+p.xy[0]}%;top:${+p.xy[1]}%">${esc(p.n)}</span>`).join("");
 }
 function shot(src, cls, label, list) {
   if (!src) return `<figure class="${cls} missing"><figcaption>${esc(label)}</figcaption><div class="none">No screenshot</div></figure>`;
-  return `<figure class="${cls}"><figcaption>${esc(label)}</figcaption><div class="frame"><img src="${src}" alt="${esc(label)}"${cls === "laptop" ? ' tabindex="0" role="button" title="Click to zoom to 1:1"' : ""}>${pins(list)}</div></figure>`;
+  return `<figure class="${cls}"><figcaption>${esc(label)}</figcaption><div class="frame"><img src="${src}" alt="${esc(label)}"${cls === "laptop" ? ' tabindex="0" role="button" title="Click to zoom to 1:1"' : ""}>${pins(list, cls)}</div></figure>`;
 }
 
 const names = [...new Set([...Object.keys(notes.views || {}), ...mb.views.map((v) => v.name)])];
