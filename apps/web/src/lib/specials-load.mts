@@ -3,7 +3,7 @@
 // Odd Pairings, computes the charts and tables from the exported values, and writes
 // src/generated/specials.json. Any mistake fails the build with a message naming the file.
 // Doing this before the build (not inside a page) means a page re-rendered on the server later
-// never needs content/ or public/data/ on disk.
+// never needs content/ or the value files on disk.
 // Format and fields: content/specials/README.md. Relative .ts imports only: plain Node runs this.
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -138,9 +138,9 @@ function parseFile(appDir: string, byId: Map<string, DatasetEntry>, pairings: Pa
 }
 
 /** Every piece, drafts included, newest first. The app leaves drafts out on mapwich.org. */
-export function loadSpecials(appDir: string, registry: DatasetEntry[], pairings: PairingRef[]): Special[] {
+export function loadSpecials(appDir: string, registry: DatasetEntry[], pairings: PairingRef[], readData: (path: string) => unknown): Special[] {
   const byId = new Map(registry.map((d) => [d.id, d]));
-  setBlockContext({ byId, appDir });
+  setBlockContext({ byId, appDir, readData });
   let files: string[];
   try { files = readdirSync(join(appDir, "content/specials")).filter((f) => f.endsWith(".md") && f !== "README.md"); } catch { return []; }
   const all = files.map((f) => parseFile(appDir, byId, pairings, f));

@@ -3,7 +3,7 @@ import type pg from "pg";
 import type { DatasetEntry } from "@webgis/registry";
 import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { log, TILES, upsert, WEB_DATA } from "./util.ts";
+import { log, TILES, upsert } from "./util.ts";
 
 export type Level = "state" | "county" | "tract" | "block_group" | "block";
 export interface Value { value: number | null; moe: number | null }
@@ -69,14 +69,14 @@ export async function landArea(pool: pg.Pool, level: Level): Promise<Map<string,
 export function writeStopValues(datasetId: string, stop: string, level: Level, values: Map<string, Value>) {
   const out: Record<string, number> = {};
   for (const [g, v] of values) if (v.value != null && Number.isFinite(v.value)) out[g] = Number(v.value.toPrecision(4));
-  const dir = join(WEB_DATA, "values", datasetId, stop);
+  const dir = join(TILES, "values", datasetId, stop);
   mkdirSync(dir, { recursive: true });
   writeFileSync(join(dir, `${level}.json`), JSON.stringify(out));
   log(datasetId, `${stop} ${level}: ${Object.keys(out).length} values (web export only)`);
 }
 
 const round = (v: number | null, digits: number) => (v == null || !Number.isFinite(v) ? null : Number(v.toPrecision(digits)));
-export const TRACT_DETAIL_DIR = join(WEB_DATA, "values", "tracts");
+export const TRACT_DETAIL_DIR = join(TILES, "values", "tracts");
 type TractShard = Record<string, Record<string, [number | null, number | null]>>;
 
 /** Tract values live in static files, not the database (D-113: the free tier's 500 MB holds
@@ -93,7 +93,7 @@ export function writeTractValues(datasetId: string, values: Map<string, Value>) 
     const c = g.slice(0, 5);
     (byCounty.get(c) ?? byCounty.set(c, {}).get(c)!)[g.slice(5)] = [value, round(v.moe, 3)];
   }
-  const dir = join(WEB_DATA, "values", datasetId);
+  const dir = join(TILES, "values", datasetId);
   mkdirSync(dir, { recursive: true });
   writeFileSync(join(dir, "tract.json"), JSON.stringify(map));
 
@@ -113,13 +113,13 @@ export function writeTractValues(datasetId: string, values: Map<string, Value>) 
 
 /** Number of non-null tract values a dataset has in its map file (for docs). */
 export function tractValueCount(datasetId: string): number | null {
-  const path = join(WEB_DATA, "values", datasetId, "tract.json");
+  const path = join(TILES, "values", datasetId, "tract.json");
   return existsSync(path) ? Object.keys(JSON.parse(readFileSync(path, "utf8"))).length : null;
 }
 
 /** Read back a timeline stop written by writeStopValues (e.g. a population denominator). */
 export function readStopValues(datasetId: string, stop: string, level: Level): Map<string, number> {
-  const path = join(WEB_DATA, "values", datasetId, stop, `${level}.json`);
+  const path = join(TILES, "values", datasetId, stop, `${level}.json`);
   if (!existsSync(path)) throw new Error(`${datasetId} ${stop} ${level} isn't exported yet (run its timeline ingest first)`);
   return new Map(Object.entries(JSON.parse(readFileSync(path, "utf8")) as Record<string, number>));
 }

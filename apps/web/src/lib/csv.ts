@@ -2,6 +2,7 @@
 import type { GeoLevel } from "@webgis/design";
 import { loadMoes, loadValues, type Values } from "./values";
 import type { Dataset } from "./registry";
+import { staticUrl } from "@/lib/static-files";
 
 /** Levels that have a downloadable values file (blocks keep their values in the tiles, D-124). */
 export const CSV_LEVELS: GeoLevel[] = ["state", "county", "tract", "block_group"];
@@ -33,7 +34,7 @@ const tick = () => new Promise<void>((r) => setTimeout(r, 0));
 export async function buildCsv(d: Dataset, level: GeoLevel, load = loadValues, names?: Record<string, string>): Promise<{ blob: Blob; rows: number }> {
   const [values, nm, moes] = await Promise.all([
     load(d.id, level),
-    names ?? fetch("/data/geo/names.json").then((r) => r.json() as Promise<Record<string, string>>),
+    names ?? fetch(staticUrl("geo/names.json")).then((r) => r.json() as Promise<Record<string, string>>),
     // Margins of error exist only for survey (ACS) datasets, and only as a separate file at block-group level.
     d.measure.kind === "acs5" && level === "block_group" ? loadMoes(d.id, level).catch((): Values => ({})) : Promise.resolve({} as Values),
   ]);

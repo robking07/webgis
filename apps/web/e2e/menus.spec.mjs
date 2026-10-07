@@ -637,6 +637,63 @@ for (const vp of ["laptop", "monitor"]) {
   });
 }
 
+/** S2 (D-210): every data file (values at every level, names, search, tract geography) comes from
+ *  the tiles base (R2, or the /tiles link to data/tiles locally), never the site's own /data folder,
+ *  and a tract place page needs no database. */
+const ownDataFiles = (page) => page.requests.filter((u) => u.startsWith(`${BASE}/data/values`) || u.startsWith(`${BASE}/data/geo`));
+for (const vp of ["phone", "laptop"]) {
+  test(`${vp} data files: every level and the tract page read the tiles base, not /data`, async (o) => {
+    for (const [path, at, want] of [
+      ["/map?d=median_household_income&lv=state&at=-94.32,46.22,5", [-94.32, 46.22], "Minnesota"],
+      ["/map?d=median_household_income&lv=county&at=-93.4752,45.0061,8", HENNEPIN, "Hennepin"],
+      ["/map?d=median_household_income&lv=tract&at=-93.2650,44.9778,11", [-93.2650, 44.9778], "Tract"],
+      ["/map?d=median_household_income&lv=block_group&at=-93.2650,44.9778,12.5", [-93.2650, 44.9778], "Block Group"],
+    ]) {
+      const { page, ctx } = await o(vp, path);
+      const level = new URL(path, BASE).searchParams.get("lv");
+      expect(page.requests.some((u) => new RegExp(`/values/median_household_income/${level}\\.json`).test(u)), `${level}: no values request (${page.requests.filter((u) => u.includes("values")).join(", ") || "none"})`);
+      const drawn = await page.evaluate((lv) => {
+        const m = window.__wgMap;
+        const ids = m.getStyle().layers.filter((l) => l.id.startsWith(`${lv}-fill`)).map((l) => l.id);
+        return ids.length ? m.queryRenderedFeatures({ layers: ids }).length : 0;
+      }, level);
+      expect(drawn > 0, `${level}: nothing drawn`);
+      await immerse(page);
+      await tapLonLat(page, ...at);
+      const det = page.locator('section[aria-label^="Details for"]');
+      await det.waitFor();
+      expect((await det.getAttribute("aria-label")).includes(want), `${level}: details opened for ${await det.getAttribute("aria-label")}, not ${want}`);
+      await page.waitForFunction(() => /\$\d/.test(document.querySelector('section[aria-label^="Details for"]')?.innerText ?? ""), null, { timeout: 15000 });
+      expect(!ownDataFiles(page).length, `${level}: requests to the site's data folder: ${ownDataFiles(page).join(", ")}`);
+      expect(!dbCalls(page).length, `${level}: database calls: ${dbCalls(page).join(", ")}`);
+      await ctx.close();
+    }
+    const { page } = await o(vp, "/place/27053100200", { ready: false });
+    await page.locator("main h1").waitFor({ timeout: 20000 });
+    expect((await page.locator("main h1").innerText()) === "Tract 1002, Hennepin County, MN", `tract page heading "${await page.locator("main h1").innerText()}"`);
+    const meta = await page.locator("main header p").last().innerText();
+    expect(/^[1-9]\d* datasets · 0\.6 sq mi of land$/.test(meta), `tract page: "${meta}"`);
+    expect(page.requests.some((u) => u.includes("/geo/tracts/27053.json")), "no request for the county's tract geography file");
+    expect(!ownDataFiles(page).length, `tract page: requests to the site's data folder: ${ownDataFiles(page).join(", ")}`);
+    expect(!dbCalls(page).length, `tract page: database calls: ${dbCalls(page).join(", ")}`);
+  });
+}
+
+test("laptop CSV download: state, county, tract and block group files have rows", async (o) => {
+  const { page } = await o("laptop", "/data/median_household_income", { ready: false });
+  const want = { States: 50, Counties: 3000, "Census tracts": 80000, "Block groups": 200000 };
+  for (const [label, min] of Object.entries(want)) {
+    const button = page.getByRole("button", { name: `${label} (CSV)` });
+    await button.waitFor({ timeout: 20000 });
+    const [dl] = await Promise.all([page.waitForEvent("download", { timeout: 60000 }), button.click()]);
+    const { readFileSync } = await import("node:fs");
+    const text = readFileSync(await dl.path(), "utf8");
+    const rows = text.split("\r\n").filter((l) => /^\d/.test(l)).length;
+    expect(rows >= min, `${label}: ${rows} rows (want at least ${min})`);
+  }
+  expect(!ownDataFiles(page).length, `requests to the site's data folder: ${ownDataFiles(page).join(", ")}`);
+});
+
 // ── Year slider (issue #102): one notch per year, lands only on a notch, no range fill ─────────
 for (const vp of ["phone", "laptop"]) {
   test(`${vp} year slider: notches, snap by tap, drag and keys, average and back`, async (o) => {

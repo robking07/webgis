@@ -1,7 +1,8 @@
 // Runs before dev/build:
 //  1. src/generated/theme.css — CSS variables for both themes, from @webgis/design tokens
 //  2. public/maplibre/ — MapLibre's worker + shared chunk, for setWorkerUrl() (v6 under Turbopack)
-//  3. public/tiles → data/tiles symlink for local PMTiles during development
+//  3. public/tiles → data/tiles symlink: local PMTiles and data files (values/, geo/, details/)
+//     during development and the e2e suite (S2)
 //  4. src/generated/registry.json, regenerated from data/registry/datasets/*.yaml on every
 //     build, so a new registry entry can never be missing from the app
 import { copyFileSync, existsSync, mkdirSync, readFileSync, symlinkSync, writeFileSync, lstatSync } from "node:fs";
@@ -39,8 +40,29 @@ const entries = loadRegistry();
 writeFileSync(join(app, "src/generated/registry.json"), JSON.stringify(entries, null, 1));
 writeFileSync(join(app, "src/generated/glossary.json"), JSON.stringify(loadGlossary(), null, 1));
 // 5. src/generated/specials.json: the Specials, checked and with their charts and tables computed
-//    from public/data/values (D-122). A bad piece stops here with a message naming the file.
+//    from the exported county values (D-122). A bad piece stops here with a message naming the file.
+//    The values live beside the tiles (S2): read from data/tiles when it has them (local dev, e2e),
+//    otherwise fetched from the tiles base (R2; https://tiles.mapwich.org when unset, so a fresh
+//    clone and the Vercel build work). The parser is synchronous, so a file it doesn't have yet
+//    stops the pass, gets fetched, and the pass runs again (a handful of files per piece).
 const insights = JSON.parse(readFileSync(join(app, "src/generated/insights.json"), "utf8")).insights;
-const specials = loadSpecials(app, entries, insights);
+const remote = (process.env.NEXT_PUBLIC_TILES_BASE_URL || "").startsWith("http") ? process.env.NEXT_PUBLIC_TILES_BASE_URL! : "https://tiles.mapwich.org";
+const fetched = new Map<string, unknown>();
+class NeedFile extends Error { path: string; constructor(path: string) { super(`needs ${path}`); this.path = path; } }
+const readData = (path: string): unknown => {
+  if (fetched.has(path)) return fetched.get(path);
+  const local = join(tiles, path);
+  if (existsSync(local)) return JSON.parse(readFileSync(local, "utf8"));
+  throw new NeedFile(path);
+};
+let specials: ReturnType<typeof loadSpecials>;
+for (;;) {
+  try { specials = loadSpecials(app, entries, insights, readData); break; } catch (e) {
+    if (!(e instanceof NeedFile)) throw e;
+    const r = await fetch(`${remote.replace(/\/$/, "")}/${e.path}`);
+    if (r.status !== 404 && r.status !== 403 && !r.ok) throw new Error(`prepare: ${remote}/${e.path} → ${r.status}`);
+    fetched.set(e.path, r.ok ? await r.json() : null);
+  }
+}
 writeFileSync(join(app, "src/generated/specials.json"), JSON.stringify(specials, null, 1));
 console.log(`prepare: theme.css, maplibre worker, tiles link, registry.json (${entries.length} datasets), specials.json (${specials.length} pieces) ready`);

@@ -8,8 +8,11 @@ import pg from "pg";
 
 export const ROOT = join(dirname(fileURLToPath(import.meta.url)), "../../..");
 export const CACHE = join(ROOT, "data/cache");
+// Everything the browser reads beside the boundary tiles: PMTiles, values/ (every level), geo/ and
+// details/, published to R2 (D-124, D-198, S2). Git-ignored; the site's own folder holds none of it.
 export const TILES = join(ROOT, "data/tiles");
-export const WEB_DATA = join(ROOT, "apps/web/public/data");
+// County and state names, committed: the web bundles them for share cards and Specials (S2).
+export const NAMES_JSON = join(ROOT, "apps/web/src/generated/names.json");
 
 /** Download once into data/cache; later runs reuse the file. */
 export async function cached(url: string, name = url.split("/").pop()!): Promise<string> {

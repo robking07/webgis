@@ -2,12 +2,14 @@
 //   apps/web/src/generated/registry.json      — validated registry entries
 //   apps/web/src/generated/glossary.json      — plain-language explainers (glossary.yaml)
 //   apps/web/src/generated/periods.json       — timeline stops exported per dataset (D-36)
-//   apps/web/public/data/values/<id>/<level>.json — { geoid: value } for each dataset/level
+//   apps/web/src/generated/names.json         — state and county names (bundled for share cards, Specials)
+//   data/tiles/values/<id>/<level>.json       — { geoid: value } for each dataset/level  ┐ published to R2 by
+//   data/tiles/geo/{names,places,search}.json — names, map points, place search index   ┘ `ingest publish-data` (S2)
 import { existsSync, mkdirSync, readdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { loadGlossary, loadRegistry } from "@webgis/registry/load";
 import { timelineStops } from "@webgis/registry/timeline";
-import { db, log, ROOT, STATES, WEB_DATA } from "./util.ts";
+import { db, log, NAMES_JSON, ROOT, STATES, TILES } from "./util.ts";
 import { readGazetteer } from "./geographies.ts";
 
 const round = (v: number) => Number(v.toPrecision(4));
@@ -26,7 +28,7 @@ export function exportRegistry() {
   const periods: Record<string, Record<string, string[]>> = {};
   for (const e of entries) {
     for (const s of timelineStops(e)) {
-      const dir = join(WEB_DATA, "values", e.id, s.id);
+      const dir = join(TILES, "values", e.id, s.id);
       if (s.isDefault || !existsSync(dir)) continue;
       const levels = readdirSync(dir).filter((f) => f.endsWith(".json")).map((f) => f.replace(/\.json$/, ""));
       if (levels.length) (periods[e.id] ??= {})[s.id] = levels;
@@ -41,9 +43,11 @@ export async function exportNames() {
   const pool = db();
   const { rows } = await pool.query<{ geoid: string; name: string; lon: number; lat: number }>(
     "select geoid, name, lon, lat from public.geographies where level in ('state','county')");
-  const dir = join(WEB_DATA, "geo");
+  const dir = join(TILES, "geo");
   mkdirSync(dir, { recursive: true });
-  writeFileSync(join(dir, "names.json"), JSON.stringify(Object.fromEntries(rows.map((r) => [r.geoid, r.name]))));
+  const names = JSON.stringify(Object.fromEntries(rows.map((r) => [r.geoid, r.name])));
+  writeFileSync(join(dir, "names.json"), names);
+  writeFileSync(NAMES_JSON, names);
   // Name + internal point, so tables and search can fly the map to a place.
   writeFileSync(join(dir, "places.json"), JSON.stringify(Object.fromEntries(rows.map((r) => [r.geoid, [r.name, +r.lon.toFixed(4), +r.lat.toFixed(4)]]))));
   log("export", `geo/names.json + places.json: ${rows.length} places`);
@@ -72,7 +76,7 @@ export async function exportSearch() {
     out.push([`${name}, ${usps}`, k?.[1] ?? "Place", "", +(+p.INTPTLONG).toFixed(4), +(+p.INTPTLAT).toFixed(4), Math.max(1, Math.round(+p.ALAND_SQMI))]);
     n++;
   }
-  const dir = join(WEB_DATA, "geo");
+  const dir = join(TILES, "geo");
   mkdirSync(dir, { recursive: true });
   writeFileSync(join(dir, "search.json"), JSON.stringify(out));
   log("export", `geo/search.json: ${rows.length} states/counties + ${n} cities, towns and communities`);
@@ -88,7 +92,7 @@ export async function exportValues(only?: string[]) {
       "select geoid, value from public.dataset_values where dataset_id = $1 and level = $2 and value is not null", [dataset_id, level]);
     const out: Record<string, number> = {};
     for (const r of rows) out[r.geoid] = round(r.value!);
-    const dir = join(WEB_DATA, "values", dataset_id);
+    const dir = join(TILES, "values", dataset_id);
     mkdirSync(dir, { recursive: true });
     writeFileSync(join(dir, `${level}.json`), JSON.stringify(out));
     log("export", `${dataset_id}/${level}.json: ${rows.length} values`);

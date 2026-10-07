@@ -1,5 +1,5 @@
 // Every number in content/specials/work-from-home-and-exercise.md, computed from Mapwich's own
-// exported county values (public/data/values). Not part of the app or the build; run by hand:
+// exported county values (data/tiles/values, S2). Not part of the app or the build; run by hand:
 //   node apps/web/scripts/specials-numbers/work-from-home-and-exercise.mjs
 // Spearman ρ uses average ranks for ties and "within state" removes each state's mean rank,
 // the same method as the Odd Pairings (data/ingest/src/insights.ts).
@@ -7,9 +7,10 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const DATA = join(dirname(fileURLToPath(import.meta.url)), "../../public/data");
+const here = dirname(fileURLToPath(import.meta.url));
+const DATA = join(here, "../../../../data/tiles");
 const V = (id, stop) => JSON.parse(readFileSync(join(DATA, "values", id, ...(stop ? [stop] : []), "county.json"), "utf8"));
-const NAMES = JSON.parse(readFileSync(join(DATA, "geo/names.json"), "utf8"));
+const NAMES = JSON.parse(readFileSync(join(here, "../../src/generated/names.json"), "utf8"));
 
 const pearson = (a, b) => {
   const n = a.length, ma = a.reduce((s, v) => s + v, 0) / n, mb = b.reduce((s, v) => s + v, 0) / n;

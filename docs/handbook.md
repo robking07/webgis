@@ -18,10 +18,14 @@ Full build spec: `docs/SPEC.md`. Project rules: `CLAUDE.md`.
     `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET`
   - If a task needs a key you don't have, stop and say so in your report. Don't hunt for it.
 - Docs-only work needs no install.
-- With no `.env.local`, `npm run build` and `npm run start -w web` still work (16 s build): details for
-  states and counties come from `details/` under the tiles base (empty locally unless the base is R2), `/api/keepalive` returns 500, and the map reads tiles from
-  `/tiles/<level>.pmtiles`, which is empty because `data/tiles/` is git-ignored. Set
-  `NEXT_PUBLIC_TILES_BASE_URL=https://tiles.mapwich.org` to see boundaries.
+- With no `.env.local`, `npm run build` and `npm run start -w web` still work (16 s build; the build
+  fetches the few county value files the Specials need from `https://tiles.mapwich.org`), and
+  `/api/keepalive` returns 500. Every data file the map reads (PMTiles, `values/`, `geo/`,
+  `details/`) comes from the tiles base: `/tiles/...` locally, the `apps/web/public/tiles` link to
+  `data/tiles/`, which is git-ignored and empty in a fresh clone (D-210). Either set
+  `NEXT_PUBLIC_TILES_BASE_URL=https://tiles.mapwich.org` (R2 only allows the production origins
+  and `http://localhost:3000`), or fill `data/tiles/` (ingest, or copy the main checkout's) to work
+  offline. Nothing goes in `apps/web/public/data` any more.
 - Ingest also needs `ogr2ogr` (GDAL) and `tippecanoe` on the PATH (the `build-tiles` skill says how they
   are installed on Robbie's machine). Check with `ogr2ogr --version` and `tippecanoe --version`.
 - Read `docs/progress.md` first (where things stand, lessons from earlier tasks).
