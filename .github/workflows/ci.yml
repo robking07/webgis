@@ -89,13 +89,19 @@ jobs:
       - name: Unit tests (npm test)
         run: npm test
 
-  click-through:
-    name: click-through
+  # The click-through tests, split four ways and run side by side (D-220): about 5 minutes of
+  # tests per shard instead of 17 in one job. Each shard starts its own server and browser.
+  click-through-shard:
+    name: click-through ${{ matrix.shard }}/4
     needs: build
-    # Heavy (~10 min): ready PRs only, not every draft push.
+    # Heavy: ready PRs only, not every draft push.
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -107,10 +113,28 @@ jobs:
         with:
           name: web-build
       - run: tar -xzf build.tgz
+      # Headless runs use Chromium's headless shell only; skip the full browser download.
       - name: Install Chromium
-        run: npx playwright-core install --with-deps chromium
-      # Starts `next start` on the production build and runs every test (apps/web/e2e/README.md).
+        run: npx playwright-core install --with-deps --only-shell chromium
+      # Starts `next start` on the production build and runs this shard's tests (apps/web/e2e/README.md).
       - run: npm run test:e2e -w web
+        env:
+          SHARD: ${{ matrix.shard }}/4
+
+  # The one "click-through" check scripts/merge-pr.sh looks for: passes only if every shard passed.
+  click-through:
+    name: click-through
+    needs: [build, click-through-shard]
+    if: always() && github.event.pull_request.draft == false && needs.build.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Every shard passed
+        env:
+          SHARDS: ${{ needs.click-through-shard.result }}
+        run: |
+          echo "click-through shards: $SHARDS"
+          test "$SHARDS" = "success"
 
   secret-scan:
     name: secret scan

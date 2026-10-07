@@ -14,7 +14,9 @@ npm run build              # from the repo root (the tests run against the produ
 npm run test:e2e -w web    # starts `next start` on port 3199, runs every test, stops the server
 ```
 
-It prints one line per test and exits non-zero if any fail. A run takes about 5 minutes.
+It prints one line per test and exits non-zero if any fail. A full run takes about 5 minutes on a
+fast machine and about 17 on CI's runners, so CI splits it into four shards that run side by side
+(`SHARD`, below; D-220).
 
 Options (environment variables):
 
@@ -23,6 +25,7 @@ Options (environment variables):
 | `BASE=http://localhost:3000` | Test a server that's already running instead of starting one. |
 | `E2E_PORT=3199` | Port for the server the test starts. If something already answers on it (another worktree's server), the test runs against that instead; pick a free port or use `BASE`. |
 | `ONLY=contrast` | Run only the tests whose names contain this text. |
+| `SHARD=2/4` | Run every 4th test, starting with the 2nd (after `ONLY`). CI runs shards 1/4 to 4/4 as parallel jobs. |
 | `CHROMIUM_PATH=…` | The Chromium (or Chrome) binary to use. |
 | `CONTRAST_LOG=/tmp/contrast.json` | Write every measured contrast ratio to a file. |
 | `HEADED=1` | Show the browser. |
