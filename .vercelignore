@@ -9,4 +9,5 @@ apps/web/public/tiles
 apps/web/public/maplibre
 .env*
 !.env.example
-.claude
+.claude/*
+!.claude/agents

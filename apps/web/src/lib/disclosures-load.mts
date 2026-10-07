@@ -56,7 +56,9 @@ export function parseAgent(markdown: string): AgentRole | null {
 
 export function loadAgents(root: string): AgentRole[] {
   const dir = join(root, ".claude/agents");
-  return readdirSync(dir).filter((f) => f.endsWith(".md")).sort()
+  let files: string[];
+  try { files = readdirSync(dir); } catch { return []; } // not uploaded to some builds; the page says so
+  return files.filter((f) => f.endsWith(".md")).sort()
     .map((f) => parseAgent(readFileSync(join(dir, f), "utf8"))).filter((a): a is AgentRole => !!a);
 }
 

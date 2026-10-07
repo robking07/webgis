@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import { SiteFooter } from "@/components/SiteNav";
 import { SiteHeader } from "@/components/SiteHeader";
 import disclosures from "@/generated/disclosures.json";
+import type { AgentRole, UsageRow, totals as totalsFn } from "@/lib/disclosures-load.mts";
+
+// The JSON types an empty list as never[], so give it its real shape.
+type DisclosuresData = { rows: UsageRow[]; totals: ReturnType<typeof totalsFn>; agents: AgentRole[] };
 
 export const metadata: Metadata = {
   title: "Disclosures · Mapwich",
@@ -33,7 +37,7 @@ const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 const tokens = (n: number) => (n >= 1e6 ? `${(n / 1e6).toFixed(2)}M` : `${Math.round(n / 1e3)}k`);
 
 export default function DisclosuresPage() {
-  const { rows, totals, agents } = disclosures;
+  const { rows, totals, agents } = disclosures as DisclosuresData;
   const roles = [...agents].sort((a, b) => ROLE_ORDER.indexOf(a.name) - ROLE_ORDER.indexOf(b.name));
   const h2 = "text-xl font-semibold tracking-tight";
   const th = "px-3 py-2 text-left font-semibold whitespace-nowrap";
@@ -64,6 +68,7 @@ export default function DisclosuresPage() {
             Work is split among AI roles. Each one has a narrow job and runs on a set model and effort level, read from the project&apos;s agent
             files when this page is built. A task can override its role&apos;s default; the usage log below shows what each task actually used.
           </p>
+          {roles.length === 0 ? <p className="text-sm text-muted-foreground">Role list unavailable in this build</p> : (
           <div className="overflow-x-auto rounded-lg border">
             <table className="w-full min-w-[34rem] text-sm">
               <thead className="bg-muted"><tr><th className={th}>Role</th><th className={th}>What it does</th><th className={th}>Model</th><th className={th}>Effort</th></tr></thead>
@@ -79,6 +84,7 @@ export default function DisclosuresPage() {
               </tbody>
             </table>
           </div>
+          )}
         </section>
 
         <section aria-labelledby="review" className="mb-10 max-w-2xl space-y-2">
