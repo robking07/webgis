@@ -4,7 +4,8 @@
 //
 // Env: BASE=<url> tests an already running server instead of starting `next start`;
 // E2E_PORT (default 3199); CHROMIUM_PATH (default: playwright-core's own Chromium);
-// ONLY=<substring> runs only the tests whose names contain it; HEADED=1 shows the browser.
+// ONLY=<substring> runs only the tests whose names contain it; SHARD=<k>/<n> runs every n-th test
+// starting at the k-th (CI runs four shards side by side, D-<PR>); HEADED=1 shows the browser.
 import { spawn } from "node:child_process";
 import { createRequire } from "node:module";
 import { dirname, join } from "node:path";
@@ -16,6 +17,12 @@ const app = join(here, "..");
 const PORT = Number(process.env.E2E_PORT || 3199);
 let BASE = process.env.BASE?.replace(/\/$/, "");
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+// SHARD=k/n: this run takes tests k, k+n, k+2n, … of the list (round-robin keeps the slow ones spread out).
+const shard = process.env.SHARD?.match(/^(\d+)\/(\d+)$/);
+if (process.env.SHARD && (!shard || +shard[1] < 1 || +shard[1] > +shard[2])) {
+  console.error(`SHARD must look like 2/4, got "${process.env.SHARD}"`);
+  process.exit(2);
+}
 
 // ── Server ─────────────────────────────────────────────────────────────────────
 let server = null;
@@ -783,9 +790,12 @@ for (const vp of ["phone", "laptop"]) {
 }
 
 // ── Run ────────────────────────────────────────────────────────────────────────
+// Round-robin keeps the slow tests spread across shards.
+const mine = shard ? queue.filter((_, i) => i % +shard[2] === +shard[1] - 1) : queue;
+if (shard) console.log(`Shard ${shard[1]} of ${shard[2]}: ${mine.length} of ${queue.length} tests`);
 const t0 = Date.now();
 try {
-  for (const [name, fn] of queue) await run(name, fn);
+  for (const [name, fn] of mine) await run(name, fn);
 } finally {
   await browser.close().catch(() => {});
   server?.kill();
