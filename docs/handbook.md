@@ -79,6 +79,8 @@ CI runs these on every PR (`.github/workflows/ci.yml`, D-168); `scripts/merge-pr
 merge while one is red. Docs-only PRs (only `docs/`, `.claude/` or top-level `*.md`) skip the
 ones marked *, which counts as passing. Checks marked † run on ready PRs only, not drafts: the
 lead runs `gh pr ready <n>` before merging, and `merge-pr.sh` refuses a code PR until they pass.
+Agent sandboxes have no Chromium (missing `libnspr4`), so workers skip e2e and screenshots there and
+say so. The lead marks UI PRs ready once the build passes, so CI's click-through runs early.
 
 | CI check | What it covers | Blocking? |
 | --- | --- | --- |
