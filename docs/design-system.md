@@ -111,10 +111,19 @@ Light and dark come from the same token structure; the basemap and the UI chrome
 | light | links and accent text | `accent` on `surface` | 6.44 | 4.5 |
 | light | text on accent buttons | `accentText` on `accent` | 6.44 | 4.5 |
 | light | focus ring (non-text) | `focus` on `surface` | 6.44 | 3 |
+| light | splash logo on black | `splashInk` on `splashBg` | 17.80 | 7 |
+| light | splash tagline on black | `splashTagline` on `splashBg` | 8.62 | 4.5 |
 | light | logo bread on the page (non-text) | `brandBread` on `bg` | 4.22 | 3 |
 | light | logo bread on panels (non-text) | `brandBread` on `surface` | 4.61 | 3 |
 | light | logo map layer on the page (non-text) | `accent` on `bg` | 5.91 | 3 |
 | light | panel borders (decorative) | `border` on `surface` | 1.45 | 1.3 |
+| light | on-map text on its panel: dataset title, Filters button, level note, legend strip | `text` on `surface` | 17.05 | 4.5 |
+| light | on-map secondary text on its panel: category, 'closer in' hint | `textMuted` on `surface` | 6.58 | 4.5 |
+| light | on-map icons on their panel: menu, Back, zoom, carets (non-text) | `text` on `surface` | 17.05 | 3 |
+| light | filter count badge | `accentText` on `accent` | 6.44 | 4.5 |
+| light | on-map control edge vs its own panel (non-text, phones) | `controlEdge` on `surface` | 3.88 | 3 |
+| light | on-map control edge vs U.S. land (non-text, phones) | `controlEdge` on `map.focusLand` | 3.53 | 3 |
+| light | on-map control edge vs land outside the U.S. (non-text, phones) | `controlEdge` on `map.land` | 3.03 | 2 |
 | light | map labels | `map.label` on `map.labelHalo` | 13.37 | 7 |
 | light | minor map labels | `map.labelMuted` on `map.labelHalo` | 6.18 | 4.5 |
 | light | labels outside the U.S. (muted on purpose, still legible) | `map.labelForeign` on `map.labelHalo` | 3.32 | 3 |
@@ -133,10 +142,19 @@ Light and dark come from the same token structure; the basemap and the UI chrome
 | dark | links and accent text | `accent` on `surface` | 7.62 | 4.5 |
 | dark | text on accent buttons | `accentText` on `accent` | 7.85 | 4.5 |
 | dark | focus ring (non-text) | `focus` on `surface` | 7.62 | 3 |
+| dark | splash logo on black | `splashInk` on `splashBg` | 17.80 | 7 |
+| dark | splash tagline on black | `splashTagline` on `splashBg` | 8.62 | 4.5 |
 | dark | logo bread on the page (non-text) | `brandBread` on `bg` | 8.40 | 3 |
 | dark | logo bread on panels (non-text) | `brandBread` on `surface` | 7.63 | 3 |
 | dark | logo map layer on the page (non-text) | `accent` on `bg` | 8.39 | 3 |
 | dark | panel borders (decorative) | `border` on `surface` | 1.46 | 1.3 |
+| dark | on-map text on its panel: dataset title, Filters button, level note, legend strip | `text` on `surface` | 14.30 | 4.5 |
+| dark | on-map secondary text on its panel: category, 'closer in' hint | `textMuted` on `surface` | 6.92 | 4.5 |
+| dark | on-map icons on their panel: menu, Back, zoom, carets (non-text) | `text` on `surface` | 14.30 | 3 |
+| dark | filter count badge | `accentText` on `accent` | 7.85 | 4.5 |
+| dark | on-map control edge vs its own panel (non-text, phones) | `controlEdge` on `surface` | 3.92 | 3 |
+| dark | on-map control edge vs U.S. land (non-text, phones) | `controlEdge` on `map.focusLand` | 3.57 | 3 |
+| dark | on-map control edge vs land outside the U.S. (non-text, phones) | `controlEdge` on `map.land` | 4.21 | 2 |
 | dark | map labels | `map.label` on `map.labelHalo` | 12.22 | 7 |
 | dark | minor map labels | `map.labelMuted` on `map.labelHalo` | 6.62 | 4.5 |
 | dark | labels outside the U.S. (muted on purpose, still legible) | `map.labelForeign` on `map.labelHalo` | 3.96 | 3 |
@@ -155,6 +173,7 @@ Light and dark come from the same token structure; the basemap and the UI chrome
 - Breaks are computed **per geography level** (state, county and tract each get their own), so the legend always describes what's on screen. Its caption names the level.
 - Class labels are text (`< a`, `a – b`, `≥ z`), so the legend never relies on color alone.
 - "No data" is always shown, with a hatched swatch, so a gap never reads as a low value.
+- **Reliability (D-222):** ACS 5-year estimates are graded by coefficient of variation, CV = (MOE / 1.645) / |value| (`src/reliability.ts`): under 15% reliable, 15–30% "use with caution" (details-panel note only), over 30% unreliable. With the legend's toggle on (off by default), unreliable tracts and block groups get diagonal hatching over their fill: paired `map.hatchDark` / `map.hatchLight` stripes, 1.25 px wide, repeating every 7 px at 60% opacity (`HATCH` in `src/themes.ts`); the design gate checks the hatch stands out from every class and the no-data fill in both themes. The fill color still shows underneath. The hatch runs the opposite way from the no-data swatch.
 - **Skewed data:** when quantile breaks would land on the minimum (e.g. most tracts at exactly 0% transit commuting), the bottom class becomes "exactly the minimum" (labeled "0%") and the other classes are quantiles of the values above it. This avoids an empty "< 0%" class.
 - Bivariate maps use tertiles on each axis; cell = 3 · y + x.
 
