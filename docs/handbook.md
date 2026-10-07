@@ -28,7 +28,9 @@ Full build spec: `docs/SPEC.md`. Project rules: `CLAUDE.md`.
   offline. Nothing goes in `apps/web/public/data` any more.
 - Ingest also needs `ogr2ogr` (GDAL) and `tippecanoe` on the PATH (the `build-tiles` skill says how they
   are installed on Robbie's machine). Check with `ogr2ogr --version` and `tippecanoe --version`.
-- Read `docs/progress.md` first (where things stand, lessons from earlier tasks).
+- Read `docs/progress.md` first (where things stand, lessons from earlier tasks). For a fast
+  picture of open work, datasets, decisions and hot-spot files, run `node scripts/brief.mjs`
+  (and `node scripts/brief.mjs <issue>` for your task's thread and PRs).
 
 ## 2. House rules
 

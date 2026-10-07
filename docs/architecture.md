@@ -19,7 +19,7 @@ sources into tiles and JSON. The **website** (`apps/web`) only reads what the pi
 | `data/registry/` | The single source of truth for datasets: `datasets/*.yaml`, `schema.ts` (zod), `glossary.yaml`, `timeline.ts`, `load.ts`. |
 | `data/ingest/src/` | `run.ts` dispatches steps (`npm run ingest -- <step>`). One file per source kind (`acs`, `places`, `climdiv`, `lodes`, `nbi`, `fars`, `vmt`, `cejst`, `ddp287g`, `features`), plus `geographies`, `tiles`, `publish-tiles`, `exportweb`, `insights`, `validate`. |
 | `supabase/migrations/` | SQL for the hosted Postgres/PostGIS database (datasets, geographies, dataset values, insights, reviewers, insight reviews). Applied with `npm run db:migrate`. |
-| `scripts/` | `merge-pr.sh` (the only merge path), `db-push.sh`, `check-decisions.mjs`, `test-guardrails.mjs`. |
+| `scripts/` | `merge-pr.sh` (the only merge path), `db-push.sh`, `check-decisions.mjs`, `test-guardrails.mjs`, `brief.mjs` (the session brief: open work, datasets, decisions, hot spots, built fresh each run; `node scripts/brief.mjs <issue>` for one task). |
 | `.claude/` | `agents/` (lead, data-scout), `skills/`, `hooks/guardrails.mjs`, `settings.json`. |
 | `docs/` | `SPEC.md`, `branching.md`, `data-intake.md`, `data-sources.md`, `roadmap.md`, `decisions/` (D-100 and up), `DECISIONS.md` (frozen D-01 to D-99). |
 
