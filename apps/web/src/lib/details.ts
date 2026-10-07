@@ -14,7 +14,7 @@ export type DetailShard = Record<string, {
   name: string; lon: number; lat: number; aland_sqmi: number;
   values: Record<string, [number | null, number | null]>;
 }>;
-type TractShard = Record<string, Record<string, [number | null, number | null]>>;
+export type TractShard =Record<string, Record<string, [number | null, number | null]>>;
 /** One county's tracts, as `ingest tract-geo` writes them: { "<6-digit code>": [name, lon, lat, land sq mi] }. */
 export type TractGeoShard = Record<string, [string, number, number, number]>;
 
@@ -63,6 +63,12 @@ export async function fetchDetail(geoid: string): Promise<Detail> {
   if (geoid.length === 11) return detailFromTractShard(await loadJson<TractShard>(tractUrl(geoid), "Tract data"), geoid);
   if (geoid.length !== 2 && geoid.length !== 5) return {};
   return detailFromShard(await loadJson<DetailShard>(detailUrl(geoid), "Place data"), geoid);
+}
+
+/** One county's tract values ({ dataset id: { 6-digit tract: [value, moe] } }), shared with the
+ *  details panel's cache; null when the county has no file. */
+export function loadTractShard(county: string): Promise<TractShard | null> {
+  return loadJson<TractShard>(tractUrl(county), "Tract data");
 }
 
 export async function fetchGeography(geoid: string): Promise<Geography | null> {

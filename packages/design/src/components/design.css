@@ -11,6 +11,13 @@
 /* Line samples carry the same casing as the map's data lines (featureLineCasing). */
 .wg-swatch-line { box-shadow: 0 0 0 1px var(--map-feature-line-casing); }
 .wg-swatch-nodata { background: repeating-linear-gradient(45deg, var(--map-no-data) 0 3px, var(--ui-surface) 3px 6px); }
+/* Reliability hatching (D-222), drawn like the map's pattern (hatchImage): a dark and a light stripe
+   at HATCH.width (1.25px), repeating every HATCH.spacing / √2 (≈4.95px), at HATCH.opacity (60%),
+   over a class color set inline. Runs the other way from the no-data swatch. Keep in step with HATCH. */
+.wg-swatch-hatch { background-image: repeating-linear-gradient(-45deg,
+  color-mix(in srgb, var(--map-hatch-dark) 60%, transparent) 0 1.25px,
+  color-mix(in srgb, var(--map-hatch-light) 60%, transparent) 1.25px 2.5px,
+  transparent 2.5px 4.95px); }
 /* Sized to its tracks so the rotation pivots on the diamond's own center; the margin holds the
    rotated corners (a 70px square turned 45° spans 99px, so 15px a side). */
 .wg-biv-grid { display: grid; width: max-content; grid-template-columns: repeat(3, 22px); grid-auto-rows: 22px; gap: 2px; transform: rotate(-45deg); margin: 16px; }

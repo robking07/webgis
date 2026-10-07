@@ -3,7 +3,7 @@
 // the client through feature state: each feature gets `c` = its class index, so the
 // same tiles serve every dataset and adding one needs no re-tiling.
 import type { LayerSpecification, StyleSpecification } from "maplibre-gl";
-import { THEMES, type ThemeName } from "./themes.ts";
+import { HATCH, THEMES, type ThemeName } from "./themes.ts";
 import { LABEL, RANK_WIDTH, SIZE, zoomInterp, GEO_LEVELS, type GeoLevel } from "./sizing.ts";
 import { US_LABEL_MASK } from "./us-label-mask.ts";
 
@@ -262,6 +262,74 @@ export function choroplethFillsByState(level: GeoLevel, colors: string[], classe
  *  string short (fast `in` in the workers) and the expression small (cheap to unpack). */
 const PACK_GROUP = 4;
 
+/** Reliability hatching (D-222): levels that can be hatched, the pattern image's name, and the
+ *  layer id. Counties and states rarely have unreliable estimates; they aren't hatched. */
+export const HATCH_LEVELS: ReadonlySet<string> = new Set(["tract", "block_group"]);
+export const HATCH_IMAGE = "wg-hatch";
+export const hatchLayerId = (level: GeoLevel) => `${level}-hatch`;
+/** A filter that matches nothing (the hatch layer's resting state). */
+export const NO_FEATURES = ["==", 1, 0];
+
+/** Filter matching exactly these geoids, packed the same way as choroplethFillsByState (one
+ *  comma-delimited string per 4-digit prefix, tested with a native `in`), so a few thousand tracts
+ *  or tens of thousands of block groups stay a compact expression. */
+export function membershipFilter(ids: Iterable<string>): unknown {
+  const byPrefix = new Map<string, string[]>();
+  for (const id of ids) {
+    if (id.length <= PACK_GROUP) continue;
+    const k = id.slice(0, PACK_GROUP);
+    let l = byPrefix.get(k);
+    if (!l) byPrefix.set(k, (l = []));
+    l.push(id.slice(PACK_GROUP));
+  }
+  if (!byPrefix.size) return NO_FEATURES;
+  const cases = [...byPrefix].flatMap(([k, l]) => [k, `,${l.join(",")},`]);
+  return [
+    "let", "g", ["to-string", ["get", "geoid"]],
+    ["in", ["concat", ",", ["slice", ["var", "g"], PACK_GROUP], ","], ["match", ["slice", ["var", "g"], 0, PACK_GROUP], ...cases, ""]],
+  ];
+}
+
+/** The hatch layer for one level: the pattern over the fill (the fill's color still shows),
+ *  hidden until the visitor turns reliability hatching on. */
+export function hatchLayer(o: { source: string; sourceLayer: string; level: GeoLevel; zooms?: { minzoom: number; maxzoom: number } }): LayerSpecification {
+  const { minzoom, maxzoom } = o.zooms ?? GEO_LEVELS[o.level];
+  return {
+    id: hatchLayerId(o.level), type: "fill", source: o.source, "source-layer": o.sourceLayer, minzoom, maxzoom,
+    filter: NO_FEATURES as never, layout: { visibility: "none" }, paint: { "fill-pattern": HATCH_IMAGE },
+  };
+}
+
+/** The hatch pattern as RGBA pixels (for map.addImage): 45° stripes, a dark stripe beside a light
+ *  one, from the theme's tokens. Tiles seamlessly; `pixelRatio` keeps it sharp on dense screens. */
+export function hatchImage(theme: ThemeName, pixelRatio = 1): { width: number; height: number; data: Uint8Array } {
+  const m = THEMES[theme].map;
+  const size = Math.max(2, Math.round(HATCH.spacing * pixelRatio));
+  const w = HATCH.width * pixelRatio;
+  const alpha = HATCH.opacity[theme];
+  const [dark, light] = [m.hatchDark, m.hatchLight].map(rgb);
+  const data = new Uint8Array(size * size * 4);
+  const ss = 4; // supersampling per axis, for soft edges
+  for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
+    let cd = 0, cl = 0;
+    for (let sy = 0; sy < ss; sy++) for (let sx = 0; sx < ss; sx++) {
+      // Position across the stripes: (x + y) repeats every `size` px; ÷ √2 measures it at right angles.
+      const d = ((x + (sx + 0.5) / ss + y + (sy + 0.5) / ss) % size) / Math.SQRT2;
+      if (d < w) cd++; else if (d < 2 * w) cl++;
+    }
+    if (!(cd + cl)) continue;
+    const i = (y * size + x) * 4;
+    for (let k = 0; k < 3; k++) data[i + k] = Math.round((dark[k] * cd + light[k] * cl) / (cd + cl));
+    data[i + 3] = Math.round(255 * alpha * (cd + cl) / (ss * ss));
+  }
+  return { width: size, height: size, data };
+}
+
+function rgb(hex: string): [number, number, number] {
+  const h = hex.replace("#", "");
+  return [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16)) as [number, number, number];
+}
+
 /** Geoids that start with `st` (string range, so the filter needs no `slice`). */
 function stateFilter(st: string): unknown {
   const next = String(Number(st) + 1).padStart(2, "0");
@@ -290,6 +358,7 @@ export function thematicLayers(o: ThematicLayerOptions): LayerSpecification[] {
   }
   return [
     ...fills,
+    ...(HATCH_LEVELS.has(o.level) ? [hatchLayer(o)] : []),
     {
       id: `${o.level}-outline`, type: "line", ...base,
       paint: { "line-color": m.featureOutline, "line-width": zoomInterp(SIZE.featureOutline) as never,

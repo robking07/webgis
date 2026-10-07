@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { StatusState } from "@webgis/design/components";
-import { formatValue, GEO_LEVELS, STATIC_ONLY_LEVELS, TILE_VALUE_LEVELS } from "@webgis/design";
+import { formatValue, GEO_LEVELS, gradeEstimate, isGradable, STATIC_ONLY_LEVELS, TILE_VALUE_LEVELS } from "@webgis/design";
+import { reliabilityNote } from "@/lib/reliability";
 import type { HoverInfo } from "../map/MapView";
 import type { Dataset } from "@/lib/registry";
 import { placeHref, rankText } from "@/lib/place";
@@ -85,6 +86,18 @@ function SheetKey({ colors, cls, ends }: { colors: string[]; cls: number | null;
   );
 }
 
+/** "Use with caution" / "Unreliable estimate" under an ACS value whose margin of error is large
+ *  (D-222). Shown whether or not the map's hatching is on; nothing for other sources. */
+function ReliabilityNote({ dataset, value, moe }: { dataset: Dataset; value?: number | null; moe?: number | null }) {
+  const note = isGradable(dataset.measure.kind) ? reliabilityNote(gradeEstimate(value, moe)) : null;
+  if (!note) return null;
+  return (
+    <p className="mt-1 text-xs text-muted-foreground" data-reliability="">
+      <span className="font-semibold text-foreground">{note.title}.</span> {note.body}
+    </p>
+  );
+}
+
 /** A clicked place: its values, ranks and links (desktop panel; a BottomSheet on phones). */
 export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, onMapIt, period, onPlace, legendKey }: DetailProps) {
   const [rows, setRows] = useState<Detail | null>(null);
@@ -160,6 +173,7 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
                   </p>
                   {i === 0 && phone && legendKey && <SheetKey {...legendKey} />}
                   {rank && <p className="mt-1 text-xs text-muted-foreground">{rank}</p>}
+                  <ReliabilityNote dataset={d} value={r?.value} moe={r?.moe} />
                 </div>
               );
             })}

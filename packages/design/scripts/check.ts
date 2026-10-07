@@ -13,7 +13,7 @@ import {
   formatHex, interpolate, oklab, wcagContrast,
 } from "culori";
 import { RAMPS, rampColors, type RampDef, type RampId } from "../src/ramps.ts";
-import { CONTRAST_RULES, GLASS_ALPHA, THEMES, themeColor } from "../src/themes.ts";
+import { CONTRAST_RULES, GLASS_ALPHA, HATCH, THEMES, themeColor } from "../src/themes.ts";
 import { featureLineColors } from "../src/style.ts";
 
 export const THRESHOLDS = { MIN_ADJ: 5, MIN_CAT: 10, MIN_BIV: 8 };
@@ -123,9 +123,26 @@ for (const [id, r] of Object.entries(RAMPS) as Array<[RampId, RampDef]>) {
   }
 }
 
+// Reliability hatching (D-222): over every class of every area ramp (and no-data), in both themes,
+// at least one of the paired stripes, composited at HATCH.opacity, must stand out from the fill.
+let hatchCases = 0;
+for (const theme of Object.values(THEMES)) {
+  const a = HATCH.opacity[theme.name];
+  const fills = new Set<string>([theme.map.noData]);
+  for (const [id, r] of Object.entries(RAMPS) as Array<[RampId, RampDef]>) {
+    if (r.kind === "categorical") continue;
+    for (let n = r.minClasses; n <= r.maxClasses; n++) for (const c of rampColors(id, n)) fills.add(c);
+  }
+  for (const f of fills) {
+    hatchCases++;
+    const best = Math.max(...[theme.map.hatchDark, theme.map.hatchLight].map((s) => wcagContrast(formatHex(interpolate([f, s], "rgb")(a))!, f)));
+    if (best < HATCH.minContrast) failures.push(`theme ${theme.name}: hatch over ${f} contrast ${best.toFixed(2)} < ${HATCH.minContrast}`);
+  }
+}
+
 if (isMain && process.argv.includes("--verbose")) console.table(report);
 if (isMain && failures.length) {
   console.error(`✗ design check failed (${failures.length}):\n  ` + failures.join("\n  "));
   process.exit(1);
 }
-if (isMain) console.log(`✓ design check passed: ${Object.keys(RAMPS).length} ramps, ${report.length} ramp/class/vision cases, ${CONTRAST_RULES.length * 2} contrast pairs, ${glassCases} glass-over-map cases, ${landCases} class-vs-land cases, ${lineCases} line-on-land cases`);
+if (isMain) console.log(`✓ design check passed: ${Object.keys(RAMPS).length} ramps, ${report.length} ramp/class/vision cases, ${CONTRAST_RULES.length * 2} contrast pairs, ${glassCases} glass-over-map cases, ${landCases} class-vs-land cases, ${lineCases} line-on-land cases, ${hatchCases} hatch-over-fill cases`);

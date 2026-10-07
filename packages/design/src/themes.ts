@@ -66,6 +66,10 @@ export interface Theme {
     countryHalo: string;
     /** State lines on the basemap (under data). */
     stateLine: string;
+    /** Reliability hatching (D-222): paired dark and light stripes, so the hatch reads over the
+     *  palest and darkest class alike. Drawn at HATCH.opacity over the fill, which still shows. */
+    hatchDark: string;
+    hatchLight: string;
   };
 }
 
@@ -118,6 +122,8 @@ export const THEMES: Record<ThemeName, Theme> = {
       countryLine: "#5d6169",
       countryHalo: "#ffffff",
       stateLine: "#b3aea5",
+      hatchDark: "#1b1c1f",
+      hatchLight: "#ffffff",
     },
   },
   dark: {
@@ -168,6 +174,8 @@ export const THEMES: Record<ThemeName, Theme> = {
       countryLine: "#8b919c",
       countryHalo: "#0a1824",
       stateLine: "#41454d",
+      hatchDark: "#0b0c0e",
+      hatchLight: "#f2f3f5",
     },
   },
 };
@@ -209,6 +217,17 @@ export const CONTRAST_RULES: Array<[keyof Theme["ui"] | `map.${keyof Theme["map"
   ["map.countryLine", "map.focusLand", 3, "national boundary vs U.S. land (non-text)"],
   ["map.coastline", "map.water", 1.5, "shoreline vs water (decorative)"],
 ];
+
+/** Reliability hatching (D-222): diagonal stripes over areas whose estimate is unreliable.
+ *  `spacing` is the repeat in CSS px (one dark and one light stripe per repeat), `width` each
+ *  stripe's width, `opacity` how strongly the stripes cover the fill underneath. */
+export const HATCH = {
+  spacing: 7,
+  width: 1.25,
+  opacity: { light: 0.6, dark: 0.6 } as Record<ThemeName, number>,
+  /** The hatch must stand out (WCAG ratio, composited) from every class of every sequential ramp. */
+  minContrast: 1.5,
+} as const;
 
 /** Opacity of the frosted-glass desktop filters sidebar (`.wg-glass` in components/design.css,
  *  which must match). `scripts/check.ts` composites the panel over the darkest and lightest map

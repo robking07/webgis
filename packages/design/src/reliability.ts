@@ -1,4 +1,4 @@
-// Reliability of survey estimates (issue #97, D-<see decision file>): ACS margins of error graded
+// Reliability of survey estimates (issue #97, D-222): ACS margins of error graded
 // by coefficient of variation, the Census Bureau's standard measure.
 //
 //   CV = (MOE / 1.645) / |value| × 100    (ACS margins are at 90% confidence)
