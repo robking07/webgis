@@ -267,8 +267,9 @@ const PACK_GROUP = 4;
 export const HATCH_LEVELS: ReadonlySet<string> = new Set(["tract", "block_group"]);
 export const HATCH_IMAGE = "wg-hatch";
 export const hatchLayerId = (level: GeoLevel) => `${level}-hatch`;
-/** A filter that matches nothing (the hatch layer's resting state). */
-export const NO_FEATURES = ["==", 1, 0];
+/** A filter that matches nothing (the hatch layer's resting state). A literal `false`: a short
+ *  form like ["==", 1, 0] reads as a legacy filter and fails validation, so addLayer drops the layer. */
+export const NO_FEATURES = false;
 
 /** Filter matching exactly these geoids, packed the same way as choroplethFillsByState (one
  *  comma-delimited string per 4-digit prefix, tested with a native `in`), so a few thousand tracts

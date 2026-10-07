@@ -23,10 +23,14 @@ describe("membershipFilter", () => {
 });
 
 describe("hatchLayer", () => {
-  it("is a valid MapLibre layer, with a packed filter set", () => {
-    const layer = { ...hatchLayer({ source: "b-tract", sourceLayer: "tract", level: "tract" }), filter: membershipFilter(["27053100400"]) };
-    const style = { version: 8, sources: { "b-tract": { type: "vector", url: "pmtiles://x" } }, layers: [layer] };
-    expect(validateStyleMin(style as never)).toEqual([]);
+  // An invalid layer is silently dropped by addLayer (MapView's error listener swallows the message),
+  // so validate both the layer as created and with a filter set.
+  const valid = (layer: object) => validateStyleMin({ version: 8, sources: { "b-tract": { type: "vector", url: "pmtiles://x" } }, layers: [layer] } as never);
+  it("is a valid MapLibre layer as created (matching nothing)", () => {
+    expect(valid(hatchLayer({ source: "b-tract", sourceLayer: "tract", level: "tract" }))).toEqual([]);
+  });
+  it("stays valid with a packed filter set", () => {
+    expect(valid({ ...hatchLayer({ source: "b-tract", sourceLayer: "tract", level: "tract" }), filter: membershipFilter(["27053100400"]) })).toEqual([]);
   });
 });
 
