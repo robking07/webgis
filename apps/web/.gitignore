@@ -42,6 +42,7 @@ next-env.d.ts
 /public/maplibre/
 /public/tiles
 /src/generated/theme.css
+/src/generated/disclosures.json
 
 # screenshot tool output (e2e/screenshots.mjs)
 /e2e/shots/

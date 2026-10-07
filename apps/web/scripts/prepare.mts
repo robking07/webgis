@@ -12,6 +12,7 @@ import { fileURLToPath } from "node:url";
 import { THEMES, themeCssVars } from "@webgis/design";
 import { loadGlossary, loadRegistry } from "@webgis/registry/load";
 import { loadSpecials } from "../src/lib/specials-load.mts";
+import { loadDisclosures } from "../src/lib/disclosures-load.mts";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const app = join(here, "..");
@@ -65,4 +66,8 @@ for (;;) {
   }
 }
 writeFileSync(join(app, "src/generated/specials.json"), JSON.stringify(specials, null, 1));
-console.log(`prepare: theme.css, maplibre worker, tiles link, registry.json (${entries.length} datasets), specials.json (${specials.length} pieces) ready`);
+// 6. src/generated/disclosures.json: the usage table (docs/progress.md "## Finished") and the agent
+//    roles (.claude/agents). Built here, not read at request time, so Vercel needs no file tracing.
+const disclosures = loadDisclosures(join(app, "../.."));
+writeFileSync(join(app, "src/generated/disclosures.json"), JSON.stringify(disclosures, null, 1));
+console.log(`prepare: theme.css, maplibre worker, tiles link, registry.json (${entries.length} datasets), specials.json (${specials.length} pieces), disclosures.json (${disclosures.rows.length} tasks) ready`);
