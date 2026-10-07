@@ -7,7 +7,8 @@ rows into one summary line. Roadmap: `docs/roadmap.md`. Rules: `docs/handbook.md
 
 - **Phase 0 gate: passed with conditions** (review lead, 2026-10-05). Conditions: Robbie's Sentry/Cloudflare setup (#76); fix drifted skills (#89) before any data-engineer task.
 - **Phase 1 order (lead, after review):** S1 static click details + unit-test runner → S2 data files to R2 → 1.3 + 1.1 → 1.2 → 1.6, 1.8, 1.7. S1 and 1.1 touch the same files, so they run in sequence.
-- **Data pause (Robbie, 2026-10-05):** no new or refreshed JSON in `apps/web/public/data` until S2 lands.
+- **Data pause: ended 2026-10-06.** S2 (#110) merged: the map's data files now live on R2 (`tiles.mapwich.org`), not in `apps/web/public/data`. Data refreshes are `npm run ingest -- publish-data` (Robbie runs uploads; keys are his, #107), not a code deploy.
+- **Next:** 1.3 reliability warnings (#97) building; 1.1 compare places (#117) parked until Robbie reopens it.
 - **Progress rows:** the lead adds Finished rows and Lessons at merge time from the worker's report (workers no longer edit this file; it conflicted on almost every merge).
 
 ## Finished
@@ -32,6 +33,7 @@ rows into one summary line. Roadmap: `docs/roadmap.md`. Rules: `docs/handbook.md
 | F9 prototype audit + F10 changelog | #86 | #88 | S / ~100k | 97k + 40k review | 1.37x | Opus / low | 2026-10-05 |
 | Skill drift + README + .env.example | #89 | #91 | S / ~50k | 66k | 1.3x | Sonnet / medium | 2026-10-05 |
 | Splash page, map at /map, noindex | #92 | #93 | S / ~100k | 74k | 0.74x | Sonnet / medium | 2026-10-05 |
+| S2 data files to R2 | #96, #106 | #110 | M / ~275k | not recorded | n/a | Opus / medium | 2026-10-06 |
 
 ## Lessons
 
@@ -68,6 +70,7 @@ One line per task. These feed the project kit (#53).
 - **#89:** `.env.*` in `.gitignore` silently swallowed `.env.example`; check `git check-ignore` before adding a dotfile.
 - **Gate review:** a fresh-context review lead (40k) caught a wrong claim and a phase-ordering flaw the builders missed; worth it at every gate.
 - **#92:** the e2e runner reuses whatever server holds its port; an orphan server from the rebuild drill caused 26 false failures. Stop every server you start.
+- **S2:** a data move needs the upload before the merge: CI click-through and the Vercel preview read the live R2 files, so the PR stayed draft until Robbie ran `publish-data` and the lead curl-checked objects (200s). Fixed keys plus a one-hour cache beat versioned paths, because a version in the path would need a code deploy again (D-210).
 
 ## How to update
 
