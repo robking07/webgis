@@ -8,7 +8,16 @@ rows into one summary line. Roadmap: `docs/roadmap.md`. Rules: `docs/handbook.md
 - **Phase 0 gate: passed with conditions** (review lead, 2026-10-05). Conditions: Robbie's Sentry/Cloudflare setup (#76); fix drifted skills (#89) before any data-engineer task.
 - **Phase 1 order (lead, after review):** S1 static click details + unit-test runner → S2 data files to R2 → 1.3 + 1.1 → 1.2 → 1.6, 1.8, 1.7. S1 and 1.1 touch the same files, so they run in sequence.
 - **Data pause: ended 2026-10-06.** S2 (#110) merged: the map's data files now live on R2 (`tiles.mapwich.org`), not in `apps/web/public/data`. Data refreshes are `npm run ingest -- publish-data` (Robbie runs uploads; keys are his, #107), not a code deploy.
-- **Next:** 1.3 reliability warnings (#97) building; 1.1 compare places (#117) parked until Robbie reopens it.
+- **Waiting on Robbie (2026-10-07):**
+  - **1.3 reliability warnings, PR #122:** all CI green (the hatching bug CI caught is fixed). Needs (a) his answer on heavy hatching. 230 of 329 Hennepin tracts grade unreliable for `pct_poverty`. Lead recommends keeping the standard ACS cut-offs and adding a legend line that small-area rates are often noisy. Also (b) his look at the preview or screenshots, and his OK on the 5 user-facing strings (listed in the PR). The PR is behind main: merge `origin/main` in before `scripts/merge-pr.sh 122`.
+  - **1.6 disclosures page, PR #126:** all CI green. Robbie edits the wording (preview: webgis-git-ui-disclosures-king-llc.vercel.app/disclosures). Defaults taken: footer link "How it's built", footer only, drop the "Draft wording" badge at merge.
+  - **1.2 change-over-time maps (#127):** filed, queued. It starts after #122 merges (same files: MapLegend, map page). Two questions for Robbie are on the issue (how change is measured; whether to show changes within the margin of error as "no clear change"). M, Opus / medium.
+  - #76 (Sentry, uptime email, R2 spend alert) is still open.
+- **After those:** 1.7 map polish (needs Robbie measuring on a real phone first), then the Phase 1 gate. The gate needs compare places (1.1, #117), which is parked until Robbie reopens it, so raise it before the gate.
+- **Open worktrees:** `agent-adb8949…` = #122 and `agent-a38ac5e…` = #126. Remove each after its merge. `agent-adb896…` (preventable-harm mockup, PR #113 closed) and `ui-skills` (`chore/ui-skills`, no PR) are stale; ask before deleting.
+- **Dependabot:** eslint 10 (#66) and TypeScript 7 (#69) fail CI; @types/node 26 (#67) and marked 18 (#70) are untouched. Alert #1 (`braces`) has no patched version.
+- **Cloud credits (Robbie, 2026-10-06):** about $99 set aside for heavy lifts; about 450k worker tokens used on 2026-10-07. Spend the rest on 1.2, then 1.1 when reopened.
+- **Worker environment:** Chromium can't run in the agent sandbox (no libnspr4), so e2e and screenshots happen only in CI on a *ready* PR. Mark worker PRs ready once the build passes, so the click-through tests act as the first browser check.
 - **Progress rows:** the lead adds Finished rows and Lessons at merge time from the worker's report (workers no longer edit this file; it conflicted on almost every merge).
 
 ## Finished

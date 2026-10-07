@@ -137,7 +137,11 @@ When a worker reports back:
 2. **Check the done-checks** against the Vercel preview or a screenshot for anything
    user-visible. If something's off, send the worker back with SendMessage (it keeps its
    context), or start a fresh worker with a corrective brief.
-3. **Questions for Robbie** go into your batch (§4). The PR stays draft until they're answered.
+3. **Questions for Robbie** go into your batch (§4). Don't merge until they're answered, but mark a
+   UI PR ready (`gh pr ready <n>`) as soon as its build passes. Worker sandboxes can't run
+   Chromium, so CI's click-through is the first real browser check, and it has caught real bugs
+   (the 1.3 hatch layer). A cancelled draft-stage run (`click-through ${{ matrix.shard }}/4`, 0 s)
+   can trip `merge-pr.sh`; merging `origin/main` in starts a clean run.
 4. **Merge** when it's verified and has no open questions. This follows the "merge as we go"
    memory: merging to `main` deploys to mapwich.org.
    - Bring it up to date: in the PR's worktree, `git fetch origin && git merge origin/main`,
