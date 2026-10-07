@@ -34,6 +34,8 @@ rows into one summary line. Roadmap: `docs/roadmap.md`. Rules: `docs/handbook.md
 | Skill drift + README + .env.example | #89 | #91 | S / ~50k | 66k | 1.3x | Sonnet / medium | 2026-10-05 |
 | Splash page, map at /map, noindex | #92 | #93 | S / ~100k | 74k | 0.74x | Sonnet / medium | 2026-10-05 |
 | S2 data files to R2 | #96, #106 | #110 | M / ~275k | not recorded | n/a | Opus / medium | 2026-10-06 |
+| Dependency updates (Actions + minor/patch) | — | #124 | lead inline | ~15k | n/a | Opus / medium (lead) | 2026-10-07 |
+| 1.8 Specials pipeline: brief, numbers check, parser tests | #125 | #128 | S / ~100k | 88k | 0.88x | Sonnet / medium | 2026-10-07 |
 
 ## Lessons
 
@@ -71,6 +73,11 @@ One line per task. These feed the project kit (#53).
 - **Gate review:** a fresh-context review lead (40k) caught a wrong claim and a phase-ordering flaw the builders missed; worth it at every gate.
 - **#92:** the e2e runner reuses whatever server holds its port; an orphan server from the rebuild drill caused 26 false failures. Stop every server you start.
 - **S2:** a data move needs the upload before the merge: CI click-through and the Vercel preview read the live R2 files, so the PR stayed draft until Robbie ran `publish-data` and the lead curl-checked objects (200s). Fixed keys plus a one-hour cache beat versioned paths, because a version in the path would need a code deploy again (D-210).
+
+- **#124:** stale Dependabot branches conflict with newer workflow edits; re-applying the version bumps on a fresh branch and running CI once beats rebasing five PRs. `braces` (alert #1) still has no patched version.
+- **1.8:** the Specials loader reads every `.md` in `content/specials/`, so non-piece docs there (BRIEF.md) must be excluded in the loader. Node's type-stripping rejects constructor parameter properties in scripts run directly.
+- **1.3 (in review):** MapView's map `error` listener swallowed a layer validation error (`["==", 1, 0]` is read as a legacy filter), so the hatch layer silently never existed; unit tests passed because they replaced the filter. Validate every new layer with the style spec exactly as created. The CI click-through was the first real browser check and caught it.
+- **1.6 (in review):** `.vercelignore` drops `.claude`, so build-time reads of agent files got nothing on Vercel; type generated JSON explicitly so an empty list still compiles.
 
 ## How to update
 

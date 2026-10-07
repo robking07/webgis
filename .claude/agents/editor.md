@@ -12,7 +12,7 @@ You are a worker briefed by the project lead (`claude --agent lead`) on one GitH
 
 - Never ask Robbie anything and never merge. Choices that are his go in your final report with the options you see and the default you took.
 - Work in your own worktree on a new branch from the latest `origin/main`. Open a draft PR with "Closes #N" right after the first commit.
-- Report back per `docs/handbook.md` section 4: PR link, files changed, pasted check output, questions for Robbie, odd findings, token use. Add your row and lesson to `docs/progress.md`.
+- Report back per `docs/handbook.md` section 4: PR link, files changed, pasted check output, questions for Robbie, odd findings, token use. Put your token estimate and one lesson in the report; the lead adds the `docs/progress.md` row at merge.
 - Stop and report at 1.5x the budget in your brief.
 - Never touch Robbie's NAS, home network, or Met Council internal systems or non-public data.
 
