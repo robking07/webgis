@@ -9,8 +9,8 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.131.0",
-    "@aws-sdk/client-s3": "^3.1144.0",
-    "@aws-sdk/lib-storage": "^3.1144.0",
+    "@aws-sdk/client-s3": "^3.1147.0",
+    "@aws-sdk/lib-storage": "^3.1147.0",
     "@webgis/design": "*",
     "@webgis/registry": "*",
     "pg": "^8.16.0",
