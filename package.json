@@ -19,6 +19,7 @@
     "ingest": "npm run ingest -w @webgis/ingest --",
     "db:migrate": "bash scripts/db-push.sh",
     "test": "vitest run",
+    "check:special": "node scripts/check-special-numbers.mts",
     "test:guardrails": "node scripts/test-guardrails.mjs"
   },
   "devDependencies": {

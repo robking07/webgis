@@ -142,7 +142,7 @@ export function loadSpecials(appDir: string, registry: DatasetEntry[], pairings:
   const byId = new Map(registry.map((d) => [d.id, d]));
   setBlockContext({ byId, appDir, readData });
   let files: string[];
-  try { files = readdirSync(join(appDir, "content/specials")).filter((f) => f.endsWith(".md") && f !== "README.md"); } catch { return []; }
+  try { files = readdirSync(join(appDir, "content/specials")).filter((f) => f.endsWith(".md") && f !== "README.md" && f !== "BRIEF.md"); } catch { return []; }
   const all = files.map((f) => parseFile(appDir, byId, pairings, f));
   // Pieces and Odd Pairings share /specials/<id>; a clash would hide one of them.
   // "pairings" is the Odd Pairings list page; "review" is the review page.

@@ -134,6 +134,24 @@ In any chart or table a dataset can name an earlier period from its timeline, li
 `pct_work_from_home@2019` (the 2015–2019 estimates). Every dataset a block uses is cited under
 "How this was made".
 
+## Pipeline
+
+Drafting, review and conversion follow one flow: the editor agent drafts in a shared Claude Doc, Robbie
+edits and comments there, the editor runs the numbers check, and the lead converts the approved doc into
+this Markdown format and posts a preview link. The checklist the lead copies into each editor brief is
+[`BRIEF.md`](BRIEF.md).
+
+The numbers check ties the figures in a piece to data and reports each as match, mismatch or rounding
+problem; figures it can't tie are listed as "unverified, check by hand":
+
+```
+npm run check:special -- work-from-home-and-exercise
+```
+
+It needs no `.env.local`; it reads the same county values the site does from `https://tiles.mapwich.org`
+(or `NEXT_PUBLIC_TILES_BASE_URL`). It exits 1 on a mismatch or rounding problem. Code: `scripts/check-special-numbers.mts`.
+The block parser has unit tests (`npm test`, `apps/web/src/lib/special-blocks.test.ts`).
+
 ## Previewing
 
 `npm run dev` checks the pieces and computes the charts when it starts. After editing a piece, restart
