@@ -5,7 +5,7 @@
 // Env: BASE=<url> tests an already running server instead of starting `next start`;
 // E2E_PORT (default 3199); CHROMIUM_PATH (default: playwright-core's own Chromium);
 // ONLY=<substring> runs only the tests whose names contain it; SHARD=<k>/<n> runs every n-th test
-// starting at the k-th (CI runs four shards side by side, D-<PR>); HEADED=1 shows the browser.
+// starting at the k-th (CI runs four shards side by side, D-220); HEADED=1 shows the browser.
 import { spawn } from "node:child_process";
 import { createRequire } from "node:module";
 import { dirname, join } from "node:path";

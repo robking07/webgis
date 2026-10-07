@@ -89,7 +89,7 @@ jobs:
       - name: Unit tests (npm test)
         run: npm test
 
-  # The click-through tests, split four ways and run side by side (D-<PR>): about 5 minutes of
+  # The click-through tests, split four ways and run side by side (D-220): about 5 minutes of
   # tests per shard instead of 17 in one job. Each shard starts its own server and browser.
   click-through-shard:
     name: click-through ${{ matrix.shard }}/4
