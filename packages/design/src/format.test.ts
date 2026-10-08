@@ -4,6 +4,9 @@ import { classLabels, formatValue } from "./format.ts";
 describe("formatValue", () => {
   it("formats by unit", () => {
     expect(formatValue(64450, "dollars")).toBe("$64,450");
+    expect(formatValue(0.16, "dollars")).toBe("$0.16");
+    expect(formatValue(3.5, "dollars")).toBe("$3.50");
+    expect(formatValue(0, "dollars")).toBe("$0");
     expect(formatValue(12.345, "percent")).toBe("12%");
     expect(formatValue(5.25, "percent")).toBe("5.3%");
     expect(formatValue(0.456, "percent")).toBe("0.46%");

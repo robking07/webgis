@@ -4,7 +4,11 @@ export type Unit = "dollars" | "percent" | "minutes" | "count" | "per_sq_mi" | "
 
 const nf = (o: Intl.NumberFormatOptions) => new Intl.NumberFormat("en-US", o);
 const FORMATTERS: Record<Unit, (v: number) => string> = {
-  dollars: (v) => nf({ style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(v),
+  // Cents only for small amounts (per-resident hazard losses run from a few cents up).
+  dollars: (v) => {
+    const d = Math.abs(v) < 10 && v !== 0 ? 2 : 0;
+    return nf({ style: "currency", currency: "USD", minimumFractionDigits: d, maximumFractionDigits: d }).format(v);
+  },
   percent: (v) => `${nf({ maximumFractionDigits: Math.abs(v) < 1 && v !== 0 ? 2 : Math.abs(v) < 10 ? 1 : 0 }).format(v)}%`,
   minutes: (v) => `${nf({ maximumFractionDigits: 1 }).format(v)} min`,
   count: (v) => nf({ notation: v >= 1e5 ? "compact" : "standard", maximumFractionDigits: 1 }).format(v),

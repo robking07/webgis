@@ -1,0 +1,21 @@
+id: nri_community_resilience
+title: "Community resilience to natural hazards"
+phrase: "community resilience scores"
+description: "How well a county is equipped to absorb and bounce back from disasters (its social, economic, housing, institutional and environmental capacity), from the University of South Carolina's BRIC index as used in FEMA's National Risk Index, ranked nationally."
+category: Environment
+tags: [FEMA, National Risk Index, NRI, natural hazards, resilience, BRIC, disasters]
+source:
+  name: FEMA National Risk Index v1.20.0 (December 2025)
+  shortName: FEMA Risk Index
+  url: https://www.fema.gov/flood-maps/products-tools/national-risk-index
+  citation: "Federal Emergency Management Agency (FEMA), National Risk Index Counties, v1.20.0 (December 2025), field RESL_SCORE. Retrieved from https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_Counties/FeatureServer/0 on October 7, 2026. This product uses the Federal Emergency Management Agency’s National Risk Index dataset API or downloadable datasets but is not endorsed by FEMA. The Federal Government or FEMA cannot vouch for the data or analyses derived from these data after the data have been retrieved from the Agency's website(s)."
+license: "FEMA National Risk Index Terms and Conditions (free to use, including non-commercial display; FEMA may ask users to stop). Required statement: “This product uses the Federal Emergency Management Agency’s National Risk Index dataset API or downloadable datasets but is not endorsed by FEMA. The Federal Government or FEMA cannot vouch for the data or analyses derived from these data after the data have been retrieved from the Agency's website(s).”"
+updateCadence: irregular
+vintage: "Version 1.20.0 (December 2025)"
+geographyLevels: [county]
+unit: percentile
+universe: "counties (national rank)"
+coverageNote: "A relative rank (0–100) among counties. County only: FEMA gives every tract its county's score. Puerto Rico and the island territories show no data. Higher is better."
+terms: [fema-nri, community-resilience]
+measure: { kind: fema_nri, version: December 2025, field: RESL_SCORE }
+symbology: { ramp: ylgnbu, classification: quantile, classes: 5, higherIsBetter: true }

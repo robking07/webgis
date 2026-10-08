@@ -130,6 +130,25 @@ const CejstMeasure = z.object({
   file: z.string(),
 });
 
+/** FEMA National Risk Index: one field of FEMA's county and tract layers (public ArcGIS
+ *  FeatureServer, no key). Ingest: data/ingest/src/nri.ts. */
+const FemaNriMeasure = z.object({
+  kind: z.literal("fema_nri"),
+  /** NRI version the entry was written for, as in the layers' NRI_VER field ("December 2025").
+   *  Ingest stops if FEMA has moved the layers to another version. */
+  version: z.string(),
+  /** NRI field, the same name in the county and tract layers (e.g. RISK_SCORE, EAL_VALT, WFIR_EALT). */
+  field: z.string().regex(/^[A-Z][A-Z_]*$/),
+  /** Divide by the NRI's POPULATION field (e.g. dollars of expected loss per resident). */
+  perCapita: z.boolean().default(false),
+  /** Per-capita values only: tracts with fewer residents than this get no value (port, airport
+   *  and park tracts with a handful of residents would otherwise show huge per-person figures). */
+  minTractPopulation: z.number().int().min(1).default(100),
+  /** Rating field: a blank value rated "Not Applicable" (the hazard isn't possible there) counts
+   *  as 0 instead of no data. Blanks rated "Insufficient Data" stay no data. */
+  ratingField: z.string().regex(/^[A-Z][A-Z_]*$/).optional(),
+});
+
 /** Daily vehicle miles traveled from HPMS: Σ AADT × section length (milepoints), by county,
  *  divided by residents. Counted roads only; uncounted local roads are missing. */
 const HpmsVmtMeasure = z.object({
@@ -225,7 +244,7 @@ export const DatasetEntry = z.object({
   unit: Unit,
   /** For insights: the population the value describes. Pairs that share one are flagged. */
   universe: z.string(),
-  measure: z.discriminatedUnion("kind", [AcsMeasure, Census2020Measure, LodesMeasure, PlacesMeasure, ClimdivMeasure, NbiMeasure, FarsMeasure, AirQualityMeasure, FeaturesMeasure, HpmsVmtMeasure, CejstMeasure, Ddp287gMeasure, OverdoseMeasure]),
+  measure: z.discriminatedUnion("kind", [AcsMeasure, Census2020Measure, LodesMeasure, PlacesMeasure, ClimdivMeasure, NbiMeasure, FarsMeasure, FeaturesMeasure, HpmsVmtMeasure, CejstMeasure, Ddp287gMeasure, FemaNriMeasure, AirQualityMeasure, OverdoseMeasure]),
   /** Other registry datasets used as inputs to this dataset's model (e.g. PLACES uses county poverty).
    *  Insight pairs with these are flagged: they correlate partly by construction. */
   modelInputs: z.array(z.string()).default([]),

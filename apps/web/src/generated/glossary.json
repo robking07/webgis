@@ -172,6 +172,41 @@
   "source": "https://www.census.gov/programs-surveys/decennial-census/about/rdo/summary-files.html"
  },
  {
+  "id": "fema-nri",
+  "term": "FEMA National Risk Index",
+  "short": "FEMA's nationwide model of how much 18 natural hazards are expected to cost each county and census tract, and how well people there could cope.",
+  "long": "The National Risk Index combines decades of hazard records (floods, wildfires, hurricanes, tornadoes, heat waves, earthquakes and more) with what is in harm's way (buildings, people and crops) to estimate average yearly losses, then adjusts for social vulnerability and community resilience to give an overall risk score. It's a model built for national comparisons and planning, not a record of what happened or a substitute for a local risk assessment. Version 1.20 (December 2025) isn't comparable with version 1.19.",
+  "source": "https://www.fema.gov/flood-maps/products-tools/national-risk-index"
+ },
+ {
+  "id": "expected-annual-loss",
+  "term": "Expected annual loss",
+  "short": "The average yearly cost of a hazard over the long run: a bad year costs far more and most years far less.",
+  "long": "FEMA multiplies how often a hazard strikes, what's exposed to it and how much of that is typically lost, adding up damage to buildings and crops plus deaths and injuries. Deaths and injuries are turned into dollars using the federal value of a statistical life (about $13.7 million per death in this version), so in places with few buildings, or for hazards like heat that mostly harm people, they can make up most of the total. Mapwich divides FEMA's figure by the number of residents so large and small places can be compared.",
+  "source": "https://www.fema.gov/flood-maps/products-tools/national-risk-index"
+ },
+ {
+  "id": "nri-risk-score",
+  "term": "Risk Index score",
+  "short": "A 0–100 national rank: a county scoring 90 has higher risk than 90% of counties. It ranks places; it doesn't measure risk in absolute terms.",
+  "long": "FEMA's risk score starts from expected annual loss, raises it where social vulnerability is high and lowers it where community resilience is high, then ranks every county (and separately every tract) against the rest of the country. Because it's a rank, a small change in one place can move others, and a new version can move scores even where the hazards didn't change.",
+  "source": "https://www.fema.gov/flood-maps/products-tools/national-risk-index"
+ },
+ {
+  "id": "social-vulnerability",
+  "term": "Social vulnerability",
+  "short": "How much harder a disaster would hit people here because of things like low income, disability, crowding, no car or no health insurance.",
+  "long": "In version 1.20 of FEMA's National Risk Index, social vulnerability comes from the Census Bureau's Community Resilience Estimates, which count residents facing several of about ten risk factors (low income, living alone or with a single caregiver, crowded housing, limited English, no full-time worker, disability, no health insurance, age 65 or older, no vehicle, no broadband). Earlier versions used CDC's Social Vulnerability Index instead. The score is a 0–100 national rank; higher means more vulnerable.",
+  "source": "https://www.census.gov/programs-surveys/community-resilience-estimates.html"
+ },
+ {
+  "id": "community-resilience",
+  "term": "Community resilience",
+  "short": "How well a community is equipped to prepare for, absorb and recover from disasters. Higher is better.",
+  "long": "FEMA's National Risk Index takes community resilience from the University of South Carolina's Baseline Resilience Indicators for Communities (BRIC), which combines measures of social, economic, housing and infrastructure, institutional, community and environmental capacity. It's a 0–100 national rank among counties; FEMA gives every census tract its county's score, so Mapwich shows it for counties only.",
+  "source": "https://www.fema.gov/flood-maps/products-tools/national-risk-index"
+ },
+ {
   "id": "design-value",
   "term": "Design value (air quality)",
   "short": "The number EPA uses to judge whether a county's air meets the federal standard: a three-year average at the county's worst monitor.",
