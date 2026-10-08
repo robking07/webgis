@@ -7,6 +7,7 @@ import { Protocol } from "pmtiles";
 import { basemapStyle, choroplethFill, hatchImage, hatchLayerId, HATCH_IMAGE, HATCH_LEVELS, membershipFilter, NO_FEATURES, choroplethFillsByState, DATA_BEFORE_ID, STATIC_ONLY_LEVELS, TILE_VALUE_LEVELS, THEMES, featureLineLayers, featurePolygonLayers, fillLayerIds, focusLandLayer, FOCUS_LAND_BEFORE_ID, GEO_LEVELS, MOTION, PER_STATE_LEVELS, thematicLayers, type GeoLevel, type ThemeName } from "@webgis/design";
 import type { FeatureLayerSpec } from "@/lib/layers";
 import type { ViewState } from "@/lib/url-state";
+import type { Geometry } from "geojson";
 
 export interface LevelPaint {
   colors: string[];
@@ -422,7 +423,7 @@ function geographyBbox(m: MlMap, level: GeoLevel, geoid: string): Bbox | null {
   return b.isEmpty() ? null : (b.toArray().flat() as Bbox);
 }
 
-function geometryBbox(g: GeoJSON.Geometry): Bbox | undefined {
+function geometryBbox(g: Geometry): Bbox | undefined {
   let w = Infinity, s = Infinity, e = -Infinity, n = -Infinity;
   const walk = (c: unknown): void => {
     if (typeof (c as number[])[0] === "number") {
