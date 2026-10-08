@@ -1024,5 +1024,499 @@
    "state",
    "tract"
   ]
+ },
+ "cooling_degree_days": {
+  "1991": [
+   "county"
+  ],
+  "1992": [
+   "county"
+  ],
+  "1993": [
+   "county"
+  ],
+  "1994": [
+   "county"
+  ],
+  "1995": [
+   "county"
+  ],
+  "1996": [
+   "county"
+  ],
+  "1997": [
+   "county"
+  ],
+  "1998": [
+   "county"
+  ],
+  "1999": [
+   "county"
+  ],
+  "2000": [
+   "county"
+  ],
+  "2001": [
+   "county"
+  ],
+  "2002": [
+   "county"
+  ],
+  "2003": [
+   "county"
+  ],
+  "2004": [
+   "county"
+  ],
+  "2005": [
+   "county"
+  ],
+  "2006": [
+   "county"
+  ],
+  "2007": [
+   "county"
+  ],
+  "2008": [
+   "county"
+  ],
+  "2009": [
+   "county"
+  ],
+  "2010": [
+   "county"
+  ],
+  "2011": [
+   "county"
+  ],
+  "2012": [
+   "county"
+  ],
+  "2013": [
+   "county"
+  ],
+  "2014": [
+   "county"
+  ],
+  "2015": [
+   "county"
+  ],
+  "2016": [
+   "county"
+  ],
+  "2017": [
+   "county"
+  ],
+  "2018": [
+   "county"
+  ],
+  "2019": [
+   "county"
+  ],
+  "2020": [
+   "county"
+  ],
+  "2021": [
+   "county"
+  ],
+  "2022": [
+   "county"
+  ],
+  "2023": [
+   "county"
+  ],
+  "2024": [
+   "county"
+  ],
+  "2025": [
+   "county"
+  ]
+ },
+ "heating_degree_days": {
+  "1991": [
+   "county"
+  ],
+  "1992": [
+   "county"
+  ],
+  "1993": [
+   "county"
+  ],
+  "1994": [
+   "county"
+  ],
+  "1995": [
+   "county"
+  ],
+  "1996": [
+   "county"
+  ],
+  "1997": [
+   "county"
+  ],
+  "1998": [
+   "county"
+  ],
+  "1999": [
+   "county"
+  ],
+  "2000": [
+   "county"
+  ],
+  "2001": [
+   "county"
+  ],
+  "2002": [
+   "county"
+  ],
+  "2003": [
+   "county"
+  ],
+  "2004": [
+   "county"
+  ],
+  "2005": [
+   "county"
+  ],
+  "2006": [
+   "county"
+  ],
+  "2007": [
+   "county"
+  ],
+  "2008": [
+   "county"
+  ],
+  "2009": [
+   "county"
+  ],
+  "2010": [
+   "county"
+  ],
+  "2011": [
+   "county"
+  ],
+  "2012": [
+   "county"
+  ],
+  "2013": [
+   "county"
+  ],
+  "2014": [
+   "county"
+  ],
+  "2015": [
+   "county"
+  ],
+  "2016": [
+   "county"
+  ],
+  "2017": [
+   "county"
+  ],
+  "2018": [
+   "county"
+  ],
+  "2019": [
+   "county"
+  ],
+  "2020": [
+   "county"
+  ],
+  "2021": [
+   "county"
+  ],
+  "2022": [
+   "county"
+  ],
+  "2023": [
+   "county"
+  ],
+  "2024": [
+   "county"
+  ],
+  "2025": [
+   "county"
+  ]
+ },
+ "july_low": {
+  "1991": [
+   "county"
+  ],
+  "1992": [
+   "county"
+  ],
+  "1993": [
+   "county"
+  ],
+  "1994": [
+   "county"
+  ],
+  "1995": [
+   "county"
+  ],
+  "1996": [
+   "county"
+  ],
+  "1997": [
+   "county"
+  ],
+  "1998": [
+   "county"
+  ],
+  "1999": [
+   "county"
+  ],
+  "2000": [
+   "county"
+  ],
+  "2001": [
+   "county"
+  ],
+  "2002": [
+   "county"
+  ],
+  "2003": [
+   "county"
+  ],
+  "2004": [
+   "county"
+  ],
+  "2005": [
+   "county"
+  ],
+  "2006": [
+   "county"
+  ],
+  "2007": [
+   "county"
+  ],
+  "2008": [
+   "county"
+  ],
+  "2009": [
+   "county"
+  ],
+  "2010": [
+   "county"
+  ],
+  "2011": [
+   "county"
+  ],
+  "2012": [
+   "county"
+  ],
+  "2013": [
+   "county"
+  ],
+  "2014": [
+   "county"
+  ],
+  "2015": [
+   "county"
+  ],
+  "2016": [
+   "county"
+  ],
+  "2017": [
+   "county"
+  ],
+  "2018": [
+   "county"
+  ],
+  "2019": [
+   "county"
+  ],
+  "2020": [
+   "county"
+  ],
+  "2021": [
+   "county"
+  ],
+  "2022": [
+   "county"
+  ],
+  "2023": [
+   "county"
+  ],
+  "2024": [
+   "county"
+  ],
+  "2025": [
+   "county"
+  ]
+ },
+ "median_owner_costs_mortgage": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
+ "overdose_deaths": {
+  "2020": [
+   "county"
+  ],
+  "2021": [
+   "county"
+  ],
+  "2022": [
+   "county"
+  ],
+  "2023": [
+   "county"
+  ],
+  "2024": [
+   "county"
+  ]
+ },
+ "pct_child_poverty": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
+ "pct_disability": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
+ "pct_graduate_degree": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
+ "pct_mobile_homes": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
+ "pct_moved_last_year": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
+ "pct_overcrowded": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
+ "pct_owner_cost_burdened": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
+ "pct_public_assistance": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
+ "pct_seniors_living_alone": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
+ "pct_single_parent_families": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
+ "pct_under_18": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
+ },
+ "pct_veterans": {
+  "2014": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2019": [
+   "county",
+   "state",
+   "tract"
+  ]
  }
 }
