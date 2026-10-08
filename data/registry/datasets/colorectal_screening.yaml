@@ -1,0 +1,22 @@
+id: colorectal_screening
+title: "Colorectal cancer screening (ages 45–75)"
+phrase: colorectal screening rates
+description: "Share of adults aged 45 to 75 who are up to date on colorectal cancer screening. Age-adjusted prevalence; model-based small-area estimate."
+category: Health
+tags: [colorectal cancer, screening, preventive care, health care]
+source:
+  name: CDC PLACES (Local Data for Better Health), 2025 release
+  shortName: CDC PLACES
+  url: https://www.cdc.gov/places/
+  citation: "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+license: Public domain (U.S. Government work; data.cdc.gov license field "Public Domain")
+updateCadence: annual
+geographyLevels: [county]
+unit: percent
+universe: adults 45–75 (model-based estimate)
+modelInputs: [pct_poverty, median_household_income]  # PLACES models county poverty; median income is near-collinear with it
+coverageNote: "From the 2022 survey (CDC asks about cancer screening every other year), so every state has data, Kentucky and Pennsylvania included. Loving County, Texas, has too few residents to estimate."
+vintage: "2022 data"
+terms: [model-based-estimate, age-adjusted, margin-of-error, quantile-classes]
+measure: { kind: places, socrata: swc5-untb, measureId: COLON_SCREEN, valueType: AgeAdjPrv }
+symbology: { ramp: ylgnbu, classification: quantile, classes: 5, higherIsBetter: true }

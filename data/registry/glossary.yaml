@@ -71,6 +71,15 @@
   long: >-
     A single year's weather is noisy. Climate normals average three decades so they describe the expected climate rather than any one year. They are updated every ten years.
 
+- id: degree-days
+  term: >-
+    Degree days
+  short: >-
+    A measure of how much heating or cooling a place needs: each day adds how many degrees its average temperature sits below (heating) or above (cooling) 65°F.
+  long: >-
+    A day averaging 50°F adds 15 heating degree days; a day averaging 80°F adds 15 cooling degree days. Summed over a year, they track energy demand for heating and air conditioning far better than average temperature does, which is why utilities and building engineers use them.
+  source: https://www.eia.gov/energyexplained/units-and-calculators/degree-days.php
+
 - id: bridge-condition
   term: >-
     Bridge condition (good, fair, poor)
@@ -214,3 +223,65 @@
   short: "A count of every person and home, not a survey sample, so there's no margin of error."
   long: "The decennial Census counts every resident and housing unit as of April 1, 2020. Its redistricting file (P.L. 94-171) is published down to census blocks, often a single city block. To protect privacy, the Census Bureau adds statistical noise to small-area counts (differential privacy), so a single block's numbers can be off by a few people; block groups and larger areas are reliable."
   source: https://www.census.gov/programs-surveys/decennial-census/about/rdo/summary-files.html
+
+- id: energy-burden
+  term: >-
+    Energy burden
+  short: >-
+    The share of a household's income that goes to home energy bills: electricity, gas and heating fuels.
+  long: >-
+    A household earning $40,000 that spends $2,400 a year on home energy has a 6% burden; 6% or more is commonly called high, and 10% or more severe. These figures are modelled, not actual bills: the Department of Energy fits incomes and energy costs from the 2018–2022 American Community Survey to each tract's homes and heating fuels, then scales bills to what local utilities reported selling. An area's value is its average yearly bill divided by its average household income. Gasoline for cars isn't included.
+  source: https://www.energy.gov/scep/low-income-energy-affordability-data-lead-tool
+
+- id: federal-poverty-level
+  term: >-
+    Federal poverty level (FPL)
+  short: >-
+    The yearly income line the federal government uses to define poverty, set by household size: $27,750 for a family of four in 2022.
+  long: >-
+    Many aid programs use multiples of it: "200% of poverty" means twice the line, about $55,500 for a family of four in 2022, and is a common cut-off for energy bill help and weatherization. The line is the same across the lower 48 states (higher in Alaska and Hawaii), so it doesn't adjust for local costs: a household just under it in an expensive city is often worse off than one in a cheaper rural area.
+  source: https://aspe.hhs.gov/topics/poverty-economic-mobility/poverty-guidelines
+- id: fema-nri
+  term: FEMA National Risk Index
+  short: "FEMA's nationwide model of how much 18 natural hazards are expected to cost each county and census tract, and how well people there could cope."
+  long: "The National Risk Index combines decades of hazard records (floods, wildfires, hurricanes, tornadoes, heat waves, earthquakes and more) with what is in harm's way (buildings, people and crops) to estimate average yearly losses, then adjusts for social vulnerability and community resilience to give an overall risk score. It's a model built for national comparisons and planning, not a record of what happened or a substitute for a local risk assessment. Version 1.20 (December 2025) isn't comparable with version 1.19."
+  source: https://www.fema.gov/flood-maps/products-tools/national-risk-index
+
+- id: expected-annual-loss
+  term: Expected annual loss
+  short: "The average yearly cost of a hazard over the long run: a bad year costs far more and most years far less."
+  long: "FEMA multiplies how often a hazard strikes, what's exposed to it and how much of that is typically lost, adding up damage to buildings and crops plus deaths and injuries. Deaths and injuries are turned into dollars using the federal value of a statistical life (about $13.7 million per death in this version), so in places with few buildings, or for hazards like heat that mostly harm people, they can make up most of the total. Mapwich divides FEMA's figure by the number of residents so large and small places can be compared."
+  source: https://www.fema.gov/flood-maps/products-tools/national-risk-index
+
+- id: nri-risk-score
+  term: Risk Index score
+  short: "A 0–100 national rank: a county scoring 90 has higher risk than 90% of counties. It ranks places; it doesn't measure risk in absolute terms."
+  long: "FEMA's risk score starts from expected annual loss, raises it where social vulnerability is high and lowers it where community resilience is high, then ranks every county (and separately every tract) against the rest of the country. Because it's a rank, a small change in one place can move others, and a new version can move scores even where the hazards didn't change."
+  source: https://www.fema.gov/flood-maps/products-tools/national-risk-index
+
+- id: social-vulnerability
+  term: Social vulnerability
+  short: "How much harder a disaster would hit people here because of things like low income, disability, crowding, no car or no health insurance."
+  long: "In version 1.20 of FEMA's National Risk Index, social vulnerability comes from the Census Bureau's Community Resilience Estimates, which count residents facing several of about ten risk factors (low income, living alone or with a single caregiver, crowded housing, limited English, no full-time worker, disability, no health insurance, age 65 or older, no vehicle, no broadband). Earlier versions used CDC's Social Vulnerability Index instead. The score is a 0–100 national rank; higher means more vulnerable."
+  source: https://www.census.gov/programs-surveys/community-resilience-estimates.html
+
+- id: community-resilience
+  term: Community resilience
+  short: "How well a community is equipped to prepare for, absorb and recover from disasters. Higher is better."
+  long: "FEMA's National Risk Index takes community resilience from the University of South Carolina's Baseline Resilience Indicators for Communities (BRIC), which combines measures of social, economic, housing and infrastructure, institutional, community and environmental capacity. It's a 0–100 national rank among counties; FEMA gives every census tract its county's score, so Mapwich shows it for counties only."
+  source: https://www.fema.gov/flood-maps/products-tools/national-risk-index
+- id: design-value
+  term: >-
+    Design value (air quality)
+  short: >-
+    The number EPA uses to judge whether a county's air meets the federal standard: a three-year average at the county's worst monitor.
+  long: >-
+    Air pollution swings from day to day and year to year, so EPA smooths it. For fine particles (PM2.5) the design value is the yearly average concentration, averaged over three years. For ozone it is the fourth-highest daily peak (8-hour average) each year, averaged over three years. A county's value comes from its single highest valid monitor, so it describes the worst-measured spot, not the average resident's exposure. Counties with no valid monitor have no value, which does not mean the air is clean. Days EPA excludes as exceptional events, such as wildfire smoke, are left out.
+
+- id: naaqs
+  term: >-
+    National Ambient Air Quality Standard (NAAQS)
+  short: >-
+    The federal legal limit for an air pollutant. Design values above it mean the county does not meet the standard.
+  long: >-
+    Under the Clean Air Act, EPA sets a limit for each common pollutant. The annual fine-particle (PM2.5) standard is 9.0 micrograms per cubic meter, tightened from 12.0 in 2024. The 8-hour ozone standard is 0.070 parts per million. A county whose design value is above the limit is violating the standard, which can lead to a formal "nonattainment" designation and cleanup requirements. The tables are informational and are not themselves a regulatory determination.

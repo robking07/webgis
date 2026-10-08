@@ -1,10 +1,14 @@
 // Number formatting and legend rules, keyed by the `unit` field of a registry entry.
 
-export type Unit = "dollars" | "percent" | "minutes" | "count" | "per_sq_mi" | "ratio" | "years" | "deg_f" | "inches" | "per_100k" | "vehicles_per_day" | "miles_per_day" | "categories" | "agreements" | "percentile";
+export type Unit = "dollars" | "percent" | "minutes" | "count" | "per_sq_mi" | "ratio" | "years" | "deg_f" | "inches" | "per_100k" | "vehicles_per_day" | "miles_per_day" | "categories" | "agreements" | "percentile" | "ug_m3" | "ppm" | "degree_days";
 
 const nf = (o: Intl.NumberFormatOptions) => new Intl.NumberFormat("en-US", o);
 const FORMATTERS: Record<Unit, (v: number) => string> = {
-  dollars: (v) => nf({ style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(v),
+  // Cents only for small amounts (per-resident hazard losses run from a few cents up).
+  dollars: (v) => {
+    const d = Math.abs(v) < 10 && v !== 0 ? 2 : 0;
+    return nf({ style: "currency", currency: "USD", minimumFractionDigits: d, maximumFractionDigits: d }).format(v);
+  },
   percent: (v) => `${nf({ maximumFractionDigits: Math.abs(v) < 1 && v !== 0 ? 2 : Math.abs(v) < 10 ? 1 : 0 }).format(v)}%`,
   minutes: (v) => `${nf({ maximumFractionDigits: 1 }).format(v)} min`,
   count: (v) => nf({ notation: v >= 1e5 ? "compact" : "standard", maximumFractionDigits: 1 }).format(v),
@@ -18,7 +22,10 @@ const FORMATTERS: Record<Unit, (v: number) => string> = {
   agreements: (v) => `${nf({ maximumFractionDigits: 0 }).format(v)} ${Math.round(v) === 1 ? "agreement" : "agreements"}`,
   miles_per_day: (v) => `${nf({ maximumFractionDigits: 1 }).format(v)} mi/day`,
   per_100k: (v) => `${nf({ maximumFractionDigits: 1 }).format(v)} per 100k`,
+  ug_m3: (v) => `${nf({ minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(v)} µg/m³`,
+  ppm: (v) => `${nf({ minimumFractionDigits: 3, maximumFractionDigits: 3 }).format(v)} ppm`,
   percentile: (v) => ordinal(Math.round(v)) + " percentile",
+  degree_days: (v) => `${nf({ maximumFractionDigits: 0 }).format(v)} degree days`,
 };
 
 function ordinal(n: number) {
@@ -34,6 +41,8 @@ export const UNIT_LABEL: Record<Unit, string> = {
   dollars: "U.S. dollars", percent: "percent", minutes: "minutes", count: "count", per_sq_mi: "per square mile of land",
   ratio: "ratio", years: "years", deg_f: "degrees Fahrenheit", inches: "inches", per_100k: "per 100,000 residents",
   vehicles_per_day: "vehicles per day", miles_per_day: "miles per day", categories: "burden categories exceeded", agreements: "active agreements", percentile: "percentile (national rank)",
+  ug_m3: "micrograms per cubic meter of air", ppm: "parts per million",
+  degree_days: "degree days (°F)",
 };
 
 export function formatValue(v: number | null | undefined, unit: Unit): string {
