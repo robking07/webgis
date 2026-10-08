@@ -214,3 +214,21 @@
   short: "A count of every person and home, not a survey sample, so there's no margin of error."
   long: "The decennial Census counts every resident and housing unit as of April 1, 2020. Its redistricting file (P.L. 94-171) is published down to census blocks, often a single city block. To protect privacy, the Census Bureau adds statistical noise to small-area counts (differential privacy), so a single block's numbers can be off by a few people; block groups and larger areas are reliable."
   source: https://www.census.gov/programs-surveys/decennial-census/about/rdo/summary-files.html
+
+- id: energy-burden
+  term: >-
+    Energy burden
+  short: >-
+    The share of a household's income that goes to home energy bills: electricity, gas and heating fuels.
+  long: >-
+    A household earning $40,000 that spends $2,400 a year on home energy has a 6% burden; 6% or more is commonly called high, and 10% or more severe. These figures are modelled, not actual bills: the Department of Energy fits incomes and energy costs from the 2018–2022 American Community Survey to each tract's homes and heating fuels, then scales bills to what local utilities reported selling. An area's value is its average yearly bill divided by its average household income. Gasoline for cars isn't included.
+  source: https://www.energy.gov/scep/low-income-energy-affordability-data-lead-tool
+
+- id: area-median-income
+  term: >-
+    Area median income (AMI)
+  short: >-
+    The middle household income for a metro area or rural county, set each year by HUD and adjusted for household size.
+  long: >-
+    Housing and energy programs often define "low-income" as earning less than 80% of the area median income, the line HUD uses for many of its programs. Because it is local, a family counted as lower-income in an expensive metro could earn more than a family above the line in a cheaper rural county. It is adjusted for household size, so a family of four has a higher limit than a single person.
+  source: https://www.huduser.gov/portal/datasets/il.html

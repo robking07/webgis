@@ -62,6 +62,7 @@ function vars(e: DatasetEntry): string[] {
   if (m.kind === "places") return [`PLACES:${m.measureId}`];
   if (m.kind === "climdiv") return [`CLIMDIV:${m.element}:${m.months.join(",")}`];
   if (m.kind === "nbi") return [`NBI:${m.condition}`];
+  if (m.kind === "lead") return m.stat === "burden" ? ["LEAD:COST", "LEAD:INCOME"] : ["LEAD:COST"];
   if (m.kind === "features") return [`FEATURES:${e.id}`];
   if (m.kind === "hpms_vmt") return ["HPMS:VMT"];
   if (m.kind === "cejst") return ["CEJST:SN_C"];

@@ -1,0 +1,29 @@
+id: energy_burden_low_income
+title: Home energy burden, lower-income households
+phrase: home energy burdens for lower-income households
+description: "Share of income spent on home energy by households earning less than 80% of their area's median income (DOE's definition of low-income): their average yearly energy bill divided by their average income."
+category: Environmental justice
+tags: [energy burden, energy affordability, low-income, utility bills, heating, LEAD, Justice40, environmental justice, area median income]
+source:
+  name: U.S. Department of Energy, Low-Income Energy Affordability Data (LEAD) Tool, 2022 Update (with NREL; via OEDI)
+  shortName: DOE LEAD Tool
+  url: https://data.openei.org/submissions/6219
+  citation: "Ma, Ookie and Aaron Vimont. Low-Income Energy Affordability Data - LEAD Tool - 2022 Update. U.S. Department of Energy, Office of Energy Efficiency and Renewable Energy, August 1, 2024. Distributed by Open Energy Data Initiative (OEDI). https://doi.org/10.25984/2504170"
+license: "Creative Commons Attribution 4.0 (CC BY 4.0), per the OEDI submission page (\"license\": \"https://creativecommons.org/licenses/by/4.0/\"). Attribution: the citation above."
+updateCadence: irregular
+vintage: "2018–2022 average"
+geographyLevels: [state, county, tract]
+unit: percent
+universe: households under 80% of area median income
+coverageNote: "Modelled, not metered: DOE estimates each area's bills from 2018–2022 American Community Survey answers, scaled to match what utilities reported to EIA for 2022. \"Lower-income\" means under 80% of the area median income for the household's size (HUD's limits). Bills paid inside the rent are left out of the average. Tracts with fewer than 20 lower-income households have no value."
+terms: [energy-burden, area-median-income, quantile-classes]
+modelInputs: [median_household_income]  # burden divides by the same ACS household income
+measure:
+  kind: lead
+  url: "https://data.openei.org/files/6219/{ST}-2022-LEAD-data.zip"
+  year: 2022
+  grouping: AMI
+  bands: ["0-30%", "30-60%", "60-80%"]
+  stat: burden
+  minHouseholds: 20
+symbology: { ramp: oranges, classification: quantile, classes: 5, higherIsBetter: false }

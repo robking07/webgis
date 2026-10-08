@@ -113,6 +113,23 @@ const HpmsVmtMeasure = z.object({
   perCapita: z.boolean().default(true),
 });
 
+/** DOE Low-Income Energy Affordability Data (LEAD Tool; OEDI, CC BY 4.0): modelled household energy
+ *  costs and incomes, summed from the per-state tract files up to county and state. */
+const LeadMeasure = z.object({
+  kind: z.literal("lead"),
+  /** Per-state zip URL with `{ST}` for the postal code. */
+  url: z.string().includes("{ST}"),
+  year: z.number().int(),
+  /** Income grouping file: Area Median Income, Federal Poverty Level, State Median Income, Lower Living Standard. */
+  grouping: z.enum(["AMI", "FPL", "SMI", "LLSI"]),
+  /** Income bands to include, as printed in the file (e.g. "0-30%"); empty = all households. */
+  bands: z.array(z.string()).default([]),
+  /** burden = average energy cost ÷ average income (percent); cost = average annual energy cost (dollars). */
+  stat: z.enum(["burden", "cost"]),
+  /** Tracts with fewer households than this in the group get no value. */
+  minHouseholds: z.number().default(0),
+});
+
 /** A layer drawn from its own geometry (road segments, stops, bridges…) instead of a
  *  choropleth on Census geography. Values live in the tiles; breaks are computed at ingest. */
 const FeaturesMeasure = z.object({
@@ -200,7 +217,7 @@ export const DatasetEntry = z.object({
   unit: Unit,
   /** For insights: the population the value describes. Pairs that share one are flagged. */
   universe: z.string(),
-  measure: z.discriminatedUnion("kind", [AcsMeasure, Census2020Measure, LodesMeasure, PlacesMeasure, ClimdivMeasure, NbiMeasure, FarsMeasure, FeaturesMeasure, HpmsVmtMeasure, CejstMeasure, Ddp287gMeasure]),
+  measure: z.discriminatedUnion("kind", [AcsMeasure, Census2020Measure, LodesMeasure, PlacesMeasure, ClimdivMeasure, NbiMeasure, FarsMeasure, FeaturesMeasure, HpmsVmtMeasure, CejstMeasure, Ddp287gMeasure, LeadMeasure]),
   /** Other registry datasets used as inputs to this dataset's model (e.g. PLACES uses county poverty).
    *  Insight pairs with these are flagged: they correlate partly by construction. */
   modelInputs: z.array(z.string()).default([]),

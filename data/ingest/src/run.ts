@@ -1,5 +1,5 @@
 // npm run ingest -- <step> [dataset or level ids…]
-// Steps: geographies | label-mask | timeline | acs | acs-bg | census2020 | lodes | places | climdiv | nbi | fars | features | vmt | cejst | ddp287g | tiles | publish-tiles | publish-values | publish-geo | publish-data | details | publish-details | tract-geo | export | insights | tracts-out | docs | mn-catalog | all
+// Steps: geographies | label-mask | timeline | acs | acs-bg | census2020 | lodes | places | climdiv | nbi | fars | features | vmt | cejst | ddp287g | lead | tiles | publish-tiles | publish-values | publish-geo | publish-data | details | publish-details | tract-geo | export | insights | tracts-out | docs | mn-catalog | all
 import { ingestGeographies, tractGeography } from "./geographies.ts";
 import { ingestAcs, ingestAcsTimeline } from "./acs.ts";
 import { ingestCensus2020 } from "./census2020.ts";
@@ -19,6 +19,7 @@ import { ingestFeatures } from "./features.ts";
 import { ingestVmt } from "./vmt.ts";
 import { ingestCejst } from "./cejst.ts";
 import { ingestDdp287g } from "./ddp287g.ts";
+import { ingestLead } from "./lead.ts";
 import { buildLabelMask } from "./label-mask.ts";
 import { tractsOut } from "./tracts.ts";
 const [step, ...rest] = process.argv.slice(2);
@@ -37,6 +38,7 @@ const steps: Record<string, () => Promise<void> | void> = {
   vmt: () => ingestVmt(only),
   cejst: () => ingestCejst(only),
   ddp287g: () => ingestDdp287g(only),
+  lead: () => ingestLead(only),
   tiles: () => buildTiles(only),
   "label-mask": buildLabelMask,
   // Year control (D-36): earlier periods, written to the web export only. ACS first (FARS
