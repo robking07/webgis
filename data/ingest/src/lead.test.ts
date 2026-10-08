@@ -11,6 +11,12 @@ describe("parsing LEAD CSVs", () => {
     expect([c.fip, c.band, c.cols[0]]).toEqual([2, 4, 9]);
     expect([t.fip, t.band, t.cols[0]]).toEqual([1, 2, 6]);
   });
+  it("reads the poverty-level band from the FPL files", () => {
+    const h = parseLeadHeader(TRACT_HDR.replace("AMI150", "FPL150"), "FPL150");
+    const r = parseLeadRow("27,27053000101,150-200%,RENTER 1980-99,RENTER 50+ UNIT,RENTER ELECTRICITY,12,3,480000,9000,0,0,12,10,0,0,REN", h, 11);
+    expect(r?.[1]).toBe("150-200%");
+    expect(leadValue(r![2], "burden")).toBeCloseTo((100 * 900) / 40_000, 6);
+  });
   it("fails loudly when a column is missing", () => {
     expect(() => parseLeadHeader(TRACT_HDR, "FPL150")).toThrow(/FPL150/);
     expect(() => parseLeadHeader("FIP,AMI150,UNITS", "AMI150")).toThrow(/HINCP\*UNITS/);

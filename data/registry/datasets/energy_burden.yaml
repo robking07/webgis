@@ -22,7 +22,7 @@ measure:
   kind: lead
   url: "https://data.openei.org/files/6219/{ST}-2022-LEAD-data.zip"
   year: 2022
-  grouping: AMI
+  grouping: FPL
   bands: []
   stat: burden
   minHouseholds: 20

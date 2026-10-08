@@ -224,11 +224,11 @@
     A household earning $40,000 that spends $2,400 a year on home energy has a 6% burden; 6% or more is commonly called high, and 10% or more severe. These figures are modelled, not actual bills: the Department of Energy fits incomes and energy costs from the 2018–2022 American Community Survey to each tract's homes and heating fuels, then scales bills to what local utilities reported selling. An area's value is its average yearly bill divided by its average household income. Gasoline for cars isn't included.
   source: https://www.energy.gov/scep/low-income-energy-affordability-data-lead-tool
 
-- id: area-median-income
+- id: federal-poverty-level
   term: >-
-    Area median income (AMI)
+    Federal poverty level (FPL)
   short: >-
-    The middle household income for a metro area or rural county, set each year by HUD and adjusted for household size.
+    The yearly income line the federal government uses to define poverty, set by household size: $27,750 for a family of four in 2022.
   long: >-
-    Housing and energy programs often define "low-income" as earning less than 80% of the area median income, the line HUD uses for many of its programs. Because it is local, a family counted as lower-income in an expensive metro could earn more than a family above the line in a cheaper rural county. It is adjusted for household size, so a family of four has a higher limit than a single person.
-  source: https://www.huduser.gov/portal/datasets/il.html
+    Many aid programs use multiples of it: "200% of poverty" means twice the line, about $55,500 for a family of four in 2022, and is a common cut-off for energy bill help and weatherization. The line is the same across the lower 48 states (higher in Alaska and Hawaii), so it doesn't adjust for local costs: a household just under it in an expensive city is often worse off than one in a cheaper rural area.
+  source: https://aspe.hhs.gov/topics/poverty-economic-mobility/poverty-guidelines

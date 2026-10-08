@@ -894,7 +894,7 @@
    "kind": "lead",
    "url": "https://data.openei.org/files/6219/{ST}-2022-LEAD-data.zip",
    "year": 2022,
-   "grouping": "AMI",
+   "grouping": "FPL",
    "bands": [],
    "stat": "burden",
    "minHouseholds": 20
@@ -921,7 +921,7 @@
   "id": "energy_burden_low_income",
   "title": "Home energy burden, lower-income households",
   "phrase": "home energy burdens for lower-income households",
-  "description": "Share of income spent on home energy by households earning less than 80% of their area's median income (DOE's definition of low-income): their average yearly energy bill divided by their average income.",
+  "description": "Share of income spent on home energy by households with incomes at or below twice the federal poverty line (about $55,500 for a family of four in 2022): their average yearly energy bill divided by their average income.",
   "category": "Environmental justice",
   "tags": [
    "energy burden",
@@ -932,7 +932,8 @@
    "LEAD",
    "Justice40",
    "environmental justice",
-   "area median income"
+   "poverty",
+   "federal poverty level"
   ],
   "source": {
    "name": "U.S. Department of Energy, Low-Income Energy Affordability Data (LEAD) Tool, 2022 Update (with NREL; via OEDI)",
@@ -949,16 +950,16 @@
    "tract"
   ],
   "unit": "percent",
-  "universe": "households under 80% of area median income",
+  "universe": "households at or below 200% of the federal poverty level",
   "measure": {
    "kind": "lead",
    "url": "https://data.openei.org/files/6219/{ST}-2022-LEAD-data.zip",
    "year": 2022,
-   "grouping": "AMI",
+   "grouping": "FPL",
    "bands": [
-    "0-30%",
-    "30-60%",
-    "60-80%"
+    "0-100%",
+    "100-150%",
+    "150-200%"
    ],
    "stat": "burden",
    "minHouseholds": 20
@@ -966,19 +967,25 @@
   "modelInputs": [
    "median_household_income"
   ],
-  "coverageNote": "Modelled, not metered: DOE estimates each area's bills from 2018–2022 American Community Survey answers, scaled to match what utilities reported to EIA for 2022. \"Lower-income\" means under 80% of the area median income for the household's size (HUD's limits). Bills paid inside the rent are left out of the average. Tracts with fewer than 20 lower-income households have no value.",
+  "coverageNote": "Modelled, not metered: DOE estimates each area's bills from 2018–2022 American Community Survey answers, scaled to match what utilities reported to EIA for 2022. \"Lower-income\" means income at or below 200% of the federal poverty guideline for the household's size, the same everywhere in the lower 48 (Alaska and Hawaii have higher guidelines). Bills paid inside the rent are left out of the average. The map's color edges at 6% and 10% are the common benchmarks for a \"high\" and a \"severe\" energy burden. Tracts with fewer than 20 lower-income households have no value.",
   "facets": [],
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
    "energy-burden",
-   "area-median-income",
+   "federal-poverty-level",
    "quantile-classes"
   ],
   "symbology": {
    "ramp": "oranges",
-   "classification": "quantile",
+   "classification": "manual",
    "classes": 5,
+   "breaks": [
+    6,
+    8,
+    10,
+    15
+   ],
    "higherIsBetter": false
   }
  },
@@ -1077,7 +1084,7 @@
    "kind": "lead",
    "url": "https://data.openei.org/files/6219/{ST}-2022-LEAD-data.zip",
    "year": 2022,
-   "grouping": "AMI",
+   "grouping": "FPL",
    "bands": [],
    "stat": "cost",
    "minHouseholds": 20
