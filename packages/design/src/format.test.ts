@@ -4,6 +4,9 @@ import { classLabels, formatValue } from "./format.ts";
 describe("formatValue", () => {
   it("formats by unit", () => {
     expect(formatValue(64450, "dollars")).toBe("$64,450");
+    expect(formatValue(0.16, "dollars")).toBe("$0.16");
+    expect(formatValue(3.5, "dollars")).toBe("$3.50");
+    expect(formatValue(0, "dollars")).toBe("$0");
     expect(formatValue(12.345, "percent")).toBe("12%");
     expect(formatValue(5.25, "percent")).toBe("5.3%");
     expect(formatValue(0.456, "percent")).toBe("0.46%");
@@ -18,6 +21,9 @@ describe("formatValue", () => {
     expect(formatValue(42, "percentile")).toBe("42nd percentile");
     expect(formatValue(11, "percentile")).toBe("11th percentile");
     expect(formatValue(71.5, "deg_f")).toBe("71.5°F");
+    expect(formatValue(9, "ug_m3")).toBe("9.0 µg/m³");
+    expect(formatValue(0.07, "ppm")).toBe("0.070 ppm");
+    expect(formatValue(4512.4, "degree_days")).toBe("4,512 degree days");
   });
   it("says No data for missing values", () => {
     expect(formatValue(null, "dollars")).toBe("No data");

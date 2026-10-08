@@ -1,0 +1,22 @@
+id: nri_risk_score
+title: "Natural hazard risk (FEMA National Risk Index score)"
+phrase: "natural hazard risk scores"
+description: "FEMA's overall risk score: expected yearly losses from 18 natural hazards, raised where people are more vulnerable and lowered where communities are more resilient, ranked against all counties (or all tracts) nationwide."
+category: Environment
+tags: [FEMA, National Risk Index, NRI, natural hazards, disasters, risk index, climate risk]
+source:
+  name: FEMA National Risk Index v1.20.0 (December 2025)
+  shortName: FEMA Risk Index
+  url: https://www.fema.gov/flood-maps/products-tools/national-risk-index
+  citation: "Federal Emergency Management Agency (FEMA), National Risk Index Counties, National Risk Index Census Tracts, v1.20.0 (December 2025), field RISK_SCORE. Retrieved from https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_Counties/FeatureServer/0 ; https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_Census_Tracts/FeatureServer/0 on October 7, 2026. This product uses the Federal Emergency Management Agency’s National Risk Index dataset API or downloadable datasets but is not endorsed by FEMA. The Federal Government or FEMA cannot vouch for the data or analyses derived from these data after the data have been retrieved from the Agency's website(s)."
+license: "FEMA National Risk Index Terms and Conditions (free to use, including non-commercial display; FEMA may ask users to stop). Required statement: “This product uses the Federal Emergency Management Agency’s National Risk Index dataset API or downloadable datasets but is not endorsed by FEMA. The Federal Government or FEMA cannot vouch for the data or analyses derived from these data after the data have been retrieved from the Agency's website(s).”"
+updateCadence: irregular
+vintage: "Version 1.20.0 (December 2025)"
+geographyLevels: [county, tract]
+unit: percentile
+universe: "counties or census tracts (national rank among the same level)"
+modelInputs: [nri_expected_loss_per_person, nri_social_vulnerability, nri_community_resilience]
+coverageNote: "A relative rank (0–100) among counties, or among tracts, not an absolute amount of risk. Puerto Rico and the island territories show no data (FEMA rates them Insufficient Data). Version 1.20 switched its social vulnerability source, so scores moved even where hazards didn't. Not comparable with NRI version 1.19 (March 2023)."
+terms: [fema-nri, nri-risk-score, expected-annual-loss]
+measure: { kind: fema_nri, version: December 2025, field: RISK_SCORE }
+symbology: { ramp: oranges, classification: quantile, classes: 5, higherIsBetter: false }

@@ -1,0 +1,21 @@
+id: nri_inland_flood_loss
+title: "Expected yearly inland flood losses, per resident"
+phrase: "expected inland flood losses per resident"
+description: "FEMA's estimate of what inland (river and rain) flooding cost here in an average year (damage to buildings and crops, plus deaths and injuries valued in dollars), divided by the number of residents."
+category: Environment
+tags: [FEMA, National Risk Index, NRI, natural hazards, flood, flooding, riverine flooding]
+source:
+  name: FEMA National Risk Index v1.20.0 (December 2025)
+  shortName: FEMA Risk Index
+  url: https://www.fema.gov/flood-maps/products-tools/national-risk-index
+  citation: "Federal Emergency Management Agency (FEMA), National Risk Index States Expected Annual Loss, National Risk Index Counties, National Risk Index Census Tracts, v1.20.0 (December 2025), field IFLD_EALT (expected annual loss, inland (river and rain) flooding) divided by POPULATION. Retrieved from https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_States_Expected_Annual_Loss/FeatureServer/0 ; https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_Counties/FeatureServer/0 ; https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_Census_Tracts/FeatureServer/0 on October 7, 2026. This product uses the Federal Emergency Management Agency’s National Risk Index dataset API or downloadable datasets but is not endorsed by FEMA. The Federal Government or FEMA cannot vouch for the data or analyses derived from these data after the data have been retrieved from the Agency's website(s)."
+license: "FEMA National Risk Index Terms and Conditions (free to use, including non-commercial display; FEMA may ask users to stop). Required statement: “This product uses the Federal Emergency Management Agency’s National Risk Index dataset API or downloadable datasets but is not endorsed by FEMA. The Federal Government or FEMA cannot vouch for the data or analyses derived from these data after the data have been retrieved from the Agency's website(s).”"
+updateCadence: irregular
+vintage: "Version 1.20.0 (December 2025)"
+geographyLevels: [state, county, tract]
+unit: dollars
+universe: "residents (FEMA National Risk Index population)"
+coverageNote: "A FEMA model of long-run averages, not a count of past losses. Mapwich divides FEMA's dollar estimate by FEMA's population count; tracts with fewer than 100 residents show no data. Inland flooding is river and heavy-rain flooding; coastal flooding is a separate map. Not comparable with NRI version 1.19 (March 2023)."
+terms: [expected-annual-loss, fema-nri, quantile-classes]
+measure: { kind: fema_nri, version: December 2025, field: IFLD_EALT, perCapita: true, ratingField: IFLD_EALR }
+symbology: { ramp: oranges, classification: quantile, classes: 5, higherIsBetter: false }

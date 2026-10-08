@@ -39,8 +39,8 @@ async function annualValues(e: DatasetEntry): Promise<Map<string, Map<number, nu
     const year = +line.slice(7, 11);
     const monthly = line.slice(11).trim().split(/\s+/).map(Number);
     const picked = months.map((m) => monthly[m - 1]);
-    // Missing-value sentinels: -99.90 (temperature) and -9.99 (precipitation).
-    if (picked.some((v) => !Number.isFinite(v) || v === -99.9 || v === -9.99)) continue;
+    // Missing-value sentinels: -99.90 (temperature), -9.99 (precipitation), -9999 (degree days).
+    if (picked.some((v) => !Number.isFinite(v) || v === -99.9 || v === -9.99 || v === -9999)) continue;
     const total = picked.reduce((a, b) => a + b, 0);
     const geoid = fips + line.slice(2, 5);
     (out.get(geoid) ?? out.set(geoid, new Map()).get(geoid)!).set(year, stat === "sum" ? total : total / picked.length);
