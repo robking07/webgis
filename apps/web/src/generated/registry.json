@@ -1624,6 +1624,578 @@
   }
  },
  {
+  "id": "nri_coastal_flood_loss",
+  "title": "Expected yearly coastal flood losses, per resident",
+  "phrase": "expected coastal flood losses per resident",
+  "description": "FEMA's estimate of what coastal flooding cost here in an average year (damage to buildings and crops, plus deaths and injuries valued in dollars), divided by the number of residents.",
+  "category": "Environment",
+  "tags": [
+   "FEMA",
+   "National Risk Index",
+   "NRI",
+   "natural hazards",
+   "coastal flooding",
+   "storm surge",
+   "flood",
+   "sea level"
+  ],
+  "source": {
+   "name": "FEMA National Risk Index v1.20.0 (December 2025)",
+   "shortName": "FEMA Risk Index",
+   "url": "https://www.fema.gov/flood-maps/products-tools/national-risk-index",
+   "citation": "Federal Emergency Management Agency (FEMA), National Risk Index States Expected Annual Loss, National Risk Index Counties, National Risk Index Census Tracts, v1.20.0 (December 2025), field CFLD_EALT (expected annual loss, coastal flooding) divided by POPULATION. Retrieved from https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_States_Expected_Annual_Loss/FeatureServer/0 ; https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_Counties/FeatureServer/0 ; https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_Census_Tracts/FeatureServer/0 on October 7, 2026. This product uses the Federal Emergency Management Agency’s National Risk Index dataset API or downloadable datasets but is not endorsed by FEMA. The Federal Government or FEMA cannot vouch for the data or analyses derived from these data after the data have been retrieved from the Agency's website(s)."
+  },
+  "license": "FEMA National Risk Index Terms and Conditions (free to use, including non-commercial display; FEMA may ask users to stop). Required statement: “This product uses the Federal Emergency Management Agency’s National Risk Index dataset API or downloadable datasets but is not endorsed by FEMA. The Federal Government or FEMA cannot vouch for the data or analyses derived from these data after the data have been retrieved from the Agency's website(s).”",
+  "updateCadence": "irregular",
+  "vintage": "Version 1.20.0 (December 2025)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "dollars",
+  "universe": "residents (FEMA National Risk Index population)",
+  "measure": {
+   "kind": "fema_nri",
+   "version": "December 2025",
+   "field": "CFLD_EALT",
+   "perCapita": true,
+   "minTractPopulation": 100,
+   "ratingField": "CFLD_EALR"
+  },
+  "modelInputs": [],
+  "coverageNote": "A FEMA model of long-run averages, not a count of past losses. Mapwich divides FEMA's dollar estimate by FEMA's population count; tracts with fewer than 100 residents show no data. Inland places show $0 (FEMA marks coastal flooding Not Applicable there). Not comparable with NRI version 1.19 (March 2023).",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "expected-annual-loss",
+   "fema-nri",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": false
+  }
+ },
+ {
+  "id": "nri_community_resilience",
+  "title": "Community resilience to natural hazards",
+  "phrase": "community resilience scores",
+  "description": "How well a county is equipped to absorb and bounce back from disasters (its social, economic, housing, institutional and environmental capacity), from the University of South Carolina's BRIC index as used in FEMA's National Risk Index, ranked nationally.",
+  "category": "Environment",
+  "tags": [
+   "FEMA",
+   "National Risk Index",
+   "NRI",
+   "natural hazards",
+   "resilience",
+   "BRIC",
+   "disasters"
+  ],
+  "source": {
+   "name": "FEMA National Risk Index v1.20.0 (December 2025)",
+   "shortName": "FEMA Risk Index",
+   "url": "https://www.fema.gov/flood-maps/products-tools/national-risk-index",
+   "citation": "Federal Emergency Management Agency (FEMA), National Risk Index Counties, v1.20.0 (December 2025), field RESL_SCORE. Retrieved from https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_Counties/FeatureServer/0 on October 7, 2026. This product uses the Federal Emergency Management Agency’s National Risk Index dataset API or downloadable datasets but is not endorsed by FEMA. The Federal Government or FEMA cannot vouch for the data or analyses derived from these data after the data have been retrieved from the Agency's website(s)."
+  },
+  "license": "FEMA National Risk Index Terms and Conditions (free to use, including non-commercial display; FEMA may ask users to stop). Required statement: “This product uses the Federal Emergency Management Agency’s National Risk Index dataset API or downloadable datasets but is not endorsed by FEMA. The Federal Government or FEMA cannot vouch for the data or analyses derived from these data after the data have been retrieved from the Agency's website(s).”",
+  "updateCadence": "irregular",
+  "vintage": "Version 1.20.0 (December 2025)",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "percentile",
+  "universe": "counties (national rank)",
+  "measure": {
+   "kind": "fema_nri",
+   "version": "December 2025",
+   "field": "RESL_SCORE",
+   "perCapita": false,
+   "minTractPopulation": 100
+  },
+  "modelInputs": [],
+  "coverageNote": "A relative rank (0–100) among counties. County only: FEMA gives every tract its county's score. Puerto Rico and the island territories show no data. Higher is better.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "fema-nri",
+   "community-resilience"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": true
+  }
+ },
+ {
+  "id": "nri_expected_loss_per_person",
+  "title": "Expected yearly losses from natural hazards, per resident",
+  "phrase": "expected natural-hazard losses per resident",
+  "description": "FEMA's estimate of what 18 natural hazards cost here in an average year (damage to buildings and crops, plus deaths and injuries valued in dollars), divided by the number of residents.",
+  "category": "Environment",
+  "tags": [
+   "FEMA",
+   "National Risk Index",
+   "NRI",
+   "natural hazards",
+   "disasters",
+   "expected annual loss",
+   "climate risk",
+   "flood",
+   "wildfire",
+   "hurricane",
+   "tornado",
+   "earthquake",
+   "heat"
+  ],
+  "source": {
+   "name": "FEMA National Risk Index v1.20.0 (December 2025)",
+   "shortName": "FEMA Risk Index",
+   "url": "https://www.fema.gov/flood-maps/products-tools/national-risk-index",
+   "citation": "Federal Emergency Management Agency (FEMA), National Risk Index States Expected Annual Loss, National Risk Index Counties, National Risk Index Census Tracts, v1.20.0 (December 2025), field EAL_VALT (expected annual loss, all hazards) divided by POPULATION. Retrieved from https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_States_Expected_Annual_Loss/FeatureServer/0 ; https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_Counties/FeatureServer/0 ; https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_Census_Tracts/FeatureServer/0 on October 7, 2026. This product uses the Federal Emergency Management Agency’s National Risk Index dataset API or downloadable datasets but is not endorsed by FEMA. The Federal Government or FEMA cannot vouch for the data or analyses derived from these data after the data have been retrieved from the Agency's website(s)."
+  },
+  "license": "FEMA National Risk Index Terms and Conditions (free to use, including non-commercial display; FEMA may ask users to stop). Required statement: “This product uses the Federal Emergency Management Agency’s National Risk Index dataset API or downloadable datasets but is not endorsed by FEMA. The Federal Government or FEMA cannot vouch for the data or analyses derived from these data after the data have been retrieved from the Agency's website(s).”",
+  "updateCadence": "irregular",
+  "vintage": "Version 1.20.0 (December 2025)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "dollars",
+  "universe": "residents (FEMA National Risk Index population)",
+  "measure": {
+   "kind": "fema_nri",
+   "version": "December 2025",
+   "field": "EAL_VALT",
+   "perCapita": true,
+   "minTractPopulation": 100
+  },
+  "modelInputs": [
+   "nri_wildfire_loss",
+   "nri_inland_flood_loss",
+   "nri_heat_wave_loss",
+   "nri_hurricane_loss",
+   "nri_coastal_flood_loss",
+   "nri_tornado_loss"
+  ],
+  "coverageNote": "A FEMA model of long-run averages, not a count of past losses. Mapwich divides FEMA's dollar estimate by FEMA's population count; tracts with fewer than 100 residents show no data. Deaths and injuries are valued in dollars and can outweigh property damage. Not comparable with NRI version 1.19 (March 2023).",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "expected-annual-loss",
+   "fema-nri",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": false
+  }
+ },
+ {
+  "id": "nri_heat_wave_loss",
+  "title": "Expected yearly heat wave losses, per resident",
+  "phrase": "expected heat wave losses per resident",
+  "description": "FEMA's estimate of what heat waves cost here in an average year (damage to buildings and crops, plus deaths and injuries valued in dollars), divided by the number of residents.",
+  "category": "Environment",
+  "tags": [
+   "FEMA",
+   "National Risk Index",
+   "NRI",
+   "natural hazards",
+   "heat",
+   "extreme heat",
+   "heat wave"
+  ],
+  "source": {
+   "name": "FEMA National Risk Index v1.20.0 (December 2025)",
+   "shortName": "FEMA Risk Index",
+   "url": "https://www.fema.gov/flood-maps/products-tools/national-risk-index",
+   "citation": "Federal Emergency Management Agency (FEMA), National Risk Index States Expected Annual Loss, National Risk Index Counties, National Risk Index Census Tracts, v1.20.0 (December 2025), field HWAV_EALT (expected annual loss, heat waves) divided by POPULATION. Retrieved from https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_States_Expected_Annual_Loss/FeatureServer/0 ; https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_Counties/FeatureServer/0 ; https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_Census_Tracts/FeatureServer/0 on October 7, 2026. This product uses the Federal Emergency Management Agency’s National Risk Index dataset API or downloadable datasets but is not endorsed by FEMA. The Federal Government or FEMA cannot vouch for the data or analyses derived from these data after the data have been retrieved from the Agency's website(s)."
+  },
+  "license": "FEMA National Risk Index Terms and Conditions (free to use, including non-commercial display; FEMA may ask users to stop). Required statement: “This product uses the Federal Emergency Management Agency’s National Risk Index dataset API or downloadable datasets but is not endorsed by FEMA. The Federal Government or FEMA cannot vouch for the data or analyses derived from these data after the data have been retrieved from the Agency's website(s).”",
+  "updateCadence": "irregular",
+  "vintage": "Version 1.20.0 (December 2025)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "dollars",
+  "universe": "residents (FEMA National Risk Index population)",
+  "measure": {
+   "kind": "fema_nri",
+   "version": "December 2025",
+   "field": "HWAV_EALT",
+   "perCapita": true,
+   "minTractPopulation": 100,
+   "ratingField": "HWAV_EALR"
+  },
+  "modelInputs": [],
+  "coverageNote": "A FEMA model of long-run averages, not a count of past losses. Mapwich divides FEMA's dollar estimate by FEMA's population count; tracts with fewer than 100 residents show no data. Alaska and some territories show no data (FEMA rates them Insufficient Data). Most heat-wave losses are lives and injuries valued in dollars. Not comparable with NRI version 1.19 (March 2023).",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "expected-annual-loss",
+   "fema-nri",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": false
+  }
+ },
+ {
+  "id": "nri_hurricane_loss",
+  "title": "Expected yearly hurricane losses, per resident",
+  "phrase": "expected hurricane losses per resident",
+  "description": "FEMA's estimate of what hurricanes cost here in an average year (damage to buildings and crops, plus deaths and injuries valued in dollars), divided by the number of residents.",
+  "category": "Environment",
+  "tags": [
+   "FEMA",
+   "National Risk Index",
+   "NRI",
+   "natural hazards",
+   "hurricane",
+   "tropical storm"
+  ],
+  "source": {
+   "name": "FEMA National Risk Index v1.20.0 (December 2025)",
+   "shortName": "FEMA Risk Index",
+   "url": "https://www.fema.gov/flood-maps/products-tools/national-risk-index",
+   "citation": "Federal Emergency Management Agency (FEMA), National Risk Index States Expected Annual Loss, National Risk Index Counties, National Risk Index Census Tracts, v1.20.0 (December 2025), field HRCN_EALT (expected annual loss, hurricanes) divided by POPULATION. Retrieved from https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_States_Expected_Annual_Loss/FeatureServer/0 ; https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_Counties/FeatureServer/0 ; https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_Census_Tracts/FeatureServer/0 on October 7, 2026. This product uses the Federal Emergency Management Agency’s National Risk Index dataset API or downloadable datasets but is not endorsed by FEMA. The Federal Government or FEMA cannot vouch for the data or analyses derived from these data after the data have been retrieved from the Agency's website(s)."
+  },
+  "license": "FEMA National Risk Index Terms and Conditions (free to use, including non-commercial display; FEMA may ask users to stop). Required statement: “This product uses the Federal Emergency Management Agency’s National Risk Index dataset API or downloadable datasets but is not endorsed by FEMA. The Federal Government or FEMA cannot vouch for the data or analyses derived from these data after the data have been retrieved from the Agency's website(s).”",
+  "updateCadence": "irregular",
+  "vintage": "Version 1.20.0 (December 2025)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "dollars",
+  "universe": "residents (FEMA National Risk Index population)",
+  "measure": {
+   "kind": "fema_nri",
+   "version": "December 2025",
+   "field": "HRCN_EALT",
+   "perCapita": true,
+   "minTractPopulation": 100,
+   "ratingField": "HRCN_EALR"
+  },
+  "modelInputs": [],
+  "coverageNote": "A FEMA model of long-run averages, not a count of past losses. Mapwich divides FEMA's dollar estimate by FEMA's population count; tracts with fewer than 100 residents show no data. Places FEMA considers out of hurricane reach show $0. Not comparable with NRI version 1.19 (March 2023).",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "expected-annual-loss",
+   "fema-nri",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": false
+  }
+ },
+ {
+  "id": "nri_inland_flood_loss",
+  "title": "Expected yearly inland flood losses, per resident",
+  "phrase": "expected inland flood losses per resident",
+  "description": "FEMA's estimate of what inland (river and rain) flooding cost here in an average year (damage to buildings and crops, plus deaths and injuries valued in dollars), divided by the number of residents.",
+  "category": "Environment",
+  "tags": [
+   "FEMA",
+   "National Risk Index",
+   "NRI",
+   "natural hazards",
+   "flood",
+   "flooding",
+   "riverine flooding"
+  ],
+  "source": {
+   "name": "FEMA National Risk Index v1.20.0 (December 2025)",
+   "shortName": "FEMA Risk Index",
+   "url": "https://www.fema.gov/flood-maps/products-tools/national-risk-index",
+   "citation": "Federal Emergency Management Agency (FEMA), National Risk Index States Expected Annual Loss, National Risk Index Counties, National Risk Index Census Tracts, v1.20.0 (December 2025), field IFLD_EALT (expected annual loss, inland (river and rain) flooding) divided by POPULATION. Retrieved from https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_States_Expected_Annual_Loss/FeatureServer/0 ; https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_Counties/FeatureServer/0 ; https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_Census_Tracts/FeatureServer/0 on October 7, 2026. This product uses the Federal Emergency Management Agency’s National Risk Index dataset API or downloadable datasets but is not endorsed by FEMA. The Federal Government or FEMA cannot vouch for the data or analyses derived from these data after the data have been retrieved from the Agency's website(s)."
+  },
+  "license": "FEMA National Risk Index Terms and Conditions (free to use, including non-commercial display; FEMA may ask users to stop). Required statement: “This product uses the Federal Emergency Management Agency’s National Risk Index dataset API or downloadable datasets but is not endorsed by FEMA. The Federal Government or FEMA cannot vouch for the data or analyses derived from these data after the data have been retrieved from the Agency's website(s).”",
+  "updateCadence": "irregular",
+  "vintage": "Version 1.20.0 (December 2025)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "dollars",
+  "universe": "residents (FEMA National Risk Index population)",
+  "measure": {
+   "kind": "fema_nri",
+   "version": "December 2025",
+   "field": "IFLD_EALT",
+   "perCapita": true,
+   "minTractPopulation": 100,
+   "ratingField": "IFLD_EALR"
+  },
+  "modelInputs": [],
+  "coverageNote": "A FEMA model of long-run averages, not a count of past losses. Mapwich divides FEMA's dollar estimate by FEMA's population count; tracts with fewer than 100 residents show no data. Inland flooding is river and heavy-rain flooding; coastal flooding is a separate map. Not comparable with NRI version 1.19 (March 2023).",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "expected-annual-loss",
+   "fema-nri",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": false
+  }
+ },
+ {
+  "id": "nri_risk_score",
+  "title": "Natural hazard risk (FEMA National Risk Index score)",
+  "phrase": "natural hazard risk scores",
+  "description": "FEMA's overall risk score: expected yearly losses from 18 natural hazards, raised where people are more vulnerable and lowered where communities are more resilient, ranked against all counties (or all tracts) nationwide.",
+  "category": "Environment",
+  "tags": [
+   "FEMA",
+   "National Risk Index",
+   "NRI",
+   "natural hazards",
+   "disasters",
+   "risk index",
+   "climate risk"
+  ],
+  "source": {
+   "name": "FEMA National Risk Index v1.20.0 (December 2025)",
+   "shortName": "FEMA Risk Index",
+   "url": "https://www.fema.gov/flood-maps/products-tools/national-risk-index",
+   "citation": "Federal Emergency Management Agency (FEMA), National Risk Index Counties, National Risk Index Census Tracts, v1.20.0 (December 2025), field RISK_SCORE. Retrieved from https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_Counties/FeatureServer/0 ; https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_Census_Tracts/FeatureServer/0 on October 7, 2026. This product uses the Federal Emergency Management Agency’s National Risk Index dataset API or downloadable datasets but is not endorsed by FEMA. The Federal Government or FEMA cannot vouch for the data or analyses derived from these data after the data have been retrieved from the Agency's website(s)."
+  },
+  "license": "FEMA National Risk Index Terms and Conditions (free to use, including non-commercial display; FEMA may ask users to stop). Required statement: “This product uses the Federal Emergency Management Agency’s National Risk Index dataset API or downloadable datasets but is not endorsed by FEMA. The Federal Government or FEMA cannot vouch for the data or analyses derived from these data after the data have been retrieved from the Agency's website(s).”",
+  "updateCadence": "irregular",
+  "vintage": "Version 1.20.0 (December 2025)",
+  "geographyLevels": [
+   "county",
+   "tract"
+  ],
+  "unit": "percentile",
+  "universe": "counties or census tracts (national rank among the same level)",
+  "measure": {
+   "kind": "fema_nri",
+   "version": "December 2025",
+   "field": "RISK_SCORE",
+   "perCapita": false,
+   "minTractPopulation": 100
+  },
+  "modelInputs": [
+   "nri_expected_loss_per_person",
+   "nri_social_vulnerability",
+   "nri_community_resilience"
+  ],
+  "coverageNote": "A relative rank (0–100) among counties, or among tracts, not an absolute amount of risk. Puerto Rico and the island territories show no data (FEMA rates them Insufficient Data). Version 1.20 switched its social vulnerability source, so scores moved even where hazards didn't. Not comparable with NRI version 1.19 (March 2023).",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "fema-nri",
+   "nri-risk-score",
+   "expected-annual-loss"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": false
+  }
+ },
+ {
+  "id": "nri_social_vulnerability",
+  "title": "Social vulnerability to natural hazards",
+  "phrase": "social vulnerability scores",
+  "description": "How hard it would be for residents to prepare for, cope with and recover from a disaster, from the Census Bureau's Community Resilience Estimates as used in FEMA's National Risk Index, ranked nationally.",
+  "category": "Environment",
+  "tags": [
+   "FEMA",
+   "National Risk Index",
+   "NRI",
+   "natural hazards",
+   "social vulnerability",
+   "SoVI",
+   "Community Resilience Estimates",
+   "disasters"
+  ],
+  "source": {
+   "name": "FEMA National Risk Index v1.20.0 (December 2025)",
+   "shortName": "FEMA Risk Index",
+   "url": "https://www.fema.gov/flood-maps/products-tools/national-risk-index",
+   "citation": "Federal Emergency Management Agency (FEMA), National Risk Index Counties, National Risk Index Census Tracts, v1.20.0 (December 2025), field SOVI_SCORE. Retrieved from https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_Counties/FeatureServer/0 ; https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_Census_Tracts/FeatureServer/0 on October 7, 2026. This product uses the Federal Emergency Management Agency’s National Risk Index dataset API or downloadable datasets but is not endorsed by FEMA. The Federal Government or FEMA cannot vouch for the data or analyses derived from these data after the data have been retrieved from the Agency's website(s)."
+  },
+  "license": "FEMA National Risk Index Terms and Conditions (free to use, including non-commercial display; FEMA may ask users to stop). Required statement: “This product uses the Federal Emergency Management Agency’s National Risk Index dataset API or downloadable datasets but is not endorsed by FEMA. The Federal Government or FEMA cannot vouch for the data or analyses derived from these data after the data have been retrieved from the Agency's website(s).”",
+  "updateCadence": "irregular",
+  "vintage": "Version 1.20.0 (December 2025)",
+  "geographyLevels": [
+   "county",
+   "tract"
+  ],
+  "unit": "percentile",
+  "universe": "counties or census tracts (national rank among the same level)",
+  "measure": {
+   "kind": "fema_nri",
+   "version": "December 2025",
+   "field": "SOVI_SCORE",
+   "perCapita": false,
+   "minTractPopulation": 100
+  },
+  "modelInputs": [
+   "pct_poverty",
+   "pct_uninsured",
+   "pct_age_65_plus",
+   "pct_zero_vehicle_households",
+   "pct_limited_english"
+  ],
+  "coverageNote": "A relative rank (0–100) among counties, or among tracts. Version 1.20 uses the Census Bureau's Community Resilience Estimates; version 1.19 used CDC's Social Vulnerability Index, so the two aren't comparable. Puerto Rico and the island territories show no data.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "fema-nri",
+   "social-vulnerability"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": false
+  }
+ },
+ {
+  "id": "nri_tornado_loss",
+  "title": "Expected yearly tornado losses, per resident",
+  "phrase": "expected tornado losses per resident",
+  "description": "FEMA's estimate of what tornadoes cost here in an average year (damage to buildings and crops, plus deaths and injuries valued in dollars), divided by the number of residents.",
+  "category": "Environment",
+  "tags": [
+   "FEMA",
+   "National Risk Index",
+   "NRI",
+   "natural hazards",
+   "tornado",
+   "severe weather"
+  ],
+  "source": {
+   "name": "FEMA National Risk Index v1.20.0 (December 2025)",
+   "shortName": "FEMA Risk Index",
+   "url": "https://www.fema.gov/flood-maps/products-tools/national-risk-index",
+   "citation": "Federal Emergency Management Agency (FEMA), National Risk Index States Expected Annual Loss, National Risk Index Counties, National Risk Index Census Tracts, v1.20.0 (December 2025), field TRND_EALT (expected annual loss, tornadoes) divided by POPULATION. Retrieved from https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_States_Expected_Annual_Loss/FeatureServer/0 ; https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_Counties/FeatureServer/0 ; https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_Census_Tracts/FeatureServer/0 on October 7, 2026. This product uses the Federal Emergency Management Agency’s National Risk Index dataset API or downloadable datasets but is not endorsed by FEMA. The Federal Government or FEMA cannot vouch for the data or analyses derived from these data after the data have been retrieved from the Agency's website(s)."
+  },
+  "license": "FEMA National Risk Index Terms and Conditions (free to use, including non-commercial display; FEMA may ask users to stop). Required statement: “This product uses the Federal Emergency Management Agency’s National Risk Index dataset API or downloadable datasets but is not endorsed by FEMA. The Federal Government or FEMA cannot vouch for the data or analyses derived from these data after the data have been retrieved from the Agency's website(s).”",
+  "updateCadence": "irregular",
+  "vintage": "Version 1.20.0 (December 2025)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "dollars",
+  "universe": "residents (FEMA National Risk Index population)",
+  "measure": {
+   "kind": "fema_nri",
+   "version": "December 2025",
+   "field": "TRND_EALT",
+   "perCapita": true,
+   "minTractPopulation": 100,
+   "ratingField": "TRND_EALR"
+  },
+  "modelInputs": [],
+  "coverageNote": "A FEMA model of long-run averages, not a count of past losses. Mapwich divides FEMA's dollar estimate by FEMA's population count; tracts with fewer than 100 residents show no data. Not comparable with NRI version 1.19 (March 2023).",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "expected-annual-loss",
+   "fema-nri",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": false
+  }
+ },
+ {
+  "id": "nri_wildfire_loss",
+  "title": "Expected yearly wildfire losses, per resident",
+  "phrase": "expected wildfire losses per resident",
+  "description": "FEMA's estimate of what wildfire cost here in an average year (damage to buildings and crops, plus deaths and injuries valued in dollars), divided by the number of residents.",
+  "category": "Environment",
+  "tags": [
+   "FEMA",
+   "National Risk Index",
+   "NRI",
+   "natural hazards",
+   "wildfire",
+   "fire"
+  ],
+  "source": {
+   "name": "FEMA National Risk Index v1.20.0 (December 2025)",
+   "shortName": "FEMA Risk Index",
+   "url": "https://www.fema.gov/flood-maps/products-tools/national-risk-index",
+   "citation": "Federal Emergency Management Agency (FEMA), National Risk Index States Expected Annual Loss, National Risk Index Counties, National Risk Index Census Tracts, v1.20.0 (December 2025), field WFIR_EALT (expected annual loss, wildfire) divided by POPULATION. Retrieved from https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_States_Expected_Annual_Loss/FeatureServer/0 ; https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_Counties/FeatureServer/0 ; https://services.arcgis.com/XG15cJAlne2vxtgt/arcgis/rest/services/National_Risk_Index_Census_Tracts/FeatureServer/0 on October 7, 2026. This product uses the Federal Emergency Management Agency’s National Risk Index dataset API or downloadable datasets but is not endorsed by FEMA. The Federal Government or FEMA cannot vouch for the data or analyses derived from these data after the data have been retrieved from the Agency's website(s)."
+  },
+  "license": "FEMA National Risk Index Terms and Conditions (free to use, including non-commercial display; FEMA may ask users to stop). Required statement: “This product uses the Federal Emergency Management Agency’s National Risk Index dataset API or downloadable datasets but is not endorsed by FEMA. The Federal Government or FEMA cannot vouch for the data or analyses derived from these data after the data have been retrieved from the Agency's website(s).”",
+  "updateCadence": "irregular",
+  "vintage": "Version 1.20.0 (December 2025)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "dollars",
+  "universe": "residents (FEMA National Risk Index population)",
+  "measure": {
+   "kind": "fema_nri",
+   "version": "December 2025",
+   "field": "WFIR_EALT",
+   "perCapita": true,
+   "minTractPopulation": 100,
+   "ratingField": "WFIR_EALR"
+  },
+  "modelInputs": [],
+  "coverageNote": "A FEMA model of long-run averages, not a count of past losses. Mapwich divides FEMA's dollar estimate by FEMA's population count; tracts with fewer than 100 residents show no data. Puerto Rico and the island territories show no data (FEMA rates them Insufficient Data). Not comparable with NRI version 1.19 (March 2023).",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "expected-annual-loss",
+   "fema-nri",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": false
+  }
+ },
+ {
   "id": "obesity",
   "title": "Obesity",
   "phrase": "obesity rates",
