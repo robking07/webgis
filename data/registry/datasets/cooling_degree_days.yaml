@@ -1,0 +1,22 @@
+id: cooling_degree_days
+title: Cooling degree days
+phrase: cooling needs
+description: "How much air conditioning homes and buildings need in a year: the sum, over every day, of how many degrees the day's average temperature rose above 65°F. Average over 1991–2020."
+category: Climate
+tags: [cooling, air conditioning, heat, energy, climate]
+source:
+  name: NOAA NCEI nClimDiv county climate data
+  shortName: NOAA
+  url: https://www.ncei.noaa.gov/pub/data/cirs/climdiv/
+  citation: "NOAA National Centers for Environmental Information, nClimDiv county monthly data (Vose et al. 2014), 1991–2020 normals computed by this site"
+license: Public domain (U.S. Government work, 17 U.S.C. § 105)
+updateCadence: static
+vintage: "1991–2020 average"
+geographyLevels: [county]
+universe: county area (area-weighted grid average)
+coverageNote: Contiguous U.S. and Alaska; Hawaii has no county series. Connecticut uses pre-2022 county codes in nClimDiv, so it shows no data.
+unit: degree_days
+terms: [degree-days, climate-normal, quantile-classes]
+measure: { kind: climdiv, element: cddc, months: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], stat: sum, years: [1991, 2020] }
+timeline: { from: 1991, to: 2025 }
+symbology: { ramp: oranges, classification: quantile, classes: 5 }

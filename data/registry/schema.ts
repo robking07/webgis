@@ -3,7 +3,7 @@
 import { z } from "zod";
 
 const Ramp = z.enum(["blues", "ylgnbu", "oranges", "purples", "viridis", "cividis", "rdbu", "puor", "brbg"]);
-const Unit = z.enum(["dollars", "percent", "minutes", "count", "per_sq_mi", "ratio", "years", "deg_f", "inches", "per_100k", "vehicles_per_day", "miles_per_day", "categories", "agreements", "percentile"]);
+const Unit = z.enum(["dollars", "percent", "minutes", "count", "per_sq_mi", "ratio", "years", "deg_f", "inches", "per_100k", "vehicles_per_day", "miles_per_day", "categories", "agreements", "percentile", "degree_days"]);
 export const GeoLevel = z.enum(["state", "county", "tract", "block_group", "block"]);
 
 /** A feature-layer popup field with optional explainers (D-35). */
@@ -59,8 +59,9 @@ const PlacesMeasure = z.object({
 });
 const ClimdivMeasure = z.object({
   kind: z.literal("climdiv"),
-  /** NOAA nClimDiv county element file: tmpc (mean temp), tmax, tmin, pcpn (precipitation). */
-  element: z.enum(["tmpc", "tmax", "tmin", "pcpn"]),
+  /** NOAA nClimDiv county element file: tmpc (mean temp), tmax, tmin, pcpn (precipitation),
+   *  hddc / cddc (heating / cooling degree days). */
+  element: z.enum(["tmpc", "tmax", "tmin", "pcpn", "hddc", "cddc"]),
   /** Months (1–12) included. */
   months: z.array(z.number().int().min(1).max(12)).min(1),
   /** mean of the monthly values, or their sum (precipitation totals). */
@@ -194,7 +195,7 @@ export const DatasetEntry = z.object({
   phrase: z.string().optional(),
   /** One sentence shown in the browser and popups. */
   description: z.string(),
-  category: z.enum(["Income & poverty", "Commuting", "Vehicles", "Housing", "Population", "Jobs", "Transportation", "Environment", "Environmental justice", "Immigration enforcement", "Health", "Climate", "Race & ethnicity", "Education"]),
+  category: z.enum(["Income & poverty", "Commuting", "Vehicles", "Housing", "Population", "Jobs", "Transportation", "Environment", "Environmental justice", "Immigration enforcement", "Health", "Climate", "Race & ethnicity", "Education", "Internet access"]),
   tags: z.array(z.string()).default([]),
   source: z.object({
     name: z.string(),

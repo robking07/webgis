@@ -1,6 +1,6 @@
 // Number formatting and legend rules, keyed by the `unit` field of a registry entry.
 
-export type Unit = "dollars" | "percent" | "minutes" | "count" | "per_sq_mi" | "ratio" | "years" | "deg_f" | "inches" | "per_100k" | "vehicles_per_day" | "miles_per_day" | "categories" | "agreements" | "percentile";
+export type Unit = "dollars" | "percent" | "minutes" | "count" | "per_sq_mi" | "ratio" | "years" | "deg_f" | "inches" | "per_100k" | "vehicles_per_day" | "miles_per_day" | "categories" | "agreements" | "percentile" | "degree_days";
 
 const nf = (o: Intl.NumberFormatOptions) => new Intl.NumberFormat("en-US", o);
 const FORMATTERS: Record<Unit, (v: number) => string> = {
@@ -19,6 +19,7 @@ const FORMATTERS: Record<Unit, (v: number) => string> = {
   miles_per_day: (v) => `${nf({ maximumFractionDigits: 1 }).format(v)} mi/day`,
   per_100k: (v) => `${nf({ maximumFractionDigits: 1 }).format(v)} per 100k`,
   percentile: (v) => ordinal(Math.round(v)) + " percentile",
+  degree_days: (v) => `${nf({ maximumFractionDigits: 0 }).format(v)} degree days`,
 };
 
 function ordinal(n: number) {
@@ -34,6 +35,7 @@ export const UNIT_LABEL: Record<Unit, string> = {
   dollars: "U.S. dollars", percent: "percent", minutes: "minutes", count: "count", per_sq_mi: "per square mile of land",
   ratio: "ratio", years: "years", deg_f: "degrees Fahrenheit", inches: "inches", per_100k: "per 100,000 residents",
   vehicles_per_day: "vehicles per day", miles_per_day: "miles per day", categories: "burden categories exceeded", agreements: "active agreements", percentile: "percentile (national rank)",
+  degree_days: "degree days (°F)",
 };
 
 export function formatValue(v: number | null | undefined, unit: Unit): string {

@@ -18,6 +18,7 @@ describe("formatValue", () => {
     expect(formatValue(42, "percentile")).toBe("42nd percentile");
     expect(formatValue(11, "percentile")).toBe("11th percentile");
     expect(formatValue(71.5, "deg_f")).toBe("71.5°F");
+    expect(formatValue(4512.4, "degree_days")).toBe("4,512 degree days");
   });
   it("says No data for missing values", () => {
     expect(formatValue(null, "dollars")).toBe("No data");

@@ -1,0 +1,22 @@
+id: july_low
+title: July low temperature
+phrase: July overnight lows
+description: "Average daily minimum temperature in July. Warm nights give bodies no chance to cool down, a major driver of heat illness. Average over 1991–2020."
+category: Climate
+tags: [heat, summer, nights, temperature, climate]
+source:
+  name: NOAA NCEI nClimDiv county climate data
+  shortName: NOAA
+  url: https://www.ncei.noaa.gov/pub/data/cirs/climdiv/
+  citation: "NOAA National Centers for Environmental Information, nClimDiv county monthly data (Vose et al. 2014), 1991–2020 normals computed by this site"
+license: Public domain (U.S. Government work, 17 U.S.C. § 105)
+updateCadence: static
+vintage: "1991–2020 average"
+geographyLevels: [county]
+universe: county area (area-weighted grid average)
+coverageNote: Contiguous U.S. and Alaska; Hawaii has no county series. Connecticut uses pre-2022 county codes in nClimDiv, so it shows no data.
+unit: deg_f
+terms: [climate-normal, quantile-classes]
+measure: { kind: climdiv, element: tmin, months: [7], stat: mean, years: [1991, 2020] }
+timeline: { from: 1991, to: 2025 }
+symbology: { ramp: oranges, classification: quantile, classes: 5 }
