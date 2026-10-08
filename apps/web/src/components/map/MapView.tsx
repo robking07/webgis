@@ -4,7 +4,7 @@
 import { useEffect, useLayoutEffect, useRef } from "react";
 import { AttributionControl, LngLatBounds, Map as MlMap, ScaleControl, addProtocol, setWorkerUrl, type LayerSpecification, type MapGeoJSONFeature } from "maplibre-gl";
 import { Protocol } from "pmtiles";
-import { basemapStyle, choroplethFill, choroplethFillsByState, DATA_BEFORE_ID, STATIC_ONLY_LEVELS, TILE_VALUE_LEVELS, THEMES, featureLineLayers, featurePolygonLayers, fillLayerIds, focusLandLayer, FOCUS_LAND_BEFORE_ID, GEO_LEVELS, MOTION, PER_STATE_LEVELS, thematicLayers, type GeoLevel, type ThemeName } from "@webgis/design";
+import { basemapStyle, choroplethFill, hatchImage, hatchLayerId, HATCH_IMAGE, HATCH_LEVELS, membershipFilter, NO_FEATURES, choroplethFillsByState, DATA_BEFORE_ID, STATIC_ONLY_LEVELS, TILE_VALUE_LEVELS, THEMES, featureLineLayers, featurePolygonLayers, fillLayerIds, focusLandLayer, FOCUS_LAND_BEFORE_ID, GEO_LEVELS, MOTION, PER_STATE_LEVELS, thematicLayers, type GeoLevel, type ThemeName } from "@webgis/design";
 import type { FeatureLayerSpec } from "@/lib/layers";
 import type { ViewState } from "@/lib/url-state";
 
@@ -83,6 +83,10 @@ interface Props {
   /** Maps inside a scrolling page (Specials, D-115): the page scrolls, and zooming needs
    *  Ctrl/⌘ + scroll or two fingers. */
   cooperative?: boolean;
+  /** Reliability hatching (D-222): unreliable geoids per level; null or absent = hatching off. */
+  hatch?: Partial<Record<GeoLevel, ReadonlySet<string>>> | null;
+  /** While hatching is on: the counties (5-digit FIPS) whose tracts are on screen, when they change. */
+  onTractCounties?: (counties: string[]) => void;
 }
 
 export interface MapApi {
@@ -110,13 +114,17 @@ function tilesUrl(level: GeoLevel, boundaries?: string | null) {
   return `pmtiles://${base}/${level !== "state" && boundaries ? `${level}-${boundaries}` : level}.pmtiles`;
 }
 
-export function MapView({ theme, initialView, paint, onViewChange, onHover, onSelect, onTilesError, ariaLabel, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, onApi, featureFilter, scaleUnit = "imperial", attribution = true, boundaries = null, cooperative = false }: Props) {
+export function MapView({ theme, initialView, paint, onViewChange, onHover, onSelect, onTilesError, ariaLabel, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, onApi, featureFilter, scaleUnit = "imperial", attribution = true, boundaries = null, cooperative = false, hatch = null, onTractCounties }: Props) {
   const container = useRef<HTMLDivElement>(null);
   const map = useRef<MlMap | null>(null);
   const applied = useRef<Partial<Record<GeoLevel, LevelPaint>>>({});
-  const latest = useRef({ paint, theme, onViewChange, onHover, onSelect, onTilesError, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, boundaries, featureFilter });
+  const latest = useRef({ paint, theme, onViewChange, onHover, onSelect, onTilesError, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, boundaries, featureFilter, hatch, onTractCounties });
   // Refresh after every render, before any effect or event handler reads it.
-  useLayoutEffect(() => { latest.current = { paint, theme, onViewChange, onHover, onSelect, onTilesError, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, boundaries, featureFilter }; });
+  useLayoutEffect(() => { latest.current = { paint, theme, onViewChange, onHover, onSelect, onTilesError, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, boundaries, featureFilter, hatch, onTractCounties }; });
+  /** Hatch filters currently on the map, per level (by set identity). */
+  const appliedHatch = useRef<Partial<Record<GeoLevel, ReadonlySet<string> | undefined>>>({});
+  /** Last county list reported to onTractCounties. */
+  const reportedCounties = useRef("");
   /** Boundary vintage the county/tract sources currently point at. */
   const shownBoundaries = useRef<string | null>(null);
   /** True once our sources/layers exist on the current style. isStyleLoaded() can't be used:
@@ -187,6 +195,7 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
     m.getCanvas().setAttribute("aria-label", ariaLabel);
 
     m.on("style.load", () => {
+      addHatchImage(m, latest.current.theme);
       addThematic(m, latest.current.theme, latest.current.boundaries);
       shownBoundaries.current = latest.current.boundaries;
       applyBands(m, latest.current.levelZooms);
@@ -196,7 +205,11 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
       syncFeatureLayer(m, latest.current.featureLayer ?? null, latest.current.theme);
       applyFeatureFilter(m, latest.current.featureLayer ?? null, latest.current.featureFilter);
       restoreFlags(m, hovered.current, selected.current);
+      appliedHatch.current = {};
+      syncHatch(m, latest.current.hatch, appliedHatch.current, latest.current.levelZooms);
     });
+    // Hatching on: report which counties' tracts are on screen once the map settles.
+    m.on("idle", () => reportTractCounties(m, latest.current.hatch, latest.current.onTractCounties, reportedCounties));
     m.on("moveend", () => {
       const c = m.getCenter();
       latest.current.onViewChange({ lon: c.lng, lat: c.lat, zoom: m.getZoom() });
@@ -278,8 +291,17 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
   // Zoom bands: depend on which levels the shown dataset(s) have.
   useEffect(() => {
     const m = map.current;
-    if (m && ready.current) applyBands(m, levelZooms);
+    if (m && ready.current) { applyBands(m, levelZooms); syncHatch(m, latest.current.hatch, appliedHatch.current, levelZooms); }
   }, [levelZooms]);
+
+  // Reliability hatching: filters and visibility; turning it on reports the counties in view now.
+  useEffect(() => {
+    const m = map.current;
+    if (!m || !ready.current) return;
+    syncHatch(m, hatch, appliedHatch.current, latest.current.levelZooms);
+    if (!hatch) reportedCounties.current = "";
+    else reportTractCounties(m, hatch, latest.current.onTractCounties, reportedCounties);
+  }, [hatch]);
 
   // Boundary vintage (timeline stops before 2020): swap the county/tract sources, keep the layers.
   // Runs before the paint effect, which then repaints the new sources.
@@ -324,6 +346,8 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
 function applyBands(m: MlMap, bands?: Props["levelZooms"]) {
   for (const level of LEVELS) {
     const band = bands ? bands[level] : GEO_LEVELS[level];
+    // The hatch layer follows the band too; whether it shows at all is syncHatch's call.
+    if (band && m.getLayer(hatchLayerId(level))) m.setLayerZoomRange(hatchLayerId(level), band.minzoom, band.maxzoom);
     for (const id of [...fillLayerIds(level), `${level}-outline`]) {
       if (!m.getLayer(id)) continue;
       m.setLayoutProperty(id, "visibility", band ? "visible" : "none");
@@ -339,6 +363,40 @@ function applyBands(m: MlMap, bands?: Props["levelZooms"]) {
       } else m.setLayerZoomRange(id, 0, 24);
     }
   }
+}
+
+/** The hatch pattern for this theme, sharp at the screen's pixel density (re-added per style). */
+function addHatchImage(m: MlMap, theme: ThemeName) {
+  const ratio = Math.min(3, Math.max(1, Math.round(window.devicePixelRatio || 1)));
+  if (m.hasImage(HATCH_IMAGE)) m.removeImage(HATCH_IMAGE);
+  m.addImage(HATCH_IMAGE, hatchImage(theme, ratio), { pixelRatio: ratio });
+}
+
+/** Show the hatch over each level's unreliable areas while hatching is on and the level has a band. */
+function syncHatch(m: MlMap, hatch: Props["hatch"], applied: Partial<Record<GeoLevel, ReadonlySet<string> | undefined>>, bands: Props["levelZooms"]) {
+  for (const level of LEVELS) {
+    if (!HATCH_LEVELS.has(level)) continue;
+    const id = hatchLayerId(level);
+    if (!m.getLayer(id)) continue;
+    const ids = hatch?.[level];
+    const band = bands ? bands[level] : GEO_LEVELS[level];
+    m.setLayoutProperty(id, "visibility", hatch && band && ids?.size ? "visible" : "none");
+    if (applied[level] === ids) continue;
+    m.setFilter(id, (ids?.size ? membershipFilter(ids) : NO_FEATURES) as never);
+    applied[level] = ids;
+  }
+}
+
+/** Counties (5-digit FIPS) whose tracts are drawn on screen; reported only when hatching is on
+ *  and the list changes. */
+function reportTractCounties(m: MlMap, hatch: Props["hatch"], cb: Props["onTractCounties"], last: { current: string }) {
+  if (!hatch || !cb || !m.getLayer("tract-fill")) return;
+  const counties = new Set<string>();
+  for (const f of m.queryRenderedFeatures({ layers: ["tract-fill"] })) counties.add(String(f.properties.geoid).slice(0, 5));
+  const key = [...counties].sort().join(",");
+  if (!key || key === last.current) return;
+  last.current = key;
+  cb(key.split(","));
 }
 
 /** The lower 48 (search and first load frame it; Alaska, Hawaii and PR are a pan away). */

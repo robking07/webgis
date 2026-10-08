@@ -7,7 +7,7 @@ import {
   differenceCiede2000, filterDeficiencyDeuter, filterDeficiencyProt, filterDeficiencyTrit, formatHex, wcagContrast,
 } from "culori";
 import { RAMPS, rampColors, type RampDef, type RampId } from "../src/ramps.ts";
-import { CONTRAST_RULES, THEMES, themeColor } from "../src/themes.ts";
+import { CONTRAST_RULES, HATCH, THEMES, themeColor } from "../src/themes.ts";
 import { BAND_REFERENCE_WIDTH, GEO_LEVELS, SIZE, LABEL } from "../src/sizing.ts";
 import { LEGEND } from "../src/format.ts";
 import { THRESHOLDS } from "./check.ts";
@@ -138,6 +138,7 @@ ${contrastRows.join("\n")}
 - Breaks are computed **per geography level** (state, county and tract each get their own), so the legend always describes what's on screen. Its caption names the level.
 - Class labels are text (\`< a\`, \`a – b\`, \`≥ z\`), so the legend never relies on color alone.
 - "No data" is always shown, with a hatched swatch, so a gap never reads as a low value.
+- **Reliability (D-222):** ACS 5-year estimates are graded by coefficient of variation, CV = (MOE / 1.645) / |value| (\`src/reliability.ts\`): under 15% reliable, 15–30% "use with caution" (details-panel note only), over 30% unreliable. With the legend's toggle on (off by default), unreliable tracts and block groups get diagonal hatching over their fill: paired \`map.hatchDark\` / \`map.hatchLight\` stripes, ${HATCH.width} px wide, repeating every ${HATCH.spacing} px at ${Math.round(HATCH.opacity.light * 100)}% opacity (\`HATCH\` in \`src/themes.ts\`); the design gate checks the hatch stands out from every class and the no-data fill in both themes. The fill color still shows underneath. The hatch runs the opposite way from the no-data swatch.
 - **Skewed data:** when quantile breaks would land on the minimum (e.g. most tracts at exactly 0% transit commuting), the bottom class becomes "exactly the minimum" (labeled "0%") and the other classes are quantiles of the values above it. This avoids an empty "< 0%" class.
 - Bivariate maps use tertiles on each axis; cell = 3 · y + x.
 

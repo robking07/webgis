@@ -13,7 +13,7 @@ const stripEnd = (s: string) => s.replace(/^([<≥]\s*\S+).*$/, "$1");
 /** Legend: full card on desktop; a strip on phones (tap to expand). Both carry `data-legend`, so
  *  the dock above can stop before it reaches them.
  *  The year control (D-36) lives in the filters panel (issue #34). */
-export function MapLegend({ theme, primary, secondary, isFeature, featureSpec, current, error, available, loading, level, periodLabel, stop, stopId, desktopStrip, mark, covered, tableReady, onTable }: {
+export function MapLegend({ theme, primary, secondary, isFeature, featureSpec, current, error, available, loading, level, periodLabel, stop, stopId, desktopStrip, mark, covered, tableReady, onTable, hatchToggle }: {
   theme: ThemeName;
   primary: Dataset | null;
   secondary: Dataset | null;
@@ -37,6 +37,8 @@ export function MapLegend({ theme, primary, secondary, isFeature, featureSpec, c
   covered?: boolean;
   tableReady: boolean;
   onTable: () => void;
+  /** Reliability hatching (D-222): the toggle, only where the shown map can be graded. */
+  hatchToggle?: { on: boolean; onChange: (on: boolean) => void; loading: boolean } | null;
 }) {
   const [openPicked, setLegendOpen] = useState(false);
   const legendOpen = openPicked && !covered;
@@ -61,6 +63,9 @@ export function MapLegend({ theme, primary, secondary, isFeature, featureSpec, c
           <Legend title={primary.title} unit={primary.unit} colors={current.colors} breaks={current.breaks} minClass={current.minClass} mark={mark}
             caption={`${GEO_LEVELS[level].label} · ${periodLabel}${stop && stopNote(primary, stop, level) ? `. ${stopNote(primary, stop, level)}` : ""}${primary.coverageNote ? `. ${primary.coverageNote}` : ""}`} />
         ) : null}
+      {hatchToggle && current?.breaks && !secondary && (
+        <HatchToggle {...hatchToggle} fill={current.colors[Math.floor(current.colors.length / 2)]} />
+      )}
     </>
   );
 
@@ -95,5 +100,25 @@ export function MapLegend({ theme, primary, secondary, isFeature, featureSpec, c
         )}
       </section>
     </>
+  );
+}
+
+/** The reliability entry (D-222): a hatched swatch over a mid class color (the color still shows),
+ *  a switch, and, once on, what the hatching means in plain words. */
+function HatchToggle({ on, onChange, loading, fill }: { on: boolean; onChange: (on: boolean) => void; loading: boolean; fill: string }) {
+  return (
+    <div className="mt-2 border-t pt-2 text-xs">
+      <label className="flex cursor-pointer items-center gap-2">
+        <input type="checkbox" checked={on} onChange={(e) => onChange(e.target.checked)} data-hatch-toggle=""
+          className="size-3.5 accent-primary focus-visible:outline-2 focus-visible:outline-ring" />
+        <span className="wg-swatch wg-swatch-hatch" style={{ backgroundColor: fill, width: 16, height: 16 }} aria-hidden />
+        <span>Hatch unreliable estimates</span>
+      </label>
+      {on && (
+        <p className="mt-1 text-muted-foreground" aria-live="polite">
+          {loading ? "Checking margins of error…" : "Hatched areas have a margin of error about half the estimate or more, so their color is a rough guide."}
+        </p>
+      )}
+    </div>
   );
 }

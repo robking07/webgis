@@ -789,6 +789,26 @@ for (const vp of ["phone", "laptop"]) {
   });
 }
 
+/** Reliability hatching (D-222): off when the map opens, a legend toggle on an ACS tract map hatches
+ *  unreliable tracts; no toggle on a dataset without margins of error. */
+test("laptop reliability hatching: toggle on an ACS tract map, none on census counts", async (o) => {
+  const { page } = await o("laptop", "/map?d=pct_poverty&at=-93.2650,44.9778,9.5");
+  const visible = () => page.evaluate(() => window.__wgMap.getLayoutProperty("tract-hatch", "visibility"));
+  expect((await visible()) !== "visible", "hatch shows before the toggle is on");
+  const toggle = page.locator("[data-hatch-toggle]");
+  await toggle.check();
+  await page.waitForFunction(() => window.__wgMap.getLayoutProperty("tract-hatch", "visibility") === "visible", null, { timeout: 20000 });
+  await mapIdle(page);
+  const hatched = await page.evaluate(() => window.__wgMap.queryRenderedFeatures({ layers: ["tract-hatch"] }).length);
+  expect(hatched > 0, "no hatched tracts in Minneapolis for poverty");
+  expect((await page.locator('section[aria-label="Legend"]').innerText()).includes("margin of error"), "legend explains the hatching");
+  await toggle.uncheck();
+  await wait(300);
+  expect((await visible()) !== "visible", "hatch still shows after the toggle is off");
+  const { page: p2 } = await o("laptop", "/map?d=census2020_pop_density&at=-93.2650,44.9778,9.5");
+  expect((await p2.locator("[data-hatch-toggle]").count()) === 0, "toggle shown for 2020 Census counts");
+});
+
 // ── Run ────────────────────────────────────────────────────────────────────────
 // Round-robin keeps the slow tests spread across shards.
 const mine = shard ? queue.filter((_, i) => i % +shard[2] === +shard[1] - 1) : queue;

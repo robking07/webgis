@@ -4,7 +4,7 @@
 // framing in useFraming, and one file per panel).
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { StatusState } from "@webgis/design/components";
-import { formatValue, GEO_LEVELS, type GeoLevel } from "@webgis/design";
+import { formatValue, GEO_LEVELS, HATCH_LEVELS, isGradable, type GeoLevel } from "@webgis/design";
 import { DataTable } from "./DataTable";
 import { MapCredits } from "./MapCredits";
 import { SearchOverlay } from "./SearchOverlay";
@@ -31,6 +31,7 @@ import { MapLegend } from "./map-page/MapLegend";
 import { DatasetsPanel } from "./map-page/DatasetsPanel";
 import { FeatureHoverPopup, PlaceHoverPopup } from "./map-page/HoverPopups";
 import { DetailPanel } from "./map-page/DetailPanel";
+import { useUnreliable } from "./map-page/useUnreliable";
 import { FeaturePanel } from "./map-page/FeaturePanel";
 
 export function Viewer({ search }: { search: string }) {
@@ -159,6 +160,16 @@ export function Viewer({ search }: { search: string }) {
   const pickDataset = (id: string) => update({ d: id, b: state.b === id ? null : state.b, lv: null, t: keepStop(id) });
   const loading = available && !current && !error;
 
+  // Reliability hatching (D-222): off when a map opens; the legend's toggle appears only where it
+  // means something (an ACS map at tract or block-group level, one dataset, the default period,
+  // whose margins of error are the ones published).
+  const [hatchOn, setHatchOn] = useState(false);
+  const [tractCounties, setTractCounties] = useState<string[]>([]);
+  const gradable = !!primary && isGradable(primary.measure.kind) && !secondary && !isFeature && !stopId;
+  const hatchable = gradable && available && HATCH_LEVELS.has(level);
+  const unreliable = useUnreliable(gradable && hatchOn ? primary : null, level, tractCounties);
+  const hatch = gradable && hatchOn ? unreliable : null;
+
   // ── Map-first chrome (D-25) ─────────────────────────────────────────────────
   // At rest: slim header, dataset card, full legend. The first user pan/zoom/scroll
   // "immerses": the navigation falls away, leaving the wordmark, the category and dataset
@@ -239,6 +250,8 @@ export function Viewer({ search }: { search: string }) {
           onApi={(api) => { mapApi.current = api; }}
           scaleUnit={scaleUnit}
           attribution={false}
+          hatch={hatch}
+          onTractCounties={setTractCounties}
           ariaLabel={primary ? `Map of ${primary.title}${secondary ? ` compared with ${secondary.title}` : ""} by ${GEO_LEVELS[level].label.toLowerCase()}` : "Map"}
         />
       </main>
@@ -281,6 +294,7 @@ export function Viewer({ search }: { search: string }) {
       <MapLegend theme={theme} primary={primary} secondary={secondary} isFeature={isFeature} featureSpec={featureSpec} current={current}
         error={error} available={available} loading={loading} level={level} periodLabel={periodLabel}
         stop={stop} stopId={stopId}
+        hatchToggle={hatchable ? { on: hatchOn, onChange: setHatchOn, loading: hatchOn && !hatch?.[level] } : null}
         desktopStrip={desktopStrip} mark={selected && selected.level === level ? selClass : null}
         covered={phone && (placeOpen || tableOpen || listOpen || stepAside)} tableReady={tableReady} onTable={() => setTableOpen(true)} />
 
