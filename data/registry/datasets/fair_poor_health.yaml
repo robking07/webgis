@@ -1,0 +1,22 @@
+id: fair_poor_health
+title: "Fair or poor health"
+phrase: rates of fair or poor health
+description: "Share of adults who describe their general health as fair or poor. Age-adjusted prevalence; model-based small-area estimate."
+category: Health
+tags: [self-rated health, health status, health]
+source:
+  name: CDC PLACES (Local Data for Better Health), 2025 release
+  shortName: CDC PLACES
+  url: https://www.cdc.gov/places/
+  citation: "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+license: Public domain (U.S. Government work; data.cdc.gov license field "Public Domain")
+updateCadence: annual
+geographyLevels: [county]
+unit: percent
+universe: adults 18+ (model-based estimate)
+modelInputs: [pct_poverty, median_household_income]  # PLACES models county poverty; median income is near-collinear with it
+coverageNote: "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate."
+vintage: "2023 data"
+terms: [model-based-estimate, age-adjusted, margin-of-error, quantile-classes]
+measure: { kind: places, socrata: swc5-untb, measureId: GHLTH, valueType: AgeAdjPrv }
+symbology: { ramp: oranges, classification: quantile, classes: 5 }

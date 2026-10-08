@@ -1,0 +1,22 @@
+id: all_teeth_lost
+title: "All teeth lost (ages 65+)"
+phrase: rates of tooth loss among seniors
+description: "Share of adults 65 and older who have lost all their natural teeth to decay or gum disease. Age-adjusted prevalence; model-based small-area estimate."
+category: Health
+tags: [teeth, oral health, dental, seniors, health]
+source:
+  name: CDC PLACES (Local Data for Better Health), 2025 release
+  shortName: CDC PLACES
+  url: https://www.cdc.gov/places/
+  citation: "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+license: Public domain (U.S. Government work; data.cdc.gov license field "Public Domain")
+updateCadence: annual
+geographyLevels: [county]
+unit: percent
+universe: adults 65+ (model-based estimate)
+modelInputs: [pct_poverty, median_household_income]  # PLACES models county poverty; median income is near-collinear with it
+coverageNote: "From the 2022 survey (CDC asks about teeth every other year), so every state has data, Kentucky and Pennsylvania included. Loving County, Texas, has too few residents to estimate."
+vintage: "2022 data"
+terms: [model-based-estimate, age-adjusted, margin-of-error, quantile-classes]
+measure: { kind: places, socrata: swc5-untb, measureId: TEETHLOST, valueType: AgeAdjPrv }
+symbology: { ramp: oranges, classification: quantile, classes: 5 }

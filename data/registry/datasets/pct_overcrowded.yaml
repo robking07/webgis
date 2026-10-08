@@ -1,0 +1,21 @@
+id: pct_overcrowded
+title: "Overcrowded homes"
+phrase: overcrowding rates
+description: "Share of occupied homes with more than one person per room (not counting bathrooms, halls or porches)."
+category: Housing
+tags: [overcrowding, housing, affordability]
+source:
+  name: U.S. Census Bureau, American Community Survey 5-Year Estimates
+  shortName: Census Bureau
+  url: https://www.census.gov/programs-surveys/acs
+  citation: "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+license: Public domain (U.S. Government work, 17 U.S.C. § 105)
+updateCadence: annual
+vintage: "2020–2024 (5-year estimate)"
+geographyLevels: [state, county, tract, block_group]
+unit: percent
+universe: occupied housing units
+terms: [acs-5-year, margin-of-error, census-geography, quantile-classes]
+measure: { kind: acs5, numerator: [B25014_005, B25014_006, B25014_007, B25014_011, B25014_012, B25014_013], denominator: [B25014_001], scale: 100 }
+timeline: { from: 2014, to: 2024, step: 5 }
+symbology: { ramp: oranges, classification: quantile, classes: 5, higherIsBetter: false }
