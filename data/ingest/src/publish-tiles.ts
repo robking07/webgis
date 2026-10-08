@@ -1,10 +1,10 @@
 // Upload data/tiles/*.pmtiles to Cloudflare R2 (D-01) and set the bucket CORS rule
 // the browser needs for PMTiles range requests.
 import { createReadStream, existsSync, readdirSync, readFileSync, statSync } from "node:fs";
-import { gzipSync } from "node:zlib";
+import { gunzipSync, gzipSync } from "node:zlib";
 import { createHash } from "node:crypto";
 import { join } from "node:path";
-import { ListObjectsV2Command, S3Client, PutBucketCorsCommand, PutObjectCommand } from "@aws-sdk/client-s3";
+import { GetObjectCommand, ListObjectsV2Command, S3Client, PutBucketCorsCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { Upload } from "@aws-sdk/lib-storage";
 import { log, TILES } from "./util.ts";
 import { DETAILS_DIR } from "./details.ts";
@@ -50,6 +50,32 @@ export async function publishTiles(only?: string[]) {
 // keys never change, so a re-upload reaches visitors within the hour without a code deploy (S2).
 const JSON_CACHE = "public, max-age=3600";
 
+/** Datasets a tract shard (values/tracts/<county>.json) holds but `next` would drop. */
+export function droppedDatasets(live: Record<string, unknown>, next: Record<string, unknown>): string[] {
+  return Object.keys(live).filter((k) => !(k in next));
+}
+
+/** A tract shard holds every dataset's tracts for one county, so a checkout that never had the
+ *  shards writes new ones holding only what it just loaded. Uploading those would erase the other
+ *  datasets' tract details on the live site (2026-10-08). Refuse instead, unless
+ *  ALLOW_TRACT_DROP=1 says the drop is intended (a dataset being removed). */
+async function guardTractShard(s3: S3Client, bucket: string, key: string, body: Buffer) {
+  if (!key.startsWith("values/tracts/") || process.env.ALLOW_TRACT_DROP === "1") return;
+  let live: Record<string, unknown>;
+  try {
+    const r = await s3.send(new GetObjectCommand({ Bucket: bucket, Key: key }));
+    const raw = Buffer.from(await r.Body!.transformToByteArray());
+    live = JSON.parse((r.ContentEncoding === "gzip" ? gunzipSync(raw) : raw).toString("utf8"));
+  } catch (e) {
+    if ((e as { name?: string }).name === "NoSuchKey") return;
+    throw e;
+  }
+  const dropped = droppedDatasets(live, JSON.parse(gunzipSync(body).toString("utf8")));
+  if (dropped.length) throw new Error(`${key}: upload would drop ${dropped.length} live dataset(s) (${dropped.slice(0, 5).join(", ")}${dropped.length > 5 ? ", …" : ""}). `
+    + "This checkout's data/tiles/values/tracts is incomplete: copy the full folder in (or rebuild it with `ingest tracts-out` plus the loads) first. "
+    + "Set ALLOW_TRACT_DROP=1 only when removing a dataset on purpose.");
+}
+
 function walk(dir: string, rel = ""): string[] {
   return readdirSync(join(dir, rel), { withFileTypes: true }).flatMap((e) =>
     e.isDirectory() ? walk(dir, join(rel, e.name)) : e.name.endsWith(".json") ? [join(rel, e.name)] : []);
@@ -77,6 +103,7 @@ async function publishJson(prefix: string, hint: string, dirs?: string[]) {
       const body = gzipSync(readFileSync(join(root, files[i])));
       bytes += body.length;
       if (etags.get(key) === createHash("md5").update(body).digest("hex")) { skipped++; continue; }
+      await guardTractShard(s3, bucket, key, body);
       await s3.send(new PutObjectCommand({ Bucket: bucket, Key: key, Body: body, ContentType: "application/json", ContentEncoding: "gzip", CacheControl: JSON_CACHE }));
       if (++sent % 500 === 0) log("r2", `${prefix}: ${sent} uploaded…`);
     }
