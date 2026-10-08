@@ -196,6 +196,59 @@
   }
  },
  {
+  "id": "all_teeth_lost",
+  "title": "All teeth lost (ages 65+)",
+  "phrase": "rates of tooth loss among seniors",
+  "description": "Share of adults 65 and older who have lost all their natural teeth to decay or gum disease. Age-adjusted prevalence; model-based small-area estimate.",
+  "category": "Health",
+  "tags": [
+   "teeth",
+   "oral health",
+   "dental",
+   "seniors",
+   "health"
+  ],
+  "source": {
+   "name": "CDC PLACES (Local Data for Better Health), 2025 release",
+   "shortName": "CDC PLACES",
+   "url": "https://www.cdc.gov/places/",
+   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+  },
+  "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
+  "updateCadence": "annual",
+  "vintage": "2022 data",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "percent",
+  "universe": "adults 65+ (model-based estimate)",
+  "measure": {
+   "kind": "places",
+   "socrata": "swc5-untb",
+   "measureId": "TEETHLOST",
+   "valueType": "AgeAdjPrv"
+  },
+  "modelInputs": [
+   "pct_poverty",
+   "median_household_income"
+  ],
+  "coverageNote": "From the 2022 survey (CDC asks about teeth every other year), so every state has data, Kentucky and Pennsylvania included. Loving County, Texas, has too few residents to estimate.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "model-based-estimate",
+   "age-adjusted",
+   "margin-of-error",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
   "id": "annual_precipitation",
   "title": "Annual precipitation",
   "phrase": "yearly precipitation",
@@ -265,6 +318,108 @@
   }
  },
  {
+  "id": "arthritis",
+  "title": "Arthritis",
+  "phrase": "arthritis rates",
+  "description": "Share of adults a doctor has told they have arthritis, rheumatoid arthritis, gout, lupus or fibromyalgia. Age-adjusted prevalence; model-based small-area estimate.",
+  "category": "Health",
+  "tags": [
+   "arthritis",
+   "chronic disease",
+   "health"
+  ],
+  "source": {
+   "name": "CDC PLACES (Local Data for Better Health), 2025 release",
+   "shortName": "CDC PLACES",
+   "url": "https://www.cdc.gov/places/",
+   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+  },
+  "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
+  "updateCadence": "annual",
+  "vintage": "2023 data",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "percent",
+  "universe": "adults 18+ (model-based estimate)",
+  "measure": {
+   "kind": "places",
+   "socrata": "swc5-untb",
+   "measureId": "ARTHRITIS",
+   "valueType": "AgeAdjPrv"
+  },
+  "modelInputs": [
+   "pct_poverty",
+   "median_household_income"
+  ],
+  "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "model-based-estimate",
+   "age-adjusted",
+   "margin-of-error",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "asthma",
+  "title": "Asthma",
+  "phrase": "asthma rates",
+  "description": "Share of adults who have been told they have asthma and still have it. Age-adjusted prevalence; model-based small-area estimate.",
+  "category": "Health",
+  "tags": [
+   "asthma",
+   "lung disease",
+   "health"
+  ],
+  "source": {
+   "name": "CDC PLACES (Local Data for Better Health), 2025 release",
+   "shortName": "CDC PLACES",
+   "url": "https://www.cdc.gov/places/",
+   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+  },
+  "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
+  "updateCadence": "annual",
+  "vintage": "2023 data",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "percent",
+  "universe": "adults 18+ (model-based estimate)",
+  "measure": {
+   "kind": "places",
+   "socrata": "swc5-untb",
+   "measureId": "CASTHMA",
+   "valueType": "AgeAdjPrv"
+  },
+  "modelInputs": [
+   "pct_poverty",
+   "median_household_income"
+  ],
+  "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "model-based-estimate",
+   "age-adjusted",
+   "margin-of-error",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
   "id": "binge_drinking",
   "title": "Binge drinking",
   "phrase": "binge drinking rates",
@@ -317,6 +472,59 @@
   }
  },
  {
+  "id": "blood_pressure_medication",
+  "title": "Taking blood pressure medicine",
+  "phrase": "rates of blood pressure treatment",
+  "description": "Share of adults with high blood pressure who are taking medicine for it. Age-adjusted prevalence; model-based small-area estimate.",
+  "category": "Health",
+  "tags": [
+   "hypertension",
+   "medication",
+   "preventive care",
+   "health care"
+  ],
+  "source": {
+   "name": "CDC PLACES (Local Data for Better Health), 2025 release",
+   "shortName": "CDC PLACES",
+   "url": "https://www.cdc.gov/places/",
+   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+  },
+  "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
+  "updateCadence": "annual",
+  "vintage": "2023 data",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "percent",
+  "universe": "adults 18+ with high blood pressure (model-based estimate)",
+  "measure": {
+   "kind": "places",
+   "socrata": "swc5-untb",
+   "measureId": "BPMED",
+   "valueType": "AgeAdjPrv"
+  },
+  "modelInputs": [
+   "pct_poverty",
+   "median_household_income"
+  ],
+  "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "model-based-estimate",
+   "age-adjusted",
+   "margin-of-error",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": true
+  }
+ },
+ {
   "id": "bridges_poor_condition",
   "title": "Bridge deck area in poor condition",
   "phrase": "shares of bridges in poor condition",
@@ -363,6 +571,57 @@
   "learnMore": [],
   "terms": [
    "bridge-condition",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "cancer",
+  "title": "Cancer",
+  "phrase": "cancer rates",
+  "description": "Share of adults a doctor has ever told they have cancer (melanoma or any cancer other than other skin cancers). Age-adjusted prevalence; model-based small-area estimate.",
+  "category": "Health",
+  "tags": [
+   "cancer",
+   "chronic disease",
+   "health"
+  ],
+  "source": {
+   "name": "CDC PLACES (Local Data for Better Health), 2025 release",
+   "shortName": "CDC PLACES",
+   "url": "https://www.cdc.gov/places/",
+   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+  },
+  "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
+  "updateCadence": "annual",
+  "vintage": "2023 data",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "percent",
+  "universe": "adults 18+ (model-based estimate)",
+  "measure": {
+   "kind": "places",
+   "socrata": "swc5-untb",
+   "measureId": "CANCER",
+   "valueType": "AgeAdjPrv"
+  },
+  "modelInputs": [
+   "pct_poverty",
+   "median_household_income"
+  ],
+  "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "model-based-estimate",
+   "age-adjusted",
+   "margin-of-error",
    "quantile-classes"
   ],
   "symbology": {
@@ -859,6 +1118,854 @@
   }
  },
  {
+  "id": "cholesterol_screening",
+  "title": "Cholesterol checked in the past 5 years",
+  "phrase": "cholesterol screening rates",
+  "description": "Share of adults who had their blood cholesterol checked in the past 5 years. Age-adjusted prevalence; model-based small-area estimate.",
+  "category": "Health",
+  "tags": [
+   "cholesterol",
+   "screening",
+   "preventive care",
+   "health care"
+  ],
+  "source": {
+   "name": "CDC PLACES (Local Data for Better Health), 2025 release",
+   "shortName": "CDC PLACES",
+   "url": "https://www.cdc.gov/places/",
+   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+  },
+  "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
+  "updateCadence": "annual",
+  "vintage": "2023 data",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "percent",
+  "universe": "adults 18+ (model-based estimate)",
+  "measure": {
+   "kind": "places",
+   "socrata": "swc5-untb",
+   "measureId": "CHOLSCREEN",
+   "valueType": "AgeAdjPrv"
+  },
+  "modelInputs": [
+   "pct_poverty",
+   "median_household_income"
+  ],
+  "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "model-based-estimate",
+   "age-adjusted",
+   "margin-of-error",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": true
+  }
+ },
+ {
+  "id": "colorectal_screening",
+  "title": "Colorectal cancer screening (ages 45–75)",
+  "phrase": "colorectal screening rates",
+  "description": "Share of adults aged 45 to 75 who are up to date on colorectal cancer screening. Age-adjusted prevalence; model-based small-area estimate.",
+  "category": "Health",
+  "tags": [
+   "colorectal cancer",
+   "screening",
+   "preventive care",
+   "health care"
+  ],
+  "source": {
+   "name": "CDC PLACES (Local Data for Better Health), 2025 release",
+   "shortName": "CDC PLACES",
+   "url": "https://www.cdc.gov/places/",
+   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+  },
+  "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
+  "updateCadence": "annual",
+  "vintage": "2022 data",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "percent",
+  "universe": "adults 45–75 (model-based estimate)",
+  "measure": {
+   "kind": "places",
+   "socrata": "swc5-untb",
+   "measureId": "COLON_SCREEN",
+   "valueType": "AgeAdjPrv"
+  },
+  "modelInputs": [
+   "pct_poverty",
+   "median_household_income"
+  ],
+  "coverageNote": "From the 2022 survey (CDC asks about cancer screening every other year), so every state has data, Kentucky and Pennsylvania included. Loving County, Texas, has too few residents to estimate.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "model-based-estimate",
+   "age-adjusted",
+   "margin-of-error",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": true
+  }
+ },
+ {
+  "id": "cooling_degree_days",
+  "title": "Cooling degree days",
+  "phrase": "cooling needs",
+  "description": "How much air conditioning homes and buildings need in a year: the sum, over every day, of how many degrees the day's average temperature rose above 65°F. Average over 1991–2020.",
+  "category": "Climate",
+  "tags": [
+   "cooling",
+   "air conditioning",
+   "heat",
+   "energy",
+   "climate"
+  ],
+  "source": {
+   "name": "NOAA NCEI nClimDiv county climate data",
+   "shortName": "NOAA",
+   "url": "https://www.ncei.noaa.gov/pub/data/cirs/climdiv/",
+   "citation": "NOAA National Centers for Environmental Information, nClimDiv county monthly data (Vose et al. 2014), 1991–2020 normals computed by this site"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "static",
+  "vintage": "1991–2020 average",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "degree_days",
+  "universe": "county area (area-weighted grid average)",
+  "measure": {
+   "kind": "climdiv",
+   "element": "cddc",
+   "months": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+   ],
+   "stat": "sum",
+   "years": [
+    1991,
+    2020
+   ]
+  },
+  "modelInputs": [],
+  "coverageNote": "Contiguous U.S. and Alaska; Hawaii has no county series. Connecticut uses pre-2022 county codes in nClimDiv, so it shows no data.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 1991,
+   "to": 2025,
+   "step": 1
+  },
+  "learnMore": [],
+  "terms": [
+   "degree-days",
+   "climate-normal",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "copd",
+  "title": "COPD (chronic lung disease)",
+  "phrase": "COPD rates",
+  "description": "Share of adults a doctor has told they have chronic obstructive pulmonary disease (COPD), emphysema or chronic bronchitis. Age-adjusted prevalence; model-based small-area estimate.",
+  "category": "Health",
+  "tags": [
+   "COPD",
+   "lung disease",
+   "emphysema",
+   "chronic disease",
+   "health"
+  ],
+  "source": {
+   "name": "CDC PLACES (Local Data for Better Health), 2025 release",
+   "shortName": "CDC PLACES",
+   "url": "https://www.cdc.gov/places/",
+   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+  },
+  "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
+  "updateCadence": "annual",
+  "vintage": "2023 data",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "percent",
+  "universe": "adults 18+ (model-based estimate)",
+  "measure": {
+   "kind": "places",
+   "socrata": "swc5-untb",
+   "measureId": "COPD",
+   "valueType": "AgeAdjPrv"
+  },
+  "modelInputs": [
+   "pct_poverty",
+   "median_household_income"
+  ],
+  "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "model-based-estimate",
+   "age-adjusted",
+   "margin-of-error",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "dentist_visit",
+  "title": "Dentist visit in the past year",
+  "phrase": "dentist visit rates",
+  "description": "Share of adults who visited a dentist or dental clinic in the past year. Age-adjusted prevalence; model-based small-area estimate.",
+  "category": "Health",
+  "tags": [
+   "dental",
+   "oral health",
+   "preventive care",
+   "health care"
+  ],
+  "source": {
+   "name": "CDC PLACES (Local Data for Better Health), 2025 release",
+   "shortName": "CDC PLACES",
+   "url": "https://www.cdc.gov/places/",
+   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+  },
+  "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
+  "updateCadence": "annual",
+  "vintage": "2022 data",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "percent",
+  "universe": "adults 18+ (model-based estimate)",
+  "measure": {
+   "kind": "places",
+   "socrata": "swc5-untb",
+   "measureId": "DENTAL",
+   "valueType": "AgeAdjPrv"
+  },
+  "modelInputs": [
+   "pct_poverty",
+   "median_household_income"
+  ],
+  "coverageNote": "From the 2022 survey (CDC asks about dental visits every other year), so every state has data, Kentucky and Pennsylvania included. Loving County, Texas, has too few residents to estimate.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "model-based-estimate",
+   "age-adjusted",
+   "margin-of-error",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": true
+  }
+ },
+ {
+  "id": "depression",
+  "title": "Depression",
+  "phrase": "depression rates",
+  "description": "Share of adults a doctor has ever told they have a depressive disorder. Age-adjusted prevalence; model-based small-area estimate.",
+  "category": "Health",
+  "tags": [
+   "depression",
+   "mental health",
+   "health"
+  ],
+  "source": {
+   "name": "CDC PLACES (Local Data for Better Health), 2025 release",
+   "shortName": "CDC PLACES",
+   "url": "https://www.cdc.gov/places/",
+   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+  },
+  "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
+  "updateCadence": "annual",
+  "vintage": "2023 data",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "percent",
+  "universe": "adults 18+ (model-based estimate)",
+  "measure": {
+   "kind": "places",
+   "socrata": "swc5-untb",
+   "measureId": "DEPRESSION",
+   "valueType": "AgeAdjPrv"
+  },
+  "modelInputs": [
+   "pct_poverty",
+   "median_household_income"
+  ],
+  "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "model-based-estimate",
+   "age-adjusted",
+   "margin-of-error",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "diabetes",
+  "title": "Diabetes",
+  "phrase": "diabetes rates",
+  "description": "Share of adults a doctor has told they have diabetes (not counting diabetes only during pregnancy). Age-adjusted prevalence; model-based small-area estimate.",
+  "category": "Health",
+  "tags": [
+   "diabetes",
+   "chronic disease",
+   "health"
+  ],
+  "source": {
+   "name": "CDC PLACES (Local Data for Better Health), 2025 release",
+   "shortName": "CDC PLACES",
+   "url": "https://www.cdc.gov/places/",
+   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+  },
+  "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
+  "updateCadence": "annual",
+  "vintage": "2023 data",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "percent",
+  "universe": "adults 18+ (model-based estimate)",
+  "measure": {
+   "kind": "places",
+   "socrata": "swc5-untb",
+   "measureId": "DIABETES",
+   "valueType": "AgeAdjPrv"
+  },
+  "modelInputs": [
+   "pct_poverty",
+   "median_household_income"
+  ],
+  "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "model-based-estimate",
+   "age-adjusted",
+   "margin-of-error",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "disability_any",
+  "title": "Any disability (adults)",
+  "phrase": "adult disability rates",
+  "description": "Share of adults with at least one disability: hearing, vision, thinking, walking, self-care or living independently. Age-adjusted prevalence; model-based small-area estimate.",
+  "category": "Health",
+  "tags": [
+   "disability",
+   "health"
+  ],
+  "source": {
+   "name": "CDC PLACES (Local Data for Better Health), 2025 release",
+   "shortName": "CDC PLACES",
+   "url": "https://www.cdc.gov/places/",
+   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+  },
+  "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
+  "updateCadence": "annual",
+  "vintage": "2023 data",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "percent",
+  "universe": "adults 18+ (model-based estimate)",
+  "measure": {
+   "kind": "places",
+   "socrata": "swc5-untb",
+   "measureId": "DISABILITY",
+   "valueType": "AgeAdjPrv"
+  },
+  "modelInputs": [
+   "pct_poverty",
+   "median_household_income"
+  ],
+  "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "model-based-estimate",
+   "age-adjusted",
+   "margin-of-error",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "disability_cognition",
+  "title": "Trouble concentrating or remembering",
+  "phrase": "rates of cognitive disability",
+  "description": "Share of adults with serious difficulty concentrating, remembering or making decisions because of a physical, mental or emotional condition. Age-adjusted prevalence; model-based small-area estimate.",
+  "category": "Health",
+  "tags": [
+   "disability",
+   "cognitive",
+   "memory",
+   "health"
+  ],
+  "source": {
+   "name": "CDC PLACES (Local Data for Better Health), 2025 release",
+   "shortName": "CDC PLACES",
+   "url": "https://www.cdc.gov/places/",
+   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+  },
+  "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
+  "updateCadence": "annual",
+  "vintage": "2023 data",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "percent",
+  "universe": "adults 18+ (model-based estimate)",
+  "measure": {
+   "kind": "places",
+   "socrata": "swc5-untb",
+   "measureId": "COGNITION",
+   "valueType": "AgeAdjPrv"
+  },
+  "modelInputs": [
+   "pct_poverty",
+   "median_household_income"
+  ],
+  "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "model-based-estimate",
+   "age-adjusted",
+   "margin-of-error",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "disability_hearing",
+  "title": "Deaf or serious trouble hearing",
+  "phrase": "rates of hearing disability",
+  "description": "Share of adults who are deaf or have serious difficulty hearing. Age-adjusted prevalence; model-based small-area estimate.",
+  "category": "Health",
+  "tags": [
+   "disability",
+   "hearing",
+   "deaf",
+   "health"
+  ],
+  "source": {
+   "name": "CDC PLACES (Local Data for Better Health), 2025 release",
+   "shortName": "CDC PLACES",
+   "url": "https://www.cdc.gov/places/",
+   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+  },
+  "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
+  "updateCadence": "annual",
+  "vintage": "2023 data",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "percent",
+  "universe": "adults 18+ (model-based estimate)",
+  "measure": {
+   "kind": "places",
+   "socrata": "swc5-untb",
+   "measureId": "HEARING",
+   "valueType": "AgeAdjPrv"
+  },
+  "modelInputs": [
+   "pct_poverty",
+   "median_household_income"
+  ],
+  "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "model-based-estimate",
+   "age-adjusted",
+   "margin-of-error",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "disability_independent_living",
+  "title": "Trouble running errands alone",
+  "phrase": "rates of independent-living disability",
+  "description": "Share of adults who, because of a physical, mental or emotional condition, have difficulty doing errands alone, such as visiting a doctor's office or shopping. Age-adjusted prevalence; model-based small-area estimate.",
+  "category": "Health",
+  "tags": [
+   "disability",
+   "independent living",
+   "health"
+  ],
+  "source": {
+   "name": "CDC PLACES (Local Data for Better Health), 2025 release",
+   "shortName": "CDC PLACES",
+   "url": "https://www.cdc.gov/places/",
+   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+  },
+  "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
+  "updateCadence": "annual",
+  "vintage": "2023 data",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "percent",
+  "universe": "adults 18+ (model-based estimate)",
+  "measure": {
+   "kind": "places",
+   "socrata": "swc5-untb",
+   "measureId": "INDEPLIVE",
+   "valueType": "AgeAdjPrv"
+  },
+  "modelInputs": [
+   "pct_poverty",
+   "median_household_income"
+  ],
+  "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "model-based-estimate",
+   "age-adjusted",
+   "margin-of-error",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "disability_mobility",
+  "title": "Serious trouble walking or climbing stairs",
+  "phrase": "rates of mobility disability",
+  "description": "Share of adults with serious difficulty walking or climbing stairs. Age-adjusted prevalence; model-based small-area estimate.",
+  "category": "Health",
+  "tags": [
+   "disability",
+   "mobility",
+   "walking",
+   "health"
+  ],
+  "source": {
+   "name": "CDC PLACES (Local Data for Better Health), 2025 release",
+   "shortName": "CDC PLACES",
+   "url": "https://www.cdc.gov/places/",
+   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+  },
+  "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
+  "updateCadence": "annual",
+  "vintage": "2023 data",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "percent",
+  "universe": "adults 18+ (model-based estimate)",
+  "measure": {
+   "kind": "places",
+   "socrata": "swc5-untb",
+   "measureId": "MOBILITY",
+   "valueType": "AgeAdjPrv"
+  },
+  "modelInputs": [
+   "pct_poverty",
+   "median_household_income"
+  ],
+  "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "model-based-estimate",
+   "age-adjusted",
+   "margin-of-error",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "disability_selfcare",
+  "title": "Trouble dressing or bathing",
+  "phrase": "rates of self-care disability",
+  "description": "Share of adults with difficulty dressing or bathing. Age-adjusted prevalence; model-based small-area estimate.",
+  "category": "Health",
+  "tags": [
+   "disability",
+   "self-care",
+   "health"
+  ],
+  "source": {
+   "name": "CDC PLACES (Local Data for Better Health), 2025 release",
+   "shortName": "CDC PLACES",
+   "url": "https://www.cdc.gov/places/",
+   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+  },
+  "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
+  "updateCadence": "annual",
+  "vintage": "2023 data",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "percent",
+  "universe": "adults 18+ (model-based estimate)",
+  "measure": {
+   "kind": "places",
+   "socrata": "swc5-untb",
+   "measureId": "SELFCARE",
+   "valueType": "AgeAdjPrv"
+  },
+  "modelInputs": [
+   "pct_poverty",
+   "median_household_income"
+  ],
+  "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "model-based-estimate",
+   "age-adjusted",
+   "margin-of-error",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "disability_vision",
+  "title": "Blind or serious trouble seeing",
+  "phrase": "rates of vision disability",
+  "description": "Share of adults who are blind or have serious difficulty seeing, even with glasses. Age-adjusted prevalence; model-based small-area estimate.",
+  "category": "Health",
+  "tags": [
+   "disability",
+   "vision",
+   "blind",
+   "health"
+  ],
+  "source": {
+   "name": "CDC PLACES (Local Data for Better Health), 2025 release",
+   "shortName": "CDC PLACES",
+   "url": "https://www.cdc.gov/places/",
+   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+  },
+  "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
+  "updateCadence": "annual",
+  "vintage": "2023 data",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "percent",
+  "universe": "adults 18+ (model-based estimate)",
+  "measure": {
+   "kind": "places",
+   "socrata": "swc5-untb",
+   "measureId": "VISION",
+   "valueType": "AgeAdjPrv"
+  },
+  "modelInputs": [
+   "pct_poverty",
+   "median_household_income"
+  ],
+  "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "model-based-estimate",
+   "age-adjusted",
+   "margin-of-error",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "fair_poor_health",
+  "title": "Fair or poor health",
+  "phrase": "rates of fair or poor health",
+  "description": "Share of adults who describe their general health as fair or poor. Age-adjusted prevalence; model-based small-area estimate.",
+  "category": "Health",
+  "tags": [
+   "self-rated health",
+   "health status",
+   "health"
+  ],
+  "source": {
+   "name": "CDC PLACES (Local Data for Better Health), 2025 release",
+   "shortName": "CDC PLACES",
+   "url": "https://www.cdc.gov/places/",
+   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+  },
+  "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
+  "updateCadence": "annual",
+  "vintage": "2023 data",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "percent",
+  "universe": "adults 18+ (model-based estimate)",
+  "measure": {
+   "kind": "places",
+   "socrata": "swc5-untb",
+   "measureId": "GHLTH",
+   "valueType": "AgeAdjPrv"
+  },
+  "modelInputs": [
+   "pct_poverty",
+   "median_household_income"
+  ],
+  "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "model-based-estimate",
+   "age-adjusted",
+   "margin-of-error",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "food_insecurity",
+  "title": "Food insecurity",
+  "phrase": "food insecurity rates",
+  "description": "Share of adults who say the food they bought in the past 12 months often or sometimes didn't last and they didn't have money to get more. Age-adjusted prevalence; model-based small-area estimate.",
+  "category": "Health",
+  "tags": [
+   "food insecurity",
+   "hunger",
+   "social needs",
+   "health"
+  ],
+  "source": {
+   "name": "CDC PLACES (Local Data for Better Health), 2025 release",
+   "shortName": "CDC PLACES",
+   "url": "https://www.cdc.gov/places/",
+   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+  },
+  "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
+  "updateCadence": "annual",
+  "vintage": "2023 data",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "percent",
+  "universe": "adults 18+ (model-based estimate)",
+  "measure": {
+   "kind": "places",
+   "socrata": "swc5-untb",
+   "measureId": "FOODINSECU",
+   "valueType": "AgeAdjPrv"
+  },
+  "modelInputs": [
+   "pct_poverty",
+   "median_household_income"
+  ],
+  "coverageNote": "Only states that asked CDC's optional social-needs questions in their 2023 survey have data on food insecurity. No data for Colorado, Florida, Kentucky, Oregon, Pennsylvania, South Dakota, Tennessee, Texas, Vermont, Washington or Wyoming.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "model-based-estimate",
+   "age-adjusted",
+   "margin-of-error",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "cividis",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
   "id": "gini_index",
   "title": "Income inequality (Gini index)",
   "description": "How unevenly household income is spread, from 0 (every household earns the same) to 1 (one household earns everything).",
@@ -915,6 +2022,283 @@
    "classification": "quantile",
    "classes": 5,
    "higherIsBetter": false
+  }
+ },
+ {
+  "id": "heart_disease",
+  "title": "Coronary heart disease",
+  "phrase": "heart disease rates",
+  "description": "Share of adults a doctor has told they have coronary heart disease or angina. Age-adjusted prevalence; model-based small-area estimate.",
+  "category": "Health",
+  "tags": [
+   "heart disease",
+   "cardiovascular",
+   "chronic disease",
+   "health"
+  ],
+  "source": {
+   "name": "CDC PLACES (Local Data for Better Health), 2025 release",
+   "shortName": "CDC PLACES",
+   "url": "https://www.cdc.gov/places/",
+   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+  },
+  "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
+  "updateCadence": "annual",
+  "vintage": "2023 data",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "percent",
+  "universe": "adults 18+ (model-based estimate)",
+  "measure": {
+   "kind": "places",
+   "socrata": "swc5-untb",
+   "measureId": "CHD",
+   "valueType": "AgeAdjPrv"
+  },
+  "modelInputs": [
+   "pct_poverty",
+   "median_household_income"
+  ],
+  "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "model-based-estimate",
+   "age-adjusted",
+   "margin-of-error",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "heating_degree_days",
+  "title": "Heating degree days",
+  "phrase": "heating needs",
+  "description": "How much heating homes and buildings need in a year: the sum, over every day, of how many degrees the day's average temperature fell below 65°F. Average over 1991–2020.",
+  "category": "Climate",
+  "tags": [
+   "heating",
+   "cold",
+   "energy",
+   "climate"
+  ],
+  "source": {
+   "name": "NOAA NCEI nClimDiv county climate data",
+   "shortName": "NOAA",
+   "url": "https://www.ncei.noaa.gov/pub/data/cirs/climdiv/",
+   "citation": "NOAA National Centers for Environmental Information, nClimDiv county monthly data (Vose et al. 2014), 1991–2020 normals computed by this site"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "static",
+  "vintage": "1991–2020 average",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "degree_days",
+  "universe": "county area (area-weighted grid average)",
+  "measure": {
+   "kind": "climdiv",
+   "element": "hddc",
+   "months": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+   ],
+   "stat": "sum",
+   "years": [
+    1991,
+    2020
+   ]
+  },
+  "modelInputs": [],
+  "coverageNote": "Contiguous U.S. and Alaska; Hawaii has no county series. Connecticut uses pre-2022 county codes in nClimDiv, so it shows no data.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 1991,
+   "to": 2025,
+   "step": 1
+  },
+  "learnMore": [],
+  "terms": [
+   "degree-days",
+   "climate-normal",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "high_blood_pressure",
+  "title": "High blood pressure",
+  "phrase": "high blood pressure rates",
+  "description": "Share of adults a doctor has told they have high blood pressure. Age-adjusted prevalence; model-based small-area estimate.",
+  "category": "Health",
+  "tags": [
+   "hypertension",
+   "blood pressure",
+   "cardiovascular",
+   "health"
+  ],
+  "source": {
+   "name": "CDC PLACES (Local Data for Better Health), 2025 release",
+   "shortName": "CDC PLACES",
+   "url": "https://www.cdc.gov/places/",
+   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+  },
+  "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
+  "updateCadence": "annual",
+  "vintage": "2023 data",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "percent",
+  "universe": "adults 18+ (model-based estimate)",
+  "measure": {
+   "kind": "places",
+   "socrata": "swc5-untb",
+   "measureId": "BPHIGH",
+   "valueType": "AgeAdjPrv"
+  },
+  "modelInputs": [
+   "pct_poverty",
+   "median_household_income"
+  ],
+  "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "model-based-estimate",
+   "age-adjusted",
+   "margin-of-error",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "high_cholesterol",
+  "title": "High cholesterol",
+  "phrase": "high cholesterol rates",
+  "description": "Share of adults who have ever had their cholesterol checked and were told it was high. Age-adjusted prevalence; model-based small-area estimate.",
+  "category": "Health",
+  "tags": [
+   "cholesterol",
+   "cardiovascular",
+   "health"
+  ],
+  "source": {
+   "name": "CDC PLACES (Local Data for Better Health), 2025 release",
+   "shortName": "CDC PLACES",
+   "url": "https://www.cdc.gov/places/",
+   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+  },
+  "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
+  "updateCadence": "annual",
+  "vintage": "2023 data",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "percent",
+  "universe": "adults 18+ ever screened for cholesterol (model-based estimate)",
+  "measure": {
+   "kind": "places",
+   "socrata": "swc5-untb",
+   "measureId": "HIGHCHOL",
+   "valueType": "AgeAdjPrv"
+  },
+  "modelInputs": [
+   "pct_poverty",
+   "median_household_income"
+  ],
+  "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "model-based-estimate",
+   "age-adjusted",
+   "margin-of-error",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "housing_insecurity",
+  "title": "Housing insecurity",
+  "phrase": "housing insecurity rates",
+  "description": "Share of adults who, in the past 12 months, were not able to pay their mortgage, rent or utility bills. Age-adjusted prevalence; model-based small-area estimate.",
+  "category": "Health",
+  "tags": [
+   "housing insecurity",
+   "rent",
+   "social needs",
+   "health"
+  ],
+  "source": {
+   "name": "CDC PLACES (Local Data for Better Health), 2025 release",
+   "shortName": "CDC PLACES",
+   "url": "https://www.cdc.gov/places/",
+   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+  },
+  "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
+  "updateCadence": "annual",
+  "vintage": "2023 data",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "percent",
+  "universe": "adults 18+ (model-based estimate)",
+  "measure": {
+   "kind": "places",
+   "socrata": "swc5-untb",
+   "measureId": "HOUSINSECU",
+   "valueType": "AgeAdjPrv"
+  },
+  "modelInputs": [
+   "pct_poverty",
+   "median_household_income"
+  ],
+  "coverageNote": "Only states that asked CDC's optional social-needs questions in their 2023 survey have data on housing insecurity. No data for Colorado, Florida, Kentucky, Oregon, Pennsylvania, South Dakota, Tennessee, Texas, Vermont, Washington or Wyoming.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "model-based-estimate",
+   "age-adjusted",
+   "margin-of-error",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "cividis",
+   "classification": "quantile",
+   "classes": 5
   }
  },
  {
@@ -1148,6 +2532,65 @@
   }
  },
  {
+  "id": "july_low",
+  "title": "July low temperature",
+  "phrase": "July overnight lows",
+  "description": "Average daily minimum temperature in July. Warm nights give bodies no chance to cool down, a major driver of heat illness. Average over 1991–2020.",
+  "category": "Climate",
+  "tags": [
+   "heat",
+   "summer",
+   "nights",
+   "temperature",
+   "climate"
+  ],
+  "source": {
+   "name": "NOAA NCEI nClimDiv county climate data",
+   "shortName": "NOAA",
+   "url": "https://www.ncei.noaa.gov/pub/data/cirs/climdiv/",
+   "citation": "NOAA National Centers for Environmental Information, nClimDiv county monthly data (Vose et al. 2014), 1991–2020 normals computed by this site"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "static",
+  "vintage": "1991–2020 average",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "deg_f",
+  "universe": "county area (area-weighted grid average)",
+  "measure": {
+   "kind": "climdiv",
+   "element": "tmin",
+   "months": [
+    7
+   ],
+   "stat": "mean",
+   "years": [
+    1991,
+    2020
+   ]
+  },
+  "modelInputs": [],
+  "coverageNote": "Contiguous U.S. and Alaska; Hawaii has no county series. Connecticut uses pre-2022 county codes in nClimDiv, so it shows no data.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 1991,
+   "to": 2025,
+   "step": 1
+  },
+  "learnMore": [],
+  "terms": [
+   "climate-normal",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
   "id": "labor_force_participation",
   "title": "People working or looking for work",
   "description": "Share of people 16 and over who have a job or are looking for one (the labor force participation rate).",
@@ -1209,6 +2652,110 @@
   }
  },
  {
+  "id": "lack_emotional_support",
+  "title": "Lack of social and emotional support",
+  "phrase": "rates of missing social support",
+  "description": "Share of adults who say they rarely or never get the social and emotional support they need. Age-adjusted prevalence; model-based small-area estimate.",
+  "category": "Health",
+  "tags": [
+   "social support",
+   "isolation",
+   "mental health",
+   "social needs"
+  ],
+  "source": {
+   "name": "CDC PLACES (Local Data for Better Health), 2025 release",
+   "shortName": "CDC PLACES",
+   "url": "https://www.cdc.gov/places/",
+   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+  },
+  "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
+  "updateCadence": "annual",
+  "vintage": "2023 data",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "percent",
+  "universe": "adults 18+ (model-based estimate)",
+  "measure": {
+   "kind": "places",
+   "socrata": "swc5-untb",
+   "measureId": "EMOTIONSPT",
+   "valueType": "AgeAdjPrv"
+  },
+  "modelInputs": [
+   "pct_poverty",
+   "median_household_income"
+  ],
+  "coverageNote": "Only states that asked CDC's optional social-needs questions in their 2023 survey have data on social and emotional support. No data for Colorado, Florida, Kentucky, Oregon, Pennsylvania, South Dakota, Tennessee, Texas, Vermont, Washington or Wyoming.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "model-based-estimate",
+   "age-adjusted",
+   "margin-of-error",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "cividis",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "lack_transportation",
+  "title": "No reliable transportation",
+  "phrase": "rates of unreliable transportation",
+  "description": "Share of adults for whom a lack of reliable transportation kept them from medical appointments, meetings, work or getting things they need in the past 12 months. Age-adjusted prevalence; model-based small-area estimate.",
+  "category": "Health",
+  "tags": [
+   "transportation",
+   "access",
+   "social needs",
+   "health"
+  ],
+  "source": {
+   "name": "CDC PLACES (Local Data for Better Health), 2025 release",
+   "shortName": "CDC PLACES",
+   "url": "https://www.cdc.gov/places/",
+   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+  },
+  "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
+  "updateCadence": "annual",
+  "vintage": "2023 data",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "percent",
+  "universe": "adults 18+ (model-based estimate)",
+  "measure": {
+   "kind": "places",
+   "socrata": "swc5-untb",
+   "measureId": "LACKTRPT",
+   "valueType": "AgeAdjPrv"
+  },
+  "modelInputs": [
+   "pct_poverty",
+   "median_household_income"
+  ],
+  "coverageNote": "Only states that asked CDC's optional social-needs questions in their 2023 survey have data on transportation. No data for Colorado, Florida, Kentucky, Oregon, Pennsylvania, South Dakota, Tennessee, Texas, Vermont, Washington or Wyoming.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "model-based-estimate",
+   "age-adjusted",
+   "margin-of-error",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "cividis",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
   "id": "loneliness",
   "title": "Loneliness",
   "phrase": "loneliness rates",
@@ -1257,6 +2804,60 @@
    "ramp": "blues",
    "classification": "quantile",
    "classes": 5
+  }
+ },
+ {
+  "id": "mammogram",
+  "title": "Mammogram in the past 2 years (women 50–74)",
+  "phrase": "mammogram rates",
+  "description": "Share of women aged 50 to 74 who had a mammogram in the past 2 years. Age-adjusted prevalence; model-based small-area estimate.",
+  "category": "Health",
+  "tags": [
+   "breast cancer",
+   "mammogram",
+   "screening",
+   "preventive care",
+   "health care"
+  ],
+  "source": {
+   "name": "CDC PLACES (Local Data for Better Health), 2025 release",
+   "shortName": "CDC PLACES",
+   "url": "https://www.cdc.gov/places/",
+   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+  },
+  "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
+  "updateCadence": "annual",
+  "vintage": "2022 data",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "percent",
+  "universe": "women 50–74 (model-based estimate)",
+  "measure": {
+   "kind": "places",
+   "socrata": "swc5-untb",
+   "measureId": "MAMMOUSE",
+   "valueType": "AgeAdjPrv"
+  },
+  "modelInputs": [
+   "pct_poverty",
+   "median_household_income"
+  ],
+  "coverageNote": "From the 2022 survey (CDC asks about cancer screening every other year), so every state has data, Kentucky and Pennsylvania included. Loving County, Texas, has too few residents to estimate.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "model-based-estimate",
+   "age-adjusted",
+   "margin-of-error",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": true
   }
  },
  {
@@ -1621,6 +3222,117 @@
    "classification": "quantile",
    "classes": 5,
    "higherIsBetter": true
+  }
+ },
+ {
+  "id": "median_owner_costs_mortgage",
+  "title": "Monthly costs for homeowners with a mortgage",
+  "phrase": "homeowner costs",
+  "description": "Middle monthly housing cost for homeowners with a mortgage: mortgage, taxes, insurance, utilities and fees, in 2024 dollars.",
+  "category": "Housing",
+  "tags": [
+   "housing costs",
+   "mortgage",
+   "homeowners"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract",
+   "block_group"
+  ],
+  "unit": "dollars",
+  "universe": "owner-occupied housing units with a mortgage",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B25088_002"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "coverageNote": "Block groups with too few mortgaged homes show no median.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [],
+  "terms": [
+   "median",
+   "inflation-adjusted",
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "mental_distress",
+  "title": "Frequent mental distress",
+  "phrase": "rates of frequent mental distress",
+  "description": "Share of adults who say their mental health was not good on 14 or more of the past 30 days. Age-adjusted prevalence; model-based small-area estimate.",
+  "category": "Health",
+  "tags": [
+   "mental health",
+   "stress",
+   "health"
+  ],
+  "source": {
+   "name": "CDC PLACES (Local Data for Better Health), 2025 release",
+   "shortName": "CDC PLACES",
+   "url": "https://www.cdc.gov/places/",
+   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+  },
+  "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
+  "updateCadence": "annual",
+  "vintage": "2023 data",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "percent",
+  "universe": "adults 18+ (model-based estimate)",
+  "measure": {
+   "kind": "places",
+   "socrata": "swc5-untb",
+   "measureId": "MHLTH",
+   "valueType": "AgeAdjPrv"
+  },
+  "modelInputs": [
+   "pct_poverty",
+   "median_household_income"
+  ],
+  "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "model-based-estimate",
+   "age-adjusted",
+   "margin-of-error",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
   }
  },
  {
@@ -2247,6 +3959,118 @@
   }
  },
  {
+  "id": "overdose_deaths",
+  "title": "Drug overdose deaths",
+  "phrase": "drug overdose death rates",
+  "description": "Drug overdose deaths per 100,000 residents in the 12 months ending December 2025, by county of residence. Provisional counts from death certificates. Counties with 1–9 deaths are hidden by CDC to protect privacy.",
+  "category": "Health",
+  "tags": [
+   "overdose",
+   "drugs",
+   "opioids",
+   "fentanyl",
+   "mortality",
+   "deaths",
+   "health"
+  ],
+  "source": {
+   "name": "CDC National Center for Health Statistics, VSRR Provisional County-Level Drug Overdose Death Counts",
+   "shortName": "CDC NCHS",
+   "url": "https://www.cdc.gov/nchs/nvss/vsrr/prov-county-drug-overdose.htm",
+   "citation": "Ahmad FB, Anderson RN, Cisewski JA, Rossen LM, Sutton P. County-level provisional drug overdose death counts. National Center for Health Statistics. DOI 10.15620/cdc/20250305009"
+  },
+  "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain U.S. Government\")",
+  "updateCadence": "quarterly",
+  "vintage": "12 months ending Dec 2025",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "per_100k",
+  "universe": "deaths per resident (rate uses ACS population), by the decedent's county of residence",
+  "measure": {
+   "kind": "overdose",
+   "socrata": "gb4e-yj24",
+   "endYear": 2025,
+   "endMonth": 12,
+   "perPopulation": 100000
+  },
+  "modelInputs": [
+   "population_density"
+  ],
+  "coverageNote": "About half of counties (1,630 of 3,144) have no value: CDC hides counts of 1–9 deaths, so a blank county is not a zero and is not necessarily low, just under 10 deaths. Shown rates come from counties with 10 or more deaths, which skews toward larger places. Provisional counts run low where cause-of-death investigations are still pending. Connecticut uses pre-2022 county codes and shows no data.",
+  "facets": [],
+  "excludeFromInsights": true,
+  "timeline": {
+   "from": 2020,
+   "to": 2025,
+   "step": 1
+  },
+  "learnMore": [],
+  "terms": [
+   "per-100k",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "ozone_8hr",
+  "title": "Ground-level ozone (smog)",
+  "phrase": "smog (ozone) levels",
+  "description": "Ground-level ozone, 2023–2025 design value: the fourth-highest daily peak (8-hour average) each year, averaged over three years, at each county's highest valid monitor. The federal standard is 0.070 parts per million.",
+  "category": "Environment",
+  "tags": [
+   "air quality",
+   "pollution",
+   "ozone",
+   "smog",
+   "health"
+  ],
+  "source": {
+   "name": "U.S. EPA, Office of Air Quality Planning and Standards, Ozone Design Values (2015 8-hour NAAQS)",
+   "shortName": "EPA",
+   "url": "https://www.epa.gov/air-trends/air-quality-design-values",
+   "citation": "U.S. Environmental Protection Agency, Air Quality Design Values: ozone design values 2023–2025 (final, updated June 8, 2026), Table 4 County Status"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105; EPA permits free non-commercial and educational use)",
+  "updateCadence": "annual",
+  "vintage": "2023–2025 design value",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "ppm",
+  "universe": "air at each county's highest-reading valid monitor (not people or area)",
+  "measure": {
+   "kind": "airquality",
+   "url": "https://www.epa.gov/system/files/documents/2026-06/o3_designvalues_2023_2025_final_06_08_26.xlsx",
+   "sheet": "Table4. County Status",
+   "period": "2023-2025"
+  },
+  "modelInputs": [],
+  "coverageNote": "Only the 688 counties with a valid ozone monitor have a value; every other county is blank, which means no monitor, not clean air. A county's value is its single highest monitor. EPA excludes exceptional-event days such as wildfire smoke. The federal 8-hour standard is 0.070 ppm; the top map classes mark counties above it (values are reported to three decimals, so 0.071 or higher exceeds it). EPA's tables are informational, not a regulatory determination.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "design-value",
+   "naaqs"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "manual",
+   "classes": 5,
+   "breaks": [
+    0.055,
+    0.065,
+    0.071,
+    0.085
+   ]
+  }
+ },
+ {
   "id": "pct_age_65_plus",
   "title": "Population 65 and older",
   "phrase": "shares of people 65 and older",
@@ -2631,6 +4455,62 @@
   }
  },
  {
+  "id": "pct_broadband",
+  "title": "Households with broadband",
+  "phrase": "broadband rates",
+  "description": "Share of households with a broadband internet subscription of any type (cable, fiber, DSL, satellite or cellular data plan).",
+  "category": "Internet access",
+  "tags": [
+   "internet",
+   "broadband",
+   "digital divide"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract",
+   "block_group"
+  ],
+  "unit": "percent",
+  "universe": "households",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B28002_004"
+   ],
+   "denominator": [
+    "B28002_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": true
+  }
+ },
+ {
   "id": "pct_carpool",
   "title": "Carpool to work",
   "description": "Share of workers 16 and over who usually share a ride to work in a car, truck or van.",
@@ -2670,6 +4550,139 @@
    "perSqMi": false
   },
   "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_child_poverty",
+  "title": "Children in poverty",
+  "phrase": "child poverty rates",
+  "description": "Share of children under 18 living in households below the federal poverty line.",
+  "category": "Income & poverty",
+  "tags": [
+   "poverty",
+   "children",
+   "income"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "percent",
+  "universe": "children under 18 for whom poverty status is determined",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B17020_003",
+    "B17020_004",
+    "B17020_005"
+   ],
+   "denominator": [
+    "B17020_003",
+    "B17020_004",
+    "B17020_005",
+    "B17020_011",
+    "B17020_012",
+    "B17020_013"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "coverageNote": "The Census Bureau doesn't publish this measure below census tracts, so there's no block-group view.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": false
+  }
+ },
+ {
+  "id": "pct_disability",
+  "title": "People with a disability",
+  "phrase": "disability rates",
+  "description": "Share of residents with at least one disability: hearing, vision, thinking, walking, self-care or living independently.",
+  "category": "Health",
+  "tags": [
+   "disability",
+   "health",
+   "accessibility"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "percent",
+  "universe": "civilian noninstitutionalized population",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "C18108_003",
+    "C18108_004",
+    "C18108_007",
+    "C18108_008",
+    "C18108_011",
+    "C18108_012"
+   ],
+   "denominator": [
+    "C18108_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "coverageNote": "The Census Bureau doesn't publish this measure below census tracts, so there's no block-group view.",
   "facets": [],
   "excludeFromInsights": false,
   "timeline": {
@@ -2871,6 +4884,70 @@
   }
  },
  {
+  "id": "pct_graduate_degree",
+  "title": "Graduate or professional degree",
+  "phrase": "shares of graduate degrees",
+  "description": "Share of adults 25 and older with a master's, professional or doctoral degree.",
+  "category": "Education",
+  "tags": [
+   "education",
+   "graduate degree",
+   "master's",
+   "doctorate"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract",
+   "block_group"
+  ],
+  "unit": "percent",
+  "universe": "population 25+",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B15003_023",
+    "B15003_024",
+    "B15003_025"
+   ],
+   "denominator": [
+    "B15003_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": true
+  }
+ },
+ {
   "id": "pct_hispanic_latino",
   "title": "Hispanic or Latino residents",
   "description": "Share of residents who are Hispanic or Latino, of any race.",
@@ -2928,6 +5005,64 @@
   ],
   "symbology": {
    "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_homes_built_before_1960",
+  "title": "Homes built before 1960",
+  "phrase": "shares of older homes",
+  "description": "Share of housing units built before 1960. Older homes are more likely to have lead paint and need repairs.",
+  "category": "Housing",
+  "tags": [
+   "housing age",
+   "lead paint",
+   "older homes",
+   "housing"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract",
+   "block_group"
+  ],
+  "unit": "percent",
+  "universe": "housing units",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B25034_009",
+    "B25034_010",
+    "B25034_011"
+   ],
+   "denominator": [
+    "B25034_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
    "classification": "quantile",
    "classes": 5
   }
@@ -3124,6 +5259,128 @@
   }
  },
  {
+  "id": "pct_mobile_homes",
+  "title": "Mobile homes",
+  "phrase": "shares of mobile homes",
+  "description": "Share of housing units that are mobile homes.",
+  "category": "Housing",
+  "tags": [
+   "mobile homes",
+   "manufactured housing",
+   "housing"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract",
+   "block_group"
+  ],
+  "unit": "percent",
+  "universe": "housing units",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B25024_010"
+   ],
+   "denominator": [
+    "B25024_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_moved_last_year",
+  "title": "Moved in the past year",
+  "phrase": "shares of recent movers",
+  "description": "Share of residents (age 1 and older) who lived in a different home a year earlier, in the U.S. or abroad.",
+  "category": "Population",
+  "tags": [
+   "mobility",
+   "moving",
+   "migration",
+   "turnover"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract",
+   "block_group"
+  ],
+  "unit": "percent",
+  "universe": "population 1 year and over",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B07201_003",
+    "B07201_014"
+   ],
+   "denominator": [
+    "B07201_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
   "id": "pct_multiracial_nh",
   "title": "Two or more races (non-Hispanic)",
   "description": "Share of residents who report two or more races and are not Hispanic or Latino.",
@@ -3249,6 +5506,62 @@
   }
  },
  {
+  "id": "pct_no_computer",
+  "title": "Households without a computer",
+  "phrase": "shares of households without a computer",
+  "description": "Share of households with no computer of any kind, including smartphones and tablets.",
+  "category": "Internet access",
+  "tags": [
+   "computer",
+   "digital divide",
+   "internet"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract",
+   "block_group"
+  ],
+  "unit": "percent",
+  "universe": "households",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B28001_011"
+   ],
+   "denominator": [
+    "B28001_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": false
+  }
+ },
+ {
   "id": "pct_no_hs_diploma",
   "title": "No high school diploma",
   "description": "Share of adults 25 and over who finished neither high school nor an equivalent such as the GED.",
@@ -3320,6 +5633,214 @@
    "ramp": "oranges",
    "classification": "quantile",
    "classes": 5
+  }
+ },
+ {
+  "id": "pct_no_internet",
+  "title": "Households without internet",
+  "phrase": "shares of households offline",
+  "description": "Share of households with no internet access at home, by any kind of subscription or free service.",
+  "category": "Internet access",
+  "tags": [
+   "internet",
+   "digital divide",
+   "broadband"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract",
+   "block_group"
+  ],
+  "unit": "percent",
+  "universe": "households",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B28002_013"
+   ],
+   "denominator": [
+    "B28002_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": false
+  }
+ },
+ {
+  "id": "pct_overcrowded",
+  "title": "Overcrowded homes",
+  "phrase": "overcrowding rates",
+  "description": "Share of occupied homes with more than one person per room (not counting bathrooms, halls or porches).",
+  "category": "Housing",
+  "tags": [
+   "overcrowding",
+   "housing",
+   "affordability"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract",
+   "block_group"
+  ],
+  "unit": "percent",
+  "universe": "occupied housing units",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B25014_005",
+    "B25014_006",
+    "B25014_007",
+    "B25014_011",
+    "B25014_012",
+    "B25014_013"
+   ],
+   "denominator": [
+    "B25014_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": false
+  }
+ },
+ {
+  "id": "pct_owner_cost_burdened",
+  "title": "Cost-burdened homeowners",
+  "phrase": "homeowner cost-burden rates",
+  "description": "Share of homeowners who spend 30% or more of household income on housing costs (mortgage, taxes, insurance, utilities).",
+  "category": "Housing",
+  "tags": [
+   "housing costs",
+   "affordability",
+   "homeowners",
+   "mortgage"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract",
+   "block_group"
+  ],
+  "unit": "percent",
+  "universe": "owner-occupied housing units (cost burden computed)",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B25091_008",
+    "B25091_009",
+    "B25091_010",
+    "B25091_011",
+    "B25091_019",
+    "B25091_020",
+    "B25091_021",
+    "B25091_022"
+   ],
+   "denominator": [
+    "B25091_003",
+    "B25091_004",
+    "B25091_005",
+    "B25091_006",
+    "B25091_007",
+    "B25091_008",
+    "B25091_009",
+    "B25091_010",
+    "B25091_011",
+    "B25091_014",
+    "B25091_015",
+    "B25091_016",
+    "B25091_017",
+    "B25091_018",
+    "B25091_019",
+    "B25091_020",
+    "B25091_021",
+    "B25091_022"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": false
   }
  },
  {
@@ -3461,6 +5982,67 @@
   }
  },
  {
+  "id": "pct_public_assistance",
+  "title": "Households on cash public assistance",
+  "phrase": "shares of households on public assistance",
+  "description": "Share of households that received cash public assistance (such as TANF or general assistance) in the past 12 months. Does not include SNAP food benefits.",
+  "category": "Income & poverty",
+  "tags": [
+   "public assistance",
+   "welfare",
+   "TANF",
+   "income"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract",
+   "block_group"
+  ],
+  "unit": "percent",
+  "universe": "households",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B19057_002"
+   ],
+   "denominator": [
+    "B19057_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
   "id": "pct_rent_burdened",
   "title": "Renters paying 30%+ of income on rent",
   "description": "Share of renter households that spend 30 percent or more of their income on rent and utilities.",
@@ -3594,6 +6176,130 @@
   }
  },
  {
+  "id": "pct_seniors_living_alone",
+  "title": "Seniors living alone",
+  "phrase": "shares of seniors living alone",
+  "description": "Share of households that are one person aged 65 or older living alone.",
+  "category": "Population",
+  "tags": [
+   "seniors",
+   "aging",
+   "living alone",
+   "isolation"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract",
+   "block_group"
+  ],
+  "unit": "percent",
+  "universe": "households",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B11007_003"
+   ],
+   "denominator": [
+    "B11007_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_single_parent_families",
+  "title": "Single-parent families",
+  "phrase": "shares of single-parent families",
+  "description": "Share of families raising their own children under 18 that are headed by a single parent.",
+  "category": "Population",
+  "tags": [
+   "families",
+   "children",
+   "single parents"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract",
+   "block_group"
+  ],
+  "unit": "percent",
+  "universe": "families with own children under 18",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B11003_010",
+    "B11003_016"
+   ],
+   "denominator": [
+    "B11003_003",
+    "B11003_010",
+    "B11003_016"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
   "id": "pct_snap_households",
   "title": "Households getting SNAP (food stamps)",
   "description": "Share of households that received SNAP food assistance at some point in the past 12 months.",
@@ -3717,6 +6423,73 @@
   }
  },
  {
+  "id": "pct_under_18",
+  "title": "Children (under 18)",
+  "phrase": "shares of children",
+  "description": "Share of residents younger than 18.",
+  "category": "Population",
+  "tags": [
+   "children",
+   "age",
+   "youth"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract",
+   "block_group"
+  ],
+  "unit": "percent",
+  "universe": "total population",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B01001_003",
+    "B01001_004",
+    "B01001_005",
+    "B01001_006",
+    "B01001_027",
+    "B01001_028",
+    "B01001_029",
+    "B01001_030"
+   ],
+   "denominator": [
+    "B01001_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
   "id": "pct_uninsured",
   "title": "No health insurance",
   "description": "Share of residents with no health insurance coverage of any kind.",
@@ -3777,6 +6550,65 @@
    "classification": "quantile",
    "classes": 5,
    "higherIsBetter": false
+  }
+ },
+ {
+  "id": "pct_veterans",
+  "title": "Veterans",
+  "phrase": "shares of veterans",
+  "description": "Share of adults 18 and older who served on active duty in the U.S. armed forces.",
+  "category": "Population",
+  "tags": [
+   "veterans",
+   "military"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract",
+   "block_group"
+  ],
+  "unit": "percent",
+  "universe": "civilian population 18+",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B21001_002"
+   ],
+   "denominator": [
+    "B21001_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
   }
  },
  {
@@ -4153,6 +6985,57 @@
   }
  },
  {
+  "id": "physical_distress",
+  "title": "Frequent physical distress",
+  "phrase": "rates of frequent physical distress",
+  "description": "Share of adults who say their physical health was not good on 14 or more of the past 30 days. Age-adjusted prevalence; model-based small-area estimate.",
+  "category": "Health",
+  "tags": [
+   "physical health",
+   "health status",
+   "health"
+  ],
+  "source": {
+   "name": "CDC PLACES (Local Data for Better Health), 2025 release",
+   "shortName": "CDC PLACES",
+   "url": "https://www.cdc.gov/places/",
+   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+  },
+  "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
+  "updateCadence": "annual",
+  "vintage": "2023 data",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "percent",
+  "universe": "adults 18+ (model-based estimate)",
+  "measure": {
+   "kind": "places",
+   "socrata": "swc5-untb",
+   "measureId": "PHLTH",
+   "valueType": "AgeAdjPrv"
+  },
+  "modelInputs": [
+   "pct_poverty",
+   "median_household_income"
+  ],
+  "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "model-based-estimate",
+   "age-adjusted",
+   "margin-of-error",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
   "id": "physical_inactivity",
   "title": "No leisure-time exercise",
   "phrase": "physical inactivity rates",
@@ -4202,6 +7085,61 @@
    "ramp": "purples",
    "classification": "quantile",
    "classes": 5
+  }
+ },
+ {
+  "id": "pm25_annual",
+  "title": "Fine particle pollution (PM2.5)",
+  "phrase": "fine particle pollution levels",
+  "description": "Yearly average concentration of fine particles (PM2.5) in the air, averaged over 2023–2025, at each county's highest valid monitor. The federal standard is 9.0 micrograms per cubic meter.",
+  "category": "Environment",
+  "tags": [
+   "air quality",
+   "pollution",
+   "PM2.5",
+   "particulates",
+   "smoke",
+   "health"
+  ],
+  "source": {
+   "name": "U.S. EPA, Office of Air Quality Planning and Standards, PM2.5 Design Values (annual, 2024 NAAQS)",
+   "shortName": "EPA",
+   "url": "https://www.epa.gov/air-trends/air-quality-design-values",
+   "citation": "U.S. Environmental Protection Agency, Air Quality Design Values: PM2.5 design values 2023–2025 (final, updated June 12, 2026), Table 4a County Status Annual"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105; EPA permits free non-commercial and educational use)",
+  "updateCadence": "annual",
+  "vintage": "2023–2025 design value",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "ug_m3",
+  "universe": "air at each county's highest-reading valid monitor (not people or area)",
+  "measure": {
+   "kind": "airquality",
+   "url": "https://www.epa.gov/system/files/documents/2026-06/pm25_designvalues_2023_2025_final_06_12_26.xlsx",
+   "sheet": "Table4a. County Status Annual",
+   "period": "2023-2025"
+  },
+  "modelInputs": [],
+  "coverageNote": "Only the 549 counties with a valid PM2.5 monitor have a value; every other county is blank, which means no monitor, not clean air. A county's value is its single highest monitor, so one near-road or border monitor can set it. EPA excludes wildfire-smoke days it concurs are exceptional events, so smoke-heavy years read lower than residents experienced. The federal annual standard is 9.0 µg/m³ (tightened from 12.0 in 2024); the top map class marks counties above it. EPA's tables are informational, not a regulatory determination.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "design-value",
+   "naaqs"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "manual",
+   "classes": 5,
+   "breaks": [
+    6,
+    8,
+    9.1,
+    12
+   ]
   }
  },
  {
@@ -4259,6 +7197,58 @@
    "ramp": "viridis",
    "classification": "quantile",
    "classes": 7
+  }
+ },
+ {
+  "id": "routine_checkup",
+  "title": "Routine checkup in the past year",
+  "phrase": "checkup rates",
+  "description": "Share of adults who visited a doctor for a routine checkup in the past year. Age-adjusted prevalence; model-based small-area estimate.",
+  "category": "Health",
+  "tags": [
+   "checkup",
+   "preventive care",
+   "health care"
+  ],
+  "source": {
+   "name": "CDC PLACES (Local Data for Better Health), 2025 release",
+   "shortName": "CDC PLACES",
+   "url": "https://www.cdc.gov/places/",
+   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+  },
+  "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
+  "updateCadence": "annual",
+  "vintage": "2023 data",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "percent",
+  "universe": "adults 18+ (model-based estimate)",
+  "measure": {
+   "kind": "places",
+   "socrata": "swc5-untb",
+   "measureId": "CHECKUP",
+   "valueType": "AgeAdjPrv"
+  },
+  "modelInputs": [
+   "pct_poverty",
+   "median_household_income"
+  ],
+  "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "model-based-estimate",
+   "age-adjusted",
+   "margin-of-error",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": true
   }
  },
  {
@@ -4360,6 +7350,57 @@
   ],
   "symbology": {
    "ramp": "cividis",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "stroke",
+  "title": "Stroke",
+  "phrase": "stroke rates",
+  "description": "Share of adults a doctor has told they have had a stroke. Age-adjusted prevalence; model-based small-area estimate.",
+  "category": "Health",
+  "tags": [
+   "stroke",
+   "cardiovascular",
+   "health"
+  ],
+  "source": {
+   "name": "CDC PLACES (Local Data for Better Health), 2025 release",
+   "shortName": "CDC PLACES",
+   "url": "https://www.cdc.gov/places/",
+   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+  },
+  "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
+  "updateCadence": "annual",
+  "vintage": "2023 data",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "percent",
+  "universe": "adults 18+ (model-based estimate)",
+  "measure": {
+   "kind": "places",
+   "socrata": "swc5-untb",
+   "measureId": "STROKE",
+   "valueType": "AgeAdjPrv"
+  },
+  "modelInputs": [
+   "pct_poverty",
+   "median_household_income"
+  ],
+  "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "model-based-estimate",
+   "age-adjusted",
+   "margin-of-error",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
    "classification": "quantile",
    "classes": 5
   }
@@ -4482,6 +7523,58 @@
    "classification": "quantile",
    "classes": 5,
    "higherIsBetter": false
+  }
+ },
+ {
+  "id": "utility_shutoff_threat",
+  "title": "Threatened utility shut-off",
+  "phrase": "rates of utility shut-off threats",
+  "description": "Share of adults whose electric, gas, oil or water company threatened to shut off service in the past 12 months. Age-adjusted prevalence; model-based small-area estimate.",
+  "category": "Health",
+  "tags": [
+   "utilities",
+   "energy",
+   "social needs",
+   "health"
+  ],
+  "source": {
+   "name": "CDC PLACES (Local Data for Better Health), 2025 release",
+   "shortName": "CDC PLACES",
+   "url": "https://www.cdc.gov/places/",
+   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+  },
+  "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
+  "updateCadence": "annual",
+  "vintage": "2023 data",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "percent",
+  "universe": "adults 18+ (model-based estimate)",
+  "measure": {
+   "kind": "places",
+   "socrata": "swc5-untb",
+   "measureId": "SHUTUTILITY",
+   "valueType": "AgeAdjPrv"
+  },
+  "modelInputs": [
+   "pct_poverty",
+   "median_household_income"
+  ],
+  "coverageNote": "Only states that asked CDC's optional social-needs questions in their 2023 survey have data on utility shut-off threats. No data for Colorado, Florida, Kentucky, Oregon, Pennsylvania, South Dakota, Tennessee, Texas, Vermont, Washington or Wyoming.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "model-based-estimate",
+   "age-adjusted",
+   "margin-of-error",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "cividis",
+   "classification": "quantile",
+   "classes": 5
   }
  },
  {

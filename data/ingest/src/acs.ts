@@ -171,7 +171,7 @@ export async function ingestAcs(only?: string[], levelsOnly?: Level[]) {
     const levelEntries = entries.filter((e) => e.geographyLevels.includes(level));
     if (!levelEntries.length) continue;
     log("acs", `fetching ${level}…`);
-    const table = await fetchLevel(level, level === "block_group" ? varsOf(entries, level) : vars);
+    const table = await fetchLevel(level, level === "block_group" ? varsOf(levelEntries, level) : vars);
     const areas = level === "block_group" ? await blockGroupLandArea() : await landArea(pool, level);
     for (const e of levelEntries) {
       const values = new Map<string, Value>();
