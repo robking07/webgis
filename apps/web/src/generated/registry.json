@@ -1675,6 +1675,64 @@
   }
  },
  {
+  "id": "overdose_deaths",
+  "title": "Drug overdose deaths",
+  "phrase": "drug overdose death rates",
+  "description": "Drug overdose deaths per 100,000 residents in the 12 months ending December 2025, by county of residence. Provisional counts from death certificates. Counties with 1–9 deaths are hidden by CDC to protect privacy.",
+  "category": "Health",
+  "tags": [
+   "overdose",
+   "drugs",
+   "opioids",
+   "fentanyl",
+   "mortality",
+   "deaths",
+   "health"
+  ],
+  "source": {
+   "name": "CDC National Center for Health Statistics, VSRR Provisional County-Level Drug Overdose Death Counts",
+   "shortName": "CDC NCHS",
+   "url": "https://www.cdc.gov/nchs/nvss/vsrr/prov-county-drug-overdose.htm",
+   "citation": "Ahmad FB, Anderson RN, Cisewski JA, Rossen LM, Sutton P. County-level provisional drug overdose death counts. National Center for Health Statistics. DOI 10.15620/cdc/20250305009"
+  },
+  "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain U.S. Government\")",
+  "updateCadence": "quarterly",
+  "vintage": "12 months ending Dec 2025",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "per_100k",
+  "universe": "deaths per resident (rate uses ACS population), by the decedent's county of residence",
+  "measure": {
+   "kind": "overdose",
+   "socrata": "gb4e-yj24",
+   "endYear": 2025,
+   "endMonth": 12,
+   "perPopulation": 100000
+  },
+  "modelInputs": [
+   "population_density"
+  ],
+  "coverageNote": "About half of counties (1,630 of 3,144) have no value: CDC hides counts of 1–9 deaths, so a blank county is not a zero and is not necessarily low, just under 10 deaths. Shown rates come from counties with 10 or more deaths, which skews toward larger places. Provisional counts run low where cause-of-death investigations are still pending. Connecticut uses pre-2022 county codes and shows no data.",
+  "facets": [],
+  "excludeFromInsights": true,
+  "timeline": {
+   "from": 2020,
+   "to": 2025,
+   "step": 1
+  },
+  "learnMore": [],
+  "terms": [
+   "per-100k",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
   "id": "pct_age_65_plus",
   "title": "Population 65 and older",
   "phrase": "shares of people 65 and older",

@@ -87,6 +87,18 @@ const FarsMeasure = z.object({
   perPopulation: z.number().default(100000),
 });
 
+/** CDC/NCHS VSRR provisional county drug overdose deaths: 12-month-ending counts from data.cdc.gov,
+ *  suppressed (1-9 deaths) counties get no value; rate = deaths ÷ ACS population × `perPopulation`. */
+const OverdoseMeasure = z.object({
+  kind: z.literal("overdose"),
+  /** Socrata dataset id on data.cdc.gov. */
+  socrata: z.string(),
+  /** The headline period is the 12 months ending in this month of this year. */
+  endYear: z.number().int(),
+  endMonth: z.number().int().min(1).max(12).default(12),
+  perPopulation: z.number().default(100000),
+});
+
 /** Deportation Data Project 287(g) agreements (CC0): active agreements counted by the
  *  agencies' county and state FIPS. */
 const Ddp287gMeasure = z.object({
@@ -200,7 +212,7 @@ export const DatasetEntry = z.object({
   unit: Unit,
   /** For insights: the population the value describes. Pairs that share one are flagged. */
   universe: z.string(),
-  measure: z.discriminatedUnion("kind", [AcsMeasure, Census2020Measure, LodesMeasure, PlacesMeasure, ClimdivMeasure, NbiMeasure, FarsMeasure, FeaturesMeasure, HpmsVmtMeasure, CejstMeasure, Ddp287gMeasure]),
+  measure: z.discriminatedUnion("kind", [AcsMeasure, Census2020Measure, LodesMeasure, PlacesMeasure, ClimdivMeasure, NbiMeasure, FarsMeasure, OverdoseMeasure, FeaturesMeasure, HpmsVmtMeasure, CejstMeasure, Ddp287gMeasure]),
   /** Other registry datasets used as inputs to this dataset's model (e.g. PLACES uses county poverty).
    *  Insight pairs with these are flagged: they correlate partly by construction. */
   modelInputs: z.array(z.string()).default([]),
@@ -213,7 +225,7 @@ export const DatasetEntry = z.object({
   /** Earlier (or later) moments the map can step through (D-36), `from`…`to` by `step`. The
    *  headline `vintage` stays the default and is what comparisons and Odd Pairings use.
    *  acs5: 5-year periods named by their last year (2014 = 2010–2014; use step 5 so periods
-   *  don't overlap). fars, climdiv, nbi, lodes: single calendar years. Stops: registry/timeline.ts. */
+   *  don't overlap). fars, climdiv, nbi, lodes: single calendar years. overdose: 12-month periods ending in `endMonth` of each year. Stops: registry/timeline.ts. */
   timeline: z.object({ from: z.number().int(), to: z.number().int(), step: z.number().int().min(1).default(1) })
     .refine((t) => t.to >= t.from, "timeline.to must be ≥ timeline.from").optional(),
   /** Popup links to readable resources about the clicked place or feature (D-35). */

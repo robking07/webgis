@@ -1,5 +1,5 @@
 // npm run ingest -- <step> [dataset or level ids…]
-// Steps: geographies | label-mask | timeline | acs | acs-bg | census2020 | lodes | places | climdiv | nbi | fars | features | vmt | cejst | ddp287g | tiles | publish-tiles | publish-values | publish-geo | publish-data | details | publish-details | tract-geo | export | insights | tracts-out | docs | mn-catalog | all
+// Steps: geographies | label-mask | timeline | acs | acs-bg | census2020 | lodes | places | climdiv | nbi | fars | overdose | features | vmt | cejst | ddp287g | tiles | publish-tiles | publish-values | publish-geo | publish-data | details | publish-details | tract-geo | export | insights | tracts-out | docs | mn-catalog | all
 import { ingestGeographies, tractGeography } from "./geographies.ts";
 import { ingestAcs, ingestAcsTimeline } from "./acs.ts";
 import { ingestCensus2020 } from "./census2020.ts";
@@ -15,6 +15,7 @@ import { writeDataSourcesDoc } from "./docs.ts";
 import { mnCatalog } from "./mn-catalog.ts";
 import { ingestNbi, ingestNbiTimeline } from "./nbi.ts";
 import { ingestFars, ingestFarsTimeline } from "./fars.ts";
+import { ingestOverdose, ingestOverdoseTimeline } from "./overdose.ts";
 import { ingestFeatures } from "./features.ts";
 import { ingestVmt } from "./vmt.ts";
 import { ingestCejst } from "./cejst.ts";
@@ -33,6 +34,7 @@ const steps: Record<string, () => Promise<void> | void> = {
   climdiv: () => ingestClimdiv(only),
   nbi: () => ingestNbi(only),
   fars: () => ingestFars(only),
+  overdose: () => ingestOverdose(only),
   features: () => ingestFeatures(only),
   vmt: () => ingestVmt(only),
   cejst: () => ingestCejst(only),
@@ -42,7 +44,7 @@ const steps: Record<string, () => Promise<void> | void> = {
   // Year control (D-36): earlier periods, written to the web export only. ACS first (FARS
   // uses its 2015–2019 population).
   timeline: async () => { await ingestAcsTimeline(only); await ingestFarsTimeline(only); await ingestClimdivTimeline(only);
-    await ingestNbiTimeline(only); await ingestLodesTimeline(only); exportRegistry(); },
+    await ingestNbiTimeline(only); await ingestLodesTimeline(only); await ingestOverdoseTimeline(only); exportRegistry(); },
   "publish-tiles": () => publishTiles(only),
   // S2: every value file, names, search and tract geography live on R2 beside the tiles, not in
   // the site's folder. `publish-data` uploads all of it (values/, geo/, details/); only changed files go up.
@@ -61,8 +63,8 @@ const steps: Record<string, () => Promise<void> | void> = {
   // D-113: tract values live in static files; moves the database's tract rows out (--drop deletes them).
   "tracts-out": () => tractsOut(rest),
   all: async () => {
-    await ingestGeographies(); await ingestAcs(); await ingestLodes(); await ingestPlaces(); await ingestClimdiv(); await ingestNbi(); await ingestFars();
-    await ingestAcsTimeline(); await ingestFarsTimeline(); await ingestClimdivTimeline(); await ingestNbiTimeline(); await ingestLodesTimeline(); await buildTiles();
+    await ingestGeographies(); await ingestAcs(); await ingestLodes(); await ingestPlaces(); await ingestClimdiv(); await ingestNbi(); await ingestFars(); await ingestOverdose();
+    await ingestAcsTimeline(); await ingestFarsTimeline(); await ingestClimdivTimeline(); await ingestNbiTimeline(); await ingestLodesTimeline(); await ingestOverdoseTimeline(); await buildTiles();
     exportRegistry(); await exportNames(); await exportValues(); await detailsOut(); await computeInsights(); await writeDataSourcesDoc();
   },
 };
