@@ -1863,6 +1863,137 @@
   }
  },
  {
+  "id": "energy_burden",
+  "title": "Home energy burden",
+  "phrase": "home energy burdens",
+  "description": "Share of household income spent on home energy (electricity, gas and other heating fuels): the average yearly energy bill divided by the average household income, for all households.",
+  "category": "Environmental justice",
+  "tags": [
+   "energy burden",
+   "energy affordability",
+   "utility bills",
+   "electricity",
+   "heating",
+   "LEAD",
+   "Justice40",
+   "environmental justice"
+  ],
+  "source": {
+   "name": "U.S. Department of Energy, Low-Income Energy Affordability Data (LEAD) Tool, 2022 Update (with NREL; via OEDI)",
+   "shortName": "DOE LEAD Tool",
+   "url": "https://data.openei.org/submissions/6219",
+   "citation": "Ma, Ookie and Aaron Vimont. Low-Income Energy Affordability Data - LEAD Tool - 2022 Update. U.S. Department of Energy, Office of Energy Efficiency and Renewable Energy, August 1, 2024. Distributed by Open Energy Data Initiative (OEDI). https://doi.org/10.25984/2504170"
+  },
+  "license": "Creative Commons Attribution 4.0 (CC BY 4.0), per the OEDI submission page (\"license\": \"https://creativecommons.org/licenses/by/4.0/\"). Attribution: the citation above.",
+  "updateCadence": "irregular",
+  "vintage": "2018–2022 average",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "percent",
+  "universe": "households (occupied housing units)",
+  "measure": {
+   "kind": "lead",
+   "url": "https://data.openei.org/files/6219/{ST}-2022-LEAD-data.zip",
+   "year": 2022,
+   "grouping": "FPL",
+   "bands": [],
+   "stat": "burden",
+   "minHouseholds": 20
+  },
+  "modelInputs": [
+   "median_household_income"
+  ],
+  "coverageNote": "Modelled, not metered: DOE estimates each area's bills from 2018–2022 American Community Survey answers, scaled to match what utilities reported to EIA for 2022. Bills paid inside the rent are left out of the average. Small or rural areas served by small utilities are the least reliable, and differences between LEAD editions are within its error, so don't read changes over time. Tracts with fewer than 20 households have no value.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "energy-burden",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": false
+  }
+ },
+ {
+  "id": "energy_burden_low_income",
+  "title": "Home energy burden, lower-income households",
+  "phrase": "home energy burdens for lower-income households",
+  "description": "Share of income spent on home energy by households with incomes at or below twice the federal poverty line (about $55,500 for a family of four in 2022): their average yearly energy bill divided by their average income.",
+  "category": "Environmental justice",
+  "tags": [
+   "energy burden",
+   "energy affordability",
+   "low-income",
+   "utility bills",
+   "heating",
+   "LEAD",
+   "Justice40",
+   "environmental justice",
+   "poverty",
+   "federal poverty level"
+  ],
+  "source": {
+   "name": "U.S. Department of Energy, Low-Income Energy Affordability Data (LEAD) Tool, 2022 Update (with NREL; via OEDI)",
+   "shortName": "DOE LEAD Tool",
+   "url": "https://data.openei.org/submissions/6219",
+   "citation": "Ma, Ookie and Aaron Vimont. Low-Income Energy Affordability Data - LEAD Tool - 2022 Update. U.S. Department of Energy, Office of Energy Efficiency and Renewable Energy, August 1, 2024. Distributed by Open Energy Data Initiative (OEDI). https://doi.org/10.25984/2504170"
+  },
+  "license": "Creative Commons Attribution 4.0 (CC BY 4.0), per the OEDI submission page (\"license\": \"https://creativecommons.org/licenses/by/4.0/\"). Attribution: the citation above.",
+  "updateCadence": "irregular",
+  "vintage": "2018–2022 average",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "percent",
+  "universe": "households at or below 200% of the federal poverty level",
+  "measure": {
+   "kind": "lead",
+   "url": "https://data.openei.org/files/6219/{ST}-2022-LEAD-data.zip",
+   "year": 2022,
+   "grouping": "FPL",
+   "bands": [
+    "0-100%",
+    "100-150%",
+    "150-200%"
+   ],
+   "stat": "burden",
+   "minHouseholds": 20
+  },
+  "modelInputs": [
+   "median_household_income"
+  ],
+  "coverageNote": "Modelled, not metered: DOE estimates each area's bills from 2018–2022 American Community Survey answers, scaled to match what utilities reported to EIA for 2022. \"Lower-income\" means income at or below 200% of the federal poverty guideline for the household's size, the same everywhere in the lower 48 (Alaska and Hawaii have higher guidelines). Bills paid inside the rent are left out of the average. The map's color edges at 6% and 10% are the common benchmarks for a \"high\" and a \"severe\" energy burden. Tracts with fewer than 20 lower-income households have no value.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "energy-burden",
+   "federal-poverty-level",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "manual",
+   "classes": 5,
+   "breaks": [
+    6,
+    8,
+    10,
+    15
+   ],
+   "higherIsBetter": false
+  }
+ },
+ {
   "id": "fair_poor_health",
   "title": "Fair or poor health",
   "phrase": "rates of fair or poor health",
@@ -2247,6 +2378,63 @@
    "ramp": "oranges",
    "classification": "quantile",
    "classes": 5
+  }
+ },
+ {
+  "id": "home_energy_cost",
+  "title": "Yearly home energy bill",
+  "phrase": "home energy bills",
+  "description": "Average a household spends in a year on home electricity, gas and other heating fuels such as propane, fuel oil or wood.",
+  "category": "Environmental justice",
+  "tags": [
+   "energy cost",
+   "utility bills",
+   "electricity",
+   "natural gas",
+   "propane",
+   "heating",
+   "LEAD",
+   "energy affordability"
+  ],
+  "source": {
+   "name": "U.S. Department of Energy, Low-Income Energy Affordability Data (LEAD) Tool, 2022 Update (with NREL; via OEDI)",
+   "shortName": "DOE LEAD Tool",
+   "url": "https://data.openei.org/submissions/6219",
+   "citation": "Ma, Ookie and Aaron Vimont. Low-Income Energy Affordability Data - LEAD Tool - 2022 Update. U.S. Department of Energy, Office of Energy Efficiency and Renewable Energy, August 1, 2024. Distributed by Open Energy Data Initiative (OEDI). https://doi.org/10.25984/2504170"
+  },
+  "license": "Creative Commons Attribution 4.0 (CC BY 4.0), per the OEDI submission page (\"license\": \"https://creativecommons.org/licenses/by/4.0/\"). Attribution: the citation above.",
+  "updateCadence": "irregular",
+  "vintage": "2018–2022 average",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "dollars",
+  "universe": "households (occupied housing units)",
+  "measure": {
+   "kind": "lead",
+   "url": "https://data.openei.org/files/6219/{ST}-2022-LEAD-data.zip",
+   "year": 2022,
+   "grouping": "FPL",
+   "bands": [],
+   "stat": "cost",
+   "minHouseholds": 20
+  },
+  "modelInputs": [],
+  "coverageNote": "Modelled, not metered: DOE estimates bills from 2018–2022 American Community Survey answers, scaled to match what utilities reported to EIA for 2022, in 2022 dollars. Each fuel is averaged over the households that pay it directly, so bills paid inside the rent are left out. Does not include gasoline for cars. Tracts with fewer than 20 households have no value.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "energy-burden",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": false
   }
  },
  {
