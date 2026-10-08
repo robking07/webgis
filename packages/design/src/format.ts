@@ -1,6 +1,6 @@
 // Number formatting and legend rules, keyed by the `unit` field of a registry entry.
 
-export type Unit = "dollars" | "percent" | "minutes" | "count" | "per_sq_mi" | "ratio" | "years" | "deg_f" | "inches" | "per_100k" | "vehicles_per_day" | "miles_per_day" | "categories" | "agreements" | "percentile";
+export type Unit = "dollars" | "percent" | "minutes" | "count" | "per_sq_mi" | "ratio" | "years" | "deg_f" | "inches" | "per_100k" | "vehicles_per_day" | "miles_per_day" | "categories" | "agreements" | "percentile" | "ug_m3" | "ppm";
 
 const nf = (o: Intl.NumberFormatOptions) => new Intl.NumberFormat("en-US", o);
 const FORMATTERS: Record<Unit, (v: number) => string> = {
@@ -18,6 +18,8 @@ const FORMATTERS: Record<Unit, (v: number) => string> = {
   agreements: (v) => `${nf({ maximumFractionDigits: 0 }).format(v)} ${Math.round(v) === 1 ? "agreement" : "agreements"}`,
   miles_per_day: (v) => `${nf({ maximumFractionDigits: 1 }).format(v)} mi/day`,
   per_100k: (v) => `${nf({ maximumFractionDigits: 1 }).format(v)} per 100k`,
+  ug_m3: (v) => `${nf({ minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(v)} µg/m³`,
+  ppm: (v) => `${nf({ minimumFractionDigits: 3, maximumFractionDigits: 3 }).format(v)} ppm`,
   percentile: (v) => ordinal(Math.round(v)) + " percentile",
 };
 
@@ -34,6 +36,7 @@ export const UNIT_LABEL: Record<Unit, string> = {
   dollars: "U.S. dollars", percent: "percent", minutes: "minutes", count: "count", per_sq_mi: "per square mile of land",
   ratio: "ratio", years: "years", deg_f: "degrees Fahrenheit", inches: "inches", per_100k: "per 100,000 residents",
   vehicles_per_day: "vehicles per day", miles_per_day: "miles per day", categories: "burden categories exceeded", agreements: "active agreements", percentile: "percentile (national rank)",
+  ug_m3: "micrograms per cubic meter of air", ppm: "parts per million",
 };
 
 export function formatValue(v: number | null | undefined, unit: Unit): string {

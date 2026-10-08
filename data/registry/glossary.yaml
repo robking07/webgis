@@ -214,3 +214,19 @@
   short: "A count of every person and home, not a survey sample, so there's no margin of error."
   long: "The decennial Census counts every resident and housing unit as of April 1, 2020. Its redistricting file (P.L. 94-171) is published down to census blocks, often a single city block. To protect privacy, the Census Bureau adds statistical noise to small-area counts (differential privacy), so a single block's numbers can be off by a few people; block groups and larger areas are reliable."
   source: https://www.census.gov/programs-surveys/decennial-census/about/rdo/summary-files.html
+
+- id: design-value
+  term: >-
+    Design value (air quality)
+  short: >-
+    The number EPA uses to judge whether a county's air meets the federal standard: a three-year average at the county's worst monitor.
+  long: >-
+    Air pollution swings from day to day and year to year, so EPA smooths it. For fine particles (PM2.5) the design value is the yearly average concentration, averaged over three years. For ozone it is the fourth-highest daily peak (8-hour average) each year, averaged over three years. A county's value comes from its single highest valid monitor, so it describes the worst-measured spot, not the average resident's exposure. Counties with no valid monitor have no value, which does not mean the air is clean. Days EPA excludes as exceptional events, such as wildfire smoke, are left out.
+
+- id: naaqs
+  term: >-
+    National Ambient Air Quality Standard (NAAQS)
+  short: >-
+    The federal legal limit for an air pollutant. Design values above it mean the county does not meet the standard.
+  long: >-
+    Under the Clean Air Act, EPA sets a limit for each common pollutant. The annual fine-particle (PM2.5) standard is 9.0 micrograms per cubic meter, tightened from 12.0 in 2024. The 8-hour ozone standard is 0.070 parts per million. A county whose design value is above the limit is violating the standard, which can lead to a formal "nonattainment" designation and cleanup requirements. The tables are informational and are not themselves a regulatory determination.

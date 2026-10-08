@@ -3,7 +3,7 @@
 import { z } from "zod";
 
 const Ramp = z.enum(["blues", "ylgnbu", "oranges", "purples", "viridis", "cividis", "rdbu", "puor", "brbg"]);
-const Unit = z.enum(["dollars", "percent", "minutes", "count", "per_sq_mi", "ratio", "years", "deg_f", "inches", "per_100k", "vehicles_per_day", "miles_per_day", "categories", "agreements", "percentile"]);
+const Unit = z.enum(["dollars", "percent", "minutes", "count", "per_sq_mi", "ratio", "years", "deg_f", "inches", "per_100k", "vehicles_per_day", "miles_per_day", "categories", "agreements", "percentile", "ug_m3", "ppm"]);
 export const GeoLevel = z.enum(["state", "county", "tract", "block_group", "block"]);
 
 /** A feature-layer popup field with optional explainers (D-35). */
@@ -85,6 +85,18 @@ const FarsMeasure = z.object({
   years: z.tuple([z.number().int(), z.number().int()]),
   /** Divide by population (from the population_density dataset × land area) per this many people. */
   perPopulation: z.number().default(100000),
+});
+
+/** EPA air quality design values (public workbooks, no key): the design value of the highest valid
+ *  monitor in each county, from the county-status sheet. Counties with no valid monitor are absent. */
+const AirQualityMeasure = z.object({
+  kind: z.literal("airquality"),
+  /** The pollutant's design-value workbook (.xlsx) on epa.gov. */
+  url: z.url(),
+  /** County-status sheet name inside the workbook. */
+  sheet: z.string(),
+  /** Design-value period as printed in the column header, e.g. "2023-2025". */
+  period: z.string(),
 });
 
 /** Deportation Data Project 287(g) agreements (CC0): active agreements counted by the
@@ -200,7 +212,7 @@ export const DatasetEntry = z.object({
   unit: Unit,
   /** For insights: the population the value describes. Pairs that share one are flagged. */
   universe: z.string(),
-  measure: z.discriminatedUnion("kind", [AcsMeasure, Census2020Measure, LodesMeasure, PlacesMeasure, ClimdivMeasure, NbiMeasure, FarsMeasure, FeaturesMeasure, HpmsVmtMeasure, CejstMeasure, Ddp287gMeasure]),
+  measure: z.discriminatedUnion("kind", [AcsMeasure, Census2020Measure, LodesMeasure, PlacesMeasure, ClimdivMeasure, NbiMeasure, FarsMeasure, AirQualityMeasure, FeaturesMeasure, HpmsVmtMeasure, CejstMeasure, Ddp287gMeasure]),
   /** Other registry datasets used as inputs to this dataset's model (e.g. PLACES uses county poverty).
    *  Insight pairs with these are flagged: they correlate partly by construction. */
   modelInputs: z.array(z.string()).default([]),
