@@ -26,6 +26,8 @@ The schema is `data/registry/schema.ts` (zod). The file name must equal `id`. Co
 | Lines/points from their own geometry (HPMS, GTFS, crash or bridge points, MN Commons) | `features` (`source.url/file/path/layerPattern`, `where`, `valueField`, `fields`, `rank`, `zooms`; manual `symbology.breaks`) | `aadt.yaml` | `features.ts` (GDAL + tippecanoe; then `publish-tiles`) |
 | Something new | add a schema in `schema.ts` + a script in `data/ingest/src/` + a step in `run.ts` | | |
 
+A new `measure.kind` touches five places. Miss one and it fails quietly: `schema.ts` (the measure and the `discriminatedUnion` list), `run.ts` (the step, plus `all` and `timeline` if it has years), `insights.ts` `vars()` (a missing case falls through to `FARS:FATALS`, so every pair looks like it shares variables), `registry/describe.ts` (method text; the build fails without it), and `registry/timeline.ts` if it has a year control. A new `unit` also needs `packages/design/src/format.ts` (formatter, `UNIT_LABEL`, a test). Recent examples: PR #134 (overdose), #138 (air quality), #139 (FEMA NRI), #142 (DOE LEAD).
+
 Fields that matter beyond the obvious:
 - `universe`: the population the value describes. Pairs with the same denominator universe are flagged in insights.
 - `modelInputs`: other dataset ids used to *model* this one (PLACES uses county poverty). Pairs with them are flagged as "by construction".
@@ -37,6 +39,10 @@ Fields that matter beyond the obvious:
 Then: `npm run registry:validate`.
 
 ## 3. Load, export, refresh
+
+**Before any load that ends in `publish-data`:** this checkout's `data/tiles/` must be complete. Run `ls data/tiles/values/tracts | wc -l` (3,222 expected), and check `geo/` and `details/` exist. Tract values are stored per county (`values/tracts/<county>.json`, every dataset in one file), so a checkout without them writes files holding only what it just loaded. `publish-data` now refuses to upload a tract file that drops live datasets (#143); `ALLOW_TRACT_DROP=1` is for deliberately removing a dataset only.
+
+**Several data PRs at once:** merge their branches into one local worktree (detached, never pushed), resolve the overlaps there, and load everything in one run with Robbie's keys. Then merge the PRs one at a time, and finish with a PR holding the generated `periods.json`, `insights.json` and `docs/data-sources.md` from that run (wave 1, #133).
 
 ```bash
 npm run ingest -- <acs|lodes|places|climdiv|nbi|fars|features> <id>   # writes public.datasets + public.dataset_values
@@ -51,4 +57,4 @@ Read the ingest log: row counts, nulls, and "geoids not in geographies (dropped)
 
 ## 4. Ship
 
-Work in a worktree on branch `data/<dataset-id>` from the latest `origin/main` (see `docs/branching.md`); never commit to `main`. Run `npm run build` locally (it runs the design check) and the other checks in `docs/handbook.md`. Commit the regenerated `apps/web/src/generated/*.json` (registry, periods, names, insights), because the Vercel build can't reach the database. The value files are not in git: run `npm run ingest -- publish-data` **before** the PR merges, so the deployed registry never names a dataset whose files aren't on R2 yet (workers without R2 keys say so in their report and the lead runs it). For a feature layer, run `npm run ingest -- publish-tiles` first so its PMTiles are on R2. Open a draft PR with "Closes #N" right after the first commit. The lead merges it with `bash scripts/merge-pr.sh <n>`, and merging deploys production (D-23). Don't deploy by hand.
+Work in a worktree on branch `data/<dataset-id>` from the latest `origin/main` (see `docs/branching.md`); never commit to `main`. Run `npm run build` locally (it runs the design check) and the other checks in `docs/handbook.md`. Commit the regenerated `apps/web/src/generated/*.json` (registry, periods, names, insights), because the Vercel build can't reach the database. `export` rebuilds `periods.json` from the stop files on disk, so diff it against `main` and never commit one that drops existing stops. Without the database, `exportRegistry()` alone regenerates `registry.json` and `glossary.json`; restore `periods.json` from git afterwards. The value files are not in git: run `npm run ingest -- publish-data` **before** the PR merges, so the deployed registry never names a dataset whose files aren't on R2 yet (workers without R2 keys say so in their report and the lead runs it). For a feature layer, run `npm run ingest -- publish-tiles` first so its PMTiles are on R2. Open a draft PR with "Closes #N" right after the first commit. The lead merges it with `bash scripts/merge-pr.sh <n>`, and merging deploys production (D-23). Don't deploy by hand.

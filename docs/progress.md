@@ -8,14 +8,16 @@ rows into one summary line. Roadmap: `docs/roadmap.md`. Rules: `docs/handbook.md
 - **Phase 0 gate: passed with conditions** (review lead, 2026-10-05). Conditions: Robbie's Sentry/Cloudflare setup (#76); fix drifted skills (#89) before any data-engineer task.
 - **Phase 1 order (lead, after review):** S1 static click details + unit-test runner → S2 data files to R2 → 1.3 + 1.1 → 1.2 → 1.6, 1.8, 1.7. S1 and 1.1 touch the same files, so they run in sequence.
 - **Data pause: ended 2026-10-06.** S2 (#110) merged: the map's data files now live on R2 (`tiles.mapwich.org`), not in `apps/web/public/data`. Data refreshes are `npm run ingest -- publish-data` (Robbie runs uploads; keys are his, #107), not a code deploy.
+- **Data expansion (#133), 2026-10-08:** waves 1 and 2 are live: 68 new maps (60 → 128 datasets) from CDC PLACES, ACS, NOAA, CDC overdose, EPA air quality, FEMA NRI and DOE LEAD. Wave 3 is next (CDC SVI, PLACES tracts, Drought Monitor, USDA food access, BLS LAUS, FCC broadband). File each as its own issue first.
+- **Incident, 2026-10-08 (fixed):** a load from an incomplete `data/tiles` wiped live tract details for existing datasets for about 9 h. Restored the same day; #143 guards `publish-data`. Until #146 is done, the complete local `data/tiles` is in `.claude/worktrees/trial-merge`.
+- **Waiting on Robbie (2026-10-08):** #145 delete the keys copy in trial-merge; #146 make the main checkout's `data/tiles` complete; #147 check El Paso's PM2.5 jump.
 - **Waiting on Robbie (2026-10-07):**
-  - **1.3 reliability warnings, PR #122:** all CI green (the hatching bug CI caught is fixed). Needs (a) his answer on heavy hatching. 230 of 329 Hennepin tracts grade unreliable for `pct_poverty`. Lead recommends keeping the standard ACS cut-offs and adding a legend line that small-area rates are often noisy. Also (b) his look at the preview or screenshots, and his OK on the 5 user-facing strings (listed in the PR). The PR is behind main: merge `origin/main` in before `scripts/merge-pr.sh 122`.
   - **1.6 disclosures page, PR #126:** all CI green. Robbie edits the wording (preview: webgis-git-ui-disclosures-king-llc.vercel.app/disclosures). Defaults taken: footer link "How it's built", footer only, drop the "Draft wording" badge at merge.
   - **1.2 change-over-time maps (#127):** filed, queued. It starts after #122 merges (same files: MapLegend, map page). Two questions for Robbie are on the issue (how change is measured; whether to show changes within the margin of error as "no clear change"). M, Opus / medium.
   - #76 (Sentry, uptime email, R2 spend alert) is still open.
 - **After those:** 1.7 map polish (needs Robbie measuring on a real phone first), then the Phase 1 gate. The gate needs compare places (1.1, #117), which is parked until Robbie reopens it, so raise it before the gate.
 - **Open worktrees:** `agent-adb8949…` = #122 and `agent-a38ac5e…` = #126. Remove each after its merge. `agent-adb896…` (preventable-harm mockup, PR #113 closed) and `ui-skills` (`chore/ui-skills`, no PR) are stale; ask before deleting.
-- **Dependabot:** eslint 10 (#66) and TypeScript 7 (#69) fail CI; @types/node 26 (#67) and marked 18 (#70) are untouched. Alert #1 (`braces`) has no patched version.
+- **Dependabot:** #66, #67, #69, #70 merged 2026-10-08. TypeScript 7 and eslint 10 broke the build; #135 fixed it. eslint 10 now prints about 1,125 warnings from bundled `public/maplibre/*.mjs` (0 errors). Alert #1 (`braces`) still has no patched version.
 - **Cloud credits (Robbie, 2026-10-06):** about $99 set aside for heavy lifts; about 450k worker tokens used on 2026-10-07. Spend the rest on 1.2, then 1.1 when reopened.
 - **Worker environment:** Chromium can't run in the agent sandbox (no libnspr4), so e2e and screenshots happen only in CI on a *ready* PR. Mark worker PRs ready once the build passes, so the click-through tests act as the first browser check.
 - **Progress rows:** the lead adds Finished rows and Lessons at merge time from the worker's report (workers no longer edit this file; it conflicted on almost every merge).
@@ -45,6 +47,16 @@ rows into one summary line. Roadmap: `docs/roadmap.md`. Rules: `docs/handbook.md
 | S2 data files to R2 | #96, #106 | #110 | M / ~275k | not recorded | n/a | Opus / medium | 2026-10-06 |
 | Dependency updates (Actions + minor/patch) | — | #124 | lead inline | ~15k | n/a | Opus / medium (lead) | 2026-10-07 |
 | 1.8 Specials pipeline: brief, numbers check, parser tests | #125 | #128 | S / ~100k | 88k | 0.88x | Sonnet / medium | 2026-10-07 |
+| Fix main build after TS 7 / eslint 10 | — | #135 | lead inline | ~15k | n/a | Opus (session) | 2026-10-08 |
+| Data: CDC PLACES, 32 county maps | #114 | #136 | S, inline | ~40k | n/a | Opus (session) | 2026-10-08 |
+| Data: ACS, 17 maps | #133 | #137 | S, inline | ~50k | n/a | Opus (session) | 2026-10-08 |
+| Data: NOAA degree days + July lows | #133 | #140 | S, inline | ~25k | n/a | Opus (session) | 2026-10-08 |
+| Data: overdose deaths | #41 | #134 | S–M / ~150k | 62k | 0.41x | Sonnet / medium | 2026-10-08 |
+| Data: EPA PM2.5 + ozone | #6 | #138 | S–M / ~150k | 72k | 0.48x | Sonnet / medium | 2026-10-08 |
+| Data: FEMA National Risk Index, 10 maps | #40 | #139 | M / ~275k | 165k | 0.60x | Opus / medium | 2026-10-08 |
+| Data: DOE LEAD energy burden (incl. 200% FPL redo) | #42 | #142 | M / ~250k | 227k | 0.91x | Opus / medium | 2026-10-08 |
+| Guard: tract uploads can't drop live datasets | #133 | #143 | lead inline | ~20k | n/a | Opus (session) | 2026-10-08 |
+| Data wave 1 generated files | #133 | #144 | lead inline | ~10k | n/a | Opus (session) | 2026-10-08 |
 
 ## Lessons
 
@@ -87,6 +99,11 @@ One line per task. These feed the project kit (#53).
 - **1.8:** the Specials loader reads every `.md` in `content/specials/`, so non-piece docs there (BRIEF.md) must be excluded in the loader. Node's type-stripping rejects constructor parameter properties in scripts run directly.
 - **1.3 (in review):** MapView's map `error` listener swallowed a layer validation error (`["==", 1, 0]` is read as a legacy filter), so the hatch layer silently never existed; unit tests passed because they replaced the filter. Validate every new layer with the style spec exactly as created. The CI click-through was the first real browser check and caught it.
 - **1.6 (in review):** `.vercelignore` drops `.claude`, so build-time reads of agent files got nothing on Vercel; type generated JSON explicitly so an empty list still compiles.
+- **Data wave 1 (#133):** registry-only batches (an existing ingest, YAML from a small generator script) are the cheapest data there is: 52 maps for about 115k tokens inline. New-kind sources cost 60–230k each with a worker.
+- **Data wave 1, incident:** tract values live in per-county files that hold every dataset, so a load from a checkout without them uploads files that erase the rest. Check `data/tiles` is complete before any `publish-data`; #143 now refuses such uploads. `export` also rebuilds `periods.json` from local files, so diff it before committing.
+- **Data wave 1, merging:** seven PRs that each append to `schema.ts`, `run.ts` and `format.ts` conflict with each other every time. Merge them once in a combined local worktree to load, then merge the PRs one at a time with a scripted "merge main, regenerate registry, push" step.
+- **Census API:** it now requires a key (`missing_key.html` redirect). To check which tables exist at block-group level without one, sample the table-based summary files on www2.census.gov for `1500000US` rows.
+- **Shell:** `pkill -f <pattern>` matches the calling shell's own command line and kills it (exit 144). Use the PID from `pgrep`.
 
 ## How to update
 

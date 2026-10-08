@@ -24,8 +24,10 @@ Full build spec: `docs/SPEC.md`. Project rules: `CLAUDE.md`.
   `details/`) comes from the tiles base: `/tiles/...` locally, the `apps/web/public/tiles` link to
   `data/tiles/`, which is git-ignored and empty in a fresh clone (D-210). Either set
   `NEXT_PUBLIC_TILES_BASE_URL=https://tiles.mapwich.org` (R2 only allows the production origins
-  and `http://localhost:3000`), or fill `data/tiles/` (ingest, or copy the main checkout's) to work
-  offline. Nothing goes in `apps/web/public/data` any more.
+  and `http://localhost:3000`), or fill `data/tiles/` to work
+  offline. **Any ingest that uploads must start from a complete `data/tiles/`** (with `values/tracts/`,
+  `geo/`, `details/` and the timeline stops); a partial folder plus `publish-data` wiped live tract data
+  on 2026-10-08. The main checkout's copy is incomplete until #146 is done. Nothing goes in `apps/web/public/data` any more.
 - Ingest also needs `ogr2ogr` (GDAL) and `tippecanoe` on the PATH (the `build-tiles` skill says how they
   are installed on Robbie's machine). Check with `ogr2ogr --version` and `tippecanoe --version`.
 - Read `docs/progress.md` first (where things stand, lessons from earlier tasks). For a fast
