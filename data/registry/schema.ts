@@ -3,7 +3,7 @@
 import { z } from "zod";
 
 const Ramp = z.enum(["blues", "ylgnbu", "oranges", "purples", "viridis", "cividis", "rdbu", "puor", "brbg"]);
-const Unit = z.enum(["dollars", "percent", "minutes", "count", "per_sq_mi", "ratio", "years", "deg_f", "inches", "per_100k", "vehicles_per_day", "miles_per_day", "categories", "agreements", "percentile", "ug_m3", "ppm"]);
+const Unit = z.enum(["dollars", "percent", "minutes", "count", "per_sq_mi", "ratio", "years", "deg_f", "inches", "per_100k", "vehicles_per_day", "miles_per_day", "categories", "agreements", "percentile", "ug_m3", "ppm", "degree_days"]);
 export const GeoLevel = z.enum(["state", "county", "tract", "block_group", "block"]);
 
 /** A feature-layer popup field with optional explainers (D-35). */
@@ -59,8 +59,9 @@ const PlacesMeasure = z.object({
 });
 const ClimdivMeasure = z.object({
   kind: z.literal("climdiv"),
-  /** NOAA nClimDiv county element file: tmpc (mean temp), tmax, tmin, pcpn (precipitation). */
-  element: z.enum(["tmpc", "tmax", "tmin", "pcpn"]),
+  /** NOAA nClimDiv county element file: tmpc (mean temp), tmax, tmin, pcpn (precipitation),
+   *  hddc / cddc (heating / cooling degree days). */
+  element: z.enum(["tmpc", "tmax", "tmin", "pcpn", "hddc", "cddc"]),
   /** Months (1–12) included. */
   months: z.array(z.number().int().min(1).max(12)).min(1),
   /** mean of the monthly values, or their sum (precipitation totals). */
@@ -97,6 +98,18 @@ const AirQualityMeasure = z.object({
   sheet: z.string(),
   /** Design-value period as printed in the column header, e.g. "2023-2025". */
   period: z.string(),
+});
+
+/** CDC/NCHS VSRR provisional county drug overdose deaths: 12-month-ending counts from data.cdc.gov,
+ *  suppressed (1-9 deaths) counties get no value; rate = deaths ÷ ACS population × `perPopulation`. */
+const OverdoseMeasure = z.object({
+  kind: z.literal("overdose"),
+  /** Socrata dataset id on data.cdc.gov. */
+  socrata: z.string(),
+  /** The headline period is the 12 months ending in this month of this year. */
+  endYear: z.number().int(),
+  endMonth: z.number().int().min(1).max(12).default(12),
+  perPopulation: z.number().default(100000),
 });
 
 /** Deportation Data Project 287(g) agreements (CC0): active agreements counted by the
@@ -194,7 +207,7 @@ export const DatasetEntry = z.object({
   phrase: z.string().optional(),
   /** One sentence shown in the browser and popups. */
   description: z.string(),
-  category: z.enum(["Income & poverty", "Commuting", "Vehicles", "Housing", "Population", "Jobs", "Transportation", "Environment", "Environmental justice", "Immigration enforcement", "Health", "Climate", "Race & ethnicity", "Education"]),
+  category: z.enum(["Income & poverty", "Commuting", "Vehicles", "Housing", "Population", "Jobs", "Transportation", "Environment", "Environmental justice", "Immigration enforcement", "Health", "Climate", "Race & ethnicity", "Education", "Internet access"]),
   tags: z.array(z.string()).default([]),
   source: z.object({
     name: z.string(),
@@ -212,7 +225,7 @@ export const DatasetEntry = z.object({
   unit: Unit,
   /** For insights: the population the value describes. Pairs that share one are flagged. */
   universe: z.string(),
-  measure: z.discriminatedUnion("kind", [AcsMeasure, Census2020Measure, LodesMeasure, PlacesMeasure, ClimdivMeasure, NbiMeasure, FarsMeasure, AirQualityMeasure, FeaturesMeasure, HpmsVmtMeasure, CejstMeasure, Ddp287gMeasure]),
+  measure: z.discriminatedUnion("kind", [AcsMeasure, Census2020Measure, LodesMeasure, PlacesMeasure, ClimdivMeasure, NbiMeasure, FarsMeasure, AirQualityMeasure, FeaturesMeasure, HpmsVmtMeasure, CejstMeasure, Ddp287gMeasure, OverdoseMeasure]),
   /** Other registry datasets used as inputs to this dataset's model (e.g. PLACES uses county poverty).
    *  Insight pairs with these are flagged: they correlate partly by construction. */
   modelInputs: z.array(z.string()).default([]),
@@ -225,7 +238,7 @@ export const DatasetEntry = z.object({
   /** Earlier (or later) moments the map can step through (D-36), `from`…`to` by `step`. The
    *  headline `vintage` stays the default and is what comparisons and Odd Pairings use.
    *  acs5: 5-year periods named by their last year (2014 = 2010–2014; use step 5 so periods
-   *  don't overlap). fars, climdiv, nbi, lodes: single calendar years. Stops: registry/timeline.ts. */
+   *  don't overlap). fars, climdiv, nbi, lodes: single calendar years. overdose: 12-month periods ending in `endMonth` of each year. Stops: registry/timeline.ts. */
   timeline: z.object({ from: z.number().int(), to: z.number().int(), step: z.number().int().min(1).default(1) })
     .refine((t) => t.to >= t.from, "timeline.to must be ≥ timeline.from").optional(),
   /** Popup links to readable resources about the clicked place or feature (D-35). */

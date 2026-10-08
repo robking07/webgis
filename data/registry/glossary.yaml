@@ -71,6 +71,15 @@
   long: >-
     A single year's weather is noisy. Climate normals average three decades so they describe the expected climate rather than any one year. They are updated every ten years.
 
+- id: degree-days
+  term: >-
+    Degree days
+  short: >-
+    A measure of how much heating or cooling a place needs: each day adds how many degrees its average temperature sits below (heating) or above (cooling) 65°F.
+  long: >-
+    A day averaging 50°F adds 15 heating degree days; a day averaging 80°F adds 15 cooling degree days. Summed over a year, they track energy demand for heating and air conditioning far better than average temperature does, which is why utilities and building engineers use them.
+  source: https://www.eia.gov/energyexplained/units-and-calculators/degree-days.php
+
 - id: bridge-condition
   term: >-
     Bridge condition (good, fair, poor)

@@ -1,0 +1,22 @@
+id: pct_child_poverty
+title: "Children in poverty"
+phrase: child poverty rates
+description: "Share of children under 18 living in households below the federal poverty line."
+category: Income & poverty
+tags: [poverty, children, income]
+source:
+  name: U.S. Census Bureau, American Community Survey 5-Year Estimates
+  shortName: Census Bureau
+  url: https://www.census.gov/programs-surveys/acs
+  citation: "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+license: Public domain (U.S. Government work, 17 U.S.C. § 105)
+updateCadence: annual
+vintage: "2020–2024 (5-year estimate)"
+geographyLevels: [state, county, tract]
+unit: percent
+universe: children under 18 for whom poverty status is determined
+coverageNote: "The Census Bureau doesn't publish this measure below census tracts, so there's no block-group view."
+terms: [acs-5-year, margin-of-error, census-geography, quantile-classes]
+measure: { kind: acs5, numerator: [B17020_003, B17020_004, B17020_005], denominator: [B17020_003, B17020_004, B17020_005, B17020_011, B17020_012, B17020_013], scale: 100 }
+timeline: { from: 2014, to: 2024, step: 5 }
+symbology: { ramp: oranges, classification: quantile, classes: 5, higherIsBetter: false }

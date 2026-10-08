@@ -1,6 +1,6 @@
 // Number formatting and legend rules, keyed by the `unit` field of a registry entry.
 
-export type Unit = "dollars" | "percent" | "minutes" | "count" | "per_sq_mi" | "ratio" | "years" | "deg_f" | "inches" | "per_100k" | "vehicles_per_day" | "miles_per_day" | "categories" | "agreements" | "percentile" | "ug_m3" | "ppm";
+export type Unit = "dollars" | "percent" | "minutes" | "count" | "per_sq_mi" | "ratio" | "years" | "deg_f" | "inches" | "per_100k" | "vehicles_per_day" | "miles_per_day" | "categories" | "agreements" | "percentile" | "ug_m3" | "ppm" | "degree_days";
 
 const nf = (o: Intl.NumberFormatOptions) => new Intl.NumberFormat("en-US", o);
 const FORMATTERS: Record<Unit, (v: number) => string> = {
@@ -21,6 +21,7 @@ const FORMATTERS: Record<Unit, (v: number) => string> = {
   ug_m3: (v) => `${nf({ minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(v)} µg/m³`,
   ppm: (v) => `${nf({ minimumFractionDigits: 3, maximumFractionDigits: 3 }).format(v)} ppm`,
   percentile: (v) => ordinal(Math.round(v)) + " percentile",
+  degree_days: (v) => `${nf({ maximumFractionDigits: 0 }).format(v)} degree days`,
 };
 
 function ordinal(n: number) {
@@ -37,6 +38,7 @@ export const UNIT_LABEL: Record<Unit, string> = {
   ratio: "ratio", years: "years", deg_f: "degrees Fahrenheit", inches: "inches", per_100k: "per 100,000 residents",
   vehicles_per_day: "vehicles per day", miles_per_day: "miles per day", categories: "burden categories exceeded", agreements: "active agreements", percentile: "percentile (national rank)",
   ug_m3: "micrograms per cubic meter of air", ppm: "parts per million",
+  degree_days: "degree days (°F)",
 };
 
 export function formatValue(v: number | null | undefined, unit: Unit): string {
