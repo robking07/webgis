@@ -3445,6 +3445,60 @@
   }
  },
  {
+  "id": "ozone_8hr",
+  "title": "Ground-level ozone (smog)",
+  "phrase": "smog (ozone) levels",
+  "description": "Ground-level ozone, 2023–2025 design value: the fourth-highest daily peak (8-hour average) each year, averaged over three years, at each county's highest valid monitor. The federal standard is 0.070 parts per million.",
+  "category": "Environment",
+  "tags": [
+   "air quality",
+   "pollution",
+   "ozone",
+   "smog",
+   "health"
+  ],
+  "source": {
+   "name": "U.S. EPA, Office of Air Quality Planning and Standards, Ozone Design Values (2015 8-hour NAAQS)",
+   "shortName": "EPA",
+   "url": "https://www.epa.gov/air-trends/air-quality-design-values",
+   "citation": "U.S. Environmental Protection Agency, Air Quality Design Values: ozone design values 2023–2025 (final, updated June 8, 2026), Table 4 County Status"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105; EPA permits free non-commercial and educational use)",
+  "updateCadence": "annual",
+  "vintage": "2023–2025 design value",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "ppm",
+  "universe": "air at each county's highest-reading valid monitor (not people or area)",
+  "measure": {
+   "kind": "airquality",
+   "url": "https://www.epa.gov/system/files/documents/2026-06/o3_designvalues_2023_2025_final_06_08_26.xlsx",
+   "sheet": "Table4. County Status",
+   "period": "2023-2025"
+  },
+  "modelInputs": [],
+  "coverageNote": "Only the 688 counties with a valid ozone monitor have a value; every other county is blank, which means no monitor, not clean air. A county's value is its single highest monitor. EPA excludes exceptional-event days such as wildfire smoke. The federal 8-hour standard is 0.070 ppm; the top map classes mark counties above it (values are reported to three decimals, so 0.071 or higher exceeds it). EPA's tables are informational, not a regulatory determination.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "design-value",
+   "naaqs"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "manual",
+   "classes": 5,
+   "breaks": [
+    0.055,
+    0.065,
+    0.071,
+    0.085
+   ]
+  }
+ },
+ {
   "id": "pct_age_65_plus",
   "title": "Population 65 and older",
   "phrase": "shares of people 65 and older",
@@ -6459,6 +6513,61 @@
    "ramp": "purples",
    "classification": "quantile",
    "classes": 5
+  }
+ },
+ {
+  "id": "pm25_annual",
+  "title": "Fine particle pollution (PM2.5)",
+  "phrase": "fine particle pollution levels",
+  "description": "Yearly average concentration of fine particles (PM2.5) in the air, averaged over 2023–2025, at each county's highest valid monitor. The federal standard is 9.0 micrograms per cubic meter.",
+  "category": "Environment",
+  "tags": [
+   "air quality",
+   "pollution",
+   "PM2.5",
+   "particulates",
+   "smoke",
+   "health"
+  ],
+  "source": {
+   "name": "U.S. EPA, Office of Air Quality Planning and Standards, PM2.5 Design Values (annual, 2024 NAAQS)",
+   "shortName": "EPA",
+   "url": "https://www.epa.gov/air-trends/air-quality-design-values",
+   "citation": "U.S. Environmental Protection Agency, Air Quality Design Values: PM2.5 design values 2023–2025 (final, updated June 12, 2026), Table 4a County Status Annual"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105; EPA permits free non-commercial and educational use)",
+  "updateCadence": "annual",
+  "vintage": "2023–2025 design value",
+  "geographyLevels": [
+   "county"
+  ],
+  "unit": "ug_m3",
+  "universe": "air at each county's highest-reading valid monitor (not people or area)",
+  "measure": {
+   "kind": "airquality",
+   "url": "https://www.epa.gov/system/files/documents/2026-06/pm25_designvalues_2023_2025_final_06_12_26.xlsx",
+   "sheet": "Table4a. County Status Annual",
+   "period": "2023-2025"
+  },
+  "modelInputs": [],
+  "coverageNote": "Only the 549 counties with a valid PM2.5 monitor have a value; every other county is blank, which means no monitor, not clean air. A county's value is its single highest monitor, so one near-road or border monitor can set it. EPA excludes wildfire-smoke days it concurs are exceptional events, so smoke-heavy years read lower than residents experienced. The federal annual standard is 9.0 µg/m³ (tightened from 12.0 in 2024); the top map class marks counties above it. EPA's tables are informational, not a regulatory determination.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "design-value",
+   "naaqs"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "manual",
+   "classes": 5,
+   "breaks": [
+    6,
+    8,
+    9.1,
+    12
+   ]
   }
  },
  {

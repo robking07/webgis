@@ -66,6 +66,7 @@ function vars(e: DatasetEntry): string[] {
   if (m.kind === "hpms_vmt") return ["HPMS:VMT"];
   if (m.kind === "cejst") return ["CEJST:SN_C"];
   if (m.kind === "ddp_287g") return ["DDP:287G"];
+  if (m.kind === "airquality") return [`AIRQUALITY:${m.sheet.includes("County Status Annual") ? "PM25" : "O3"}`];
   if (m.kind === "overdose") return ["VSRR:OVERDOSE"];
   return ["FARS:FATALS"];
 }

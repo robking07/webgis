@@ -1,5 +1,5 @@
 // npm run ingest -- <step> [dataset or level ids…]
-// Steps: geographies | label-mask | timeline | acs | acs-bg | census2020 | lodes | places | climdiv | nbi | fars | overdose | features | vmt | cejst | ddp287g | tiles | publish-tiles | publish-values | publish-geo | publish-data | details | publish-details | tract-geo | export | insights | tracts-out | docs | mn-catalog | all
+// Steps: geographies | label-mask | timeline | acs | acs-bg | census2020 | lodes | places | climdiv | nbi | fars | overdose | airquality | features | vmt | cejst | ddp287g | tiles | publish-tiles | publish-values | publish-geo | publish-data | details | publish-details | tract-geo | export | insights | tracts-out | docs | mn-catalog | all
 import { ingestGeographies, tractGeography } from "./geographies.ts";
 import { ingestAcs, ingestAcsTimeline } from "./acs.ts";
 import { ingestCensus2020 } from "./census2020.ts";
@@ -15,6 +15,7 @@ import { writeDataSourcesDoc } from "./docs.ts";
 import { mnCatalog } from "./mn-catalog.ts";
 import { ingestNbi, ingestNbiTimeline } from "./nbi.ts";
 import { ingestFars, ingestFarsTimeline } from "./fars.ts";
+import { ingestAirQuality } from "./airquality.ts";
 import { ingestOverdose, ingestOverdoseTimeline } from "./overdose.ts";
 import { ingestFeatures } from "./features.ts";
 import { ingestVmt } from "./vmt.ts";
@@ -34,6 +35,7 @@ const steps: Record<string, () => Promise<void> | void> = {
   climdiv: () => ingestClimdiv(only),
   nbi: () => ingestNbi(only),
   fars: () => ingestFars(only),
+  airquality: () => ingestAirQuality(only),
   overdose: () => ingestOverdose(only),
   features: () => ingestFeatures(only),
   vmt: () => ingestVmt(only),
@@ -63,7 +65,7 @@ const steps: Record<string, () => Promise<void> | void> = {
   // D-113: tract values live in static files; moves the database's tract rows out (--drop deletes them).
   "tracts-out": () => tractsOut(rest),
   all: async () => {
-    await ingestGeographies(); await ingestAcs(); await ingestLodes(); await ingestPlaces(); await ingestClimdiv(); await ingestNbi(); await ingestFars(); await ingestOverdose();
+    await ingestGeographies(); await ingestAcs(); await ingestLodes(); await ingestPlaces(); await ingestClimdiv(); await ingestNbi(); await ingestFars(); await ingestOverdose(); await ingestAirQuality();
     await ingestAcsTimeline(); await ingestFarsTimeline(); await ingestClimdivTimeline(); await ingestNbiTimeline(); await ingestLodesTimeline(); await ingestOverdoseTimeline(); await buildTiles();
     exportRegistry(); await exportNames(); await exportValues(); await detailsOut(); await computeInsights(); await writeDataSourcesDoc();
   },
