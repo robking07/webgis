@@ -1,0 +1,22 @@
+id: housing_insecurity
+title: "Housing insecurity"
+phrase: housing insecurity rates
+description: "Share of adults who, in the past 12 months, were not able to pay their mortgage, rent or utility bills. Age-adjusted prevalence; model-based small-area estimate."
+category: Health
+tags: [housing insecurity, rent, social needs, health]
+source:
+  name: CDC PLACES (Local Data for Better Health), 2025 release
+  shortName: CDC PLACES
+  url: https://www.cdc.gov/places/
+  citation: "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+license: Public domain (U.S. Government work; data.cdc.gov license field "Public Domain")
+updateCadence: annual
+geographyLevels: [county]
+unit: percent
+universe: adults 18+ (model-based estimate)
+modelInputs: [pct_poverty, median_household_income]  # PLACES models county poverty; median income is near-collinear with it
+coverageNote: "Only states that asked CDC's optional social-needs questions in their 2023 survey have data on housing insecurity. No data for Colorado, Florida, Kentucky, Oregon, Pennsylvania, South Dakota, Tennessee, Texas, Vermont, Washington or Wyoming."
+vintage: "2023 data"
+terms: [model-based-estimate, age-adjusted, margin-of-error, quantile-classes]
+measure: { kind: places, socrata: swc5-untb, measureId: HOUSINSECU, valueType: AgeAdjPrv }
+symbology: { ramp: cividis, classification: quantile, classes: 5 }
