@@ -1624,6 +1624,66 @@
   }
  },
  {
+  "id": "median_owner_costs_mortgage",
+  "title": "Monthly costs for homeowners with a mortgage",
+  "phrase": "homeowner costs",
+  "description": "Middle monthly housing cost for homeowners with a mortgage: mortgage, taxes, insurance, utilities and fees, in 2024 dollars.",
+  "category": "Housing",
+  "tags": [
+   "housing costs",
+   "mortgage",
+   "homeowners"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract",
+   "block_group"
+  ],
+  "unit": "dollars",
+  "universe": "owner-occupied housing units with a mortgage",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B25088_002"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "coverageNote": "Block groups with too few mortgaged homes show no median.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [],
+  "terms": [
+   "median",
+   "inflation-adjusted",
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
   "id": "obesity",
   "title": "Obesity",
   "phrase": "obesity rates",
@@ -2059,6 +2119,62 @@
   }
  },
  {
+  "id": "pct_broadband",
+  "title": "Households with broadband",
+  "phrase": "broadband rates",
+  "description": "Share of households with a broadband internet subscription of any type (cable, fiber, DSL, satellite or cellular data plan).",
+  "category": "Internet access",
+  "tags": [
+   "internet",
+   "broadband",
+   "digital divide"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract",
+   "block_group"
+  ],
+  "unit": "percent",
+  "universe": "households",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B28002_004"
+   ],
+   "denominator": [
+    "B28002_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": true
+  }
+ },
+ {
   "id": "pct_carpool",
   "title": "Carpool to work",
   "description": "Share of workers 16 and over who usually share a ride to work in a car, truck or van.",
@@ -2098,6 +2214,139 @@
    "perSqMi": false
   },
   "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_child_poverty",
+  "title": "Children in poverty",
+  "phrase": "child poverty rates",
+  "description": "Share of children under 18 living in households below the federal poverty line.",
+  "category": "Income & poverty",
+  "tags": [
+   "poverty",
+   "children",
+   "income"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "percent",
+  "universe": "children under 18 for whom poverty status is determined",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B17020_003",
+    "B17020_004",
+    "B17020_005"
+   ],
+   "denominator": [
+    "B17020_003",
+    "B17020_004",
+    "B17020_005",
+    "B17020_011",
+    "B17020_012",
+    "B17020_013"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "coverageNote": "The Census Bureau doesn't publish this measure below census tracts, so there's no block-group view.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": false
+  }
+ },
+ {
+  "id": "pct_disability",
+  "title": "People with a disability",
+  "phrase": "disability rates",
+  "description": "Share of residents with at least one disability: hearing, vision, thinking, walking, self-care or living independently.",
+  "category": "Health",
+  "tags": [
+   "disability",
+   "health",
+   "accessibility"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "unit": "percent",
+  "universe": "civilian noninstitutionalized population",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "C18108_003",
+    "C18108_004",
+    "C18108_007",
+    "C18108_008",
+    "C18108_011",
+    "C18108_012"
+   ],
+   "denominator": [
+    "C18108_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "coverageNote": "The Census Bureau doesn't publish this measure below census tracts, so there's no block-group view.",
   "facets": [],
   "excludeFromInsights": false,
   "timeline": {
@@ -2299,6 +2548,70 @@
   }
  },
  {
+  "id": "pct_graduate_degree",
+  "title": "Graduate or professional degree",
+  "phrase": "shares of graduate degrees",
+  "description": "Share of adults 25 and older with a master's, professional or doctoral degree.",
+  "category": "Education",
+  "tags": [
+   "education",
+   "graduate degree",
+   "master's",
+   "doctorate"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract",
+   "block_group"
+  ],
+  "unit": "percent",
+  "universe": "population 25+",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B15003_023",
+    "B15003_024",
+    "B15003_025"
+   ],
+   "denominator": [
+    "B15003_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": true
+  }
+ },
+ {
   "id": "pct_hispanic_latino",
   "title": "Hispanic or Latino residents",
   "description": "Share of residents who are Hispanic or Latino, of any race.",
@@ -2356,6 +2669,64 @@
   ],
   "symbology": {
    "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_homes_built_before_1960",
+  "title": "Homes built before 1960",
+  "phrase": "shares of older homes",
+  "description": "Share of housing units built before 1960. Older homes are more likely to have lead paint and need repairs.",
+  "category": "Housing",
+  "tags": [
+   "housing age",
+   "lead paint",
+   "older homes",
+   "housing"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract",
+   "block_group"
+  ],
+  "unit": "percent",
+  "universe": "housing units",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B25034_009",
+    "B25034_010",
+    "B25034_011"
+   ],
+   "denominator": [
+    "B25034_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
    "classification": "quantile",
    "classes": 5
   }
@@ -2552,6 +2923,128 @@
   }
  },
  {
+  "id": "pct_mobile_homes",
+  "title": "Mobile homes",
+  "phrase": "shares of mobile homes",
+  "description": "Share of housing units that are mobile homes.",
+  "category": "Housing",
+  "tags": [
+   "mobile homes",
+   "manufactured housing",
+   "housing"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract",
+   "block_group"
+  ],
+  "unit": "percent",
+  "universe": "housing units",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B25024_010"
+   ],
+   "denominator": [
+    "B25024_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_moved_last_year",
+  "title": "Moved in the past year",
+  "phrase": "shares of recent movers",
+  "description": "Share of residents (age 1 and older) who lived in a different home a year earlier, in the U.S. or abroad.",
+  "category": "Population",
+  "tags": [
+   "mobility",
+   "moving",
+   "migration",
+   "turnover"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract",
+   "block_group"
+  ],
+  "unit": "percent",
+  "universe": "population 1 year and over",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B07201_003",
+    "B07201_014"
+   ],
+   "denominator": [
+    "B07201_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
   "id": "pct_multiracial_nh",
   "title": "Two or more races (non-Hispanic)",
   "description": "Share of residents who report two or more races and are not Hispanic or Latino.",
@@ -2677,6 +3170,62 @@
   }
  },
  {
+  "id": "pct_no_computer",
+  "title": "Households without a computer",
+  "phrase": "shares of households without a computer",
+  "description": "Share of households with no computer of any kind, including smartphones and tablets.",
+  "category": "Internet access",
+  "tags": [
+   "computer",
+   "digital divide",
+   "internet"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract",
+   "block_group"
+  ],
+  "unit": "percent",
+  "universe": "households",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B28001_011"
+   ],
+   "denominator": [
+    "B28001_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": false
+  }
+ },
+ {
   "id": "pct_no_hs_diploma",
   "title": "No high school diploma",
   "description": "Share of adults 25 and over who finished neither high school nor an equivalent such as the GED.",
@@ -2748,6 +3297,214 @@
    "ramp": "oranges",
    "classification": "quantile",
    "classes": 5
+  }
+ },
+ {
+  "id": "pct_no_internet",
+  "title": "Households without internet",
+  "phrase": "shares of households offline",
+  "description": "Share of households with no internet access at home, by any kind of subscription or free service.",
+  "category": "Internet access",
+  "tags": [
+   "internet",
+   "digital divide",
+   "broadband"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract",
+   "block_group"
+  ],
+  "unit": "percent",
+  "universe": "households",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B28002_013"
+   ],
+   "denominator": [
+    "B28002_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": false
+  }
+ },
+ {
+  "id": "pct_overcrowded",
+  "title": "Overcrowded homes",
+  "phrase": "overcrowding rates",
+  "description": "Share of occupied homes with more than one person per room (not counting bathrooms, halls or porches).",
+  "category": "Housing",
+  "tags": [
+   "overcrowding",
+   "housing",
+   "affordability"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract",
+   "block_group"
+  ],
+  "unit": "percent",
+  "universe": "occupied housing units",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B25014_005",
+    "B25014_006",
+    "B25014_007",
+    "B25014_011",
+    "B25014_012",
+    "B25014_013"
+   ],
+   "denominator": [
+    "B25014_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": false
+  }
+ },
+ {
+  "id": "pct_owner_cost_burdened",
+  "title": "Cost-burdened homeowners",
+  "phrase": "homeowner cost-burden rates",
+  "description": "Share of homeowners who spend 30% or more of household income on housing costs (mortgage, taxes, insurance, utilities).",
+  "category": "Housing",
+  "tags": [
+   "housing costs",
+   "affordability",
+   "homeowners",
+   "mortgage"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract",
+   "block_group"
+  ],
+  "unit": "percent",
+  "universe": "owner-occupied housing units (cost burden computed)",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B25091_008",
+    "B25091_009",
+    "B25091_010",
+    "B25091_011",
+    "B25091_019",
+    "B25091_020",
+    "B25091_021",
+    "B25091_022"
+   ],
+   "denominator": [
+    "B25091_003",
+    "B25091_004",
+    "B25091_005",
+    "B25091_006",
+    "B25091_007",
+    "B25091_008",
+    "B25091_009",
+    "B25091_010",
+    "B25091_011",
+    "B25091_014",
+    "B25091_015",
+    "B25091_016",
+    "B25091_017",
+    "B25091_018",
+    "B25091_019",
+    "B25091_020",
+    "B25091_021",
+    "B25091_022"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": false
   }
  },
  {
@@ -2889,6 +3646,67 @@
   }
  },
  {
+  "id": "pct_public_assistance",
+  "title": "Households on cash public assistance",
+  "phrase": "shares of households on public assistance",
+  "description": "Share of households that received cash public assistance (such as TANF or general assistance) in the past 12 months. Does not include SNAP food benefits.",
+  "category": "Income & poverty",
+  "tags": [
+   "public assistance",
+   "welfare",
+   "TANF",
+   "income"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract",
+   "block_group"
+  ],
+  "unit": "percent",
+  "universe": "households",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B19057_002"
+   ],
+   "denominator": [
+    "B19057_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
   "id": "pct_rent_burdened",
   "title": "Renters paying 30%+ of income on rent",
   "description": "Share of renter households that spend 30 percent or more of their income on rent and utilities.",
@@ -3022,6 +3840,130 @@
   }
  },
  {
+  "id": "pct_seniors_living_alone",
+  "title": "Seniors living alone",
+  "phrase": "shares of seniors living alone",
+  "description": "Share of households that are one person aged 65 or older living alone.",
+  "category": "Population",
+  "tags": [
+   "seniors",
+   "aging",
+   "living alone",
+   "isolation"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract",
+   "block_group"
+  ],
+  "unit": "percent",
+  "universe": "households",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B11007_003"
+   ],
+   "denominator": [
+    "B11007_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_single_parent_families",
+  "title": "Single-parent families",
+  "phrase": "shares of single-parent families",
+  "description": "Share of families raising their own children under 18 that are headed by a single parent.",
+  "category": "Population",
+  "tags": [
+   "families",
+   "children",
+   "single parents"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract",
+   "block_group"
+  ],
+  "unit": "percent",
+  "universe": "families with own children under 18",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B11003_010",
+    "B11003_016"
+   ],
+   "denominator": [
+    "B11003_003",
+    "B11003_010",
+    "B11003_016"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
   "id": "pct_snap_households",
   "title": "Households getting SNAP (food stamps)",
   "description": "Share of households that received SNAP food assistance at some point in the past 12 months.",
@@ -3145,6 +4087,73 @@
   }
  },
  {
+  "id": "pct_under_18",
+  "title": "Children (under 18)",
+  "phrase": "shares of children",
+  "description": "Share of residents younger than 18.",
+  "category": "Population",
+  "tags": [
+   "children",
+   "age",
+   "youth"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract",
+   "block_group"
+  ],
+  "unit": "percent",
+  "universe": "total population",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B01001_003",
+    "B01001_004",
+    "B01001_005",
+    "B01001_006",
+    "B01001_027",
+    "B01001_028",
+    "B01001_029",
+    "B01001_030"
+   ],
+   "denominator": [
+    "B01001_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
   "id": "pct_uninsured",
   "title": "No health insurance",
   "description": "Share of residents with no health insurance coverage of any kind.",
@@ -3205,6 +4214,65 @@
    "classification": "quantile",
    "classes": 5,
    "higherIsBetter": false
+  }
+ },
+ {
+  "id": "pct_veterans",
+  "title": "Veterans",
+  "phrase": "shares of veterans",
+  "description": "Share of adults 18 and older who served on active duty in the U.S. armed forces.",
+  "category": "Population",
+  "tags": [
+   "veterans",
+   "military"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, American Community Survey 5-Year Estimates",
+   "shortName": "Census Bureau",
+   "url": "https://www.census.gov/programs-surveys/acs",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract",
+   "block_group"
+  ],
+  "unit": "percent",
+  "universe": "civilian population 18+",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B21001_002"
+   ],
+   "denominator": [
+    "B21001_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2014,
+   "to": 2024,
+   "step": 5
+  },
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
   }
  },
  {
