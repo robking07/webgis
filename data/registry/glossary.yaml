@@ -218,13 +218,13 @@
 - id: fema-nri
   term: FEMA National Risk Index
   short: "FEMA's nationwide model of how much 18 natural hazards are expected to cost each county and census tract, and how well people there could cope."
-  long: "The National Risk Index combines decades of hazard records (floods, wildfires, hurricanes, tornadoes, heat waves, earthquakes and more) with what is in harm's way (buildings, people and crops) to estimate average yearly losses. It then adjusts for social vulnerability and community resilience to produce an overall risk score. FEMA built it for broad national comparisons and planning; it is a model, not a record of what happened, and it isn't a substitute for a local risk assessment. Version 1.20 (December 2025) isn't comparable with version 1.19 (March 2023). This product uses the Federal Emergency Management Agency’s National Risk Index dataset API or downloadable datasets but is not endorsed by FEMA."
+  long: "The National Risk Index combines decades of hazard records (floods, wildfires, hurricanes, tornadoes, heat waves, earthquakes and more) with what is in harm's way (buildings, people and crops) to estimate average yearly losses, then adjusts for social vulnerability and community resilience to give an overall risk score. It's a model built for national comparisons and planning, not a record of what happened or a substitute for a local risk assessment. Version 1.20 (December 2025) isn't comparable with version 1.19."
   source: https://www.fema.gov/flood-maps/products-tools/national-risk-index
 
 - id: expected-annual-loss
   term: Expected annual loss
   short: "The average yearly cost of a hazard over the long run: a bad year costs far more and most years far less."
-  long: "FEMA multiplies how often a hazard strikes, how much is exposed to it, and how much of that is typically lost, then adds up building damage, crop losses and deaths and injuries. Deaths and injuries are turned into dollars using the federal value of a statistical life (about $13.7 million per death in this version), so in places with few buildings, or for hazards like heat that mostly harm people, they can make up most of the total. Mapwich divides FEMA's figure by the number of residents so large and small places can be compared."
+  long: "FEMA multiplies how often a hazard strikes, what's exposed to it and how much of that is typically lost, adding up damage to buildings and crops plus deaths and injuries. Deaths and injuries are turned into dollars using the federal value of a statistical life (about $13.7 million per death in this version), so in places with few buildings, or for hazards like heat that mostly harm people, they can make up most of the total. Mapwich divides FEMA's figure by the number of residents so large and small places can be compared."
   source: https://www.fema.gov/flood-maps/products-tools/national-risk-index
 
 - id: nri-risk-score
