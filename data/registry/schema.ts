@@ -182,7 +182,7 @@ export const DatasetEntry = z.object({
   phrase: z.string().optional(),
   /** One sentence shown in the browser and popups. */
   description: z.string(),
-  category: z.enum(["Income & poverty", "Commuting", "Vehicles", "Housing", "Population", "Jobs", "Transportation", "Environment", "Environmental justice", "Immigration enforcement", "Health", "Climate", "Race & ethnicity", "Education"]),
+  category: z.enum(["Income & poverty", "Commuting", "Vehicles", "Housing", "Population", "Jobs", "Transportation", "Environment", "Environmental justice", "Immigration enforcement", "Health", "Climate", "Race & ethnicity", "Education", "Internet access"]),
   tags: z.array(z.string()).default([]),
   source: z.object({
     name: z.string(),

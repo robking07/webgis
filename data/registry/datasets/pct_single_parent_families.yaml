@@ -1,0 +1,21 @@
+id: pct_single_parent_families
+title: "Single-parent families"
+phrase: shares of single-parent families
+description: "Share of families raising their own children under 18 that are headed by a single parent."
+category: Population
+tags: [families, children, single parents]
+source:
+  name: U.S. Census Bureau, American Community Survey 5-Year Estimates
+  shortName: Census Bureau
+  url: https://www.census.gov/programs-surveys/acs
+  citation: "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+license: Public domain (U.S. Government work, 17 U.S.C. § 105)
+updateCadence: annual
+vintage: "2020–2024 (5-year estimate)"
+geographyLevels: [state, county, tract, block_group]
+unit: percent
+universe: families with own children under 18
+terms: [acs-5-year, margin-of-error, census-geography, quantile-classes]
+measure: { kind: acs5, numerator: [B11003_010, B11003_016], denominator: [B11003_003, B11003_010, B11003_016], scale: 100 }
+timeline: { from: 2014, to: 2024, step: 5 }
+symbology: { ramp: purples, classification: quantile, classes: 5 }

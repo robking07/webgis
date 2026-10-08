@@ -1,0 +1,22 @@
+id: pct_disability
+title: "People with a disability"
+phrase: disability rates
+description: "Share of residents with at least one disability: hearing, vision, thinking, walking, self-care or living independently."
+category: Health
+tags: [disability, health, accessibility]
+source:
+  name: U.S. Census Bureau, American Community Survey 5-Year Estimates
+  shortName: Census Bureau
+  url: https://www.census.gov/programs-surveys/acs
+  citation: "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates"
+license: Public domain (U.S. Government work, 17 U.S.C. § 105)
+updateCadence: annual
+vintage: "2020–2024 (5-year estimate)"
+geographyLevels: [state, county, tract]
+unit: percent
+universe: civilian noninstitutionalized population
+coverageNote: "The Census Bureau doesn't publish this measure below census tracts, so there's no block-group view."
+terms: [acs-5-year, margin-of-error, census-geography, quantile-classes]
+measure: { kind: acs5, numerator: [C18108_003, C18108_004, C18108_007, C18108_008, C18108_011, C18108_012], denominator: [C18108_001], scale: 100 }
+timeline: { from: 2014, to: 2024, step: 5 }
+symbology: { ramp: purples, classification: quantile, classes: 5 }
