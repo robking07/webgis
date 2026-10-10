@@ -809,6 +809,14 @@ test("laptop reliability hatching: toggle on an ACS tract map, none on census co
   expect((await p2.locator("[data-hatch-toggle]").count()) === 0, "toggle shown for 2020 Census counts");
 });
 
+test("laptop earlier year at block-group zoom: no boundary file that doesn't exist is requested (#159)", async (o) => {
+  const { page } = await o("laptop", "/map?d=pct_poverty&t=2019&at=-93.2650,44.9778,13");
+  const bad = page.requests.filter((u) => /\/(block_group|block)-\d{4}\.pmtiles|\/(tract|county)-2014\.pmtiles/.test(u));
+  expect(bad.length === 0, `requested missing files: ${bad.join(", ")}`);
+  const drawn = await page.evaluate(() => window.__wgMap.queryRenderedFeatures({ layers: ["tract-fill"] }).length);
+  expect(drawn > 0, "no tracts drawn on the 2019 map at zoom 13");
+});
+
 // Feature files (one per feature; this file keeps the shared harness).
 (await import("./compare.tests.mjs")).default({ test, expect, wait, immerse, tapLonLat, live, HENNEPIN, dbCalls });
 
