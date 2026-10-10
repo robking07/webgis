@@ -1,4 +1,4 @@
-// Compare places side by side (roadmap 1.1, issue #117, D-<PR+100>): the route, the level rules and
+// Compare places side by side (roadmap 1.1, issue #117, D-258): the route, the level rules and
 // the test of a difference. Pure functions, so the page, the picker and the unit tests share them.
 import { formatValue, isGradable, type GeoLevel, type Unit } from "@webgis/design";
 import { searchPlaces, type PlaceHit, type PlaceRow } from "./search";

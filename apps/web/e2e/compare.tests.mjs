@@ -26,7 +26,6 @@ export default function compareTests({ test, expect, wait, immerse, tapLonLat, H
       await verdict.waitFor({ timeout: 20000 });
       expect((await verdict.innerText()).trim() === said, `after reload: "${await verdict.innerText()}" vs "${said}"`);
       expect(!dbCalls(page).length, `database calls: ${dbCalls(page).join(", ")}`);
-      await wait(100);
     });
   }
 
