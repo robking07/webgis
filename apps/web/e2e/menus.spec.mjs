@@ -578,8 +578,9 @@ for (const vp of ["phone", "laptop"]) {
     const want = "Change, 2015–2019 → 2020–2024, percentage points";
     const legend = await legendText();
     expect(legend.includes(want) && /Down .* pts/.test(legend) && /Up .* pts/.test(legend), `legend: ${legend.slice(0, 200)}`);
-    // The link restores the view.
-    await page.reload();
+    // The link restores the view: open the URL the app wrote. (The app rewrites the URL without
+    // `debug`, so a plain reload would never expose window.__wgMap; add it back.)
+    await page.goto(`${page.url()}&debug=1`, { waitUntil: "load" });
     await mapIdle(page);
     const again = await legendText();
     expect(again.includes(want), `after reload: ${again.slice(0, 200)}`);
