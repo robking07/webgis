@@ -66,3 +66,7 @@ settings that work for the feature they are using."
 `apps/web/src/lib/compare.ts` (+ test), `app/compare/[a]/[b]/page.tsx`, `components/compare/ComparePlaces.tsx`,
 `components/compare/CompareWith.tsx` (one line in `DetailPanel.tsx`), `e2e/compare.tests.mjs`
 (registered from `menus.spec.mjs`, the first feature split out of it).
+
+## Amendments
+
+- 2026-10-10, Robbie: the headline names the higher place; a second tract tap opens compare at once; the button stays "Compare with…". The on-screen wording still needs his OK.
