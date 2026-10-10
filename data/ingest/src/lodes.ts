@@ -9,6 +9,7 @@ import { cached, db, log, splitCsv, STATES } from "./util.ts";
 import type { DatasetEntry } from "@webgis/registry";
 import { timelineStops } from "@webgis/registry/timeline";
 import { landArea, registerDataset, writeStopValues, writeValues, type Level, type Value } from "./values.ts";
+import { sumStates, usArea, writeCounts, writeUs, type Counts } from "./counts.ts";
 
 const BASE = "https://lehd.ces.census.gov/data/lodes/LODES8";
 const LEN: Record<Level, number> = { state: 2, county: 5, tract: 11 };
@@ -113,7 +114,19 @@ export async function ingestLodes(only?: string[]) {
   for (const e of entries) {
     await registerDataset(pool, e);
     const t = await totals(pool, e, +e.vintage, true);
-    for (const level of e.geographyLevels) await writeValues(pool, e.id, level, await levelValues(pool, e, t, level));
+    let us: Counts | null = null;
+    for (const level of e.geographyLevels) {
+      const values = await levelValues(pool, e, t, level);
+      await writeValues(pool, e.id, level, values);
+      // The counts behind the map (#156): jobs, for the same places (no data where a state is missing).
+      const jobs = new Map([...values].map(([g, v]): [string, Counts] => [g, [t.missingStates.has(g.slice(0, 2)) ? null : t.jobs[level].get(g) ?? 0, null, null, null]]));
+      writeCounts(level, new Map([[e.id, jobs]]));
+      if (level === "state") us = sumStates(jobs);
+    }
+    if (us) {
+      const perSqMi = e.measure.kind === "lodes" && e.measure.perSqMi;
+      writeUs(e.id, null, { value: us[0] == null ? null : perSqMi ? us[0] / usArea(await landArea(pool, "state")) : us[0], moe: null }, us);
+    }
   }
   await pool.end();
 }
