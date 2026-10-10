@@ -13,6 +13,7 @@ import { BottomSheet, useIsPhone } from "../BottomSheet";
 import { PlaceDataList, type Detail } from "../PlaceDataList";
 import { LearnMore } from "./LearnMore";
 import { loadPlaceIndex, placeByGeoid, type PlaceHit } from "@/lib/search";
+import { CompareWith } from "../compare/CompareWith";
 
 const dedupe = (links: Link[]) => links.filter((l, i) => links.findIndex((m) => m.url === l.url) === i);
 
@@ -179,6 +180,8 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
             })}
           </div>
         )}
+      <CompareWith geoid={info.geoid} level={info.level} name={info.name} dataset={primary} otherPeriod={!!period}
+        aValue={!rows ? null : staticOnly ? undefined : rows[primary.id]?.value ?? null} />
       <LearnMore links={links} />
       {phone && rows && !staticOnly && <p className="mt-2 text-center text-xs text-muted-foreground group-data-[snap=full]:hidden">Swipe up for all {Object.keys(rows).length} datasets here</p>}
     </>
