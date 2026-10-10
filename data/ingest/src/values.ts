@@ -8,7 +8,15 @@ import { log, TILES, upsert } from "./util.ts";
 export type Level = "state" | "county" | "tract" | "block_group" | "block";
 export interface Value { value: number | null; moe: number | null }
 
+/** `ingest counts` (#156, #154): run the ingests for their new files only (margins, counts, U.S.
+ *  rows). The database and every existing value file are left exactly as they are: the writers
+ *  below return without writing, and the database is only read (land areas, geographies). */
+let countsOnly = false;
+export const setCountsOnly = () => { countsOnly = true; };
+export const isCountsOnly = () => countsOnly;
+
 export async function registerDataset(pool: pg.Pool, e: DatasetEntry) {
+  if (countsOnly) return;
   await pool.query(
     `insert into public.datasets (id, title, category, unit, vintage, entry, loaded_at)
      values ($1,$2,$3,$4,$5,$6, now())
@@ -21,6 +29,7 @@ export async function registerDataset(pool: pg.Pool, e: DatasetEntry) {
 /** Replace all values of one dataset at one level. Rows whose geoid isn't in `geographies` are dropped and counted.
  *  Tract values skip the database (D-113): see writeTractValues. */
 export async function writeValues(pool: pg.Pool, datasetId: string, level: Level, values: Map<string, Value>) {
+  if (countsOnly) return { rows: 0, unmatched: 0 };
   const known = new Set((await pool.query<{ geoid: string }>("select geoid from public.geographies where level = $1", [level])).rows.map((r) => r.geoid));
   const rows: unknown[][] = [];
   let unmatched = 0;
@@ -45,6 +54,7 @@ export async function writeValues(pool: pg.Pool, datasetId: string, level: Level
  *  with MOEs in a side file the details panel loads on demand. They're ~5 MB each, so they
  *  live with the tiles (data/tiles/values, R2 via `publish-values`), not in git. */
 export function writeStatic(datasetId: string, level: Level, values: Map<string, Value>) {
+  if (countsOnly) return;
   const dir = join(TILES, "values", datasetId);
   mkdirSync(dir, { recursive: true });
   const round = (v: number) => Number(v.toPrecision(4));
@@ -67,6 +77,7 @@ export async function landArea(pool: pg.Pool, level: Level): Promise<Map<string,
 /** Timeline values (D-36) skip the database, which holds only the default period (free-tier
  *  budget), and go straight to the web export: values/<dataset>/<stop>/<level>.json. */
 export function writeStopValues(datasetId: string, stop: string, level: Level, values: Map<string, Value>) {
+  if (countsOnly) return;
   const out: Record<string, number> = {};
   for (const [g, v] of values) if (v.value != null && Number.isFinite(v.value)) out[g] = Number(v.value.toPrecision(4));
   const dir = join(TILES, "values", datasetId, stop);

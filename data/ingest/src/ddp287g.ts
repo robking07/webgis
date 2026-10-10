@@ -4,6 +4,7 @@ import { spawnSync } from "node:child_process";
 import { loadRegistry } from "@webgis/registry/load";
 import { cached, db, log, splitCsv } from "./util.ts";
 import { landArea, registerDataset, writeValues, type Level, type Value } from "./values.ts";
+import { sumStates, writeCounts, writeUs, type Counts } from "./counts.ts";
 
 export async function ingestDdp287g(only?: string[]) {
   const entries = loadRegistry().filter((e) => e.measure.kind === "ddp_287g" && (!only || only.includes(e.id)));
@@ -36,6 +37,10 @@ export async function ingestDdp287g(only?: string[]) {
       const unmatched = [...counts[level].keys()].filter((g) => !known.has(g));
       if (unmatched.length) log(e.id, `${level}: ${unmatched.length} codes not in current geography (${unmatched.slice(0, 5).join(", ")})`);
       await writeValues(pool, e.id, level, values);
+      // The map's value is itself a count (#156): same numbers, in the shape every count file has.
+      const rows = new Map([...values].map(([g, v]): [string, Counts] => [g, [v.value, null, null, null]]));
+      writeCounts(level, new Map([[e.id, rows]]));
+      if (level === "state") { const us = sumStates(rows); writeUs(e.id, null, { value: us[0], moe: null }, us); }
     }
   }
   await pool.end();

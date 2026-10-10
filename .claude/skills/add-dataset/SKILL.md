@@ -36,7 +36,7 @@ Fields that matter beyond the obvious:
 - `geographyLevels`: only the levels the source really has. The UI handles county-only data.
 - `phrase`: a plain noun phrase that reads after "higher" / "lower" in Odd Pairings captions ("work-from-home rates", "household incomes", "shares of renters"). Needed for any county dataset that can be paired; otherwise captions fall back to the title, which often reads badly ("higher no leisure-time exercise").
 
-Then: `npm run registry:validate`.
+Then add the map to `data/registry/relations.yaml` (`maps:` with its `group` = category; `counts: { of, per }` if the ingest publishes counts for it; any parts set or links, D-257), and run `npm run registry:validate`; it fails until the map is listed.
 
 ## 3. Load, export, refresh
 

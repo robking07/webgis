@@ -12,7 +12,8 @@ import { createGunzip } from "node:zlib";
 import { join } from "node:path";
 import { loadRegistry } from "@webgis/registry/load";
 import { cached, CACHE, db, log, splitCsv, STATES, TILES } from "./util.ts";
-import { registerDataset, writeStatic, writeValues, type Level, type Value } from "./values.ts";
+import { isCountsOnly, registerDataset, writeStatic, writeValues, type Level, type Value } from "./values.ts";
+import { writeCounts, writeUs, type Counts } from "./counts.ts";
 
 const API = "https://api.census.gov/data/2020/dec/pl";
 const SQMI = 2_589_988.11;
@@ -56,6 +57,13 @@ function derive(t: Totals): Record<"pop_density" | "hu_density" | "pct_vacant", 
     hu_density: sqmi > 0 ? t.hu / sqmi : null,
     pct_vacant: t.hu > 0 ? (100 * t.vac) / t.hu : null,
   };
+}
+
+/** The counts behind each 2020 Census map (#156): full counts, so no margins. */
+export function census2020Counts(value: "pop_density" | "hu_density" | "pct_vacant", t: Totals): Counts {
+  if (value === "pop_density") return [t.pop, null, null, null];
+  if (value === "hu_density") return [t.hu, null, null, null];
+  return [t.vac, null, t.hu, null];
 }
 
 export async function ingestCensus2020(only?: string[]) {
@@ -111,17 +119,26 @@ export async function ingestCensus2020(only?: string[]) {
   await new Promise((r) => out.end(r));
 
   const pool = db();
+  const counts = new Map((Object.keys(LEN) as Array<keyof typeof totals>).map((l) => [l, new Map<string, Map<string, Counts>>()]));
   for (const e of entries) {
     if (e.measure.kind !== "census2020") continue;
+    const kind = e.measure.value;
     await registerDataset(pool, e);
     for (const level of Object.keys(LEN) as Array<keyof typeof totals>) {
       const values = new Map<string, Value>();
-      for (const [g, t] of totals[level]) values.set(g, { value: derive(t)[e.measure.value], moe: null });
+      for (const [g, t] of totals[level]) values.set(g, { value: derive(t)[kind], moe: null });
       if (level === "block_group") writeStatic(e.id, level, values);
       else await writeValues(pool, e.id, level, values);
+      counts.get(level)!.set(e.id, new Map([...totals[level]].map(([g, t]) => [g, census2020Counts(kind, t)])));
     }
+    // U.S. row: the states summed (no Puerto Rico, as in the Census Bureau's U.S. total).
+    const us: Totals = { pop: 0, hu: 0, vac: 0, aland: 0 };
+    for (const [g, t] of totals.state) if (g !== "72") { us.pop += t.pop; us.hu += t.hu; us.vac += t.vac; us.aland += t.aland; }
+    writeUs(e.id, null, { value: derive(us)[kind], moe: null }, census2020Counts(kind, us));
   }
+  for (const [level, series] of counts) writeCounts(level, series);
   await pool.end();
+  if (isCountsOnly()) return; // `ingest counts`: leave the block tiles as they are
 
   // Block tiles carry the values. Blocks are dropped as needed at low zoom (they'd be
   // sub-pixel anyway); tippecanoe adds zooms past 13 if it's still dropping, so the

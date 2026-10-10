@@ -16,6 +16,17 @@ export interface TimelineStop {
   boundaries?: "2019";
 }
 
+/** Levels that have a boundary file for each older vintage on R2 (`county-2019.pmtiles`, ...).
+ *  Other levels (block group, block) exist only for the current boundaries. */
+export const VINTAGE_BOUNDARY_LEVELS: Record<"2019", readonly string[]> = { "2019": ["county", "tract"] };
+
+/** Boundary file name (no extension) for a level under a vintage: the dated file where one
+ *  exists, otherwise the current one. Never names a file that isn't there. */
+export function boundaryFile(level: string, boundaries?: string | null): string {
+  const has = boundaries ? VINTAGE_BOUNDARY_LEVELS[boundaries as "2019"]?.includes(level) : false;
+  return has ? `${level}-${boundaries}` : level;
+}
+
 /** Years of a dataset's `timeline`, oldest first. */
 export function timelineYears(e: DatasetEntry): number[] {
   if (!e.timeline) return [];

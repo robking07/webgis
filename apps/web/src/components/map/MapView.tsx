@@ -8,6 +8,7 @@ import { basemapStyle, choroplethFill, hatchImage, hatchLayerId, HATCH_IMAGE, HA
 import type { FeatureLayerSpec } from "@/lib/layers";
 import type { ViewState } from "@/lib/url-state";
 import type { Geometry } from "geojson";
+import { boundaryFile } from "@webgis/registry/timeline";
 
 export interface LevelPaint {
   colors: string[];
@@ -116,7 +117,7 @@ let protocolReady = false;
 
 function tilesUrl(level: GeoLevel, boundaries?: string | null) {
   const base = TILES_BASE.startsWith("http") ? TILES_BASE : `${window.location.origin}${TILES_BASE}`;
-  return `pmtiles://${base}/${level !== "state" && boundaries ? `${level}-${boundaries}` : level}.pmtiles`;
+  return `pmtiles://${base}/${boundaryFile(level, boundaries)}.pmtiles`;
 }
 
 export function MapView({ theme, initialView, paint, onViewChange, onHover, onSelect, onTilesError, ariaLabel, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, onApi, featureFilter, scaleUnit = "imperial", attribution = true, boundaries = null, cooperative = false, hatch = null, onTractCounties, watchCounties = false }: Props) {

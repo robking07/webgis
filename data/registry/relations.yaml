@@ -1,0 +1,414 @@
+# How maps relate to each other (#156; schema and checks: relations.ts). `npm run registry:validate`
+# fails if a registry map is missing here, so every new dataset gets an entry:
+#   maps:   every map, with its topic group (= its registry `category`) and, when the ingest
+#           publishes the counts behind it (relations.ts `countsSpec`), plain names for them:
+#           `of` = the numerator, `per` = the denominator.
+#   parts:  maps whose shares of one total add up to 100%, plus a remainder for what's left.
+#   links:  hand-picked pairs of related maps, each with a short reason a reader would accept.
+
+parts:
+  race_ethnicity:
+    label: Race and ethnicity
+    explainer: Every resident is counted once, in one of these groups. "People of color" is everyone except non-Hispanic White residents, so it overlaps these and isn't one of them.
+    members: [pct_white_nh, pct_hispanic_latino, pct_black_nh, pct_asian_nh, pct_multiracial_nh, pct_aian_nh, pct_nhpi_nh]
+    remainder:
+      id: some_other_race_nh
+      label: Some other race (non-Hispanic)
+      variables: [B03002_008]
+  commute_modes:
+    label: How people get to work
+    explainer: Every worker 16 and older is counted once, by the way they usually got to work in the week before the survey.
+    members: [pct_drive_alone, pct_carpool, pct_work_from_home, pct_transit_commute, pct_walk_commute, pct_bike_commute]
+    remainder:
+      id: other_commute_mode
+      label: Taxi, motorcycle or another way
+      variables: [B08301_016, B08301_017, B08301_020]
+
+links:
+  # Housing costs and income
+  - { maps: [median_gross_rent, median_household_income], why: Rent is paid out of household income. }
+  - { maps: [pct_rent_burdened, median_gross_rent], why: Higher rents push more renters past 30% of income. }
+  - { maps: [pct_rent_burdened, pct_renter_households], why: Rent burden is a share of renter households only. }
+  - { maps: [pct_rent_burdened, median_household_income], why: Rent burden compares rent with income. }
+  - { maps: [median_home_value, median_household_income], why: How far home prices run ahead of incomes. }
+  - { maps: [pct_owner_cost_burdened, median_owner_costs_mortgage], why: Higher monthly costs push more owners past 30% of income. }
+  - { maps: [pct_overcrowded, median_gross_rent], why: Crowding often follows high rents. }
+  # Poverty and help
+  - { maps: [pct_poverty, median_household_income], why: Two views of the same income distribution. }
+  - { maps: [pct_poverty, pct_child_poverty], why: Child poverty is poverty among children only. }
+  - { maps: [pct_poverty, pct_snap_households], why: SNAP eligibility is set by income relative to the poverty line. }
+  - { maps: [pct_poverty, pct_public_assistance], why: Cash assistance goes to households with very low incomes. }
+  - { maps: [pct_poverty, food_insecurity], why: Not being able to afford enough food tracks low income. }
+  - { maps: [pct_poverty, pct_uninsured], why: People with low incomes are less often insured. }
+  - { maps: [pct_poverty, nri_social_vulnerability], why: Poverty is one of the inputs to FEMA's social vulnerability score. }
+  - { maps: [pct_bachelors_plus, median_household_income], why: Education and earnings go together. }
+  - { maps: [pct_no_hs_diploma, pct_poverty], why: Adults without a diploma earn less on average. }
+  - { maps: [pct_single_parent_families, pct_child_poverty], why: Children of single parents are more often poor. }
+  # Work
+  - { maps: [unemployment_rate, labor_force_participation], why: Unemployment is counted only among people in the labor force. }
+  - { maps: [job_density, population_density], why: Where jobs are compared with where people live. }
+  - { maps: [pct_work_outside_county, mean_commute_minutes], why: Working in another county usually means a longer trip. }
+  - { maps: [mean_commute_minutes, pct_long_commute], why: The average and the share of long trips. }
+  - { maps: [pct_long_commute, pct_extreme_commute], why: 90-minute-plus commutes are part of hour-plus commutes. }
+  - { maps: [pct_leave_before_7am, pct_long_commute], why: Long commutes start early. }
+  # Getting around
+  - { maps: [pct_zero_vehicle_households, pct_transit_commute], why: Households without a car rely on transit. }
+  - { maps: [pct_zero_vehicle_households, lack_transportation], why: Two views of not having a way to get around. }
+  - { maps: [traffic_fatalities, vmt_per_capita], why: More driving per person means more exposure to crashes. }
+  - { maps: [aadt, vmt_per_capita], why: Road traffic counts are what driving totals are built from. }
+  # Population
+  - { maps: [population_density, census2020_pop_density], why: The same measure from the survey and from the 2020 count. }
+  - { maps: [census2020_housing_density, census2020_pop_density], why: Homes and residents per square mile from the same count. }
+  - { maps: [pct_age_65_plus, pct_seniors_living_alone], why: More older residents, more seniors living alone. }
+  - { maps: [pct_seniors_living_alone, loneliness], why: Living alone is one driver of loneliness. }
+  - { maps: [pct_foreign_born, pct_limited_english], why: Many households with limited English are immigrant households. }
+  - { maps: [pct_foreign_born, ice_287g_agreements], why: Where immigrants live and where local police work with ICE. }
+  - { maps: [pct_disability, disability_any], why: The same question from the Census survey and CDC's model. }
+  # Internet
+  - { maps: [pct_no_internet, pct_broadband], why: Two sides of home internet access. }
+  - { maps: [pct_no_computer, pct_no_internet], why: Households without a computer often have no internet either. }
+  # Energy and climate
+  - { maps: [energy_burden, home_energy_cost], why: Energy burden is energy cost divided by income. }
+  - { maps: [energy_burden, median_household_income], why: The same bill is a bigger share of a smaller income. }
+  - { maps: [energy_burden, energy_burden_low_income], why: All households and lower-income households only. }
+  - { maps: [home_energy_cost, heating_degree_days], why: Colder places spend more on heating. }
+  - { maps: [home_energy_cost, cooling_degree_days], why: Hotter places spend more on cooling. }
+  - { maps: [home_energy_cost, pct_homes_built_before_1960], why: Older homes are often harder to heat and cool. }
+  - { maps: [nri_heat_wave_loss, july_high], why: Heat-wave losses are highest where summers are hottest. }
+  - { maps: [nri_tornado_loss, pct_mobile_homes], why: Mobile homes are the most exposed to tornadoes. }
+  - { maps: [nri_expected_loss_per_person, nri_risk_score], why: Expected loss is the main part of FEMA's risk score. }
+  - { maps: [cejst_pct_pop_disadvantaged, cejst_disadvantaged_tracts], why: The share of residents and the tracts behind it. }
+  # Health and environment
+  - { maps: [pm25_annual, asthma], why: Fine-particle pollution worsens asthma. }
+  - { maps: [ozone_8hr, asthma], why: Ozone worsens asthma. }
+  - { maps: [pm25_annual, copd], why: Fine-particle pollution worsens lung disease. }
+  - { maps: [overdose_deaths, mental_distress], why: Overdose and mental distress often go together. }
+  - { maps: [pct_uninsured, routine_checkup], why: People without insurance see a doctor less often. }
+
+maps:
+  # Climate
+  annual_precipitation:
+    group: "Climate"
+  cooling_degree_days:
+    group: "Climate"
+  heating_degree_days:
+    group: "Climate"
+  january_low:
+    group: "Climate"
+  july_high:
+    group: "Climate"
+  july_low:
+    group: "Climate"
+  mean_temperature:
+    group: "Climate"
+  # Commuting
+  mean_commute_minutes:
+    group: "Commuting"
+    counts: { of: "minutes spent commuting, all workers combined", per: "workers who commute (not working from home)" }
+  pct_bike_commute:
+    group: "Commuting"
+    counts: { of: "workers who bike to work", per: "workers 16 and older" }
+  pct_carpool:
+    group: "Commuting"
+    counts: { of: "workers who carpool", per: "workers 16 and older" }
+  pct_drive_alone:
+    group: "Commuting"
+    counts: { of: "workers who drive alone", per: "workers 16 and older" }
+  pct_extreme_commute:
+    group: "Commuting"
+    counts: { of: "workers with a 90-minute-plus commute", per: "workers who commute (not working from home)" }
+  pct_leave_before_7am:
+    group: "Commuting"
+    counts: { of: "workers who leave before 7 a.m.", per: "workers who commute (not working from home)" }
+  pct_long_commute:
+    group: "Commuting"
+    counts: { of: "workers with an hour-plus commute", per: "workers who commute (not working from home)" }
+  pct_transit_commute:
+    group: "Commuting"
+    counts: { of: "workers who take public transit", per: "workers 16 and older" }
+  pct_walk_commute:
+    group: "Commuting"
+    counts: { of: "workers who walk to work", per: "workers 16 and older" }
+  pct_work_from_home:
+    group: "Commuting"
+    counts: { of: "workers who work from home", per: "workers 16 and older" }
+  pct_work_outside_county:
+    group: "Commuting"
+    counts: { of: "workers who work outside their home county", per: "workers 16 and older" }
+  # Education
+  pct_bachelors_plus:
+    group: "Education"
+    counts: { of: "adults with a bachelor's degree or higher", per: "adults 25 and older" }
+  pct_graduate_degree:
+    group: "Education"
+    counts: { of: "adults with a graduate or professional degree", per: "adults 25 and older" }
+  pct_no_hs_diploma:
+    group: "Education"
+    counts: { of: "adults without a high school diploma", per: "adults 25 and older" }
+  # Environment
+  nri_coastal_flood_loss:
+    group: "Environment"
+  nri_community_resilience:
+    group: "Environment"
+  nri_expected_loss_per_person:
+    group: "Environment"
+  nri_heat_wave_loss:
+    group: "Environment"
+  nri_hurricane_loss:
+    group: "Environment"
+  nri_inland_flood_loss:
+    group: "Environment"
+  nri_risk_score:
+    group: "Environment"
+  nri_social_vulnerability:
+    group: "Environment"
+  nri_tornado_loss:
+    group: "Environment"
+  nri_wildfire_loss:
+    group: "Environment"
+  ozone_8hr:
+    group: "Environment"
+  pm25_annual:
+    group: "Environment"
+  # Environmental justice
+  cejst_disadvantaged_tracts:
+    group: "Environmental justice"
+  cejst_pct_pop_disadvantaged:
+    group: "Environmental justice"
+  energy_burden:
+    group: "Environmental justice"
+  energy_burden_low_income:
+    group: "Environmental justice"
+  home_energy_cost:
+    group: "Environmental justice"
+  # Health
+  all_teeth_lost:
+    group: "Health"
+  arthritis:
+    group: "Health"
+  asthma:
+    group: "Health"
+  binge_drinking:
+    group: "Health"
+  blood_pressure_medication:
+    group: "Health"
+  cancer:
+    group: "Health"
+  cholesterol_screening:
+    group: "Health"
+  colorectal_screening:
+    group: "Health"
+  copd:
+    group: "Health"
+  dentist_visit:
+    group: "Health"
+  depression:
+    group: "Health"
+  diabetes:
+    group: "Health"
+  disability_any:
+    group: "Health"
+  disability_cognition:
+    group: "Health"
+  disability_hearing:
+    group: "Health"
+  disability_independent_living:
+    group: "Health"
+  disability_mobility:
+    group: "Health"
+  disability_selfcare:
+    group: "Health"
+  disability_vision:
+    group: "Health"
+  fair_poor_health:
+    group: "Health"
+  food_insecurity:
+    group: "Health"
+  heart_disease:
+    group: "Health"
+  high_blood_pressure:
+    group: "Health"
+  high_cholesterol:
+    group: "Health"
+  housing_insecurity:
+    group: "Health"
+  lack_emotional_support:
+    group: "Health"
+  lack_transportation:
+    group: "Health"
+  loneliness:
+    group: "Health"
+  mammogram:
+    group: "Health"
+  mental_distress:
+    group: "Health"
+  obesity:
+    group: "Health"
+  overdose_deaths:
+    group: "Health"
+  pct_disability:
+    group: "Health"
+    counts: { of: "people with a disability", per: "people not in the military or an institution" }
+  pct_uninsured:
+    group: "Health"
+    counts: { of: "people without health insurance", per: "people not in the military or an institution" }
+  physical_distress:
+    group: "Health"
+  physical_inactivity:
+    group: "Health"
+  routine_checkup:
+    group: "Health"
+  short_sleep:
+    group: "Health"
+  smoking:
+    group: "Health"
+  stroke:
+    group: "Health"
+  utility_shutoff_threat:
+    group: "Health"
+  # Housing
+  census2020_housing_density:
+    group: "Housing"
+    counts: { of: "homes (housing units)" }
+  census2020_pct_vacant:
+    group: "Housing"
+    counts: { of: "vacant homes", per: "homes" }
+  median_gross_rent:
+    group: "Housing"
+  median_home_value:
+    group: "Housing"
+  median_owner_costs_mortgage:
+    group: "Housing"
+  pct_homes_built_before_1960:
+    group: "Housing"
+    counts: { of: "homes built before 1960", per: "homes" }
+  pct_mobile_homes:
+    group: "Housing"
+    counts: { of: "mobile homes", per: "homes" }
+  pct_overcrowded:
+    group: "Housing"
+    counts: { of: "overcrowded homes", per: "occupied homes" }
+  pct_owner_cost_burdened:
+    group: "Housing"
+    counts: { of: "homeowners paying 30% or more of income on housing", per: "homeowners (where cost burden is known)" }
+  pct_rent_burdened:
+    group: "Housing"
+    counts: { of: "renter households paying 30% or more of income on rent", per: "renter households (where rent burden is known)" }
+  pct_renter_households:
+    group: "Housing"
+    counts: { of: "renter households", per: "households" }
+  # Immigration enforcement
+  ice_287g_agreements:
+    group: "Immigration enforcement"
+    counts: { of: "active 287(g) agreements" }
+  # Income & poverty
+  gini_index:
+    group: "Income & poverty"
+  median_household_income:
+    group: "Income & poverty"
+  pct_child_poverty:
+    group: "Income & poverty"
+    counts: { of: "children in poverty", per: "children whose poverty status is known" }
+  pct_poverty:
+    group: "Income & poverty"
+    counts: { of: "people below the poverty line", per: "people whose poverty status is known" }
+  pct_public_assistance:
+    group: "Income & poverty"
+    counts: { of: "households on cash public assistance", per: "households" }
+  pct_snap_households:
+    group: "Income & poverty"
+    counts: { of: "households getting SNAP (food stamps)", per: "households" }
+  per_capita_income:
+    group: "Income & poverty"
+  # Internet access
+  pct_broadband:
+    group: "Internet access"
+    counts: { of: "households with broadband", per: "households" }
+  pct_no_computer:
+    group: "Internet access"
+    counts: { of: "households without a computer", per: "households" }
+  pct_no_internet:
+    group: "Internet access"
+    counts: { of: "households without internet", per: "households" }
+  # Jobs
+  job_density:
+    group: "Jobs"
+    counts: { of: "jobs" }
+  labor_force_participation:
+    group: "Jobs"
+    counts: { of: "people working or looking for work", per: "people 16 and older" }
+  unemployment_rate:
+    group: "Jobs"
+    counts: { of: "unemployed people", per: "people in the labor force" }
+  # Population
+  census2020_pop_density:
+    group: "Population"
+    counts: { of: "residents" }
+  median_age:
+    group: "Population"
+  pct_age_65_plus:
+    group: "Population"
+    counts: { of: "people 65 and older", per: "residents" }
+  pct_foreign_born:
+    group: "Population"
+    counts: { of: "residents born outside the U.S.", per: "residents" }
+  pct_limited_english:
+    group: "Population"
+    counts: { of: "households with limited English", per: "households" }
+  pct_moved_last_year:
+    group: "Population"
+    counts: { of: "people who moved in the past year", per: "people 1 year and older" }
+  pct_seniors_living_alone:
+    group: "Population"
+    counts: { of: "seniors living alone", per: "households" }
+  pct_single_parent_families:
+    group: "Population"
+    counts: { of: "single-parent families", per: "families with children under 18" }
+  pct_under_18:
+    group: "Population"
+    counts: { of: "children under 18", per: "residents" }
+  pct_veterans:
+    group: "Population"
+    counts: { of: "veterans", per: "civilians 18 and older" }
+  population_density:
+    group: "Population"
+    counts: { of: "residents" }
+  # Race & ethnicity
+  pct_aian_nh:
+    group: "Race & ethnicity"
+    counts: { of: "American Indian and Alaska Native (non-Hispanic) residents", per: "residents" }
+  pct_asian_nh:
+    group: "Race & ethnicity"
+    counts: { of: "Asian (non-Hispanic) residents", per: "residents" }
+  pct_black_nh:
+    group: "Race & ethnicity"
+    counts: { of: "Black (non-Hispanic) residents", per: "residents" }
+  pct_hispanic_latino:
+    group: "Race & ethnicity"
+    counts: { of: "Hispanic or Latino residents", per: "residents" }
+  pct_multiracial_nh:
+    group: "Race & ethnicity"
+    counts: { of: "residents of two or more races (non-Hispanic)", per: "residents" }
+  pct_nhpi_nh:
+    group: "Race & ethnicity"
+    counts: { of: "Native Hawaiian and Pacific Islander (non-Hispanic) residents", per: "residents" }
+  pct_people_of_color:
+    group: "Race & ethnicity"
+    counts: { of: "people of color", per: "residents" }
+  pct_white_nh:
+    group: "Race & ethnicity"
+    counts: { of: "White (non-Hispanic) residents", per: "residents" }
+  # Transportation
+  aadt:
+    group: "Transportation"
+  bridges_poor_condition:
+    group: "Transportation"
+  traffic_fatalities:
+    group: "Transportation"
+    counts: { of: "traffic deaths a year (average)", per: "residents" }
+  vmt_per_capita:
+    group: "Transportation"
+  # Vehicles
+  pct_zero_vehicle_households:
+    group: "Vehicles"
+    counts: { of: "households with no vehicle", per: "households" }
