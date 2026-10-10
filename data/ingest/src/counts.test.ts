@@ -1,7 +1,7 @@
-import { mkdtempSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { tmpdir } from "node:os";
+import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, onTestFinished } from "vitest";
+import { CACHE } from "./util.ts";
 import { loadRegistry } from "@webgis/registry/load";
 import { countsRow, remainderRow, sumStates, sumVars, usArea, writeCounts, type Counts } from "./counts.ts";
 import { acsCounts, derive, remainders } from "./acs.ts";
@@ -99,7 +99,10 @@ describe("U.S. row", () => {
 
 describe("writeCounts", () => {
   it("replaces only the series it writes in a county shard", () => {
-    const root = mkdtempSync(join(tmpdir(), "counts-"));
+    // Inside the repo (git-ignored data/cache), never the system temp folder.
+    mkdirSync(CACHE, { recursive: true });
+    const root = mkdtempSync(join(CACHE, "test-counts-"));
+    onTestFinished(() => rmSync(root, { recursive: true, force: true }));
     const dir = join(root, "values", "counts", "tract");
     mkdirSync(dir, { recursive: true });
     writeFileSync(join(dir, "27053.json"), JSON.stringify({ job_density: { "000100": [5, null, null, null] }, pct_poverty: { "000100": [1, 1, 2, 1] } }));

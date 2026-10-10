@@ -199,6 +199,8 @@ export async function ingestAcsTimeline(only?: string[]) {
         }
         writeStopValues(e.id, String(year), level, values);
         writeMoes(e.id, String(year), level, values); // #154: real margins for the change map
+        // shortcut: counts files are written for the default period only (Compare places reads that);
+        // write them here too (≈90 MB more on R2) if a change map ever shows change in head counts.
       }
     }
   }

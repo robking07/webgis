@@ -317,7 +317,7 @@ maps:
     counts: { of: "households on cash public assistance", per: "households" }
   pct_snap_households:
     group: "Income & poverty"
-    counts: { of: "households getting SNAP", per: "households" }
+    counts: { of: "households getting SNAP (food stamps)", per: "households" }
   per_capita_income:
     group: "Income & poverty"
   # Internet access
