@@ -1,9 +1,9 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { X } from "lucide-react";
 import { StatusState } from "@webgis/design/components";
-import { formatValue, GEO_LEVELS, gradeEstimate, isGradable, STATIC_ONLY_LEVELS, TILE_VALUE_LEVELS } from "@webgis/design";
+import { CHANGE_CLASSES, formatValue, GEO_LEVELS, gradeEstimate, isGradable, STATIC_ONLY_LEVELS, TILE_VALUE_LEVELS } from "@webgis/design";
 import { reliabilityNote } from "@/lib/reliability";
-import { differenceMoe, formatChange, withinMoe } from "@/lib/change";
+import { changeSummary, differenceMoe, formatChange, withinMoe } from "@/lib/change";
 import type { ClassedLevel } from "./useViewerData";
 import type { HoverInfo } from "../map/MapView";
 import type { Dataset } from "@/lib/registry";
@@ -38,7 +38,7 @@ interface DetailProps {
   legendKey?: { colors: string[]; cls: number | null; ends: [string, string] } | null;
   /** A change map (issue #127): both stops' labels, the earlier values at this level, and the
    *  change classification. `toIsDefault`: the later stop is the default, whose margins are known. */
-  change?: { fromLabel: string; toLabel: string; fromValues?: Values; classed: ClassedLevel; toIsDefault: boolean };
+  change?: { fromLabel: string; toLabel: string; fromValues?: Values; classed: ClassedLevel; toIsDefault: boolean; boundaryNote?: string | null };
 }
 
 /** The state and county a place sits inside (from its GEOID), coarse first. */
@@ -110,17 +110,22 @@ function ChangeCard({ dataset, geoid, change, to, toMoe, sheetKey }: { dataset: 
   const from = change.fromValues?.[geoid];
   const moe = isGradable(dataset.measure.kind) && change.toIsDefault && from != null && to != null ? differenceMoe(from, null, to, toMoe) : null;
   const steady = from != null && to != null && withinMoe(from, to, moe);
+  const c = change.classed.change?.[geoid];
+  // The headline says what the map's color and the hover card say (margins are tested on the map
+  // for tracts only); the note below adds this panel's own test, which reaches counties and states too.
+  const mapSteady = !!change.classed.tested && change.classed.classes.get(geoid) === (CHANGE_CLASSES - 1) / 2;
+  const { headline } = changeSummary(c, from, to, change.classed.measure!, dataset.unit, mapSteady, change.boundaryNote);
   return (
     <div className="rounded-md bg-muted px-3 py-2" data-change-card="">
       <p className="text-xs text-muted-foreground">{dataset.title}, change since {change.fromLabel}</p>
-      <p className="text-xl font-semibold tabular-nums">{formatChange(change.classed.change?.[geoid], change.classed.measure!, dataset.unit)}</p>
+      <p className="text-xl font-semibold tabular-nums" data-change-headline="">{headline}</p>
       {sheetKey}
       <p className="mt-1 text-xs text-muted-foreground tabular-nums">
         {change.fromLabel}: {formatValue(from, dataset.unit)} · {change.toLabel}: {formatValue(to, dataset.unit)}
       </p>
       {steady && (
         <p className="mt-1 text-xs text-muted-foreground">
-          <span className="font-semibold text-foreground">No clear change.</span> The difference is within the margin of error, so it may not be real.
+          The change ({formatChange(c, change.classed.measure!, dataset.unit)}) is within the margin of error, so it may not be real.
         </p>
       )}
     </div>

@@ -141,3 +141,17 @@ export function classifyChangeCached(from: Values, to: Values, unit: Unit, toMoe
   if (!c) byMoes.set(toMoes ?? NO_MOES, (c = classifyChange(from, to, unit, toMoes)));
   return c;
 }
+
+/** What a change map says about one area, everywhere it shows a number (hover, details):
+ *  the headline ("+2.3 pts", "No clear change", "No data…") and both values ("12.1% → 14.4%").
+ *  `steady`: the change is within its margin of error. `boundaryNote`: why an area missing
+ *  from the earlier period has no change (its boundaries changed), if that's the reason. */
+export function changeSummary(change: number | null | undefined, from: number | null | undefined, to: number | null | undefined,
+  m: ChangeMeasure, unit: Unit, steady: boolean, boundaryNote?: string | null): { headline: string; values: string } {
+  const values = `${formatValue(from, unit)} → ${formatValue(to, unit)}`;
+  if (change == null || !Number.isFinite(change)) {
+    const why = from == null && to != null ? boundaryNote : from === 0 && m === "percent" ? "no earlier amount" : null;
+    return { headline: why ? `No data: ${why}` : "No data", values };
+  }
+  return { headline: steady ? "No clear change" : formatChange(change, m, unit), values };
+}

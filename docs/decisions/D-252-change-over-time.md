@@ -15,10 +15,9 @@ period at a time; nothing showed the change between two.
 
 **Defaulted (worker).**
 - **Where it lives:** Filters, under the year control: "Show change since" with a drop-down of
-  the dated periods before the shown one (newest first, "Off" first). The year control picks the
-  later period, so there's still one year picker. Averages and normals (FARS, climate) are not a
-  moment in time, so they offer no change. URL: `since=<stop id>` beside `t=`; the filter count
-  counts it. Comparing two datasets turns it off (as it does the year).
+  the dated periods before the latest one (newest first, "Off" first). The change always runs to
+  the latest period (see the amendment below). URL: `since=<stop id>`; the filter count counts
+  it. Comparing two datasets turns it off (as it does the year).
 - **Computed in the browser** from the two value files already on R2 (`values/<id>/<stop>/<level>.json`);
   no new files, no database (`apps/web/src/lib/change.ts`).
 - **Measure by unit** (registry `unit`): `percent` → points; amounts (`count`, `per_sq_mi`,
@@ -50,6 +49,18 @@ period at a time; nothing showed the change between two.
   so. A code kept across a small boundary fix still compares slightly different areas.
 - **Details panel:** the change, then both periods' values, then the margin note if any.
   Hatching is off on change maps (its grades are for one period's estimate, not a change).
+
+**Amended 2026-10-09, Robbie** (review of the first build: "when I am mapping change over time I
+only see the values represented in the legend"):
+- **Change mode is change everywhere.** The hover card and the details card lead with the change
+  ("+2.3 pts", "No clear change", "No data: tract changed in 2020"), with both periods' values
+  after it ("12% → 14%" in the hover card, "2015–2019: X · 2020–2024: Y" in details). The table
+  (one period's values) isn't offered on a change map (`shortcut:` in `Viewer.tsx`).
+- **The year control is off in change mode.** Change always compares the chosen period with the
+  latest one (the default, or the newest year when the default is an average or normal). The
+  year control stays in place, disabled (`<fieldset disabled>`, `aria-disabled`), showing the
+  latest period, with "Comparing A → B. Turn off change to pick a year." under it. It doesn't add
+  to the filter count, and a `t=` in a link with `since=` is dropped.
 
 **Open (Robbie).** Wording of the labels ("Down 1.2–5.0 pts", "No clear change"); whether tract
 changes across the 2020 boundary change should match by code (default) or wait for a crosswalk;

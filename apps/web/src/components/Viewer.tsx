@@ -18,7 +18,7 @@ import { loadPlaceIndex, placeByGeoid, type PlaceHit } from "@/lib/search";
 import { useIsCompact, useIsNarrow, useIsPhone } from "./BottomSheet";
 import { DatasetSheet } from "./DatasetMenus";
 import { parseUrlState, useUrlState, type UrlState } from "@/lib/url-state";
-import { stopsFor } from "@/lib/periods";
+import { areaChangeNote, stopsFor } from "@/lib/periods";
 import { useViewerData } from "./map-page/useViewerData";
 import { useFraming } from "./map-page/useFraming";
 import { HEADER_GAP } from "./map-page/layout";
@@ -105,6 +105,9 @@ export function Viewer({ search }: { search: string }) {
   const { primary, secondary, isFeature, featureSpec, stops, stop, stopId, since, xFrom, testMoes, availableLevels, pinnedLevel, bands, x, y, level, classed, blockField } = useViewerData(state, tractCounties);
   const current = classed[level];
   const error = x.error ?? y.error ?? xFrom.error;
+  // Change always runs to the latest period: a year in the link alongside it is dropped
+  // (adjusted during render, not in an effect).
+  if (since && state.t) update({ t: null });
   const available = !!primary && !isFeature && availableLevels.includes(level);
   // The table lists states or counties (finer areas have no names to search); below counties it shows counties.
   const tableLevel: GeoLevel | null = level === "state" || level === "county" ? level : availableLevels.includes("county") ? "county" : null;
@@ -137,7 +140,8 @@ export function Viewer({ search }: { search: string }) {
     loadPlaceIndex().then((rows) => placeByGeoid(rows, geoid)?.sqmi, () => undefined)
       .then((sqmi) => goToPlace({ geoid, level: tableLevel, name, lon, lat, sqmi }));
   }, [tableLevel, goToPlace]);
-  const filterValue: FilterValue = { pinned: pinnedLevel, stop: stopId, since: since?.id ?? null, hidden };
+  // In change mode the year control is off, so the year neither counts nor applies.
+  const filterValue: FilterValue = { pinned: pinnedLevel, stop: since ? null : stopId, since: since?.id ?? null, hidden };
   const nFilters = filterCount(filterValue);
   const toggleFilters = (el: HTMLElement) => setFilters((f) => (f ? null : { anchor: el }));
   /** The level pill: open (never toggle) Filters and bring the geography-level choice into view. */
@@ -149,7 +153,7 @@ export function Viewer({ search }: { search: string }) {
   };
   const applyFilters = (v: FilterValue) => {
     setHidden(v.hidden);
-    if (v.pinned !== pinnedLevel || v.stop !== stopId || v.since !== (since?.id ?? null)) update({ lv: v.pinned, t: v.stop, since: v.since });
+    if (v.pinned !== pinnedLevel || v.stop !== stopId || v.since !== (since?.id ?? null)) update({ lv: v.pinned, t: v.since ? null : v.stop, since: v.since });
   };
   const onSearchPlace = (p: PlaceHit) => { setSearchOpen(false); goToPlace(p); };
   /** Phones: the dataset list and the details share the bottom sheet; opening one closes the other. */
@@ -188,7 +192,9 @@ export function Viewer({ search }: { search: string }) {
   // Phones keep the meta on one line (issue #34): the period without its note, the short source name.
   const sourceLabel = primary ? (phone && primary.source.shortName) || primary.source.name.split(",")[0].split(" (")[0] : "";
   const meta = primary ? [isFeature ? featureNoun : GEO_LEVELS[level].label, phone ? periodLabel.replace(/ \(.*\)$/, "") : periodLabel, sourceLabel].join(" · ") : "";
-  const tableReady = !!primary && !isFeature && !!tableLevel && !!x.values[tableLevel];
+  // The table lists one period's values; a change map shows only change, so it has no table.
+  // shortcut: no change table yet; add a change column if planners ask for one.
+  const tableReady = !!primary && !isFeature && !since && !!tableLevel && !!x.values[tableLevel];
   const placeOpen = !!selected || !!featureSelected;
   // The level caption hints at the next level near a band edge ("block groups closer in"), while
   // switching with zoom.
@@ -329,7 +335,8 @@ export function Viewer({ search }: { search: string }) {
 
       {/* Hover popups wait while the map moves (issue #34). */}
       {hover && !selected && !moving && primary && (
-        <PlaceHoverPopup hover={hover} primary={primary} secondary={secondary} xValues={x.values} yValues={y.values} blockField={blockField} periodLabel={stopId || since ? stop!.label : undefined} />
+        <PlaceHoverPopup hover={hover} primary={primary} secondary={secondary} xValues={x.values} yValues={y.values} blockField={blockField} periodLabel={stopId ? stop!.label : undefined}
+          change={since && classed[hover.level]?.change ? { from: since, to: stop!, fromValues: xFrom.values[hover.level], classed: classed[hover.level]! } : undefined} />
       )}
       {featureHover && !featureSelected && !moving && featureSpec && <FeatureHoverPopup hit={featureHover} spec={featureSpec} primary={primary} />}
       {featureSelected && featureSpec && primary && (
@@ -340,7 +347,7 @@ export function Viewer({ search }: { search: string }) {
         <DetailPanel info={selected} top={panelTop} onClose={() => { setSelected(null); mapApi.current?.select("county", null); }} primary={primary} secondary={secondary}
           xv={x.values[selected.level]} yv={y.values[selected.level]}
           period={stopId && !since ? { label: stop!.label, defaultLabel: primary.vintage } : undefined}
-          change={since && selClassed?.change ? { fromLabel: since.label, toLabel: stop!.label, fromValues: xFrom.values[selected.level], classed: selClassed, toIsDefault: !!stop?.isDefault } : undefined}
+          change={since && selClassed?.change ? { fromLabel: since.label, toLabel: stop!.label, fromValues: xFrom.values[selected.level], classed: selClassed, toIsDefault: !!stop?.isDefault, boundaryNote: areaChangeNote(since, stop!, selected.level, selected.geoid) } : undefined}
           onMapIt={pickDataset} onPlace={goToPlace} legendKey={legendKey} />
       )}
     </div>

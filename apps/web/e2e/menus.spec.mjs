@@ -564,6 +564,11 @@ for (const vp of ["phone", "laptop"]) {
     await page.locator("#filters-panel").waitFor();
     await wait(400);
     await page.locator("#filters-panel select[data-change-since]").selectOption("2019");
+    // Change runs to the latest period, so the year control is off, with its reason.
+    const years = page.locator("#filters-panel fieldset[data-year-control]");
+    expect(await years.isDisabled() && (await years.getAttribute("aria-disabled")) === "true", "year control still enabled in change mode");
+    expect(await page.locator("#filters-panel [role=radiogroup][aria-label=Years] [role=radio]").first().isDisabled(), "a year button still works");
+    expect((await page.locator("#year-off-reason").innerText()).includes("Comparing 2015–2019 → 2020–2024"), "no reason under the year control");
     if (page.isPhone) await page.getByRole("button", { name: /^Apply filters/ }).click();
     else await page.getByRole("button", { name: "Close filters" }).click();
     await page.waitForSelector("#filters-panel", { state: "detached" });
@@ -586,11 +591,24 @@ for (const vp of ["phone", "laptop"]) {
     expect(again.includes(want), `after reload: ${again.slice(0, 200)}`);
     if (page.isPhone) return;
     await immerse(page);
+    // Hover shows the change too.
+    await page.evaluate(([lon, lat]) => window.__wgMap.jumpTo({ center: [lon, lat] }), HENNEPIN);
+    await mapIdle(page);
+    const [hx, hy] = await page.evaluate(([lon, lat]) => { const p = window.__wgMap.project([lon, lat]); return [p.x, p.y]; }, HENNEPIN);
+    await page.mouse.move(hx, hy);
+    await page.mouse.move(hx + 2, hy + 2);
+    const hover = page.locator("[data-change-hover]");
+    await hover.waitFor({ timeout: 5000 });
+    const hoverText = await hover.innerText();
+    expect(/[+−][\d.]+ pts|No clear change/.test(hoverText) && hoverText.includes("→"), `hover: ${hoverText}`);
     await tapLonLat(page, ...HENNEPIN);
     const card = page.locator("[data-change-card]");
     await card.waitFor({ timeout: 15000 });
     const text = await card.innerText();
-    expect(text.includes("change since 2015–2019") && text.includes("2015–2019:") && text.includes("2020–2024:") && /[+−]?\d.* pts/.test(text), `details: ${text}`);
+    expect(text.includes("change since 2015–2019") && text.includes("2015–2019:") && text.includes("2020–2024:"), `details: ${text}`);
+    // The headline is the change, not the latest value.
+    const headline = (await card.locator("[data-change-headline]").innerText()).trim();
+    expect(/^[+−][\d.]+ pts$/.test(headline) || headline === "No clear change", `details headline: ${headline}`);
   });
 }
 

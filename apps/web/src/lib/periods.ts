@@ -51,3 +51,18 @@ export function changeNote(from: Stop, to: Stop, level: GeoLevel): string | null
   if (level === "county") return "Connecticut shows no data (its counties changed in 2022)";
   return null;
 }
+
+/** The period a change map runs to: the latest dated stop (the default, unless the default is an
+ *  average or normal). Change always ends here, so the year control is off in change mode. */
+export function latestStop(stops: Stop[]): Stop | null {
+  const d = stops.find((s) => s.isDefault);
+  return d && DATED.test(d.id) ? d : [...stops].reverse().find((s) => DATED.test(s.id)) ?? null;
+}
+
+/** Why one area has no change: its boundaries changed between the two periods. */
+export function areaChangeNote(from: Stop, to: Stop, level: GeoLevel, geoid: string): string | null {
+  if (from.boundaries === to.boundaries) return null;
+  if (level === "tract") return "tract changed in 2020";
+  if (level === "county" && geoid.startsWith("09")) return "Connecticut's counties changed in 2022";
+  return null;
+}

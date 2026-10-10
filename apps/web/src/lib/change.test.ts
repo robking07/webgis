@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { changeMeasure, changeOf, classifyChange, differenceMoe, formatChange, withinMoe } from "./change";
-import { changeStops, type Stop } from "./periods";
+import { changeMeasure, changeOf, changeSummary, classifyChange, differenceMoe, formatChange, withinMoe } from "./change";
+import { changeStops, latestStop, type Stop } from "./periods";
 
 describe("change measure", () => {
   it("uses points for percentages, percent change for counts and amounts, a difference otherwise", () => {
@@ -112,5 +112,26 @@ describe("changeStops", () => {
     const fars = [s("2019"), s("2020"), s("avg", true)];
     expect(changeStops(fars, fars[2])).toEqual([]);
     expect(changeStops(fars, fars[1]).map((x) => x.id)).toEqual(["2019"]);
+  });
+});
+
+describe("changeSummary", () => {
+  it("leads with the change, or no clear change, with both values after", () => {
+    expect(changeSummary(2.34, 10, 12.34, "points", "percent", false)).toEqual({ headline: "+2.3 pts", values: "10% → 12%" });
+    expect(changeSummary(0.8, 10, 10.8, "points", "percent", true).headline).toBe("No clear change");
+  });
+  it("says why an area has no change", () => {
+    expect(changeSummary(null, undefined, 12, "points", "percent", false, "tract changed in 2020").headline).toBe("No data: tract changed in 2020");
+    expect(changeSummary(null, 0, 12, "percent", "count", false).headline).toBe("No data: no earlier amount");
+    expect(changeSummary(null, undefined, undefined, "points", "percent", false, "tract changed in 2020").headline).toBe("No data");
+  });
+});
+
+describe("latestStop", () => {
+  const s = (id: string, isDefault = false): Stop => ({ id, label: id, isDefault, levels: ["county"] });
+  it("is the default when it's a year, else the newest year", () => {
+    expect(latestStop([s("2014"), s("2019"), s("2024", true)])?.id).toBe("2024");
+    expect(latestStop([s("2019"), s("2020"), s("avg", true)])?.id).toBe("2020");
+    expect(latestStop([])).toBeNull();
   });
 });

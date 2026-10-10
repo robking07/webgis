@@ -9,7 +9,7 @@ import { Info, ListFilter, X } from "lucide-react";
 import { GEO_LEVELS, type GeoLevel } from "@webgis/design";
 import type { Facet } from "@webgis/registry";
 import { TERM_BY_ID } from "@/lib/glossary";
-import { changeStops, type Stop } from "@/lib/periods";
+import { changeStops, latestStop, type Stop } from "@/lib/periods";
 import { TimeControl } from "../TimeControl";
 
 /** What the filters control. `hidden`: facet field → values the visitor hid. */
@@ -65,22 +65,28 @@ const sectionTitle = "text-xs font-semibold";
 function FilterControls({ levels, shown, facets, stops, value, onChange }: ControlsProps) {
   const plural = (l: GeoLevel) => GEO_LEVELS[l].plural.toLowerCase();
   const defaultStop = stops.find((s) => s.isDefault)?.id;
-  const sinceOptions = changeStops(stops, stops.find((s) => s.id === (value.stop ?? defaultStop)) ?? null);
-  /** A new year keeps the change's start only while it's still earlier. */
-  const pickStop = (id: string) => {
-    const stop = id === defaultStop ? null : id;
-    const still = changeStops(stops, stops.find((s) => s.id === id) ?? null).some((s) => s.id === value.since);
-    onChange({ ...value, stop, since: still ? value.since : null });
-  };
+  // Change always runs to the latest period (Robbie, 2026-10-09), so while it's on the year control
+  // shows that period and is disabled, with the reason under it.
+  const latest = latestStop(stops);
+  const sinceOptions = changeStops(stops, latest);
+  const since = sinceOptions.find((s) => s.id === value.since);
   return (
     <div className="space-y-5">
       {stops.length > 0 && defaultStop && (
         <section aria-label="Year">
-          <TimeControl stops={stops} value={value.stop ?? defaultStop} onChange={pickStop} />
+          <fieldset disabled={!!since} aria-disabled={!!since || undefined} aria-describedby={since ? "year-off-reason" : undefined}
+            data-year-control="" className={since ? "opacity-50" : undefined}>
+            <TimeControl stops={stops} value={since ? latest!.id : value.stop ?? defaultStop} onChange={(id) => onChange({ ...value, stop: id === defaultStop ? null : id })} />
+          </fieldset>
+          {since && (
+            <p id="year-off-reason" className="mt-1.5 text-xs text-muted-foreground">
+              Comparing {since.label} → {latest!.label}. Turn off change to pick a year.
+            </p>
+          )}
           {sinceOptions.length > 0 && (
             <label className="mt-3 flex items-center gap-2 text-xs">
               <span className="font-semibold">Show change since</span>
-              <select value={value.since ?? ""} onChange={(e) => onChange({ ...value, since: e.target.value || null })} data-change-since=""
+              <select value={value.since ?? ""} onChange={(e) => onChange({ ...value, since: e.target.value || null, stop: e.target.value ? null : value.stop })} data-change-since=""
                 className="min-w-0 flex-1 rounded-md border bg-background px-2 py-1 text-base tabular-nums md:text-xs focus-visible:outline-2 focus-visible:outline-ring">
                 <option value="">Off</option>
                 {sinceOptions.map((s) => <option key={s.id} value={s.id}>{s.label}</option>)}
