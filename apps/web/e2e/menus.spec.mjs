@@ -555,6 +555,44 @@ test("splash at /, old map links forward to /map (D-193)", async (o) => {
   expect(u.pathname === "/map" && u.searchParams.get("d") === "median_household_income", `old link ended at ${u.pathname}${u.search}`);
 });
 
+// Change-over-time maps (issue #127): Filters offers "Show change since", the map recolors on the
+// change ramp, the legend names the comparison, the link restores it, and a click shows both values.
+for (const vp of ["phone", "laptop"]) {
+  test(`${vp} change since an earlier period: legend, link and details`, async (o) => {
+    const { page } = await o(vp, "/map?d=pct_poverty&lv=county&at=-93.4752,45.0061,7.2");
+    await live(page).click();
+    await page.locator("#filters-panel").waitFor();
+    await wait(400);
+    await page.locator("#filters-panel select[data-change-since]").selectOption("2019");
+    if (page.isPhone) await page.getByRole("button", { name: /^Apply filters/ }).click();
+    else await page.getByRole("button", { name: "Close filters" }).click();
+    await page.waitForSelector("#filters-panel", { state: "detached" });
+    await wait(800);
+    await mapIdle(page);
+    const url = new URL(page.url());
+    expect(url.searchParams.get("since") === "2019", `URL: ${url.search}`);
+    const legendText = async () => {
+      if (page.isPhone) await page.locator("button[data-legend]").click();
+      return page.locator('section[aria-label="Legend"]').innerText();
+    };
+    const want = "Change, 2015–2019 → 2020–2024, percentage points";
+    const legend = await legendText();
+    expect(legend.includes(want) && /Down .* pts/.test(legend) && /Up .* pts/.test(legend), `legend: ${legend.slice(0, 200)}`);
+    // The link restores the view.
+    await page.reload();
+    await mapIdle(page);
+    const again = await legendText();
+    expect(again.includes(want), `after reload: ${again.slice(0, 200)}`);
+    if (page.isPhone) return;
+    await immerse(page);
+    await tapLonLat(page, ...HENNEPIN);
+    const card = page.locator("[data-change-card]");
+    await card.waitFor({ timeout: 15000 });
+    const text = await card.innerText();
+    expect(text.includes("change since 2015–2019") && text.includes("2015–2019:") && text.includes("2020–2024:") && /[+−]?\d.* pts/.test(text), `details: ${text}`);
+  });
+}
+
 test('details with no links show no "Learn more" heading', async (o) => {
   const { page } = await o("laptop", "/map?d=pct_poverty&lv=county&at=-93.4752,45.0061,8");
   await immerse(page);
