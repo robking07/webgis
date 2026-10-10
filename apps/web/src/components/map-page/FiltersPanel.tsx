@@ -1,11 +1,12 @@
 "use client";
-// Filters (issue #34, Robbie 2026-10-02): everything that was "Display options" (geography level,
-// facet filters) plus the year control, behind one small filter button under the dataset name.
+// Map options (issue #34, Robbie 2026-10-02; renamed from "Filters", #155, 2026-10-10): geography
+// level, time (year, or change since an earlier period) and facet show/hide, behind one small button
+// under the dataset name.
 // Phones: the panel grows from the button to full screen; changes are staged and Apply shrinks it
 // back into the button. Desktop: a sidebar that opens over the left of the map (not a fixed
 // column), with changes applied live.
-import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
-import { Info, ListFilter, X } from "lucide-react";
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { Info, SlidersHorizontal, X } from "lucide-react";
 import { GEO_LEVELS, type GeoLevel } from "@webgis/design";
 import type { Facet } from "@webgis/registry";
 import { TERM_BY_ID } from "@/lib/glossary";
@@ -22,7 +23,7 @@ export interface FilterValue {
   hidden: Record<string, Set<string>>;
 }
 
-/** Changes from the defaults, for the button's count: each hidden value, a pinned level, a year, a change map. */
+/** Changes from the defaults (each hidden value, a pinned level, a year, a change map): the button's dot and Reset. */
 export function filterCount(v: FilterValue): number {
   return Object.values(v.hidden).reduce((a, h) => a + h.size, 0) + (v.pinned ? 1 : 0) + (v.stop ? 1 : 0) + (v.since ? 1 : 0);
 }
@@ -35,15 +36,16 @@ export const pluralLabel = (label: string) => {
   return /(s|x|ch|sh)$/.test(l) ? `${l}es` : `${l}s`;
 };
 
-/** The small filter button under the dataset name, with a count when filters are set. */
+/** The small "Map options" button under the dataset name, with a dot when anything differs from
+ *  the defaults (a count read as "how many", and hiding 5 road types counted 5; Robbie, 2026-10-10). */
 export function FilterButton({ count, open, onOpen, className = "" }: { count: number; open: boolean; onOpen: (el: HTMLElement) => void; className?: string }) {
   return (
     <button type="button" data-filter-button="" onClick={(e) => onOpen(e.currentTarget)} aria-expanded={open} aria-controls="filters-panel"
-      aria-label={count ? `Filters, ${count} set` : "Filters"}
+      aria-label={count ? "Map options, changed from the defaults" : "Map options"}
       className={`wg-panel pointer-events-auto inline-flex h-7 shrink-0 items-center gap-1.5 rounded-full px-2.5 text-xs font-semibold text-foreground focus-visible:outline-2 focus-visible:outline-ring ${className}`}>
-      <ListFilter className="size-3.5" aria-hidden />
-      Filters
-      {count > 0 && <span className="grid h-4 min-w-4 place-items-center rounded-full bg-primary px-1 text-[10px] leading-none text-primary-foreground tabular-nums">{count}</span>}
+      <SlidersHorizontal className="size-3.5" aria-hidden />
+      Map options
+      {count > 0 && <span data-changed-dot="" className="size-2 rounded-full bg-primary" aria-hidden />}
     </button>
   );
 }
@@ -60,51 +62,38 @@ interface ControlsProps {
 
 const sectionTitle = "text-xs font-semibold";
 
-/** The panel's sections: year (and a change since an earlier one), geography level, then each
- *  facet as a checkbox list. */
+/** A headed section of the panel (Robbie, 2026-10-10, D-252): Geography, Time, Show/hide. */
+function Section({ title, children }: { title: string; children: ReactNode }) {
+  return (
+    <section aria-label={title} className="space-y-2">
+      <h3 className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">{title}</h3>
+      {children}
+    </section>
+  );
+}
+
+/** The panel's sections: geography level, time (values for one period, or the change since an
+ *  earlier one), then each facet as a checkbox list. */
 function FilterControls({ levels, shown, facets, stops, value, onChange }: ControlsProps) {
   const plural = (l: GeoLevel) => GEO_LEVELS[l].plural.toLowerCase();
   const defaultStop = stops.find((s) => s.isDefault)?.id;
-  // Change always runs to the latest period (Robbie, 2026-10-09), so while it's on the year control
-  // shows that period and is disabled, with the reason under it.
+  // Change always runs to the latest period (Robbie, 2026-10-09). Values / Change (Robbie,
+  // 2026-10-10): Change swaps the year picker for the earlier-period choice; nothing is greyed out.
   const latest = latestStop(stops);
   const sinceOptions = changeStops(stops, latest);
   const since = sinceOptions.find((s) => s.id === value.since);
+  const chip = (on: boolean) => `rounded-md px-2 py-1 text-xs font-medium focus-visible:outline-2 focus-visible:outline-ring ${on ? "bg-primary text-primary-foreground" : "border hover:bg-muted"}`;
   return (
     <div className="space-y-5">
-      {stops.length > 0 && defaultStop && (
-        <section aria-label="Year">
-          <fieldset disabled={!!since} aria-disabled={!!since || undefined} aria-describedby={since ? "year-off-reason" : undefined}
-            data-year-control="" className={since ? "opacity-50" : undefined}>
-            <TimeControl stops={stops} value={since ? latest!.id : value.stop ?? defaultStop} onChange={(id) => onChange({ ...value, stop: id === defaultStop ? null : id })} />
-          </fieldset>
-          {since && (
-            <p id="year-off-reason" className="mt-1.5 text-xs text-muted-foreground">
-              Comparing {since.label} → {latest!.label}. Turn off change to pick a year.
-            </p>
-          )}
-          {sinceOptions.length > 0 && (
-            <label className="mt-3 flex items-center gap-2 text-xs">
-              <span className="font-semibold">Show change since</span>
-              <select value={value.since ?? ""} onChange={(e) => onChange({ ...value, since: e.target.value || null, stop: e.target.value ? null : value.stop })} data-change-since=""
-                className="min-w-0 flex-1 rounded-md border bg-background px-2 py-1 text-base tabular-nums md:text-xs focus-visible:outline-2 focus-visible:outline-ring">
-                <option value="">Off</option>
-                {sinceOptions.map((s) => <option key={s.id} value={s.id}>{s.label}</option>)}
-              </select>
-            </label>
-          )}
-        </section>
-      )}
       {levels.length > 1 && (
-        <fieldset>
-          <legend className={sectionTitle}>Geography level</legend>
-          <div role="radiogroup" aria-label="Geography level" className="mt-1.5 space-y-0.5">
+        <Section title="Geography">
+          <div role="radiogroup" aria-label="Geography level" className="space-y-0.5">
             {([null, ...levels] as Array<GeoLevel | null>).map((l) => {
               const on = value.pinned === l;
               return (
                 <label key={l ?? "auto"} className="flex cursor-pointer items-center gap-2.5 rounded-md px-1.5 py-1.5 text-sm hover:bg-muted/60">
                   <input type="radio" name="geo-level" checked={on} onChange={() => onChange({ ...value, pinned: l })} className="size-4 accent-[var(--ui-accent)]" />
-                  <span className="flex-1">{l ? GEO_LEVELS[l].plural : "Switch with zoom"}</span>
+                  <span className="flex-1">{l ? GEO_LEVELS[l].plural : "Automatic (changes as you zoom)"}</span>
                   {l === null && <span className="text-xs text-muted-foreground">{plural(shown)} now</span>}
                   {l && l === shown && value.pinned === null && <span className="text-xs text-muted-foreground">shown now</span>}
                 </label>
@@ -112,12 +101,35 @@ function FilterControls({ levels, shown, facets, stops, value, onChange }: Contr
             })}
           </div>
           {value.pinned && "pinFloor" in GEO_LEVELS[value.pinned] && (
-            <p className="mt-1 px-1.5 text-xs text-muted-foreground">{GEO_LEVELS[value.pinned].plural} show once you zoom in closer than a few states.</p>
+            <p className="px-1.5 text-xs text-muted-foreground">{GEO_LEVELS[value.pinned].plural} show once you zoom in closer than a few states.</p>
           )}
-        </fieldset>
+        </Section>
       )}
-      {facets.map((f) => <FacetChecks key={f.field} facet={f} hidden={value.hidden[f.field]}
-        onChange={(h) => onChange({ ...value, hidden: { ...value.hidden, [f.field]: h } })} />)}
+      {stops.length > 0 && defaultStop && (
+        <Section title="Time">
+          {sinceOptions.length > 0 && (
+            <div role="radiogroup" aria-label="Map shows" data-time-mode="" className="flex gap-1">
+              <button type="button" role="radio" aria-checked={!since} onClick={() => since && onChange({ ...value, since: null })} className={chip(!since)}>Values</button>
+              {/* Change starts from the oldest earlier period: the longest span, and for ACS the one that doesn't overlap the latest. */}
+              <button type="button" role="radio" aria-checked={!!since} onClick={() => !since && onChange({ ...value, since: sinceOptions[sinceOptions.length - 1].id, stop: null })} className={chip(!!since)}>Change</button>
+            </div>
+          )}
+          {since ? (
+            <>
+              <TimeControl label="Compare with…" stops={[...sinceOptions].reverse()} value={since.id} onChange={(id) => onChange({ ...value, since: id, stop: null })} />
+              <p data-change-span="" className="text-xs text-muted-foreground">Change from {since.label} to {latest!.label}, the latest period.</p>
+            </>
+          ) : (
+            <TimeControl stops={stops} value={value.stop ?? defaultStop} onChange={(id) => onChange({ ...value, stop: id === defaultStop ? null : id })} />
+          )}
+        </Section>
+      )}
+      {facets.length > 0 && (
+        <Section title="Show/hide">
+          {facets.map((f) => <FacetChecks key={f.field} facet={f} hidden={value.hidden[f.field]}
+            onChange={(h) => onChange({ ...value, hidden: { ...value.hidden, [f.field]: h } })} />)}
+        </Section>
+      )}
     </div>
   );
 }
@@ -200,16 +212,16 @@ export function FiltersSheet({ anchor, title, value, onApply, onClose, ...contro
     transition: `clip-path var(--wg-grow-ms, ${GROW_MS}ms) cubic-bezier(0.2, 0.8, 0.2, 1)`,
   };
   return (
-    <div id="filters-panel" role="dialog" aria-modal="true" aria-label={`Filters for ${title}`} style={style}
+    <div id="filters-panel" role="dialog" aria-modal="true" aria-label={`Map options for ${title}`} style={style}
       className="fixed inset-0 z-50 flex flex-col bg-background">
       <div className={`flex min-h-0 flex-1 flex-col transition-opacity ${phase === "from" ? "opacity-0 duration-100" : "opacity-100 duration-200"}`}>
         <header className="flex items-center gap-3 border-b px-4 py-3">
-          <ListFilter className="size-5 text-muted-foreground" aria-hidden />
+          <SlidersHorizontal className="size-5 text-muted-foreground" aria-hidden />
           <div className="min-w-0 flex-1">
-            <h2 className="text-base font-semibold leading-tight">Filters</h2>
+            <h2 className="text-base font-semibold leading-tight">Map options</h2>
             <p className="truncate text-xs text-muted-foreground">{title}</p>
           </div>
-          <button type="button" onClick={() => finish(false)} aria-label="Close filters without applying"
+          <button type="button" onClick={() => finish(false)} aria-label="Close map options without applying"
             className="-mr-1 rounded p-1.5 text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring"><X className="size-5" /></button>
         </header>
         <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4">
@@ -220,7 +232,7 @@ export function FiltersSheet({ anchor, title, value, onApply, onClose, ...contro
             className="rounded-md px-3 py-2.5 text-sm font-semibold text-primary disabled:text-muted-foreground disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-ring">Reset</button>
           <button type="button" onClick={() => finish(true)}
             className="flex-1 rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground focus-visible:outline-2 focus-visible:outline-ring">
-            Apply filters{n > 0 ? ` (${n})` : ""}
+            Apply
           </button>
         </footer>
       </div>
@@ -250,14 +262,14 @@ export function FiltersSidebar({ top, bottom, value, onChange, onClose, hiddenWh
   }, [onClose]);
   const n = filterCount(value);
   return (
-    <section ref={ref} id="filters-panel" aria-label="Filters" data-obstructs={hiddenWhileMoving ? undefined : ""}
+    <section ref={ref} id="filters-panel" aria-label="Map options" data-obstructs={hiddenWhileMoving ? undefined : ""}
       className={`wg-glass absolute left-3 z-30 flex w-80 flex-col overflow-hidden rounded-xl transition-opacity duration-200 md:left-4 ${hiddenWhileMoving ? "pointer-events-none opacity-0" : "opacity-100"}`}
       style={{ top, maxHeight: `calc(100% - ${top + bottom}px)` }}>
       <header className="flex items-center gap-2 border-b px-4 py-2.5">
-        <ListFilter className="size-4 text-muted-foreground" aria-hidden />
-        <h2 className="flex-1 text-sm font-semibold">Filters</h2>
+        <SlidersHorizontal className="size-4 text-muted-foreground" aria-hidden />
+        <h2 className="flex-1 text-sm font-semibold">Map options</h2>
         {n > 0 && <button type="button" onClick={() => onChange(NO_FILTERS)} className="rounded text-xs font-semibold text-primary hover:underline">Reset</button>}
-        <button type="button" onClick={onClose} aria-label="Close filters" className="-mr-1.5 rounded p-1 text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring"><X className="size-4" /></button>
+        <button type="button" onClick={onClose} aria-label="Close map options" className="-mr-1.5 rounded p-1 text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring"><X className="size-4" /></button>
       </header>
       <div className="min-h-0 flex-1 overflow-y-auto px-4 py-3">
         <FilterControls {...controls} value={value} onChange={onChange} />

@@ -224,11 +224,11 @@ const opacityOf = (loc) => loc.evaluate((el) => { let o = 1; for (let n = el; n;
 console.log(`Map menus e2e against ${BASE}`);
 
 for (const vp of ["phone", "laptop", "monitor"]) {
-  test(`${vp}: landing draws states and shows the Filters button`, async (o) => {
+  test(`${vp}: landing draws states and shows the Map options button`, async (o) => {
     const { page } = await o(vp, "/map");
     const states = await page.evaluate(() => window.__wgMap.queryRenderedFeatures({ layers: window.__wgMap.getStyle().layers.filter((l) => l.id.startsWith("state-fill")).map((l) => l.id) }).length);
     expect(states > 20, `expected states drawn, got ${states} features`);
-    expect(await live(page).isVisible(), "Filters button not visible");
+    expect(await live(page).isVisible(), "Map options button not visible");
   });
 }
 
@@ -290,7 +290,7 @@ test("phone card: meta and actions never wrap at 360, 390 and 430 px, long names
   expect(!bad.length, bad.join("\n      "));
 });
 
-test("phone filters: staged until Apply, then the count and the map filter", async (o) => {
+test("phone map options: staged until Apply, then the dot and the map filter", async (o) => {
   const { page } = await o("phone", "/map?d=aadt&at=-93.27,44.97,11");
   await immerse(page);
   await live(page).click();
@@ -299,19 +299,18 @@ test("phone filters: staged until Apply, then the count and the map filter", asy
   for (const label of ["County road", "City or local road"]) await page.locator("#filters-panel label", { hasText: label }).first().click();
   const before = await page.evaluate(() => window.__wgMap.getFilter("aadt-line"));
   expect(!before, `the map is filtered before Apply: ${JSON.stringify(before)}`);
-  expect((await page.getByRole("button", { name: /^Apply filters/ }).innerText()).includes("(2)"), "Apply doesn't count 2 changes");
-  await page.getByRole("button", { name: /^Apply filters/ }).click();
+  await page.getByRole("button", { name: "Apply", exact: true }).click();
   await page.waitForSelector("#filters-panel", { state: "detached" });
   const btn = live(page);
-  expect((await btn.getAttribute("aria-label")) === "Filters, 2 set", `button label: ${await btn.getAttribute("aria-label")}`);
-  expect((await btn.innerText()).includes("2"), "the button doesn't show 2");
+  expect((await btn.getAttribute("aria-label")) === "Map options, changed from the defaults", `button label: ${await btn.getAttribute("aria-label")}`);
+  expect(await btn.locator("[data-changed-dot]").count() === 1, "the button doesn't show its dot");
   const after = JSON.stringify(await page.evaluate(() => window.__wgMap.getFilter("aadt-line")));
   expect(after && after.includes("road_type"), `map filter after Apply: ${after}`);
   expect((await page.locator("[data-filter-note]:not([inert] *)").first().innerText()).includes("2 road types hidden"), "note doesn't say 2 road types hidden");
 });
 
 for (const vp of ["laptop", "monitor"]) {
-  test(`${vp} filters: sidebar applies live, closes, and the count stays`, async (o) => {
+  test(`${vp} filters: sidebar applies live, closes, and the dot stays`, async (o) => {
     const { page } = await o(vp, "/map?d=aadt&at=-93.27,44.97,11");
     await live(page).click();
     const side = page.locator("section#filters-panel");
@@ -321,9 +320,9 @@ for (const vp of ["laptop", "monitor"]) {
     await wait(300);
     const f = JSON.stringify(await page.evaluate(() => window.__wgMap.getFilter("aadt-line")));
     expect(f && f.includes("road_type"), `sidebar change didn't apply live: ${f}`);
-    await page.getByRole("button", { name: "Close filters" }).click();
+    await page.getByRole("button", { name: "Close map options" }).click();
     await side.waitFor({ state: "detached" });
-    expect((await live(page).getAttribute("aria-label")) === "Filters, 1 set", `count after close: ${await live(page).getAttribute("aria-label")}`);
+    expect((await live(page).getAttribute("aria-label")) === "Map options, changed from the defaults", `label after close: ${await live(page).getAttribute("aria-label")}`);
     const f2 = JSON.stringify(await page.evaluate(() => window.__wgMap.getFilter("aadt-line")));
     expect(f2 === f, "filter dropped when the sidebar closed");
   });
@@ -340,8 +339,8 @@ for (const vp of ["phone", "laptop", "monitor"]) {
     // The selected level stays readable (regression: it once rendered pale).
     const lvl = await page.evaluate(contrastInPage, '#filters-panel label:has(input[type=radio]:checked)');
     expect(lvl.length && lvl.every((r) => r.ratio >= 4.5), `selected level contrast: ${JSON.stringify(lvl)}`);
-    if (page.isPhone) await page.getByRole("button", { name: /^Apply filters/ }).click();
-    else await page.getByRole("button", { name: "Close filters" }).click();
+    if (page.isPhone) await page.getByRole("button", { name: "Apply", exact: true }).click();
+    else await page.getByRole("button", { name: "Close map options" }).click();
     await page.waitForSelector("#filters-panel", { state: "detached" });
     await wait(800);
     await mapIdle(page);
@@ -379,7 +378,7 @@ for (const [vp, hides] of [["phone", true], ["laptop", true], ["monitor", false]
     if (vp === "phone") {
       expect(during.menu === 0, `menu button visible mid-pan (${during.menu})`);
       expect(after.menu === 1, `menu button didn't return (${after.menu})`);
-      expect(await live(page).isVisible(), "Filters button gone after the pan");
+      expect(await live(page).isVisible(), "Map options button gone after the pan");
     } else if (vp === "laptop") {
       expect(during.side === 0, `sidebar visible mid-pan (${during.side})`);
       expect(during.menu < 1, `menu button not dimmed mid-pan (${during.menu})`);
@@ -480,9 +479,9 @@ for (const vp of ["phone", "laptop"]) {
   });
 }
 
-// Issue #100: the level pill is a real button; it opens Filters at the geography level and never reaches the map.
+// Issue #100: the level pill is a real button; it opens Map options at the geography level and never reaches the map.
 for (const vp of ["laptop", "phone"]) {
-  test(`${vp} level pill opens Filters at the geography level without touching the map`, async (o) => {
+  test(`${vp} level pill opens Map options at the geography level without touching the map`, async (o) => {
     const { page } = await o(vp, "/map?d=pct_poverty&at=-93.27,44.97,9.5");
     await immerse(page);
     const view = () => page.evaluate(() => { const m = window.__wgMap, c = m.getCenter(); return [c.lng, c.lat, m.getZoom()].map((n) => n.toFixed(4)).join(","); });
@@ -555,22 +554,25 @@ test("splash at /, old map links forward to /map (D-193)", async (o) => {
   expect(u.pathname === "/map" && u.searchParams.get("d") === "median_household_income", `old link ended at ${u.pathname}${u.search}`);
 });
 
-// Change-over-time maps (issue #127): Filters offers "Show change since", the map recolors on the
-// change ramp, the legend names the comparison, the link restores it, and a click shows both values.
+// Change-over-time maps (issue #127, #155): Map options › Time has Values / Change; Change swaps the
+// year picker for "Compare with…", the map recolors on the change ramp, the legend names the
+// comparison, the link restores it, and a click shows both values.
 for (const vp of ["phone", "laptop"]) {
   test(`${vp} change since an earlier period: legend, link and details`, async (o) => {
     const { page } = await o(vp, "/map?d=pct_poverty&lv=county&at=-93.4752,45.0061,7.2");
     await live(page).click();
     await page.locator("#filters-panel").waitFor();
     await wait(400);
-    await page.locator("#filters-panel select[data-change-since]").selectOption("2019");
-    // Change runs to the latest period, so the year control is off, with its reason.
-    const years = page.locator("#filters-panel fieldset[data-year-control]");
-    expect(await years.isDisabled() && (await years.getAttribute("aria-disabled")) === "true", "year control still enabled in change mode");
-    expect(await page.locator("#filters-panel [role=radiogroup][aria-label=Years] [role=radio]").first().isDisabled(), "a year button still works");
-    expect((await page.locator("#year-off-reason").innerText()).includes("Comparing 2015–2019 → 2020–2024"), "no reason under the year control");
-    if (page.isPhone) await page.getByRole("button", { name: /^Apply filters/ }).click();
-    else await page.getByRole("button", { name: "Close filters" }).click();
+    const heads = await page.locator("#filters-panel h3").allInnerTexts();
+    expect(heads.map((h) => h.toLowerCase()).join(",") === "geography,time", `sections: ${heads.join(", ")}`);
+    const mode = page.locator("#filters-panel [role=radiogroup][aria-label='Map shows']");
+    await mode.getByRole("radio", { name: "Change" }).click();
+    // The year picker is gone (not greyed out); "Compare with…" takes its place.
+    expect(await page.locator("#filters-panel [role=radiogroup][aria-label=Years]").count() === 0, "year picker still shown in change mode");
+    await page.locator("#filters-panel [role=radiogroup][aria-label='Compare with…'] [role=radio]", { hasText: "2015–2019" }).first().click();
+    expect((await page.locator("#filters-panel [data-change-span]").innerText()).includes("2015–2019 to 2020–2024"), "no span under Compare with");
+    if (page.isPhone) await page.getByRole("button", { name: "Apply", exact: true }).click();
+    else await page.getByRole("button", { name: "Close map options" }).click();
     await page.waitForSelector("#filters-panel", { state: "detached" });
     await wait(800);
     await mapIdle(page);
@@ -590,6 +592,12 @@ for (const vp of ["phone", "laptop"]) {
     const again = await legendText();
     expect(again.includes(want), `after reload: ${again.slice(0, 200)}`);
     if (page.isPhone) return;
+    // The link opens Map options in change mode.
+    await live(page).click();
+    await page.locator("#filters-panel").waitFor();
+    expect((await page.locator("#filters-panel [role=radiogroup][aria-label='Map shows'] [role=radio]", { hasText: "Change" }).getAttribute("aria-checked")) === "true", "since= link isn't in change mode");
+    await page.getByRole("button", { name: "Close map options" }).click();
+    await page.locator("#filters-panel").waitFor({ state: "detached" });
     await immerse(page);
     // Hover shows the change too.
     await page.evaluate(([lon, lat]) => window.__wgMap.jumpTo({ center: [lon, lat] }), HENNEPIN);
@@ -611,6 +619,15 @@ for (const vp of ["phone", "laptop"]) {
     expect(/^[+−][\d.]+ pts$/.test(headline) || headline === "No clear change", `details headline: ${headline}`);
   });
 }
+
+// A map with one period has no Time section, so no Change button (#155).
+test("laptop one-period map: no Values / Change switch", async (o) => {
+  const { page } = await o("laptop", "/map?d=census2020_pop_density");
+  await live(page).click();
+  await page.locator("#filters-panel").waitFor();
+  expect(await page.locator("#filters-panel [role=radiogroup][aria-label='Map shows']").count() === 0, "Change offered on a one-period map");
+  expect(await page.locator("#filters-panel section[aria-label=Geography]").count() === 1, "no Geography section");
+});
 
 test('details with no links show no "Learn more" heading', async (o) => {
   const { page } = await o("laptop", "/map?d=pct_poverty&lv=county&at=-93.4752,45.0061,8");
@@ -812,8 +829,8 @@ for (const vp of ["phone", "laptop"]) {
     const sliderAt = await slider.evaluate((el) => +el.value);
     expect(sliderAt === 8, `thumb index ${sliderAt}`);
     // The map, legend and URL agree with the notch.
-    if (page.isPhone) await page.getByRole("button", { name: /^Apply filters/ }).click();
-    else await page.getByRole("button", { name: "Close filters" }).click();
+    if (page.isPhone) await page.getByRole("button", { name: "Apply", exact: true }).click();
+    else await page.getByRole("button", { name: "Close map options" }).click();
     await panel.waitFor({ state: "detached" });
     await wait(800);
     await mapIdle(page);
@@ -838,8 +855,8 @@ for (const vp of ["phone", "laptop"]) {
     await page.keyboard.press("ArrowLeft");
     await wait(200);
     expect((await shown()) === "2023", `key after back: ${await shown()}`);
-    if (page.isPhone) await page.getByRole("button", { name: /^Apply filters/ }).click();
-    else await page.getByRole("button", { name: "Close filters" }).click();
+    if (page.isPhone) await page.getByRole("button", { name: "Apply", exact: true }).click();
+    else await page.getByRole("button", { name: "Close map options" }).click();
     await panel.waitFor({ state: "detached" });
     await wait(800);
     expect(urlYear() === "2023", `final URL year: ${urlYear()}`);

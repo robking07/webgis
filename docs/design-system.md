@@ -117,7 +117,7 @@ Light and dark come from the same token structure; the basemap and the UI chrome
 | light | logo bread on panels (non-text) | `brandBread` on `surface` | 4.61 | 3 |
 | light | logo map layer on the page (non-text) | `accent` on `bg` | 5.91 | 3 |
 | light | panel borders (decorative) | `border` on `surface` | 1.45 | 1.3 |
-| light | on-map text on its panel: dataset title, Filters button, level note, legend strip | `text` on `surface` | 17.05 | 4.5 |
+| light | on-map text on its panel: dataset title, Map options button, level note, legend strip | `text` on `surface` | 17.05 | 4.5 |
 | light | on-map secondary text on its panel: category, 'closer in' hint | `textMuted` on `surface` | 6.58 | 4.5 |
 | light | on-map icons on their panel: menu, Back, zoom, carets (non-text) | `text` on `surface` | 17.05 | 3 |
 | light | filter count badge | `accentText` on `accent` | 6.44 | 4.5 |
@@ -148,7 +148,7 @@ Light and dark come from the same token structure; the basemap and the UI chrome
 | dark | logo bread on panels (non-text) | `brandBread` on `surface` | 7.63 | 3 |
 | dark | logo map layer on the page (non-text) | `accent` on `bg` | 8.39 | 3 |
 | dark | panel borders (decorative) | `border` on `surface` | 1.46 | 1.3 |
-| dark | on-map text on its panel: dataset title, Filters button, level note, legend strip | `text` on `surface` | 14.30 | 4.5 |
+| dark | on-map text on its panel: dataset title, Map options button, level note, legend strip | `text` on `surface` | 14.30 | 4.5 |
 | dark | on-map secondary text on its panel: category, 'closer in' hint | `textMuted` on `surface` | 6.92 | 4.5 |
 | dark | on-map icons on their panel: menu, Back, zoom, carets (non-text) | `text` on `surface` | 14.30 | 3 |
 | dark | filter count badge | `accentText` on `accent` | 7.85 | 4.5 |
@@ -180,7 +180,7 @@ Light and dark come from the same token structure; the basemap and the UI chrome
 
 ## Geography levels and zoom
 
-"Switch with zoom" is the default for every dataset. Zooms are for a map 1440 px across; smaller screens shift every band down by `bandShift` (about 2 zooms on a 390 px phone), so each level covers the same ground on any screen. A pinned level draws at every zoom except below its floor, where the finest coarser level stands in.
+"Automatic (changes as you zoom)" is the default for every dataset. Zooms are for a map 1440 px across; smaller screens shift every band down by `bandShift` (about 2 zooms on a 390 px phone), so each level covers the same ground on any screen. A pinned level draws at every zoom except below its floor, where the finest coarser level stands in.
 
 | Level | Shown at zoom (switch with zoom) | Never below zoom (pinned) |
 |---|---|---|

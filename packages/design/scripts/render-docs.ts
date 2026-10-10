@@ -145,7 +145,7 @@ ${contrastRows.join("\n")}
 
 ## Geography levels and zoom
 
-"Switch with zoom" is the default for every dataset. Zooms are for a map ${BAND_REFERENCE_WIDTH} px across; smaller screens shift every band down by \`bandShift\` (about 2 zooms on a 390 px phone), so each level covers the same ground on any screen. A pinned level draws at every zoom except below its floor, where the finest coarser level stands in.
+"Automatic (changes as you zoom)" is the default for every dataset. Zooms are for a map ${BAND_REFERENCE_WIDTH} px across; smaller screens shift every band down by \`bandShift\` (about 2 zooms on a 390 px phone), so each level covers the same ground on any screen. A pinned level draws at every zoom except below its floor, where the finest coarser level stands in.
 
 | Level | Shown at zoom (switch with zoom) | Never below zoom (pinned) |
 |---|---|---|

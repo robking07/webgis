@@ -140,7 +140,7 @@ export function Viewer({ search }: { search: string }) {
     loadPlaceIndex().then((rows) => placeByGeoid(rows, geoid)?.sqmi, () => undefined)
       .then((sqmi) => goToPlace({ geoid, level: tableLevel, name, lon, lat, sqmi }));
   }, [tableLevel, goToPlace]);
-  // In change mode the year control is off, so the year neither counts nor applies.
+  // In change mode the year picker is hidden (Values / Change, D-252), so the year neither counts nor applies.
   const filterValue: FilterValue = { pinned: pinnedLevel, stop: since ? null : stopId, since: since?.id ?? null, hidden };
   const nFilters = filterCount(filterValue);
   const toggleFilters = (el: HTMLElement) => setFilters((f) => (f ? null : { anchor: el }));

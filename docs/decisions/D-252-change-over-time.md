@@ -62,6 +62,24 @@ only see the values represented in the legend"):
   latest period, with "Comparing A → B. Turn off change to pick a year." under it. It doesn't add
   to the filter count, and a `t=` in a link with `since=` is dropped.
 
+**Amended 2026-10-10, Robbie: Map options (issue #155, options A + B of the panel review).**
+This replaces "Where it lives" above and the disabled year control in the 2026-10-09 amendment.
+- **"Filters" is now "Map options"** (button, panel heading, phone sheet). Three headed sections in
+  this order: **Geography** (the level), **Time**, **Show/hide** (feature layers' facets only).
+  Each appears only when the map has something to set there.
+- **The button shows a dot**, not a count, when anything differs from the defaults (its label says
+  "Map options, changed from the defaults"). A count read as "how many settings" but counted each
+  hidden road type. The phone's button is just "Apply".
+- **Time starts with a Values / Change switch** in the year buttons' style, only on maps with an
+  earlier period to compare with. Values shows the year picker. Change hides it and shows
+  "Compare with…" (the earlier periods, as buttons or the slider, like the year picker) and
+  "Change from A to B, the latest period." Nothing is greyed out. Turning Change on starts from the
+  oldest earlier period (worker default: the longest span, and for ACS the one that doesn't overlap
+  the latest). `since=` links keep working and open in Change.
+- **"Switch with zoom" is now "Automatic (changes as you zoom)"** (worker wording).
+- **Phone and laptop still differ**: the phone's full-screen sheet stages changes until Apply (the
+  map is hidden under it); the laptop's sidebar applies at once next to the map. Left as is.
+
 **Open (Robbie).** Wording of the labels ("Down 1.2–5.0 pts", "No clear change"); whether tract
 changes across the 2020 boundary change should match by code (default) or wait for a crosswalk;
 whether to publish earlier-period margins so the estimate above isn't needed.

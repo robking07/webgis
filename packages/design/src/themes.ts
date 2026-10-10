@@ -203,7 +203,7 @@ export const CONTRAST_RULES: Array<[keyof Theme["ui"] | `map.${keyof Theme["map"
   // On-map controls on phones (Robbie, 2026-10-03, issue #34: "get serious about making this
   // easier to see on mobile"). Every control and label over the map sits on a solid surface panel
   // (.wg-panel); these are the pairs that panel has to carry (WCAG AA). See also GLASS below.
-  ["text", "surface", 4.5, "on-map text on its panel: dataset title, Filters button, level note, legend strip"],
+  ["text", "surface", 4.5, "on-map text on its panel: dataset title, Map options button, level note, legend strip"],
   ["textMuted", "surface", 4.5, "on-map secondary text on its panel: category, 'closer in' hint"],
   ["text", "surface", 3, "on-map icons on their panel: menu, Back, zoom, carets (non-text)"],
   ["accentText", "accent", 4.5, "filter count badge"],
