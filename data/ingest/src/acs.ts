@@ -8,6 +8,9 @@ import { ACS_HEADLINE_YEAR, timelineStops } from "@webgis/registry/timeline";
 import { db, FIPS_RENAMES, log, STATES } from "./util.ts";
 import { areas2019, blockGroupLandArea } from "./geographies.ts";
 import { landArea, registerDataset, writeStatic, writeStopValues, writeValues, type Level, type Value } from "./values.ts";
+import { countsSpec, type Relations } from "@webgis/registry/relations";
+import { loadRelations } from "@webgis/registry/load";
+import { countsRow, remainderRow, sumVars as sum, usArea, writeCounts, writeMoes, writeUs, type Counts, type Row } from "./counts.ts";
 
 const YEAR = ACS_HEADLINE_YEAR;
 const API = (year: number) => `https://api.census.gov/data/${year}/acs/acs5`;
@@ -16,7 +19,6 @@ const MAX_VARS = 48;
  *  its last year's dollars; timeline periods are restated in headline-year dollars (D-36). */
 const CPI_U: Record<number, number> = { 2014: 236.736, 2019: 255.657, 2024: 313.689 };
 
-type Row = Map<string, number | null>; // variable (with E/M suffix) → number
 
 function clean(raw: string | null, isMoe: boolean): number | null {
   if (raw == null) return null;
@@ -55,22 +57,24 @@ async function fetchTable(vars: string[], geo: string, year = YEAR): Promise<Map
   return out;
 }
 
-function sum(row: Row, vars: string[]): { e: number | null; m: number | null } {
-  let e = 0, m2 = 0;
-  for (const v of vars) {
-    const ev = row.get(`${v}E`), mv = row.get(`${v}M`);
-    if (ev == null) return { e: null, m: null };
-    e += ev;
-    m2 += (mv ?? 0) ** 2;
-  }
-  return { e, m: Math.sqrt(m2) };
+/** The numerator and denominator variables of an entry at a level (block groups may use other
+ *  tables for the same measure, registry `blockGroup`). */
+function tablesOf(entry: DatasetEntry, level?: Level) {
+  if (entry.measure.kind !== "acs5") throw new Error("not acs5");
+  return level === "block_group" && entry.measure.blockGroup ? entry.measure.blockGroup : entry.measure;
 }
 
-function derive(entry: DatasetEntry, row: Row, area?: number, level?: Level): Value {
+/** The counts behind an ACS map (#156): numerator and denominator sums with their margins. */
+export function acsCounts(entry: DatasetEntry, row: Row, level?: Level): Counts | null {
+  if (!countsSpec(entry)) return null;
+  const { numerator, denominator } = tablesOf(entry, level);
+  return countsRow(sum(row, numerator), denominator ? sum(row, denominator) : null);
+}
+
+export function derive(entry: DatasetEntry, row: Row, area?: number, level?: Level): Value {
   if (entry.measure.kind !== "acs5") throw new Error("not acs5");
   const { scale, perSqMi } = entry.measure;
-  // Block groups may use other tables for the same measure (registry `blockGroup`).
-  const { numerator, denominator } = level === "block_group" && entry.measure.blockGroup ? entry.measure.blockGroup : entry.measure;
+  const { numerator, denominator } = tablesOf(entry, level);
   const num = sum(row, numerator);
   if (num.e == null) return { value: null, moe: null };
   let value = num.e, moe = num.m;
@@ -93,16 +97,57 @@ function derive(entry: DatasetEntry, row: Row, area?: number, level?: Level): Va
   return { value: value * scale, moe: moe == null ? null : moe * scale };
 }
 
-/** Every variable the entries need; block groups use each entry's `blockGroup` tables (D-124). */
-function varsOf(entries: DatasetEntry[], level?: Level): string[] {
-  return [...new Set(entries.flatMap((e) => {
+/** Every variable the entries need, plus `extra` (remainder cells); block groups use each entry's
+ *  `blockGroup` tables (D-124). */
+function varsOf(entries: DatasetEntry[], level?: Level, extra: string[] = []): string[] {
+  return [...new Set([...entries.flatMap((e) => {
     if (e.measure.kind !== "acs5") return [];
-    const m = level === "block_group" && e.measure.blockGroup ? e.measure.blockGroup : e.measure;
+    const m = tablesOf(e, level);
     return [...m.numerator, ...(m.denominator ?? [])];
-  }))].flatMap((v) => [`${v}E`, `${v}M`]);
+  }), ...extra])].flatMap((v) => [`${v}E`, `${v}M`]);
 }
 
-function fetchLevel(level: Level, vars: string[], year = YEAR): Promise<Map<string, Row>> {
+/** Parts sets (relations.yaml) whose remainder these entries can give: every member selected. */
+function remainderSets(rel: Relations, entries: DatasetEntry[]) {
+  const ids = new Set(entries.map((e) => e.id));
+  return Object.values(rel.parts).filter((p) => p.remainder && p.members.every((m) => ids.has(m))).map((p) => {
+    const members = p.members.map((m) => entries.find((e) => e.id === m)!);
+    return { id: p.remainder!.id, variables: p.remainder!.variables, members, total: tablesOf(members[0]).denominator! };
+  });
+}
+type RemainderSet = ReturnType<typeof remainderSets>[number];
+
+/** A parts set's remainder for every place in `table` (total − Σ members, #156). */
+export function remainders(set: Pick<RemainderSet, "id" | "variables" | "members" | "total">, table: Map<string, Row>): Map<string, Counts> {
+  const out = new Map<string, Counts>();
+  let mismatched = 0;
+  for (const [g, row] of table) {
+    const r = remainderRow(sum(row, set.total), set.members.map((e) => sum(row, tablesOf(e).numerator)), sum(row, set.variables));
+    if (r.mismatch) mismatched++;
+    out.set(g, r.row);
+  }
+  if (mismatched) log(set.id, `${mismatched} of ${table.size} places: the remainder's own cells don't equal total − members (check relations.yaml)`);
+  return out;
+}
+
+/** The U.S. row of every entry (and remainder) for one period: one API call (`for=us:1`, the
+ *  Census Bureau's own U.S. estimates and margins, 50 states and DC). `k`: dollar restatement. */
+async function writeUsRows(pool: ReturnType<typeof db>, entries: DatasetEntry[], sets: RemainderSet[], vars: string[], year: number, stop: string | null, k: (e: DatasetEntry) => number) {
+  const row = [...(await fetchLevel("us", vars, year)).values()][0];
+  if (!row) throw new Error(`ACS ${year}: no U.S. row`);
+  const area = usArea(await landArea(pool, "state"));
+  for (const e of entries) {
+    const v = derive(e, row, area), f = k(e);
+    writeUs(e.id, stop, { value: v.value == null ? null : v.value * f, moe: v.moe == null ? null : v.moe * f }, acsCounts(e, row));
+  }
+  for (const s of sets) {
+    const c = remainders(s, new Map([["US", row]])).get("US")!;
+    writeUs(s.id, stop, { value: c[0] != null && c[2] ? (100 * c[0]) / c[2] : null, moe: null }, c);
+  }
+}
+
+function fetchLevel(level: Level | "us", vars: string[], year = YEAR): Promise<Map<string, Row>> {
+  if (level === "us") return fetchTable(vars, "for=us:1", year);
   if (level === "state") return fetchTable(vars, "for=state:*", year);
   if (level === "county") return fetchTable(vars, "for=county:*", year);
   // Tracts and block groups: one call per state (block groups across every county and tract).
@@ -131,6 +176,8 @@ export async function ingestAcsTimeline(only?: string[]) {
     if (list.some(({ e }) => e.unit === "dollars") && !cpi) throw new Error(`no CPI-U for ${year}: add it to CPI_U in acs.ts`);
     const boundaries = list[0].boundaries;
     const vars = varsOf(list.map((x) => x.e));
+    const k = (e: DatasetEntry) => (e.unit === "dollars" ? CPI_U[YEAR] / cpi : 1);
+    await writeUsRows(pool, list.map((x) => x.e), [], vars, year, String(year), k);
     log("acs", `${year - 4}–${year}: ${list.length} datasets, ${vars.length} variables${boundaries ? `, ${boundaries} boundaries` : ""}`);
     for (const level of ["state", "county", "tract"] as const) {
       const levelEntries = list.map((x) => x.e).filter((e) => e.geographyLevels.includes(level));
@@ -145,12 +192,15 @@ export async function ingestAcsTimeline(only?: string[]) {
       const areas = level !== "state" && boundaries ? await areas2019(level) : await landArea(pool, level);
       for (const e of levelEntries) {
         const values = new Map<string, Value>();
-        const k = e.unit === "dollars" ? CPI_U[YEAR] / cpi : 1;
+        const f = k(e);
         for (const [geoid, row] of table) {
           const v = derive(e, row, areas.get(geoid));
-          values.set(geoid, { value: v.value == null ? null : v.value * k, moe: v.moe == null ? null : v.moe * k });
+          values.set(geoid, { value: v.value == null ? null : v.value * f, moe: v.moe == null ? null : v.moe * f });
         }
         writeStopValues(e.id, String(year), level, values);
+        writeMoes(e.id, String(year), level, values); // #154: real margins for the change map
+        // shortcut: counts files are written for the default period only (Compare places reads that);
+        // write them here too (≈90 MB more on R2) if a change map ever shows change in head counts.
       }
     }
   }
@@ -161,24 +211,37 @@ export async function ingestAcsTimeline(only?: string[]) {
 export async function ingestAcs(only?: string[], levelsOnly?: Level[]) {
   const entries = loadRegistry().filter((e) => e.measure.kind === "acs5" && (!only || only.includes(e.id)));
   if (!entries.length) return log("acs", "no acs5 entries selected");
-  const vars = varsOf(entries);
+  // Parts sets with every member selected also get their remainder (#156).
+  const sets = remainderSets(loadRelations(), entries);
+  const vars = varsOf(entries, undefined, sets.flatMap((s) => s.variables));
   log("acs", `${entries.length} datasets, ${vars.length} variables`);
   const pool = db();
   for (const e of entries) await registerDataset(pool, e);
+  if (!levelsOnly || levelsOnly.includes("state")) await writeUsRows(pool, entries, sets, vars, YEAR, null, () => 1);
 
   for (const level of ["state", "county", "tract", "block_group"] as const) {
     if (levelsOnly && !levelsOnly.includes(level)) continue;
     const levelEntries = entries.filter((e) => e.geographyLevels.includes(level));
     if (!levelEntries.length) continue;
     log("acs", `fetching ${level}…`);
-    const table = await fetchLevel(level, level === "block_group" ? varsOf(levelEntries, level) : vars);
+    const levelSets = sets.filter((s) => s.members.every((e) => e.geographyLevels.includes(level)));
+    const table = await fetchLevel(level, level === "block_group" ? varsOf(levelEntries, level, levelSets.flatMap((s) => s.variables)) : vars);
     const areas = level === "block_group" ? await blockGroupLandArea() : await landArea(pool, level);
+    const counts = new Map<string, Map<string, Counts>>();
     for (const e of levelEntries) {
       const values = new Map<string, Value>();
       for (const [geoid, row] of table) values.set(geoid, derive(e, row, areas.get(geoid), level));
-      if (level === "block_group") writeStatic(e.id, level, values);
-      else await writeValues(pool, e.id, level, values);
+      if (level === "block_group") writeStatic(e.id, level, values); // writes block_group.moe.json too
+      else {
+        await writeValues(pool, e.id, level, values);
+        writeMoes(e.id, null, level, values); // #154: state and county margins were only in details/
+      }
+      if (countsSpec(e)) counts.set(e.id, new Map([...table].map(([g, row]) => [g, acsCounts(e, row, level)!])));
+      // ~240k block groups × 44 series won't fit in memory at once: merge into the shards in batches.
+      if (counts.size >= 8) { writeCounts(level, counts); counts.clear(); }
     }
+    for (const s of levelSets) counts.set(s.id, remainders(s, table));
+    writeCounts(level, counts);
   }
   await pool.end();
 }

@@ -4,6 +4,7 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parse } from "yaml";
 import { DatasetEntry, GlossaryTerm } from "./schema.ts";
+import { checkRelations, Relations } from "./relations.ts";
 
 export const REGISTRY_DIR = join(dirname(fileURLToPath(import.meta.url)), "datasets");
 
@@ -33,4 +34,15 @@ export function loadRegistry(): DatasetEntry[] {
     if (!terms.has(t)) throw new Error(`${e.id}: unknown glossary term "${t}" (add it to glossary.yaml)`);
   }
   return entries;
+}
+
+export const RELATIONS_FILE = join(dirname(fileURLToPath(import.meta.url)), "relations.yaml");
+
+/** relations.yaml (#156), parsed and checked against the registry: throws on any problem. */
+export function loadRelations(entries: DatasetEntry[] = loadRegistry()): Relations {
+  const res = Relations.safeParse(parse(readFileSync(RELATIONS_FILE, "utf8")));
+  if (!res.success) throw new Error(`relations.yaml: ${res.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`).join("; ")}`);
+  const problems = checkRelations(res.data, entries);
+  if (problems.length) throw new Error(`relations.yaml:\n  ${problems.join("\n  ")}`);
+  return res.data;
 }
