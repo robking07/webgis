@@ -117,7 +117,7 @@ Light and dark come from the same token structure; the basemap and the UI chrome
 | light | logo bread on panels (non-text) | `brandBread` on `surface` | 4.61 | 3 |
 | light | logo map layer on the page (non-text) | `accent` on `bg` | 5.91 | 3 |
 | light | panel borders (decorative) | `border` on `surface` | 1.45 | 1.3 |
-| light | on-map text on its panel: dataset title, Filters button, level note, legend strip | `text` on `surface` | 17.05 | 4.5 |
+| light | on-map text on its panel: dataset title, Map options button, level note, legend strip | `text` on `surface` | 17.05 | 4.5 |
 | light | on-map secondary text on its panel: category, 'closer in' hint | `textMuted` on `surface` | 6.58 | 4.5 |
 | light | on-map icons on their panel: menu, Back, zoom, carets (non-text) | `text` on `surface` | 17.05 | 3 |
 | light | filter count badge | `accentText` on `accent` | 6.44 | 4.5 |
@@ -148,7 +148,7 @@ Light and dark come from the same token structure; the basemap and the UI chrome
 | dark | logo bread on panels (non-text) | `brandBread` on `surface` | 7.63 | 3 |
 | dark | logo map layer on the page (non-text) | `accent` on `bg` | 8.39 | 3 |
 | dark | panel borders (decorative) | `border` on `surface` | 1.46 | 1.3 |
-| dark | on-map text on its panel: dataset title, Filters button, level note, legend strip | `text` on `surface` | 14.30 | 4.5 |
+| dark | on-map text on its panel: dataset title, Map options button, level note, legend strip | `text` on `surface` | 14.30 | 4.5 |
 | dark | on-map secondary text on its panel: category, 'closer in' hint | `textMuted` on `surface` | 6.92 | 4.5 |
 | dark | on-map icons on their panel: menu, Back, zoom, carets (non-text) | `text` on `surface` | 14.30 | 3 |
 | dark | filter count badge | `accentText` on `accent` | 7.85 | 4.5 |
@@ -176,10 +176,11 @@ Light and dark come from the same token structure; the basemap and the UI chrome
 - **Reliability (D-222):** ACS 5-year estimates are graded by coefficient of variation, CV = (MOE / 1.645) / |value| (`src/reliability.ts`): under 15% reliable, 15–30% "use with caution" (details-panel note only), over 30% unreliable. With the legend's toggle on (off by default), unreliable tracts and block groups get diagonal hatching over their fill: paired `map.hatchDark` / `map.hatchLight` stripes, 1.25 px wide, repeating every 7 px at 60% opacity (`HATCH` in `src/themes.ts`); the design gate checks the hatch stands out from every class and the no-data fill in both themes. The fill color still shows underneath. The hatch runs the opposite way from the no-data swatch.
 - **Skewed data:** when quantile breaks would land on the minimum (e.g. most tracts at exactly 0% transit commuting), the bottom class becomes "exactly the minimum" (labeled "0%") and the other classes are quantiles of the values above it. This avoids an empty "< 0%" class.
 - Bivariate maps use tertiles on each axis; cell = 3 · y + x.
+- **Change maps (D-252):** `CHANGE_RAMP` (Orange–Purple, 7 classes): three classes down, "no clear change" in the middle, three up, with the same magnitude cut-offs (thirds of the areas' absolute change) on both sides. Areas without a value use `map.noDataChange`, darker than `map.noData` in the light theme so the near-white middle never reads as missing; the design gate checks every change class against it under all four visions.
 
 ## Geography levels and zoom
 
-"Switch with zoom" is the default for every dataset. Zooms are for a map 1440 px across; smaller screens shift every band down by `bandShift` (about 2 zooms on a 390 px phone), so each level covers the same ground on any screen. A pinned level draws at every zoom except below its floor, where the finest coarser level stands in.
+"Automatic (changes as you zoom)" is the default for every dataset. Zooms are for a map 1440 px across; smaller screens shift every band down by `bandShift` (about 2 zooms on a 390 px phone), so each level covers the same ground on any screen. A pinned level draws at every zoom except below its floor, where the finest coarser level stands in.
 
 | Level | Shown at zoom (switch with zoom) | Never below zoom (pinned) |
 |---|---|---|

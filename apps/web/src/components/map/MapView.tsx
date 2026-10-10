@@ -4,7 +4,7 @@
 import { useEffect, useLayoutEffect, useRef } from "react";
 import { AttributionControl, LngLatBounds, Map as MlMap, ScaleControl, addProtocol, setWorkerUrl, type LayerSpecification, type MapGeoJSONFeature } from "maplibre-gl";
 import { Protocol } from "pmtiles";
-import { basemapStyle, choroplethFill, hatchImage, hatchLayerId, HATCH_IMAGE, HATCH_LEVELS, membershipFilter, NO_FEATURES, choroplethFillsByState, DATA_BEFORE_ID, STATIC_ONLY_LEVELS, TILE_VALUE_LEVELS, THEMES, featureLineLayers, featurePolygonLayers, fillLayerIds, focusLandLayer, FOCUS_LAND_BEFORE_ID, GEO_LEVELS, MOTION, PER_STATE_LEVELS, thematicLayers, type GeoLevel, type ThemeName } from "@webgis/design";
+import { basemapStyle, choroplethFill, hatchImage, hatchLayerId, HATCH_IMAGE, HATCH_LEVELS, membershipFilter, NO_FEATURES, choroplethFillsByState, DATA_BEFORE_ID, STATIC_ONLY_LEVELS, TILE_VALUE_LEVELS, THEMES, featureLineLayers, featurePolygonLayers, fillLayerIds, focusLandLayer, FOCUS_LAND_BEFORE_ID, GEO_LEVELS, MOTION, PER_STATE_LEVELS, thematicLayers, type GeoLevel, type NoDataFill, type ThemeName } from "@webgis/design";
 import type { FeatureLayerSpec } from "@/lib/layers";
 import type { ViewState } from "@/lib/url-state";
 import type { Geometry } from "geojson";
@@ -17,6 +17,8 @@ export interface LevelPaint {
   /** Levels with values in the tiles (blocks): color by this property with `breaks`. */
   field?: string;
   breaks?: number[];
+  /** Theme token for areas without a value (change maps have their own). */
+  noData?: NoDataFill;
 }
 
 export interface HoverInfo {
@@ -87,8 +89,10 @@ interface Props {
   cooperative?: boolean;
   /** Reliability hatching (D-222): unreliable geoids per level; null or absent = hatching off. */
   hatch?: Partial<Record<GeoLevel, ReadonlySet<string>>> | null;
-  /** While hatching is on: the counties (5-digit FIPS) whose tracts are on screen, when they change. */
+  /** While hatching (or `watchCounties`) is on: the counties (5-digit FIPS) whose tracts are on screen, when they change. */
   onTractCounties?: (counties: string[]) => void;
+  /** Report onTractCounties without hatching (a change map testing tract margins of error). */
+  watchCounties?: boolean;
 }
 
 export interface MapApi {
@@ -116,13 +120,13 @@ function tilesUrl(level: GeoLevel, boundaries?: string | null) {
   return `pmtiles://${base}/${boundaryFile(level, boundaries)}.pmtiles`;
 }
 
-export function MapView({ theme, initialView, paint, onViewChange, onHover, onSelect, onTilesError, ariaLabel, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, onApi, featureFilter, scaleUnit = "imperial", attribution = true, boundaries = null, cooperative = false, hatch = null, onTractCounties }: Props) {
+export function MapView({ theme, initialView, paint, onViewChange, onHover, onSelect, onTilesError, ariaLabel, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, onApi, featureFilter, scaleUnit = "imperial", attribution = true, boundaries = null, cooperative = false, hatch = null, onTractCounties, watchCounties = false }: Props) {
   const container = useRef<HTMLDivElement>(null);
   const map = useRef<MlMap | null>(null);
   const applied = useRef<Partial<Record<GeoLevel, LevelPaint>>>({});
-  const latest = useRef({ paint, theme, onViewChange, onHover, onSelect, onTilesError, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, boundaries, featureFilter, hatch, onTractCounties });
+  const latest = useRef({ paint, theme, onViewChange, onHover, onSelect, onTilesError, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, boundaries, featureFilter, hatch, onTractCounties, watchCounties });
   // Refresh after every render, before any effect or event handler reads it.
-  useLayoutEffect(() => { latest.current = { paint, theme, onViewChange, onHover, onSelect, onTilesError, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, boundaries, featureFilter, hatch, onTractCounties }; });
+  useLayoutEffect(() => { latest.current = { paint, theme, onViewChange, onHover, onSelect, onTilesError, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, boundaries, featureFilter, hatch, onTractCounties, watchCounties }; });
   /** Hatch filters currently on the map, per level (by set identity). */
   const appliedHatch = useRef<Partial<Record<GeoLevel, ReadonlySet<string> | undefined>>>({});
   /** Last county list reported to onTractCounties. */
@@ -211,7 +215,7 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
       syncHatch(m, latest.current.hatch, appliedHatch.current, latest.current.levelZooms);
     });
     // Hatching on: report which counties' tracts are on screen once the map settles.
-    m.on("idle", () => reportTractCounties(m, latest.current.hatch, latest.current.onTractCounties, reportedCounties));
+    m.on("idle", () => reportTractCounties(m, !!latest.current.hatch || latest.current.watchCounties, latest.current.onTractCounties, reportedCounties));
     m.on("moveend", () => {
       const c = m.getCenter();
       latest.current.onViewChange({ lon: c.lng, lat: c.lat, zoom: m.getZoom() });
@@ -301,9 +305,9 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
     const m = map.current;
     if (!m || !ready.current) return;
     syncHatch(m, hatch, appliedHatch.current, latest.current.levelZooms);
-    if (!hatch) reportedCounties.current = "";
-    else reportTractCounties(m, hatch, latest.current.onTractCounties, reportedCounties);
-  }, [hatch]);
+    if (!hatch && !watchCounties) reportedCounties.current = "";
+    else reportTractCounties(m, true, latest.current.onTractCounties, reportedCounties);
+  }, [hatch, watchCounties]);
 
   // Boundary vintage (timeline stops before 2020): swap the county/tract sources, keep the layers.
   // Runs before the paint effect, which then repaints the new sources.
@@ -389,10 +393,10 @@ function syncHatch(m: MlMap, hatch: Props["hatch"], applied: Partial<Record<GeoL
   }
 }
 
-/** Counties (5-digit FIPS) whose tracts are drawn on screen; reported only when hatching is on
- *  and the list changes. */
-function reportTractCounties(m: MlMap, hatch: Props["hatch"], cb: Props["onTractCounties"], last: { current: string }) {
-  if (!hatch || !cb || !m.getLayer("tract-fill")) return;
+/** Counties (5-digit FIPS) whose tracts are drawn on screen; reported only when `on` (hatching or
+ *  a change map) and the list changes. */
+function reportTractCounties(m: MlMap, on: boolean, cb: Props["onTractCounties"], last: { current: string }) {
+  if (!on || !cb || !m.getLayer("tract-fill")) return;
   const counties = new Set<string>();
   for (const f of m.queryRenderedFeatures({ layers: ["tract-fill"] })) counties.add(String(f.properties.geoid).slice(0, 5));
   const key = [...counties].sort().join(",");
@@ -488,10 +492,10 @@ function syncPaint(m: MlMap, paint: Partial<Record<GeoLevel, LevelPaint>>, appli
     }
     // Data-driven expressions evaluated in the tile workers, no per-feature state (D-114).
     if (PER_STATE_LEVELS.has(level)) {
-      const fills = choroplethFillsByState(level, next?.colors ?? [], next?.classes ?? new Map(), theme);
+      const fills = choroplethFillsByState(level, next?.colors ?? [], next?.classes ?? new Map(), theme, next?.noData);
       for (const [id, color] of Object.entries(fills)) if (m.getLayer(id)) m.setPaintProperty(id, "fill-color", color as never);
     } else {
-      m.setPaintProperty(`${level}-fill`, "fill-color", choroplethFill(next?.colors ?? [], next?.classes ?? new Map(), theme) as never);
+      m.setPaintProperty(`${level}-fill`, "fill-color", choroplethFill(next?.colors ?? [], next?.classes ?? new Map(), theme, next?.noData) as never);
     }
     applied[level] = next;
   }

@@ -7,13 +7,15 @@ import type { Stop } from "@/lib/periods";
 
 const DATED = /^\d{4}$/;
 
-export function TimeControl({ stops, value, onChange, docked }: {
+export function TimeControl({ stops, value, onChange, docked, label }: {
   stops: Stop[];
   /** Selected stop id. */
   value: string;
   onChange: (id: string) => void;
   /** Immersed dock: transparent, text halos. */
   docked?: boolean;
+  /** Heading in place of "Years"/"Year" (the change map's "Compare with…"). */
+  label?: string;
 }) {
   const current = stops.find((s) => s.id === value) ?? stops.find((s) => s.isDefault)!;
   const summary = stops.find((s) => s.isDefault && !DATED.test(s.id));
@@ -24,8 +26,8 @@ export function TimeControl({ stops, value, onChange, docked }: {
   if (stops.length <= 4) {
     return (
       <fieldset className="space-y-1.5">
-        <legend className="text-xs font-semibold">Years</legend>
-        <div role="radiogroup" aria-label="Years" className="flex flex-wrap gap-1">
+        <legend className="text-xs font-semibold">{label ?? "Years"}</legend>
+        <div role="radiogroup" aria-label={label ?? "Years"} className="flex flex-wrap gap-1">
           {stops.map((s) => (
             <button key={s.id} type="button" role="radio" aria-checked={s.id === current.id} onClick={() => onChange(s.id)} className={chip(s.id === current.id)}>
               {s.label}
@@ -46,7 +48,7 @@ export function TimeControl({ stops, value, onChange, docked }: {
   return (
     <div className="space-y-1.5">
       <div className="flex items-baseline justify-between gap-2">
-        <span className="text-xs font-semibold" id="time-label">{summary ? "Show" : "Year"}</span>
+        <span className="text-xs font-semibold" id="time-label">{label ?? (summary ? "Show" : "Year")}</span>
         <span className="text-sm font-semibold tabular-nums" aria-live="polite">{current.label}</span>
       </div>
       {summary && (

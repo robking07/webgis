@@ -186,10 +186,13 @@ export interface ThematicLayerOptions {
   zooms?: { minzoom: number; maxzoom: number };
 }
 
+/** Which theme token fills areas without a value: change maps use their own (see themes.ts). */
+export type NoDataFill = "noData" | "noDataChange";
+
 /** Choropleth fill for small levels (states, counties): a `match` on geoid, evaluated in
  *  the tile workers. Feature state holds only hover/selected (D-114). */
-export function choroplethFill(colors: string[], classes: ReadonlyMap<string, number>, theme: ThemeName): unknown {
-  const noData = THEMES[theme].map.noData;
+export function choroplethFill(colors: string[], classes: ReadonlyMap<string, number>, theme: ThemeName, noDataFill: NoDataFill = "noData"): unknown {
+  const noData = THEMES[theme].map[noDataFill];
   if (colors.length === 0 || classes.size === 0) return noData;
   const byClass: string[][] = colors.map(() => []);
   for (const [id, c] of classes) byClass[c]?.push(id);
@@ -228,8 +231,8 @@ export function fillLayerIds(level: GeoLevel): string[] {
  *  membership with `in`, a native `indexOf`. The commas make a hit an exact match of the
  *  whole remainder, never part of a longer or neighboring id. (`index-of` and `slice`
  *  spread their whole input into an array first, so they're only used on the geoid.) */
-export function choroplethFillsByState(level: GeoLevel, colors: string[], classes: ReadonlyMap<string, number>, theme: ThemeName): Record<string, unknown> {
-  const noData = THEMES[theme].map.noData;
+export function choroplethFillsByState(level: GeoLevel, colors: string[], classes: ReadonlyMap<string, number>, theme: ThemeName, noDataFill: NoDataFill = "noData"): Record<string, unknown> {
+  const noData = THEMES[theme].map[noDataFill];
   // state → county prefix → per-class lists of the geoid's remainder
   const byState = new Map<string, Map<string, string[][]>>();
   if (colors.length) for (const [id, c] of classes) {

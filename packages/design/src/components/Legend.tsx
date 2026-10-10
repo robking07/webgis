@@ -1,4 +1,5 @@
 import { classLabels, LEGEND, type Unit } from "../format.ts";
+import type { NoDataFill } from "../style.ts";
 
 export interface LegendProps {
   title: string;
@@ -15,11 +16,15 @@ export interface LegendProps {
   swatch?: "area" | "line";
   /** Class index of a selected place: that row is outlined and labeled, so its value reads against the key. */
   mark?: number | null;
+  /** Labels to show instead of ranges made from `breaks` (change maps, whose classes aren't ranges). */
+  labels?: string[];
+  /** Theme token for the no-data swatch (change maps have their own; see themes.ts). */
+  noDataFill?: NoDataFill;
 }
 
 /** The only choropleth legend. Labels are text, so the legend never relies on color alone. */
-export function Legend({ title, unit, colors, breaks, caption, minClass, showNoData = true, swatch = "area", mark = null }: LegendProps) {
-  const labels = classLabels(breaks, unit, minClass != null ? { min: minClass, minIsClass: true } : undefined);
+export function Legend({ title, unit, colors, breaks, caption, minClass, showNoData = true, swatch = "area", mark = null, labels: given, noDataFill = "noData" }: LegendProps) {
+  const labels = given ?? classLabels(breaks, unit, minClass != null ? { min: minClass, minIsClass: true } : undefined);
   return (
     <figure className="wg-legend" aria-label={`Legend: ${title}`}>
       <figcaption className="wg-legend-title">{title}</figcaption>
@@ -34,7 +39,7 @@ export function Legend({ title, unit, colors, breaks, caption, minClass, showNoD
         ))}
         {LEGEND.alwaysShowNoData && showNoData && (
           <li>
-            <span className="wg-swatch wg-swatch-nodata" style={{ width: LEGEND.swatchSize, height: LEGEND.swatchSize }} aria-hidden />
+            <span className="wg-swatch wg-swatch-nodata" style={{ width: LEGEND.swatchSize, height: LEGEND.swatchSize, ...(noDataFill === "noDataChange" && { "--map-no-data": "var(--map-no-data-change)" }) }} aria-hidden />
             <span>{LEGEND.noDataLabel}</span>
           </li>
         )}

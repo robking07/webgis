@@ -30,7 +30,7 @@ export default function compareTests({ test, expect, wait, immerse, tapLonLat, l
   }
 
   test("laptop compare places: no Compare with… on a non-default year", async (o) => {
-    // Pick the year in Filters rather than loading with t=2019: a page that opens on an earlier year
+    // Pick the year in Map options rather than loading with t=2019: a page that opens on an earlier year
     // asks for block-group and block boundary files that don't exist (#159) at any zoom, because
     // every level's source is added on load. The year control only swaps county and tract
     // boundaries, which do exist.
@@ -39,7 +39,7 @@ export default function compareTests({ test, expect, wait, immerse, tapLonLat, l
     await page.locator("#filters-panel").waitFor();
     await wait(400);
     await page.locator("#filters-panel [role=radiogroup][aria-label=Years] [role=radio]", { hasText: "2015–2019" }).first().click();
-    await page.getByRole("button", { name: "Close filters" }).click();
+    await page.getByRole("button", { name: "Close map options" }).click();
     await page.waitForSelector("#filters-panel", { state: "detached" });
     await page.waitForFunction(() => new URLSearchParams(location.search).get("t") === "2019", null, { timeout: 10000 });
     await immerse(page);

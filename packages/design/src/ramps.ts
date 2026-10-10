@@ -107,6 +107,13 @@ export function rampColors(id: RampId, n: number): string[] {
   return samples(n).map((t) => formatHex(interp(t))!);
 }
 
+/** Change-over-time maps: a diverging ramp. Falls are on the low (orange) side, rises on the
+ *  high (purple) side, "no clear change" is the neutral middle. Orange–purple carries no good/bad
+ *  reading (a rise in poverty and a rise in income look alike). 7 classes: three down, the
+ *  middle, three up. */
+export const CHANGE_RAMP: RampId = "puor";
+export const CHANGE_CLASSES = 7;
+
 export function rampsOfKind(kind: RampKind): RampDef[] {
   return Object.values(RAMPS).filter((r) => r.kind === kind);
 }

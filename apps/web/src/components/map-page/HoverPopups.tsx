@@ -3,11 +3,16 @@ import { GEO_LEVELS, TILE_VALUE_LEVELS } from "@webgis/design";
 import type { FeatureHit, HoverInfo } from "../map/MapView";
 import type { Dataset } from "@/lib/registry";
 import type { FeatureLayerSpec } from "@/lib/layers";
-import type { LevelValues } from "@/lib/values";
+import type { LevelValues, Values } from "@/lib/values";
 import { featureRows, featureTitle } from "./FeaturePanel";
+import { changeSummary } from "@/lib/change";
+import { areaChangeNote, type Stop } from "@/lib/periods";
+import type { ClassedLevel } from "./useViewerData";
+import { CHANGE_CLASSES } from "@webgis/design";
 
-/** The hover card for a place (value for each mapped dataset), shown until something is clicked. */
-export function PlaceHoverPopup({ hover, primary, secondary, xValues, yValues, blockField, periodLabel }: {
+/** The hover card for a place (value for each mapped dataset), shown until something is clicked.
+ *  On a change map it shows the change, with both periods' values under it. */
+export function PlaceHoverPopup({ hover, primary, secondary, xValues, yValues, blockField, periodLabel, change }: {
   hover: HoverInfo;
   primary: Dataset;
   secondary: Dataset | null;
@@ -17,7 +22,21 @@ export function PlaceHoverPopup({ hover, primary, secondary, xValues, yValues, b
   blockField?: string | null;
   /** The shown year stop's label, when it isn't the default period. */
   periodLabel?: string;
+  /** A change map (issue #127): the two stops, the earlier values and the change classes. */
+  change?: { from: Stop; to: Stop; fromValues?: Values; classed: ClassedLevel };
 }) {
+  if (change) {
+    const g = hover.geoid;
+    const tested = !!change.classed.tested && change.classed.classes.get(g) === (CHANGE_CLASSES - 1) / 2;
+    const s = changeSummary(change.classed.change?.[g], change.fromValues?.[g], xValues[hover.level]?.[g], change.classed.measure!, primary.unit,
+      tested, areaChangeNote(change.from, change.to, hover.level, g));
+    return (
+      <div className="pointer-events-none absolute z-30 rounded-md border bg-popover p-2.5 shadow-md" style={{ left: hover.x + 14, top: hover.y + 14 }} data-change-hover="">
+        <Popup title={hover.name} subtitle={`${GEO_LEVELS[hover.level].label} · change, ${change.from.label} → ${change.to.label}`}
+          rows={[{ label: primary.title, unit: primary.unit, value: null, text: s.headline }]} footnote={s.values} />
+      </div>
+    );
+  }
   return (
     <div className="pointer-events-none absolute z-30 rounded-md border bg-popover p-2.5 shadow-md" style={{ left: hover.x + 14, top: hover.y + 14 }}>
       <Popup title={hover.name} subtitle={`${GEO_LEVELS[hover.level].label}${periodLabel ? ` · ${periodLabel}` : ""}`}

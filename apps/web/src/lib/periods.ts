@@ -34,3 +34,35 @@ export function stopNote(d: Dataset, s: Stop, level: GeoLevel): string | null {
   notes.push("Colors use the same breaks as the default view, so they show change");
   return notes.join(". ");
 }
+
+const DATED = /^\d{4}$/;
+
+/** Stops a change map can start from: dated stops before `to` (the shown one), newest first.
+ *  None when `to` is an average or normal (a change since then isn't a change over time). */
+export function changeStops(stops: Stop[], to: Stop | null): Stop[] {
+  if (!to || !DATED.test(to.id)) return [];
+  return stops.slice(0, stops.indexOf(to)).filter((s) => DATED.test(s.id)).reverse();
+}
+
+/** The legend's note for a change map: what's matched across a boundary change. */
+export function changeNote(from: Stop, to: Stop, level: GeoLevel): string | null {
+  if (from.boundaries === to.boundaries) return null;
+  if (level === "tract") return "Tracts are matched by their code; tracts split or merged in 2020 show no data";
+  if (level === "county") return "Connecticut shows no data (its counties changed in 2022)";
+  return null;
+}
+
+/** The period a change map runs to: the latest dated stop (the default, unless the default is an
+ *  average or normal). Change always ends here, so the year control is off in change mode. */
+export function latestStop(stops: Stop[]): Stop | null {
+  const d = stops.find((s) => s.isDefault);
+  return d && DATED.test(d.id) ? d : [...stops].reverse().find((s) => DATED.test(s.id)) ?? null;
+}
+
+/** Why one area has no change: its boundaries changed between the two periods. */
+export function areaChangeNote(from: Stop, to: Stop, level: GeoLevel, geoid: string): string | null {
+  if (from.boundaries === to.boundaries) return null;
+  if (level === "tract") return "tract changed in 2020";
+  if (level === "county" && geoid.startsWith("09")) return "Connecticut's counties changed in 2022";
+  return null;
+}
