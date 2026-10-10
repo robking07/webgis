@@ -810,7 +810,7 @@ test("laptop reliability hatching: toggle on an ACS tract map, none on census co
 });
 
 // Feature files (one per feature; this file keeps the shared harness).
-(await import("./compare.tests.mjs")).default({ test, expect, wait, immerse, tapLonLat, HENNEPIN, dbCalls });
+(await import("./compare.tests.mjs")).default({ test, expect, wait, immerse, tapLonLat, live, HENNEPIN, dbCalls });
 
 // ── Run ────────────────────────────────────────────────────────────────────────
 // Round-robin keeps the slow tests spread across shards.

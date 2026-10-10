@@ -1,6 +1,6 @@
 // Compare places side by side (roadmap 1.1, issue #117), registered by menus.spec.mjs, which owns
 // the browser, server and helpers. Split by feature so the map-menu file stops growing.
-export default function compareTests({ test, expect, wait, immerse, tapLonLat, HENNEPIN, dbCalls }) {
+export default function compareTests({ test, expect, wait, immerse, tapLonLat, live, HENNEPIN, dbCalls }) {
   for (const vp of ["phone", "laptop"]) {
     test(`${vp} compare places: Hennepin details → Compare with… → Ramsey → headline, survives reload, no database`, async (o) => {
       const { page } = await o(vp, `/map?d=pct_poverty&lv=county&at=${HENNEPIN.join(",")},8`);
@@ -30,12 +30,25 @@ export default function compareTests({ test, expect, wait, immerse, tapLonLat, H
   }
 
   test("laptop compare places: no Compare with… on a non-default year", async (o) => {
-    const { page } = await o("laptop", `/map?d=pct_poverty&lv=county&t=2019&at=${HENNEPIN.join(",")},8`);
+    // Pick the year in Filters rather than loading with t=2019: a page that opens on an earlier year
+    // asks for block-group and block boundary files that don't exist (#159) at any zoom, because
+    // every level's source is added on load. The year control only swaps county and tract
+    // boundaries, which do exist.
+    const { page } = await o("laptop", `/map?d=pct_poverty&lv=county&at=${HENNEPIN.join(",")},8`);
+    await live(page).click();
+    await page.locator("#filters-panel").waitFor();
+    await wait(400);
+    await page.locator("#filters-panel [role=radiogroup][aria-label=Years] [role=radio]", { hasText: "2015–2019" }).first().click();
+    await page.getByRole("button", { name: "Close filters" }).click();
+    await page.waitForSelector("#filters-panel", { state: "detached" });
+    await page.waitForFunction(() => new URLSearchParams(location.search).get("t") === "2019", null, { timeout: 10000 });
     await immerse(page);
     await tapLonLat(page, ...HENNEPIN);
     const det = page.locator('section[aria-label^="Details for Hennepin County"]');
     await det.waitFor();
-    await wait(1500);
+    // The period's value is in; the panel has decided whether to offer compare.
+    await page.waitForFunction(() => /\d%/.test(document.querySelector('section[aria-label^="Details for"]')?.innerText ?? ""), null, { timeout: 15000 });
+    await wait(500);
     expect((await det.getByRole("button", { name: "Compare with…" }).count()) === 0, "Compare with… offered for another year");
   });
 }
