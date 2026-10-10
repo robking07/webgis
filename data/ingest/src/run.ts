@@ -1,5 +1,5 @@
 // npm run ingest -- <step> [dataset or level ids…]
-// Steps: geographies | label-mask | timeline | acs | acs-bg | census2020 | lodes | places | climdiv | nbi | fars | overdose | airquality | features | vmt | cejst | ddp287g | nri | lead | tiles | publish-tiles | publish-values | publish-geo | publish-data | details | publish-details | tract-geo | export | insights | tracts-out | docs | mn-catalog | all
+// Steps: geographies | label-mask | timeline | acs | acs-bg | census2020 | lodes | places | climdiv | nbi | fars | overdose | airquality | features | vmt | cejst | ddp287g | nri | lead | tiles | publish-tiles | publish-values | publish-geo | publish-data | counts | publish-counts | details | publish-details | tract-geo | export | insights | tracts-out | docs | mn-catalog | all
 import { ingestGeographies, tractGeography } from "./geographies.ts";
 import { ingestAcs, ingestAcsTimeline } from "./acs.ts";
 import { ingestCensus2020 } from "./census2020.ts";
@@ -9,7 +9,8 @@ import { exportNames, exportRegistry, exportSearch, exportValues } from "./expor
 import { computeInsights } from "./insights.ts";
 import { ingestPlaces } from "./places.ts";
 import { ingestClimdiv, ingestClimdivTimeline } from "./climdiv.ts";
-import { publishData, publishDetails, publishGeo, publishTiles, publishValues } from "./publish-tiles.ts";
+import { publishCounts, publishData, publishDetails, publishGeo, publishTiles, publishValues } from "./publish-tiles.ts";
+import { setCountsOnly } from "./values.ts";
 import { detailsOut } from "./details.ts";
 import { writeDataSourcesDoc } from "./docs.ts";
 import { mnCatalog } from "./mn-catalog.ts";
@@ -57,6 +58,15 @@ const steps: Record<string, () => Promise<void> | void> = {
   "publish-values": () => publishValues(only),
   "publish-geo": publishGeo,
   "publish-data": () => publishData(only),
+  // #156, #154: margins of error, the counts behind each map and U.S. rows, as new files only. Re-runs
+  // the source downloads but writes nothing else (no database writes, no existing value files or
+  // tiles); `publish-counts` then uploads just those files.
+  counts: async () => {
+    setCountsOnly();
+    await ingestAcs(only); await ingestAcsTimeline(only); await ingestCensus2020(only);
+    await ingestLodes(only); await ingestFars(only); await ingestDdp287g(only);
+  },
+  "publish-counts": () => publishCounts(only),
   "tract-geo": tractGeography,
   // State and county click details as static files on R2 (S1): the browser no longer queries the database.
   details: detailsOut,

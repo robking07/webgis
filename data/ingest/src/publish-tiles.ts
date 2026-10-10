@@ -55,12 +55,16 @@ export function droppedDatasets(live: Record<string, unknown>, next: Record<stri
   return Object.keys(live).filter((k) => !(k in next));
 }
 
-/** A tract shard holds every dataset's tracts for one county, so a checkout that never had the
+/** Files that hold many datasets for one county: tract details (D-113) and the tract and block-group
+ *  counts (values/counts/<level>/<county>.json, #156). */
+export const SHARD_PREFIXES = ["values/tracts/", "values/counts/"];
+
+/** A shard holds every dataset's tracts for one county, so a checkout that never had the
  *  shards writes new ones holding only what it just loaded. Uploading those would erase the other
  *  datasets' tract details on the live site (2026-10-08). Refuse instead, unless
  *  ALLOW_TRACT_DROP=1 says the drop is intended (a dataset being removed). */
 async function guardTractShard(s3: S3Client, bucket: string, key: string, body: Buffer) {
-  if (!key.startsWith("values/tracts/") || process.env.ALLOW_TRACT_DROP === "1") return;
+  if (!SHARD_PREFIXES.some((p) => key.startsWith(p)) || process.env.ALLOW_TRACT_DROP === "1") return;
   let live: Record<string, unknown>;
   try {
     const r = await s3.send(new GetObjectCommand({ Bucket: bucket, Key: key }));
@@ -72,7 +76,7 @@ async function guardTractShard(s3: S3Client, bucket: string, key: string, body: 
   }
   const dropped = droppedDatasets(live, JSON.parse(gunzipSync(body).toString("utf8")));
   if (dropped.length) throw new Error(`${key}: upload would drop ${dropped.length} live dataset(s) (${dropped.slice(0, 5).join(", ")}${dropped.length > 5 ? ", …" : ""}). `
-    + "This checkout's data/tiles/values/tracts is incomplete: copy the full folder in (or rebuild it with `ingest tracts-out` plus the loads) first. "
+    + "This checkout's data/tiles/values/tracts (or values/counts) is incomplete: copy the full folder in (or rebuild it with `ingest tracts-out` plus the loads) first. "
     + "Set ALLOW_TRACT_DROP=1 only when removing a dataset on purpose.");
 }
 
@@ -84,11 +88,11 @@ function walk(dir: string, rel = ""): string[] {
 /** Upload every .json file under data/tiles/<prefix>/ (optionally only `dirs`, its top-level
  *  folders) to R2 under the same key. Files whose gzipped bytes match what R2 already holds (by
  *  ETag, the MD5 of a single-part upload) are skipped, so a re-run uploads only what changed. */
-async function publishJson(prefix: string, hint: string, dirs?: string[]) {
+async function publishJson(prefix: string, hint: string, dirs?: string[], keep: (file: string) => boolean = () => true) {
   const { s3, bucket } = r2();
   const root = join(TILES, prefix);
   if (!existsSync(root)) throw new Error(`no data/tiles/${prefix}; run \`ingest ${hint}\` first`);
-  const files = walk(root).filter((f) => !dirs || dirs.includes(f.split("/")[0]));
+  const files = walk(root).filter((f) => (!dirs || dirs.includes(f.split("/")[0])) && keep(f));
   const etags = new Map<string, string>();
   let token: string | undefined;
   do {
@@ -118,6 +122,19 @@ export const publishValues = (only?: string[]) => publishJson("values", "export"
 export const publishGeo = () => publishJson("geo", "export` and `ingest tract-geo");
 /** The state/county click details (details/, from `ingest details`), gzip-encoded. */
 export const publishDetails = () => publishJson("details", "details");
+
+/** The files `ingest counts` writes (#156, #154), relative to values/: margins of error, counts, U.S.
+ *  rows and the tract and block-group count shards. Nothing else matches, so existing files are
+ *  never re-sent by `publish-counts`, whatever state the rest of data/tiles is in. */
+const COUNT_FILES = [
+  /^[a-z0-9_]+\/(\d{4}\/)?(state|county|tract)\.moe\.json$/,
+  /^[a-z0-9_]+\/(state|county)\.counts\.json$/,
+  /^[a-z0-9_]+\/(\d{4}\/)?us\.json$/,
+  /^counts\/(tract|block_group)\/\d{5}\.json$/,
+];
+export const isCountFile = (f: string) => COUNT_FILES.some((re) => re.test(f));
+/** `ingest publish-counts`: upload only the files `ingest counts` writes. */
+export const publishCounts = (only?: string[]) => publishJson("values", "counts", only && [...only, "counts"], isCountFile);
 
 /** `ingest publish-data`: everything the web reads beside the tiles, in one command (S2). */
 export async function publishData(only?: string[]) {

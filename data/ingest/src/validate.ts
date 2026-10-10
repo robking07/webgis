@@ -1,5 +1,5 @@
 // Validate every registry entry against the schema and the design tokens.
-import { loadRegistry } from "@webgis/registry/load";
+import { loadRegistry, loadRelations } from "@webgis/registry/load";
 import { RAMPS, rampColors, type RampId } from "@webgis/design";
 
 const entries = loadRegistry();
@@ -13,5 +13,8 @@ for (const e of entries) {
   try { rampColors(e.symbology.ramp as RampId, e.symbology.classes); }
   catch (err) { problems.push(`${e.id}: ${(err as Error).message}`); }
 }
+// relations.yaml (#156): every map listed, parts and links point at real maps.
+let relations = 0;
+try { relations = Object.keys(loadRelations(entries).maps).length; } catch (err) { problems.push((err as Error).message); }
 if (problems.length) { console.error("✗ registry invalid:\n  " + problems.join("\n  ")); process.exit(1); }
-console.log(`✓ registry valid: ${entries.length} datasets`);
+console.log(`✓ registry valid: ${entries.length} datasets, ${relations} in relations.yaml`);

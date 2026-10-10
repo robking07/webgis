@@ -2,17 +2,21 @@
 //   apps/web/src/generated/registry.json      — validated registry entries
 //   apps/web/src/generated/glossary.json      — plain-language explainers (glossary.yaml)
 //   apps/web/src/generated/periods.json       — timeline stops exported per dataset (D-36)
+//   apps/web/src/generated/relations.json     — how maps relate (relations.yaml, #156)
 //   apps/web/src/generated/names.json         — state and county names (bundled for share cards, Specials)
 //   data/tiles/values/<id>/<level>.json       — { geoid: value } for each dataset/level  ┐ published to R2 by
 //   data/tiles/geo/{names,places,search}.json — names, map points, place search index   ┘ `ingest publish-data` (S2)
 import { existsSync, mkdirSync, readdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { loadGlossary, loadRegistry } from "@webgis/registry/load";
+import { loadGlossary, loadRegistry, loadRelations } from "@webgis/registry/load";
+import { GeoLevel } from "@webgis/registry";
+import { relationsExport } from "@webgis/registry/relations";
 import { timelineStops } from "@webgis/registry/timeline";
 import { db, log, NAMES_JSON, ROOT, STATES, TILES } from "./util.ts";
 import { readGazetteer } from "./geographies.ts";
 
 const round = (v: number) => Number(v.toPrecision(4));
+const LEVEL_FILE = new RegExp(`^(${GeoLevel.options.join("|")})\\.json$`);
 
 export function exportRegistry() {
   const dir = join(ROOT, "apps/web/src/generated");
@@ -30,11 +34,14 @@ export function exportRegistry() {
     for (const s of timelineStops(e)) {
       const dir = join(TILES, "values", e.id, s.id);
       if (s.isDefault || !existsSync(dir)) continue;
-      const levels = readdirSync(dir).filter((f) => f.endsWith(".json")).map((f) => f.replace(/\.json$/, ""));
+      // Level files only: a stop folder also holds <level>.moe.json and us.json (#154, #156).
+      const levels = readdirSync(dir).filter((f) => LEVEL_FILE.test(f)).map((f) => f.replace(/\.json$/, ""));
       if (levels.length) (periods[e.id] ??= {})[s.id] = levels;
     }
   }
   writeFileSync(join(dir, "periods.json"), JSON.stringify(periods, null, 1));
+  // How maps relate (#156): groups, counts labels, parts sets and links, for Compare places.
+  writeFileSync(join(dir, "relations.json"), JSON.stringify(relationsExport(loadRelations(entries)), null, 1));
   log("export", `periods.json: ${Object.values(periods).reduce((n, p) => n + Object.keys(p).length, 0)} timeline stops in ${Object.keys(periods).length} datasets`);
 }
 

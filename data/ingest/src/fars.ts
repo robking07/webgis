@@ -8,6 +8,7 @@ import { cached, db, FIPS_RENAMES, log, splitCsv } from "./util.ts";
 import { areas2019 } from "./geographies.ts";
 import { landArea, readStopValues, registerDataset, writeStopValues, writeValues, type Level, type Value } from "./values.ts";
 import { unzipEntry } from "./zip.ts";
+import { sumStates, writeCounts, writeUs, type Counts } from "./counts.ts";
 
 type Pool = Awaited<ReturnType<typeof db>>;
 interface Deaths { state: Map<string, number>; county: Map<string, number>; total: number; unknownCounty: number }
@@ -84,12 +85,30 @@ export async function ingestFars(only?: string[]) {
     await registerDataset(pool, e);
     const deaths = await readYears(years[0], years[1]);
     log(e.id, `${deaths.total.toLocaleString()} deaths ${years[0]}–${years[1]} (${deaths.unknownCounty} with unknown county, state totals only)`);
+    const nYears = years[1] - years[0] + 1;
     for (const level of e.geographyLevels) {
       if (level === "tract") continue;
-      await writeValues(pool, e.id, level, rates(e, deaths, level, await population(pool, level), years[1] - years[0] + 1, "avg"));
+      const pop = await population(pool, level);
+      const values = rates(e, deaths, level, pop, nYears, "avg");
+      await writeValues(pool, e.id, level, values);
+      // The counts behind the map (#156): deaths a year (average) and residents, for the same places.
+      const counts = farsCounts(values, deaths[level], pop, nYears);
+      writeCounts(level, new Map([[e.id, counts]]));
+      if (level === "state") {
+        const us = sumStates(counts);
+        writeUs(e.id, null, { value: us[0] != null && us[2] ? (us[0] / us[2]) * e.measure.perPopulation : null, moe: null }, us);
+      }
     }
   }
   await pool.end();
+}
+
+/** [deaths a year, null, residents, null] for every place that has a rate (null deaths where the
+ *  rate was withheld). */
+export function farsCounts(values: Map<string, Value>, deaths: Map<string, number>, pop: Map<string, number>, nYears: number): Map<string, Counts> {
+  const out = new Map<string, Counts>();
+  for (const [g, v] of values) out.set(g, [v.value == null ? null : Math.round(((deaths.get(g) ?? 0) / nYears) * 10) / 10, null, pop.has(g) ? Math.round(pop.get(g)!) : null, null]);
+  return out;
 }
 
 /** Single-year rates (D-36). Years before 2020 use 2019 boundaries and 2015–2019 ACS
