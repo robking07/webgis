@@ -809,6 +809,9 @@ test("laptop reliability hatching: toggle on an ACS tract map, none on census co
   expect((await p2.locator("[data-hatch-toggle]").count()) === 0, "toggle shown for 2020 Census counts");
 });
 
+// Feature files (one per feature; this file keeps the shared harness).
+(await import("./compare.tests.mjs")).default({ test, expect, wait, immerse, tapLonLat, HENNEPIN, dbCalls });
+
 // ── Run ────────────────────────────────────────────────────────────────────────
 // Round-robin keeps the slow tests spread across shards.
 const mine = shard ? queue.filter((_, i) => i % +shard[2] === +shard[1] - 1) : queue;

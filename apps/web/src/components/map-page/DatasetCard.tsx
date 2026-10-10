@@ -48,7 +48,7 @@ export function DatasetCard({ cardRef, primary, secondary, meta, immersed, isFea
     // name (and ellipsizes as a last resort); the actions sit on their own line.
     const link = "rounded font-semibold text-primary hover:underline focus-visible:outline-2 focus-visible:outline-ring";
     const actions = [
-      !isFeature && <button key="c" type="button" onClick={onBrowse} className={link}>Compare</button>,
+      !isFeature && <button key="c" type="button" onClick={onBrowse} className={link}>Compare datasets</button>,
       tableReady && <button key="t" type="button" onClick={onTable} className={link}>Table</button>,
       <a key="a" href={`/data/${primary.id}`} className={link}>About</a>,
     ].filter(Boolean);
@@ -87,7 +87,7 @@ export function DatasetCard({ cardRef, primary, secondary, meta, immersed, isFea
       <p className="mt-1.5 text-xs text-muted-foreground md:text-[13px]">{meta}{infoButton}</p>
       {explain}
       <div className="mt-3 flex flex-wrap items-center gap-2">
-        {!isFeature && <button type="button" onClick={onBrowse} className="rounded-md border px-2.5 py-1 text-[13px] hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring">Compare</button>}
+        {!isFeature && <button type="button" onClick={onBrowse} className="rounded-md border px-2.5 py-1 text-[13px] hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring">Compare datasets</button>}
         {tableReady && <button type="button" onClick={onTable} className="rounded-md border px-2.5 py-1 text-[13px] hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring">Table</button>}
         <a href={`/data/${primary.id}`} className="rounded-md border px-2.5 py-1 text-[13px] text-foreground hover:bg-muted">About this data</a>
       </div>
