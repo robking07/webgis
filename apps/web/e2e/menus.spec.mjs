@@ -891,6 +891,9 @@ test("laptop earlier year at block-group zoom: no boundary file that doesn't exi
   expect(drawn > 0, "no tracts drawn on the 2019 map at zoom 13");
 });
 
+// Feature files (one per feature; this file keeps the shared harness).
+(await import("./compare.tests.mjs")).default({ test, expect, wait, immerse, tapLonLat, live, HENNEPIN, dbCalls });
+
 // ── Run ────────────────────────────────────────────────────────────────────────
 // Round-robin keeps the slow tests spread across shards.
 const mine = shard ? queue.filter((_, i) => i % +shard[2] === +shard[1] - 1) : queue;
