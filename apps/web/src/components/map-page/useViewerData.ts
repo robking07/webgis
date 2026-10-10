@@ -1,19 +1,28 @@
 import { useMemo, useSyncExternalStore } from "react";
-import { bandShift, GEO_LEVELS, LAZY_LEVELS, levelAtZoom, levelBands, pinnedBands, TILE_VALUE_LEVELS, type GeoLevel } from "@webgis/design";
+import { bandShift, GEO_LEVELS, type Unit, LAZY_LEVELS, levelAtZoom, levelBands, pinnedBands, TILE_VALUE_LEVELS, type GeoLevel } from "@webgis/design";
 import type { LevelPaint } from "../map/MapView";
 import { DATASET_BY_ID } from "@/lib/registry";
 import { featureLayerSpec, isFeatureDataset } from "@/lib/layers";
 import type { UrlState } from "@/lib/url-state";
 import { blockPaintFrom, classifyBivariateCached, classifyUnivariateCached, useDatasetValues, type Classed } from "@/lib/values";
-import { stopsFor } from "@/lib/periods";
+import { changeStops, stopsFor } from "@/lib/periods";
+import { classifyChangeCached, type ChangeMeasure } from "@/lib/change";
+import type { Values } from "@/lib/values";
+import { useChangeMoes } from "./useChangeMoes";
 
 export const LEVELS = Object.keys(GEO_LEVELS) as GeoLevel[];
 
-export type ClassedLevel = LevelPaint & { breaks?: number[]; xBreaks?: number[]; yBreaks?: number[]; minClass?: number };
+export type ClassedLevel = LevelPaint & {
+  breaks?: number[]; xBreaks?: number[]; yBreaks?: number[]; minClass?: number;
+  /** Change maps (issue #127): class labels, strip ends, geoid → change, how it's measured, and
+   *  whether margins of error were tested. */
+  labels?: string[]; ends?: [string, string]; change?: Values; measure?: ChangeMeasure; tested?: boolean;
+};
 
 /** What the map shows for the URL state: the datasets, the year stop, the geography levels and
- *  zoom bands, the loaded values, and their classification (one paint per level). */
-export function useViewerData(state: UrlState) {
+ *  zoom bands, the loaded values, and their classification (one paint per level).
+ *  `tractCounties`: counties whose tracts are on screen (a change map tests their margins of error). */
+export function useViewerData(state: UrlState, tractCounties: readonly string[] = []) {
   const primary = state.d ? DATASET_BY_ID.get(state.d)! : null;
   // Feature layers (roads, transit…) draw their own geometry: no choropleth, no comparison.
   const isFeature = isFeatureDataset(primary);
@@ -24,9 +33,14 @@ export function useViewerData(state: UrlState) {
   const stop = stops.find((s) => s.id === state.t) ?? stops.find((s) => s.isDefault) ?? null;
   /** The shown stop when it isn't the default; null = the default period. */
   const stopId = stop && !stop.isDefault ? stop.id : null;
+  // Change map (issue #127): from an earlier stop to the shown one.
+  const sinceOptions = useMemo(() => changeStops(stops, stop), [stops, stop]);
+  const since = sinceOptions.find((s) => s.id === state.since) ?? null;
   // Levels both datasets have (and the shown stop has). Blocks (values in the tiles) can't be
   // compared: no bivariate join.
-  const availableLevels = useMemo(() => isFeature ? [] : LEVELS.filter((l) => (!primary || primary.geographyLevels.includes(l)) && (!secondary || (secondary.geographyLevels.includes(l) && !TILE_VALUE_LEVELS.has(l))) && (!stopId || stop!.levels.includes(l))), [primary, secondary, isFeature, stopId, stop]);
+  const availableLevels = useMemo(() => isFeature ? [] : LEVELS.filter((l) => (!primary || primary.geographyLevels.includes(l)) && (!secondary || (secondary.geographyLevels.includes(l) && !TILE_VALUE_LEVELS.has(l))) && (!stopId || stop!.levels.includes(l))
+    // A change needs values at both stops; blocks have no earlier values.
+    && (!since || (since.levels.includes(l) && !TILE_VALUE_LEVELS.has(l)))), [primary, secondary, isFeature, stopId, stop, since]);
   // Switch with zoom is the default for every dataset (Robbie, 2026-10-02; replaces D-35's
   // "finest level at every zoom"). lv=<level> pins one; lv=auto is the old spelling of the default.
   // A pinned block group or block never draws at national or multi-state zoom (pinFloor).
@@ -42,8 +56,14 @@ export function useViewerData(state: UrlState) {
   const x = useDatasetValues(primary, want, stopId, stop?.levels);
   const y = useDatasetValues(secondary, want);
   // A non-default stop is colored with the default view's breaks, so stepping shows change.
-  const xBase = useDatasetValues(stopId ? primary : null, want);
+  const xBase = useDatasetValues(stopId && !since ? primary : null, want);
+  const xFrom = useDatasetValues(since ? primary : null, want, since && !since.isDefault ? since.id : null, since?.levels);
   const level = levelAtZoom(bands, state.at.zoom) ?? availableLevels[0] ?? "county";
+  // Margins of error exist only for the default period, as published (tract shards; D-222).
+  // shortcut: counties and states aren't tested (their margins are only in the per-state detail
+  // files, ~6 MB for the country); test them too if a county-level margins file is published.
+  const testMoes = !!since && !!stop?.isDefault && primary?.measure.kind === "acs5" && level === "tract";
+  const tractMoes = useChangeMoes(testMoes ? primary!.id : null, tractCounties);
 
   // Cached classification keeps its identity, so the map only repaints when the data changes (D-114).
   const classed = useMemo(() => {
@@ -52,7 +72,10 @@ export function useViewerData(state: UrlState) {
     for (const l of LEVELS) {
       const xv = x.values[l];
       if (!xv) continue;
-      if (secondary) {
+      if (since) {
+        const fv = xFrom.values[l];
+        if (fv) out[l] = classifyChangeCached(fv, xv, primary.unit as Unit, l === "tract" ? tractMoes : null);
+      } else if (secondary) {
         const yv = y.values[l];
         if (yv) out[l] = classifyBivariateCached(xv, yv);
       } else if (stopId) {
@@ -64,9 +87,9 @@ export function useViewerData(state: UrlState) {
     const bg = out.block_group;
     if (blockField && !secondary && bg?.breaks) out.block = blockPaintFrom(bg as Classed, blockField);
     return out;
-  }, [primary, secondary, x.values, y.values, stopId, xBase.values, blockField]);
+  }, [primary, secondary, x.values, y.values, stopId, xBase.values, blockField, since, xFrom.values, tractMoes]);
 
-  return { primary, secondary, isFeature, featureSpec, stops, stop, stopId, availableLevels, pinnedLevel, bands, x, y, level, classed, blockField };
+  return { primary, secondary, isFeature, featureSpec, stops, stop, stopId, sinceOptions, since, xFrom, testMoes, availableLevels, pinnedLevel, bands, x, y, level, classed, blockField };
 }
 
 const onResize = (cb: () => void) => { window.addEventListener("resize", cb); return () => window.removeEventListener("resize", cb); };

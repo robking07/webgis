@@ -51,6 +51,9 @@ export interface Theme {
     highlightHalo: string;
     /** Fill for features with no value. */
     noData: string;
+    /** No-data fill on change maps: darker in light themes, so the near-white "no clear change"
+     *  middle of the diverging ramp never reads as missing (design check). */
+    noDataChange: string;
     /** Reference overlays drawn above thematic fills (cased so they read over any fill). */
     interstate: string;
     interstateCasing: string;
@@ -112,6 +115,7 @@ export const THEMES: Record<ThemeName, Theme> = {
       highlight: "#111111",
       highlightHalo: "#ffffff",
       noData: "#d9d6cf",
+      noDataChange: "#aeaaa1",
       interstate: "#4a4d55",
       interstateCasing: "#ffffff",
       river: "#5b8fbf",
@@ -164,6 +168,7 @@ export const THEMES: Record<ThemeName, Theme> = {
       highlight: "#ffffff",
       highlightHalo: "#111111",
       noData: "#3a3d43",
+      noDataChange: "#3a3d43",
       interstate: "#c9ccd2",
       interstateCasing: "#16181b",
       river: "#6fa8dc",

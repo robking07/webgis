@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { X } from "lucide-react";
 import { StatusState } from "@webgis/design/components";
 import { formatValue, GEO_LEVELS, gradeEstimate, isGradable, STATIC_ONLY_LEVELS, TILE_VALUE_LEVELS } from "@webgis/design";
 import { reliabilityNote } from "@/lib/reliability";
+import { differenceMoe, formatChange, withinMoe } from "@/lib/change";
+import type { ClassedLevel } from "./useViewerData";
 import type { HoverInfo } from "../map/MapView";
 import type { Dataset } from "@/lib/registry";
 import { placeHref, rankText } from "@/lib/place";
@@ -34,6 +36,9 @@ interface DetailProps {
   onPlace?: (p: PlaceHit) => void;
   /** Phones: the legend key, shown in the sheet with this place's class outlined. */
   legendKey?: { colors: string[]; cls: number | null; ends: [string, string] } | null;
+  /** A change map (issue #127): both stops' labels, the earlier values at this level, and the
+   *  change classification. `toIsDefault`: the later stop is the default, whose margins are known. */
+  change?: { fromLabel: string; toLabel: string; fromValues?: Values; classed: ClassedLevel; toIsDefault: boolean };
 }
 
 /** The state and county a place sits inside (from its GEOID), coarse first. */
@@ -99,7 +104,30 @@ function ReliabilityNote({ dataset, value, moe }: { dataset: Dataset; value?: nu
 }
 
 /** A clicked place: its values, ranks and links (desktop panel; a BottomSheet on phones). */
-export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, onMapIt, period, onPlace, legendKey }: DetailProps) {
+/** A change map's card: the change, then both values, and "no clear change" when the difference is
+ *  within its margin of error (√(MOE₁² + MOE₂²); see lib/change.ts). */
+function ChangeCard({ dataset, geoid, change, to, toMoe, sheetKey }: { dataset: Dataset; geoid: string; change: NonNullable<DetailProps["change"]>; to?: number; toMoe?: number | null; sheetKey: ReactNode }) {
+  const from = change.fromValues?.[geoid];
+  const moe = isGradable(dataset.measure.kind) && change.toIsDefault && from != null && to != null ? differenceMoe(from, null, to, toMoe) : null;
+  const steady = from != null && to != null && withinMoe(from, to, moe);
+  return (
+    <div className="rounded-md bg-muted px-3 py-2" data-change-card="">
+      <p className="text-xs text-muted-foreground">{dataset.title}, change since {change.fromLabel}</p>
+      <p className="text-xl font-semibold tabular-nums">{formatChange(change.classed.change?.[geoid], change.classed.measure!, dataset.unit)}</p>
+      {sheetKey}
+      <p className="mt-1 text-xs text-muted-foreground tabular-nums">
+        {change.fromLabel}: {formatValue(from, dataset.unit)} · {change.toLabel}: {formatValue(to, dataset.unit)}
+      </p>
+      {steady && (
+        <p className="mt-1 text-xs text-muted-foreground">
+          <span className="font-semibold text-foreground">No clear change.</span> The difference is within the margin of error, so it may not be real.
+        </p>
+      )}
+    </div>
+  );
+}
+
+export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, onMapIt, period, onPlace, legendKey, change }: DetailProps) {
   const [rows, setRows] = useState<Detail | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const phone = useIsPhone();
@@ -152,6 +180,10 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
           <div className="space-y-2">
             {featured.map((d, i) => {
               const r = rows[d.id];
+              if (i === 0 && change) {
+                return <ChangeCard key={d.id} dataset={d} geoid={info.geoid} change={change} to={xv?.[info.geoid]} toMoe={change.toIsDefault ? r?.moe : null}
+                  sheetKey={phone && legendKey ? <SheetKey {...legendKey} /> : null} />;
+              }
               if (i === 0 && period) {
                 const v = xv?.[info.geoid];
                 return (

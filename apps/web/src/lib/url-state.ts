@@ -1,6 +1,7 @@
 // Everything needed to reproduce a view lives in the URL:
 //   ?d=<dataset>&b=<second dataset for bivariate>&at=<lon>,<lat>,<zoom>&theme=light|dark
 //   &lv=<level>&t=<timeline stop, e.g. 2019; omitted = the default period>
+//   &since=<earlier stop: map the change from it to the shown stop (issue #127)>
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -19,6 +20,8 @@ export interface UrlState {
   lv: "state" | "county" | "tract" | "block_group" | "block" | "auto" | null;
   /** Timeline stop (D-36), e.g. "2019" (ACS 2015–2019) or "2021"; null = the default period. */
   t?: string | null;
+  /** Change map: the earlier timeline stop the change is measured from; null = values, not change. */
+  since?: string | null;
 }
 
 export const DEFAULT_VIEW: ViewState = { lon: -96.5, lat: 38.5, zoom: 3.6, fit: true };
@@ -34,6 +37,7 @@ export function parseUrlState(search: string): UrlState {
     theme: theme === "light" || theme === "dark" ? theme : null,
     lv: (["state", "county", "tract", "block_group", "block", "auto"] as const).find((l) => l === p.get("lv")) ?? null,
     t: p.get("t")?.match(/^[a-z0-9]{1,12}$/)?.[0] ?? null,
+    since: p.get("since")?.match(/^[a-z0-9]{1,12}$/)?.[0] ?? null,
   };
 }
 
@@ -45,6 +49,7 @@ export function serializeUrlState(s: UrlState): string {
   if (s.theme) p.set("theme", s.theme);
   if (s.lv) p.set("lv", s.lv);
   if (s.t) p.set("t", s.t);
+  if (s.since) p.set("since", s.since);
   return `?${p.toString().replaceAll("%2C", ",")}`;
 }
 

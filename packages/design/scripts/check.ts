@@ -12,7 +12,7 @@ import {
   differenceCiede2000, filterDeficiencyDeuter, filterDeficiencyProt, filterDeficiencyTrit,
   formatHex, interpolate, oklab, wcagContrast,
 } from "culori";
-import { RAMPS, rampColors, type RampDef, type RampId } from "../src/ramps.ts";
+import { CHANGE_CLASSES, CHANGE_RAMP, RAMPS, rampColors, type RampDef, type RampId } from "../src/ramps.ts";
 import { CONTRAST_RULES, GLASS_ALPHA, HATCH, THEMES, themeColor } from "../src/themes.ts";
 import { featureLineColors } from "../src/style.ts";
 
@@ -109,6 +109,17 @@ for (const [id, r] of Object.entries(RAMPS) as Array<[RampId, RampDef]>) {
     }
   }
 }
+// The change ramp (diverging, so exempt above) still keeps every class, its near-white "no clear
+// change" middle included, clear of the change map's no-data fill: a steady area must never read as missing.
+for (const theme of Object.values(THEMES)) {
+  for (const [i, c] of rampColors(CHANGE_RAMP, CHANGE_CLASSES).entries()) {
+    for (const [vision, sim] of Object.entries(VISION)) {
+      landCases++;
+      const d = de(sim(c), sim(theme.map.noDataChange));
+      if (d < MIN_FROM_LAND) failures.push(`change ramp ${CHANGE_RAMP} class ${i + 1} theme ${theme.name} ${vision}: ΔE ${d.toFixed(1)} from change no-data < ${MIN_FROM_LAND}`);
+    }
+  }
+}
 
 // Feature lines: the highest class (the busiest roads) must stand out from the land it is drawn
 // on, in both themes, as drawn (dark themes reverse the ramp; see featureLineColors).
@@ -128,7 +139,7 @@ for (const [id, r] of Object.entries(RAMPS) as Array<[RampId, RampDef]>) {
 let hatchCases = 0;
 for (const theme of Object.values(THEMES)) {
   const a = HATCH.opacity[theme.name];
-  const fills = new Set<string>([theme.map.noData]);
+  const fills = new Set<string>([theme.map.noData, theme.map.noDataChange]);
   for (const [id, r] of Object.entries(RAMPS) as Array<[RampId, RampDef]>) {
     if (r.kind === "categorical") continue;
     for (let n = r.minClasses; n <= r.maxClasses; n++) for (const c of rampColors(id, n)) fills.add(c);

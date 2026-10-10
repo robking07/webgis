@@ -9,7 +9,7 @@ import { Info, ListFilter, X } from "lucide-react";
 import { GEO_LEVELS, type GeoLevel } from "@webgis/design";
 import type { Facet } from "@webgis/registry";
 import { TERM_BY_ID } from "@/lib/glossary";
-import type { Stop } from "@/lib/periods";
+import { changeStops, type Stop } from "@/lib/periods";
 import { TimeControl } from "../TimeControl";
 
 /** What the filters control. `hidden`: facet field → values the visitor hid. */
@@ -17,13 +17,17 @@ export interface FilterValue {
   pinned: GeoLevel | null;
   /** Timeline stop id; null = the default period. */
   stop: string | null;
+  /** Change map (issue #127): the earlier stop the change is measured from; null = values. */
+  since: string | null;
   hidden: Record<string, Set<string>>;
 }
 
-/** Changes from the defaults, for the button's count: each hidden value, a pinned level, a year. */
+/** Changes from the defaults, for the button's count: each hidden value, a pinned level, a year, a change map. */
 export function filterCount(v: FilterValue): number {
-  return Object.values(v.hidden).reduce((a, h) => a + h.size, 0) + (v.pinned ? 1 : 0) + (v.stop ? 1 : 0);
+  return Object.values(v.hidden).reduce((a, h) => a + h.size, 0) + (v.pinned ? 1 : 0) + (v.stop ? 1 : 0) + (v.since ? 1 : 0);
 }
+
+const NO_FILTERS: FilterValue = { pinned: null, stop: null, since: null, hidden: {} };
 
 /** "Road type" → "road types", "Functional class" → "functional classes". */
 export const pluralLabel = (label: string) => {
@@ -56,15 +60,33 @@ interface ControlsProps {
 
 const sectionTitle = "text-xs font-semibold";
 
-/** The panel's sections: year, geography level, then each facet as a checkbox list. */
+/** The panel's sections: year (and a change since an earlier one), geography level, then each
+ *  facet as a checkbox list. */
 function FilterControls({ levels, shown, facets, stops, value, onChange }: ControlsProps) {
   const plural = (l: GeoLevel) => GEO_LEVELS[l].plural.toLowerCase();
   const defaultStop = stops.find((s) => s.isDefault)?.id;
+  const sinceOptions = changeStops(stops, stops.find((s) => s.id === (value.stop ?? defaultStop)) ?? null);
+  /** A new year keeps the change's start only while it's still earlier. */
+  const pickStop = (id: string) => {
+    const stop = id === defaultStop ? null : id;
+    const still = changeStops(stops, stops.find((s) => s.id === id) ?? null).some((s) => s.id === value.since);
+    onChange({ ...value, stop, since: still ? value.since : null });
+  };
   return (
     <div className="space-y-5">
       {stops.length > 0 && defaultStop && (
         <section aria-label="Year">
-          <TimeControl stops={stops} value={value.stop ?? defaultStop} onChange={(id) => onChange({ ...value, stop: id === defaultStop ? null : id })} />
+          <TimeControl stops={stops} value={value.stop ?? defaultStop} onChange={pickStop} />
+          {sinceOptions.length > 0 && (
+            <label className="mt-3 flex items-center gap-2 text-xs">
+              <span className="font-semibold">Show change since</span>
+              <select value={value.since ?? ""} onChange={(e) => onChange({ ...value, since: e.target.value || null })} data-change-since=""
+                className="min-w-0 flex-1 rounded-md border bg-background px-2 py-1 text-base tabular-nums md:text-xs focus-visible:outline-2 focus-visible:outline-ring">
+                <option value="">Off</option>
+                {sinceOptions.map((s) => <option key={s.id} value={s.id}>{s.label}</option>)}
+              </select>
+            </label>
+          )}
         </section>
       )}
       {levels.length > 1 && (
@@ -188,7 +210,7 @@ export function FiltersSheet({ anchor, title, value, onApply, onClose, ...contro
           <FilterControls {...controls} value={draft} onChange={setDraft} />
         </div>
         <footer className="flex items-center gap-3 border-t bg-background px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3">
-          <button type="button" onClick={() => setDraft({ pinned: null, stop: null, hidden: {} })} disabled={n === 0}
+          <button type="button" onClick={() => setDraft(NO_FILTERS)} disabled={n === 0}
             className="rounded-md px-3 py-2.5 text-sm font-semibold text-primary disabled:text-muted-foreground disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-ring">Reset</button>
           <button type="button" onClick={() => finish(true)}
             className="flex-1 rounded-md bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground focus-visible:outline-2 focus-visible:outline-ring">
@@ -228,7 +250,7 @@ export function FiltersSidebar({ top, bottom, value, onChange, onClose, hiddenWh
       <header className="flex items-center gap-2 border-b px-4 py-2.5">
         <ListFilter className="size-4 text-muted-foreground" aria-hidden />
         <h2 className="flex-1 text-sm font-semibold">Filters</h2>
-        {n > 0 && <button type="button" onClick={() => onChange({ pinned: null, stop: null, hidden: {} })} className="rounded text-xs font-semibold text-primary hover:underline">Reset</button>}
+        {n > 0 && <button type="button" onClick={() => onChange(NO_FILTERS)} className="rounded text-xs font-semibold text-primary hover:underline">Reset</button>}
         <button type="button" onClick={onClose} aria-label="Close filters" className="-mr-1.5 rounded p-1 text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring"><X className="size-4" /></button>
       </header>
       <div className="min-h-0 flex-1 overflow-y-auto px-4 py-3">

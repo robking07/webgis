@@ -100,9 +100,11 @@ export function Viewer({ search }: { search: string }) {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  const { primary, secondary, isFeature, featureSpec, stops, stop, stopId, availableLevels, pinnedLevel, bands, x, y, level, classed, blockField } = useViewerData(state);
+  /** Counties whose tracts are on screen, while hatching or a change map's margin test needs them. */
+  const [tractCounties, setTractCounties] = useState<string[]>([]);
+  const { primary, secondary, isFeature, featureSpec, stops, stop, stopId, since, xFrom, testMoes, availableLevels, pinnedLevel, bands, x, y, level, classed, blockField } = useViewerData(state, tractCounties);
   const current = classed[level];
-  const error = x.error ?? y.error;
+  const error = x.error ?? y.error ?? xFrom.error;
   const available = !!primary && !isFeature && availableLevels.includes(level);
   // The table lists states or counties (finer areas have no names to search); below counties it shows counties.
   const tableLevel: GeoLevel | null = level === "state" || level === "county" ? level : availableLevels.includes("county") ? "county" : null;
@@ -135,7 +137,7 @@ export function Viewer({ search }: { search: string }) {
     loadPlaceIndex().then((rows) => placeByGeoid(rows, geoid)?.sqmi, () => undefined)
       .then((sqmi) => goToPlace({ geoid, level: tableLevel, name, lon, lat, sqmi }));
   }, [tableLevel, goToPlace]);
-  const filterValue: FilterValue = { pinned: pinnedLevel, stop: stopId, hidden };
+  const filterValue: FilterValue = { pinned: pinnedLevel, stop: stopId, since: since?.id ?? null, hidden };
   const nFilters = filterCount(filterValue);
   const toggleFilters = (el: HTMLElement) => setFilters((f) => (f ? null : { anchor: el }));
   /** The level pill: open (never toggle) Filters and bring the geography-level choice into view. */
@@ -147,7 +149,7 @@ export function Viewer({ search }: { search: string }) {
   };
   const applyFilters = (v: FilterValue) => {
     setHidden(v.hidden);
-    if (v.pinned !== pinnedLevel || v.stop !== stopId) update({ lv: v.pinned, t: v.stop });
+    if (v.pinned !== pinnedLevel || v.stop !== stopId || v.since !== (since?.id ?? null)) update({ lv: v.pinned, t: v.stop, since: v.since });
   };
   const onSearchPlace = (p: PlaceHit) => { setSearchOpen(false); goToPlace(p); };
   /** Phones: the dataset list and the details share the bottom sheet; opening one closes the other. */
@@ -155,17 +157,18 @@ export function Viewer({ search }: { search: string }) {
   // Opening a place or the table closes the dataset list (adjusted during render, not in an effect).
   if (listOpen && (selected || featureSelected || tableOpen)) setListOpen(false);
   /** Keep the shown year when the next dataset has it too. */
-  const keepStop = (id: string) => (state.t && stopsFor(DATASET_BY_ID.get(id) ?? null).some((s) => s.id === state.t) ? state.t : null);
-  const onSearchDataset = (d: Dataset) => { setSearchOpen(false); update({ d: d.id, b: state.b === d.id ? null : state.b, lv: null, t: keepStop(d.id) }); };
-  const pickDataset = (id: string) => update({ d: id, b: state.b === id ? null : state.b, lv: null, t: keepStop(id) });
+  const keep = (id: string, t: string | null | undefined) => (t && stopsFor(DATASET_BY_ID.get(id) ?? null).some((s) => s.id === t) ? t : null);
+  /** The next dataset keeps the shown year, and the change map's start year, when it has them. */
+  const keepStops = (id: string) => ({ t: keep(id, state.t), since: keep(id, since?.id) });
+  const onSearchDataset = (d: Dataset) => { setSearchOpen(false); update({ d: d.id, b: state.b === d.id ? null : state.b, lv: null, ...keepStops(d.id) }); };
+  const pickDataset = (id: string) => update({ d: id, b: state.b === id ? null : state.b, lv: null, ...keepStops(id) });
   const loading = available && !current && !error;
 
   // Reliability hatching (D-222): off when a map opens; the legend's toggle appears only where it
   // means something (an ACS map at tract or block-group level, one dataset, the default period,
   // whose margins of error are the ones published).
   const [hatchOn, setHatchOn] = useState(false);
-  const [tractCounties, setTractCounties] = useState<string[]>([]);
-  const gradable = !!primary && isGradable(primary.measure.kind) && !secondary && !isFeature && !stopId;
+  const gradable = !!primary && isGradable(primary.measure.kind) && !secondary && !isFeature && !stopId && !since;
   const hatchable = gradable && available && HATCH_LEVELS.has(level);
   const unreliable = useUnreliable(gradable && hatchOn ? primary : null, level, tractCounties);
   const hatch = gradable && hatchOn ? unreliable : null;
@@ -181,7 +184,7 @@ export function Viewer({ search }: { search: string }) {
   const desktopStrip = !!filters && !phone;
   const hasFilters = !!primary && (availableLevels.length > 1 || primary.facets.length > 0 || stops.length > 0);
   const featureNoun = featureSpec?.geometry === "polygon" ? "Census tracts (2010)" : "Road segments";
-  const periodLabel = primary ? (stopId ? stop!.label : primary.vintage) : "";
+  const periodLabel = primary ? (since ? `${since.label} → ${stop!.label}` : stopId ? stop!.label : primary.vintage) : "";
   // Phones keep the meta on one line (issue #34): the period without its note, the short source name.
   const sourceLabel = primary ? (phone && primary.source.shortName) || primary.source.name.split(",")[0].split(" (")[0] : "";
   const meta = primary ? [isFeature ? featureNoun : GEO_LEVELS[level].label, phone ? periodLabel.replace(/ \(.*\)$/, "") : periodLabel, sourceLabel].join(" · ") : "";
@@ -214,7 +217,9 @@ export function Viewer({ search }: { search: string }) {
   const selClassed = selected ? classed[selected.level] : undefined;
   const selClass = selected && selClassed && !secondary ? selClassed.classes.get(selected.geoid) ?? null : null;
   const strip = (v: number) => formatValue(v, primary!.unit).replace(/^(\S+).*$/, "$1");
-  const legendKey = selClassed?.breaks?.length && primary && !secondary
+  const legendKey = selClassed?.ends && primary
+    ? { colors: selClassed.colors, cls: selClass, ends: selClassed.ends }
+    : selClassed?.breaks?.length && primary && !secondary
     ? { colors: selClassed.colors, cls: selClass, ends: [`< ${strip(selClassed.breaks[0])}`, `≥ ${strip(selClassed.breaks[selClassed.breaks.length - 1])}`] as [string, string] }
     : null;
   // Narrow screens dock the table at the bottom; the details panel waits until it closes.
@@ -252,7 +257,8 @@ export function Viewer({ search }: { search: string }) {
           attribution={false}
           hatch={hatch}
           onTractCounties={setTractCounties}
-          ariaLabel={primary ? `Map of ${primary.title}${secondary ? ` compared with ${secondary.title}` : ""} by ${GEO_LEVELS[level].label.toLowerCase()}` : "Map"}
+          watchCounties={testMoes}
+          ariaLabel={primary ? `Map of ${since ? "change in " : ""}${primary.title}${since ? ` since ${since.label}` : ""}${secondary ? ` compared with ${secondary.title}` : ""} by ${GEO_LEVELS[level].label.toLowerCase()}` : "Map"}
         />
       </main>
 
@@ -293,7 +299,7 @@ export function Viewer({ search }: { search: string }) {
 
       <MapLegend theme={theme} primary={primary} secondary={secondary} isFeature={isFeature} featureSpec={featureSpec} current={current}
         error={error} available={available} loading={loading} level={level} periodLabel={periodLabel}
-        stop={stop} stopId={stopId}
+        stop={stop} stopId={stopId} since={since}
         hatchToggle={hatchable ? { on: hatchOn, onChange: setHatchOn, loading: hatchOn && !hatch?.[level] } : null}
         desktopStrip={desktopStrip} mark={selected && selected.level === level ? selClass : null}
         covered={phone && (placeOpen || tableOpen || listOpen || stepAside)} tableReady={tableReady} onTable={() => setTableOpen(true)} />
@@ -303,7 +309,7 @@ export function Viewer({ search }: { search: string }) {
       {browserOpen && (
         <DatasetsPanel primary={state.d} secondary={state.b} onClose={() => setBrowserOpen(false)}
           onPrimary={(id) => { pickDataset(id); setBrowserOpen(false); }}
-          onSecondary={(id) => { update({ b: id, t: null }); setBrowserOpen(false); }} />
+          onSecondary={(id) => { update({ b: id, t: null, since: null }); setBrowserOpen(false); }} />
       )}
 
       {listOpen && phone && primary && <DatasetSheet primary={primary} onPick={pickDataset} onClose={() => setListOpen(false)} />}
@@ -333,7 +339,8 @@ export function Viewer({ search }: { search: string }) {
       {selected && primary && !isFeature && !detailHidden && (
         <DetailPanel info={selected} top={panelTop} onClose={() => { setSelected(null); mapApi.current?.select("county", null); }} primary={primary} secondary={secondary}
           xv={x.values[selected.level]} yv={y.values[selected.level]}
-          period={stopId ? { label: stop!.label, defaultLabel: primary.vintage } : undefined}
+          period={stopId && !since ? { label: stop!.label, defaultLabel: primary.vintage } : undefined}
+          change={since && selClassed?.change ? { fromLabel: since.label, toLabel: stop!.label, fromValues: xFrom.values[selected.level], classed: selClassed, toIsDefault: !!stop?.isDefault } : undefined}
           onMapIt={pickDataset} onPlace={goToPlace} legendKey={legendKey} />
       )}
     </div>
