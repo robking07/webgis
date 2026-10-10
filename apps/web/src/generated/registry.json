@@ -7310,7 +7310,7 @@
    "period": "2023-2025"
   },
   "modelInputs": [],
-  "coverageNote": "Only the 549 counties with a valid PM2.5 monitor have a value; every other county is blank, which means no monitor, not clean air. A county's value is its single highest monitor, so one near-road or border monitor can set it. EPA excludes wildfire-smoke days it concurs are exceptional events, so smoke-heavy years read lower than residents experienced. The federal annual standard is 9.0 µg/m³ (tightened from 12.0 in 2024); the top map class marks counties above it. EPA's tables are informational, not a regulatory determination.",
+  "coverageNote": "Only the 549 counties with a valid PM2.5 monitor have a value; every other county is blank, which means no monitor, not clean air. A county's value is its single highest monitor, so one near-road or border monitor can set it. EPA excludes wildfire-smoke days it concurs are exceptional events, so smoke-heavy years read lower than residents experienced. The federal annual standard is 9.0 µg/m³ (tightened from 12.0 in 2024); the top map class marks counties above it. EPA's tables are informational, not a regulatory determination. El Paso County, TX: its value comes from a monitor that began in May 2024, so it covers two years, not three. It includes the 2025 spring dust storms; Texas has not asked EPA to exclude those days.",
   "facets": [],
   "excludeFromInsights": false,
   "learnMore": [],
