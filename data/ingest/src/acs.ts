@@ -237,6 +237,8 @@ export async function ingestAcs(only?: string[], levelsOnly?: Level[]) {
         writeMoes(e.id, null, level, values); // #154: state and county margins were only in details/
       }
       if (countsSpec(e)) counts.set(e.id, new Map([...table].map(([g, row]) => [g, acsCounts(e, row, level)!])));
+      // ~240k block groups × 44 series won't fit in memory at once: merge into the shards in batches.
+      if (counts.size >= 8) { writeCounts(level, counts); counts.clear(); }
     }
     for (const s of levelSets) counts.set(s.id, remainders(s, table));
     writeCounts(level, counts);
