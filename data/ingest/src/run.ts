@@ -83,7 +83,7 @@ const steps: Record<string, () => Promise<void> | void> = {
   // Every ingest step above also goes in `all`.
   all: async () => {
     await ingestGeographies(); await ingestAcs(); await ingestCensus2020(); await ingestLodes(); await ingestPlaces(); await ingestClimdiv(); await ingestNbi(); await ingestFars(); await ingestOverdose(); await ingestAirQuality();
-    await ingestFeatures(); await ingestVmt(); await ingestCejst(); await ingestDdp287g(); await ingestNri(); await ingestLead();
+    await ingestFeatures(); await ingestVmt(); await ingestCejst(); await ingestDdp287g(); await ingestNri(); await ingestLead(); await ingestSvi();
     await ingestAcsTimeline(); await ingestFarsTimeline(); await ingestClimdivTimeline(); await ingestNbiTimeline(); await ingestLodesTimeline(); await ingestOverdoseTimeline(); await buildLabelMask(); await buildTiles();
     await tractGeography();
     exportRegistry(); await exportNames(); await exportSearch(); await exportValues(); await detailsOut(); await computeInsights(); await writeDataSourcesDoc();
