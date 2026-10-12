@@ -35,5 +35,7 @@ each in `docs/decisions/` (D-100 and up); D-01 to D-99 are in `docs/DECISIONS.md
   `main`, edit the main checkout, or stack on an unmerged branch.
 - Open the PR (draft) right after the first commit. Decision ID = PR number + 100
   (PR #12 → `docs/decisions/D-112-<slug>.md`). Never pick the "next" number from the log.
+- Code work follows ponytail (smallest complete change) and gets a `ponytail-review` before the
+  report and again before merge (`docs/handbook.md` §2–3). Repo rules win where they disagree.
 - Merge only with `bash scripts/merge-pr.sh <n>` (after merging `origin/main` into the branch),
   then remove the worktree and local branch.
