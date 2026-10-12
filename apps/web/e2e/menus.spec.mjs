@@ -812,6 +812,8 @@ for (const vp of ["phone", "laptop"]) {
     await page.mouse.move(thumbX, tb.y + tb.height / 2);
     await page.mouse.down();
     await page.mouse.move(tb.x + tb.width + 20, tb.y + tb.height / 2, { steps: 8 });
+    // Scrubbing (issue #165): the big year follows the thumb before release.
+    expect((await shown()) === "2024", `while dragging: ${await shown()}`);
     await page.mouse.up();
     await wait(300);
     expect((await shown()) === "2024", `after drag: ${await shown()}`);
