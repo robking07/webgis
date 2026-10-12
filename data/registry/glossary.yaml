@@ -274,7 +274,7 @@
 - id: cdc-svi
   term: CDC Social Vulnerability Index (SVI)
   short: "CDC's ranking of every county and census tract by how hard a disaster or disease outbreak would hit the people who live there."
-  long: "The index uses 16 measures from the Census Bureau's American Community Survey, grouped into four themes: socioeconomic status (poverty, unemployment, housing costs, no high school diploma, no health insurance); household characteristics (older adults, children, disability, single parents, limited English); racial and ethnic minority status; and housing type and transportation (large apartment buildings, mobile homes, crowding, no vehicle, group quarters). Each theme is a rank, and the overall score ranks places on all 16 measures together, so it isn't an average of the four theme ranks. Emergency planners use it to decide where to send help first. It describes a place's residents, not the hazards there. Where CDC has no value (its code -999, mostly tracts with no residents), Mapwich shows no data."
+  long: "It combines 16 census measures in four themes: socioeconomic status; household characteristics (age, disability, single parents, limited English); racial and ethnic minority status; and housing type and transportation. The overall score ranks places on all 16 together, so it isn't an average of the four theme ranks. Emergency planners use it to decide where help is needed first. It describes residents, not the hazards they face. Where CDC has no value (its code -999, mostly tracts with no residents), the map shows no data."
   source: https://www.atsdr.cdc.gov/place-health/php/svi/index.html
 
 - id: percentile-rank
