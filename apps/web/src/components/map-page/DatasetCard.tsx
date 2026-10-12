@@ -1,4 +1,4 @@
-import { useState, type RefObject } from "react";
+import { useState, type ReactNode, type RefObject } from "react";
 import { ChevronDown, Info } from "lucide-react";
 import type { Dataset } from "@/lib/registry";
 import { TERM_BY_ID } from "@/lib/glossary";
@@ -6,7 +6,7 @@ import { ShareButton } from "../ShareButton";
 import { FilterButton } from "./FiltersPanel";
 
 /** At rest: the factual dataset card (category, title, filter button, meta line, explainer, actions). */
-export function DatasetCard({ cardRef, primary, secondary, meta, immersed, isFeature, tableReady, hasFilters, filtersOpen, filterCount, onOpenFilters, onBrowse, onTable, phone, onOpenSheet }: {
+export function DatasetCard({ cardRef, primary, secondary, meta, immersed, isFeature, tableReady, hasFilters, filtersOpen, filterCount, onOpenFilters, onBrowse, onTable, phone, onOpenSheet, contextLink }: {
   cardRef: RefObject<HTMLElement | null>;
   primary: Dataset;
   secondary: Dataset | null;
@@ -26,6 +26,8 @@ export function DatasetCard({ cardRef, primary, secondary, meta, immersed, isFea
    *  actions are links on the meta line, so less of the map sits under the card. */
   phone?: boolean;
   onOpenSheet?: () => void;
+  /** "Why this matters" (issue #115), on maps that have context; absent everywhere else. */
+  contextLink?: ReactNode;
 }) {
   const [explainOpen, setExplainOpen] = useState(false);
   const explain = explainOpen && (
@@ -74,6 +76,8 @@ export function DatasetCard({ cardRef, primary, secondary, meta, immersed, isFea
         <p data-card-actions="" className="mt-0.5 whitespace-nowrap text-xs leading-relaxed text-muted-foreground">
           {actions.map((a, i) => <span key={i}>{i > 0 && <span aria-hidden> · </span>}{a}</span>)}
         </p>
+        {/* Its own line: the actions line above must stay one line at 360 px. */}
+        {contextLink && <p className="mt-0.5 leading-relaxed">{contextLink}</p>}
         {explain}
       </section>
     );
@@ -90,6 +94,7 @@ export function DatasetCard({ cardRef, primary, secondary, meta, immersed, isFea
       </h1>
       {filterButton}
       <p className="mt-1.5 text-xs text-muted-foreground md:text-[13px]">{meta}{infoButton}</p>
+      {contextLink && <p className="mt-1.5">{contextLink}</p>}
       {explain}
       <div className="mt-3 flex flex-wrap items-center gap-2">
         {!isFeature && <button type="button" onClick={onBrowse} className="rounded-md border px-2.5 py-1 text-[13px] hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring">Compare datasets</button>}

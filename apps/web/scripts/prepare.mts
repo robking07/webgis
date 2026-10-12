@@ -12,6 +12,7 @@ import { fileURLToPath } from "node:url";
 import { THEMES, themeCssVars } from "@webgis/design";
 import { loadGlossary, loadRegistry } from "@webgis/registry/load";
 import { loadSpecials } from "../src/lib/specials-load.mts";
+import { loadContexts } from "../src/lib/context-load.mts";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const app = join(here, "..");
@@ -65,4 +66,10 @@ for (;;) {
   }
 }
 writeFileSync(join(app, "src/generated/specials.json"), JSON.stringify(specials, null, 1));
-console.log(`prepare: theme.css, maplibre worker, tiles link, registry.json (${entries.length} datasets), specials.json (${specials.length} pieces) ready`);
+// 6. src/generated/context.json: "Why this matters" (issue #115), checked; a number no source quote
+//    backs fails the build. Unapproved drafts never reach a production build (they show in local
+//    builds and Vercel previews with ?context=preview).
+const { contexts, warnings } = loadContexts(app, new Set(entries.map((d) => d.id)), process.env.VERCEL_ENV !== "production");
+for (const w of warnings) console.warn(`prepare: warning: ${w}`);
+writeFileSync(join(app, "src/generated/context.json"), JSON.stringify(contexts, null, 1));
+console.log(`prepare: theme.css, maplibre worker, tiles link, registry.json (${entries.length} datasets), specials.json (${specials.length} pieces), context.json (${contexts.length} maps) ready`);
