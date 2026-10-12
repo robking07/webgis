@@ -174,21 +174,24 @@ export function Viewer({ search }: { search: string }) {
   const ctx = primary && !secondary ? contextFor(primary.id, ctxPreview) : null;
   // A place, the dataset list, or the docked table (phones and tablets) takes its place (adjusted during render).
   if (ctxOpen && (selected || featureSelected || listOpen || (narrow && tableOpen))) setCtxOpen(false);
-  /** Desktop: shift the map left by the panel's width so it doesn't cover the data (review lead, #104),
-   *  and back when it closes. Phones: the sheet peeks low, under the data. */
-  const padForContext = (open: boolean) => {
+  /** Desktop: while the panel is open, the map shifts left by its width so it doesn't cover the data
+   *  (review lead, #104); it shifts back however the panel closes (Esc, ×, the link, switching maps, the
+   *  table). A place opening keeps the shift: its details panel takes the same spot. Phones: the sheet
+   *  peeks low, under the data. Explicit zero padding: MapApi.setCamera's `padding: 0` leaves it as is. */
+  const padded = useRef(false);
+  useEffect(() => {
     const api = mapApi.current;
-    if (!api || phone) return;
+    if (!api || phone || ctxOpen === padded.current) return;
+    padded.current = ctxOpen;
+    if (!ctxOpen && (selected || featureSelected)) return;
     const c = api.getCamera();
-    if (open) api.flyTo(c.center[0], c.center[1], c.zoom, { top: 0, bottom: 0, left: 0, right: CONTEXT_PANEL_RIGHT });
-    else api.setCamera(c);
-  };
+    api.flyTo(c.center[0], c.center[1], c.zoom, { top: 0, bottom: 0, left: 0, right: ctxOpen ? CONTEXT_PANEL_RIGHT : 0 });
+  }, [ctxOpen, phone, selected, featureSelected]);
   const toggleContext = () => {
     if (!ctxOpen) { setSelected(null); setFeatureSelected(null); mapApi.current?.select("county", null); }
-    padForContext(!ctxOpen);
     setCtxOpen(!ctxOpen);
   };
-  const closeContext = () => { padForContext(false); setCtxOpen(false); };
+  const closeContext = () => setCtxOpen(false);
 
   // Reliability hatching (D-222): off when a map opens; the legend's toggle appears only where it
   // means something (an ACS map at tract or block-group level, one dataset, the default period,
@@ -363,7 +366,7 @@ export function Viewer({ search }: { search: string }) {
       )}
       {featureHover && !featureSelected && !moving && featureSpec && <FeatureHoverPopup hit={featureHover} spec={featureSpec} primary={primary} />}
       {ctx && ctxOpen && primary && (
-        <ContextPanel ctx={ctx} dataset={primary} top={panelTop} onClose={closeContext} onMapIt={(id) => { closeContext(); pickDataset(id); }} />
+        <ContextPanel ctx={ctx} dataset={primary} top={panelTop} onClose={closeContext} onMapIt={pickDataset} />
       )}
       {featureSelected && featureSpec && primary && (
         <FeaturePanel hit={featureSelected} spec={featureSpec} dataset={primary} top={panelTop}

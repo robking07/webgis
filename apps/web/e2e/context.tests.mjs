@@ -38,6 +38,9 @@ export default function contextTests({ test, expect, wait }) {
     await page.waitForURL(/d=vmt_per_capita/, { timeout: 10000 });
     expect((await page.locator(PANEL).count()) === 0, "panel still open after switching maps");
     expect((await page.locator("[data-context-link]").count()) === 0, "a map without context shows the link");
+    await wait(1200);
+    const pad = await page.evaluate(() => window.__wgMap.getPadding());
+    expect(pad.right === 0, `padding not reset after switching maps: ${JSON.stringify(pad)}`);
   });
 
   test("phone why this matters: a bottom sheet that leaves the map visible", async (o) => {
