@@ -17,10 +17,12 @@ export function loadValues(id: string, level: GeoLevel, stop?: string | null): P
   if (!cache.has(key)) {
     const url = staticUrl(`values/${key}.json`);
     // Tracts and block groups (85k and 240k values) are fetched, parsed and classified in a
-    // worker, so the map doesn't stall when they first load (issue #28, D-<PR>).
+    // worker, so the map doesn't stall when they first load (D-277).
+    const onMain = () => fetch(url).then((r) => (r.ok ? r.json() : r.status));
+    // A worker that fails (its script missing after a deploy, a network error) falls back to the main thread.
     const loaded = LAZY_LEVELS.has(level) && typeof Worker !== "undefined"
-      ? loadInWorker(url, stop ? undefined : DATASET_BY_ID.get(id))
-      : fetch(url).then((r) => (r.ok ? r.json() : r.status));
+      ? loadInWorker(url, stop ? undefined : DATASET_BY_ID.get(id)).catch(onMain)
+      : onMain();
     cache.set(key, loaded.then((v) => {
       if (typeof v === "number") throw new Error(`No ${level} data for ${id} (${v})`);
       return v;
@@ -38,6 +40,12 @@ async function loadInWorker(url: string, ds?: Dataset): Promise<Values | number>
   if (!worker) {
     worker = new Worker(new URL("./values.worker.ts", import.meta.url));
     worker.onmessage = (e: MessageEvent<WorkerReply>) => { pending.get(e.data.id)?.(e.data); pending.delete(e.data.id); };
+    // The worker didn't load or crashed: fail every waiting request (it never replies) and start fresh next time.
+    worker.onerror = () => {
+      for (const [id, done] of pending) done({ id, error: "values worker failed" });
+      pending.clear();
+      worker = null;
+    };
   }
   const id = nextId++;
   const reply = await new Promise<WorkerReply>((resolve) => {
@@ -46,7 +54,7 @@ async function loadInWorker(url: string, ds?: Dataset): Promise<Values | number>
   });
   if ("error" in reply) throw new Error(reply.error);
   if ("status" in reply) return reply.status;
-  const keys = reply.keys.split(",");
+  const keys = reply.keys ? reply.keys.split(",") : [];
   const values: Values = {};
   const classes = new Map<string, number>();
   // Built in slices with a yield between them: one 240k-entry pass blocks for ~100 ms.

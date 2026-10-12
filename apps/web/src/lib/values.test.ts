@@ -4,6 +4,7 @@ import type { Values } from "./values";
 
 const workerSelf: { onmessage?: (e: { data: unknown }) => void; postMessage?: (m: unknown) => void } = {};
 const files: Record<string, Values> = {
+  "http://localhost/tiles/values/empty/tract.json": {},
   "http://localhost/tiles/values/median_age/block_group.json": { "270531001001": 30, "270531001002": 40, "270531001003": 50, "060750101001": 35, "060750101002": 45 },
 };
 
@@ -33,6 +34,10 @@ describe("loadValues through the worker", () => {
     expect([...seeded.classes]).toEqual([...fresh.classes]);
     expect(seeded.breaks).toEqual(fresh.breaks);
     expect(seeded.colors).toEqual(fresh.colors);
+  });
+  it("an empty file gives no values", async () => {
+    const { loadValues } = await import("./values");
+    expect(await loadValues("empty", "tract")).toEqual({});
   });
   it("a missing file rejects with the level and status", async () => {
     const { loadValues } = await import("./values");
