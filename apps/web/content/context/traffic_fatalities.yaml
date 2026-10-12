@@ -1,0 +1,35 @@
+# "Why this matters" for the traffic deaths map (issue #115). DRAFT by Claude from the cited
+# sources; not shown on mapwich.org until Robbie sets approved: true. Robbie's editable copy:
+# drafts/site-copy/why-this-matters-traffic_fatalities.md. Format: docs/decisions/D-279-why-this-matters.md.
+approved: false
+framing: preventable-harm
+reviewed: "2026-10-12"
+review_by: "2028-04-12"
+summary:
+  - "Nationally, in 2023, 40,901 people were killed in motor vehicle crashes on U.S. roads.[1]"
+  - "The CDC says these deaths and injuries are preventable.[3]"
+points:
+  - "Speed: 29 percent of the people killed in 2023 died in speeding-related crashes.[1]"
+  - "Alcohol: 30 percent of traffic deaths in 2023 were in crashes involving an alcohol-impaired driver.[1]"
+  - "Seat belts: of the people killed in cars, SUVs, pickups and vans in 2023 whose belt use is known, 49 percent were not buckled in.[1]"
+  - "Rural roads: in 2022, about 20 percent of Americans lived in rural areas, but rural areas had 41 percent of traffic deaths.[2]"
+linked:
+  - { id: vmt_per_capita, why: "Miles driven per resident" }
+  - { id: population_density, why: "People per square mile" }
+  - { id: aadt, why: "Traffic on each counted road" }
+sources:
+  - title: "NHTSA, Overview of Motor Vehicle Traffic Crashes in 2023 (DOT HS 813 705, April 2025)"
+    url: https://crashstats.nhtsa.dot.gov/Api/Public/ViewPublication/813705
+    quotes:
+      - "There were 1,820 fewer people killed in motor vehicle traffic crashes on U.S. roadways during 2023, a 4.3-percent decrease from 42,721 in 2022 to 40,901 in 2023."
+      - "Nineteen percent of all drivers involved in fatal traffic crashes were speeding at the time of the crashes, and 29 percent of all those killed in traffic crashes were in speeding-related traffic crashes."
+      - "Alcohol-impaired-driving fatalities decreased by 7.6 percent from 2022 to 2023 (Table 5), accounting for 30 percent of overall traffic fatalities in 2023."
+      - "The percentages reported in this section are all based on known restraint use (restraint use was unknown for 11 percent of passenger vehicle occupant fatalities in 2023). Among passenger vehicle occupants killed in 2023, a little less than half (49%) were unrestrained (Table 8)."
+  - title: "NHTSA, Rural/Urban Traffic Fatalities: 2022 Data (DOT HS 813 599, July 2024)"
+    url: https://crashstats.nhtsa.dot.gov/Api/Public/ViewPublication/813599
+    quotes:
+      - "According to the Census Bureau’s 2022 American Community Survey, an estimated 20 percent of the U.S. population lived in rural areas, and according to the FHWA, 32 percent of the total vehicle miles traveled (VMT) in 2022 were in rural areas. However, rural areas accounted for 41 percent of all traffic fatalities in 2022."
+  - title: "CDC, About Transportation Safety (April 2026)"
+    url: https://www.cdc.gov/transportation-safety/about/index.html
+    quotes:
+      - "However, motor vehicle crash injuries and deaths are preventable."

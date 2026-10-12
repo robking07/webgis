@@ -1,0 +1,37 @@
+# "Why this matters" for the cigarette smoking map (issue #115). DRAFT by Claude from the cited
+# sources; not shown on mapwich.org until Robbie sets approved: true. Robbie's editable copy:
+# drafts/site-copy/why-this-matters-smoking.md. Format: docs/decisions/D-279-why-this-matters.md.
+approved: false
+framing: risk-factor
+reviewed: "2026-10-12"
+review_by: "2028-04-12"
+summary:
+  - "Cigarette smoking is the leading preventable cause of disease, death and disability in the United States.[1]"
+  - "Nationally, smoking and secondhand smoke cause more than 480,000 deaths a year, nearly one in five deaths.[1]"
+points:
+  - "Lung cancer: in the United States, smoking is linked to about 80 percent of lung cancer deaths.[2]"
+  - "People who smoke are 15 to 30 times more likely to get lung cancer or die from it than people who don't.[2]"
+  - "Other diseases: smoking also causes other cancers, heart disease and stroke, lung diseases such as COPD, and type 2 diabetes.[1]"
+  - "Quitting lowers the risk of lung cancer, heart disease, other cancers and COPD.[1][2]"
+linked:
+  - { id: copd, why: "Adults with COPD" }
+  - { id: heart_disease, why: "Adults with coronary heart disease" }
+  - { id: stroke, why: "Adults who have had a stroke" }
+  - { id: cancer, why: "Adults ever told they have cancer" }
+sources:
+  - title: "CDC, Cigarette Smoking (September 2024)"
+    url: https://www.cdc.gov/tobacco/about/index.html
+    quotes:
+      - "Cigarette smoking is the leading preventable cause of disease, death, and disability in the United States."
+      - "Cigarette smoking and secondhand smoke exposure cause more than 480,000 deaths each year in the United States. This is nearly one in five deaths."
+      - "Cancer"
+      - "Heart disease and stroke"
+      - "Lung diseases such as chronic obstructive pulmonary disease (COPD)"
+      - "Type 2 Diabetes"
+      - "Quitting also reduces the risk for smoking-related diseases, including heart disease, cancer, and COPD."
+  - title: "CDC, Lung Cancer Risk Factors (May 2026)"
+    url: https://www.cdc.gov/lung-cancer/risk-factors/index.html
+    quotes:
+      - "In the United States, cigarette smoking is linked to about 80% of lung cancer deaths."
+      - "People who smoke cigarettes are 15 to 30 times more likely to get lung cancer or die from lung cancer than people who do not smoke."
+      - "A person's risk of getting lung cancer goes down after they quit smoking."

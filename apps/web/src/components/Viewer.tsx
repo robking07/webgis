@@ -33,6 +33,8 @@ import { FeatureHoverPopup, PlaceHoverPopup } from "./map-page/HoverPopups";
 import { DetailPanel } from "./map-page/DetailPanel";
 import { useUnreliable } from "./map-page/useUnreliable";
 import { FeaturePanel } from "./map-page/FeaturePanel";
+import { ContextLink, ContextPanel, CONTEXT_PANEL_RIGHT } from "./map-page/ContextPanel";
+import { contextFor } from "@/lib/context";
 
 export function Viewer({ search }: { search: string }) {
   const [initial] = useState<UrlState>(() => {
@@ -65,6 +67,10 @@ export function Viewer({ search }: { search: string }) {
   /** Feature-layer facet filters: field → values HIDDEN by the user. */
   const [hidden, setHidden] = useState<Record<string, Set<string>>>({});
   const [peek, setPeek] = useState(false);
+  /** "Why this matters" is open (issue #115). `?context=preview` also shows unapproved drafts; production
+   *  builds don't contain any (scripts/prepare.mts), so the switch does nothing on mapwich.org. */
+  const [ctxOpen, setCtxOpen] = useState(false);
+  const [ctxPreview] = useState(() => new URLSearchParams(search).get("context") === "preview");
   const mapApi = useRef<MapApi | null>(null);
   // The dataset card's height, so phone controls can sit just below it.
   const card = useRef<HTMLElement>(null);
@@ -110,7 +116,7 @@ export function Viewer({ search }: { search: string }) {
   const tableLevel: GeoLevel | null = level === "state" || level === "county" ? level : availableLevels.includes("county") ? "county" : null;
   // Clear selections and filters when the dataset changes.
   const [seenDataset, setSeenDataset] = useState(state.d);
-  if (seenDataset !== state.d) { setSeenDataset(state.d); setSelected(null); setFeatureSelected(null); setFeatureHover(null); setHidden({}); }
+  if (seenDataset !== state.d) { setSeenDataset(state.d); setSelected(null); setFeatureSelected(null); setFeatureHover(null); setHidden({}); setCtxOpen(false); }
   useEffect(() => { mapApi.current?.select("county", null); }, [state.d]);
   const featureFilter = useMemo(() => {
     if (!primary) return undefined;
@@ -164,6 +170,28 @@ export function Viewer({ search }: { search: string }) {
   const onSearchDataset = (d: Dataset) => { setSearchOpen(false); update({ d: d.id, b: state.b === d.id ? null : state.b, lv: null, ...keepStops(d.id) }); };
   const pickDataset = (id: string) => update({ d: id, b: state.b === id ? null : state.b, lv: null, ...keepStops(id) });
   const loading = available && !current && !error;
+  // Context is about one map, so a comparison shows none.
+  const ctx = primary && !secondary ? contextFor(primary.id, ctxPreview) : null;
+  // A place, the dataset list, or the docked table (phones and tablets) takes its place (adjusted during render).
+  if (ctxOpen && (selected || featureSelected || listOpen || (narrow && tableOpen))) setCtxOpen(false);
+  /** Desktop: while the panel is open, the map shifts left by its width so it doesn't cover the data
+   *  (review lead, #104); it shifts back however the panel closes (Esc, ×, the link, switching maps, the
+   *  table). A place opening keeps the shift: its details panel takes the same spot. Phones: the sheet
+   *  peeks low, under the data. Explicit zero padding: MapApi.setCamera's `padding: 0` leaves it as is. */
+  const padded = useRef(false);
+  useEffect(() => {
+    const api = mapApi.current;
+    if (!api || phone || ctxOpen === padded.current) return;
+    padded.current = ctxOpen;
+    if (!ctxOpen && (selected || featureSelected)) return;
+    const c = api.getCamera();
+    api.flyTo(c.center[0], c.center[1], c.zoom, { top: 0, bottom: 0, left: 0, right: ctxOpen ? CONTEXT_PANEL_RIGHT : 0 });
+  }, [ctxOpen, phone, selected, featureSelected]);
+  const toggleContext = () => {
+    if (!ctxOpen) { setSelected(null); setFeatureSelected(null); mapApi.current?.select("county", null); }
+    setCtxOpen(!ctxOpen);
+  };
+  const closeContext = () => setCtxOpen(false);
 
   // Reliability hatching (D-222): off when a map opens; the legend's toggle appears only where it
   // means something (an ACS map at tract or block-group level, one dataset, the default period,
@@ -277,7 +305,8 @@ export function Viewer({ search }: { search: string }) {
         <DatasetCard cardRef={card} primary={primary} secondary={secondary} meta={meta} immersed={immersed} isFeature={isFeature}
           tableReady={tableReady} hasFilters={hasFilters} filtersOpen={!!filters} filterCount={nFilters} onOpenFilters={toggleFilters}
           onBrowse={() => setBrowserOpen(true)} onTable={() => setTableOpen(true)}
-          phone={phone} onOpenSheet={openSheet} />
+          phone={phone} onOpenSheet={openSheet}
+          contextLink={ctx ? <ContextLink open={ctxOpen} onToggle={toggleContext} /> : undefined} />
       )}
 
       {primary && (
@@ -305,7 +334,7 @@ export function Viewer({ search }: { search: string }) {
         stop={stop} stopId={stopId} since={since}
         hatchToggle={hatchable ? { on: hatchOn, onChange: setHatchOn, loading: hatchOn && !hatch?.[level] } : null}
         desktopStrip={desktopStrip} mark={selected && selected.level === level ? selClass : null}
-        covered={phone && (placeOpen || tableOpen || listOpen || stepAside)} tableReady={tableReady} onTable={() => setTableOpen(true)} />
+        covered={phone && (placeOpen || tableOpen || listOpen || stepAside || ctxOpen)} tableReady={tableReady} onTable={() => setTableOpen(true)} />
 
       <MapCredits datasets={[primary, secondary].filter((d): d is Dataset => !!d)} />
 
@@ -336,6 +365,9 @@ export function Viewer({ search }: { search: string }) {
           change={since && classed[hover.level]?.change ? { from: since, to: stop!, fromValues: xFrom.values[hover.level], classed: classed[hover.level]! } : undefined} />
       )}
       {featureHover && !featureSelected && !moving && featureSpec && <FeatureHoverPopup hit={featureHover} spec={featureSpec} primary={primary} />}
+      {ctx && ctxOpen && primary && (
+        <ContextPanel ctx={ctx} dataset={primary} top={panelTop} onClose={closeContext} onMapIt={pickDataset} />
+      )}
       {featureSelected && featureSpec && primary && (
         <FeaturePanel hit={featureSelected} spec={featureSpec} dataset={primary} top={panelTop}
           onClose={() => setFeatureSelected(null)} />
