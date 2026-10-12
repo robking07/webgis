@@ -4,7 +4,7 @@
 //   npm run ingest -- publish-details     upload them to R2 (details/<state fips>.json, gzip-encoded)
 // One file per state holds the state and its counties: geography (name, centroid, land area) and
 // every dataset's [value, moe]. Re-run both after any ingest that changes state or county values.
-import { mkdirSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { db, log, TILES } from "./util.ts";
 
@@ -60,8 +60,4 @@ export async function detailsOut() {
   }
   const datasets = new Set(values.map((v) => v.dataset_id)).size;
   log("details", `${shards.size} files, ${geos.length} places, ${values.length} values from ${datasets} datasets (${(bytes / 1e6).toFixed(1)} MB raw)`);
-}
-
-export function detailFiles(): string[] {
-  return readdirSync(DETAILS_DIR).filter((f) => f.endsWith(".json"));
 }
