@@ -172,8 +172,8 @@ export function Viewer({ search }: { search: string }) {
   const loading = available && !current && !error;
   // Context is about one map, so a comparison shows none.
   const ctx = primary && !secondary ? contextFor(primary.id, ctxPreview) : null;
-  // A place, the dataset list, or the phone table takes its place (adjusted during render).
-  if (ctxOpen && (selected || featureSelected || listOpen || (phone && tableOpen))) setCtxOpen(false);
+  // A place, the dataset list, or the docked table (phones and tablets) takes its place (adjusted during render).
+  if (ctxOpen && (selected || featureSelected || listOpen || (narrow && tableOpen))) setCtxOpen(false);
   /** Desktop: shift the map left by the panel's width so it doesn't cover the data (review lead, #104),
    *  and back when it closes. Phones: the sheet peeks low, under the data. */
   const padForContext = (open: boolean) => {
