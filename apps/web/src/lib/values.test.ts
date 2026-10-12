@@ -1,11 +1,15 @@
 // The values worker round trip (issue #28): the worker module runs in-process behind a fake Worker.
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import type { Values } from "./values";
+import { staticUrl } from "./static-files";
 
 const workerSelf: { onmessage?: (e: { data: unknown }) => void; postMessage?: (m: unknown) => void } = {};
+// Keyed by the URL the worker is asked for, whatever NEXT_PUBLIC_TILES_BASE_URL is (CI sets it).
+const url = (path: string) => new URL(staticUrl(path), "http://localhost/map").href;
+const bg: Values = { "270531001001": 30, "270531001002": 40, "270531001003": 50, "060750101001": 35, "060750101002": 45 };
 const files: Record<string, Values> = {
-  "http://localhost/tiles/values/empty/tract.json": {},
-  "http://localhost/tiles/values/median_age/block_group.json": { "270531001001": 30, "270531001002": 40, "270531001003": 50, "060750101001": 35, "060750101002": 45 },
+  [url("values/empty/tract.json")]: {},
+  [url("values/median_age/block_group.json")]: bg,
 };
 
 beforeAll(async () => {
@@ -26,7 +30,7 @@ describe("loadValues through the worker", () => {
     const { loadValues, classifyUnivariate, classifyUnivariateCached } = await import("./values");
     const { DATASET_BY_ID } = await import("./registry");
     const v = await loadValues("median_age", "block_group");
-    expect(v).toEqual(files["http://localhost/tiles/values/median_age/block_group.json"]);
+    expect(v).toEqual(bg);
     const ds = DATASET_BY_ID.get("median_age")!;
     const seeded = classifyUnivariateCached(ds, v);
     expect(seeded.packed?.size).toBe(2);
