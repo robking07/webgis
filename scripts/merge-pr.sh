@@ -34,5 +34,5 @@ if [ "$(status_of build)" = "pass" ]; then
 fi
 
 # The repo deletes the branch on GitHub after merging (delete_branch_on_merge).
-gh pr merge "$pr" --merge
+gh pr merge "$pr" --merge --match-head-commit "$head"
 echo "Merged PR #$pr. Remove its worktree: git worktree remove .claude/worktrees/<name>"
