@@ -1,18 +1,22 @@
 "use client";
 // Two places side by side (roadmap 1.1, issue #117). Leads with the metric the visitor was viewing,
-// in large type, then the rest of that metric's topic group; other topics fold behind "More topics".
+// in large type, then every topic group, folded except the metric's own. Laptops and monitors get a
+// map beside the panel with both places outlined (D-258, PR 2a); phones and tablets get no map.
 // Every number comes from the same static files as the details panel and place pages
 // (details/<state>.json, values/tracts/<county>.json; lib/details.ts), so no database call.
 import { useEffect, useMemo, useState } from "react";
-import { formatValue, isGradable, type GeoLevel } from "@webgis/design";
+import { formatValue, isGradable, SECOND_OUTLINE_DASH, type GeoLevel } from "@webgis/design";
 import { StatusState } from "@webgis/design/components";
 import { bothHave, compareValues, rowVerdictText, shortName, verdictText, type Verdict } from "@/lib/compare";
-import { fetchDetail, fetchGeography, type Detail } from "@/lib/details";
+import { fetchDetail, fetchGeography, type Detail, type Geography } from "@/lib/details";
 import { levelOfGeoid, PLACE_ZOOM, placeHref, rankText } from "@/lib/place";
 import { DATASET_BY_ID, DATASETS, type Dataset } from "@/lib/registry";
 import { loadValues } from "@/lib/values";
 import { serializeUrlState } from "@/lib/url-state";
 import { ShareButton } from "../ShareButton";
+import { useMedia } from "../BottomSheet";
+import { SpecialMap } from "../specials/SpecialMap";
+import type { Bbox } from "../map/MapView";
 
 interface Props { a: string; b: string; nameA: string; nameB: string; datasetId: string }
 
@@ -24,6 +28,16 @@ export function ComparePlaces({ a, b, nameA, nameB, datasetId }: Props) {
   const [data, setData] = useState<{ a: Detail; b: Detail; back: string } | null>(null);
   const [err, setErr] = useState(false);
   const [ranks, setRanks] = useState<{ a: string | null; b: string | null } | null>(null);
+  // The map only on laptops and monitors (lg, D-135); starts false, so phones never load it.
+  const wide = useMedia("(min-width: 1024px)");
+  const mapped = wide && ds.geographyLevels.includes(level);
+  const [bbox, setBbox] = useState<Bbox | null>(null);
+  useEffect(() => {
+    if (!mapped) return;
+    let live = true;
+    Promise.all([fetchGeography(a), fetchGeography(b)]).then(([ga, gb]) => { if (live && ga && gb) setBbox(roughBbox(ga, gb)); }, () => {});
+    return () => { live = false; };
+  }, [mapped, a, b]);
 
   useEffect(() => {
     let live = true;
@@ -48,13 +62,13 @@ export function ComparePlaces({ a, b, nameA, nameB, datasetId }: Props) {
     const has = (d: Dataset) => bothHave(data.a[d.id], data.b[d.id]);
     const byCat = new Map<string, Dataset[]>();
     for (const d of DATASETS) if (d.id !== ds.id && has(d)) (byCat.get(d.category) ?? byCat.set(d.category, []).get(d.category)!).push(d);
-    const same = byCat.get(ds.category) ?? [];
-    byCat.delete(ds.category);
-    return { same, others: [...byCat].sort((x, y) => x[0].localeCompare(y[0])) };
+    // The metric's own group first (open), then the rest A–Z (folded).
+    return [...byCat].sort((x, y) => Number(y[0] === ds.category) - Number(x[0] === ds.category) || x[0].localeCompare(y[0]));
   }, [data, ds]);
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-6 md:px-8 md:py-8" data-compare="">
+    <div className="lg:flex lg:items-start">
+    <main className={`mx-auto max-w-3xl px-4 py-6 md:px-8 md:py-8 ${mapped ? "lg:mx-0 lg:w-[40rem] lg:shrink-0" : ""}`} data-compare="">
       <nav className="mb-4 flex items-center justify-between gap-3 text-sm">
         <a href={data?.back ?? "/map"} className="text-primary underline-offset-2 hover:underline">← Back to the map</a>
         <ShareButton />
@@ -73,27 +87,16 @@ export function ComparePlaces({ a, b, nameA, nameB, datasetId }: Props) {
         : (
           <>
             <Headline ds={ds} a={data.a[ds.id]} b={data.b[ds.id]} names={names} ranks={ranks} />
-            {groups.same.length > 0 && (
-              <section aria-label={`More in ${ds.category}`} className="mt-8">
-                <h2 className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">More in {ds.category}</h2>
-                <Rows list={groups.same} data={data} names={names} />
-              </section>
-            )}
-            {groups.others.length > 0 && (
-              <details className="group mt-8" data-more-topics="">
-                <summary className="cursor-pointer rounded text-sm font-semibold text-primary focus-visible:outline-2 focus-visible:outline-ring">
-                  More topics <span className="font-normal text-muted-foreground">({groups.others.length})</span>
-                </summary>
-                <div className="mt-4 flex flex-col gap-6">
-                  {groups.others.map(([cat, list]) => (
-                    <section key={cat} aria-label={cat}>
-                      <h3 className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{cat}</h3>
-                      <Rows list={list} data={data} names={names} />
-                    </section>
-                  ))}
-                </div>
-              </details>
-            )}
+            <div className="mt-8 flex flex-col gap-4">
+              {groups.map(([cat, list]) => (
+                <details key={cat} open={cat === ds.category} data-topic={cat}>
+                  <summary className="cursor-pointer rounded text-sm font-semibold text-primary focus-visible:outline-2 focus-visible:outline-ring">
+                    {cat} <span className="font-normal text-muted-foreground">({list.length})</span>
+                  </summary>
+                  <div className="mt-2"><Rows list={list} data={data} names={names} /></div>
+                </details>
+              ))}
+            </div>
             <p className="mt-8 text-xs text-muted-foreground">
               Both places are {LEVEL_WORD[level]}. ± is the ACS 90% margin of error, or the PLACES 95% interval.
               Census survey (ACS) gaps smaller than their margins of error read “About the same”; other sources show the plain difference.
@@ -101,7 +104,41 @@ export function ComparePlaces({ a, b, nameA, nameB, datasetId }: Props) {
           </>
         )}
     </main>
+    {mapped && (
+      <aside aria-label="Map of both places" className="sticky top-14 min-w-0 flex-1 p-4" data-compare-map="">
+        {bbox && (
+          <SpecialMap datasets={[ds.id]} at={null} level={level as "state" | "county" | "tract"} compare={{ a, b, bbox }} className="h-[calc(100dvh-5.5rem)]">
+            <div className="pointer-events-none absolute left-3 top-3 z-10 flex flex-col gap-1 rounded-lg border bg-card/95 p-2 text-xs shadow-sm">
+              <p className="flex items-center gap-2"><OutlineKey />{names.a}</p>
+              <p className="flex items-center gap-2"><OutlineKey dashed />{names.b}</p>
+            </div>
+          </SpecialMap>
+        )}
+      </aside>
+    )}
+    </div>
   );
+}
+
+/** A sample of each place's outline for the map key: solid for A, dashed for B (the map's own dash). */
+function OutlineKey({ dashed = false }: { dashed?: boolean }) {
+  const w = 2.5;
+  return (
+    <svg width="24" height="6" aria-hidden className="shrink-0 text-foreground">
+      <line x1="0" y1="3" x2="24" y2="3" stroke="currentColor" strokeWidth={w} strokeDasharray={dashed ? SECOND_OUTLINE_DASH.map((d) => d * w).join(" ") : undefined} />
+    </svg>
+  );
+}
+
+/** A first frame for the map from each place's center and land area; the map then fits the real outlines. */
+function roughBbox(...gs: Geography[]): Bbox {
+  let w = 180, s = 90, e = -180, n = -90;
+  for (const g of gs) {
+    const r = Math.sqrt(g.aland_sqmi) * 0.6 / 69; // ~half the place's width, in degrees of latitude
+    const rl = r / Math.cos((g.lat * Math.PI) / 180);
+    w = Math.min(w, g.lon - rl); e = Math.max(e, g.lon + rl); s = Math.min(s, g.lat - r); n = Math.max(n, g.lat + r);
+  }
+  return [w, s, e, n];
 }
 
 function Headline({ ds, a, b, names, ranks }: {

@@ -70,3 +70,28 @@ settings that work for the feature they are using."
 ## Amendments
 
 - 2026-10-10, Robbie: the headline names the higher place; a second tract tap opens compare at once; the button stays "Compare with…". The on-screen wording still needs his OK.
+
+## PR 2a (2026-10-12, worker; plan from the review lead's verdict of 2026-10-09)
+
+PR 2 is split: **2a** (this) needs no new data; **2b** adds counts, share of parent and
+parts-of-a-whole bars once the counts files are uploaded (D-257).
+
+1. **Laptops and monitors (≥ 1024 px, D-135's `lg`) show a map beside the panel**: the compared
+   metric as the choropleth at the compare level, with its legend, and both places outlined. The map
+   is `SpecialMap` (the Specials' map: `MapView`, the same values files and classing) with a new
+   `compare` prop, so nothing is forked. It is sticky beside the scrolling panel, with cooperative
+   gestures like any map inside a scrolling page (Ctrl/⌘ + scroll zooms). No map when the metric has
+   no values at the compare level. Hover and clicks on it select nothing.
+2. **Outline styles (design tokens):** place A (where the visitor started) keeps the solid
+   selection outline; place B gets the same outline **dashed** (`SECOND_OUTLINE_DASH`, 2 on, 1.5
+   off, in line widths; layer `<level>-highlight-second`, feature state `second`). Same color and
+   halo, so the two differ by pattern, not color, and read for colorblind visitors. A key on the map
+   names both with a sample of each line.
+3. **Framing:** the map opens on a rough box from each place's center and land area (from files the
+   page already loads), then fits both real outlines once their tiles are in.
+4. **Phones and tablets: unchanged, no map.** The map mounts only when the `lg` media query
+   matches (it starts false), so a phone fetches no map code, tiles or extra values files. Part 1's
+   data budget stands.
+5. **All topic groups are listed, folded**, the metric's own first and open (still only rows with a
+   value for both places). "More in …" and "More topics" are gone; each group is headed by its name
+   and row count.

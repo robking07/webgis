@@ -79,6 +79,10 @@ export function levelAtZoom(bands: LevelBands, zoom: number): GeoLevel | null {
   return null;
 }
 
+/** Compare maps (D-258): the second place's outline is dashed (dash, gap, in line widths); the first
+ *  is the solid selection outline. Same color and halo, so the two differ without relying on color. */
+export const SECOND_OUTLINE_DASH = [2, 1.5] as const;
+
 /** [zoom, value] pairs, interpolated linearly. */
 export const SIZE = {
   featureOutline: [[3, 0.2], [6, 0.4], [10, 0.8], [14, 1.2]],

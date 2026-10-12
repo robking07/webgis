@@ -93,6 +93,9 @@ interface Props {
   onTractCounties?: (counties: string[]) => void;
   /** Report onTractCounties without hatching (a change map testing tract margins of error). */
   watchCounties?: boolean;
+  /** Compare places (D-258): outline `a` (solid) and `b` (dashed), open on `bbox` and fit both once
+   *  their tiles are in. Clicks and hover don't select anything else. */
+  compare?: { level: GeoLevel; a: string; b: string; bbox: Bbox };
 }
 
 export interface MapApi {
@@ -120,7 +123,7 @@ function tilesUrl(level: GeoLevel, boundaries?: string | null) {
   return `pmtiles://${base}/${boundaryFile(level, boundaries)}.pmtiles`;
 }
 
-export function MapView({ theme, initialView, paint, onViewChange, onHover, onSelect, onTilesError, ariaLabel, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, onApi, featureFilter, scaleUnit = "imperial", attribution = true, boundaries = null, cooperative = false, hatch = null, onTractCounties, watchCounties = false }: Props) {
+export function MapView({ theme, initialView, paint, onViewChange, onHover, onSelect, onTilesError, ariaLabel, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, onApi, featureFilter, scaleUnit = "imperial", attribution = true, boundaries = null, cooperative = false, hatch = null, onTractCounties, watchCounties = false, compare }: Props) {
   const container = useRef<HTMLDivElement>(null);
   const map = useRef<MlMap | null>(null);
   const applied = useRef<Partial<Record<GeoLevel, LevelPaint>>>({});
@@ -137,7 +140,8 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
    *  it stays false while tiles are loading, which silently dropped paint updates. */
   const ready = useRef(false);
   const hovered = useRef<{ level: GeoLevel; id: string } | null>(null);
-  const selected = useRef<{ level: GeoLevel; id: string } | null>(null);
+  const selected = useRef<Flag>(compare ? { level: compare.level, id: compare.a } : null);
+  const second = useRef<Flag>(compare ? { level: compare.level, id: compare.b } : null);
   const scale = useRef<ScaleControl | null>(null);
 
   // Create the map once.
@@ -153,7 +157,8 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
       container: container.current,
       style: basemapStyle(latest.current.theme),
       // No `at` in the URL: frame the lower 48 to the screen, so phones see the whole country too.
-      ...(initialView.fit ? { bounds: CONUS, fitBoundsOptions: { padding: 16 } } : { center: [initialView.lon, initialView.lat] as [number, number], zoom: initialView.zoom }),
+      ...(compare ? { bounds: compare.bbox, fitBoundsOptions: { padding: 40 } }
+        : initialView.fit ? { bounds: CONUS, fitBoundsOptions: { padding: 16 } } : { center: [initialView.lon, initialView.lat] as [number, number], zoom: initialView.zoom }),
       attributionControl: false,
       fadeDuration: reduceMotion ? 0 : MOTION.fade,
       dragRotate: false,
@@ -210,11 +215,16 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
       syncPaint(m, latest.current.paint, applied.current, latest.current.theme);
       syncFeatureLayer(m, latest.current.featureLayer ?? null, latest.current.theme);
       applyFeatureFilter(m, latest.current.featureLayer ?? null, latest.current.featureFilter);
-      restoreFlags(m, hovered.current, selected.current);
+      restoreFlags(m, hovered.current, selected.current, second.current);
       appliedHatch.current = {};
       syncHatch(m, latest.current.hatch, appliedHatch.current, latest.current.levelZooms);
     });
     // Hatching on: report which counties' tracts are on screen once the map settles.
+    // The opening bbox is an estimate from each place's center and area; frame both exactly once their tiles are in.
+    if (compare) m.once("idle", () => {
+      const [a, b] = [geographyBbox(m, compare.level, compare.a), geographyBbox(m, compare.level, compare.b)];
+      if (a && b) fitBbox([Math.min(a[0], b[0]), Math.min(a[1], b[1]), Math.max(a[2], b[2]), Math.max(a[3], b[3])], { top: 40, right: 40, bottom: 40, left: 40 });
+    });
     m.on("idle", () => reportTractCounties(m, !!latest.current.hatch || latest.current.watchCounties, latest.current.onTractCounties, reportedCounties));
     m.on("moveend", () => {
       const c = m.getCenter();
@@ -261,6 +271,7 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
       return { layerId: fl.id, properties: f.properties, x: pt.x, y: pt.y, lon: ll.lng, lat: ll.lat, bbox: geometryBbox(f.geometry) };
     };
     m.on("mousemove", (e) => {
+      if (compare) return;
       if (latest.current.featureLayer) {
         const hit = featureAt(e.point);
         m.getCanvas().style.cursor = hit ? "pointer" : "";
@@ -274,6 +285,7 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
     });
     m.on("mouseout", () => { setFlag(m, hovered, null, "hover"); latest.current.onHover(null); latest.current.onFeatureHover?.(null); });
     m.on("click", (e) => {
+      if (compare) return;
       if (latest.current.featureLayer) { latest.current.onFeatureSelect?.(featureAt(e.point)); return; }
       const f = placeAt(e.point);
       setFlag(m, selected, f ? { level: f.sourceLayer as GeoLevel, id: String(f.properties.geoid) } : null, "selected");
@@ -318,13 +330,13 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
     shownBoundaries.current = boundaries;
     delete applied.current.county; delete applied.current.tract;
     syncPaint(m, latest.current.paint, applied.current, latest.current.theme);
-    restoreFlags(m, hovered.current, selected.current);
+    restoreFlags(m, hovered.current, selected.current, second.current);
   }, [boundaries]);
 
   // Paint: diff per level and push class indices into feature state.
   useEffect(() => {
     const m = map.current;
-    if (m && ready.current) { syncPaint(m, paint, applied.current, latest.current.theme); restoreFlags(m, hovered.current, selected.current); }
+    if (m && ready.current) { syncPaint(m, paint, applied.current, latest.current.theme); restoreFlags(m, hovered.current, selected.current, second.current); }
   }, [paint]);
 
   // Feature layer (lines/points): swap in/out, then apply its filter.
@@ -359,7 +371,7 @@ function applyBands(m: MlMap, bands?: Props["levelZooms"]) {
       m.setLayoutProperty(id, "visibility", band ? "visible" : "none");
       if (band) m.setLayerZoomRange(id, band.minzoom, band.maxzoom);
     }
-    for (const id of [`${level}-highlight-halo`, `${level}-highlight`]) {
+    for (const id of [`${level}-highlight-halo`, `${level}-highlight`, `${level}-highlight-second`]) {
       if (!m.getLayer(id)) continue;
       // Block groups and blocks are never picked from the table or search, and an always-on
       // outline would load their heavy tiles at every zoom (D-124): only within their band.
@@ -453,7 +465,7 @@ function addThematic(m: MlMap, theme: ThemeName, boundaries: string | null) {
     }
   }
   // Selection outlines go above every level's fill, so a county picked while tracts are drawn still shows.
-  for (const level of LEVELS) for (const id of [`${level}-highlight-halo`, `${level}-highlight`]) {
+  for (const level of LEVELS) for (const id of [`${level}-highlight-halo`, `${level}-highlight`, `${level}-highlight-second`]) {
     if (m.getLayer(id)) m.moveLayer(id, m.getLayer(DATA_BEFORE_ID) ? DATA_BEFORE_ID : undefined);
   }
 }
@@ -506,9 +518,11 @@ function blockName(geoid: string) {
   return `Block ${geoid.slice(11)}, Tract ${Number(geoid.slice(5, 11)) / 100}`;
 }
 
+type Flag = { level: GeoLevel; id: string } | null;
+
 /** Repainting clears feature state per source; put the hover/selection flags back. */
-function restoreFlags(m: MlMap, hover: { level: GeoLevel; id: string } | null, sel: { level: GeoLevel; id: string } | null) {
-  for (const [f, key] of [[hover, "hover"], [sel, "selected"]] as const) {
+function restoreFlags(m: MlMap, hover: Flag, sel: Flag, second: Flag) {
+  for (const [f, key] of [[hover, "hover"], [sel, "selected"], [second, "second"]] as const) {
     if (f && m.getSource(`b-${f.level}`)) m.setFeatureState({ source: `b-${f.level}`, sourceLayer: f.level, id: f.id }, { [key]: true });
   }
 }

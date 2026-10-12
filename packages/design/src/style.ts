@@ -4,7 +4,7 @@
 // same tiles serve every dataset and adding one needs no re-tiling.
 import type { LayerSpecification, StyleSpecification } from "maplibre-gl";
 import { HATCH, THEMES, type ThemeName } from "./themes.ts";
-import { LABEL, RANK_WIDTH, SIZE, zoomInterp, GEO_LEVELS, type GeoLevel } from "./sizing.ts";
+import { LABEL, RANK_WIDTH, SECOND_OUTLINE_DASH, SIZE, zoomInterp, GEO_LEVELS, type GeoLevel } from "./sizing.ts";
 import { US_LABEL_MASK } from "./us-label-mask.ts";
 
 export const BASEMAP = {
@@ -348,7 +348,8 @@ export function thematicLayers(o: ThematicLayerOptions): LayerSpecification[] {
   const base = { source: o.source, "source-layer": o.sourceLayer, minzoom, maxzoom };
   // No-data until syncPaint sets the level's class expression.
   const fillColor = choroplethFill(o.colors, new Map(), o.theme);
-  const shown = ["case", ["any", ["boolean", ["feature-state", "hover"], false], ["boolean", ["feature-state", "selected"], false]], 1, 0];
+  const flag = (k: string) => ["boolean", ["feature-state", k], false];
+  const shown = ["case", ["any", flag("hover"), flag("selected")], 1, 0];
   const perState = PER_STATE_LEVELS.has(o.level);
   const fills: LayerSpecification[] = [
     // Per-state levels keep this layer for hit-testing only (fills draw nothing at opacity 0).
@@ -371,11 +372,18 @@ export function thematicLayers(o: ThematicLayerOptions): LayerSpecification[] {
     // Cased selection: a contrasting halo under the outline, so it reads on the darkest and lightest classes.
     {
       id: `${o.level}-highlight-halo`, type: "line", ...base,
-      paint: { "line-color": m.highlightHalo, "line-width": zoomInterp(SIZE.highlightOutline.map(([z, w]) => [z, w + 3] as const)) as never, "line-opacity": shown as never },
+      paint: { "line-color": m.highlightHalo, "line-width": zoomInterp(SIZE.highlightOutline.map(([z, w]) => [z, w + 3] as const)) as never,
+        "line-opacity": ["case", ["any", flag("hover"), flag("selected"), flag("second")], 1, 0] as never },
     },
     {
       id: `${o.level}-highlight`, type: "line", ...base,
       paint: { "line-color": m.highlight, "line-width": zoomInterp(SIZE.highlightOutline) as never, "line-opacity": shown as never },
+    },
+    // The second place on a compare map (D-258): the same outline, dashed, over the same halo.
+    {
+      id: `${o.level}-highlight-second`, type: "line", ...base,
+      paint: { "line-color": m.highlight, "line-width": zoomInterp(SIZE.highlightOutline) as never,
+        "line-dasharray": [...SECOND_OUTLINE_DASH], "line-opacity": ["case", flag("second"), 1, 0] as never },
     },
   ];
 }
