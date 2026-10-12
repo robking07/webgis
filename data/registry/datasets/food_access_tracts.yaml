@@ -1,0 +1,80 @@
+id: food_access_tracts
+title: Far from a supermarket (tracts)
+description: "Share of each census tract's residents who live more than 1 mile (urban tracts) or 10 miles (rural tracts) from the nearest supermarket, supercenter or large grocery store. Tracts that are also low income are USDA's low-income, low-access tracts, often called food deserts."
+category: Health
+tags: [food access, food deserts, supermarkets, grocery stores, low income low access, USDA, Food Access Research Atlas]
+source:
+  name: USDA Economic Research Service, Food Access Research Atlas (Large Retailer Access Map, 2019 data)
+  shortName: USDA Food Access Atlas
+  url: https://www.ers.usda.gov/data-products/food-access-research-atlas
+  citation: "U.S. Department of Agriculture, Economic Research Service. Food Access Research Atlas, Large Retailer Access Map (formerly the Food Access Research Atlas), 2019 data, released April 2021."
+license: Public domain (U.S. Government work, 17 U.S.C. § 105).
+updateCadence: irregular
+vintage: "2019"
+unit: percent
+universe: residents (2010 Census, 2010 tracts)
+coverageNote: "2010 tract boundaries, drawn as USDA published them. Store locations are from 2019, residents from the 2010 Census and incomes from the 2014–2018 American Community Survey."
+terms: [food-access, tract-2010]
+learnMore:
+  - label: How USDA measures distance to a supermarket
+    url: https://www.ers.usda.gov/data-products/food-access-research-atlas/documentation/large-retailer-access-map-reference-guide
+facets:
+  - field: status
+    label: Low income and low access
+    term: food-access
+    explainer: "Tracts that are both low income and low access at 1 mile (urban) or 10 miles (rural): USDA's main food desert measure. Hide one group to see only the other."
+    values:
+      - { value: "Low income and low access", label: "Low income and low access", description: "A low-income tract where at least 500 people, or a third of residents, live beyond the distance." }
+      - { value: "Other tracts", label: "Other tracts", description: "Not low income, not low access, or neither." }
+measure:
+  kind: features
+  geometry: polygon
+  source:
+    url: https://www2.census.gov/geo/tiger/GENZ2019/shp/cb_2019_us_tract_500k.zip
+    file: cb_2019_us_tract_500k.zip
+    path: cb_2019_us_tract_500k.shp
+    layerPattern: "^cb_2019_us_tract_500k$"
+  join:
+    url: https://www.ers.usda.gov/media/5627/2019-large-retailer-access-map-lram-formerly-known-as-the-food-access-research-atlas-fara-data.zip
+    file: usda-food-access-2019.zip
+    path: Food Access Research Atlas.csv
+  # 2019 cartographic tracts are the 2010 tracts. A "NULL" count in the atlas means no one lives that far (0).
+  select: >-
+    SELECT t.GEOID AS tract, a.County || ', ' || a.State AS place,
+    CASE WHEN CAST(a.Pop2010 AS REAL) > 0 THEN ROUND(100.0 * CAST(REPLACE(a.LAPOP1_10, 'NULL', '0') AS REAL) / CAST(a.Pop2010 AS REAL), 1) END AS far_pct,
+    CASE WHEN CAST(a.OHU2010 AS REAL) > 0 THEN ROUND(100.0 * CAST(REPLACE(a.lahunvhalf, 'NULL', '0') AS REAL) / CAST(a.OHU2010 AS REAL), 1) END AS no_car_pct,
+    CASE WHEN a.LILATracts_1And10 = '1' THEN 'Low income and low access' ELSE 'Other tracts' END AS status,
+    CASE WHEN a.Urban = '1' THEN 'Urban: 1 mile' ELSE 'Rural: 10 miles' END AS distance,
+    CASE WHEN a.LowIncomeTracts = '1' THEN 'Yes' ELSE 'No' END AS low_income,
+    CASE WHEN a.LA1and10 = '1' THEN 'Yes' ELSE 'No' END AS low_access,
+    CAST(a.Pop2010 AS INTEGER) AS population,
+    t.geom FROM {layer} t JOIN "join" a ON a.CensusTract = ltrim(t.GEOID, '0')
+  valueField: far_pct
+  fields:
+    place: Place
+    far_pct:
+      label: Residents far from a supermarket
+      unit: percent
+      explainer: "Share of residents living more than 1 mile (urban tracts) or 10 miles (rural tracts) from the nearest supermarket, supercenter or large grocery store, measured from where people live."
+    no_car_pct:
+      label: Households with no car, far from a supermarket
+      unit: percent
+      explainer: "Share of the tract's households that have no vehicle and live more than half a mile from the nearest supermarket."
+    status: Status
+    distance:
+      label: Distance that counts as far
+      explainer: "USDA counts someone as far from a supermarket beyond 1 mile in urban tracts and beyond 10 miles in rural ones. A tract is rural when its population center is outside any town of 2,500 people or more."
+    low_income:
+      label: Low-income tract
+      explainer: "A poverty rate of 20% or more, or a median family income at or below 80% of the state's or metro area's median (2014–2018)."
+    low_access:
+      label: Low-access tract
+      explainer: "At least 500 people, or at least a third of residents, live beyond that distance."
+    population: { label: "Residents (2010)", unit: count }
+  zooms: [2, 12]
+symbology:
+  ramp: oranges
+  classification: manual
+  classes: 5
+  breaks: [10, 25, 50, 75]
+  higherIsBetter: false

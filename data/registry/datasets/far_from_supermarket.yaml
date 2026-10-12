@@ -1,0 +1,30 @@
+id: far_from_supermarket
+title: Far from a supermarket
+phrase: shares of residents far from a supermarket
+description: "Share of residents who live more than 1 mile (urban tracts) or 10 miles (rural tracts) from the nearest supermarket, supercenter or large grocery store."
+category: Health
+tags: [food access, food deserts, supermarkets, grocery stores, USDA, Food Access Research Atlas]
+source:
+  name: USDA Economic Research Service, Food Access Research Atlas (Large Retailer Access Map, 2019 data)
+  shortName: USDA Food Access Atlas
+  url: https://www.ers.usda.gov/data-products/food-access-research-atlas
+  citation: "U.S. Department of Agriculture, Economic Research Service. Food Access Research Atlas, Large Retailer Access Map (formerly the Food Access Research Atlas), 2019 data, released April 2021."
+license: Public domain (U.S. Government work, 17 U.S.C. § 105).
+updateCadence: irregular
+vintage: "2019"
+geographyLevels: [state, county]
+unit: percent
+universe: residents (2010 Census, 2010 tracts)
+coverageNote: "Built from 2010 tracts. Connecticut counties show no data (2022 county change). Store locations are from 2019 and residents from the 2010 Census. For each tract, map Far from a supermarket (tracts)."
+terms: [food-access, tract-2010, quantile-classes]
+learnMore:
+  - label: How USDA measures distance to a supermarket
+    url: https://www.ers.usda.gov/data-products/food-access-research-atlas/documentation/large-retailer-access-map-reference-guide
+measure:
+  kind: food_access
+  url: https://www.ers.usda.gov/media/5627/2019-large-retailer-access-map-lram-formerly-known-as-the-food-access-research-atlas-fara-data.zip
+  file: usda-food-access-2019.zip
+  entry: Food Access Research Atlas.csv
+  count: LAPOP1_10
+  per: Pop2010
+symbology: { ramp: oranges, classification: quantile, classes: 5, higherIsBetter: false }

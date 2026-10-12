@@ -1,0 +1,31 @@
+id: no_car_far_from_supermarket
+title: No car, far from a supermarket
+phrase: shares of households without a car far from a supermarket
+description: "Share of households that have no car and live more than half a mile from the nearest supermarket, supercenter or large grocery store."
+category: Health
+tags: [vehicle access, no car, food access, supermarkets, USDA, Food Access Research Atlas]
+source:
+  name: USDA Economic Research Service, Food Access Research Atlas (Large Retailer Access Map, 2019 data)
+  shortName: USDA Food Access Atlas
+  url: https://www.ers.usda.gov/data-products/food-access-research-atlas
+  citation: "U.S. Department of Agriculture, Economic Research Service. Food Access Research Atlas, Large Retailer Access Map (formerly the Food Access Research Atlas), 2019 data, released April 2021."
+license: Public domain (U.S. Government work, 17 U.S.C. § 105).
+updateCadence: irregular
+vintage: "2019"
+geographyLevels: [state, county]
+unit: percent
+universe: occupied housing units (2010 Census, 2010 tracts)
+coverageNote: "Built from 2010 tracts. Connecticut counties show no data (2022 county change). Store locations are from 2019, households from the 2010 Census and car ownership from the 2014–2018 American Community Survey. For each tract, map No car, far from a supermarket (tracts)."
+terms: [food-access, tract-2010, quantile-classes]
+learnMore:
+  - label: How USDA measures distance to a supermarket
+    url: https://www.ers.usda.gov/data-products/food-access-research-atlas/documentation/large-retailer-access-map-reference-guide
+modelInputs: [pct_zero_vehicle_households]  # both count ACS households without a vehicle
+measure:
+  kind: food_access
+  url: https://www.ers.usda.gov/media/5627/2019-large-retailer-access-map-lram-formerly-known-as-the-food-access-research-atlas-fara-data.zip
+  file: usda-food-access-2019.zip
+  entry: Food Access Research Atlas.csv
+  count: lahunvhalf
+  per: OHU2010
+symbology: { ramp: purples, classification: quantile, classes: 5, higherIsBetter: false }

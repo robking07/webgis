@@ -84,6 +84,12 @@ links:
   - { maps: [pm25_annual, copd], why: Fine-particle pollution worsens lung disease. }
   - { maps: [overdose_deaths, mental_distress], why: Overdose and mental distress often go together. }
   - { maps: [pct_uninsured, routine_checkup], why: People without insurance see a doctor less often. }
+  # Food access
+  - { maps: [far_from_supermarket, food_access_tracts], why: The share of residents and the tracts behind it. }
+  - { maps: [no_car_far_from_supermarket, food_access_no_car_tracts], why: The share of households and the tracts behind it. }
+  - { maps: [food_desert_residents, far_from_supermarket], why: Low-income, low-access tracts are low-income tracts where many residents live far from a supermarket. }
+  - { maps: [no_car_far_from_supermarket, pct_zero_vehicle_households], why: Living far from a supermarket is harder without a car. }
+  - { maps: [food_desert_residents, food_insecurity], why: Living far from a supermarket on a low income can make it harder to get enough food. }
 
 maps:
   # Climate
@@ -222,6 +228,14 @@ maps:
     group: "Health"
   fair_poor_health:
     group: "Health"
+  far_from_supermarket:
+    group: "Health"
+  food_access_no_car_tracts:
+    group: "Health"
+  food_access_tracts:
+    group: "Health"
+  food_desert_residents:
+    group: "Health"
   food_insecurity:
     group: "Health"
   heart_disease:
@@ -241,6 +255,8 @@ maps:
   mammogram:
     group: "Health"
   mental_distress:
+    group: "Health"
+  no_car_far_from_supermarket:
     group: "Health"
   obesity:
     group: "Health"

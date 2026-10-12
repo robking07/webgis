@@ -1,5 +1,5 @@
 // npm run ingest -- <step> [dataset or level ids…]
-// Steps: geographies | label-mask | timeline | acs | acs-bg | census2020 | lodes | places | climdiv | nbi | fars | overdose | airquality | features | vmt | cejst | ddp287g | nri | lead | tiles | publish-tiles | publish-values | publish-geo | publish-data | counts | publish-counts | details | publish-details | tract-geo | export | insights | tracts-out | docs | mn-catalog | all
+// Steps: geographies | label-mask | timeline | acs | acs-bg | census2020 | lodes | places | climdiv | nbi | fars | overdose | airquality | features | vmt | cejst | ddp287g | nri | lead | food-access | tiles | publish-tiles | publish-values | publish-geo | publish-data | counts | publish-counts | details | publish-details | tract-geo | export | insights | tracts-out | docs | mn-catalog | all
 import { ingestGeographies, tractGeography } from "./geographies.ts";
 import { ingestAcs, ingestAcsTimeline } from "./acs.ts";
 import { ingestCensus2020 } from "./census2020.ts";
@@ -23,6 +23,7 @@ import { ingestVmt } from "./vmt.ts";
 import { ingestCejst } from "./cejst.ts";
 import { ingestDdp287g } from "./ddp287g.ts";
 import { ingestLead } from "./lead.ts";
+import { ingestFoodAccess } from "./foodaccess.ts";
 import { ingestNri } from "./nri.ts";
 import { buildLabelMask } from "./label-mask.ts";
 import { tractsOut } from "./tracts.ts";
@@ -45,6 +46,7 @@ const steps: Record<string, () => Promise<void> | void> = {
   cejst: () => ingestCejst(only),
   ddp287g: () => ingestDdp287g(only),
   lead: () => ingestLead(only),
+  "food-access": () => ingestFoodAccess(only),
   nri: () => ingestNri(only),
   tiles: () => buildTiles(only),
   "label-mask": buildLabelMask,

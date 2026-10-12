@@ -106,8 +106,15 @@
  {
   "id": "tract-2010",
   "term": "2010 census tracts",
-  "short": "CEJST uses the 2010 tract boundaries, which differ in places from the 2020 tracts used by most other layers here.",
-  "long": "Census tracts are redrawn every ten years. CEJST 2.0 was built on 2010 tracts, so its tract shapes are drawn as published rather than matched to 2020 tracts. County and state roll-ups use the 2010 county codes, which still match today's counties everywhere except Connecticut (which switched to planning regions in 2022) and a few renamed or split areas."
+  "short": "CEJST and USDA's Food Access Research Atlas use the 2010 tract boundaries, which differ in places from the 2020 tracts used by most other layers here.",
+  "long": "Census tracts are redrawn every ten years. CEJST 2.0 and the 2019 Food Access Research Atlas were built on 2010 tracts, so their tract shapes are drawn as published rather than matched to 2020 tracts. County and state roll-ups use the 2010 county codes, which still match today's counties everywhere except Connecticut (which switched to planning regions in 2022) and a few renamed or split areas."
+ },
+ {
+  "id": "food-access",
+  "term": "Low income, low access (food deserts)",
+  "short": "USDA's name for census tracts where incomes are low and many people live far from a supermarket.",
+  "long": "USDA's Food Access Research Atlas counts how many people live more than 1 mile from the nearest supermarket, supercenter or large grocery store in urban tracts, or more than 10 miles in rural ones (a tract is rural when its population center is outside any town of 2,500 or more). A tract is low access when at least 500 people, or a third of its residents, live that far. It is low income when its poverty rate is 20% or more, or its median family income is at or below 80% of the state's or metro area's median. Tracts that are both are often called food deserts. Distance is only part of the story: a car, transit, prices and smaller stores matter too, which is why the atlas also counts households with no car more than half a mile from a supermarket. The 2019 edition uses 2019 store lists, 2010 Census population and 2014–2018 survey incomes.",
+  "source": "https://www.ers.usda.gov/data-products/food-access-research-atlas/documentation/large-retailer-access-map-reference-guide"
  },
  {
   "id": "ice-287g",
