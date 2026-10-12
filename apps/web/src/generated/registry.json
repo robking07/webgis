@@ -2066,7 +2066,7 @@
   },
   "license": "Public domain (U.S. Government work, 17 U.S.C. § 105).",
   "updateCadence": "irregular",
-  "vintage": "2019",
+  "vintage": "2019 data",
   "geographyLevels": [
    "state",
    "county"
@@ -2078,7 +2078,8 @@
    "url": "https://www.ers.usda.gov/media/5627/2019-large-retailer-access-map-lram-formerly-known-as-the-food-access-research-atlas-fara-data.zip",
    "file": "usda-food-access-2019.zip",
    "entry": "Food Access Research Atlas.csv",
-   "count": "LAPOP1_10",
+   "count": "lapop1",
+   "ruralCount": "lapop10",
    "per": "Pop2010"
   },
   "modelInputs": [],
@@ -2127,7 +2128,7 @@
   },
   "license": "Public domain (U.S. Government work, 17 U.S.C. § 105).",
   "updateCadence": "irregular",
-  "vintage": "2019",
+  "vintage": "2019 data",
   "geographyLevels": [],
   "unit": "percent",
   "universe": "occupied housing units (2010 Census, 2010 tracts)",
@@ -2145,7 +2146,7 @@
     "file": "usda-food-access-2019.zip",
     "path": "Food Access Research Atlas.csv"
    },
-   "select": "SELECT t.GEOID AS tract, a.County || ', ' || a.State AS place, CASE WHEN CAST(a.Pop2010 AS REAL) > 0 THEN ROUND(100.0 * CAST(REPLACE(a.LAPOP1_10, 'NULL', '0') AS REAL) / CAST(a.Pop2010 AS REAL), 1) END AS far_pct, CASE WHEN CAST(a.OHU2010 AS REAL) > 0 THEN ROUND(100.0 * CAST(REPLACE(a.lahunvhalf, 'NULL', '0') AS REAL) / CAST(a.OHU2010 AS REAL), 1) END AS no_car_pct, CASE WHEN a.LILATracts_1And10 = '1' THEN 'Low income and low access' ELSE 'Other tracts' END AS status, CASE WHEN a.Urban = '1' THEN 'Urban: 1 mile' ELSE 'Rural: 10 miles' END AS distance, CASE WHEN a.LowIncomeTracts = '1' THEN 'Yes' ELSE 'No' END AS low_income, CASE WHEN a.LA1and10 = '1' THEN 'Yes' ELSE 'No' END AS low_access, CAST(a.Pop2010 AS INTEGER) AS population, t.geom FROM {layer} t JOIN \"join\" a ON a.CensusTract = ltrim(t.GEOID, '0')",
+   "select": "SELECT t.GEOID AS tract, a.County || ', ' || a.State AS place, CASE WHEN CAST(a.Pop2010 AS REAL) > 0 THEN ROUND(100.0 * CAST(REPLACE(CASE WHEN a.Urban = '1' THEN a.lapop1 ELSE a.lapop10 END, 'NULL', '0') AS REAL) / CAST(a.Pop2010 AS REAL), 1) END AS far_pct, CASE WHEN CAST(a.OHU2010 AS REAL) > 0 THEN ROUND(100.0 * CAST(REPLACE(a.lahunvhalf, 'NULL', '0') AS REAL) / CAST(a.OHU2010 AS REAL), 1) END AS no_car_pct, CASE WHEN a.LILATracts_1And10 = '1' THEN 'Low income and low access' ELSE 'Other tracts' END AS status, CASE WHEN a.Urban = '1' THEN 'Urban: 1 mile' ELSE 'Rural: 10 miles' END AS distance, CASE WHEN a.LowIncomeTracts = '1' THEN 'Yes' WHEN a.PovertyRate = 'NULL' AND a.MedianFamilyIncome = 'NULL' THEN NULL ELSE 'No' END AS low_income, CASE WHEN a.LA1and10 = '1' THEN 'Yes' ELSE 'No' END AS low_access, CAST(a.Pop2010 AS INTEGER) AS population, t.geom FROM {layer} t JOIN \"join\" a ON a.CensusTract = ltrim(t.GEOID, '0')",
    "valueField": "no_car_pct",
    "fields": {
     "place": "Place",
@@ -2202,6 +2203,24 @@
       "description": "Not low income, not low access, or neither."
      }
     ]
+   },
+   {
+    "field": "distance",
+    "label": "Urban or rural",
+    "explainer": "USDA uses a shorter distance in towns and cities than in the countryside.",
+    "term": "food-access",
+    "values": [
+     {
+      "value": "Urban: 1 mile",
+      "label": "Urban: 1 mile",
+      "description": "Residents more than 1 mile from a supermarket count as far."
+     },
+     {
+      "value": "Rural: 10 miles",
+      "label": "Rural: 10 miles",
+      "description": "Residents more than 10 miles from a supermarket count as far. A tract is rural when its population center is outside any town of 2,500 or more."
+     }
+    ]
    }
   ],
   "excludeFromInsights": false,
@@ -2250,7 +2269,7 @@
   },
   "license": "Public domain (U.S. Government work, 17 U.S.C. § 105).",
   "updateCadence": "irregular",
-  "vintage": "2019",
+  "vintage": "2019 data",
   "geographyLevels": [],
   "unit": "percent",
   "universe": "residents (2010 Census, 2010 tracts)",
@@ -2268,7 +2287,7 @@
     "file": "usda-food-access-2019.zip",
     "path": "Food Access Research Atlas.csv"
    },
-   "select": "SELECT t.GEOID AS tract, a.County || ', ' || a.State AS place, CASE WHEN CAST(a.Pop2010 AS REAL) > 0 THEN ROUND(100.0 * CAST(REPLACE(a.LAPOP1_10, 'NULL', '0') AS REAL) / CAST(a.Pop2010 AS REAL), 1) END AS far_pct, CASE WHEN CAST(a.OHU2010 AS REAL) > 0 THEN ROUND(100.0 * CAST(REPLACE(a.lahunvhalf, 'NULL', '0') AS REAL) / CAST(a.OHU2010 AS REAL), 1) END AS no_car_pct, CASE WHEN a.LILATracts_1And10 = '1' THEN 'Low income and low access' ELSE 'Other tracts' END AS status, CASE WHEN a.Urban = '1' THEN 'Urban: 1 mile' ELSE 'Rural: 10 miles' END AS distance, CASE WHEN a.LowIncomeTracts = '1' THEN 'Yes' ELSE 'No' END AS low_income, CASE WHEN a.LA1and10 = '1' THEN 'Yes' ELSE 'No' END AS low_access, CAST(a.Pop2010 AS INTEGER) AS population, t.geom FROM {layer} t JOIN \"join\" a ON a.CensusTract = ltrim(t.GEOID, '0')",
+   "select": "SELECT t.GEOID AS tract, a.County || ', ' || a.State AS place, CASE WHEN CAST(a.Pop2010 AS REAL) > 0 THEN ROUND(100.0 * CAST(REPLACE(CASE WHEN a.Urban = '1' THEN a.lapop1 ELSE a.lapop10 END, 'NULL', '0') AS REAL) / CAST(a.Pop2010 AS REAL), 1) END AS far_pct, CASE WHEN CAST(a.OHU2010 AS REAL) > 0 THEN ROUND(100.0 * CAST(REPLACE(a.lahunvhalf, 'NULL', '0') AS REAL) / CAST(a.OHU2010 AS REAL), 1) END AS no_car_pct, CASE WHEN a.LILATracts_1And10 = '1' THEN 'Low income and low access' ELSE 'Other tracts' END AS status, CASE WHEN a.Urban = '1' THEN 'Urban: 1 mile' ELSE 'Rural: 10 miles' END AS distance, CASE WHEN a.LowIncomeTracts = '1' THEN 'Yes' WHEN a.PovertyRate = 'NULL' AND a.MedianFamilyIncome = 'NULL' THEN NULL ELSE 'No' END AS low_income, CASE WHEN a.LA1and10 = '1' THEN 'Yes' ELSE 'No' END AS low_access, CAST(a.Pop2010 AS INTEGER) AS population, t.geom FROM {layer} t JOIN \"join\" a ON a.CensusTract = ltrim(t.GEOID, '0')",
    "valueField": "far_pct",
    "fields": {
     "place": "Place",
@@ -2325,6 +2344,24 @@
       "description": "Not low income, not low access, or neither."
      }
     ]
+   },
+   {
+    "field": "distance",
+    "label": "Urban or rural",
+    "explainer": "USDA uses a shorter distance in towns and cities than in the countryside.",
+    "term": "food-access",
+    "values": [
+     {
+      "value": "Urban: 1 mile",
+      "label": "Urban: 1 mile",
+      "description": "Residents more than 1 mile from a supermarket count as far."
+     },
+     {
+      "value": "Rural: 10 miles",
+      "label": "Rural: 10 miles",
+      "description": "Residents more than 10 miles from a supermarket count as far. A tract is rural when its population center is outside any town of 2,500 or more."
+     }
+    ]
    }
   ],
   "excludeFromInsights": false,
@@ -2373,7 +2410,7 @@
   },
   "license": "Public domain (U.S. Government work, 17 U.S.C. § 105).",
   "updateCadence": "irregular",
-  "vintage": "2019",
+  "vintage": "2019 data",
   "geographyLevels": [
    "state",
    "county"
@@ -3915,7 +3952,7 @@
   },
   "license": "Public domain (U.S. Government work, 17 U.S.C. § 105).",
   "updateCadence": "irregular",
-  "vintage": "2019",
+  "vintage": "2019 data",
   "geographyLevels": [
    "state",
    "county"

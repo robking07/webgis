@@ -153,7 +153,7 @@
   short: >-
     USDA's name for census tracts where incomes are low and many people live far from a supermarket.
   long: >-
-    USDA's Food Access Research Atlas counts how many people live more than 1 mile from the nearest supermarket, supercenter or large grocery store in urban tracts, or more than 10 miles in rural ones (a tract is rural when its population center is outside any town of 2,500 or more). A tract is low access when at least 500 people, or a third of its residents, live that far. It is low income when its poverty rate is 20% or more, or its median family income is at or below 80% of the state's or metro area's median. Tracts that are both are often called food deserts. Distance is only part of the story: a car, transit, prices and smaller stores matter too, which is why the atlas also counts households with no car more than half a mile from a supermarket. The 2019 edition uses 2019 store lists, 2010 Census population and 2014–2018 survey incomes.
+    USDA counts people living more than 1 mile from the nearest supermarket, supercenter or large grocery store in urban tracts, or more than 10 miles in rural ones. A tract is low access when at least 500 people, or a third of residents, live that far, and low income when its poverty rate is 20% or more or its family incomes are well below the area's. Tracts that are both are often called food deserts. Distance isn't everything: a car, transit and prices matter too. The 2019 edition uses 2019 store lists and 2010 Census residents.
   source: https://www.ers.usda.gov/data-products/food-access-research-atlas/documentation/large-retailer-access-map-reference-guide
 
 - id: ice-287g

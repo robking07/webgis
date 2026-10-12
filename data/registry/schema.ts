@@ -184,6 +184,9 @@ const FoodAccessMeasure = z.object({
   entry: z.string(),
   /** Tract column counted (a "NULL" count means no one beyond the distance: 0). */
   count: z.string(),
+  /** Rural tracts' count column, when it differs (`count: lapop1` + `ruralCount: lapop10` is the
+   *  1-mile urban / 10-mile rural count; USDA's combined LAPOP1_10 is blank in four tracts of renamed counties). */
+  ruralCount: z.string().optional(),
   /** Count only tracts where this 0/1 flag column is 1 (e.g. residents of flagged tracts). */
   flag: z.string().optional(),
   /** Tract total the count is divided by (Pop2010, OHU2010). */

@@ -11,7 +11,7 @@ source:
   citation: "U.S. Department of Agriculture, Economic Research Service. Food Access Research Atlas, Large Retailer Access Map (formerly the Food Access Research Atlas), 2019 data, released April 2021."
 license: Public domain (U.S. Government work, 17 U.S.C. § 105).
 updateCadence: irregular
-vintage: "2019"
+vintage: "2019 data"
 geographyLevels: [state, county]
 unit: percent
 universe: residents (2010 Census, 2010 tracts)

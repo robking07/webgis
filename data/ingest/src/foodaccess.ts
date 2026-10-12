@@ -7,7 +7,7 @@ import { cached, db, FIPS_RENAMES, log, splitCsv } from "./util.ts";
 import { registerDataset, writeValues, type Value } from "./values.ts";
 import { unzipEntry } from "./zip.ts";
 
-export interface FoodAccessColumns { count: string; flag?: string; per: string }
+export interface FoodAccessColumns { count: string; ruralCount?: string; flag?: string; per: string }
 
 /** Atlas CSV text → [count, total] sums by county and state. A "NULL" count is the atlas's way of
  *  saying no one lives beyond that distance, so it counts as 0. County codes renamed since 2010
@@ -15,14 +15,15 @@ export interface FoodAccessColumns { count: string; flag?: string; per: string }
 export function foodAccessSums(text: string, c: FoodAccessColumns) {
   const lines = text.split(/\r?\n/);
   const h = splitCsv(lines[0]);
-  const [iT, iC, iF, iP] = ["CensusTract", c.count, c.flag ?? "CensusTract", c.per].map((n) => h.indexOf(n));
-  if ([iT, iC, iF, iP].some((i) => i < 0)) throw new Error(`food access CSV: missing one of CensusTract, ${c.count}, ${c.flag ?? ""}, ${c.per}`);
+  const [iT, iC, iR, iU, iF, iP] = ["CensusTract", c.count, c.ruralCount ?? c.count, "Urban", c.flag ?? "CensusTract", c.per].map((n) => h.indexOf(n));
+  if ([iT, iC, iR, iU, iF, iP].some((i) => i < 0)) throw new Error(`food access CSV: missing one of CensusTract, Urban, ${c.count}, ${c.ruralCount ?? ""}, ${c.flag ?? ""}, ${c.per}`);
   const out = { county: new Map<string, [number, number]>(), state: new Map<string, [number, number]>() };
   for (const line of lines.slice(1)) {
     if (!line) continue;
     const f = splitCsv(line);
     const g = f[iT].padStart(11, "0"), raw = g.slice(0, 5);
-    const n = f[iC] === "NULL" ? 0 : Number(f[iC]), per = Number(f[iP]);
+    const cell = f[f[iU] === "1" ? iC : iR];
+    const n = cell === "NULL" ? 0 : Number(cell), per = Number(f[iP]);
     if (!Number.isFinite(n) || !Number.isFinite(per)) throw new Error(`food access CSV: bad number in tract ${g}`);
     const counted = c.flag && f[iF] !== "1" ? 0 : n;
     for (const [m, k] of [[out.county, FIPS_RENAMES[raw] ?? raw], [out.state, g.slice(0, 2)]] as const) {
