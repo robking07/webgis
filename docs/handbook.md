@@ -63,6 +63,12 @@ Each rule links to its source; follow the source, not this summary.
   blocks you, take the safe route it names; don't look for a way around. Its test: `npm run test:guardrails`.
 - **Stay in scope.** Do what the issue asks. Extras are how budgets get blown. Note them in your
   report instead.
+- **Ponytail: the smallest complete change.** Coding workers get ponytail's rules at start: reuse
+  what the repo already has, no unrequested abstractions, options or dependencies, deletion beats
+  addition, but finish every caller, test and fixture the change touches. **This handbook wins where
+  they disagree:** design tokens, registry-only datasets, decision files, real screenshots and the
+  checks below are never "extras" to cut. A shortcut with a known limit gets a one-line comment,
+  `shortcut: <the limit>, <when to upgrade>`, so the lead can list them later (`/ponytail-debt`).
 
 ## 3. Checks: what to run, and when
 
@@ -95,6 +101,10 @@ say so. The lead marks UI PRs ready once the build passes, so CI's click-through
 | `secret scan` | gitleaks over the PR's commits. | Yes |
 | `speed + accessibility` * † | Lighthouse on `/`, a dataset page and a Special (local build). Runs on ready PRs only. | Accessibility < 90 fails; performance, best practices, SEO only warn |
 
+**Self-review before you report.** Run the `ponytail-review` skill on your own diff against
+`origin/main`. Fix every **Must fix** item; fix **Should fix** items that are in scope and list the
+rest in your report. Paste its `Verdict:` line in your report.
+
 Skills to use (invoke by name):
 
 - `run`: launch the app and see a change working in the real browser. Use for any visible
@@ -103,6 +113,8 @@ Skills to use (invoke by name):
   person (no cryptic codes, raw units, missing explainers, facets). Part of the dataset flow.
 - `add-dataset`, `build-tiles` (PMTiles to R2), `postgis-analysis` (SQL and migrations),
   `maplibre-*` (map rendering questions): use the one that matches the task.
+- `ponytail-review`: plain-English review of a diff (bugs, safety, missing tests, what to cut).
+  Every code PR, before reporting. The lead runs it again before merging.
 
 Docs-only PRs need no build; check that every path and command you cite exists.
 Ingest steps (`npm run ingest -- <step>`) and `npm run db:migrate` need GDAL, tippecanoe and
@@ -118,6 +130,7 @@ You are a worker, not the decision maker. Don't ask Robbie anything; don't merge
 2. Your final message to the lead contains:
    - the PR number and link, and the files you changed;
    - **the check output, pasted** (not "tests pass"): the commands you ran and their results;
+   - the `ponytail-review` verdict line, and any findings you left unfixed (with why);
    - **Questions for Robbie**, listed with the options you see and the default you took. Choices
      that are his: what users see, scope, editorial wording, data judgment, cost;
    - anything odd you found in the repo (listed, not fixed);

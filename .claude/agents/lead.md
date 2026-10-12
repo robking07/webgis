@@ -117,7 +117,10 @@ agent (no worktree; it only reports). Before you start a worker:
     secrets;
   - checks to run before reporting: `npm run build` (includes `check:design`),
     `npm run registry:validate` for data work, the `dataset-display-review` skill after
-    dataset changes, the `run` skill or a screenshot for anything visible;
+    dataset changes, the `run` skill or a screenshot for anything visible, and the
+    `ponytail-review` skill on its own diff (fix Must-fix items, paste the verdict);
+  - "Smallest complete change (ponytail): reuse what exists, add nothing the issue didn't ask
+    for, mark known limits with a `shortcut:` comment. The handbook's rules win over ponytail.";
   - **"Do not merge. Do not ask Robbie anything."** If the worker hits a choice that is
     Robbie's (per §3), it stops at a sensible point and puts the question in its final report,
     with the options it sees. If it hits a technical fork, it picks the sensible default and
@@ -134,6 +137,11 @@ When a worker reports back:
 1. **Read the PR yourself**: `gh pr view <n>`, `gh pr diff <n>`, `gh pr checks <n>`. Does it
    do what the issue asked, and only that? Did it follow the house rules (tokens, registry-only
    datasets, decision numbering, no secrets)? Are the check results real and green?
+   Then run the `ponytail-review` skill on the PR (`/ponytail-review PR #<n>`). Its findings are
+   written for a non-programmer, so they double as the summary for Robbie. **Must fix** → send
+   the worker back before merging. **Should fix** → back to the worker if it's in scope, otherwise
+   file a follow-up issue. **Nice to have** → ignore unless trivial. For an L-sized or risky PR
+   (data writes, the guardrails hook, CI), also run `/code-review high`.
 2. **Check the done-checks** against the Vercel preview or a screenshot for anything
    user-visible. If something's off, send the worker back with SendMessage (it keeps its
    context), or start a fresh worker with a corrective brief.
@@ -154,6 +162,8 @@ When a worker reports back:
 
 ## 7. Keeping the project coherent
 
+- At each phase gate, run `/ponytail-debt` and turn any `shortcut:` whose upgrade trigger has been
+  hit into an issue. A whole-repo `/ponytail-audit` is a big job: ask Robbie first (usage budget).
 - When work reveals a new decision, a follow-up or a bug, file it as an issue with the right
   label rather than letting the worker widen its scope.
 - Update `docs/roadmap.md` (through a small worker PR) when a planned item ships or Robbie

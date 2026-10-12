@@ -1,4 +1,14 @@
 {
+  "env": {
+  "PONYTAIL_SUBAGENT_MATCHER": "^(general-purpose|ui-engineer|data-engineer|fork)$"
+},
+"extraKnownMarketplaces": {
+  "ponytail": { "source": { "source": "github", "repo": "DietrichGebert/ponytail" } }
+},
+"enabledPlugins": {
+  "ponytail@ponytail": true
+},
+
   "permissions": {
     "deny": [
       "Read(.env.local)",
@@ -8,6 +18,17 @@
     ]
   },
   "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/scripts/brief.mjs\"",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
     "PreToolUse": [
       {
         "matcher": "Bash|Read|Edit|Write|NotebookEdit|Grep|Glob",
