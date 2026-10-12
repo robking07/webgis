@@ -113,7 +113,3 @@ export function rampColors(id: RampId, n: number): string[] {
  *  middle, three up. */
 export const CHANGE_RAMP: RampId = "puor";
 export const CHANGE_CLASSES = 7;
-
-export function rampsOfKind(kind: RampKind): RampDef[] {
-  return Object.values(RAMPS).filter((r) => r.kind === kind);
-}

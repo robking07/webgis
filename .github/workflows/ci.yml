@@ -85,6 +85,8 @@ jobs:
       - run: npm ci
       - name: ESLint (apps/web)
         run: npm run lint -w web
+      - name: Registry validates
+        run: npm run registry:validate
       # Vitest (S1), a few seconds; shares this job's npm ci instead of starting another runner.
       - name: Unit tests (npm test)
         run: npm test

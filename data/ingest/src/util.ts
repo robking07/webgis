@@ -56,10 +56,11 @@ export const STATES: Record<string, [string, string]> = {
 };
 
 /** Bulk upsert rows through a temp table + COPY-free multi-row inserts, in batches. */
-export async function upsert(pool: pg.Pool, table: string, cols: string[], key: string[], rows: unknown[][], batch = 2000) {
+export async function upsert(pool: pg.Pool, table: string, cols: string[], key: string[], rows: unknown[][], batch = 2000, before?: [string, unknown[]]) {
   const client = await pool.connect();
   try {
     await client.query("begin");
+    if (before) await client.query(...before); // e.g. a delete, so a failed insert rolls it back
     for (let i = 0; i < rows.length; i += batch) {
       const chunk = rows.slice(i, i + batch);
       const params: unknown[] = [];

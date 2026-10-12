@@ -78,10 +78,13 @@ const steps: Record<string, () => Promise<void> | void> = {
   insights: computeInsights,
   // D-113: tract values live in static files; moves the database's tract rows out (--drop deletes them).
   "tracts-out": () => tractsOut(rest),
+  // Every ingest step above also goes in `all`.
   all: async () => {
-    await ingestGeographies(); await ingestAcs(); await ingestLodes(); await ingestPlaces(); await ingestClimdiv(); await ingestNbi(); await ingestFars(); await ingestOverdose(); await ingestAirQuality();
-    await ingestAcsTimeline(); await ingestFarsTimeline(); await ingestClimdivTimeline(); await ingestNbiTimeline(); await ingestLodesTimeline(); await ingestOverdoseTimeline(); await buildTiles();
-    exportRegistry(); await exportNames(); await exportValues(); await detailsOut(); await computeInsights(); await writeDataSourcesDoc();
+    await ingestGeographies(); await ingestAcs(); await ingestCensus2020(); await ingestLodes(); await ingestPlaces(); await ingestClimdiv(); await ingestNbi(); await ingestFars(); await ingestOverdose(); await ingestAirQuality();
+    await ingestFeatures(); await ingestVmt(); await ingestCejst(); await ingestDdp287g(); await ingestNri(); await ingestLead();
+    await ingestAcsTimeline(); await ingestFarsTimeline(); await ingestClimdivTimeline(); await ingestNbiTimeline(); await ingestLodesTimeline(); await ingestOverdoseTimeline(); await buildLabelMask(); await buildTiles();
+    await tractGeography();
+    exportRegistry(); await exportNames(); await exportSearch(); await exportValues(); await detailsOut(); await computeInsights(); await writeDataSourcesDoc();
   },
 };
 if (!step || !steps[step]) {

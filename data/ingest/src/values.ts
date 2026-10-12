@@ -37,14 +37,15 @@ export async function writeValues(pool: pg.Pool, datasetId: string, level: Level
     if (!known.has(geoid)) { unmatched++; continue; }
     rows.push([datasetId, level, geoid, v.value, v.moe]);
   }
-  await pool.query("delete from public.dataset_values where dataset_id = $1 and level = $2", [datasetId, level]);
+  const wipe: [string, unknown[]] = ["delete from public.dataset_values where dataset_id = $1 and level = $2", [datasetId, level]];
   if (level === "tract") {
+    await pool.query(...wipe);
     writeTractValues(datasetId, new Map(rows.map((r) => [r[2] as string, { value: r[3] as number | null, moe: r[4] as number | null }])));
     const nulls = rows.filter((r) => r[3] == null).length;
     log(datasetId, `tract: ${rows.length} values (${nulls} null), files only${unmatched ? `, ${unmatched} geoids not in geographies (dropped)` : ""}`);
     return { rows: rows.length, unmatched };
   }
-  await upsert(pool, "public.dataset_values", ["dataset_id", "level", "geoid", "value", "moe"], ["dataset_id", "level", "geoid"], rows);
+  await upsert(pool, "public.dataset_values", ["dataset_id", "level", "geoid", "value", "moe"], ["dataset_id", "level", "geoid"], rows, undefined, wipe);
   const nulls = rows.filter((r) => r[3] == null).length;
   log(datasetId, `${level}: ${rows.length} rows (${nulls} null)${unmatched ? `, ${unmatched} geoids not in geographies (dropped)` : ""}`);
   return { rows: rows.length, unmatched };

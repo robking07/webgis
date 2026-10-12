@@ -99,7 +99,7 @@ export function useDatasetValues(ds: Dataset | null, want: GeoLevel[], stop: str
     for (const level of load) {
       loadValues(ds.id, level, stop).then(
         (v) => live && setData((d) => ({ key, values: { ...(d.key === key ? d.values : {}), [level]: v }, error: null })),
-        (e: Error) => live && setData((d) => ({ ...d, key, error: e.message })),
+        (e: Error) => live && setData((d) => ({ key, values: d.key === key ? d.values : {}, error: e.message })),
       );
     }
     return () => { live = false; };

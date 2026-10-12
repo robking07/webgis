@@ -202,8 +202,7 @@ export async function computeInsights() {
     const fingerprint = createHash("sha256").update(JSON.stringify([card.x, card.y, card.n, card.r, card.rho, card.withinState, card.headline, card.caption])).digest("hex").slice(0, 16);
     exported.push({ ...card, fingerprint });
   }
-  await pool.query("delete from public.insights where level = $1", [LEVEL]);
-  await upsert(pool, "public.insights", ["id", "x_dataset", "y_dataset", "level", "n", "pearson_r", "spearman_rho", "status", "flags", "headline", "caption"], ["id"], out);
+  await upsert(pool, "public.insights", ["id", "x_dataset", "y_dataset", "level", "n", "pearson_r", "spearman_rho", "status", "flags", "headline", "caption"], ["id"], out, undefined, ["delete from public.insights where level = $1", [LEVEL]]);
   await pool.end();
 
   const dir = join(ROOT, "apps/web/src/generated");
