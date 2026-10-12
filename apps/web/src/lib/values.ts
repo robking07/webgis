@@ -2,8 +2,8 @@
 // with the dataset's registry symbology and the design tokens.
 "use client";
 import { useEffect, useState } from "react";
-import { classify, classOf, LAZY_LEVELS, rampColors, RAMPS, TILE_VALUE_LEVELS, type GeoLevel, type RampId } from "@webgis/design";
-import type { Dataset } from "./registry";
+import { classify, classifyValues, classOf, LAZY_LEVELS, rampColors, TILE_VALUE_LEVELS, type GeoLevel, type PackedClasses } from "@webgis/design";
+import { DATASET_BY_ID, type Dataset } from "./registry";
 // Every level's file lives with the tiles (R2 in production, the /tiles link locally; D-124, S2).
 import { staticUrl } from "./static-files";
 
@@ -15,13 +15,65 @@ const cache = new Map<string, Promise<Values>>();
 export function loadValues(id: string, level: GeoLevel, stop?: string | null): Promise<Values> {
   const key = stop ? `${id}/${stop}/${level}` : `${id}/${level}`;
   if (!cache.has(key)) {
-    cache.set(key, fetch(staticUrl(`values/${key}.json`)).then((r) => {
-      if (!r.ok) throw new Error(`No ${level} data for ${id} (${r.status})`);
-      return r.json();
+    const url = staticUrl(`values/${key}.json`);
+    // Tracts and block groups (85k and 240k values) are fetched, parsed and classified in a
+    // worker, so the map doesn't stall when they first load (D-277).
+    const onMain = () => fetch(url).then((r) => (r.ok ? r.json() : r.status));
+    // A worker that fails (its script missing after a deploy, a network error) falls back to the main thread.
+    const loaded = LAZY_LEVELS.has(level) && typeof Worker !== "undefined"
+      ? loadInWorker(url, stop ? undefined : DATASET_BY_ID.get(id)).catch(onMain)
+      : onMain();
+    cache.set(key, loaded.then((v) => {
+      if (typeof v === "number") throw new Error(`No ${level} data for ${id} (${v})`);
+      return v;
     }).catch((e) => { cache.delete(key); throw e; }));
   }
   return cache.get(key)!;
 }
+
+let worker: Worker | null = null;
+let nextId = 0;
+const pending = new Map<number, (m: WorkerReply) => void>();
+
+/** Resolves to the values (with the default classification cached for `ds`), or the HTTP status. */
+async function loadInWorker(url: string, ds?: Dataset): Promise<Values | number> {
+  if (!worker) {
+    worker = new Worker(new URL("./values.worker.ts", import.meta.url));
+    worker.onmessage = (e: MessageEvent<WorkerReply>) => { pending.get(e.data.id)?.(e.data); pending.delete(e.data.id); };
+    // The worker didn't load or crashed: fail every waiting request (it never replies) and start fresh next time.
+    worker.onerror = () => {
+      for (const [id, done] of pending) done({ id, error: "values worker failed" });
+      pending.clear();
+      worker = null;
+    };
+  }
+  const id = nextId++;
+  const reply = await new Promise<WorkerReply>((resolve) => {
+    pending.set(id, resolve);
+    worker!.postMessage({ id, url: new URL(url, location.href).href, symbology: ds?.symbology } satisfies WorkerRequest);
+  });
+  if ("error" in reply) throw new Error(reply.error);
+  if ("status" in reply) return reply.status;
+  const keys = reply.keys ? reply.keys.split(",") : [];
+  const values: Values = {};
+  const classes = new Map<string, number>();
+  // Built in slices with a yield between them: one 240k-entry pass blocks for ~100 ms.
+  for (let i = 0; i < keys.length; i++) {
+    values[keys[i]] = reply.vals[i];
+    if (reply.classed) classes.set(keys[i], reply.classed.cls[i]);
+    if (i % 20000 === 19999) await new Promise((r) => setTimeout(r));
+  }
+  const c = reply.classed;
+  if (ds && c) seedClassified(ds, values, { colors: c.colors, breaks: c.breaks, minClass: c.minClass, packed: c.packed, classes });
+  return values;
+}
+
+export type WorkerRequest = { id: number; url: string; symbology?: Dataset["symbology"] };
+export type WorkerReply = { id: number } & (
+  | { error: string }
+  | { status: number }
+  | { keys: string; vals: Float64Array; classed?: ReturnType<typeof classifyValues> & { packed: PackedClasses } }
+);
 
 export type LevelValues = Partial<Record<GeoLevel, Values>>;
 
@@ -61,25 +113,19 @@ export interface Classed {
   classes: Map<string, number>;
   /** Set when the bottom class holds exactly this value (heavily skewed data). */
   minClass?: number;
+  /** `classes` packed for the per-state map layers, when the values worker classified them. */
+  packed?: PackedClasses;
 }
 
 /** `breaksFrom`: classify with breaks computed from these values instead (the default view's),
  *  so stepping through time shows change rather than re-ranking each year (D-36). */
 export function classifyUnivariate(ds: Dataset, values: Values, breaksFrom?: Values): Classed {
-  const { ramp, classification, classes } = ds.symbology;
-  const r = RAMPS[ramp as RampId];
-  const n = Math.min(Math.max(classes, r.minClasses), r.maxClasses);
-  const breaks = classify(Object.values(breaksFrom ?? values), { method: classification, classes: n, breaks: ds.symbology.breaks });
-  const colors = rampColors(ramp as RampId, breaks.length + 1);
-  const out = new Map<string, number>();
-  let min = Infinity, bottomAllMin = true;
-  for (const v of Object.values(values)) if (v < min) min = v;
-  for (const [g, v] of Object.entries(values)) {
-    const c = classOf(v, breaks);
-    if (c === 0 && v !== min) bottomAllMin = false;
-    out.set(g, c);
-  }
-  return { colors, breaks, classes: out, minClass: breaks.length && bottomAllMin ? min : undefined };
+  // One Object.keys pass: Object.values/entries on a 240k-key object cost ~150 ms each.
+  const keys = Object.keys(values);
+  const { cls, ...rest } = classifyValues(ds.symbology, keys.map((k) => values[k]), breaksFrom && Object.values(breaksFrom));
+  const classes = new Map<string, number>();
+  keys.forEach((k, i) => classes.set(k, cls[i]));
+  return { ...rest, classes };
 }
 
 export interface BivariateClassed {
@@ -115,6 +161,11 @@ export function classifyUnivariateCached(ds: Dataset, values: Values, breaksFrom
   let c = byBase.get(key);
   if (!c) byBase.set(key, (c = classifyUnivariate(ds, values, breaksFrom)));
   return c;
+}
+
+/** Caches a classification the values worker already made (default view, no `breaksFrom`). */
+function seedClassified(ds: Dataset, values: Values, c: Classed) {
+  uniCache.set(values, new Map([[ds.id, new WeakMap([[values, c]])]]));
 }
 
 export function classifyBivariateCached(x: Values, y: Values): BivariateClassed {
