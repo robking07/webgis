@@ -34,7 +34,7 @@ export default function compareTests({ test, expect, wait, immerse, tapLonLat, l
   // PR 2a (D-258): laptops and monitors show the map beside the panel, A outlined solid and B dashed, both in view.
   for (const [vp, path, level, a, b, names] of [
     ["laptop", "/compare/27053/27123?d=pct_poverty", "county", "27053", "27123", ["Hennepin County", "Ramsey County"]],
-    ["monitor", "/compare/27053100400/27053100200?d=gini_index", "tract", "27053100400", "27053100200", ["Tract 1004", "Tract 1002"]],
+    ["monitor", "/compare/27053100400/27053100200?d=gini_index", "tract", "27053100400", "27053100200", ["Census tract 1004", "Census tract 1002"]],
   ]) {
     test(`${vp} compare places: the map outlines both ${level === "tract" ? "tracts" : "counties"} and frames them`, async (o) => {
       const { page } = await o(vp, path);
