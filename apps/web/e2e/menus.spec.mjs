@@ -72,6 +72,7 @@ async function open(vp, path, { scheme = "light", ready = true } = {}) {
       await route.fulfill({ response: res, headers: { ...res.headers(), ...CORS } });
     } catch { await route.abort().catch(() => {}); }
   });
+  await ctx.addInitScript(() => { window.__wgDebug = true; }); // exposes window.__wgMap, survives reloads
   const page = await ctx.newPage();
   page.errors = [];
   page.requests = [];
@@ -85,7 +86,7 @@ async function open(vp, path, { scheme = "light", ready = true } = {}) {
   });
   page.isPhone = (typeof vp === "string" ? VP[vp] : vp).isMobile === true;
   const sep = path.includes("?") ? "&" : "?";
-  await page.goto(`${BASE}${path}${sep}theme=${scheme}&debug=1`, { waitUntil: "load" });
+  await page.goto(`${BASE}${path}${sep}theme=${scheme}`, { waitUntil: "load" });
   if (ready) await mapIdle(page);
   return { ctx, page };
 }
@@ -599,9 +600,8 @@ for (const vp of ["phone", "laptop"]) {
     const want = "Change, 2015–2019 → 2020–2024, percentage points";
     const legend = await legendText();
     expect(legend.includes(want) && /Down .* pts/.test(legend) && /Up .* pts/.test(legend), `legend: ${legend.slice(0, 200)}`);
-    // The link restores the view: open the URL the app wrote. (The app rewrites the URL without
-    // `debug`, so a plain reload would never expose window.__wgMap; add it back.)
-    await page.goto(`${page.url()}&debug=1`, { waitUntil: "load" });
+    // The link restores the view: reload the URL the app wrote.
+    await page.reload({ waitUntil: "load" });
     await mapIdle(page);
     const again = await legendText();
     expect(again.includes(want), `after reload: ${again.slice(0, 200)}`);
