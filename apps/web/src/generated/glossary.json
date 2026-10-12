@@ -221,6 +221,20 @@
   "source": "https://www.fema.gov/flood-maps/products-tools/national-risk-index"
  },
  {
+  "id": "cdc-svi",
+  "term": "CDC Social Vulnerability Index (SVI)",
+  "short": "CDC's ranking of every county and census tract by how hard a disaster or disease outbreak would hit the people who live there.",
+  "long": "The index uses 16 measures from the Census Bureau's American Community Survey, grouped into four themes: socioeconomic status (poverty, unemployment, housing costs, no high school diploma, no health insurance); household characteristics (older adults, children, disability, single parents, limited English); racial and ethnic minority status; and housing type and transportation (large apartment buildings, mobile homes, crowding, no vehicle, group quarters). Each theme is a rank, and the overall score ranks places on all 16 measures together, so it isn't an average of the four theme ranks. Emergency planners use it to decide where to send help first. It describes a place's residents, not the hazards there. Where CDC has no value (its code -999, mostly tracts with no residents), Mapwich shows no data.",
+  "source": "https://www.atsdr.cdc.gov/place-health/php/svi/index.html"
+ },
+ {
+  "id": "percentile-rank",
+  "term": "Percentile rank",
+  "short": "Where a place falls among all others, from 0 to 100: the 75th percentile means higher than 75% of places.",
+  "long": "A percentile rank only says how places compare, not how much of something there is. CDC ranks every county against all U.S. counties, and every tract against all U.S. tracts, not just those in the same state, so a tract can be low for its state and still rank high nationally, or the other way round. Because it's a rank, a place can move when others change even if it didn't.",
+  "source": "https://www.atsdr.cdc.gov/place-health/php/svi/svi-data-documentation-download.html"
+ },
+ {
   "id": "design-value",
   "term": "Design value (air quality)",
   "short": "The number EPA uses to judge whether a county's air meets the federal standard: a three-year average at the county's worst monitor.",
