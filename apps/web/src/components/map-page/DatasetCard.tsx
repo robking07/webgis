@@ -2,6 +2,7 @@ import { useState, type RefObject } from "react";
 import { ChevronDown, Info } from "lucide-react";
 import type { Dataset } from "@/lib/registry";
 import { TERM_BY_ID } from "@/lib/glossary";
+import { ShareButton } from "../ShareButton";
 import { FilterButton } from "./FiltersPanel";
 
 /** At rest: the factual dataset card (category, title, filter button, meta line, explainer, actions). */
@@ -54,7 +55,11 @@ export function DatasetCard({ cardRef, primary, secondary, meta, immersed, isFea
     ].filter(Boolean);
     return (
       <section ref={cardRef} aria-label="Mapped dataset" data-obstructs={!immersed ? "" : undefined} className={`${shell} wg-panel px-3 py-2.5`} inert={immersed || undefined}>
-        <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">{primary.category}</span>
+        {/* Share sits in the category row's empty right side: the actions line below must stay one line at 360 px. */}
+        <div className="flex items-baseline justify-between gap-2">
+          <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">{primary.category}</span>
+          <ShareButton variant="link" size="xs" className="h-auto p-0 font-semibold" />
+        </div>
         <h1>
           <button type="button" onClick={onOpenSheet} aria-haspopup="dialog" aria-label={`${primary.title}: choose another dataset`}
             className="flex items-center gap-1 rounded text-left text-lg font-bold leading-snug tracking-tight text-balance focus-visible:outline-2 focus-visible:outline-ring">
@@ -90,6 +95,7 @@ export function DatasetCard({ cardRef, primary, secondary, meta, immersed, isFea
         {!isFeature && <button type="button" onClick={onBrowse} className="rounded-md border px-2.5 py-1 text-[13px] hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring">Compare datasets</button>}
         {tableReady && <button type="button" onClick={onTable} className="rounded-md border px-2.5 py-1 text-[13px] hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring">Table</button>}
         <a href={`/data/${primary.id}`} className="rounded-md border px-2.5 py-1 text-[13px] text-foreground hover:bg-muted">About this data</a>
+        <ShareButton className="h-auto bg-transparent py-1 text-[13px] font-normal dark:bg-transparent" />
       </div>
     </section>
   );

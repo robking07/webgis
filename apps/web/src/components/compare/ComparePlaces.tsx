@@ -12,6 +12,7 @@ import { levelOfGeoid, PLACE_ZOOM, placeHref, rankText } from "@/lib/place";
 import { DATASET_BY_ID, DATASETS, type Dataset } from "@/lib/registry";
 import { loadValues } from "@/lib/values";
 import { serializeUrlState } from "@/lib/url-state";
+import { ShareButton } from "../ShareButton";
 
 interface Props { a: string; b: string; nameA: string; nameB: string; datasetId: string }
 
@@ -54,8 +55,9 @@ export function ComparePlaces({ a, b, nameA, nameB, datasetId }: Props) {
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-6 md:px-8 md:py-8" data-compare="">
-      <nav className="mb-4 text-sm">
+      <nav className="mb-4 flex items-center justify-between gap-3 text-sm">
         <a href={data?.back ?? "/map"} className="text-primary underline-offset-2 hover:underline">← Back to the map</a>
+        <ShareButton />
       </nav>
       <header className="mb-5">
         <p className="text-xs uppercase tracking-wide text-muted-foreground">Compare places</p>
