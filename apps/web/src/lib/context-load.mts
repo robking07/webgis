@@ -1,7 +1,7 @@
-// "Why this matters" loader (issue #115, D-<see docs/decisions>). Node-only: runs in scripts/prepare.mts
+// "Why this matters" loader (issue #115, D-279). Node-only: runs in scripts/prepare.mts
 // before every dev and build, reads content/context/<dataset id>.yaml, checks each file, and writes
 // src/generated/context.json. A mistake fails the build with a message naming the file.
-// Format: the decision file docs/decisions/D-*-why-this-matters.md. Relative imports only: plain Node runs this.
+// Format: docs/decisions/D-279-why-this-matters.md. Relative imports only: plain Node runs this.
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { parse as parseYaml } from "yaml";
