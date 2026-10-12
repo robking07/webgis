@@ -63,7 +63,7 @@ network connection is required). Nothing on R2 changes.
 ## Adding a test
 
 Call `test(name, async (open) => { … })`; `open(viewport, path, { scheme })` returns `{ page }`
-with `window.__wgMap` (the MapLibre map, exposed by `?debug=1`) ready and its tiles loaded. Use
+with `window.__wgMap` (the MapLibre map, exposed by an init script, so it survives `page.reload()`) ready and its tiles loaded. Use
 `expect(condition, message)` for assertions. Helpers: `immerse`, `dragStart`/`dragEnd` (held
 mid-drag), `tapLonLat`, `mapIdle`, and `contrastInPage` (contrast of an element's text, icons and
 edge against the backing it actually sits on).

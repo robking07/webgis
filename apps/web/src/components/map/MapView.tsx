@@ -168,8 +168,8 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
       cooperativeGestures: cooperative,
     });
     map.current = m;
-    // ?debug exposes the map for inspection in devtools / headless checks.
-    if (new URLSearchParams(window.location.search).has("debug")) (window as unknown as { __wgMap: MlMap }).__wgMap = m;
+    // ?debug (or window.__wgDebug, set by the e2e init script so reloads keep it) exposes the map for devtools / headless checks.
+    if ((window as unknown as { __wgDebug?: boolean }).__wgDebug || new URLSearchParams(window.location.search).has("debug")) (window as unknown as { __wgMap: MlMap }).__wgMap = m;
     m.touchZoomRotate.disableRotation();
     // Zoom buttons are the page's own (frosted, design-token styled); see onApi.
     scale.current = new ScaleControl({ unit: scaleUnit });

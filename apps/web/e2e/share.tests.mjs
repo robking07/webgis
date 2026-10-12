@@ -19,9 +19,9 @@ export default function shareTests({ test, expect, wait, mapIdle }) {
     expect((await page.getByRole("status").filter({ hasText: "Link copied" }).count()) === 1, "copied state not in a live region");
     await wait(2300);
     expect((await btn.innerText()).trim() === "Share", `button didn't reset: "${await btn.innerText()}"`);
-    // Open the copied link: same view. (The app drops `debug` from the URL; add it back for window.__wgMap.)
+    // Open the copied link: same view.
     const before = await page.evaluate(() => [window.__wgMap.getZoom(), ...window.__wgMap.getCenter().toArray()]);
-    await page.goto(`${copied}${copied.includes("?") ? "&" : "?"}debug=1`, { waitUntil: "load" });
+    await page.goto(copied, { waitUntil: "load" });
     await mapIdle(page);
     const after = await page.evaluate(() => [window.__wgMap.getZoom(), ...window.__wgMap.getCenter().toArray()]);
     expect(before.every((v, i) => Math.abs(v - after[i]) < 0.05), `view ${before} became ${after}`);
