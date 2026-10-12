@@ -105,9 +105,6 @@ export function Viewer({ search }: { search: string }) {
   const { primary, secondary, isFeature, featureSpec, stops, stop, stopId, since, xFrom, testMoes, availableLevels, pinnedLevel, bands, x, y, level, classed, blockField } = useViewerData(state, tractCounties);
   const current = classed[level];
   const error = x.error ?? y.error ?? xFrom.error;
-  // Change always runs to the latest period: a year in the link alongside it is dropped
-  // (adjusted during render, not in an effect).
-  if (since && state.t) update({ t: null });
   const available = !!primary && !isFeature && availableLevels.includes(level);
   // The table lists states or counties (finer areas have no names to search); below counties it shows counties.
   const tableLevel: GeoLevel | null = level === "state" || level === "county" ? level : availableLevels.includes("county") ? "county" : null;
@@ -140,8 +137,8 @@ export function Viewer({ search }: { search: string }) {
     loadPlaceIndex().then((rows) => placeByGeoid(rows, geoid)?.sqmi, () => undefined)
       .then((sqmi) => goToPlace({ geoid, level: tableLevel, name, lon, lat, sqmi }));
   }, [tableLevel, goToPlace]);
-  // In change mode the year picker is hidden (Values / Change, D-252), so the year neither counts nor applies.
-  const filterValue: FilterValue = { pinned: pinnedLevel, stop: since ? null : stopId, since: since?.id ?? null, hidden };
+  // In change mode the year is the change's later end ("To", issue #168).
+  const filterValue: FilterValue = { pinned: pinnedLevel, stop: stopId, since: since?.id ?? null, hidden };
   const nFilters = filterCount(filterValue);
   const toggleFilters = (el: HTMLElement) => setFilters((f) => (f ? null : { anchor: el }));
   /** The level pill: open (never toggle) Filters and bring the geography-level choice into view. */
@@ -153,7 +150,7 @@ export function Viewer({ search }: { search: string }) {
   };
   const applyFilters = (v: FilterValue) => {
     setHidden(v.hidden);
-    if (v.pinned !== pinnedLevel || v.stop !== stopId || v.since !== (since?.id ?? null)) update({ lv: v.pinned, t: v.since ? null : v.stop, since: v.since });
+    if (v.pinned !== pinnedLevel || v.stop !== stopId || v.since !== (since?.id ?? null)) update({ lv: v.pinned, t: v.stop, since: v.since });
   };
   const onSearchPlace = (p: PlaceHit) => { setSearchOpen(false); goToPlace(p); };
   /** Phones: the dataset list and the details share the bottom sheet; opening one closes the other. */
@@ -264,7 +261,7 @@ export function Viewer({ search }: { search: string }) {
           hatch={hatch}
           onTractCounties={setTractCounties}
           watchCounties={testMoes}
-          ariaLabel={primary ? `Map of ${since ? "change in " : ""}${primary.title}${since ? ` since ${since.label}` : ""}${secondary ? ` compared with ${secondary.title}` : ""} by ${GEO_LEVELS[level].label.toLowerCase()}` : "Map"}
+          ariaLabel={primary ? `Map of ${since ? "change in " : ""}${primary.title}${since ? ` from ${since.label} to ${stop!.label}` : ""}${secondary ? ` compared with ${secondary.title}` : ""} by ${GEO_LEVELS[level].label.toLowerCase()}` : "Map"}
         />
       </main>
 

@@ -10,7 +10,7 @@ import { Info, SlidersHorizontal, X } from "lucide-react";
 import { GEO_LEVELS, type GeoLevel } from "@webgis/design";
 import type { Facet } from "@webgis/registry";
 import { TERM_BY_ID } from "@/lib/glossary";
-import { changeStops, latestStop, type Stop } from "@/lib/periods";
+import { changeEnds, changeStops, latestStop, type Stop } from "@/lib/periods";
 import { TimeControl } from "../TimeControl";
 
 /** What the filters control. `hidden`: facet field → values the visitor hid. */
@@ -77,11 +77,21 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 function FilterControls({ levels, shown, facets, stops, value, onChange }: ControlsProps) {
   const plural = (l: GeoLevel) => GEO_LEVELS[l].plural.toLowerCase();
   const defaultStop = stops.find((s) => s.isDefault)?.id;
-  // Change always runs to the latest period (Robbie, 2026-10-09). Values / Change (Robbie,
-  // 2026-10-10): Change swaps the year picker for the earlier-period choice; nothing is greyed out.
+  // Values / Change (Robbie, 2026-10-10): Change swaps the year picker for two, From and To, with
+  // both ends spelled out (issue #168). `stop` is the change's To; null = the default period.
   const latest = latestStop(stops);
-  const sinceOptions = changeStops(stops, latest);
-  const since = sinceOptions.find((s) => s.id === value.since);
+  const earlier = changeStops(stops, latest);
+  const ends = changeEnds(stops, value.stop, value.since);
+  const pick = (id: string) => (id === defaultStop ? null : id);
+  // Change starts from the oldest period (the longest span, and for ACS the one that doesn't
+  // overlap the latest), to the year picked in Values when there's an earlier one.
+  const startChange = () => {
+    const from = earlier[earlier.length - 1].id;
+    onChange({ ...value, since: from, stop: changeEnds(stops, value.stop, from)!.to.id === value.stop ? value.stop : null });
+  };
+  /** A new To keeps From when it's still earlier, else starts from the oldest again. */
+  const setTo = (id: string) => onChange({ ...value, stop: pick(id),
+    since: changeStops(stops, stops.find((s) => s.id === id)!).some((s) => s.id === value.since) ? value.since : earlier[earlier.length - 1].id });
   const chip = (on: boolean) => `rounded-md px-2 py-1 text-xs font-medium focus-visible:outline-2 focus-visible:outline-ring ${on ? "bg-primary text-primary-foreground" : "border hover:bg-muted"}`;
   return (
     <div className="space-y-5">
@@ -107,17 +117,21 @@ function FilterControls({ levels, shown, facets, stops, value, onChange }: Contr
       )}
       {stops.length > 0 && defaultStop && (
         <Section title="Time">
-          {sinceOptions.length > 0 && (
+          {earlier.length > 0 && (
             <div role="radiogroup" aria-label="Map shows" data-time-mode="" className="flex gap-1">
-              <button type="button" role="radio" aria-checked={!since} onClick={() => since && onChange({ ...value, since: null })} className={chip(!since)}>Values</button>
-              {/* Change starts from the oldest earlier period: the longest span, and for ACS the one that doesn't overlap the latest. */}
-              <button type="button" role="radio" aria-checked={!!since} onClick={() => !since && onChange({ ...value, since: sinceOptions[sinceOptions.length - 1].id, stop: null })} className={chip(!!since)}>Change</button>
+              {/* Back to Values keeps To as the year shown. */}
+              <button type="button" role="radio" aria-checked={!ends} onClick={() => ends && onChange({ ...value, since: null })} className={chip(!ends)}>Values</button>
+              <button type="button" role="radio" aria-checked={!!ends} onClick={() => !ends && startChange()} className={chip(!!ends)}>Change</button>
             </div>
           )}
-          {since ? (
+          {ends ? (
             <>
-              <TimeControl label="Compare with…" stops={[...sinceOptions].reverse()} value={since.id} onChange={(id) => onChange({ ...value, since: id, stop: null })} />
-              <p data-change-span="" className="text-xs text-muted-foreground">Change from {since.label} to {latest!.label}, the latest period.</p>
+              <div data-change-span="">
+                <p className="text-2xl font-semibold tabular-nums">{ends.from.label} → {ends.to.label}</p>
+                <p className="text-xs text-muted-foreground">The map shows how each area changed from {ends.from.label} to {ends.to.label}.</p>
+              </div>
+              <TimeControl label="From" stops={changeStops(stops, ends.to).reverse()} value={ends.from.id} onChange={(id) => onChange({ ...value, since: id })} />
+              <TimeControl label="To" stops={[...earlier.slice(0, -1).reverse(), latest!]} value={ends.to.id} onChange={setTo} />
             </>
           ) : (
             <TimeControl stops={stops} value={value.stop ?? defaultStop} onChange={(id) => onChange({ ...value, stop: id === defaultStop ? null : id })} />
