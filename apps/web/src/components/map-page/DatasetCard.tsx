@@ -95,7 +95,7 @@ export function DatasetCard({ cardRef, primary, secondary, meta, immersed, isFea
         {!isFeature && <button type="button" onClick={onBrowse} className="rounded-md border px-2.5 py-1 text-[13px] hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring">Compare datasets</button>}
         {tableReady && <button type="button" onClick={onTable} className="rounded-md border px-2.5 py-1 text-[13px] hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring">Table</button>}
         <a href={`/data/${primary.id}`} className="rounded-md border px-2.5 py-1 text-[13px] text-foreground hover:bg-muted">About this data</a>
-        <ShareButton className="h-auto py-1 text-[13px] font-normal" />
+        <ShareButton className="h-auto bg-transparent py-1 text-[13px] font-normal dark:bg-transparent" />
       </div>
     </section>
   );
