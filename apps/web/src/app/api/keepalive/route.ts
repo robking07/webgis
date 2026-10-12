@@ -1,5 +1,6 @@
-// Daily keep-alive (D-02): Supabase free projects pause after 7 idle days, which would
-// break click details and place profiles. Vercel Cron calls this once a day (vercel.json);
+// Daily keep-alive (D-02): Supabase free projects pause after 7 idle days. Visitors no longer
+// read Supabase (D-198, D-210); this keeps it alive for the data pipeline and reviewer sign-in.
+// Vercel Cron calls this once a day (vercel.json);
 // it runs one tiny read. Vercel sends `Authorization: Bearer $CRON_SECRET` on cron calls,
 // so anyone else gets a 401.
 import { supabase } from "@/lib/supabase";

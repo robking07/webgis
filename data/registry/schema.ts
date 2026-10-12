@@ -299,9 +299,8 @@ export const DatasetEntry = z.object({
     breaks: z.array(z.number()).optional(),
     /** true = high values are "better"; used only for caption wording. */
     higherIsBetter: z.boolean().optional(),
-  }),
+  }).refine((s) => s.classification !== "manual" || s.breaks?.length === s.classes - 1, "manual classification needs breaks.length === classes - 1"),
 });
-export const isFeatureLayer = (e: { measure: { kind: string } }) => e.measure.kind === "features";
 export type DatasetEntry = z.infer<typeof DatasetEntry>;
 
 export const GlossaryTerm = z.object({

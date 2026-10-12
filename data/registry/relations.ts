@@ -52,9 +52,6 @@ export function countsSpec(e: DatasetEntry): { denominator: boolean } | null {
   }
 }
 
-/** Levels that get counts files: the map's levels except blocks (their values live in the tiles). */
-export const countLevels = (e: DatasetEntry) => e.geographyLevels.filter((l) => l !== "block");
-
 /** Folders under values/ that aren't datasets; a map or remainder id may not take these names. */
 export const RESERVED_VALUE_DIRS = ["tracts", "counts"];
 
