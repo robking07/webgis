@@ -1,6 +1,7 @@
 // Classification methods. All return the n-1 interior break values; class i covers
 // [breaks[i-1], breaks[i]) with open ends at the data min and max.
 import { ckmeans, quantileSorted } from "simple-statistics";
+import { RAMPS, rampColors, type RampId } from "./ramps.ts";
 
 export type ClassMethod = "quantile" | "equalInterval" | "jenks" | "manual";
 
@@ -50,4 +51,27 @@ export function classOf(value: number, breaks: number[]): number {
 
 function dedupe(b: number[]): number[] {
   return b.filter((x, i) => i === 0 || x > b[i - 1]);
+}
+
+/** A level's classes from a dataset's registry symbology and the token ramps: one class per value,
+ *  parallel to `vals`. `breaksFrom`: compute the breaks from these values instead (D-36).
+ *  `minClass` is set when the bottom class holds exactly the minimum (heavily skewed data).
+ *  Plain arrays in and out, so the values worker (issue #28) and the main thread share it. */
+export function classifyValues(
+  sym: { ramp: string; classification: ClassMethod; classes: number; breaks?: number[] },
+  vals: ArrayLike<number>,
+  breaksFrom?: number[],
+): { colors: string[]; breaks: number[]; cls: Uint8Array; minClass?: number } {
+  const r = RAMPS[sym.ramp as RampId];
+  const n = Math.min(Math.max(sym.classes, r.minClasses), r.maxClasses);
+  const breaks = classify(breaksFrom ?? Array.from(vals), { method: sym.classification, classes: n, breaks: sym.breaks });
+  const colors = rampColors(sym.ramp as RampId, breaks.length + 1);
+  const cls = new Uint8Array(vals.length);
+  let min = Infinity, bottomAllMin = true;
+  for (let i = 0; i < vals.length; i++) if (vals[i] < min) min = vals[i];
+  for (let i = 0; i < vals.length; i++) {
+    cls[i] = classOf(vals[i], breaks);
+    if (cls[i] === 0 && vals[i] !== min) bottomAllMin = false;
+  }
+  return { colors, breaks, cls, minClass: breaks.length && bottomAllMin ? min : undefined };
 }

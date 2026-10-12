@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { classify, classOf } from "./classify.ts";
+import { classify, classifyValues, classOf } from "./classify.ts";
 
 const range = (n: number) => Array.from({ length: n }, (_, i) => i + 1);
 
@@ -40,5 +40,21 @@ describe("classOf", () => {
     expect(classOf(10, [10, 20])).toBe(1);
     expect(classOf(25, [10, 20])).toBe(2);
     expect(classOf(3, [])).toBe(0);
+  });
+});
+
+describe("classifyValues", () => {
+  const sym = { ramp: "viridis", classification: "quantile" as const, classes: 3 };
+  it("one class per value, colors from the ramp", () => {
+    const c = classifyValues(sym, [1, 2, 3, 4, 5, 6]);
+    expect([...c.cls]).toEqual([0, 0, 1, 1, 2, 2]);
+    expect(c.colors).toHaveLength(c.breaks.length + 1);
+    expect(c.minClass).toBeUndefined();
+  });
+  it("skewed data: the bottom class is exactly the minimum", () => {
+    expect(classifyValues(sym, [0, 0, 0, 0, 1, 2, 3]).minClass).toBe(0);
+  });
+  it("breaksFrom: breaks come from the other values", () => {
+    expect([...classifyValues(sym, [5, 5], [1, 2, 3, 10, 11, 12]).cls]).toEqual([1, 1]);
   });
 });

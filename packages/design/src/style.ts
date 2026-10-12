@@ -231,24 +231,13 @@ export function fillLayerIds(level: GeoLevel): string[] {
  *  membership with `in`, a native `indexOf`. The commas make a hit an exact match of the
  *  whole remainder, never part of a longer or neighboring id. (`index-of` and `slice`
  *  spread their whole input into an array first, so they're only used on the geoid.) */
-export function choroplethFillsByState(level: GeoLevel, colors: string[], classes: ReadonlyMap<string, number>, theme: ThemeName, noDataFill: NoDataFill = "noData"): Record<string, unknown> {
+export function choroplethFillsByState(level: GeoLevel, colors: string[], classes: ReadonlyMap<string, number>, theme: ThemeName, noDataFill: NoDataFill = "noData", packed: PackedClasses = packByState(classes, colors.length)): Record<string, unknown> {
   const noData = THEMES[theme].map[noDataFill];
-  // state → county prefix → per-class lists of the geoid's remainder
-  const byState = new Map<string, Map<string, string[][]>>();
-  if (colors.length) for (const [id, c] of classes) {
-    if (!(c >= 0 && c < colors.length) || id.length <= PACK_GROUP) continue;
-    const st = id.slice(0, 2), k = id.slice(0, PACK_GROUP);
-    let byPrefix = byState.get(st);
-    if (!byPrefix) byState.set(st, (byPrefix = new Map()));
-    let lists = byPrefix.get(k);
-    if (!lists) byPrefix.set(k, (lists = colors.map(() => [])));
-    lists[c].push(id.slice(PACK_GROUP));
-  }
   const out: Record<string, unknown> = { [`${level}-fill`]: noData, [`${level}-fill-other`]: noData };
   for (const st of STATE_PREFIXES) {
-    const byPrefix = byState.get(st);
-    const tests = byPrefix ? colors.flatMap((color, c) => {
-      const cases = [...byPrefix].flatMap(([k, lists]) => (lists[c].length ? [k, `,${lists[c].join(",")},`] : []));
+    const perClass = packed.get(st);
+    const tests = perClass ? colors.flatMap((color, c) => {
+      const cases = perClass[c] ?? [];
       return cases.length ? [["in", ["var", "needle"], ["match", ["var", "prefix"], ...cases, ""]], color] : [];
     }) : [];
     out[`${level}-fill-${st}`] = tests.length === 0 ? noData : [
@@ -258,6 +247,29 @@ export function choroplethFillsByState(level: GeoLevel, colors: string[], classe
         ["case", ...tests, noData],
       ],
     ];
+  }
+  return out;
+}
+
+/** The O(geoids) half of choroplethFillsByState, theme-free so it can run once per classification
+ *  (in the values worker, issue #28): state → per class, the flat `match` cases
+ *  [prefix, ",rest,rest,", prefix, …]. */
+export type PackedClasses = Map<string, string[][]>;
+export function packByState(classes: Iterable<readonly [string, number]>, nColors: number): PackedClasses {
+  // state → county prefix → per-class lists of the geoid's remainder
+  const byState = new Map<string, Map<string, string[][]>>();
+  for (const [id, c] of classes) {
+    if (!(c >= 0 && c < nColors) || id.length <= PACK_GROUP) continue;
+    const st = id.slice(0, 2), k = id.slice(0, PACK_GROUP);
+    let byPrefix = byState.get(st);
+    if (!byPrefix) byState.set(st, (byPrefix = new Map()));
+    let lists = byPrefix.get(k);
+    if (!lists) byPrefix.set(k, (lists = Array.from({ length: nColors }, () => [])));
+    lists[c].push(id.slice(PACK_GROUP));
+  }
+  const out: PackedClasses = new Map();
+  for (const [st, byPrefix] of byState) {
+    out.set(st, Array.from({ length: nColors }, (_, c) => [...byPrefix].flatMap(([k, lists]) => (lists[c].length ? [k, `,${lists[c].join(",")},`] : []))));
   }
   return out;
 }
