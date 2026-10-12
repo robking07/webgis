@@ -5,22 +5,16 @@ rows into one summary line. Roadmap: `docs/roadmap.md`. Rules: `docs/handbook.md
 
 ## Now
 
-- **Phase 0 gate: passed with conditions** (review lead, 2026-10-05). Conditions: Robbie's Sentry/Cloudflare setup (#76); fix drifted skills (#89) before any data-engineer task.
-- **Phase 1 order (lead, after review):** S1 static click details + unit-test runner → S2 data files to R2 → 1.3 + 1.1 → 1.2 → 1.6, 1.8, 1.7. S1 and 1.1 touch the same files, so they run in sequence.
-- **Data pause: ended 2026-10-06.** S2 (#110) merged: the map's data files now live on R2 (`tiles.mapwich.org`), not in `apps/web/public/data`. Data refreshes are `npm run ingest -- publish-data` (Robbie runs uploads; keys are his, #107), not a code deploy.
-- **Data expansion (#133), 2026-10-08:** waves 1 and 2 are live: 68 new maps (60 → 128 datasets) from CDC PLACES, ACS, NOAA, CDC overdose, EPA air quality, FEMA NRI and DOE LEAD. Wave 3 is next (CDC SVI, PLACES tracts, Drought Monitor, USDA food access, BLS LAUS, FCC broadband). File each as its own issue first.
-- **Incident, 2026-10-08 (fixed):** a load from an incomplete `data/tiles` wiped live tract details for existing datasets for about 9 h. Restored the same day; #143 guards `publish-data`. Until #146 is done, the complete local `data/tiles` is in `.claude/worktrees/trial-merge`.
-- **Waiting on Robbie (2026-10-08):** #145 delete the keys copy in trial-merge; #146 make the main checkout's `data/tiles` complete; #147 check El Paso's PM2.5 jump.
-- **Waiting on Robbie (2026-10-07):**
-  - **1.6 disclosures page, PR #126:** all CI green. Robbie edits the wording (preview: webgis-git-ui-disclosures-king-llc.vercel.app/disclosures). Defaults taken: footer link "How it's built", footer only, drop the "Draft wording" badge at merge.
-  - **1.2 change-over-time maps (#127):** filed, queued. It starts after #122 merges (same files: MapLegend, map page). Two questions for Robbie are on the issue (how change is measured; whether to show changes within the margin of error as "no clear change"). M, Opus / medium.
-  - #76 (Sentry, uptime email, R2 spend alert) is still open.
-- **After those:** 1.7 map polish (needs Robbie measuring on a real phone first), then the Phase 1 gate. The gate needs compare places (1.1, #117), which is parked until Robbie reopens it, so raise it before the gate.
-- **Open worktrees:** `agent-adb8949…` = #122 and `agent-a38ac5e…` = #126. Remove each after its merge. `agent-adb896…` (preventable-harm mockup, PR #113 closed) and `ui-skills` (`chore/ui-skills`, no PR) are stale; ask before deleting.
-- **Dependabot:** #66, #67, #69, #70 merged 2026-10-08. TypeScript 7 and eslint 10 broke the build; #135 fixed it. eslint 10 now prints about 1,125 warnings from bundled `public/maplibre/*.mjs` (0 errors). Alert #1 (`braces`) still has no patched version.
-- **Cloud credits (Robbie, 2026-10-06):** about $99 set aside for heavy lifts; about 450k worker tokens used on 2026-10-07. Spend the rest on 1.2, then 1.1 when reopened.
-- **Worker environment:** Chromium can't run in the agent sandbox (no libnspr4), so e2e and screenshots happen only in CI on a *ready* PR. Mark worker PRs ready once the build passes, so the click-through tests act as the first browser check.
-- **Progress rows:** the lead adds Finished rows and Lessons at merge time from the worker's report (workers no longer edit this file; it conflicted on almost every merge).
+- **Phase 1 (2026-10-12):** shipped 1.1 part 1 + 2a (compare places, laptop map), 1.2 (change maps with From → To, Map options panel), 1.3, 1.4, 1.5, 1.8, S1, S2. Left: 1.1 part 2b (counts and share of parent; waits on Robbie's `ingest counts` + `publish-counts` upload, D-257), 1.7 map polish (waits on Robbie's phone check), 1.6 disclosures (**on hold** by Robbie, 2026-10-09; nobody rewrites the copy). Then the Phase 1 gate: Robbie uses compare and change maps in a real conversation.
+- **Robbie's list:** `~/webgis/drafts/robbie-this-week.md` (gitignored) holds every open ask for him, newest under "New items". Add to it rather than asking one question at a time.
+- **Specials:** two drafts await Robbie in `drafts/specials/` (#105 traffic deaths, #141 Holmes County bikes), with numbers scripts beside them. On "publish <name>": copy verbatim, strip `<!-- -->` comments (the loader counts them as words), move the script to `apps/web/scripts/specials-numbers/`, then run `check:special` and the build.
+- **Phase 2 started early (Robbie: "keep building"):** #115 "Why this matters" PR 1 (content gated by `approved`). Transit (2.4) review verdict CHANGE → #176, which waits on Robbie's four calls.
+- **Repo is public (2026-10-10)** after GitHub Actions minutes ran out (#162). gitleaks was clean across the history; secret scanning and push protection are on. #44 still needs a license (Robbie) and branch protection.
+- **Ponytail (#151, PR #163):** coding workers self-review with `ponytail-review`; the lead runs it again before merging.
+- **CI quirks:** a cancelled draft-stage run leaves a red `click-through ${{ matrix.shard }}/4`; `merge-pr.sh` ignores it. "The job was not started… spending limit" annotations mean billing, not code (#162). Occasional 502s from `tiles.mapwich.org` fail a shard; re-run failed jobs once before digging.
+- **Local data:** the main checkout's complete data is in `data/tiles.old`. Robbie moves it back (#146) before any upload.
+- **Worker environment:** Chromium can't run in the agent sandbox, so e2e and screenshots happen only in CI on a *ready* PR.
+- **Progress rows:** the lead adds Finished rows and Lessons at merge time from the worker's report.
 
 ## Finished
 
@@ -57,6 +51,15 @@ rows into one summary line. Roadmap: `docs/roadmap.md`. Rules: `docs/handbook.md
 | Data: DOE LEAD energy burden (incl. 200% FPL redo) | #42 | #142 | M / ~250k | 227k | 0.91x | Opus / medium | 2026-10-08 |
 | Guard: tract uploads can't drop live datasets | #133 | #143 | lead inline | ~20k | n/a | Opus (session) | 2026-10-08 |
 | Data wave 1 generated files | #133 | #144 | lead inline | ~10k | n/a | Opus (session) | 2026-10-08 |
+| Fix: earlier years never request missing boundary files | #159 | #160 | S | n/r | n/a | Sonnet / medium | 2026-10-10 |
+| PM2.5: El Paso note | #147 | #161 | lead inline | ~15k | n/a | Opus (session) | 2026-10-10 |
+| 1.1 Compare places, part 1 | #117 | #158 | M / ~275k | n/r | n/a | Opus / medium | 2026-10-10 |
+| 1.2 Change maps + Map options panel | #127, #155 | #152 | M / ~275k | ~107k (rework only) | n/a | Opus / medium | 2026-10-10 |
+| Ponytail in the project rules | #151 | #163 | lead inline | ~20k | n/a | Opus (session) | 2026-10-11 |
+| Share button | #164 | #166 | S / ~100k | ~114k | 1.1x | Opus / medium | 2026-10-12 |
+| Year slider + From → To change maps | #165, #168 | #167 | S / ~100k | ~146k | 1.5x | Opus / medium | 2026-10-12 |
+| 1.1 Compare places, part 2a (laptop map) | #117 | #170 | M / ~250k | ~199k | 0.8x | Opus / medium | 2026-10-12 |
+| e2e: map handle survives reloads | #153 | #175 | S / ~100k | ~64k | 0.64x | Sonnet / medium | 2026-10-12 |
 
 ## Lessons
 
@@ -104,6 +107,10 @@ One line per task. These feed the project kit (#53).
 - **Data wave 1, merging:** seven PRs that each append to `schema.ts`, `run.ts` and `format.ts` conflict with each other every time. Merge them once in a combined local worktree to load, then merge the PRs one at a time with a scripted "merge main, regenerate registry, push" step.
 - **Census API:** it now requires a key (`missing_key.html` redirect). To check which tables exist at block-group level without one, sample the table-based summary files on www2.census.gov for `1500000US` rows.
 - **Shell:** `pkill -f <pattern>` matches the calling shell's own command line and kills it (exit 144). Use the PID from `pgrep`.
+- **#162:** a private repo's free Actions minutes ran out mid-session; the failure looked like a 3 s "click-through" fail with an empty log. Read the job's annotations (`gh api …/check-runs/<id>/annotations`) before debugging tests.
+- **#170:** test IDs copied from unit fixtures may not exist in live data; pick e2e places from the live geo files.
+- **#167:** native range inputs lose the pointer when a mouse drags off them; commit-on-release needs `setPointerCapture`.
+- **Specials drafts:** run `check:special` on a `git archive` of `origin/main` (node_modules symlinked) to check a draft without a branch.
 
 ## How to update
 
