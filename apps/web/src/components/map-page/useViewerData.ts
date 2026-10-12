@@ -5,7 +5,7 @@ import { DATASET_BY_ID } from "@/lib/registry";
 import { featureLayerSpec, isFeatureDataset } from "@/lib/layers";
 import type { UrlState } from "@/lib/url-state";
 import { blockPaintFrom, classifyBivariateCached, classifyUnivariateCached, useDatasetValues, type Classed } from "@/lib/values";
-import { changeStops, latestStop, stopsFor } from "@/lib/periods";
+import { changeEnds, stopsFor } from "@/lib/periods";
 import { classifyChangeCached, type ChangeMeasure } from "@/lib/change";
 import type { Values } from "@/lib/values";
 import { useChangeMoes } from "./useChangeMoes";
@@ -30,12 +30,10 @@ export function useViewerData(state: UrlState, tractCounties: readonly string[] 
   const secondary = state.b && !isFeature && !isFeatureDataset(DATASET_BY_ID.get(state.b)) ? DATASET_BY_ID.get(state.b)! : null;
   // Year control (D-36): single-dataset maps only; comparisons use the default period.
   const stops = useMemo(() => (secondary || isFeature ? [] : stopsFor(primary)), [primary, secondary, isFeature]);
-  // Change map (issue #127; Robbie 2026-10-09): from an earlier stop to the latest one, always.
-  // While it's on, the year (`t`) is ignored and the year control is off.
-  const latest = useMemo(() => latestStop(stops), [stops]);
-  const sinceOptions = useMemo(() => changeStops(stops, latest), [stops, latest]);
-  const since = sinceOptions.find((s) => s.id === state.since) ?? null;
-  const stop = since ? latest : stops.find((s) => s.id === state.t) ?? stops.find((s) => s.isDefault) ?? null;
+  // Change map (issue #127): from `since` to the year `t`, or to the latest period (issue #168).
+  const ends = useMemo(() => changeEnds(stops, state.t, state.since), [stops, state.t, state.since]);
+  const since = ends?.from ?? null;
+  const stop = ends ? ends.to : stops.find((s) => s.id === state.t) ?? stops.find((s) => s.isDefault) ?? null;
   /** The shown stop when it isn't the default; null = the default period. */
   const stopId = stop && !stop.isDefault ? stop.id : null;
   // Levels both datasets have (and the shown stop has). Blocks (values in the tiles) can't be
@@ -91,7 +89,7 @@ export function useViewerData(state: UrlState, tractCounties: readonly string[] 
     return out;
   }, [primary, secondary, x.values, y.values, stopId, xBase.values, blockField, since, xFrom.values, tractMoes]);
 
-  return { primary, secondary, isFeature, featureSpec, stops, stop, stopId, latest, sinceOptions, since, xFrom, testMoes, availableLevels, pinnedLevel, bands, x, y, level, classed, blockField };
+  return { primary, secondary, isFeature, featureSpec, stops, stop, stopId, since, xFrom, testMoes, availableLevels, pinnedLevel, bands, x, y, level, classed, blockField };
 }
 
 const onResize = (cb: () => void) => { window.addEventListener("resize", cb); return () => window.removeEventListener("resize", cb); };

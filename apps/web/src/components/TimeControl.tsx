@@ -17,7 +17,7 @@ export function TimeControl({ stops, value, onChange, docked, label }: {
   onChange: (id: string) => void;
   /** Immersed dock: transparent, text halos. */
   docked?: boolean;
-  /** Heading in place of "Years"/"Year" (the change map's "Compare with…"). */
+  /** Heading in place of "Years"/"Year" (the change map's "From" and "To"). */
   label?: string;
 }) {
   const [scrub, setScrub] = useState<number | null>(null);
@@ -64,7 +64,7 @@ export function TimeControl({ stops, value, onChange, docked, label }: {
   return (
     <div className="space-y-1.5">
       <div className="flex items-baseline justify-between gap-2">
-        <span className="text-xs font-semibold" id="time-label">{label ?? (summary ? "Show" : "Year")}</span>
+        <span className="text-xs font-semibold" data-time-label="">{label ?? (summary ? "Show" : "Year")}</span>
         <span className="text-2xl leading-none font-semibold tabular-nums" aria-live="polite">
           <span key={big} className="inline-block animate-in fade-in slide-in-from-bottom-1 duration-150">{big}</span>
         </span>
@@ -76,14 +76,14 @@ export function TimeControl({ stops, value, onChange, docked, label }: {
         </div>
       )}
       <div className="flex items-center gap-1.5">
-        <button type="button" onClick={() => step(-1)} disabled={!onSummary && pos === 0} aria-label="Previous year" className={btn}><ChevronLeft className="size-4" aria-hidden /></button>
+        <button type="button" onClick={() => step(-1)} disabled={!onSummary && pos === 0} aria-label={label ? `${label}: previous year` : "Previous year"} className={btn}><ChevronLeft className="size-4" aria-hidden /></button>
         <div className="wg-notches relative min-w-0 flex-1" data-off={(onSummary && scrub === null) || undefined}>
           <div className="pointer-events-none absolute inset-x-0 top-1/2 h-0" aria-hidden>
             {dated.map((s, k) => (
               <span key={s.id} data-notch={s.id} className={`wg-notch ${k === shown && (scrub !== null || !onSummary) ? "wg-notch-on" : ""}`} style={{ left: `calc(0.5rem + (100% - 1rem) * ${last ? k / last : 0})` }} />
             ))}
           </div>
-          <input type="range" min={0} max={last} step={1} value={shown} aria-label="Year"
+          <input type="range" min={0} max={last} step={1} value={shown} aria-label={label ?? "Year"}
             aria-valuetext={big}
             // Capture so the release lands here even when the pointer leaves the slider.
             onPointerDown={(e) => { held.current = true; e.currentTarget.setPointerCapture(e.pointerId); }}
@@ -91,7 +91,7 @@ export function TimeControl({ stops, value, onChange, docked, label }: {
             onChange={(e) => scrubTo(+e.target.value)}
             className="wg-range relative w-full" />
         </div>
-        <button type="button" onClick={() => step(1)} disabled={onSummary || pos === last} aria-label="Next year" className={btn}><ChevronRight className="size-4" aria-hidden /></button>
+        <button type="button" onClick={() => step(1)} disabled={onSummary || pos === last} aria-label={label ? `${label}: next year` : "Next year"} className={btn}><ChevronRight className="size-4" aria-hidden /></button>
       </div>
       <div className="flex items-center justify-between gap-2 text-[11px] tabular-nums text-muted-foreground">
         <span>{dated[0].label}</span>

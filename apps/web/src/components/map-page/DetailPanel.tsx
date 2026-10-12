@@ -118,7 +118,7 @@ function ChangeCard({ dataset, geoid, change, to, toMoe, sheetKey }: { dataset: 
   const { headline } = changeSummary(c, from, to, change.classed.measure!, dataset.unit, mapSteady, change.boundaryNote);
   return (
     <div className="rounded-md bg-muted px-3 py-2" data-change-card="">
-      <p className="text-xs text-muted-foreground">{dataset.title}, change since {change.fromLabel}</p>
+      <p className="text-xs text-muted-foreground">{dataset.title}, change, {change.fromLabel} → {change.toLabel}</p>
       <p className="text-xl font-semibold tabular-nums" data-change-headline="">{headline}</p>
       {sheetKey}
       <p className="mt-1 text-xs text-muted-foreground tabular-nums">

@@ -52,8 +52,8 @@ export function changeNote(from: Stop, to: Stop, level: GeoLevel): string | null
   return null;
 }
 
-/** The period a change map runs to: the latest dated stop (the default, unless the default is an
- *  average or normal). Change always ends here, so the year control is off in change mode. */
+/** The latest dated stop (the default, unless the default is an average or normal): where a change
+ *  map ends unless the link picks another year. */
 export function latestStop(stops: Stop[]): Stop | null {
   const d = stops.find((s) => s.isDefault);
   return d && DATED.test(d.id) ? d : [...stops].reverse().find((s) => DATED.test(s.id)) ?? null;
@@ -64,5 +64,15 @@ export function areaChangeNote(from: Stop, to: Stop, level: GeoLevel, geoid: str
   if (from.boundaries === to.boundaries) return null;
   if (level === "tract") return "tract changed in 2020";
   if (level === "county" && geoid.startsWith("09")) return "Connecticut's counties changed in 2022";
+  return null;
+}
+
+/** A change map's two ends from the link (issue #168): from `since` to the year `t` when `since`
+ *  is before it, else to the latest period (old `since=` links, and `t` an average). */
+export function changeEnds(stops: Stop[], t: string | null | undefined, since: string | null | undefined): { from: Stop; to: Stop } | null {
+  for (const to of [stops.find((s) => s.id === t), latestStop(stops)]) {
+    const from = changeStops(stops, to ?? null).find((s) => s.id === since);
+    if (from) return { from, to: to! };
+  }
   return null;
 }

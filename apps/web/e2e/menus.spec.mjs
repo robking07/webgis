@@ -554,9 +554,10 @@ test("splash at /, old map links forward to /map (D-193)", async (o) => {
   expect(u.pathname === "/map" && u.searchParams.get("d") === "median_household_income", `old link ended at ${u.pathname}${u.search}`);
 });
 
-// Change-over-time maps (issue #127, #155): Map options › Time has Values / Change; Change swaps the
-// year picker for "Compare with…", the map recolors on the change ramp, the legend names the
-// comparison, the link restores it, and a click shows both values.
+// Change-over-time maps (issue #127, #155, #168): Map options › Time has Values / Change; Change swaps
+// the year picker for From and To, keeps the year picked in Values as To, and spells out both ends;
+// the map recolors on the change ramp, the legend names the comparison, the link restores it, and a
+// click shows both values.
 for (const vp of ["phone", "laptop"]) {
   test(`${vp} change since an earlier period: legend, link and details`, async (o) => {
     const { page } = await o(vp, "/map?d=pct_poverty&lv=county&at=-93.4752,45.0061,7.2");
@@ -566,11 +567,24 @@ for (const vp of ["phone", "laptop"]) {
     const heads = await page.locator("#filters-panel h3").allInnerTexts();
     expect(heads.map((h) => h.toLowerCase()).join(",") === "geography,time", `sections: ${heads.join(", ")}`);
     const mode = page.locator("#filters-panel [role=radiogroup][aria-label='Map shows']");
+    const radio = (group, name) => page.locator(`#filters-panel [role=radiogroup][aria-label='${group}'] [role=radio]`, { hasText: name }).first();
+    const span = async () => (await page.locator("#filters-panel [data-change-span]").innerText());
+    // The year picked in Values becomes To.
+    await radio("Years", "2015–2019").click();
     await mode.getByRole("radio", { name: "Change" }).click();
-    // The year picker is gone (not greyed out); "Compare with…" takes its place.
+    // The year picker is gone (not greyed out); From and To take its place.
     expect(await page.locator("#filters-panel [role=radiogroup][aria-label=Years]").count() === 0, "year picker still shown in change mode");
-    await page.locator("#filters-panel [role=radiogroup][aria-label='Compare with…'] [role=radio]", { hasText: "2015–2019" }).first().click();
-    expect((await page.locator("#filters-panel [data-change-span]").innerText()).includes("2015–2019 to 2020–2024"), "no span under Compare with");
+    expect((await span()).includes("2010–2014 → 2015–2019"), `kept year as To: ${await span()}`);
+    expect((await radio("To", "2015–2019").getAttribute("aria-checked")) === "true", "To isn't the year picked in Values");
+    // Back to Values restores that year.
+    await mode.getByRole("radio", { name: "Values" }).click();
+    expect((await radio("Years", "2015–2019").getAttribute("aria-checked")) === "true", "Values lost the year");
+    await mode.getByRole("radio", { name: "Change" }).click();
+    // A later To keeps From; then a later From.
+    await radio("To", "2020–2024").click();
+    expect((await span()).includes("2010–2014 → 2020–2024"), `after To: ${await span()}`);
+    await radio("From", "2015–2019").click();
+    expect((await span()).includes("2015–2019 → 2020–2024"), `after From: ${await span()}`);
     if (page.isPhone) await page.getByRole("button", { name: "Apply", exact: true }).click();
     else await page.getByRole("button", { name: "Close map options" }).click();
     await page.waitForSelector("#filters-panel", { state: "detached" });
@@ -613,7 +627,7 @@ for (const vp of ["phone", "laptop"]) {
     const card = page.locator("[data-change-card]");
     await card.waitFor({ timeout: 15000 });
     const text = await card.innerText();
-    expect(text.includes("change since 2015–2019") && text.includes("2015–2019:") && text.includes("2020–2024:"), `details: ${text}`);
+    expect(text.includes("change, 2015–2019 → 2020–2024") && text.includes("2015–2019:") && text.includes("2020–2024:"), `details: ${text}`);
     // The headline is the change, not the latest value.
     const headline = (await card.locator("[data-change-headline]").innerText()).trim();
     expect(/^[+−][\d.]+ pts$/.test(headline) || headline === "No clear change", `details headline: ${headline}`);
@@ -789,7 +803,7 @@ for (const vp of ["phone", "laptop"]) {
     const bg = await slider.evaluate((el) => getComputedStyle(el, "::-webkit-slider-runnable-track").backgroundImage);
     expect(bg === "none", `track has a fill: ${bg}`);
     const urlYear = () => new URL(page.url()).searchParams.get("t");
-    const shown = async () => (await panel.locator("#time-label + span").innerText()).trim();
+    const shown = async () => (await panel.locator("[data-time-label] + span").innerText()).trim();
     // Default is the average, with the slider resting.
     expect((await shown()).includes("average"), `default label: ${await shown()}`);
     expect(await slider.evaluate((el) => el.closest("[data-off]") !== null), "slider isn't marked off on the average");
