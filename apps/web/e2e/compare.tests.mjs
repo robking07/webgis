@@ -19,7 +19,9 @@ export default function compareTests({ test, expect, wait, immerse, tapLonLat, l
       expect(/higher$|^About the same$/.test(said), `headline: "${said}"`);
       const h1 = await page.locator("main h1").innerText();
       expect(h1.includes("Hennepin County, MN") && h1.includes("Ramsey County, MN"), `heading: ${h1}`);
-      expect(!(await page.locator("[data-more-topics]").evaluate((d) => d.open)), "More topics open by default");
+      // Every topic group is listed; only the metric's own (Income & poverty) starts open.
+      const groups = await page.locator("details[data-topic]").evaluateAll((ds) => ds.map((d) => [d.dataset.topic, d.open]));
+      expect(groups.length > 1 && groups[0][0] === "Income & poverty" && groups[0][1] && groups.slice(1).every(([, o]) => !o), `topic groups: ${JSON.stringify(groups)}`);
       expect((await page.locator("[data-compare-row]").count()) > 0, "no topic-group rows");
       expect(!/No data/.test(await page.locator("main").innerText()), "a No data row on the compare page");
       await page.reload({ waitUntil: "load" });
@@ -28,6 +30,38 @@ export default function compareTests({ test, expect, wait, immerse, tapLonLat, l
       expect(!dbCalls(page).length, `database calls: ${dbCalls(page).join(", ")}`);
     });
   }
+
+  // PR 2a (D-258): laptops and monitors show the map beside the panel, A outlined solid and B dashed, both in view.
+  for (const [vp, path, level, a, b, names] of [
+    ["laptop", "/compare/27053/27123?d=pct_poverty", "county", "27053", "27123", ["Hennepin County", "Ramsey County"]],
+    ["monitor", "/compare/27053100400/27053100200?d=gini_index", "tract", "27053100400", "27053100200", ["Census tract 1004", "Census tract 1002"]],
+  ]) {
+    test(`${vp} compare places: the map outlines both ${level === "tract" ? "tracts" : "counties"} and frames them`, async (o) => {
+      const { page } = await o(vp, path);
+      await page.locator("[data-compare-verdict]").waitFor({ timeout: 20000 });
+      const got = await page.evaluate(([level, a, b]) => {
+        const m = window.__wgMap, st = (id) => m.getFeatureState({ source: `b-${level}`, sourceLayer: level, id });
+        const seen = new Set(m.queryRenderedFeatures({ layers: [`${level}-fill`] }).map((f) => String(f.properties.geoid)));
+        return { a: st(a), b: st(b), inView: [seen.has(a), seen.has(b)] };
+      }, [level, a, b]);
+      expect(got.a.selected === true && !got.a.second, `place A outline: ${JSON.stringify(got.a)}`);
+      expect(got.b.second === true && !got.b.selected, `place B outline: ${JSON.stringify(got.b)}`);
+      expect(got.inView.every(Boolean), `both places in view: ${got.inView}`);
+      const key = await page.locator("[data-compare-map]").innerText();
+      expect(names.every((n) => key.includes(n)), `map key: ${key}`);
+      expect((await page.locator("[data-share]").count()) === 1, "no Share button");
+      expect(/\/map\?/.test(await page.getByRole("link", { name: "← Back to the map" }).getAttribute("href")), "Back to the map link");
+    });
+  }
+
+  test("phone compare places: no map, no map download", async (o) => {
+    const { page } = await o("phone", "/compare/27053/27123?d=pct_poverty", { ready: false });
+    await page.locator("[data-compare-verdict]").waitFor({ timeout: 20000 });
+    await wait(1500);
+    expect((await page.locator("[data-compare-map]").count()) === 0, "a map on the phone compare page");
+    const tiles = page.requests.filter((u) => /\.pmtiles|maplibre-gl-worker|\/values\/[^/]+\/tract\.json/.test(u));
+    expect(!tiles.length && !(await page.evaluate(() => !!window.__wgMap)), `map downloads on the phone: ${tiles.join(", ")}`);
+  });
 
   test("laptop compare places: no Compare with… on a non-default year", async (o) => {
     // Pick the year in Map options rather than loading with t=2019: a page that opens on an earlier year
