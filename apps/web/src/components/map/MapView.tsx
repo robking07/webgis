@@ -219,12 +219,12 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
       appliedHatch.current = {};
       syncHatch(m, latest.current.hatch, appliedHatch.current, latest.current.levelZooms);
     });
-    // Hatching on: report which counties' tracts are on screen once the map settles.
     // The opening bbox is an estimate from each place's center and area; frame both exactly once their tiles are in.
     if (compare) m.once("idle", () => {
       const [a, b] = [geographyBbox(m, compare.level, compare.a), geographyBbox(m, compare.level, compare.b)];
       if (a && b) fitBbox([Math.min(a[0], b[0]), Math.min(a[1], b[1]), Math.max(a[2], b[2]), Math.max(a[3], b[3])], { top: 40, right: 40, bottom: 40, left: 40 });
     });
+    // Hatching on: report which counties' tracts are on screen once the map settles.
     m.on("idle", () => reportTractCounties(m, !!latest.current.hatch || latest.current.watchCounties, latest.current.onTractCounties, reportedCounties));
     m.on("moveend", () => {
       const c = m.getCenter();
