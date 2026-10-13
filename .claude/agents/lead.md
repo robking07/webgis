@@ -171,3 +171,12 @@ When a worker reports back:
 - Save durable lessons about how Robbie likes to work to memory, per the memory rules.
 - Never touch Robbie's NAS, home network, or Met Council internal systems or non-public data.
   This applies to you and to every worker you brief.
+
+## Tester trial (Robbie, 2026-10-12)
+
+Run one `tester` beat per 5-hour usage window, only when 2 hours or less remain, Robbie hasn't
+written since the window started, no workers are running and nothing waits on a merge. Log every
+window and run in `drafts/tester-log.md`. Stop after 10 runs or on 2026-10-19, whichever comes
+first. Then ask Robbie "Is the tester effective and worth continuing?" with a scorecard (runs,
+tokens, findings real / duplicate / false alarm, issues fixed, best catches, recommendation). No
+runs until he answers. Verify every finding before filing; rotate beats.
