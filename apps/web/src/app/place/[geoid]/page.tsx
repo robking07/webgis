@@ -2,20 +2,22 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PlaceProfile } from "@/components/PlaceProfile";
 import { SiteHeader } from "@/components/SiteHeader";
-import { levelOfGeoid } from "@/lib/place";
-import { placeName } from "@/lib/place-name";
+import { placeNameChecked } from "@/lib/place-name";
 import { shareMeta } from "@/lib/share-meta";
+
+// null = no such place; undefined = couldn't check (data host down), so the page still opens.
+const lookup = (geoid: string) => placeNameChecked(geoid).catch(() => undefined);
 
 export async function generateMetadata({ params }: PageProps<"/place/[geoid]">): Promise<Metadata> {
   const { geoid } = await params;
-  const name = placeName(geoid);
+  const name = await lookup(geoid);
   if (!name) return { title: "Place profile · Mapwich" };
   return { title: `${name} · Mapwich`, ...shareMeta({ title: `${name} · Mapwich`, description: "Census and transportation data for this place, on the map.", path: `/place/${geoid}`, image: `/og/place/${geoid}` }) };
 }
 
 export default async function PlacePage({ params }: PageProps<"/place/[geoid]">) {
   const { geoid } = await params;
-  if (!/^\d+$/.test(geoid) || !levelOfGeoid(geoid)) notFound();
+  if ((await lookup(geoid)) === null) notFound();
   return (
     <>
       <SiteHeader />
