@@ -42,3 +42,6 @@ map, so the picker never offers a pair the map won't draw.
   <second map>. Open it on its own?" with **Open on its own** / **Cancel** (a sheet on phones, a
   small panel on laptops). Cancel keeps the comparison as it was. Opening the second map itself
   still shows it alone, without asking.
+- 2026-10-14 (Robbie, #225): the picker now lives in the title's drop-down (the sheet on phones);
+  the side panel and the Change dataset button are gone, and the title asks which map to replace.
+  See D-326.
