@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { classLabels, formatValue } from "./format.ts";
+import { classLabels, formatEstimate, formatValue } from "./format.ts";
 
 describe("formatValue", () => {
   it("formats by unit", () => {
@@ -47,5 +47,29 @@ describe("classLabels", () => {
   });
   it("has one label when there are no breaks", () => {
     expect(classLabels([], "dollars")).toEqual(["All values"]);
+  });
+});
+
+describe("formatEstimate", () => {
+  const e = (v: number, m: number | null, u: Parameters<typeof formatValue>[1]) => { const r = formatEstimate(v, m, u); return r.moe ? `${r.value} ±${r.moe}` : r.value; };
+  it("keeps margins no finer than values", () => {
+    expect(e(0.5043, 0.0027, "ratio")).toBe("0.504 ±0.003");
+    expect(e(1435, 7, "dollars")).toBe("$1,435 ±$7");
+    expect(e(19.8, 1.9, "percent")).toBe("19.8% ±1.9%");
+    expect(e(7, 0.16, "percent")).toBe("7% ±0.2%");
+    expect(e(0.4, 0.004, "percent")).toBe("0.4% ±0.01%");
+  });
+  it("never prints a zero margin", () => {
+    expect(e(50, 0, "percent")).toBe("50%");
+    expect(e(3000, 0, "per_sq_mi")).toBe("3,000/sq mi");
+    expect(e(0.5, 0.0001, "ratio")).toBe("0.5 ±0.001");
+    expect(e(1000, null, "count")).toBe("1,000");
+  });
+  it("handles tiny dollars and top percentiles", () => {
+    expect(e(0.007, 0.002, "dollars")).toBe("under $0.01");
+    expect(formatValue(0.007, "dollars")).toBe("under $0.01");
+    expect(formatValue(0.5043, "ratio")).toBe("0.504");
+    expect(formatValue(99.97, "percentile")).toBe("99th percentile");
+    expect(classLabels([0.007, 0.5], "dollars")[0]).toBe("< $0.01");
   });
 });

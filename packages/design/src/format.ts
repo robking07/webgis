@@ -3,17 +3,20 @@
 export type Unit = "dollars" | "percent" | "minutes" | "count" | "per_sq_mi" | "ratio" | "years" | "deg_f" | "inches" | "per_100k" | "vehicles_per_day" | "miles_per_day" | "categories" | "agreements" | "percentile" | "ug_m3" | "ppm" | "degree_days";
 
 const nf = (o: Intl.NumberFormatOptions) => new Intl.NumberFormat("en-US", o);
-const FORMATTERS: Record<Unit, (v: number) => string> = {
+/** Default decimals for the units whose precision depends on the value (margins reuse these). */
+const DECIMALS: Partial<Record<Unit, (v: number) => number>> = {
   // Cents only for small amounts (per-resident hazard losses run from a few cents up).
-  dollars: (v) => {
-    const d = Math.abs(v) < 10 && v !== 0 ? 2 : 0;
-    return nf({ style: "currency", currency: "USD", minimumFractionDigits: d, maximumFractionDigits: d }).format(v);
-  },
-  percent: (v) => `${nf({ maximumFractionDigits: Math.abs(v) < 1 && v !== 0 ? 2 : Math.abs(v) < 10 ? 1 : 0 }).format(v)}%`,
+  dollars: (v) => (Math.abs(v) < 10 && v !== 0 ? 2 : 0),
+  percent: (v) => (Math.abs(v) < 1 && v !== 0 ? 2 : Math.abs(v) < 10 ? 1 : 0),
+  ratio: () => 3,
+};
+const FORMATTERS: Record<Unit, (v: number, d: number) => string> = {
+  dollars: (v, d) => nf({ style: "currency", currency: "USD", minimumFractionDigits: d, maximumFractionDigits: d }).format(v),
+  percent: (v, d) => `${nf({ maximumFractionDigits: d }).format(v)}%`,
   minutes: (v) => `${nf({ maximumFractionDigits: 1 }).format(v)} min`,
   count: (v) => nf({ notation: v >= 1e5 ? "compact" : "standard", maximumFractionDigits: 1 }).format(v),
   per_sq_mi: (v) => `${nf({ maximumFractionDigits: v < 10 ? 1 : 0 }).format(v)}/sq mi`,
-  ratio: (v) => nf({ maximumFractionDigits: 2 }).format(v),
+  ratio: (v, d) => nf({ maximumFractionDigits: d }).format(v),
   years: (v) => `${nf({ maximumFractionDigits: 1 }).format(v)} yr`,
   deg_f: (v) => `${nf({ maximumFractionDigits: 1 }).format(v)}°F`,
   inches: (v) => `${nf({ maximumFractionDigits: 1 }).format(v)} in`,
@@ -24,7 +27,7 @@ const FORMATTERS: Record<Unit, (v: number) => string> = {
   per_100k: (v) => `${nf({ maximumFractionDigits: 1 }).format(v)} per 100k`,
   ug_m3: (v) => `${nf({ minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(v)} µg/m³`,
   ppm: (v) => `${nf({ minimumFractionDigits: 3, maximumFractionDigits: 3 }).format(v)} ppm`,
-  percentile: (v) => ordinal(Math.round(v)) + " percentile",
+  percentile: (v) => ordinal(Math.min(99, Math.round(v))) + " percentile",
   degree_days: (v) => `${nf({ maximumFractionDigits: 0 }).format(v)} degree days`,
 };
 
@@ -45,9 +48,25 @@ export const UNIT_LABEL: Record<Unit, string> = {
   degree_days: "degree days (°F)",
 };
 
-export function formatValue(v: number | null | undefined, unit: Unit): string {
+/** `plain` skips the "under $0.01" wording (legend labels). `decimals` overrides the default precision. */
+export function formatValue(v: number | null | undefined, unit: Unit, opts?: { decimals?: number; plain?: boolean }): string {
   if (v == null || !Number.isFinite(v)) return "No data";
-  return FORMATTERS[unit](v);
+  if (unit === "dollars" && !opts?.plain && v !== 0 && Math.abs(v) < 0.01) return "under $0.01";
+  return FORMATTERS[unit](v, opts?.decimals ?? DECIMALS[unit]?.(v) ?? 0);
+}
+
+/** A value and its margin of error, rounded together: the margin is never shown more precisely than
+ *  the value, and never as "±0". `moe` is null when there is nothing honest to add (no margin, or an
+ *  exact count with a margin of 0). shortcut: only dollars, percent and ratio adjust precision; other
+ *  units use their usual format for both, which already matches. */
+export function formatEstimate(v: number | null | undefined, moe: number | null | undefined, unit: Unit): { value: string; moe: string | null } {
+  const value = formatValue(v, unit);
+  const dec = DECIMALS[unit];
+  if (v == null || !Number.isFinite(v) || moe == null || !Number.isFinite(moe) || moe <= 0 || value.startsWith("under")) return { value, moe: null };
+  if (!dec) return { value, moe: formatValue(moe, unit) };
+  // Percent carries one decimal when the margin needs it ("19.8% ±1.9%", not "20% ±1.9%").
+  const d = unit === "percent" ? Math.min(Math.max(dec(v), dec(moe)), Math.abs(v) < 1 ? 2 : 1) : dec(v);
+  return { value: formatValue(v, unit, { decimals: d }), moe: formatValue(Math.max(moe, 10 ** -d), unit, { decimals: d }) };
 }
 
 export const LEGEND = {
@@ -63,7 +82,7 @@ export const LEGEND = {
 /** Human-readable class labels: "< a", "a – b", …, "≥ z". */
 export function classLabels(breaks: number[], unit: Unit, opts?: { min?: number; minIsClass?: boolean }): string[] {
   if (breaks.length === 0) return ["All values"];
-  const f = (v: number) => formatValue(v, unit);
+  const f = (v: number) => formatValue(v, unit, { plain: true });
   /** "10.9 – 15.9 per 100k", not "10.9 per 100k – 15.9 per 100k": drop a multi-character
    *  unit suffix from the lower bound when the upper bound carries it. */
   const range = (a: number, b: number) => {
