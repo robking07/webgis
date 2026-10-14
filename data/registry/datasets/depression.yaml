@@ -3,6 +3,7 @@ title: "Depression"
 phrase: depression rates
 description: "Share of adults a doctor has ever told they have a depressive disorder. Age-adjusted prevalence; model-based small-area estimate."
 category: Health
+subcategory: Conditions
 tags: [depression, mental health, health]
 source:
   name: CDC PLACES (Local Data for Better Health), 2025 release

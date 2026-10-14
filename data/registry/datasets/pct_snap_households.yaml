@@ -1,7 +1,8 @@
 id: pct_snap_households
 title: "Households getting SNAP (food stamps)"
 description: "Share of households that received SNAP food assistance at some point in the past 12 months."
-category: Income & poverty
+category: Economy
+subcategory: Income and poverty
 tags: [SNAP, food stamps, food assistance, poverty, benefits]
 source:
   name: U.S. Census Bureau, American Community Survey 5-Year Estimates

@@ -1,6 +1,7 @@
 // Dataset registry schema. One YAML file per dataset in ./datasets. Adding a dataset
 // means adding a file here (and, for a new source type, an ingest script) — never UI code.
 import { z } from "zod";
+import { CATEGORIES } from "./categories.ts";
 
 const Ramp = z.enum(["blues", "ylgnbu", "oranges", "purples", "viridis", "cividis", "rdbu", "puor", "brbg"]);
 const Unit = z.enum(["dollars", "percent", "minutes", "count", "per_sq_mi", "ratio", "years", "deg_f", "inches", "per_100k", "vehicles_per_day", "miles_per_day", "categories", "agreements", "percentile", "ug_m3", "ppm", "degree_days"]);
@@ -253,7 +254,9 @@ export const DatasetEntry = z.object({
   phrase: z.string().optional(),
   /** One sentence shown in the browser and popups. */
   description: z.string(),
-  category: z.enum(["Income & poverty", "Commuting", "Vehicles", "Housing", "Population", "Jobs", "Transportation", "Environment", "Environmental justice", "Immigration enforcement", "Health", "Climate", "Race & ethnicity", "Education", "Internet access"]),
+  /** Top-level category (the menu chips) and its subcategory (the list headings): `categories.ts`. */
+  category: z.enum(CATEGORIES),
+  subcategory: z.string(),
   tags: z.array(z.string()).default([]),
   source: z.object({
     name: z.string(),

@@ -1,7 +1,8 @@
 id: ice_287g_agreements
 title: 287(g) agreements with ICE
 description: Active agreements that let local or state law enforcement agencies carry out immigration enforcement duties for ICE, counted by county.
-category: Immigration enforcement
+category: People
+subcategory: Immigration and language
 tags: [ICE, immigration, 287(g), enforcement, sheriffs, police, deportation]
 source:
   name: Deportation Data Project (UC Berkeley Law / UCLA)

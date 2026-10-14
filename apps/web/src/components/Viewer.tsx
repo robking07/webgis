@@ -315,7 +315,7 @@ export function Viewer({ search }: { search: string }) {
           phone={phone} motion={stepAside ? (phone ? "hide" : "dim") : null} closeKey={closeKey}
           onShowNav={() => { setImmersed(false); setPeek(false); }} onPick={pickDataset}
           onOpenFilters={toggleFilters} onOpenLevel={openLevelFilters} levelPill={!isFeature} onMenuChange={setHeadingMenu}
-          onOpenSheet={phone ? openSheet : undefined} />
+          onOpenSheet={phone ? openSheet : undefined} onBrowse={() => setBrowserOpen(true)} />
       )}
 
       {filters && primary && !phone && (

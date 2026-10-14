@@ -2,7 +2,8 @@ id: pct_public_assistance
 title: "Households on cash public assistance"
 phrase: shares of households on public assistance
 description: "Share of households that received cash public assistance (such as TANF or general assistance) in the past 12 months. Does not include SNAP food benefits."
-category: Income & poverty
+category: Economy
+subcategory: Income and poverty
 tags: [public assistance, welfare, TANF, income]
 source:
   name: U.S. Census Bureau, American Community Survey 5-Year Estimates

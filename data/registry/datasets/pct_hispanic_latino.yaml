@@ -1,7 +1,8 @@
 id: pct_hispanic_latino
 title: "Hispanic or Latino residents"
 description: "Share of residents who are Hispanic or Latino, of any race."
-category: Race & ethnicity
+category: People
+subcategory: Race and ethnicity
 tags: [race, ethnicity, Hispanic, Latino, demographics]
 source:
   name: U.S. Census Bureau, American Community Survey 5-Year Estimates

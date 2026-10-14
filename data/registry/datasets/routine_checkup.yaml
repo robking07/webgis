@@ -3,6 +3,7 @@ title: "Routine checkup in the past year"
 phrase: checkup rates
 description: "Share of adults who visited a doctor for a routine checkup in the past year. Age-adjusted prevalence; model-based small-area estimate."
 category: Health
+subcategory: Care and coverage
 tags: [checkup, preventive care, health care]
 source:
   name: CDC PLACES (Local Data for Better Health), 2025 release

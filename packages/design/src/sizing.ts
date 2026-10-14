@@ -9,8 +9,8 @@
  *  visitor pins it (no block groups or blocks at national or multi-state zoom); the finest
  *  coarser level without a floor stands in. */
 export const GEO_LEVELS = {
-  state: { label: "State", plural: "States", minzoom: 0, maxzoom: 4.6 },
-  county: { label: "County", plural: "Counties", minzoom: 4.6, maxzoom: 8.5 },
+  state: { label: "State", plural: "States", minzoom: 0, maxzoom: 5.5 },
+  county: { label: "County", plural: "Counties", minzoom: 5.5, maxzoom: 8.5 },
   tract: { label: "Census tract", plural: "Census tracts", minzoom: 8.5, maxzoom: 11 },
   /** ACS publishes most tables here; values live only in static exports (D-124). */
   block_group: { label: "Block group", plural: "Block groups", minzoom: 11, maxzoom: 13, pinFloor: 7 },

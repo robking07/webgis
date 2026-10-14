@@ -2,7 +2,8 @@ id: population_density
 title: Population density
 phrase: population density
 description: Total resident population. Shown as people per square mile of land, so large rural areas don't dominate the map.
-category: Population
+category: People
+subcategory: Population and age
 tags: [population, density, demographics]
 source:
   name: U.S. Census Bureau, American Community Survey 5-Year Estimates

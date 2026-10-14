@@ -1,7 +1,8 @@
 id: pct_bachelors_plus
 title: "Bachelor's degree or higher"
 description: "Share of adults 25 and over with at least a bachelor's degree."
-category: Education
+category: People
+subcategory: Education
 tags: [education, college, degree, attainment]
 source:
   name: U.S. Census Bureau, American Community Survey 5-Year Estimates

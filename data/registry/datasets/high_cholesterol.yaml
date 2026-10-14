@@ -3,6 +3,7 @@ title: "High cholesterol"
 phrase: high cholesterol rates
 description: "Share of adults who have ever had their cholesterol checked and were told it was high. Age-adjusted prevalence; model-based small-area estimate."
 category: Health
+subcategory: Conditions
 tags: [cholesterol, cardiovascular, health]
 source:
   name: CDC PLACES (Local Data for Better Health), 2025 release

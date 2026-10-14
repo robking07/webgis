@@ -3,6 +3,7 @@ title: "Mammogram in the past 2 years (women 50–74)"
 phrase: mammogram rates
 description: "Share of women aged 50 to 74 who had a mammogram in the past 2 years. Age-adjusted prevalence; model-based small-area estimate."
 category: Health
+subcategory: Care and coverage
 tags: [breast cancer, mammogram, screening, preventive care, health care]
 source:
   name: CDC PLACES (Local Data for Better Health), 2025 release

@@ -80,3 +80,7 @@ stop at that level's band.
 **Later (proposal only, for Robbie's review):** how menus should respond to screen size and to
 interaction (at rest → interacting → after a selection → digging in). Mockups are with the project
 lead; nothing is built yet.
+
+## Amendment 2026-10-14 (#204)
+
+Robbie's video note (#204): counties start at z5.5 (was 4.6). States stay up until a single state or a few fill the view; `bandShift` still scales this for phones. Tract, block-group and block thresholds are unchanged.

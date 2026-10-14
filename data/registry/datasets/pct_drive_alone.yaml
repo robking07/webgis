@@ -1,7 +1,8 @@
 id: pct_drive_alone
 title: "Drive to work alone"
 description: "Share of workers 16 and over who usually drive to work alone in a car, truck or van."
-category: Commuting
+category: Transportation
+subcategory: Commuting
 tags: [driving, car, mode share, transportation]
 source:
   name: U.S. Census Bureau, American Community Survey 5-Year Estimates

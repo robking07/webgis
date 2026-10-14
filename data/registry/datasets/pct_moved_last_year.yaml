@@ -2,7 +2,8 @@ id: pct_moved_last_year
 title: "Moved in the past year"
 phrase: shares of recent movers
 description: "Share of residents (age 1 and older) who lived in a different home a year earlier, in the U.S. or abroad."
-category: Population
+category: People
+subcategory: Population and age
 tags: [mobility, moving, migration, turnover]
 source:
   name: U.S. Census Bureau, American Community Survey 5-Year Estimates

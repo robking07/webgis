@@ -2,7 +2,8 @@ id: nri_expected_loss_per_person
 title: "Expected yearly losses from natural hazards, per resident"
 phrase: "expected natural-hazard losses per resident"
 description: "FEMA's estimate of what 18 natural hazards cost here in an average year (damage to buildings and crops, plus deaths and injuries valued in dollars), divided by the number of residents."
-category: Environment
+category: Environment and climate
+subcategory: Natural hazards
 tags: [FEMA, National Risk Index, NRI, natural hazards, disasters, expected annual loss, climate risk, flood, wildfire, hurricane, tornado, earthquake, heat]
 source:
   name: FEMA National Risk Index v1.20.0 (December 2025)

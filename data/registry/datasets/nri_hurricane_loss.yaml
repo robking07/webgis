@@ -2,7 +2,8 @@ id: nri_hurricane_loss
 title: "Expected yearly hurricane losses, per resident"
 phrase: "expected hurricane losses per resident"
 description: "FEMA's estimate of what hurricanes cost here in an average year (damage to buildings and crops, plus deaths and injuries valued in dollars), divided by the number of residents."
-category: Environment
+category: Environment and climate
+subcategory: Natural hazards
 tags: [FEMA, National Risk Index, NRI, natural hazards, hurricane, tropical storm]
 source:
   name: FEMA National Risk Index v1.20.0 (December 2025)

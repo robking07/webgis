@@ -2,7 +2,8 @@ id: pct_broadband
 title: "Households with broadband"
 phrase: broadband rates
 description: "Share of households with a broadband internet subscription of any type (cable, fiber, DSL, satellite or cellular data plan)."
-category: Internet access
+category: Economy
+subcategory: Internet access
 tags: [internet, broadband, digital divide]
 source:
   name: U.S. Census Bureau, American Community Survey 5-Year Estimates

@@ -4,11 +4,12 @@ import type { Dataset } from "@/lib/registry";
 import { DatasetHeading } from "../DatasetMenus";
 import { LogoMark } from "../Logo";
 import { FilterButton } from "./FiltersPanel";
+import { ChangeDatasetButton } from "./DatasetCard";
 
 /** Immersed: menu button and wordmark, then the category above the dataset name (both open the
  *  dataset list), then the filter button with a caption (the level shown, or what's filtered).
  *  Phones drop the wordmark and put the heading beside the menu button, on one row (issue #34). */
-export function ImmersedHeading({ primary, secondary, immersed, hasFilters, filtersOpen, filterCount, caption, captionHint, phone, motion, closeKey, onShowNav, onPick, onOpenFilters, onOpenLevel, levelPill, onMenuChange, onOpenSheet }: {
+export function ImmersedHeading({ primary, secondary, immersed, hasFilters, filtersOpen, filterCount, caption, captionHint, phone, motion, closeKey, onShowNav, onPick, onOpenFilters, onOpenLevel, levelPill, onMenuChange, onOpenSheet, onBrowse }: {
   primary: Dataset;
   secondary: Dataset | null;
   immersed: boolean;
@@ -34,6 +35,8 @@ export function ImmersedHeading({ primary, secondary, immersed, hasFilters, filt
   onMenuChange: (open: boolean) => void;
   /** Phones: open the dataset list sheet. */
   onOpenSheet?: () => void;
+  /** Laptops and up: open the dataset browser (the Change dataset button). */
+  onBrowse: () => void;
 }) {
   // An open menu sits above every other map panel (legend, controls, details), never under one.
   const [menuOpen, setMenuOpen] = useState(false);
@@ -60,6 +63,7 @@ export function ImmersedHeading({ primary, secondary, immersed, hasFilters, filt
       </div>
       {!phone && <div className="mt-1.5">{heading}</div>}
       <div className={`mt-1 flex max-w-[calc(100vw-1.5rem)] items-center gap-2 ${phone ? "pl-[52px]" : "pl-0.5"}`}>
+        {!phone && <ChangeDatasetButton onClick={onBrowse} />}
         {hasFilters && <FilterButton count={filterCount} open={filtersOpen} onOpen={onOpenFilters} />}
         {/* The level pill is a real button: it opens Filters at the geography level (D-35), and being
             interactive it keeps clicks off the map behind it (issue #100). It sits on a solid pill like
