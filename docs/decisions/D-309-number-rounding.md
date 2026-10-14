@@ -1,4 +1,4 @@
-# D-309: Number rounding on place details
+# D-309 · Number rounding on place details
 
 PR #209, closes #196. Formatting lives in `packages/design/src/format.ts` (`formatValue`, `formatEstimate`).
 
