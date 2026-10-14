@@ -1,5 +1,5 @@
 // npm run ingest -- <step> [dataset or level ids…]
-// Steps: geographies | label-mask | timeline | acs | acs-bg | census2020 | lodes | places | climdiv | nbi | fars | overdose | airquality | features | vmt | cejst | ddp287g | nri | lead | tiles | publish-tiles | publish-values | publish-geo | publish-data | counts | publish-counts | details | publish-details | tract-geo | export | insights | tracts-out | docs | mn-catalog | all
+// Steps: geographies | label-mask | timeline | acs | acs-bg | census2020 | lodes | places | climdiv | nbi | fars | overdose | airquality | features | vmt | cejst | ddp287g | nri | svi | lead | tiles | publish-tiles | publish-values | publish-geo | publish-data | counts | publish-counts | details | publish-details | tract-geo | export | insights | tracts-out | docs | mn-catalog | all
 import { ingestGeographies, tractGeography } from "./geographies.ts";
 import { ingestAcs, ingestAcsTimeline } from "./acs.ts";
 import { ingestCensus2020 } from "./census2020.ts";
@@ -24,6 +24,7 @@ import { ingestCejst } from "./cejst.ts";
 import { ingestDdp287g } from "./ddp287g.ts";
 import { ingestLead } from "./lead.ts";
 import { ingestNri } from "./nri.ts";
+import { ingestSvi } from "./svi.ts";
 import { buildLabelMask } from "./label-mask.ts";
 import { tractsOut } from "./tracts.ts";
 const [step, ...rest] = process.argv.slice(2);
@@ -46,6 +47,7 @@ const steps: Record<string, () => Promise<void> | void> = {
   ddp287g: () => ingestDdp287g(only),
   lead: () => ingestLead(only),
   nri: () => ingestNri(only),
+  svi: () => ingestSvi(only),
   tiles: () => buildTiles(only),
   "label-mask": buildLabelMask,
   // Year control (D-36): earlier periods, written to the web export only. ACS first (FARS
@@ -81,7 +83,7 @@ const steps: Record<string, () => Promise<void> | void> = {
   // Every ingest step above also goes in `all`.
   all: async () => {
     await ingestGeographies(); await ingestAcs(); await ingestCensus2020(); await ingestLodes(); await ingestPlaces(); await ingestClimdiv(); await ingestNbi(); await ingestFars(); await ingestOverdose(); await ingestAirQuality();
-    await ingestFeatures(); await ingestVmt(); await ingestCejst(); await ingestDdp287g(); await ingestNri(); await ingestLead();
+    await ingestFeatures(); await ingestVmt(); await ingestCejst(); await ingestDdp287g(); await ingestNri(); await ingestLead(); await ingestSvi();
     await ingestAcsTimeline(); await ingestFarsTimeline(); await ingestClimdivTimeline(); await ingestNbiTimeline(); await ingestLodesTimeline(); await ingestOverdoseTimeline(); await buildLabelMask(); await buildTiles();
     await tractGeography();
     exportRegistry(); await exportNames(); await exportSearch(); await exportValues(); await detailsOut(); await computeInsights(); await writeDataSourcesDoc();
