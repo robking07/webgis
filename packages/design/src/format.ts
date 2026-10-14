@@ -27,7 +27,7 @@ const FORMATTERS: Record<Unit, (v: number, d: number) => string> = {
   per_100k: (v) => `${nf({ maximumFractionDigits: 1 }).format(v)} per 100k`,
   ug_m3: (v) => `${nf({ minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(v)} µg/m³`,
   ppm: (v) => `${nf({ minimumFractionDigits: 3, maximumFractionDigits: 3 }).format(v)} ppm`,
-  percentile: (v) => ordinal(Math.min(99, Math.round(v))) + " percentile",
+  percentile: (v) => ordinal(Math.min(99, Math.max(1, Math.round(v)))) + " percentile",
   degree_days: (v) => `${nf({ maximumFractionDigits: 0 }).format(v)} degree days`,
 };
 
@@ -82,7 +82,7 @@ export const LEGEND = {
 /** Human-readable class labels: "< a", "a – b", …, "≥ z". */
 export function classLabels(breaks: number[], unit: Unit, opts?: { min?: number; minIsClass?: boolean }): string[] {
   if (breaks.length === 0) return ["All values"];
-  const f = (v: number) => formatValue(v, unit, { plain: true });
+  const f = (v: number) => formatValue(v, unit, { plain: true, decimals: unit === "ratio" ? 2 : undefined }); // legends keep ratios at 2 decimals
   /** "10.9 – 15.9 per 100k", not "10.9 per 100k – 15.9 per 100k": drop a multi-character
    *  unit suffix from the lower bound when the upper bound carries it. */
   const range = (a: number, b: number) => {
