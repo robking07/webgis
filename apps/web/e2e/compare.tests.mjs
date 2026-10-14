@@ -19,9 +19,9 @@ export default function compareTests({ test, expect, wait, immerse, tapLonLat, l
       expect(/higher$|^About the same$/.test(said), `headline: "${said}"`);
       const h1 = await page.locator("main h1").innerText();
       expect(h1.includes("Hennepin County, MN") && h1.includes("Ramsey County, MN"), `heading: ${h1}`);
-      // Every topic group is listed; only the metric's own (Income & poverty) starts open.
+      // Every topic group is listed; only the metric's own (Economy) starts open.
       const groups = await page.locator("details[data-topic]").evaluateAll((ds) => ds.map((d) => [d.dataset.topic, d.open]));
-      expect(groups.length > 1 && groups[0][0] === "Income & poverty" && groups[0][1] && groups.slice(1).every(([, o]) => !o), `topic groups: ${JSON.stringify(groups)}`);
+      expect(groups.length > 1 && groups[0][0] === "Economy" && groups[0][1] && groups.slice(1).every(([, o]) => !o), `topic groups: ${JSON.stringify(groups)}`);
       expect((await page.locator("[data-compare-row]").count()) > 0, "no topic-group rows");
       expect(!/No data/.test(await page.locator("main").innerText()), "a No data row on the compare page");
       await page.reload({ waitUntil: "load" });
@@ -74,7 +74,7 @@ export default function compareTests({ test, expect, wait, immerse, tapLonLat, l
       await page.locator('[data-compare-headline] [data-compare-share="us"]').nth(1).waitFor({ timeout: 20000 });
       const shares = await page.locator("[data-compare-headline] [data-compare-share]").allInnerTexts();
       expect(shares.length === 4 && shares.some((s) => /of the Minnesota total$/.test(s)) && shares.some((s) => /of the U\.S\. total$/.test(s)), `shares: ${JSON.stringify(shares)}`);
-      const race = page.locator('details[data-topic="Race & ethnicity"]');
+      const race = page.locator('details[data-topic="People"]');
       await race.locator("summary").click();
       const bars = race.locator("[data-compare-parts]");
       await bars.waitFor();

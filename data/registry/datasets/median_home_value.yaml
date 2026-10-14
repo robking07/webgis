@@ -2,6 +2,7 @@ id: median_home_value
 title: "Median home value"
 description: "Middle value of owner-occupied homes, as estimated by their owners, in 2024 dollars."
 category: Housing
+subcategory: Costs
 tags: [home value, housing, real estate, affordability]
 source:
   name: U.S. Census Bureau, American Community Survey 5-Year Estimates

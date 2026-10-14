@@ -2,7 +2,8 @@ id: nri_risk_score
 title: "Natural hazard risk (FEMA National Risk Index score)"
 phrase: "natural hazard risk scores"
 description: "FEMA's overall risk score: expected yearly losses from 18 natural hazards, raised where people are more vulnerable and lowered where communities are more resilient, ranked against all counties (or all tracts) nationwide."
-category: Environment
+category: Environment and climate
+subcategory: Natural hazards
 tags: [FEMA, National Risk Index, NRI, natural hazards, disasters, risk index, climate risk]
 source:
   name: FEMA National Risk Index v1.20.0 (December 2025)

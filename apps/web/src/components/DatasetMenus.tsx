@@ -5,7 +5,7 @@
 // categories as a swipeable chip row, datasets below, in the same sheet the details use.
 import { useEffect, useRef, useState } from "react";
 import { Check, ChevronDown, X } from "lucide-react";
-import { CATEGORIES, DATASETS, type Dataset } from "@/lib/registry";
+import { CATEGORIES, DATASETS, bySubcategory, type Dataset } from "@/lib/registry";
 import { BottomSheet } from "./BottomSheet";
 
 interface Props {
@@ -87,15 +87,20 @@ export function DatasetHeading({ primary, secondary, onPick, onOpenChange, onOpe
 function DatasetList({ category, primary, onPick, className }: { category: string; primary: Dataset; onPick: (id: string) => void; className?: string }) {
   return (
     <div role="menu" aria-label={`${category} datasets`} className={className}>
-      {DATASETS.filter((d) => d.category === category).map((d) => (
-        <button key={d.id} type="button" role="menuitemradio" aria-checked={d.id === primary.id} onClick={() => onPick(d.id)}
-          className="flex w-full items-start gap-2 rounded-md px-2.5 py-2 text-left hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring">
-          <span className="min-w-0 flex-1">
-            <span className="block text-sm font-medium leading-snug">{d.title}</span>
-            <span className="block text-xs text-muted-foreground">{d.vintage}</span>
-          </span>
-          {d.id === primary.id && <Check className="mt-0.5 size-3.5 shrink-0 text-primary" aria-hidden />}
-        </button>
+      {bySubcategory(DATASETS.filter((d) => d.category === category)).map((g) => (
+        <div key={g.subcategory} role="group" aria-label={g.subcategory}>
+          <p aria-hidden className="px-2.5 pb-0.5 pt-2.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">{g.subcategory}</p>
+          {g.datasets.map((d) => (
+            <button key={d.id} type="button" role="menuitemradio" aria-checked={d.id === primary.id} onClick={() => onPick(d.id)}
+              className="flex w-full items-start gap-2 rounded-md px-2.5 py-2 text-left hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring">
+              <span className="min-w-0 flex-1">
+                <span className="block text-sm font-medium leading-snug">{d.title}</span>
+                <span className="block text-xs text-muted-foreground">{d.vintage}</span>
+              </span>
+              {d.id === primary.id && <Check className="mt-0.5 size-3.5 shrink-0 text-primary" aria-hidden />}
+            </button>
+          ))}
+        </div>
       ))}
     </div>
   );
@@ -104,7 +109,7 @@ function DatasetList({ category, primary, onPick, className }: { category: strin
 /** Phones: the dataset list as a bottom sheet. Categories are a swipeable chip row; the datasets
  *  of the chosen one are listed below. Swipe down (or ✕) to close. */
 export function DatasetSheet({ primary, onPick, onClose }: { primary: Dataset; onPick: (id: string) => void; onClose: () => void }) {
-  const [category, setCategory] = useState(primary.category);
+  const [category, setCategory] = useState<string>(primary.category);
   const row = useRef<HTMLDivElement>(null);
   // Start with the current category's chip in view.
   useEffect(() => { row.current?.querySelector("[aria-checked=true]")?.scrollIntoView({ inline: "center", block: "nearest" }); }, []);

@@ -2,7 +2,8 @@ id: home_energy_cost
 title: Yearly home energy bill
 phrase: home energy bills
 description: "Average a household spends in a year on home electricity, gas and other heating fuels such as propane, fuel oil or wood."
-category: Environmental justice
+category: Environment and climate
+subcategory: Energy burden
 tags: [energy cost, utility bills, electricity, natural gas, propane, heating, LEAD, energy affordability]
 source:
   name: U.S. Department of Energy, Low-Income Energy Affordability Data (LEAD) Tool, 2022 Update (with NREL; via OEDI)

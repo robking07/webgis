@@ -2,7 +2,8 @@ id: pct_no_computer
 title: "Households without a computer"
 phrase: shares of households without a computer
 description: "Share of households with no computer of any kind, including smartphones and tablets."
-category: Internet access
+category: Economy
+subcategory: Internet access
 tags: [computer, digital divide, internet]
 source:
   name: U.S. Census Bureau, American Community Survey 5-Year Estimates

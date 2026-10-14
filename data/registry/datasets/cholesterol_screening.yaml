@@ -3,6 +3,7 @@ title: "Cholesterol checked in the past 5 years"
 phrase: cholesterol screening rates
 description: "Share of adults who had their blood cholesterol checked in the past 5 years. Age-adjusted prevalence; model-based small-area estimate."
 category: Health
+subcategory: Care and coverage
 tags: [cholesterol, screening, preventive care, health care]
 source:
   name: CDC PLACES (Local Data for Better Health), 2025 release

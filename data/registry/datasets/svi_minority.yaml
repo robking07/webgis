@@ -3,7 +3,8 @@ title: "Social vulnerability: racial and ethnic minority status (CDC index)"
 phrase: "minority status ranks"
 description: "CDC's Social Vulnerability Index theme for racial and ethnic minority status: the share of residents who are Hispanic or Latino, or of any race other than white alone, ranked nationally."
 tags: [CDC, ATSDR, SVI, social vulnerability index, race, ethnicity, minority status, people of color]
-category: Environmental justice
+category: Environment and climate
+subcategory: Social vulnerability
 source:
   name: CDC/ATSDR Social Vulnerability Index 2022
   shortName: CDC SVI

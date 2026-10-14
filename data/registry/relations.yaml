@@ -58,7 +58,7 @@ links:
   - { maps: [pct_zero_vehicle_households, lack_transportation], why: Two views of not having a way to get around. }
   - { maps: [traffic_fatalities, vmt_per_capita], why: More driving per person means more exposure to crashes. }
   - { maps: [aadt, vmt_per_capita], why: Road traffic counts are what driving totals are built from. }
-  # Population
+  # People: Population and age, Immigration and language
   - { maps: [population_density, census2020_pop_density], why: The same measure from the survey and from the 2020 count. }
   - { maps: [census2020_housing_density, census2020_pop_density], why: Homes and residents per square mile from the same count. }
   - { maps: [pct_age_65_plus, pct_seniors_living_alone], why: More older residents, more seniors living alone. }
@@ -88,111 +88,112 @@ links:
   - { maps: [pct_uninsured, routine_checkup], why: People without insurance see a doctor less often. }
 
 maps:
-  # Climate
+  # Environment and climate: Climate
   annual_precipitation:
-    group: "Climate"
+    group: "Environment and climate"
   cooling_degree_days:
-    group: "Climate"
+    group: "Environment and climate"
   heating_degree_days:
-    group: "Climate"
+    group: "Environment and climate"
   january_low:
-    group: "Climate"
+    group: "Environment and climate"
   july_high:
-    group: "Climate"
+    group: "Environment and climate"
   july_low:
-    group: "Climate"
+    group: "Environment and climate"
   mean_temperature:
-    group: "Climate"
-  # Commuting
+    group: "Environment and climate"
+  # Transportation: Commuting
   mean_commute_minutes:
-    group: "Commuting"
+    group: "Transportation"
     counts: { of: "minutes spent commuting, all workers combined", per: "workers who commute (not working from home)" }
   pct_bike_commute:
-    group: "Commuting"
+    group: "Transportation"
     counts: { of: "workers who bike to work", per: "workers 16 and older" }
   pct_carpool:
-    group: "Commuting"
+    group: "Transportation"
     counts: { of: "workers who carpool", per: "workers 16 and older" }
   pct_drive_alone:
-    group: "Commuting"
+    group: "Transportation"
     counts: { of: "workers who drive alone", per: "workers 16 and older" }
   pct_extreme_commute:
-    group: "Commuting"
+    group: "Transportation"
     counts: { of: "workers with a 90-minute-plus commute", per: "workers who commute (not working from home)" }
   pct_leave_before_7am:
-    group: "Commuting"
+    group: "Transportation"
     counts: { of: "workers who leave before 7 a.m.", per: "workers who commute (not working from home)" }
   pct_long_commute:
-    group: "Commuting"
+    group: "Transportation"
     counts: { of: "workers with an hour-plus commute", per: "workers who commute (not working from home)" }
   pct_transit_commute:
-    group: "Commuting"
+    group: "Transportation"
     counts: { of: "workers who take public transit", per: "workers 16 and older" }
   pct_walk_commute:
-    group: "Commuting"
+    group: "Transportation"
     counts: { of: "workers who walk to work", per: "workers 16 and older" }
   pct_work_from_home:
-    group: "Commuting"
+    group: "Transportation"
     counts: { of: "workers who work from home", per: "workers 16 and older" }
   pct_work_outside_county:
-    group: "Commuting"
+    group: "Transportation"
     counts: { of: "workers who work outside their home county", per: "workers 16 and older" }
-  # Education
+  # People: Education
   pct_bachelors_plus:
-    group: "Education"
+    group: "People"
     counts: { of: "adults with a bachelor's degree or higher", per: "adults 25 and older" }
   pct_graduate_degree:
-    group: "Education"
+    group: "People"
     counts: { of: "adults with a graduate or professional degree", per: "adults 25 and older" }
   pct_no_hs_diploma:
-    group: "Education"
+    group: "People"
     counts: { of: "adults without a high school diploma", per: "adults 25 and older" }
-  # Environment
+  # Environment and climate: Natural hazards, Air quality, Social vulnerability
   nri_coastal_flood_loss:
-    group: "Environment"
+    group: "Environment and climate"
   nri_community_resilience:
-    group: "Environment"
+    group: "Environment and climate"
   nri_expected_loss_per_person:
-    group: "Environment"
+    group: "Environment and climate"
   nri_heat_wave_loss:
-    group: "Environment"
+    group: "Environment and climate"
   nri_hurricane_loss:
-    group: "Environment"
+    group: "Environment and climate"
   nri_inland_flood_loss:
-    group: "Environment"
+    group: "Environment and climate"
   nri_risk_score:
-    group: "Environment"
+    group: "Environment and climate"
   nri_social_vulnerability:
-    group: "Environment"
+    group: "Environment and climate"
   nri_tornado_loss:
-    group: "Environment"
+    group: "Environment and climate"
   nri_wildfire_loss:
-    group: "Environment"
+    group: "Environment and climate"
   ozone_8hr:
-    group: "Environment"
+    group: "Environment and climate"
   pm25_annual:
-    group: "Environment"
-  # Environmental justice
+    group: "Environment and climate"
+  # Health: Environmental justice; Environment and climate: Energy burden
   cejst_disadvantaged_tracts:
-    group: "Environmental justice"
+    group: "Health"
   cejst_pct_pop_disadvantaged:
-    group: "Environmental justice"
+    group: "Health"
   energy_burden:
-    group: "Environmental justice"
+    group: "Environment and climate"
   energy_burden_low_income:
-    group: "Environmental justice"
+    group: "Environment and climate"
   home_energy_cost:
-    group: "Environmental justice"
+    group: "Environment and climate"
+  # Environment and climate: Social vulnerability (CDC SVI)
   svi_household:
-    group: "Environmental justice"
+    group: "Environment and climate"
   svi_housing_transport:
-    group: "Environmental justice"
+    group: "Environment and climate"
   svi_minority:
-    group: "Environmental justice"
+    group: "Environment and climate"
   svi_overall:
-    group: "Environmental justice"
+    group: "Environment and climate"
   svi_socioeconomic:
-    group: "Environmental justice"
+    group: "Environment and climate"
   # Health
   all_teeth_lost:
     group: "Health"
@@ -309,108 +310,108 @@ maps:
   pct_renter_households:
     group: "Housing"
     counts: { of: "renter households", per: "households" }
-  # Immigration enforcement
+  # People: Immigration and language
   ice_287g_agreements:
-    group: "Immigration enforcement"
+    group: "People"
     counts: { of: "active 287(g) agreements" }
-  # Income & poverty
+  # Economy: Income and poverty
   gini_index:
-    group: "Income & poverty"
+    group: "Economy"
   median_household_income:
-    group: "Income & poverty"
+    group: "Economy"
   pct_child_poverty:
-    group: "Income & poverty"
+    group: "Economy"
     counts: { of: "children in poverty", per: "children whose poverty status is known" }
   pct_poverty:
-    group: "Income & poverty"
+    group: "Economy"
     counts: { of: "people below the poverty line", per: "people whose poverty status is known" }
   pct_public_assistance:
-    group: "Income & poverty"
+    group: "Economy"
     counts: { of: "households on cash public assistance", per: "households" }
   pct_snap_households:
-    group: "Income & poverty"
+    group: "Economy"
     counts: { of: "households getting SNAP (food stamps)", per: "households" }
   per_capita_income:
-    group: "Income & poverty"
-  # Internet access
+    group: "Economy"
+  # Economy: Internet access
   pct_broadband:
-    group: "Internet access"
+    group: "Economy"
     counts: { of: "households with broadband", per: "households" }
   pct_no_computer:
-    group: "Internet access"
+    group: "Economy"
     counts: { of: "households without a computer", per: "households" }
   pct_no_internet:
-    group: "Internet access"
+    group: "Economy"
     counts: { of: "households without internet", per: "households" }
-  # Jobs
+  # Economy: Jobs
   job_density:
-    group: "Jobs"
+    group: "Economy"
     counts: { of: "jobs" }
   labor_force_participation:
-    group: "Jobs"
+    group: "Economy"
     counts: { of: "people working or looking for work", per: "people 16 and older" }
   unemployment_rate:
-    group: "Jobs"
+    group: "Economy"
     counts: { of: "unemployed people", per: "people in the labor force" }
-  # Population
+  # People: Population and age, Immigration and language
   census2020_pop_density:
-    group: "Population"
+    group: "People"
     counts: { of: "residents" }
   median_age:
-    group: "Population"
+    group: "People"
   pct_age_65_plus:
-    group: "Population"
+    group: "People"
     counts: { of: "people 65 and older", per: "residents" }
   pct_foreign_born:
-    group: "Population"
+    group: "People"
     counts: { of: "residents born outside the U.S.", per: "residents" }
   pct_limited_english:
-    group: "Population"
+    group: "People"
     counts: { of: "households with limited English", per: "households" }
   pct_moved_last_year:
-    group: "Population"
+    group: "People"
     counts: { of: "people who moved in the past year", per: "people 1 year and older" }
   pct_seniors_living_alone:
-    group: "Population"
+    group: "People"
     counts: { of: "seniors living alone", per: "households" }
   pct_single_parent_families:
-    group: "Population"
+    group: "People"
     counts: { of: "single-parent families", per: "families with children under 18" }
   pct_under_18:
-    group: "Population"
+    group: "People"
     counts: { of: "children under 18", per: "residents" }
   pct_veterans:
-    group: "Population"
+    group: "People"
     counts: { of: "veterans", per: "civilians 18 and older" }
   population_density:
-    group: "Population"
+    group: "People"
     counts: { of: "residents" }
-  # Race & ethnicity
+  # People: Race and ethnicity
   pct_aian_nh:
-    group: "Race & ethnicity"
+    group: "People"
     counts: { of: "American Indian and Alaska Native (non-Hispanic) residents", per: "residents" }
   pct_asian_nh:
-    group: "Race & ethnicity"
+    group: "People"
     counts: { of: "Asian (non-Hispanic) residents", per: "residents" }
   pct_black_nh:
-    group: "Race & ethnicity"
+    group: "People"
     counts: { of: "Black (non-Hispanic) residents", per: "residents" }
   pct_hispanic_latino:
-    group: "Race & ethnicity"
+    group: "People"
     counts: { of: "Hispanic or Latino residents", per: "residents" }
   pct_multiracial_nh:
-    group: "Race & ethnicity"
+    group: "People"
     counts: { of: "residents of two or more races (non-Hispanic)", per: "residents" }
   pct_nhpi_nh:
-    group: "Race & ethnicity"
+    group: "People"
     counts: { of: "Native Hawaiian and Pacific Islander (non-Hispanic) residents", per: "residents" }
   pct_people_of_color:
-    group: "Race & ethnicity"
+    group: "People"
     counts: { of: "people of color", per: "residents" }
   pct_white_nh:
-    group: "Race & ethnicity"
+    group: "People"
     counts: { of: "White (non-Hispanic) residents", per: "residents" }
-  # Transportation
+  # Transportation: Roads and vehicles, Traffic safety
   aadt:
     group: "Transportation"
   bridges_poor_condition:
@@ -420,7 +421,7 @@ maps:
     counts: { of: "traffic deaths a year (average)", per: "residents" }
   vmt_per_capita:
     group: "Transportation"
-  # Vehicles
+  # Transportation: Roads and vehicles
   pct_zero_vehicle_households:
-    group: "Vehicles"
+    group: "Transportation"
     counts: { of: "households with no vehicle", per: "households" }

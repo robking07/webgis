@@ -2,7 +2,8 @@ id: pct_graduate_degree
 title: "Graduate or professional degree"
 phrase: shares of graduate degrees
 description: "Share of adults 25 and older with a master's, professional or doctoral degree."
-category: Education
+category: People
+subcategory: Education
 tags: [education, graduate degree, master's, doctorate]
 source:
   name: U.S. Census Bureau, American Community Survey 5-Year Estimates

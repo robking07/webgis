@@ -3,6 +3,7 @@ title: "Dentist visit in the past year"
 phrase: dentist visit rates
 description: "Share of adults who visited a dentist or dental clinic in the past year. Age-adjusted prevalence; model-based small-area estimate."
 category: Health
+subcategory: Care and coverage
 tags: [dental, oral health, preventive care, health care]
 source:
   name: CDC PLACES (Local Data for Better Health), 2025 release

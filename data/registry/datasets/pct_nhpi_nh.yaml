@@ -1,7 +1,8 @@
 id: pct_nhpi_nh
 title: "Native Hawaiian and Pacific Islander (non-Hispanic) residents"
 description: "Share of residents who are Native Hawaiian or Other Pacific Islander alone and not Hispanic or Latino."
-category: Race & ethnicity
+category: People
+subcategory: Race and ethnicity
 tags: [race, ethnicity, Native Hawaiian, Pacific Islander, demographics]
 source:
   name: U.S. Census Bureau, American Community Survey 5-Year Estimates

@@ -2,7 +2,8 @@ id: pct_child_poverty
 title: "Children in poverty"
 phrase: child poverty rates
 description: "Share of children under 18 living in households below the federal poverty line."
-category: Income & poverty
+category: Economy
+subcategory: Income and poverty
 tags: [poverty, children, income]
 source:
   name: U.S. Census Bureau, American Community Survey 5-Year Estimates

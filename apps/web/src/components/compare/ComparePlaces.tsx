@@ -14,7 +14,7 @@ import { countsLabels, PARTS, parentsOf, partsOf, placeCounts, shareOf, type Cou
 import { reliabilityNote } from "@/lib/reliability";
 import { fetchDetail, fetchGeography, type Detail, type Geography } from "@/lib/details";
 import { levelOfGeoid, PLACE_ZOOM, placeHref, rankText } from "@/lib/place";
-import { DATASET_BY_ID, DATASETS, type Dataset } from "@/lib/registry";
+import { CATEGORIES, DATASET_BY_ID, DATASETS, type Dataset } from "@/lib/registry";
 import { loadValues } from "@/lib/values";
 import { serializeUrlState } from "@/lib/url-state";
 import { ShareButton } from "../ShareButton";
@@ -68,8 +68,8 @@ export function ComparePlaces({ a, b, nameA, nameB, datasetId, parentNames }: Pr
     const has = (d: Dataset) => bothHave(data.a[d.id], data.b[d.id]);
     const byCat = new Map<string, Dataset[]>();
     for (const d of DATASETS) if (d.id !== ds.id && has(d)) (byCat.get(d.category) ?? byCat.set(d.category, []).get(d.category)!).push(d);
-    // The metric's own group first (open), then the rest A–Z (folded).
-    return [...byCat].sort((x, y) => Number(y[0] === ds.category) - Number(x[0] === ds.category) || x[0].localeCompare(y[0]));
+    // The metric's own group first (open), then the rest in category order (folded).
+    return [...byCat].sort((x, y) => Number(y[0] === ds.category) - Number(x[0] === ds.category) || CATEGORIES.indexOf(x[0]) - CATEGORIES.indexOf(y[0]));
   }, [data, ds]);
 
   // Counts (2b): the lead metric's for both places and the places above them, at every size; the

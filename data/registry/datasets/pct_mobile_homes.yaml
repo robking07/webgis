@@ -3,6 +3,7 @@ title: "Mobile homes"
 phrase: shares of mobile homes
 description: "Share of housing units that are mobile homes."
 category: Housing
+subcategory: Homes
 tags: [mobile homes, manufactured housing, housing]
 source:
   name: U.S. Census Bureau, American Community Survey 5-Year Estimates

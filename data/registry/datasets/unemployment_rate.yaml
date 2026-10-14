@@ -1,7 +1,8 @@
 id: unemployment_rate
 title: "Unemployment rate"
 description: "Share of people in the civilian labor force (working or looking for work) who had no job and were looking for one."
-category: Jobs
+category: Economy
+subcategory: Jobs
 tags: [unemployment, jobs, labor force, economy]
 source:
   name: U.S. Census Bureau, American Community Survey 5-Year Estimates

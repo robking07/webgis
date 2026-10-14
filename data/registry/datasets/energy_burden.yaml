@@ -2,7 +2,8 @@ id: energy_burden
 title: Home energy burden
 phrase: home energy burdens
 description: "Share of household income spent on home energy (electricity, gas and other heating fuels): the average yearly energy bill divided by the average household income, for all households."
-category: Environmental justice
+category: Environment and climate
+subcategory: Energy burden
 tags: [energy burden, energy affordability, utility bills, electricity, heating, LEAD, Justice40, environmental justice]
 source:
   name: U.S. Department of Energy, Low-Income Energy Affordability Data (LEAD) Tool, 2022 Update (with NREL; via OEDI)

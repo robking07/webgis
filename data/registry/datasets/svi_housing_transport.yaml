@@ -3,7 +3,8 @@ title: "Social vulnerability: housing and transportation (CDC index)"
 phrase: "housing and transportation vulnerability ranks"
 description: "CDC's Social Vulnerability Index theme for housing type and transportation: homes in buildings with 10 or more units, mobile homes, crowded homes, households without a vehicle and people living in group quarters, ranked nationally."
 tags: [CDC, ATSDR, SVI, social vulnerability index, housing, mobile homes, crowding, no vehicle, group quarters, transportation]
-category: Environmental justice
+category: Environment and climate
+subcategory: Social vulnerability
 source:
   name: CDC/ATSDR Social Vulnerability Index 2022
   shortName: CDC SVI

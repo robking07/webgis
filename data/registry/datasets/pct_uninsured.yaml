@@ -2,6 +2,7 @@ id: pct_uninsured
 title: "No health insurance"
 description: "Share of residents with no health insurance coverage of any kind."
 category: Health
+subcategory: Care and coverage
 tags: [health insurance, uninsured, health care]
 source:
   name: U.S. Census Bureau, American Community Survey 5-Year Estimates
