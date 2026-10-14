@@ -63,6 +63,8 @@ export function formatEstimate(v: number | null | undefined, moe: number | null 
   const value = formatValue(v, unit);
   const dec = DECIMALS[unit];
   if (v == null || !Number.isFinite(v) || moe == null || !Number.isFinite(moe) || moe <= 0 || value.startsWith("less than")) return { value, moe: null };
+  // Counts with a margin read in full ("123,902 ±4,816"); compact "123.9K" would out-round the margin.
+  if (unit === "count") { const full = nf({ maximumFractionDigits: 0 }).format; return { value: full(v), moe: full(moe) }; }
   if (!dec) return { value, moe: formatValue(moe, unit) };
   // Percent carries one decimal when the margin needs it ("19.8% ±1.9%", not "20% ±1.9%").
   const d = unit === "percent" ? Math.min(Math.max(dec(v), dec(moe)), Math.abs(v) < 1 ? 2 : 1) : dec(v);
