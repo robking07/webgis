@@ -184,8 +184,8 @@ Light and dark come from the same token structure; the basemap and the UI chrome
 
 | Level | Shown at zoom (switch with zoom) | Never below zoom (pinned) |
 |---|---|---|
-| State | 0 – 4.6 | – |
-| County | 4.6 – 8.5 | – |
+| State | 0 – 5.5 | – |
+| County | 5.5 – 8.5 | – |
 | Census tract | 8.5 – 11 | – |
 | Block group | 11 – 13 | 7 |
 | Block | 13 – max | 7 |
