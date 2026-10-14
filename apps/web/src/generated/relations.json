@@ -44,11 +44,11 @@
  },
  "maps": {
   "annual_precipitation": {
-   "group": "Climate",
+   "group": "Environment and climate",
    "links": []
   },
   "cooling_degree_days": {
-   "group": "Climate",
+   "group": "Environment and climate",
    "links": [
     {
      "id": "home_energy_cost",
@@ -57,7 +57,7 @@
    ]
   },
   "heating_degree_days": {
-   "group": "Climate",
+   "group": "Environment and climate",
    "links": [
     {
      "id": "home_energy_cost",
@@ -66,11 +66,11 @@
    ]
   },
   "january_low": {
-   "group": "Climate",
+   "group": "Environment and climate",
    "links": []
   },
   "july_high": {
-   "group": "Climate",
+   "group": "Environment and climate",
    "links": [
     {
      "id": "nri_heat_wave_loss",
@@ -79,15 +79,15 @@
    ]
   },
   "july_low": {
-   "group": "Climate",
+   "group": "Environment and climate",
    "links": []
   },
   "mean_temperature": {
-   "group": "Climate",
+   "group": "Environment and climate",
    "links": []
   },
   "mean_commute_minutes": {
-   "group": "Commuting",
+   "group": "Transportation",
    "counts": {
     "of": "minutes spent commuting, all workers combined",
     "per": "workers who commute (not working from home)"
@@ -104,7 +104,7 @@
    ]
   },
   "pct_bike_commute": {
-   "group": "Commuting",
+   "group": "Transportation",
    "counts": {
     "of": "workers who bike to work",
     "per": "workers 16 and older"
@@ -113,7 +113,7 @@
    "parts": "commute_modes"
   },
   "pct_carpool": {
-   "group": "Commuting",
+   "group": "Transportation",
    "counts": {
     "of": "workers who carpool",
     "per": "workers 16 and older"
@@ -122,7 +122,7 @@
    "parts": "commute_modes"
   },
   "pct_drive_alone": {
-   "group": "Commuting",
+   "group": "Transportation",
    "counts": {
     "of": "workers who drive alone",
     "per": "workers 16 and older"
@@ -131,7 +131,7 @@
    "parts": "commute_modes"
   },
   "pct_extreme_commute": {
-   "group": "Commuting",
+   "group": "Transportation",
    "counts": {
     "of": "workers with a 90-minute-plus commute",
     "per": "workers who commute (not working from home)"
@@ -144,7 +144,7 @@
    ]
   },
   "pct_leave_before_7am": {
-   "group": "Commuting",
+   "group": "Transportation",
    "counts": {
     "of": "workers who leave before 7 a.m.",
     "per": "workers who commute (not working from home)"
@@ -157,7 +157,7 @@
    ]
   },
   "pct_long_commute": {
-   "group": "Commuting",
+   "group": "Transportation",
    "counts": {
     "of": "workers with an hour-plus commute",
     "per": "workers who commute (not working from home)"
@@ -178,7 +178,7 @@
    ]
   },
   "pct_transit_commute": {
-   "group": "Commuting",
+   "group": "Transportation",
    "counts": {
     "of": "workers who take public transit",
     "per": "workers 16 and older"
@@ -192,7 +192,7 @@
    "parts": "commute_modes"
   },
   "pct_walk_commute": {
-   "group": "Commuting",
+   "group": "Transportation",
    "counts": {
     "of": "workers who walk to work",
     "per": "workers 16 and older"
@@ -201,7 +201,7 @@
    "parts": "commute_modes"
   },
   "pct_work_from_home": {
-   "group": "Commuting",
+   "group": "Transportation",
    "counts": {
     "of": "workers who work from home",
     "per": "workers 16 and older"
@@ -210,7 +210,7 @@
    "parts": "commute_modes"
   },
   "pct_work_outside_county": {
-   "group": "Commuting",
+   "group": "Transportation",
    "counts": {
     "of": "workers who work outside their home county",
     "per": "workers 16 and older"
@@ -223,7 +223,7 @@
    ]
   },
   "pct_bachelors_plus": {
-   "group": "Education",
+   "group": "People",
    "counts": {
     "of": "adults with a bachelor's degree or higher",
     "per": "adults 25 and older"
@@ -236,7 +236,7 @@
    ]
   },
   "pct_graduate_degree": {
-   "group": "Education",
+   "group": "People",
    "counts": {
     "of": "adults with a graduate or professional degree",
     "per": "adults 25 and older"
@@ -244,7 +244,7 @@
    "links": []
   },
   "pct_no_hs_diploma": {
-   "group": "Education",
+   "group": "People",
    "counts": {
     "of": "adults without a high school diploma",
     "per": "adults 25 and older"
@@ -257,15 +257,15 @@
    ]
   },
   "nri_coastal_flood_loss": {
-   "group": "Environment",
+   "group": "Environment and climate",
    "links": []
   },
   "nri_community_resilience": {
-   "group": "Environment",
+   "group": "Environment and climate",
    "links": []
   },
   "nri_expected_loss_per_person": {
-   "group": "Environment",
+   "group": "Environment and climate",
    "links": [
     {
      "id": "nri_risk_score",
@@ -274,7 +274,7 @@
    ]
   },
   "nri_heat_wave_loss": {
-   "group": "Environment",
+   "group": "Environment and climate",
    "links": [
     {
      "id": "july_high",
@@ -283,15 +283,15 @@
    ]
   },
   "nri_hurricane_loss": {
-   "group": "Environment",
+   "group": "Environment and climate",
    "links": []
   },
   "nri_inland_flood_loss": {
-   "group": "Environment",
+   "group": "Environment and climate",
    "links": []
   },
   "nri_risk_score": {
-   "group": "Environment",
+   "group": "Environment and climate",
    "links": [
     {
      "id": "nri_expected_loss_per_person",
@@ -300,16 +300,20 @@
    ]
   },
   "nri_social_vulnerability": {
-   "group": "Environment",
+   "group": "Environment and climate",
    "links": [
     {
      "id": "pct_poverty",
      "why": "Poverty is one of the inputs to FEMA's social vulnerability score."
+    },
+    {
+     "id": "svi_overall",
+     "why": "Two federal measures of who a disaster would hit hardest."
     }
    ]
   },
   "nri_tornado_loss": {
-   "group": "Environment",
+   "group": "Environment and climate",
    "links": [
     {
      "id": "pct_mobile_homes",
@@ -318,11 +322,11 @@
    ]
   },
   "nri_wildfire_loss": {
-   "group": "Environment",
+   "group": "Environment and climate",
    "links": []
   },
   "ozone_8hr": {
-   "group": "Environment",
+   "group": "Environment and climate",
    "links": [
     {
      "id": "asthma",
@@ -331,7 +335,7 @@
    ]
   },
   "pm25_annual": {
-   "group": "Environment",
+   "group": "Environment and climate",
    "links": [
     {
      "id": "asthma",
@@ -344,7 +348,7 @@
    ]
   },
   "cejst_disadvantaged_tracts": {
-   "group": "Environmental justice",
+   "group": "Health",
    "links": [
     {
      "id": "cejst_pct_pop_disadvantaged",
@@ -353,7 +357,7 @@
    ]
   },
   "cejst_pct_pop_disadvantaged": {
-   "group": "Environmental justice",
+   "group": "Health",
    "links": [
     {
      "id": "cejst_disadvantaged_tracts",
@@ -362,7 +366,7 @@
    ]
   },
   "energy_burden": {
-   "group": "Environmental justice",
+   "group": "Environment and climate",
    "links": [
     {
      "id": "home_energy_cost",
@@ -379,7 +383,7 @@
    ]
   },
   "energy_burden_low_income": {
-   "group": "Environmental justice",
+   "group": "Environment and climate",
    "links": [
     {
      "id": "energy_burden",
@@ -388,7 +392,7 @@
    ]
   },
   "home_energy_cost": {
-   "group": "Environmental justice",
+   "group": "Environment and climate",
    "links": [
     {
      "id": "energy_burden",
@@ -407,6 +411,36 @@
      "why": "Older homes are often harder to heat and cool."
     }
    ]
+  },
+  "svi_household": {
+   "group": "Environment and climate",
+   "links": []
+  },
+  "svi_housing_transport": {
+   "group": "Environment and climate",
+   "links": []
+  },
+  "svi_minority": {
+   "group": "Environment and climate",
+   "links": [
+    {
+     "id": "pct_people_of_color",
+     "why": "CDC's minority-status theme ranks the share of people of color."
+    }
+   ]
+  },
+  "svi_overall": {
+   "group": "Environment and climate",
+   "links": [
+    {
+     "id": "nri_social_vulnerability",
+     "why": "Two federal measures of who a disaster would hit hardest."
+    }
+   ]
+  },
+  "svi_socioeconomic": {
+   "group": "Environment and climate",
+   "links": []
   },
   "all_teeth_lost": {
    "group": "Health",
@@ -507,12 +541,60 @@
    "group": "Health",
    "links": []
   },
+  "far_from_supermarket": {
+   "group": "Health",
+   "links": [
+    {
+     "id": "food_access_tracts",
+     "why": "The share of residents and the tracts behind it."
+    },
+    {
+     "id": "food_desert_residents",
+     "why": "Low-income"
+    }
+   ]
+  },
+  "food_access_no_car_tracts": {
+   "group": "Health",
+   "links": [
+    {
+     "id": "no_car_far_from_supermarket",
+     "why": "The share of households and the tracts behind it."
+    }
+   ]
+  },
+  "food_access_tracts": {
+   "group": "Health",
+   "links": [
+    {
+     "id": "far_from_supermarket",
+     "why": "The share of residents and the tracts behind it."
+    }
+   ]
+  },
+  "food_desert_residents": {
+   "group": "Health",
+   "links": [
+    {
+     "id": "far_from_supermarket",
+     "why": "Low-income"
+    },
+    {
+     "id": "food_insecurity",
+     "why": "Living far from a supermarket on a low income can make it harder to get enough food."
+    }
+   ]
+  },
   "food_insecurity": {
    "group": "Health",
    "links": [
     {
      "id": "pct_poverty",
      "why": "Not being able to afford enough food tracks low income."
+    },
+    {
+     "id": "food_desert_residents",
+     "why": "Living far from a supermarket on a low income can make it harder to get enough food."
     }
    ]
   },
@@ -564,6 +646,19 @@
     {
      "id": "overdose_deaths",
      "why": "Overdose and mental distress often go together."
+    }
+   ]
+  },
+  "no_car_far_from_supermarket": {
+   "group": "Health",
+   "links": [
+    {
+     "id": "food_access_no_car_tracts",
+     "why": "The share of households and the tracts behind it."
+    },
+    {
+     "id": "pct_zero_vehicle_households",
+     "why": "Living far from a supermarket is harder without a car."
     }
    ]
   },
@@ -785,7 +880,7 @@
    ]
   },
   "ice_287g_agreements": {
-   "group": "Immigration enforcement",
+   "group": "People",
    "counts": {
     "of": "active 287(g) agreements"
    },
@@ -797,11 +892,11 @@
    ]
   },
   "gini_index": {
-   "group": "Income & poverty",
+   "group": "Economy",
    "links": []
   },
   "median_household_income": {
-   "group": "Income & poverty",
+   "group": "Economy",
    "links": [
     {
      "id": "median_gross_rent",
@@ -830,7 +925,7 @@
    ]
   },
   "pct_child_poverty": {
-   "group": "Income & poverty",
+   "group": "Economy",
    "counts": {
     "of": "children in poverty",
     "per": "children whose poverty status is known"
@@ -847,7 +942,7 @@
    ]
   },
   "pct_poverty": {
-   "group": "Income & poverty",
+   "group": "Economy",
    "counts": {
     "of": "people below the poverty line",
     "per": "people whose poverty status is known"
@@ -888,7 +983,7 @@
    ]
   },
   "pct_public_assistance": {
-   "group": "Income & poverty",
+   "group": "Economy",
    "counts": {
     "of": "households on cash public assistance",
     "per": "households"
@@ -901,7 +996,7 @@
    ]
   },
   "pct_snap_households": {
-   "group": "Income & poverty",
+   "group": "Economy",
    "counts": {
     "of": "households getting SNAP (food stamps)",
     "per": "households"
@@ -914,11 +1009,11 @@
    ]
   },
   "per_capita_income": {
-   "group": "Income & poverty",
+   "group": "Economy",
    "links": []
   },
   "pct_broadband": {
-   "group": "Internet access",
+   "group": "Economy",
    "counts": {
     "of": "households with broadband",
     "per": "households"
@@ -931,7 +1026,7 @@
    ]
   },
   "pct_no_computer": {
-   "group": "Internet access",
+   "group": "Economy",
    "counts": {
     "of": "households without a computer",
     "per": "households"
@@ -944,7 +1039,7 @@
    ]
   },
   "pct_no_internet": {
-   "group": "Internet access",
+   "group": "Economy",
    "counts": {
     "of": "households without internet",
     "per": "households"
@@ -961,7 +1056,7 @@
    ]
   },
   "job_density": {
-   "group": "Jobs",
+   "group": "Economy",
    "counts": {
     "of": "jobs"
    },
@@ -973,7 +1068,7 @@
    ]
   },
   "labor_force_participation": {
-   "group": "Jobs",
+   "group": "Economy",
    "counts": {
     "of": "people working or looking for work",
     "per": "people 16 and older"
@@ -986,7 +1081,7 @@
    ]
   },
   "unemployment_rate": {
-   "group": "Jobs",
+   "group": "Economy",
    "counts": {
     "of": "unemployed people",
     "per": "people in the labor force"
@@ -999,7 +1094,7 @@
    ]
   },
   "census2020_pop_density": {
-   "group": "Population",
+   "group": "People",
    "counts": {
     "of": "residents"
    },
@@ -1015,11 +1110,11 @@
    ]
   },
   "median_age": {
-   "group": "Population",
+   "group": "People",
    "links": []
   },
   "pct_age_65_plus": {
-   "group": "Population",
+   "group": "People",
    "counts": {
     "of": "people 65 and older",
     "per": "residents"
@@ -1032,7 +1127,7 @@
    ]
   },
   "pct_foreign_born": {
-   "group": "Population",
+   "group": "People",
    "counts": {
     "of": "residents born outside the U.S.",
     "per": "residents"
@@ -1049,7 +1144,7 @@
    ]
   },
   "pct_limited_english": {
-   "group": "Population",
+   "group": "People",
    "counts": {
     "of": "households with limited English",
     "per": "households"
@@ -1062,7 +1157,7 @@
    ]
   },
   "pct_moved_last_year": {
-   "group": "Population",
+   "group": "People",
    "counts": {
     "of": "people who moved in the past year",
     "per": "people 1 year and older"
@@ -1070,7 +1165,7 @@
    "links": []
   },
   "pct_seniors_living_alone": {
-   "group": "Population",
+   "group": "People",
    "counts": {
     "of": "seniors living alone",
     "per": "households"
@@ -1087,7 +1182,7 @@
    ]
   },
   "pct_single_parent_families": {
-   "group": "Population",
+   "group": "People",
    "counts": {
     "of": "single-parent families",
     "per": "families with children under 18"
@@ -1100,7 +1195,7 @@
    ]
   },
   "pct_under_18": {
-   "group": "Population",
+   "group": "People",
    "counts": {
     "of": "children under 18",
     "per": "residents"
@@ -1108,7 +1203,7 @@
    "links": []
   },
   "pct_veterans": {
-   "group": "Population",
+   "group": "People",
    "counts": {
     "of": "veterans",
     "per": "civilians 18 and older"
@@ -1116,7 +1211,7 @@
    "links": []
   },
   "population_density": {
-   "group": "Population",
+   "group": "People",
    "counts": {
     "of": "residents"
    },
@@ -1132,7 +1227,7 @@
    ]
   },
   "pct_aian_nh": {
-   "group": "Race & ethnicity",
+   "group": "People",
    "counts": {
     "of": "American Indian and Alaska Native (non-Hispanic) residents",
     "per": "residents"
@@ -1141,7 +1236,7 @@
    "parts": "race_ethnicity"
   },
   "pct_asian_nh": {
-   "group": "Race & ethnicity",
+   "group": "People",
    "counts": {
     "of": "Asian (non-Hispanic) residents",
     "per": "residents"
@@ -1150,7 +1245,7 @@
    "parts": "race_ethnicity"
   },
   "pct_black_nh": {
-   "group": "Race & ethnicity",
+   "group": "People",
    "counts": {
     "of": "Black (non-Hispanic) residents",
     "per": "residents"
@@ -1159,7 +1254,7 @@
    "parts": "race_ethnicity"
   },
   "pct_hispanic_latino": {
-   "group": "Race & ethnicity",
+   "group": "People",
    "counts": {
     "of": "Hispanic or Latino residents",
     "per": "residents"
@@ -1168,7 +1263,7 @@
    "parts": "race_ethnicity"
   },
   "pct_multiracial_nh": {
-   "group": "Race & ethnicity",
+   "group": "People",
    "counts": {
     "of": "residents of two or more races (non-Hispanic)",
     "per": "residents"
@@ -1177,7 +1272,7 @@
    "parts": "race_ethnicity"
   },
   "pct_nhpi_nh": {
-   "group": "Race & ethnicity",
+   "group": "People",
    "counts": {
     "of": "Native Hawaiian and Pacific Islander (non-Hispanic) residents",
     "per": "residents"
@@ -1186,15 +1281,20 @@
    "parts": "race_ethnicity"
   },
   "pct_people_of_color": {
-   "group": "Race & ethnicity",
+   "group": "People",
    "counts": {
     "of": "people of color",
     "per": "residents"
    },
-   "links": []
+   "links": [
+    {
+     "id": "svi_minority",
+     "why": "CDC's minority-status theme ranks the share of people of color."
+    }
+   ]
   },
   "pct_white_nh": {
-   "group": "Race & ethnicity",
+   "group": "People",
    "counts": {
     "of": "White (non-Hispanic) residents",
     "per": "residents"
@@ -1242,7 +1342,7 @@
    ]
   },
   "pct_zero_vehicle_households": {
-   "group": "Vehicles",
+   "group": "Transportation",
    "counts": {
     "of": "households with no vehicle",
     "per": "households"
@@ -1255,6 +1355,10 @@
     {
      "id": "lack_transportation",
      "why": "Two views of not having a way to get around."
+    },
+    {
+     "id": "no_car_far_from_supermarket",
+     "why": "Living far from a supermarket is harder without a car."
     }
    ]
   }
