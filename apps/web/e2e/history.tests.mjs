@@ -8,11 +8,12 @@ export default function historyTests({ test, expect, immerse, mapIdle }) {
       const sheet = page.locator('section[aria-label="Dataset list"]');
       await sheet.locator("[role=radiogroup][aria-label=Categories] [role=radio]").filter({ hasText: category }).click();
       await sheet.getByRole("menuitemradio", { name }).first().click();
+      await sheet.waitFor({ state: "detached" });
       await page.waitForFunction((d) => new URL(location.href).searchParams.get("d") === d, id);
     };
     const at = (id) => page.waitForFunction((d) => new URL(location.href).searchParams.get("d") === d, id);
     await pick("Transportation", /Work from home/i, "pct_work_from_home");
-    await pick("Economy", /poverty/i, "pct_poverty");
+    await pick("Economy", /Population below poverty/i, "pct_poverty");
     await page.goBack();
     await at("pct_work_from_home");
     await mapIdle(page);
