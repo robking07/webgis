@@ -1,4 +1,4 @@
-import { formatValue, type Unit } from "../format.ts";
+import { formatEstimate, type Unit } from "../format.ts";
 
 export interface PopupRow {
   label: string;
@@ -35,16 +35,19 @@ export function Popup({ title, subtitle, rows, footnote }: PopupProps) {
         <section key={g ?? gi} className={g ? "wg-popup-group" : undefined} aria-label={g}>
           {g && <p className="wg-popup-group-title">{g}</p>}
           <dl>
-            {rs.map((r) => (
-              <div key={r.label} className="wg-popup-row">
-                <dt>{r.label}</dt>
-                <dd>
-                  {r.text ?? formatValue(r.value, r.unit)}
-                  {/* A zero MOE means a controlled (exact) estimate: say nothing rather than "±0". */}
-                  {r.moe != null && r.moe > 0 && r.value != null && <span className="wg-moe"> ±{formatValue(r.moe, r.unit)}</span>}
-                </dd>
-              </div>
-            ))}
+            {rs.map((r) => {
+              // A zero MOE means a controlled (exact) estimate: formatEstimate returns no margin rather than "±0".
+              const est = formatEstimate(r.value, r.moe, r.unit);
+              return (
+                <div key={r.label} className="wg-popup-row">
+                  <dt>{r.label}</dt>
+                  <dd>
+                    {r.text ?? est.value}
+                    {est.moe && <span className="wg-moe"> ±{est.moe}</span>}
+                  </dd>
+                </div>
+              );
+            })}
           </dl>
         </section>
       ))}
