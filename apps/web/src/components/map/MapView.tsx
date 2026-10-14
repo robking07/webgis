@@ -95,9 +95,9 @@ interface Props {
   onTractCounties?: (counties: string[]) => void;
   /** Report onTractCounties without hatching (a change map testing tract margins of error). */
   watchCounties?: boolean;
-  /** Compare places (D-258): outline `a` (solid) and `b` (dashed), open on `bbox` and fit both once
-   *  their tiles are in. Clicks and hover don't select anything else. */
-  compare?: { level: GeoLevel; a: string; b: string; bbox: Bbox };
+  /** Compare places (D-258): outline `a` (solid) and `b` (dashed), open on `bbox` and fit both (or
+   *  only `fit`) once their tiles are in. Clicks and hover don't select anything else. */
+  compare?: { level: GeoLevel; a: string; b: string; bbox: Bbox; fit?: "a" | "b" };
 }
 
 export interface MapApi {
@@ -169,7 +169,7 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
     });
     map.current = m;
     // ?debug (or window.__wgDebug, set by the e2e init script so reloads keep it) exposes the map for devtools / headless checks.
-    if ((window as unknown as { __wgDebug?: boolean }).__wgDebug || new URLSearchParams(window.location.search).has("debug")) (window as unknown as { __wgMap: MlMap }).__wgMap = m;
+    if ((window as unknown as { __wgDebug?: boolean }).__wgDebug || new URLSearchParams(window.location.search).has("debug")) (window as unknown as { __wgMap: MlMap }).__wgMap = (container.current as unknown as { __wgMap: MlMap }).__wgMap = m;
     m.touchZoomRotate.disableRotation();
     // Zoom buttons are the page's own (frosted, design-token styled); see onApi.
     scale.current = new ScaleControl({ unit: scaleUnit });
@@ -223,8 +223,8 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
     });
     // The opening bbox is an estimate from each place's center and area; frame both exactly once their tiles are in.
     if (compare) m.once("idle", () => {
-      const [a, b] = [geographyBbox(m, compare.level, compare.a), geographyBbox(m, compare.level, compare.b)];
-      if (a && b) fitBbox([Math.min(a[0], b[0]), Math.min(a[1], b[1]), Math.max(a[2], b[2]), Math.max(a[3], b[3])], { top: 40, right: 40, bottom: 40, left: 40 });
+      const bs = (compare.fit ? [compare[compare.fit]] : [compare.a, compare.b]).map((g) => geographyBbox(m, compare.level, g));
+      if (bs.every(Boolean)) fitBbox([Math.min(...bs.map((b) => b![0])), Math.min(...bs.map((b) => b![1])), Math.max(...bs.map((b) => b![2])), Math.max(...bs.map((b) => b![3]))], { top: 40, right: 40, bottom: 40, left: 40 });
     });
     // Hatching on: report which counties' tracts are on screen once the map settles.
     m.on("idle", () => reportTractCounties(m, !!latest.current.hatch || latest.current.watchCounties, latest.current.onTractCounties, reportedCounties));
@@ -446,7 +446,8 @@ function geometryBbox(g: Geometry): Bbox | undefined {
   let w = Infinity, s = Infinity, e = -Infinity, n = -Infinity;
   const walk = (c: unknown): void => {
     if (typeof (c as number[])[0] === "number") {
-      const [x, y] = c as number[];
+      const [lon, y] = c as number[];
+      const x = lon > 0 ? lon - 360 : lon; // U.S. places are all west of 0°: the Aleutians past 180° stay next to Alaska
       if (x < w) w = x; if (x > e) e = x; if (y < s) s = y; if (y > n) n = y;
     } else (c as unknown[]).forEach(walk);
   };

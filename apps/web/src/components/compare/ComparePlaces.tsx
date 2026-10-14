@@ -1,7 +1,8 @@
 "use client";
 // Two places side by side (roadmap 1.1, issue #117). Leads with the metric the visitor was viewing,
-// in large type, then every topic group, folded except the metric's own. Laptops and monitors get a
-// map beside the panel with both places outlined (D-258, PR 2a); phones and tablets get no map.
+// in large type, then every topic group, folded except the metric's own. Each place gets its own map,
+// framed on it with both outlined (D-258 PR 2a, 2c): side by side beside the panel on laptops and
+// monitors, one at a time under two tabs on phones and tablets.
 // Every number comes from the same static files as the details panel and place pages
 // (details/<state>.json, values/tracts/<county>.json; lib/details.ts), so no database call.
 // Part 2b: the head counts behind a rate, each place's share of the places above it, and
@@ -34,14 +35,15 @@ export function ComparePlaces({ a, b, nameA, nameB, datasetId, parentNames }: Pr
   const [data, setData] = useState<{ a: Detail; b: Detail; back: string } | null>(null);
   const [err, setErr] = useState(false);
   const [ranks, setRanks] = useState<{ a: string | null; b: string | null } | null>(null);
-  // The map only on laptops and monitors (lg, D-135); starts false, so phones never load it.
+  // Side-by-side maps on laptops and monitors (lg, D-135), tabs below that.
   const wide = useMedia("(min-width: 1024px)");
-  const mapped = wide && ds.geographyLevels.includes(level);
-  const [bbox, setBbox] = useState<Bbox | null>(null);
+  const mapped = ds.geographyLevels.includes(level);
+  const [bbox, setBbox] = useState<{ a: Bbox; b: Bbox } | null>(null);
+  const [tab, setTab] = useState<"a" | "b">("a");
   useEffect(() => {
     if (!mapped) return;
     let live = true;
-    Promise.all([fetchGeography(a), fetchGeography(b)]).then(([ga, gb]) => { if (live && ga && gb) setBbox(roughBbox(ga, gb)); }, () => {});
+    Promise.all([fetchGeography(a), fetchGeography(b)]).then(([ga, gb]) => { if (live && ga && gb) setBbox({ a: roughBbox(ga), b: roughBbox(gb) }); }, () => {});
     return () => { live = false; };
   }, [mapped, a, b]);
 
@@ -62,6 +64,16 @@ export function ComparePlaces({ a, b, nameA, nameB, datasetId, parentNames }: Pr
   }, [a, b, ds, level]);
 
   const names = { a: shortName(nameA), b: shortName(nameB) };
+  // One place's map: framed on it, both places outlined (A solid, B dashed), its name and line style on top.
+  // shortcut: tract maps load the national tract values file (~440 KB gzipped), heavy for a phone; upgrade to the per-county files if phones complain.
+  const placeMap = (k: "a" | "b", className: string) => bbox && (
+    <SpecialMap key={k} datasets={[ds.id]} at={null} level={level as "state" | "county" | "tract"} compare={{ a, b, bbox: bbox[k], fit: k }}
+      legend={k === "a" || !wide} className={className}>
+      <p className="pointer-events-none absolute left-3 top-3 z-10 flex max-w-[calc(100%-1.5rem)] items-center gap-2 rounded-lg border bg-card/95 p-2 text-xs shadow-sm" data-compare-map-name={k}>
+        <OutlineKey dashed={k === "b"} /><span className="truncate">{names[k]}</span>
+      </p>
+    </SpecialMap>
+  );
   const groups = useMemo(() => {
     if (!data) return null;
     // Only datasets with a value for both places (Robbie: show only what works for the feature).
@@ -101,6 +113,19 @@ export function ComparePlaces({ a, b, nameA, nameB, datasetId, parentNames }: Pr
         : (
           <>
             <Headline ds={ds} a={data.a[ds.id]} b={data.b[ds.id]} names={names} ranks={ranks} counts={counts} geoids={{ a, b }} parentNames={parentNames} />
+            {mapped && !wide && (
+              <section aria-label="Maps of both places" className="mt-6" data-compare-map="">
+                <div role="tablist" aria-label="Map of which place" className="mb-2 flex gap-1.5">
+                  {(["a", "b"] as const).map((k) => (
+                    <button key={k} type="button" role="tab" aria-selected={tab === k} onClick={() => setTab(k)}
+                      className="min-w-0 truncate rounded-full border px-3 py-1 text-sm text-muted-foreground aria-selected:border-primary aria-selected:bg-primary aria-selected:text-primary-foreground focus-visible:outline-2 focus-visible:outline-ring">
+                      {names[k]}
+                    </button>
+                  ))}
+                </div>
+                <div role="tabpanel">{placeMap(tab, "h-[60dvh]")}</div>
+              </section>
+            )}
             <div className="mt-8 flex flex-col gap-4">
               {groups.map(([cat, list]) => (
                 <details key={cat} open={cat === ds.category} data-topic={cat}
@@ -123,16 +148,10 @@ export function ComparePlaces({ a, b, nameA, nameB, datasetId, parentNames }: Pr
           </>
         )}
     </main>
-    {mapped && (
-      <aside aria-label="Map of both places" className="sticky top-14 min-w-0 flex-1 p-4" data-compare-map="">
-        {bbox && (
-          <SpecialMap datasets={[ds.id]} at={null} level={level as "state" | "county" | "tract"} compare={{ a, b, bbox }} className="h-[calc(100dvh-5.5rem)]">
-            <div className="pointer-events-none absolute left-3 top-3 z-10 flex flex-col gap-1 rounded-lg border bg-card/95 p-2 text-xs shadow-sm">
-              <p className="flex items-center gap-2"><OutlineKey />{names.a}</p>
-              <p className="flex items-center gap-2"><OutlineKey dashed />{names.b}</p>
-            </div>
-          </SpecialMap>
-        )}
+    {mapped && wide && (
+      <aside aria-label="Maps of both places" className="sticky top-14 grid min-w-0 flex-1 grid-cols-2 gap-3 p-4" data-compare-map="">
+        {placeMap("a", "h-[calc(100dvh-5.5rem)]")}
+        {placeMap("b", "h-[calc(100dvh-5.5rem)]")}
       </aside>
     )}
     </div>
@@ -149,15 +168,11 @@ function OutlineKey({ dashed = false }: { dashed?: boolean }) {
   );
 }
 
-/** A first frame for the map from each place's center and land area; the map then fits the real outlines. */
-function roughBbox(...gs: Geography[]): Bbox {
-  let w = 180, s = 90, e = -180, n = -90;
-  for (const g of gs) {
-    const r = Math.sqrt(g.aland_sqmi) * 0.6 / 69; // ~half the place's width, in degrees of latitude
-    const rl = r / Math.cos((g.lat * Math.PI) / 180);
-    w = Math.min(w, g.lon - rl); e = Math.max(e, g.lon + rl); s = Math.min(s, g.lat - r); n = Math.max(n, g.lat + r);
-  }
-  return [w, s, e, n];
+/** A first frame for a place's map from its center and land area; the map then fits the real outline. */
+function roughBbox(g: Geography): Bbox {
+  const r = Math.sqrt(g.aland_sqmi) * 0.6 / 69; // ~half the place's width, in degrees of latitude
+  const rl = r / Math.cos((g.lat * Math.PI) / 180);
+  return [g.lon - rl, g.lat - r, g.lon + rl, g.lat + r];
 }
 
 /** Loads each `<map id>:<geoid>` key's counts once (lib/counts caches the files). */

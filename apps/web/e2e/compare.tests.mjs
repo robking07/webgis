@@ -31,38 +31,66 @@ export default function compareTests({ test, expect, wait, immerse, tapLonLat, l
     });
   }
 
-  // PR 2a (D-258): laptops and monitors show the map beside the panel, A outlined solid and B dashed, both in view.
-  for (const [vp, path, level, a, b, names] of [
-    ["laptop", "/compare/27053/27123?d=pct_poverty", "county", "27053", "27123", ["Hennepin County", "Ramsey County"]],
-    ["monitor", "/compare/27053100400/27053100200?d=gini_index", "tract", "27053100400", "27053100200", ["Census tract 1004", "Census tract 1002"]],
+  // The compare maps (D-258 PR 2a, 2c): each place's own map, framed on it, A outlined solid and B dashed.
+  // Each map's MapLibre instance hangs off its container as __wgMap (debug only).
+  const settled = async (page, n) => {
+    await page.waitForFunction((n) => {
+      const ms = [...document.querySelectorAll("[data-compare-map] .maplibregl-map")].map((el) => el.__wgMap);
+      return ms.length === n && ms.every((m) => m && m.isStyleLoaded() && m.areTilesLoaded() && !m.isMoving());
+    }, n, { timeout: 30000, polling: 200 });
+    await wait(1500); // the fit to the real outline runs on the first idle and animates
+    await page.waitForFunction(() => [...document.querySelectorAll("[data-compare-map] .maplibregl-map")].every((el) => !el.__wgMap.isMoving()), null, { timeout: 10000 });
+  };
+  /** Per map, in page order: the framed place's name, both outlines' state, which places are drawn, center and zoom. */
+  const maps = (page, level, a, b) => page.evaluate(([level, a, b]) => [...document.querySelectorAll("[data-compare-map] .maplibregl-map")].map((el) => {
+    const m = el.__wgMap, st = (id) => m.getFeatureState({ source: `b-${level}`, sourceLayer: level, id });
+    const seen = new Set(m.queryRenderedFeatures({ layers: [`${level}-fill`] }).map((f) => String(f.properties.geoid)));
+    return { name: el.closest("[data-compare-map] > *")?.querySelector("[data-compare-map-name]")?.textContent ?? "",
+      a: st(a), b: st(b), inView: { a: seen.has(a), b: seen.has(b) }, lng: m.getCenter().lng, zoom: m.getZoom() };
+  }), [level, a, b]);
+
+  // Laptops and monitors: two maps side by side, each framed on its own place. Hennepin vs Cherry County, NE
+  // (far apart: one shared map made Cherry a speck), two neighboring Minneapolis tracts, Alaska vs Minnesota.
+  for (const [vp, path, level, a, b, names, minZoom] of [
+    ["laptop", "/compare/27053/31031?d=pct_poverty", "county", "27053", "31031", ["Hennepin County", "Cherry County"], 6.3],
+    ["monitor", "/compare/27053100400/27053100200?d=gini_index", "tract", "27053100400", "27053100200", ["Census tract 1004", "Census tract 1002"], 11],
+    ["laptop", "/compare/02/27?d=pct_poverty", "state", "02", "27", ["Alaska", "Minnesota"], 1],
   ]) {
-    test(`${vp} compare places: the map outlines both ${level === "tract" ? "tracts" : "counties"} and frames them`, async (o) => {
-      const { page } = await o(vp, path);
+    test(`${vp} compare places: two maps side by side, ${names.join(" and ")} each framed and outlined`, async (o) => {
+      const { page } = await o(vp, path, { ready: false });
       await page.locator("[data-compare-verdict]").waitFor({ timeout: 20000 });
-      const got = await page.evaluate(([level, a, b]) => {
-        const m = window.__wgMap, st = (id) => m.getFeatureState({ source: `b-${level}`, sourceLayer: level, id });
-        const seen = new Set(m.queryRenderedFeatures({ layers: [`${level}-fill`] }).map((f) => String(f.properties.geoid)));
-        return { a: st(a), b: st(b), inView: [seen.has(a), seen.has(b)] };
-      }, [level, a, b]);
-      expect(got.a.selected === true && !got.a.second, `place A outline: ${JSON.stringify(got.a)}`);
-      expect(got.b.second === true && !got.b.selected, `place B outline: ${JSON.stringify(got.b)}`);
-      expect(got.inView.every(Boolean), `both places in view: ${got.inView}`);
-      const key = await page.locator("[data-compare-map]").innerText();
-      expect(names.every((n) => key.includes(n)), `map key: ${key}`);
+      await settled(page, 2);
+      const got = await maps(page, level, a, b);
+      for (const [i, k] of [[0, "a"], [1, "b"]]) {
+        const g = got[i];
+        expect(g.name.includes(names[i]), `map ${i + 1} label: ${g.name}`);
+        expect(g.a.selected === true && !g.a.second && g.b.second === true && !g.b.selected, `map ${i + 1} outlines: ${JSON.stringify([g.a, g.b])}`);
+        expect(g.inView[k], `map ${i + 1} shows its place`);
+        expect(g.zoom >= minZoom, `map ${i + 1} zoom ${g.zoom} < ${minZoom}`);
+      }
+      // Alaska: the Aleutians past 180° must not stretch the frame round the world.
+      if (a === "02") expect(got[0].lng > -175 && got[0].lng < -140, `Alaska map center ${got[0].lng}`);
       expect((await page.locator("[data-share]").count()) === 1, "no Share button");
       expect(/\/map\?/.test(await page.getByRole("link", { name: "← Back to the map" }).getAttribute("href")), "Back to the map link");
     });
   }
 
-  test("phone compare places: no map, no map download", async (o) => {
-    const { page } = await o("phone", "/compare/27053/27123?d=pct_poverty", { ready: false });
+  // Phones and tablets: one map at a time, two tabs named for the places. Anchorage vs Honolulu.
+  test("phone compare places: two tabs, each frames its own place", async (o) => {
+    const { page } = await o("phone", "/compare/02020/15003?d=pct_poverty", { ready: false });
     await page.locator("[data-compare-verdict]").waitFor({ timeout: 20000 });
-    await wait(1500);
-    expect((await page.locator("[data-compare-map]").count()) === 0, "a map on the phone compare page");
-    const tiles = page.requests.filter((u) => /\.pmtiles|maplibre-gl-worker|\/values\/[^/]+\/tract\.json/.test(u));
-    expect(!tiles.length && !(await page.evaluate(() => !!window.__wgMap)), `map downloads on the phone: ${tiles.join(", ")}`);
+    const tabs = page.locator("[data-compare-map] [role=tab]");
+    const names = await tabs.allInnerTexts();
+    expect(names.length === 2 && /Anchorage/.test(names[0]) && /Honolulu/.test(names[1]), `tabs: ${names}`);
+    for (const [i, k] of [[0, "a"], [1, "b"]]) {
+      if (i) await tabs.nth(1).click();
+      expect((await tabs.nth(i).getAttribute("aria-selected")) === "true", `tab ${i + 1} not selected`);
+      await settled(page, 1);
+      const [g] = await maps(page, "county", "02020", "15003");
+      expect(g.inView[k] && !g.inView[k === "a" ? "b" : "a"], `tab ${i + 1} map shows: ${JSON.stringify(g.inView)}`);
+      expect(g.zoom >= 5, `tab ${i + 1} zoom ${g.zoom}`);
+    }
   });
-
   // PR 2b (D-258): counts and shares under the headline everywhere; row counts only on laptops and
   // up; parts-of-a-whole bars in the race and ethnicity group.
   for (const vp of ["phone", "laptop"]) {
