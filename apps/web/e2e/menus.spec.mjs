@@ -80,6 +80,8 @@ async function open(vp, path, { scheme = "light", ready = true } = {}) {
   page.on("pageerror", (e) => page.errors.push(`pageerror: ${e.message}`));
   page.on("console", (m) => {
     if (m.type() !== "error") return;
+    // shortcut: LODES, Census 2020, FARS and 287(g) counts files are not on R2 yet, so they 404; remove when Robbie uploads them.
+    if (/\.counts\.json$|\/values\/counts\//.test(m.location()?.url ?? "") && /404/.test(m.text())) return;
     // Vercel Web Analytics only exists on Vercel; locally its script 404s.
     if ((m.location()?.url ?? "").includes("/_vercel/")) return;
     page.errors.push(`console: ${m.text()} ${m.location()?.url ?? ""}`);

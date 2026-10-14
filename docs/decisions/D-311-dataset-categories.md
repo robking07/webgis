@@ -34,7 +34,7 @@ The list and its order live in `data/registry/categories.ts`. Each dataset's YAM
 - **Dataset browser ("Change dataset" panel):** with "All", each category's name heads its first
   subcategory; the per-row category label is gone (the headings carry it).
 - **/data and dataset pages** show "Category › Subcategory".
-- **Compare page** topic groups use the new categories unchanged in code (A–Z, the metric's own first).
+- **Compare page** topic groups use the new categories in category order, the metric's own first.
 - **Odd Pairings** keep the "same category: expected, not weird" rule at the category level. Wider
   categories flag more pairs (climate × heat-wave losses, income × broadband) the next time insights
   are rebuilt.
