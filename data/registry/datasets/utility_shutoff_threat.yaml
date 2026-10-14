@@ -3,6 +3,7 @@ title: "Threatened utility shut-off"
 phrase: rates of utility shut-off threats
 description: "Share of adults whose electric, gas, oil or water company threatened to shut off service in the past 12 months. Age-adjusted prevalence; model-based small-area estimate."
 category: Health
+subcategory: Daily needs
 tags: [utilities, energy, social needs, health]
 source:
   name: CDC PLACES (Local Data for Better Health), 2025 release

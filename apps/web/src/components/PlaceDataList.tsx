@@ -7,7 +7,7 @@ import { StatusState } from "@webgis/design/components";
 import { DatasetFilter, useDatasetFilter } from "./DatasetFilter";
 import { loadValues, type Values } from "@/lib/values";
 import { rankText } from "@/lib/place";
-import { DATASET_BY_ID, type Dataset } from "@/lib/registry";
+import { CATEGORIES, DATASET_BY_ID, type Dataset } from "@/lib/registry";
 
 export type Detail = Record<string, { value: number | null; moe: number | null }>;
 
@@ -47,7 +47,7 @@ export function PlaceDataList({ level, detail, mapHref, onMapIt, compact }: Prop
   const grouped = useMemo(() => {
     const m = new Map<string, Dataset[]>();
     for (const d of results.filter((d) => detail[d.id])) (m.get(d.category) ?? m.set(d.category, []).get(d.category)!).push(d);
-    return [...m].sort((a, b) => a[0].localeCompare(b[0]));
+    return [...m].sort((a, b) => CATEGORIES.indexOf(a[0]) - CATEGORIES.indexOf(b[0]));
   }, [results, detail]);
 
   return (

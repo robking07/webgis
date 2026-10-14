@@ -3,6 +3,7 @@ title: "No reliable transportation"
 phrase: rates of unreliable transportation
 description: "Share of adults for whom a lack of reliable transportation kept them from medical appointments, meetings, work or getting things they need in the past 12 months. Age-adjusted prevalence; model-based small-area estimate."
 category: Health
+subcategory: Daily needs
 tags: [transportation, access, social needs, health]
 source:
   name: CDC PLACES (Local Data for Better Health), 2025 release

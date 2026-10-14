@@ -2,7 +2,8 @@ id: pm25_annual
 title: Fine particle pollution (PM2.5)
 phrase: fine particle pollution levels
 description: "Yearly average concentration of fine particles (PM2.5) in the air, averaged over 2023–2025, at each county's highest valid monitor. The federal standard is 9.0 micrograms per cubic meter."
-category: Environment
+category: Environment and climate
+subcategory: Air quality
 tags: [air quality, pollution, PM2.5, particulates, smoke, health]
 source:
   name: U.S. EPA, Office of Air Quality Planning and Standards, PM2.5 Design Values (annual, 2024 NAAQS)

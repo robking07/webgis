@@ -2,6 +2,7 @@ id: pct_rent_burdened
 title: "Renters paying 30%+ of income on rent"
 description: "Share of renter households that spend 30 percent or more of their income on rent and utilities."
 category: Housing
+subcategory: Costs
 tags: [rent burden, housing cost burden, affordability, renters]
 source:
   name: U.S. Census Bureau, American Community Survey 5-Year Estimates

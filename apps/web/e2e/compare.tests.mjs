@@ -19,9 +19,9 @@ export default function compareTests({ test, expect, wait, immerse, tapLonLat, l
       expect(/higher$|^About the same$/.test(said), `headline: "${said}"`);
       const h1 = await page.locator("main h1").innerText();
       expect(h1.includes("Hennepin County, MN") && h1.includes("Ramsey County, MN"), `heading: ${h1}`);
-      // Every topic group is listed; only the metric's own (Income & poverty) starts open.
+      // Every topic group is listed; only the metric's own (Economy) starts open.
       const groups = await page.locator("details[data-topic]").evaluateAll((ds) => ds.map((d) => [d.dataset.topic, d.open]));
-      expect(groups.length > 1 && groups[0][0] === "Income & poverty" && groups[0][1] && groups.slice(1).every(([, o]) => !o), `topic groups: ${JSON.stringify(groups)}`);
+      expect(groups.length > 1 && groups[0][0] === "Economy" && groups[0][1] && groups.slice(1).every(([, o]) => !o), `topic groups: ${JSON.stringify(groups)}`);
       expect((await page.locator("[data-compare-row]").count()) > 0, "no topic-group rows");
       expect(!/No data/.test(await page.locator("main").innerText()), "a No data row on the compare page");
       await page.reload({ waitUntil: "load" });

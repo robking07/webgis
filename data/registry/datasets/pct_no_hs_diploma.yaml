@@ -1,7 +1,8 @@
 id: pct_no_hs_diploma
 title: "No high school diploma"
 description: "Share of adults 25 and over who finished neither high school nor an equivalent such as the GED."
-category: Education
+category: People
+subcategory: Education
 tags: [education, high school, GED, attainment]
 source:
   name: U.S. Census Bureau, American Community Survey 5-Year Estimates

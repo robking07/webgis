@@ -2,7 +2,8 @@ id: pct_seniors_living_alone
 title: "Seniors living alone"
 phrase: shares of seniors living alone
 description: "Share of households that are one person aged 65 or older living alone."
-category: Population
+category: People
+subcategory: Population and age
 tags: [seniors, aging, living alone, isolation]
 source:
   name: U.S. Census Bureau, American Community Survey 5-Year Estimates

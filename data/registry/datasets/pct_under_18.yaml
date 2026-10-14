@@ -2,7 +2,8 @@ id: pct_under_18
 title: "Children (under 18)"
 phrase: shares of children
 description: "Share of residents younger than 18."
-category: Population
+category: People
+subcategory: Population and age
 tags: [children, age, youth]
 source:
   name: U.S. Census Bureau, American Community Survey 5-Year Estimates

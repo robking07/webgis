@@ -24,7 +24,7 @@ describe("relations.yaml", () => {
     r.maps.population_density.counts = { of: "residents", per: "square miles" };
     r.maps.no_such_map = { group: "Health" };
     const p = checkRelations(r, entries);
-    expect(p).toContain('pct_poverty: group "Housing" must be the registry category "Income & poverty"');
+    expect(p).toContain('pct_poverty: group "Housing" must be the registry category "Economy"');
     expect(p.some((x) => x.startsWith("pct_renter_households: the ingest publishes counts"))).toBe(true);
     expect(p).toContain("diabetes: has counts labels but the ingest publishes no counts for it");
     expect(p).toContain("population_density: counts.per must be left out (no denominator)");

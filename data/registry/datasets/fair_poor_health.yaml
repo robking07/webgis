@@ -3,6 +3,7 @@ title: "Fair or poor health"
 phrase: rates of fair or poor health
 description: "Share of adults who describe their general health as fair or poor. Age-adjusted prevalence; model-based small-area estimate."
 category: Health
+subcategory: Conditions
 tags: [self-rated health, health status, health]
 source:
   name: CDC PLACES (Local Data for Better Health), 2025 release

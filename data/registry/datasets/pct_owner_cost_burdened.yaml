@@ -3,6 +3,7 @@ title: "Cost-burdened homeowners"
 phrase: homeowner cost-burden rates
 description: "Share of homeowners who spend 30% or more of household income on housing costs (mortgage, taxes, insurance, utilities)."
 category: Housing
+subcategory: Costs
 tags: [housing costs, affordability, homeowners, mortgage]
 source:
   name: U.S. Census Bureau, American Community Survey 5-Year Estimates

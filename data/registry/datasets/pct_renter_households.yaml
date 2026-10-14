@@ -3,6 +3,7 @@ title: Renter-occupied households
 phrase: shares of renters
 description: Share of occupied housing units that are renter-occupied.
 category: Housing
+subcategory: Homes
 tags: [rent, tenure, housing]
 source:
   name: U.S. Census Bureau, American Community Survey 5-Year Estimates

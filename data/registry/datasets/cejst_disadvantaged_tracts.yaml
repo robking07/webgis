@@ -1,7 +1,8 @@
 id: cejst_disadvantaged_tracts
 title: Disadvantaged communities (CEJST tracts)
 description: Census tracts the Climate and Economic Justice Screening Tool identified as disadvantaged, shaded by how many of its eight burden categories they exceed.
-category: Environmental justice
+category: Health
+subcategory: Environmental justice
 tags: [Justice40, CEJST, environmental justice, disadvantaged communities, climate, pollution, energy burden, EJ]
 source:
   name: Climate and Economic Justice Screening Tool 2.0 (CEQ; mirrored by Public Environmental Data Partners)

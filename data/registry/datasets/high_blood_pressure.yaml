@@ -3,6 +3,7 @@ title: "High blood pressure"
 phrase: high blood pressure rates
 description: "Share of adults a doctor has told they have high blood pressure. Age-adjusted prevalence; model-based small-area estimate."
 category: Health
+subcategory: Conditions
 tags: [hypertension, blood pressure, cardiovascular, health]
 source:
   name: CDC PLACES (Local Data for Better Health), 2025 release

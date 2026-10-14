@@ -62,7 +62,7 @@ export default async function DatasetProfilePage({ params }: PageProps<"/data/[i
     <main className="mx-auto max-w-3xl px-4 py-6 md:px-8 md:py-8">
       <p className="text-sm"><Link href="/data" className="text-primary underline-offset-2 hover:underline">← All data</Link></p>
       <header className="mb-6 mt-3">
-        <p className="text-xs uppercase tracking-wide text-muted-foreground">{d.category} · {source.name}</p>
+        <p className="text-xs uppercase tracking-wide text-muted-foreground">{d.category} › {d.subcategory} · {source.name}</p>
         <h1 className="mt-1 text-2xl font-semibold tracking-tight">{d.title}</h1>
         <p className="mt-2 text-muted-foreground">{d.description}</p>
         <a href={`/map?d=${d.id}`} className="mt-4 inline-flex rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">

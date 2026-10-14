@@ -3,6 +3,7 @@ title: "Overcrowded homes"
 phrase: overcrowding rates
 description: "Share of occupied homes with more than one person per room (not counting bathrooms, halls or porches)."
 category: Housing
+subcategory: Homes
 tags: [overcrowding, housing, affordability]
 source:
   name: U.S. Census Bureau, American Community Survey 5-Year Estimates

@@ -1,7 +1,8 @@
 id: median_age
 title: "Median age"
 description: "The age that splits residents into two equal halves: half are younger, half are older."
-category: Population
+category: People
+subcategory: Population and age
 tags: [age, demographics, aging]
 source:
   name: U.S. Census Bureau, American Community Survey 5-Year Estimates

@@ -434,9 +434,9 @@ test("phone dataset sheet: chips, pick switches the map, sheet and details close
   await sheet.waitFor();
   expect((await page.locator('section[aria-label^="Details for"]').count()) === 0, "details still open under the dataset list");
   const chips = sheet.locator('[role=radiogroup][aria-label=Categories] [role=radio]');
-  expect((await chips.count()) >= 8, `only ${await chips.count()} category chips`);
-  expect((await sheet.locator("[role=radio][aria-checked=true]").innerText()).trim() === "Income & poverty", "current category chip not selected");
-  await chips.filter({ hasText: "Commuting" }).click();
+  expect((await chips.count()) === 6, `${await chips.count()} category chips, expected 6`);
+  expect((await sheet.locator("[role=radio][aria-checked=true]").innerText()).trim() === "Economy", "current category chip not selected");
+  await chips.filter({ hasText: "Transportation" }).click();
   await sheet.getByRole("menuitemradio", { name: /Work from home/i }).first().click();
   await sheet.waitFor({ state: "detached" });
   await page.waitForFunction(() => new URL(location.href).searchParams.get("d") === "pct_work_from_home");

@@ -1,5 +1,6 @@
 import { useState, type ReactNode, type RefObject } from "react";
-import { ChevronDown, Info } from "lucide-react";
+import { ChevronDown, Info, Layers } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import type { Dataset } from "@/lib/registry";
 import { TERM_BY_ID } from "@/lib/glossary";
 import { ShareButton } from "../ShareButton";
@@ -42,7 +43,15 @@ export function DatasetCard({ cardRef, primary, secondary, meta, immersed, isFea
     <button type="button" onClick={() => setExplainOpen((o) => !o)} aria-expanded={explainOpen} aria-label="What do these numbers mean?"
       className="ml-1 shrink-0 rounded align-[-2px] text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring"><Info className="size-3.5" aria-hidden /></button>
   );
-  const filterButton = hasFilters && <FilterButton count={filterCount} open={filtersOpen} onOpen={onOpenFilters} className="mt-1.5" />;
+  // "Change dataset" is a real button (Robbie, issue #199: "a pretty important thing that needs to be
+  // highlighted"), the accent-filled pill beside Map options, the same height (D-135) on every screen.
+  const buttons = (onChange: (() => void) | undefined) => (
+    <div className="mt-2 flex flex-wrap items-center gap-1.5">
+      <Button type="button" size="sm" onClick={onChange} aria-haspopup="dialog" data-change-dataset=""
+        className="rounded-full text-xs font-semibold"><Layers aria-hidden />Change dataset</Button>
+      {hasFilters && <FilterButton count={filterCount} open={filtersOpen} onOpen={onOpenFilters} />}
+    </div>
+  );
   const shell = `absolute left-3 right-3 top-[68px] z-20 rounded-lg border bg-card shadow-sm transition-all duration-300 ${immersed ? "pointer-events-none -translate-y-3 opacity-0" : "opacity-100"}`;
 
   if (phone) {
@@ -69,7 +78,7 @@ export function DatasetCard({ cardRef, primary, secondary, meta, immersed, isFea
             <ChevronDown className="size-4 shrink-0" aria-hidden />
           </button>
         </h1>
-        {filterButton}
+        {buttons(onOpenSheet)}
         <p data-card-meta="" className="mt-1.5 flex items-center whitespace-nowrap text-xs leading-relaxed text-muted-foreground">
           <span className="min-w-0 truncate">{meta}</span>{infoButton}
         </p>
@@ -85,14 +94,11 @@ export function DatasetCard({ cardRef, primary, secondary, meta, immersed, isFea
   return (
     <section ref={cardRef} aria-label="Mapped dataset" data-obstructs={!immersed ? "" : undefined}
       className={`${shell} p-3 md:left-4 md:right-auto md:w-80 md:p-4`} inert={immersed || undefined}>
-      <div className="flex items-baseline justify-between gap-2">
-        <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">{primary.category}</span>
-        <button type="button" onClick={onBrowse} className="rounded text-xs font-semibold text-primary hover:underline focus-visible:outline-2 focus-visible:outline-ring">Change dataset</button>
-      </div>
+      <span className="block text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">{primary.category}</span>
       <h1 className="mt-1 text-lg font-bold leading-snug tracking-tight md:text-xl">
         {primary.title}{secondary && <span className="font-semibold text-muted-foreground"> × {secondary.title}</span>}
       </h1>
-      {filterButton}
+      {buttons(onBrowse)}
       <p className="mt-1.5 text-xs text-muted-foreground md:text-[13px]">{meta}{infoButton}</p>
       {contextLink && <p className="mt-1.5">{contextLink}</p>}
       {explain}

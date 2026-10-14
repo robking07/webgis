@@ -2,7 +2,8 @@ id: january_low
 title: January low temperature
 phrase: January low temperatures
 description: "Average daily minimum temperature in January. Average over 1991–2020."
-category: Climate
+category: Environment and climate
+subcategory: Climate
 tags: [cold, winter, temperature, climate]
 source:
   name: NOAA NCEI nClimDiv county climate data
