@@ -13,6 +13,7 @@ import { THEMES, themeCssVars } from "@webgis/design";
 import { loadGlossary, loadRegistry } from "@webgis/registry/load";
 import { loadSpecials } from "../src/lib/specials-load.mts";
 import { loadContexts } from "../src/lib/context-load.mts";
+import { loadSplash } from "../src/lib/splash-load.mts";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const app = join(here, "..");
@@ -72,4 +73,19 @@ writeFileSync(join(app, "src/generated/specials.json"), JSON.stringify(specials,
 const { contexts, warnings } = loadContexts(app, new Set(entries.map((d) => d.id)), process.env.VERCEL_ENV !== "production");
 for (const w of warnings) console.warn(`prepare: warning: ${w}`);
 writeFileSync(join(app, "src/generated/context.json"), JSON.stringify(contexts, null, 1));
+// 7. src/generated/splash.json: the splash questions (issue #224), checked against the registry and
+//    place names. Production builds carry none until the file says approved: true (the others show
+//    them with /?splash=preview). splash-counties.json: [geoid, name, lon, lat] for every county in the
+//    50 states and DC, from the search index, for the "{county}" questions; kept as is when offline.
+const names = JSON.parse(readFileSync(join(app, "src/generated/names.json"), "utf8"));
+const splash = loadSplash(app, new Map(entries.map((d) => [d.id, d])), names, process.env.VERCEL_ENV !== "production");
+writeFileSync(join(app, "src/generated/splash.json"), JSON.stringify(splash, null, 1));
+try {
+  const local = join(tiles, "geo/search.json");
+  const rows: [string, string, string, number, number][] = existsSync(local) ? JSON.parse(readFileSync(local, "utf8"))
+    : await fetch(`${remote.replace(/\/$/, "")}/geo/search.json`).then((r) => { if (!r.ok) throw new Error(`${r.status}`); return r.json(); });
+  const counties = rows.filter((r) => r[1] === "County" && !r[2].startsWith("72")).map((r) => [r[2], r[0], +r[3].toFixed(2), +r[4].toFixed(2)]);
+  writeFileSync(join(app, "src/generated/splash-counties.json"), JSON.stringify(counties));
+} catch (e) { console.warn(`prepare: warning: splash counties not refreshed (${(e as Error).message})`); }
+console.log(`prepare: splash.json (${splash.questions.length} questions${splash.approved ? "" : ", not approved"}) ready`);
 console.log(`prepare: theme.css, maplibre worker, tiles link, registry.json (${entries.length} datasets), specials.json (${specials.length} pieces), context.json (${contexts.length} maps) ready`);
