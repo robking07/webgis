@@ -185,6 +185,25 @@ const LeadMeasure = z.object({
   minHouseholds: z.number().default(0),
 });
 
+/** USDA ERS Food Access Research Atlas (public domain): a tract count column summed to county and
+ *  state, ÷ a tract total column. 2010 tracts, rolled up by their 2010 county code. */
+const FoodAccessMeasure = z.object({
+  kind: z.literal("food_access"),
+  url: z.url(),
+  file: z.string(),
+  /** CSV inside the zip. */
+  entry: z.string(),
+  /** Tract column counted (a "NULL" count means no one beyond the distance: 0). */
+  count: z.string(),
+  /** Rural tracts' count column, when it differs (`count: lapop1` + `ruralCount: lapop10` is the
+   *  1-mile urban / 10-mile rural count; USDA's combined LAPOP1_10 is blank in four tracts of renamed counties). */
+  ruralCount: z.string().optional(),
+  /** Count only tracts where this 0/1 flag column is 1 (e.g. residents of flagged tracts). */
+  flag: z.string().optional(),
+  /** Tract total the count is divided by (Pop2010, OHU2010). */
+  per: z.string(),
+});
+
 /** A layer drawn from its own geometry (road segments, stops, bridges…) instead of a
  *  choropleth on Census geography. Values live in the tiles; breaks are computed at ingest. */
 const FeaturesMeasure = z.object({
@@ -200,6 +219,8 @@ const FeaturesMeasure = z.object({
     /** Regex matching the GDAL layer(s) to read; HPMS ships one layer per state. */
     layerPattern: z.string(),
   }),
+  /** A table to join in `select` as the layer `join` (e.g. a CSV of tract values for tract shapes). */
+  join: z.object({ url: z.url(), file: z.string(), path: z.string() }).optional(),
   /** OGR SQL WHERE clause applied while extracting (e.g. "AADT > 0"). Ignored when `select` is set. */
   where: z.string().optional(),
   /** SQLite-dialect SELECT run per source layer, for derived readable fields (e.g. route labels).
@@ -274,7 +295,7 @@ export const DatasetEntry = z.object({
   unit: Unit,
   /** For insights: the population the value describes. Pairs that share one are flagged. */
   universe: z.string(),
-  measure: z.discriminatedUnion("kind", [AcsMeasure, Census2020Measure, LodesMeasure, PlacesMeasure, ClimdivMeasure, NbiMeasure, FarsMeasure, FeaturesMeasure, HpmsVmtMeasure, CejstMeasure, Ddp287gMeasure, LeadMeasure, FemaNriMeasure, SviMeasure, AirQualityMeasure, OverdoseMeasure]),
+  measure: z.discriminatedUnion("kind", [AcsMeasure, Census2020Measure, LodesMeasure, PlacesMeasure, ClimdivMeasure, NbiMeasure, FarsMeasure, FeaturesMeasure, HpmsVmtMeasure, CejstMeasure, Ddp287gMeasure, LeadMeasure, FoodAccessMeasure, FemaNriMeasure, SviMeasure, AirQualityMeasure, OverdoseMeasure]),
   /** Other registry datasets used as inputs to this dataset's model (e.g. PLACES uses county poverty).
    *  Insight pairs with these are flagged: they correlate partly by construction. */
   modelInputs: z.array(z.string()).default([]),

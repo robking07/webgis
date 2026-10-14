@@ -234,5 +234,89 @@
   },
   "rankField": null,
   "featureCount": 74134
+ },
+ "food_access_no_car_tracts": {
+  "tiles": "food_access_no_car_tracts.pmtiles",
+  "sourceLayer": "food_access_no_car_tracts",
+  "geometry": "polygon",
+  "valueField": "no_car_pct",
+  "fields": {
+   "place": {
+    "label": "Place"
+   },
+   "far_pct": {
+    "label": "Residents far from a supermarket",
+    "unit": "percent",
+    "explainer": "Share of residents living more than 1 mile (urban tracts) or 10 miles (rural tracts) from the nearest supermarket, supercenter or large grocery store, measured from where people live."
+   },
+   "no_car_pct": {
+    "label": "Households with no car, far from a supermarket",
+    "unit": "percent",
+    "explainer": "Share of the tract's households that have no vehicle and live more than half a mile from the nearest supermarket."
+   },
+   "status": {
+    "label": "Status"
+   },
+   "distance": {
+    "label": "Distance that counts as far",
+    "explainer": "USDA counts someone as far from a supermarket beyond 1 mile in urban tracts and beyond 10 miles in rural ones. A tract is rural when its population center is outside any town of 2,500 people or more."
+   },
+   "low_income": {
+    "label": "Low-income tract",
+    "explainer": "A poverty rate of 20% or more, or a median family income at or below 80% of the state's or metro area's median (2014–2018)."
+   },
+   "low_access": {
+    "label": "Low-access tract",
+    "explainer": "At least 500 people, or at least a third of residents, live beyond that distance."
+   },
+   "population": {
+    "label": "Residents (2010)",
+    "unit": "count"
+   }
+  },
+  "rankField": null,
+  "featureCount": 72531
+ },
+ "food_access_tracts": {
+  "tiles": "food_access_tracts.pmtiles",
+  "sourceLayer": "food_access_tracts",
+  "geometry": "polygon",
+  "valueField": "far_pct",
+  "fields": {
+   "place": {
+    "label": "Place"
+   },
+   "far_pct": {
+    "label": "Residents far from a supermarket",
+    "unit": "percent",
+    "explainer": "Share of residents living more than 1 mile (urban tracts) or 10 miles (rural tracts) from the nearest supermarket, supercenter or large grocery store, measured from where people live."
+   },
+   "no_car_pct": {
+    "label": "Households with no car, far from a supermarket",
+    "unit": "percent",
+    "explainer": "Share of the tract's households that have no vehicle and live more than half a mile from the nearest supermarket."
+   },
+   "status": {
+    "label": "Status"
+   },
+   "distance": {
+    "label": "Distance that counts as far",
+    "explainer": "USDA counts someone as far from a supermarket beyond 1 mile in urban tracts and beyond 10 miles in rural ones. A tract is rural when its population center is outside any town of 2,500 people or more."
+   },
+   "low_income": {
+    "label": "Low-income tract",
+    "explainer": "A poverty rate of 20% or more, or a median family income at or below 80% of the state's or metro area's median (2014–2018)."
+   },
+   "low_access": {
+    "label": "Low-access tract",
+    "explainer": "At least 500 people, or at least a third of residents, live beyond that distance."
+   },
+   "population": {
+    "label": "Residents (2010)",
+    "unit": "count"
+   }
+  },
+  "rankField": null,
+  "featureCount": 72531
  }
 }

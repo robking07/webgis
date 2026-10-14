@@ -66,6 +66,7 @@ function vars(e: DatasetEntry): string[] {
   if (m.kind === "features") return [`FEATURES:${e.id}`];
   if (m.kind === "hpms_vmt") return ["HPMS:VMT"];
   if (m.kind === "cejst") return ["CEJST:SN_C"];
+  if (m.kind === "food_access") return [`FARA:${m.count}`, `FARA:${m.per}`];
   if (m.kind === "ddp_287g") return ["DDP:287G"];
   if (m.kind === "fema_nri") return [`NRI:${m.field}`];
   if (m.kind === "svi") return [`SVI:${m.field}`];
