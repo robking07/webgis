@@ -60,8 +60,21 @@ rows into one summary line. Roadmap: `docs/roadmap.md`. Rules: `docs/handbook.md
 | Year slider + From → To change maps | #165, #168 | #167 | S / ~100k | ~146k | 1.5x | Opus / medium | 2026-10-12 |
 | 1.1 Compare places, part 2a (laptop map) | #117 | #170 | M / ~250k | ~199k | 0.8x | Opus / medium | 2026-10-12 |
 | e2e: map handle survives reloads | #153 | #175 | S / ~100k | ~64k | 0.64x | Sonnet / medium | 2026-10-12 |
+| Tidy before the build push (architecture map, unused files) | #206 | #208 | S / ~100k | ~94k | 0.94x | Sonnet / medium | 2026-10-14 |
+| Number rounding ("0.504 ±0.003", "less than 1¢", "top 1%") | #196 | #209 | S / ~100k | ~80k | 0.8x | Sonnet / medium | 2026-10-14 |
+| 1.1 Compare places, part 2b (counts, shares, parts bars) | #117 | #210 | M / ~275k | ~170k | 0.62x | Opus / medium | 2026-10-14 |
+| Datasets menu: 6 categories + Change dataset button | #199 | #211 | M / ~275k | ~204k | 0.74x | Opus / medium | 2026-10-14 |
+| States longer before counties (z5.5) | #204 | #213 | S / ~100k | ~68k | 0.68x | Sonnet / medium | 2026-10-14 |
+| Not-found place pages, one tract name | #195 | #215 | S / ~100k | ~83k | 0.83x | Sonnet / medium | 2026-10-14 |
+| Big counts with margins in full | #214 | #218 | S / ~100k | ~65k | 0.65x | Sonnet / medium | 2026-10-14 |
+| "Block groups" labels on /data; commuting wording | #192, #194 | #219, #221 | S / ~100k | ~73k | 0.73x | Sonnet / medium | 2026-10-14 |
+| Back button steps through map changes | #212 | #220 | S / ~100k | ~82k | 0.82x | Sonnet / medium | 2026-10-14 |
 
 ## Lessons
+
+- **2026-10-14:** a change to registry categories must also change `relations.yaml` groups (group = category), and open data PRs need their category lines updated when they merge.
+- **2026-10-14:** merging several PRs touching the same page in one day means e2e tests written against yesterday's labels break (category names, tract titles); run the merges one at a time and expect a test fix or two.
+- **2026-10-14:** generated files that the code reads must be committed (`generated/relations.json` was never exported until PR #210).
 
 One line per task. These feed the project kit (#53).
 

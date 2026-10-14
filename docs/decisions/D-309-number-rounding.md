@@ -12,3 +12,4 @@ PR #209, closes #196. Formatting lives in `packages/design/src/format.ts` (`form
 ## Wording choices (Robbie, 2026-10-14)
 - Dollar amounts under one cent read "less than 1¢", with no margin.
 - Percentiles that round to 99 or more read "top 1%". Everything else is "Nth percentile", never "0th" (lowest is "1st").
+- Amendment (#214): counts with a margin read in full ("123,902 ±4,816"); compact ("123.9K") only for a count with no margin.

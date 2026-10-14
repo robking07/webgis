@@ -64,6 +64,9 @@ describe("formatEstimate", () => {
     expect(e(3000, 0, "per_sq_mi")).toBe("3,000/sq mi");
     expect(e(0.5, 0.0001, "ratio")).toBe("0.5 ±0.001");
     expect(e(1000, null, "count")).toBe("1,000");
+    expect(e(123902, 4816, "count")).toBe("123,902 ±4,816");
+    expect(e(850, 40, "count")).toBe("850 ±40");
+    expect(e(123902, null, "count")).toBe("123.9K");
   });
   it("handles tiny dollars and top percentiles", () => {
     expect(e(0.007, 0.002, "dollars")).toBe("less than 1¢");

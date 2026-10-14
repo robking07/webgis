@@ -1,0 +1,83 @@
+# The questions the splash page at / types out (issue #224). Each one opens a map that helps answer it.
+# Robbie edits these. Only `approved: true` reaches mapwich.org; until then previews show them at
+# /?splash=preview. Checked at every build (src/lib/splash-load.mts) and by `npm test`.
+#
+#   text:   the question. With `county: random`, "{county}" is replaced by a real county, picked at
+#           random each time the question comes up, and the map opens centered on it.
+#   link:   /map?d=<map>               one map (add &lv=county to show county values)
+#           /map?d=<map>&b=<second>    two maps compared on one map (they must be pairable)
+#           /compare/<A>/<B>?d=<map>   two places side by side (state or county codes, same level)
+approved: false
+questions:
+  # People
+  - text: "Where do the most people over 65 live?"
+    link: /map?d=pct_age_65_plus
+  - text: "How many seniors live alone in {county}?"
+    link: /map?d=pct_seniors_living_alone&lv=county
+    county: random
+  - text: "Do places with more college grads earn more?"
+    link: /map?d=pct_bachelors_plus&b=median_household_income
+  - text: "Is loneliness more common where more seniors live alone?"
+    link: /map?d=loneliness&b=pct_seniors_living_alone
+
+  # Economy
+  - text: "What's the typical household income in {county}?"
+    link: /map?d=median_household_income&lv=county
+    county: random
+  - text: "How many kids grow up in poverty in {county}?"
+    link: /map?d=pct_child_poverty&lv=county
+    county: random
+  - text: "Do people in the countryside have less broadband?"
+    link: /map?d=pct_broadband&b=population_density
+  - text: "Is unemployment higher in Michigan or Minnesota?"
+    link: /compare/26/27?d=unemployment_rate
+
+  # Housing
+  - text: "How much does rent cost in {county}?"
+    link: /map?d=median_gross_rent&lv=county
+    county: random
+  - text: "Is rent higher in Denver or Philadelphia?"
+    link: /compare/08031/42101?d=median_gross_rent
+  - text: "Do higher rents leave more renters struggling to pay?"
+    link: /map?d=median_gross_rent&b=pct_rent_burdened
+  - text: "Where were most homes built before 1960?"
+    link: /map?d=pct_homes_built_before_1960
+
+  # Health
+  - text: "Do people who work from home get more exercise?"
+    link: /map?d=pct_work_from_home&b=physical_inactivity
+  - text: "How common is smoking in {county}?"
+    link: /map?d=smoking&lv=county
+    county: random
+  - text: "Where do people get the least sleep?"
+    link: /map?d=short_sleep
+  - text: "Are more people uninsured in Texas or Minnesota?"
+    link: /compare/48/27?d=pct_uninsured
+  - text: "Is obesity lower where more people walk to work?"
+    link: /map?d=obesity&b=pct_walk_commute
+
+  # Transportation
+  - text: "How many people bike to work in {county}?"
+    link: /map?d=pct_bike_commute&lv=county
+    county: random
+  - text: "How many households in {county} don't have a car?"
+    link: /map?d=pct_zero_vehicle_households&lv=county
+    county: random
+  - text: "Where are commutes the longest?"
+    link: /map?d=mean_commute_minutes
+  - text: "Do more people take transit to work in Manhattan or Chicago's Cook County?"
+    link: /compare/36061/17031?d=pct_transit_commute
+
+  # Environment and climate
+  - text: "How hot does July get in {county}?"
+    link: /map?d=july_high&lv=county
+    county: random
+  - text: "What does a year of home energy cost in {county}?"
+    link: /map?d=home_energy_cost&lv=county
+    county: random
+  - text: "Is asthma more common where the air is dirtier?"
+    link: /map?d=asthma&b=pm25_annual
+  - text: "Do hurricanes cost more per person in Miami-Dade or Houston's Harris County?"
+    link: /compare/12086/48201?d=nri_hurricane_loss
+  - text: "Where are wildfires expected to cost the most?"
+    link: /map?d=nri_wildfire_loss

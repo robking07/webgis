@@ -53,15 +53,37 @@ export function serializeUrlState(s: UrlState): string {
   return `?${p.toString().replaceAll("%2C", ",")}`;
 }
 
-/** URL-backed state. Writes use replaceState (debounced) so panning doesn't flood history. */
+/** The deliberate choices; changing one adds a Back step. Panning, zooming and theme don't. */
+export const historyKey = (s: UrlState) => [s.d, s.b, s.lv, s.t, s.since].join("|");
+
+/** URL-backed state. Pan/zoom write with replaceState (debounced); a change to the dataset, second
+ *  dataset, level or period pushes a history entry, and Back/Forward re-read the URL. */
 export function useUrlState(initial: UrlState) {
   const [state, setState] = useState<UrlState>(initial);
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const lastKey = useRef(historyKey(initial));
   useEffect(() => {
     clearTimeout(timer.current);
-    timer.current = setTimeout(() => window.history.replaceState(null, "", serializeUrlState(state)), 250);
+    const key = historyKey(state);
+    const push = key !== lastKey.current;
+    lastKey.current = key;
+    const write = () => window.history[push ? "pushState" : "replaceState"](null, "", serializeUrlState(state));
+    if (push) write(); else timer.current = setTimeout(write, 250);
     return () => clearTimeout(timer.current);
   }, [state]);
+  useEffect(() => {
+    // shortcut: Back restores the dataset/level/period; the camera stays where the visitor left it.
+    const onPop = () => {
+      const p = parseUrlState(window.location.search);
+      setState((s) => {
+        const next = { ...s, d: p.d ?? initial.d, b: p.b, lv: p.lv, t: p.t, since: p.since };
+        lastKey.current = historyKey(next); // the URL already holds it: don't push it again
+        return next;
+      });
+    };
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, [initial.d]);
   const update = useCallback((patch: Partial<UrlState>) => setState((s) => ({ ...s, ...patch })), []);
   return [state, update] as const;
 }

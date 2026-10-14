@@ -403,7 +403,7 @@ test("monitor: an open dataset drop-down closes on pan and sits above the sideba
   await wait(400);
   // Regression: the dataset list must not sit under (or tangle with) the filters sidebar.
   const onTop = await page.evaluate(() => {
-    const panel = document.querySelector('[role=menu][aria-label="Categories"]').parentElement;
+    const panel = document.querySelector('[role=menu][aria-label="Categories"]').closest("[role=dialog]");
     const r = panel.getBoundingClientRect();
     const pts = [[r.left + 20, r.top + 20], [r.left + r.width / 2, r.top + r.height / 2], [r.right - 20, r.bottom - 20]];
     return pts.every(([x, y]) => panel.contains(document.elementFromPoint(x, y)));
@@ -413,7 +413,7 @@ test("monitor: an open dataset drop-down closes on pan and sits above the sideba
   const sideShown = (await side.count()) ? await opacityOf(side) : 0;
   if (sideShown > 0) {
     const overlap = await page.evaluate(() => {
-      const a = document.querySelector('[role=menu][aria-label="Categories"]').parentElement.getBoundingClientRect();
+      const a = document.querySelector('[role=menu][aria-label="Categories"]').closest("[role=dialog]").getBoundingClientRect();
       const b = document.querySelector("section#filters-panel").getBoundingClientRect();
       return a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom;
     });
@@ -645,15 +645,48 @@ test("laptop one-period map: no Values / Change switch", async (o) => {
   expect(await page.locator("#filters-panel section[aria-label=Geography]").count() === 1, "no Geography section");
 });
 
-// Robbie (2026-10-14, #199): once the card hides, Change dataset stays beside Map options on laptops.
-test("laptop hidden card: Change dataset stays at the top and opens the dataset browser", async (o) => {
+// Robbie (2026-10-14, #225): the title's drop-down is the one dataset menu; no Change dataset button.
+test("laptop dataset menu: the card title opens it tall, with search, the data library link, and Esc", async (o) => {
+  const { page } = await o("laptop", "/map?d=median_household_income&at=-93.27,44.97,9");
+  expect(await page.locator("[data-change-dataset]").count() === 0, "a Change dataset button is back");
+  const title = page.locator('section[aria-label="Mapped dataset"]').getByRole("button", { name: /choose another dataset/ });
+  await title.click();
+  const menu = page.locator('section[role=dialog][aria-label="Datasets"]');
+  await menu.waitFor();
+  const search = menu.getByRole("searchbox");
+  expect(await search.evaluate((el) => el === document.activeElement), "focus didn't move into the search box");
+  // Taller than the old drop-down: most of the screen below the title, clear of the legend strip.
+  const box = await menu.boundingBox();
+  expect(box.height > page.viewportSize().height * 0.6, `menu only ${Math.round(box.height)} px tall`);
+  const legend = await page.evaluate(() => [...document.querySelectorAll("[data-legend]")].filter((el) => el.offsetParent).map((el) => el.getBoundingClientRect().top));
+  expect(legend.every((top) => top >= box.y + box.height), "the menu covers the legend");
+  expect(await menu.getByRole("link", { name: /Browse the full data library/ }).getAttribute("href") === "/data", "no data library link");
+  // Search spans categories: no category stays selected, and the match is listed.
+  await search.fill("work from home");
+  expect(await menu.locator('[role=menu][aria-label="Categories"] [aria-checked=true]').count() === 0, "a category stays selected while searching");
+  await menu.getByRole("menuitemradio", { name: /Work from home/i }).first().waitFor();
+  await search.fill("zzzz no such map");
+  await menu.getByText(/No datasets match/).waitFor();
+  // Esc closes it and hands focus back to the title.
+  await page.keyboard.press("Escape");
+  await menu.waitFor({ state: "detached" });
+  expect(await title.evaluate((el) => el === document.activeElement), "focus didn't return to the title");
+  // Picking from the matches switches the map.
+  await title.click();
+  await menu.getByRole("searchbox").fill("work from home");
+  await menu.getByRole("menuitemradio", { name: /Work from home/i }).first().click();
+  await menu.waitFor({ state: "detached" });
+  await page.waitForFunction(() => new URL(location.href).searchParams.get("d") === "pct_work_from_home");
+});
+
+test("laptop hidden card: the heading's title opens the same menu", async (o) => {
   const { page } = await o("laptop", "/map?d=median_household_income&at=-93.27,44.97,9");
   await immerse(page);
   expect(await opacityOf(page.locator('section[aria-label="Mapped dataset"]')) === 0, "the card didn't hide");
-  const btn = page.locator("[data-immersed-heading] [data-change-dataset]");
-  expect(await btn.isVisible() && await opacityOf(btn) === 1, "no Change dataset button once the card hid");
-  await btn.click();
-  await page.locator('section[role=dialog][aria-label="Datasets"]').waitFor();
+  await page.locator("[data-immersed-heading]").getByRole("button", { name: /other .* datasets/ }).click();
+  const menu = page.locator('[data-immersed-heading] section[role=dialog][aria-label="Datasets"]');
+  await menu.waitFor();
+  await menu.getByRole("searchbox").waitFor();
 });
 
 test('details with no links show no "Learn more" heading', async (o) => {
@@ -778,7 +811,7 @@ for (const vp of ["phone", "laptop"]) {
     }
     const { page } = await o(vp, "/place/27053100200", { ready: false });
     await page.locator("main h1").waitFor({ timeout: 20000 });
-    expect((await page.locator("main h1").innerText()) === "Tract 1002, Hennepin County, MN", `tract page heading "${await page.locator("main h1").innerText()}"`);
+    expect((await page.locator("main h1").innerText()) === "Census tract 1002, Hennepin County, MN", `tract page heading "${await page.locator("main h1").innerText()}"`);
     const meta = await page.locator("main header p").last().innerText();
     expect(/^[1-9]\d* datasets · 0\.6 sq mi of land$/.test(meta), `tract page: "${meta}"`);
     expect(page.requests.some((u) => u.includes("/geo/tracts/27053.json")), "no request for the county's tract geography file");
@@ -924,6 +957,9 @@ test("laptop earlier year at block-group zoom: no boundary file that doesn't exi
 (await import("./compare.tests.mjs")).default({ test, expect, wait, immerse, tapLonLat, live, HENNEPIN, dbCalls });
 (await import("./share.tests.mjs")).default({ test, expect, wait, mapIdle });
 (await import("./context.tests.mjs")).default({ test, expect, wait });
+(await import("./history.tests.mjs")).default({ test, expect, immerse, mapIdle });
+(await import("./compare-mode.tests.mjs")).default({ test, expect, immerse });
+(await import("./splash.tests.mjs")).default({ test, expect, wait });
 
 // ── Run ────────────────────────────────────────────────────────────────────────
 // Round-robin keeps the slow tests spread across shards.

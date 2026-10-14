@@ -175,10 +175,11 @@ function useCounts(keys: string[]): CountsBy {
   return got;
 }
 
-/** "142K ±4.1K" (± only when there's a margin), plus the D-222 grade's title when it's shaky. */
+/** "142,031 ±4,100" (± only when there's a margin), plus the D-222 grade's title when it's shaky. */
 function countText(n: number, moe: number | null, gradable: boolean): string {
   const note = gradable ? reliabilityNote(gradeEstimate(n, moe)) : null;
-  return `${formatValue(n, "count")}${moe ? ` ±${formatValue(moe, "count")}` : ""}${note ? ` · ${note.title}` : ""}`;
+  const est = formatEstimate(n, moe, "count");
+  return `${est.value}${est.moe ? ` ±${est.moe}` : ""}${note ? ` · ${note.title}` : ""}`;
 }
 
 /** The head counts behind the lead metric for one place, and its share of the places above it. */

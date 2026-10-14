@@ -3512,7 +3512,7 @@
   "id": "mean_commute_minutes",
   "title": "Mean travel time to work",
   "phrase": "commute times",
-  "description": "Average one-way travel time to work for workers 16 and over who do not work from home.",
+  "description": "Average one-way travel time to work for commuters (workers 16 and over who do not work from home), not for all workers.",
   "category": "Transportation",
   "subcategory": "Commuting",
   "tags": [
@@ -5251,6 +5251,7 @@
  {
   "id": "pct_carpool",
   "title": "Carpool to work",
+  "phrase": "carpooling rates",
   "description": "Share of workers 16 and over who usually share a ride to work in a car, truck or van.",
   "category": "Transportation",
   "subcategory": "Commuting",
@@ -5447,6 +5448,7 @@
  {
   "id": "pct_drive_alone",
   "title": "Drive to work alone",
+  "phrase": "drive-alone rates",
   "description": "Share of workers 16 and over who usually drive to work alone in a car, truck or van.",
   "category": "Transportation",
   "subcategory": "Commuting",
@@ -5508,7 +5510,8 @@
  {
   "id": "pct_extreme_commute",
   "title": "90-minute-plus commutes",
-  "description": "Share of workers who don't work from home whose one-way trip to work takes 90 minutes or more.",
+  "phrase": "shares of 90-minute-plus commutes",
+  "description": "Share of commuters (workers 16 and over who don't work from home), not of all workers, whose one-way trip to work takes 90 minutes or more.",
   "category": "Transportation",
   "subcategory": "Commuting",
   "tags": [
@@ -5817,7 +5820,7 @@
  {
   "id": "pct_leave_before_7am",
   "title": "Leave for work before 7 a.m.",
-  "description": "Share of workers who don't work from home who usually leave for work before 7:00 a.m.",
+  "description": "Share of commuters (workers 16 and over who don't work from home), not of all workers, who usually leave for work before 7:00 a.m.",
   "category": "Transportation",
   "subcategory": "Commuting",
   "tags": [
@@ -5949,7 +5952,7 @@
   "id": "pct_long_commute",
   "title": "Hour-plus commutes",
   "phrase": "shares of hour-plus commutes",
-  "description": "Share of workers who don't work from home whose one-way trip to work takes 60 minutes or more.",
+  "description": "Share of commuters (workers 16 and over who don't work from home), not of all workers, whose one-way trip to work takes 60 minutes or more.",
   "category": "Transportation",
   "subcategory": "Commuting",
   "tags": [
@@ -7571,6 +7574,7 @@
  {
   "id": "pct_work_outside_county",
   "title": "Work outside their home county",
+  "phrase": "rates of working outside the home county",
   "description": "Share of workers 16 and over whose job is outside the county they live in, including in another state.",
   "category": "Transportation",
   "subcategory": "Commuting",

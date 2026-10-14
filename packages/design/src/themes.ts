@@ -17,6 +17,9 @@ export interface Theme {
     textMuted: string;
     accent: string;
     accentText: string;
+    /** The "Comparing two maps" strip on the dataset card and the Exit button in full-screen (issue #198):
+     *  a pale accent wash, so compare reads as a mode you are in. */
+    compareTint: string;
     focus: string;
     danger: string;
     /** Bread in the Mapwich logo (the map layer between the slices is `accent`). */
@@ -89,6 +92,7 @@ export const THEMES: Record<ThemeName, Theme> = {
       textMuted: "#5b5d63",
       accent: "#1f5fa8",
       accentText: "#ffffff",
+      compareTint: "#e2ecf7",
       focus: "#1f5fa8",
       danger: "#b3261e",
       brandBread: "#a8652a",
@@ -142,6 +146,7 @@ export const THEMES: Record<ThemeName, Theme> = {
       textMuted: "#a3a6ad",
       accent: "#7fb2ec",
       accentText: "#0d1b2a",
+      compareTint: "#1d3048",
       focus: "#7fb2ec",
       danger: "#f2b8b5",
       brandBread: "#e0a25c",
@@ -207,6 +212,8 @@ export const CONTRAST_RULES: Array<[keyof Theme["ui"] | `map.${keyof Theme["map"
   ["textMuted", "surface", 4.5, "on-map secondary text on its panel: category, 'closer in' hint"],
   ["text", "surface", 3, "on-map icons on their panel: menu, Back, zoom, carets (non-text)"],
   ["accentText", "accent", 4.5, "filter count badge"],
+  ["text", "compareTint", 7, "compare strip text (issue #198)"],
+  ["accent", "compareTint", 4.5, "compare strip buttons' accent text (issue #198)"],
   ["controlEdge", "surface", 3, "on-map control edge vs its own panel (non-text, phones)"],
   ["controlEdge", "map.focusLand", 3, "on-map control edge vs U.S. land (non-text, phones)"],
   ["controlEdge", "map.land", 2, "on-map control edge vs land outside the U.S. (non-text, phones)"],

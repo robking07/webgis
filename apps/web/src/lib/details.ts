@@ -4,6 +4,7 @@
 //    counties, values and geography (`ingest details`);
 //  - tract values: values/tracts/<county fips>.json (D-113);
 //  - tract geography (name, point, land area): geo/tracts/<county fips>.json (`ingest tract-geo`, #106).
+import { tidyPlaceName } from "./place";
 import { staticUrl, TILES_BASE } from "./static-files";
 
 export type Detail = Record<string, { value: number | null; moe: number | null }>;
@@ -32,12 +33,12 @@ export function detailFromShard(shard: DetailShard | null, geoid: string): Detai
 export function geographyFromShard(shard: DetailShard | null, geoid: string): Geography | null {
   const place = shard?.[geoid];
   if (!place) return null;
-  return { geoid, level: geoid.length === 2 ? "state" : "county", name: place.name, lon: place.lon, lat: place.lat, aland_sqmi: place.aland_sqmi };
+  return { geoid, level: geoid.length === 2 ? "state" : "county", name: tidyPlaceName(place.name), lon: place.lon, lat: place.lat, aland_sqmi: place.aland_sqmi };
 }
 
 export function geographyFromTractShard(shard: TractGeoShard | null, geoid: string): Geography | null {
   const t = shard?.[geoid.slice(5)];
-  return t ? { geoid, level: "tract", name: t[0], lon: t[1], lat: t[2], aland_sqmi: t[3] } : null;
+  return t ? { geoid, level: "tract", name: tidyPlaceName(t[0]), lon: t[1], lat: t[2], aland_sqmi: t[3] } : null;
 }
 
 export function detailFromTractShard(shard: TractShard | null, geoid: string): Detail {
