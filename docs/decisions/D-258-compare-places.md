@@ -95,3 +95,31 @@ parts-of-a-whole bars once the counts files are uploaded (D-257).
 5. **All topic groups are listed, folded**, the metric's own first and open (still only rows with a
    value for both places). "More in …" and "More topics" are gone; each group is headed by its name
    and row count.
+
+## PR 2b (2026-10-14, worker; PR #210)
+
+Counts, share of parent places and parts-of-a-whole bars, from the D-257 files (`lib/counts.ts`).
+
+1. **Counts under the headline, at every size:** for a map with counts (relations.yaml `counts`),
+   each place shows its numerator with ± and the `of` label ("123.9K ±4,816 people below the poverty
+   line"), then "out of" the denominator with the `per` label. Census counts with no margin show no ±.
+   D-222 grades apply: a count graded caution or unreliable carries "· Use with caution" or
+   "· Unreliable estimate". Maps without counts look as before.
+2. **Share of the places above:** tract → county, state; county → state, U.S.; state → U.S.,
+   as "23.7% ±0.8% of the Minnesota total" (share of the numerator). Margin: the ACS proportion
+   formula √(MOE_x² − p²·MOE_y²) / y, the ratio formula (+) when the root goes negative; none when
+   either count has no margin. Headline metric only.
+3. **Rows get counts only on laptops and monitors** (`lg`, like the map), for the topic groups that
+   are open; files load when a group opens. Phones fetch only the lead metric's counts files (county:
+   one `county.counts.json` ≈38 KB gzipped + `state.counts.json` + `us.json`; tracts: the county's count
+   shard ≈143 KB for Hennepin, plus the county and state files), so Part 1's ≈600 KB budget holds
+   (Hennepin tracts ≈340 KB).
+4. **Parts-of-a-whole bars** (relations.yaml `parts`: race and ethnicity, commute mode) sit at the top
+   of their topic group, one 100% bar per place plus a table of each part for both places, at every
+   size. They use the published percentages already loaded (no extra file); the remainder is
+   100 − Σ members, never below 0. Members use the Okabe–Ito categorical tokens in set order, the
+   remainder the theme's muted color. Only when both places have every member.
+5. A missing or failed counts file shows nothing (on 2026-10-14 the LODES, 2020 Census, FARS and
+   287(g) counts were not on R2 yet; their rows simply have no counts).
+6. `apps/web/src/generated/relations.json` is committed (written by `ingest export`'s
+   `relationsExport`, never committed before).
