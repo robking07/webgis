@@ -41,6 +41,8 @@ links:
   - { maps: [pct_poverty, food_insecurity], why: Not being able to afford enough food tracks low income. }
   - { maps: [pct_poverty, pct_uninsured], why: People with low incomes are less often insured. }
   - { maps: [pct_poverty, nri_social_vulnerability], why: Poverty is one of the inputs to FEMA's social vulnerability score. }
+  - { maps: [svi_overall, nri_social_vulnerability], why: Two federal measures of who a disaster would hit hardest. }
+  - { maps: [svi_minority, pct_people_of_color], why: CDC's minority-status theme ranks the share of people of color. }
   - { maps: [pct_bachelors_plus, median_household_income], why: Education and earnings go together. }
   - { maps: [pct_no_hs_diploma, pct_poverty], why: Adults without a diploma earn less on average. }
   - { maps: [pct_single_parent_families, pct_child_poverty], why: Children of single parents are more often poor. }
@@ -180,6 +182,16 @@ maps:
   energy_burden_low_income:
     group: "Environmental justice"
   home_energy_cost:
+    group: "Environmental justice"
+  svi_household:
+    group: "Environmental justice"
+  svi_housing_transport:
+    group: "Environmental justice"
+  svi_minority:
+    group: "Environmental justice"
+  svi_overall:
+    group: "Environmental justice"
+  svi_socioeconomic:
     group: "Environmental justice"
   # Health
   all_teeth_lost:
