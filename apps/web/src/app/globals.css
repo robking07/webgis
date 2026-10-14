@@ -42,6 +42,7 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  --color-compare: var(--ui-compare-tint);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -110,6 +111,9 @@
 .wg-zbtn:focus-visible { outline: 2px solid var(--ui-focus); outline-offset: -3px; }
 /* A single solid button (Back) keeps its panel fill under the hover tint. */
 .wg-panel.wg-zbtn { background: var(--ui-surface); }
+/* Compare mode's Exit button in full screen (issue #198): the compare strip's tint on an on-map panel. */
+.wg-panel.wg-compare { background: var(--ui-compare-tint); }
+.wg-panel.wg-compare:hover { background: var(--ui-surface); }
 .wg-panel.wg-zbtn:hover { background: color-mix(in srgb, var(--ui-text) 7%, var(--ui-surface)); }
 .wg-panel.wg-zbtn:active { background: color-mix(in srgb, var(--ui-text) 13%, var(--ui-surface)); }
 /* The wordmark lets the map show through; a shadow keeps it legible. */

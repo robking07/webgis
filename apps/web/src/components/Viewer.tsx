@@ -28,7 +28,8 @@ import { filterCount, FiltersSheet, FiltersSidebar, pluralLabel, type FilterValu
 import { useMapMotion } from "./map-page/useMapMotion";
 import { MapControls } from "./map-page/MapControls";
 import { MapLegend } from "./map-page/MapLegend";
-import { DatasetsPanel } from "./map-page/DatasetsPanel";
+import { DatasetsPanel, type BrowseSlot } from "./map-page/DatasetsPanel";
+import { pairReason } from "@/lib/layers";
 import { FeatureHoverPopup, PlaceHoverPopup } from "./map-page/HoverPopups";
 import { DetailPanel } from "./map-page/DetailPanel";
 import { useUnreliable } from "./map-page/useUnreliable";
@@ -56,7 +57,9 @@ export function Viewer({ search }: { search: string }) {
   const [featureSelected, setFeatureSelected] = useState<FeatureHit | null>(null);
   const [tilesError, setTilesError] = useState<string | null>(null);
   const [tableOpen, setTableOpen] = useState(false);
-  const [browserOpen, setBrowserOpen] = useState(false);
+  /** The dataset browser is open, and which map it picks (issue #198); null = closed. */
+  const [browse, setBrowse] = useState<BrowseSlot | null>(null);
+  const browserOpen = !!browse;
   const [searchOpen, setSearchOpen] = useState(false);
   const [immersed, setImmersed] = useState(false);
   /** The filters panel (issue #34): a sidebar on desktop, a full-screen sheet on phones. `anchor`
@@ -98,7 +101,7 @@ export function Viewer({ search }: { search: string }) {
   // Esc brings the chrome back (panels and menus handle their own Esc first).
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") { setImmersed(false); setPeek(false); setBrowserOpen(false); }
+      if (e.key === "Escape") { setImmersed(false); setPeek(false); setBrowse(null); }
       // "/" opens search, unless the user is typing somewhere.
       if (e.key === "/" && !(e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement)) { e.preventDefault(); setSearchOpen(true); }
     };
@@ -167,8 +170,19 @@ export function Viewer({ search }: { search: string }) {
   const keep = (id: string, t: string | null | undefined) => (t && stopsFor(DATASET_BY_ID.get(id) ?? null).some((s) => s.id === t) ? t : null);
   /** The next dataset keeps the shown year, and the change map's start year, when it has them. */
   const keepStops = (id: string) => ({ t: keep(id, state.t), since: keep(id, since?.id) });
-  const onSearchDataset = (d: Dataset) => { setSearchOpen(false); update({ d: d.id, b: state.b === d.id ? null : state.b, lv: null, ...keepStops(d.id) }); };
-  const pickDataset = (id: string) => update({ d: id, b: state.b === id ? null : state.b, lv: null, ...keepStops(id) });
+  /** A new first map keeps the second while the two can still be compared (the picker greys out the
+   *  rest; "Map it" and search leave compare, and the strip going away shows it). */
+  const pickDataset = (id: string) => {
+    const b = state.b ? DATASET_BY_ID.get(state.b) : undefined;
+    update({ d: id, b: b && !pairReason(DATASET_BY_ID.get(id)!, b) ? b.id : null, lv: null, ...keepStops(id) });
+  };
+  const onSearchDataset = (d: Dataset) => { setSearchOpen(false); pickDataset(d.id); };
+  // Compare mode (issue #198). Entering, swapping and leaving each add a Back step (useUrlState).
+  const pickSecond = (id: string) => update({ b: id, t: null, since: null });
+  const swapMaps = () => update({ d: state.b, b: state.d, lv: null, t: null, since: null });
+  const exitCompare = () => update({ b: null });
+  /** Change dataset: while comparing, first ask which map to replace (Robbie, 2026-10-14). */
+  const changeDataset = () => setBrowse(secondary ? "ask" : "a");
   const loading = available && !current && !error;
   // Context is about one map, so a comparison shows none.
   const ctx = primary && !secondary ? contextFor(primary.id, ctxPreview) : null;
@@ -259,7 +273,7 @@ export function Viewer({ search }: { search: string }) {
   return (
     <div ref={root} className="fixed inset-0 overflow-hidden"
       onMouseMove={(e) => { if (immersed && !peek && e.clientY < 14) setPeek(true); }}>
-      <button type="button" onClick={() => setBrowserOpen(true)}
+      <button type="button" onClick={changeDataset}
         className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-50 focus:rounded focus:bg-card focus:px-3 focus:py-2 focus:shadow">Choose a dataset</button>
 
       <main className="absolute inset-0">
@@ -304,8 +318,8 @@ export function Viewer({ search }: { search: string }) {
       {primary && (
         <DatasetCard cardRef={card} primary={primary} secondary={secondary} meta={meta} immersed={immersed} isFeature={isFeature}
           tableReady={tableReady} hasFilters={hasFilters} filtersOpen={!!filters} filterCount={nFilters} onOpenFilters={toggleFilters}
-          onBrowse={() => setBrowserOpen(true)} onTable={() => setTableOpen(true)}
-          phone={phone} onOpenSheet={openSheet}
+          onBrowse={changeDataset} onCompare={() => setBrowse("b")} onSwap={swapMaps} onExit={exitCompare} onTable={() => setTableOpen(true)}
+          phone={phone} onOpenSheet={secondary ? changeDataset : openSheet}
           contextLink={ctx ? <ContextLink open={ctxOpen} onToggle={toggleContext} /> : undefined} />
       )}
 
@@ -315,7 +329,7 @@ export function Viewer({ search }: { search: string }) {
           phone={phone} motion={stepAside ? (phone ? "hide" : "dim") : null} closeKey={closeKey}
           onShowNav={() => { setImmersed(false); setPeek(false); }} onPick={pickDataset}
           onOpenFilters={toggleFilters} onOpenLevel={openLevelFilters} levelPill={!isFeature} onMenuChange={setHeadingMenu}
-          onOpenSheet={phone ? openSheet : undefined} onBrowse={() => setBrowserOpen(true)} />
+          onOpenSheet={secondary ? changeDataset : phone ? openSheet : undefined} onBrowse={changeDataset} onExit={exitCompare} />
       )}
 
       {filters && primary && !phone && (
@@ -338,10 +352,9 @@ export function Viewer({ search }: { search: string }) {
 
       <MapCredits datasets={[primary, secondary].filter((d): d is Dataset => !!d)} />
 
-      {browserOpen && (
-        <DatasetsPanel primary={state.d} secondary={state.b} onClose={() => setBrowserOpen(false)}
-          onPrimary={(id) => { pickDataset(id); setBrowserOpen(false); }}
-          onSecondary={(id) => { update({ b: id, t: null, since: null }); setBrowserOpen(false); }} />
+      {browse && primary && (
+        <DatasetsPanel slot={browse} primary={primary} secondary={secondary} onSlot={setBrowse} onClose={() => setBrowse(null)}
+          onPick={(id) => { (browse === "b" ? pickSecond : pickDataset)(id); setBrowse(null); }} />
       )}
 
       {listOpen && phone && primary && <DatasetSheet primary={primary} onPick={pickDataset} onClose={() => setListOpen(false)} />}

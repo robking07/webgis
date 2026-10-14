@@ -1,17 +1,20 @@
 "use client";
 import { useId } from "react";
 import { DatasetFilter, useDatasetFilter } from "./DatasetFilter";
-import { DATASET_BY_ID, bySubcategory, type Dataset } from "@/lib/registry";
+import { bySubcategory, type Dataset } from "@/lib/registry";
+import { pairReason } from "@/lib/layers";
 
 interface Props {
-  primary: string | null;
-  secondary: string | null;
-  onPrimary: (id: string) => void;
-  onSecondary: (id: string | null) => void;
+  /** The dataset in the slot being filled (marked current). */
+  current: string | null;
+  /** The map the pick will be compared with (issue #198): datasets that can't pair with it show
+   *  greyed out with the reason, instead of silently leaving compare. null = no comparison. */
+  pairWith: Dataset | null;
+  onPick: (id: string) => void;
 }
 
 /** Search + category filter over the registry. Fully keyboard operable. */
-export function DatasetBrowser({ primary, secondary, onPrimary, onSecondary }: Props) {
+export function DatasetBrowser({ current, pairWith, onPick }: Props) {
   const { q, setQ, cat, setCat, results } = useDatasetFilter();
   const headingId = useId();
   const Sub = cat ? "h3" : "h4";
@@ -28,10 +31,8 @@ export function DatasetBrowser({ primary, secondary, onPrimary, onSecondary }: P
             <Sub className="px-1 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">{g.subcategory}</Sub>
             <ul className="space-y-1">
               {g.datasets.map((d) => (
-                <DatasetItem key={d.id} d={d} isPrimary={d.id === primary} isSecondary={d.id === secondary}
-                  onPrimary={() => onPrimary(d.id)}
-                  onSecondary={() => onSecondary(d.id === secondary ? null : d.id)}
-                  canCompare={!!primary && d.id !== primary && d.measure.kind !== "features" && DATASET_BY_ID.get(primary)?.measure.kind !== "features"} />
+                <DatasetItem key={d.id} d={d} isCurrent={d.id === current} onPick={() => onPick(d.id)}
+                  reason={pairWith && d.id !== current ? pairReason(d, pairWith) : null} />
               ))}
             </ul>
           </section>
@@ -42,21 +43,14 @@ export function DatasetBrowser({ primary, secondary, onPrimary, onSecondary }: P
   );
 }
 
-function DatasetItem({ d, isPrimary, isSecondary, onPrimary, onSecondary, canCompare }: {
-  d: Dataset; isPrimary: boolean; isSecondary: boolean; onPrimary: () => void; onSecondary: () => void; canCompare: boolean;
-}) {
+function DatasetItem({ d, isCurrent, onPick, reason }: { d: Dataset; isCurrent: boolean; onPick: () => void; reason: string | null }) {
   return (
-    <li className={`group rounded-lg border p-2.5 transition-colors ${isPrimary ? "border-primary bg-card" : isSecondary ? "border-dashed border-primary bg-card" : "border-transparent hover:border-border hover:bg-card"}`}>
-      <button type="button" onClick={onPrimary} aria-current={isPrimary || undefined} className="block w-full text-left focus-visible:outline-2 focus-visible:outline-ring rounded">
-        <span className="block text-sm font-medium leading-snug">{d.title}</span>
-        <span className="mt-0.5 block text-xs text-muted-foreground">{d.vintage}</span>
+    <li className={`group rounded-lg border p-2.5 transition-colors ${isCurrent ? "border-primary bg-card" : reason ? "border-transparent" : "border-transparent hover:border-border hover:bg-card"}`}>
+      <button type="button" onClick={onPick} aria-current={isCurrent || undefined} disabled={!!reason}
+        className="block w-full text-left focus-visible:outline-2 focus-visible:outline-ring rounded disabled:cursor-not-allowed">
+        <span className={`block text-sm font-medium leading-snug ${reason ? "text-muted-foreground" : ""}`}>{d.title}</span>
+        <span className="mt-0.5 block text-xs text-muted-foreground">{reason ?? d.vintage}</span>
       </button>
-      {canCompare && (
-        <button type="button" onClick={onSecondary} aria-pressed={isSecondary}
-          className="mt-1.5 text-xs text-primary underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-ring rounded">
-          {isSecondary ? "Stop comparing" : "Compare with map (bivariate)"}
-        </button>
-      )}
     </li>
   );
 }
