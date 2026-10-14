@@ -57,4 +57,25 @@ export default function compareModeTests({ test, expect, immerse }) {
     await until(page, "b", null);
     expect(param(page, "d") === "asthma", "Exit changed the first map");
   });
+
+  // Robbie (2026-10-14): opening a map that can't pair, from outside the picker, asks first.
+  test("laptop compare mode: a can't-pair map from search asks first; Cancel keeps the comparison", async (o) => {
+    const { page } = await o("laptop", "/map?d=asthma&b=arthritis");
+    const prompt = page.locator("[data-leave-compare]");
+    const searchFor = async () => {
+      await page.keyboard.press("/");
+      const dlg = page.getByRole("dialog", { name: "Search places and datasets" });
+      await dlg.getByRole("combobox").fill("Traffic volume");
+      await dlg.getByRole("option", { name: /Traffic volume/ }).first().getByRole("button").click();
+      await prompt.waitFor();
+    };
+    await searchFor();
+    expect((await prompt.innerText()).includes("can't be compared with Arthritis"), `prompt text: ${await prompt.innerText()}`);
+    await prompt.getByRole("button", { name: "Cancel" }).click();
+    expect(param(page, "d") === "asthma" && param(page, "b") === "arthritis", `Cancel changed the maps: ${page.url()}`);
+    await searchFor();
+    await prompt.getByRole("button", { name: "Open on its own" }).click();
+    await until(page, "d", "aadt");
+    expect(param(page, "b") === null, "still comparing after Open on its own");
+  });
 }

@@ -26,10 +26,19 @@ The two-variable map (`?d=<a>&b=<b>`) now reads as a mode.
   same kinds of area" (no geography level in common; blocks don't count).
 - Phones: the strip takes the category row's place and Share moves to the actions line, so the
   card grows only by the strip's padding (D-135).
-- "Map it" and search picks that can't pair with the second map leave compare (the strip going
-  away shows it); only the picker greys out.
+- Opening a map that can't pair from outside the picker ("Map it", search): see the amendment.
 - Colour: a new design token `ui.compareTint` (pale accent wash), contrast-checked for text (7:1)
   and accent text (4.5:1) in both themes.
 
 One rule, `pairReason` in `apps/web/src/lib/layers.ts`, decides pairing for both the picker and the
 map, so the picker never offers a pair the map won't draw.
+
+## Amendments
+
+- 2026-10-14 (Robbie): the strip stays "Comparing two maps · Swap · Exit", with the names in the
+  title under it; the generic "Not mapped for the same kinds of area" reason stays.
+- 2026-10-14 (Robbie): ask first. While comparing, opening a map that can't pair with the second
+  one from anywhere outside the picker ("Map it", search) shows "<map> can't be compared with
+  <second map>. Open it on its own?" with **Open on its own** / **Cancel** (a sheet on phones, a
+  small panel on laptops). Cancel keeps the comparison as it was. Opening the second map itself
+  still shows it alone, without asking.
