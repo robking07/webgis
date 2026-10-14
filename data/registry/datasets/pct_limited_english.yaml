@@ -1,7 +1,8 @@
 id: pct_limited_english
 title: "Households with limited English"
 description: "Share of households where no one 14 or older speaks English only or speaks it very well."
-category: Population
+category: People
+subcategory: Immigration and language
 tags: [language, English, limited English proficiency, LEP, immigrants]
 source:
   name: U.S. Census Bureau, American Community Survey 5-Year Estimates

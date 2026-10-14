@@ -3,6 +3,7 @@ title: "Asthma"
 phrase: asthma rates
 description: "Share of adults who have been told they have asthma and still have it. Age-adjusted prevalence; model-based small-area estimate."
 category: Health
+subcategory: Conditions
 tags: [asthma, lung disease, health]
 source:
   name: CDC PLACES (Local Data for Better Health), 2025 release

@@ -3,6 +3,7 @@ title: "Housing insecurity"
 phrase: housing insecurity rates
 description: "Share of adults who, in the past 12 months, were not able to pay their mortgage, rent or utility bills. Age-adjusted prevalence; model-based small-area estimate."
 category: Health
+subcategory: Daily needs
 tags: [housing insecurity, rent, social needs, health]
 source:
   name: CDC PLACES (Local Data for Better Health), 2025 release

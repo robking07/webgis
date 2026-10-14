@@ -6,6 +6,7 @@
   "exports": {
     ".": "./schema.ts",
     "./load": "./load.ts",
+    "./categories": "./categories.ts",
     "./describe": "./describe.ts",
     "./timeline": "./timeline.ts",
     "./relations": "./relations.ts"

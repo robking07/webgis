@@ -1,7 +1,8 @@
 id: pct_foreign_born
 title: "Born outside the U.S."
 description: "Share of residents who were not U.S. citizens at birth (immigrants), whatever their citizenship today."
-category: Population
+category: People
+subcategory: Immigration and language
 tags: [immigrants, foreign-born, nativity, immigration]
 source:
   name: U.S. Census Bureau, American Community Survey 5-Year Estimates

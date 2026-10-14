@@ -1,7 +1,8 @@
 id: pct_white_nh
 title: "White (non-Hispanic) residents"
 description: "Share of residents who are white alone and not Hispanic or Latino."
-category: Race & ethnicity
+category: People
+subcategory: Race and ethnicity
 tags: [race, ethnicity, white, demographics]
 source:
   name: U.S. Census Bureau, American Community Survey 5-Year Estimates

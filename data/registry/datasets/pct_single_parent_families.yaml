@@ -2,7 +2,8 @@ id: pct_single_parent_families
 title: "Single-parent families"
 phrase: shares of single-parent families
 description: "Share of families raising their own children under 18 that are headed by a single parent."
-category: Population
+category: People
+subcategory: Population and age
 tags: [families, children, single parents]
 source:
   name: U.S. Census Bureau, American Community Survey 5-Year Estimates

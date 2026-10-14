@@ -1,7 +1,8 @@
 id: pct_asian_nh
 title: "Asian (non-Hispanic) residents"
 description: "Share of residents who are Asian alone and not Hispanic or Latino."
-category: Race & ethnicity
+category: People
+subcategory: Race and ethnicity
 tags: [race, ethnicity, Asian, demographics]
 source:
   name: U.S. Census Bureau, American Community Survey 5-Year Estimates

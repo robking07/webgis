@@ -31,7 +31,7 @@ export function DataDirectory() {
                     <span className="block text-xs text-muted-foreground">{d.description}</span>
                   </span>
                   <span className="shrink-0 text-xs text-muted-foreground sm:text-right">
-                    {d.category} · {d.vintage}
+                    {d.category} › {d.subcategory} · {d.vintage}
                     <span className="block">{d.measure.kind === "features" ? "Road segments" : d.geographyLevels.map((l) => l[0].toUpperCase() + l.slice(1)).join(", ")}</span>
                   </span>
                 </a>

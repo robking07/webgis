@@ -2,12 +2,12 @@
 // All datasets for one place, filterable with the shared dataset filter. Used by the
 // place profile page and by the map's bottom drawer when it's swiped open.
 import { useEffect, useMemo, useState } from "react";
-import { formatValue, type GeoLevel } from "@webgis/design";
+import { formatEstimate, type GeoLevel } from "@webgis/design";
 import { StatusState } from "@webgis/design/components";
 import { DatasetFilter, useDatasetFilter } from "./DatasetFilter";
 import { loadValues, type Values } from "@/lib/values";
 import { rankText } from "@/lib/place";
-import { DATASET_BY_ID, type Dataset } from "@/lib/registry";
+import { CATEGORIES, DATASET_BY_ID, type Dataset } from "@/lib/registry";
 
 export type Detail = Record<string, { value: number | null; moe: number | null }>;
 
@@ -47,7 +47,7 @@ export function PlaceDataList({ level, detail, mapHref, onMapIt, compact }: Prop
   const grouped = useMemo(() => {
     const m = new Map<string, Dataset[]>();
     for (const d of results.filter((d) => detail[d.id])) (m.get(d.category) ?? m.set(d.category, []).get(d.category)!).push(d);
-    return [...m].sort((a, b) => a[0].localeCompare(b[0]));
+    return [...m].sort((a, b) => CATEGORIES.indexOf(a[0]) - CATEGORIES.indexOf(b[0]));
   }, [results, detail]);
 
   return (
@@ -59,6 +59,7 @@ export function PlaceDataList({ level, detail, mapHref, onMapIt, compact }: Prop
           <ul className="divide-y rounded-xl border bg-card">
             {ds.map((d) => {
               const r = detail[d.id];
+              const est = formatEstimate(r.value, r.moe, d.unit);
               return (
                 <li key={d.id} className={`group flex items-center justify-between gap-3 ${compact ? "px-3 py-2" : "px-4 py-3"}`}>
                   <div className="min-w-0">
@@ -67,8 +68,8 @@ export function PlaceDataList({ level, detail, mapHref, onMapIt, compact }: Prop
                   </div>
                   <div className="shrink-0 text-right">
                     <p className="text-sm font-semibold tabular-nums">
-                      {formatValue(r.value, d.unit)}
-                      {r.moe != null && r.moe > 0 && r.value != null && <span className="ml-1 text-xs font-normal text-muted-foreground">±{formatValue(r.moe, d.unit)}</span>}
+                      {est.value}
+                      {est.moe && <span className="ml-1 text-xs font-normal text-muted-foreground">±{est.moe}</span>}
                     </p>
                     {/* "Map it" shows on row hover/focus where there's a mouse; touch screens always show it. */}
                     {onMapIt ? (

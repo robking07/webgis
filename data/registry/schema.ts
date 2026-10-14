@@ -1,6 +1,7 @@
 // Dataset registry schema. One YAML file per dataset in ./datasets. Adding a dataset
 // means adding a file here (and, for a new source type, an ingest script) — never UI code.
 import { z } from "zod";
+import { CATEGORIES } from "./categories.ts";
 
 const Ramp = z.enum(["blues", "ylgnbu", "oranges", "purples", "viridis", "cividis", "rdbu", "puor", "brbg"]);
 const Unit = z.enum(["dollars", "percent", "minutes", "count", "per_sq_mi", "ratio", "years", "deg_f", "inches", "per_100k", "vehicles_per_day", "miles_per_day", "categories", "agreements", "percentile", "ug_m3", "ppm", "degree_days"]);
@@ -149,6 +150,16 @@ const FemaNriMeasure = z.object({
   ratingField: z.string().regex(/^[A-Z][A-Z_]*$/).optional(),
 });
 
+/** CDC/ATSDR Social Vulnerability Index: one percentile-rank field of CDC's U.S.-wide county and
+ *  tract CSVs (ranked nationally, not within each state). Ingest: data/ingest/src/svi.ts. */
+const SviMeasure = z.object({
+  kind: z.literal("svi"),
+  /** SVI release year (the files are SVI_<year>_US.csv and SVI_<year>_US_county.csv). */
+  year: z.number().int(),
+  /** Percentile-rank field, 0–1 in the files (-999 = no data): RPL_THEMES or RPL_THEME1–4. */
+  field: z.enum(["RPL_THEMES", "RPL_THEME1", "RPL_THEME2", "RPL_THEME3", "RPL_THEME4"]),
+});
+
 /** Daily vehicle miles traveled from HPMS: Σ AADT × section length (milepoints), by county,
  *  divided by residents. Counted roads only; uncounted local roads are missing. */
 const HpmsVmtMeasure = z.object({
@@ -264,7 +275,9 @@ export const DatasetEntry = z.object({
   phrase: z.string().optional(),
   /** One sentence shown in the browser and popups. */
   description: z.string(),
-  category: z.enum(["Income & poverty", "Commuting", "Vehicles", "Housing", "Population", "Jobs", "Transportation", "Environment", "Environmental justice", "Immigration enforcement", "Health", "Climate", "Race & ethnicity", "Education", "Internet access"]),
+  /** Top-level category (the menu chips) and its subcategory (the list headings): `categories.ts`. */
+  category: z.enum(CATEGORIES),
+  subcategory: z.string(),
   tags: z.array(z.string()).default([]),
   source: z.object({
     name: z.string(),
@@ -282,7 +295,7 @@ export const DatasetEntry = z.object({
   unit: Unit,
   /** For insights: the population the value describes. Pairs that share one are flagged. */
   universe: z.string(),
-  measure: z.discriminatedUnion("kind", [AcsMeasure, Census2020Measure, LodesMeasure, PlacesMeasure, ClimdivMeasure, NbiMeasure, FarsMeasure, FeaturesMeasure, HpmsVmtMeasure, CejstMeasure, Ddp287gMeasure, LeadMeasure, FoodAccessMeasure, FemaNriMeasure, AirQualityMeasure, OverdoseMeasure]),
+  measure: z.discriminatedUnion("kind", [AcsMeasure, Census2020Measure, LodesMeasure, PlacesMeasure, ClimdivMeasure, NbiMeasure, FarsMeasure, FeaturesMeasure, HpmsVmtMeasure, CejstMeasure, Ddp287gMeasure, LeadMeasure, FoodAccessMeasure, FemaNriMeasure, SviMeasure, AirQualityMeasure, OverdoseMeasure]),
   /** Other registry datasets used as inputs to this dataset's model (e.g. PLACES uses county poverty).
    *  Insight pairs with these are flagged: they correlate partly by construction. */
   modelInputs: z.array(z.string()).default([]),

@@ -4,6 +4,7 @@
   "title": "Traffic volume (AADT)",
   "description": "Average annual daily traffic, in vehicles per day, on each road segment with a count. Wider lines are higher road classes.",
   "category": "Transportation",
+  "subcategory": "Roads and vehicles",
   "tags": [
    "traffic",
    "AADT",
@@ -201,6 +202,7 @@
   "phrase": "rates of tooth loss among seniors",
   "description": "Share of adults 65 and older who have lost all their natural teeth to decay or gum disease. Age-adjusted prevalence; model-based small-area estimate.",
   "category": "Health",
+  "subcategory": "Conditions",
   "tags": [
    "teeth",
    "oral health",
@@ -253,7 +255,8 @@
   "title": "Annual precipitation",
   "phrase": "yearly precipitation",
   "description": "Total yearly precipitation (rain plus melted snow). Average over 1991–2020.",
-  "category": "Climate",
+  "category": "Environment and climate",
+  "subcategory": "Climate",
   "tags": [
    "rain",
    "precipitation",
@@ -323,6 +326,7 @@
   "phrase": "arthritis rates",
   "description": "Share of adults a doctor has told they have arthritis, rheumatoid arthritis, gout, lupus or fibromyalgia. Age-adjusted prevalence; model-based small-area estimate.",
   "category": "Health",
+  "subcategory": "Conditions",
   "tags": [
    "arthritis",
    "chronic disease",
@@ -374,6 +378,7 @@
   "phrase": "asthma rates",
   "description": "Share of adults who have been told they have asthma and still have it. Age-adjusted prevalence; model-based small-area estimate.",
   "category": "Health",
+  "subcategory": "Conditions",
   "tags": [
    "asthma",
    "lung disease",
@@ -425,6 +430,7 @@
   "phrase": "binge drinking rates",
   "description": "Share of adults who binge drank in the past 30 days. Age-adjusted prevalence among adults; model-based small-area estimate.",
   "category": "Health",
+  "subcategory": "Behaviors",
   "tags": [
    "alcohol",
    "drinking",
@@ -477,6 +483,7 @@
   "phrase": "rates of blood pressure treatment",
   "description": "Share of adults with high blood pressure who are taking medicine for it. Age-adjusted prevalence; model-based small-area estimate.",
   "category": "Health",
+  "subcategory": "Care and coverage",
   "tags": [
    "hypertension",
    "medication",
@@ -530,6 +537,7 @@
   "phrase": "shares of bridges in poor condition",
   "description": "Share of highway bridge deck area rated in poor condition (lowest of deck, superstructure, substructure or culvert rating 4 or below), the federal bridge performance measure.",
   "category": "Transportation",
+  "subcategory": "Roads and vehicles",
   "tags": [
    "bridges",
    "infrastructure",
@@ -585,6 +593,7 @@
   "phrase": "cancer rates",
   "description": "Share of adults a doctor has ever told they have cancer (melanoma or any cancer other than other skin cancers). Age-adjusted prevalence; model-based small-area estimate.",
   "category": "Health",
+  "subcategory": "Conditions",
   "tags": [
    "cancer",
    "chronic disease",
@@ -634,7 +643,8 @@
   "id": "cejst_disadvantaged_tracts",
   "title": "Disadvantaged communities (CEJST tracts)",
   "description": "Census tracts the Climate and Economic Justice Screening Tool identified as disadvantaged, shaded by how many of its eight burden categories they exceed.",
-  "category": "Environmental justice",
+  "category": "Health",
+  "subcategory": "Environmental justice",
   "tags": [
    "Justice40",
    "CEJST",
@@ -908,7 +918,8 @@
   "title": "Residents in disadvantaged communities",
   "phrase": "shares of residents in disadvantaged communities",
   "description": "Share of residents living in census tracts the Climate and Economic Justice Screening Tool identified as disadvantaged.",
-  "category": "Environmental justice",
+  "category": "Health",
+  "subcategory": "Environmental justice",
   "tags": [
    "Justice40",
    "CEJST",
@@ -968,6 +979,7 @@
   "title": "Homes per square mile (2020 Census)",
   "description": "Every housing unit (occupied or vacant) counted in the 2020 Census, per square mile of land. Shows built form, including places where few people live.",
   "category": "Housing",
+  "subcategory": "Homes",
   "tags": [
    "housing units",
    "homes",
@@ -1020,6 +1032,7 @@
   "title": "Share of homes vacant (2020 Census)",
   "description": "Vacant housing units as a share of all housing units on April 1, 2020. Includes seasonal and vacation homes, so resort and cabin areas run high.",
   "category": "Housing",
+  "subcategory": "Homes",
   "tags": [
    "vacancy",
    "vacant homes",
@@ -1071,7 +1084,8 @@
   "id": "census2020_pop_density",
   "title": "Residents per square mile (2020 Census)",
   "description": "Everyone counted in the 2020 Census, per square mile of land. Down to single blocks.",
-  "category": "Population",
+  "category": "People",
+  "subcategory": "Population and age",
   "tags": [
    "population",
    "density",
@@ -1123,6 +1137,7 @@
   "phrase": "cholesterol screening rates",
   "description": "Share of adults who had their blood cholesterol checked in the past 5 years. Age-adjusted prevalence; model-based small-area estimate.",
   "category": "Health",
+  "subcategory": "Care and coverage",
   "tags": [
    "cholesterol",
    "screening",
@@ -1176,6 +1191,7 @@
   "phrase": "colorectal screening rates",
   "description": "Share of adults aged 45 to 75 who are up to date on colorectal cancer screening. Age-adjusted prevalence; model-based small-area estimate.",
   "category": "Health",
+  "subcategory": "Care and coverage",
   "tags": [
    "colorectal cancer",
    "screening",
@@ -1228,7 +1244,8 @@
   "title": "Cooling degree days",
   "phrase": "cooling needs",
   "description": "How much air conditioning homes and buildings need in a year: the sum, over every day, of how many degrees the day's average temperature rose above 65°F. Average over 1991–2020.",
-  "category": "Climate",
+  "category": "Environment and climate",
+  "subcategory": "Climate",
   "tags": [
    "cooling",
    "air conditioning",
@@ -1300,6 +1317,7 @@
   "phrase": "COPD rates",
   "description": "Share of adults a doctor has told they have chronic obstructive pulmonary disease (COPD), emphysema or chronic bronchitis. Age-adjusted prevalence; model-based small-area estimate.",
   "category": "Health",
+  "subcategory": "Conditions",
   "tags": [
    "COPD",
    "lung disease",
@@ -1353,6 +1371,7 @@
   "phrase": "dentist visit rates",
   "description": "Share of adults who visited a dentist or dental clinic in the past year. Age-adjusted prevalence; model-based small-area estimate.",
   "category": "Health",
+  "subcategory": "Care and coverage",
   "tags": [
    "dental",
    "oral health",
@@ -1406,6 +1425,7 @@
   "phrase": "depression rates",
   "description": "Share of adults a doctor has ever told they have a depressive disorder. Age-adjusted prevalence; model-based small-area estimate.",
   "category": "Health",
+  "subcategory": "Conditions",
   "tags": [
    "depression",
    "mental health",
@@ -1457,6 +1477,7 @@
   "phrase": "diabetes rates",
   "description": "Share of adults a doctor has told they have diabetes (not counting diabetes only during pregnancy). Age-adjusted prevalence; model-based small-area estimate.",
   "category": "Health",
+  "subcategory": "Conditions",
   "tags": [
    "diabetes",
    "chronic disease",
@@ -1508,6 +1529,7 @@
   "phrase": "adult disability rates",
   "description": "Share of adults with at least one disability: hearing, vision, thinking, walking, self-care or living independently. Age-adjusted prevalence; model-based small-area estimate.",
   "category": "Health",
+  "subcategory": "Disability",
   "tags": [
    "disability",
    "health"
@@ -1558,6 +1580,7 @@
   "phrase": "rates of cognitive disability",
   "description": "Share of adults with serious difficulty concentrating, remembering or making decisions because of a physical, mental or emotional condition. Age-adjusted prevalence; model-based small-area estimate.",
   "category": "Health",
+  "subcategory": "Disability",
   "tags": [
    "disability",
    "cognitive",
@@ -1610,6 +1633,7 @@
   "phrase": "rates of hearing disability",
   "description": "Share of adults who are deaf or have serious difficulty hearing. Age-adjusted prevalence; model-based small-area estimate.",
   "category": "Health",
+  "subcategory": "Disability",
   "tags": [
    "disability",
    "hearing",
@@ -1662,6 +1686,7 @@
   "phrase": "rates of independent-living disability",
   "description": "Share of adults who, because of a physical, mental or emotional condition, have difficulty doing errands alone, such as visiting a doctor's office or shopping. Age-adjusted prevalence; model-based small-area estimate.",
   "category": "Health",
+  "subcategory": "Disability",
   "tags": [
    "disability",
    "independent living",
@@ -1713,6 +1738,7 @@
   "phrase": "rates of mobility disability",
   "description": "Share of adults with serious difficulty walking or climbing stairs. Age-adjusted prevalence; model-based small-area estimate.",
   "category": "Health",
+  "subcategory": "Disability",
   "tags": [
    "disability",
    "mobility",
@@ -1765,6 +1791,7 @@
   "phrase": "rates of self-care disability",
   "description": "Share of adults with difficulty dressing or bathing. Age-adjusted prevalence; model-based small-area estimate.",
   "category": "Health",
+  "subcategory": "Disability",
   "tags": [
    "disability",
    "self-care",
@@ -1816,6 +1843,7 @@
   "phrase": "rates of vision disability",
   "description": "Share of adults who are blind or have serious difficulty seeing, even with glasses. Age-adjusted prevalence; model-based small-area estimate.",
   "category": "Health",
+  "subcategory": "Disability",
   "tags": [
    "disability",
    "vision",
@@ -1867,7 +1895,8 @@
   "title": "Home energy burden",
   "phrase": "home energy burdens",
   "description": "Share of household income spent on home energy (electricity, gas and other heating fuels): the average yearly energy bill divided by the average household income, for all households.",
-  "category": "Environmental justice",
+  "category": "Environment and climate",
+  "subcategory": "Energy burden",
   "tags": [
    "energy burden",
    "energy affordability",
@@ -1926,7 +1955,8 @@
   "title": "Home energy burden, lower-income households",
   "phrase": "home energy burdens for lower-income households",
   "description": "Share of income spent on home energy by households with incomes at or below twice the federal poverty line (about $55,500 for a family of four in 2022): their average yearly energy bill divided by their average income.",
-  "category": "Environmental justice",
+  "category": "Environment and climate",
+  "subcategory": "Energy burden",
   "tags": [
    "energy burden",
    "energy affordability",
@@ -1999,6 +2029,7 @@
   "phrase": "rates of fair or poor health",
   "description": "Share of adults who describe their general health as fair or poor. Age-adjusted prevalence; model-based small-area estimate.",
   "category": "Health",
+  "subcategory": "Conditions",
   "tags": [
    "self-rated health",
    "health status",
@@ -2050,6 +2081,7 @@
   "phrase": "shares of residents far from a supermarket",
   "description": "Share of residents who live more than 1 mile (urban tracts) or 10 miles (rural tracts) from the nearest supermarket, supercenter or large grocery store.",
   "category": "Health",
+  "subcategory": "Food access",
   "tags": [
    "food access",
    "food deserts",
@@ -2109,6 +2141,7 @@
   "title": "No car, far from a supermarket (tracts)",
   "description": "Share of each census tract's households that have no car and live more than half a mile from the nearest supermarket, supercenter or large grocery store.",
   "category": "Health",
+  "subcategory": "Food access",
   "tags": [
    "vehicle access",
    "no car",
@@ -2252,6 +2285,7 @@
   "title": "Far from a supermarket (tracts)",
   "description": "Share of each census tract's residents who live more than 1 mile (urban tracts) or 10 miles (rural tracts) from the nearest supermarket, supercenter or large grocery store. Tracts that are also low income are USDA's low-income, low-access tracts, often called food deserts.",
   "category": "Health",
+  "subcategory": "Food access",
   "tags": [
    "food access",
    "food deserts",
@@ -2394,6 +2428,7 @@
   "phrase": "shares of residents in food deserts",
   "description": "Share of residents living in census tracts USDA flags as low income and low access: at least 500 people, or a third of residents, live more than 1 mile (urban) or 10 miles (rural) from the nearest supermarket. Often called food deserts.",
   "category": "Health",
+  "subcategory": "Food access",
   "tags": [
    "food access",
    "food deserts",
@@ -2457,6 +2492,7 @@
   "phrase": "food insecurity rates",
   "description": "Share of adults who say the food they bought in the past 12 months often or sometimes didn't last and they didn't have money to get more. Age-adjusted prevalence; model-based small-area estimate.",
   "category": "Health",
+  "subcategory": "Daily needs",
   "tags": [
    "food insecurity",
    "hunger",
@@ -2507,7 +2543,8 @@
   "id": "gini_index",
   "title": "Income inequality (Gini index)",
   "description": "How unevenly household income is spread, from 0 (every household earns the same) to 1 (one household earns everything).",
-  "category": "Income & poverty",
+  "category": "Economy",
+  "subcategory": "Income and poverty",
   "tags": [
    "inequality",
    "Gini",
@@ -2568,6 +2605,7 @@
   "phrase": "heart disease rates",
   "description": "Share of adults a doctor has told they have coronary heart disease or angina. Age-adjusted prevalence; model-based small-area estimate.",
   "category": "Health",
+  "subcategory": "Conditions",
   "tags": [
    "heart disease",
    "cardiovascular",
@@ -2619,7 +2657,8 @@
   "title": "Heating degree days",
   "phrase": "heating needs",
   "description": "How much heating homes and buildings need in a year: the sum, over every day, of how many degrees the day's average temperature fell below 65°F. Average over 1991–2020.",
-  "category": "Climate",
+  "category": "Environment and climate",
+  "subcategory": "Climate",
   "tags": [
    "heating",
    "cold",
@@ -2690,6 +2729,7 @@
   "phrase": "high blood pressure rates",
   "description": "Share of adults a doctor has told they have high blood pressure. Age-adjusted prevalence; model-based small-area estimate.",
   "category": "Health",
+  "subcategory": "Conditions",
   "tags": [
    "hypertension",
    "blood pressure",
@@ -2742,6 +2782,7 @@
   "phrase": "high cholesterol rates",
   "description": "Share of adults who have ever had their cholesterol checked and were told it was high. Age-adjusted prevalence; model-based small-area estimate.",
   "category": "Health",
+  "subcategory": "Conditions",
   "tags": [
    "cholesterol",
    "cardiovascular",
@@ -2792,7 +2833,8 @@
   "title": "Yearly home energy bill",
   "phrase": "home energy bills",
   "description": "Average a household spends in a year on home electricity, gas and other heating fuels such as propane, fuel oil or wood.",
-  "category": "Environmental justice",
+  "category": "Environment and climate",
+  "subcategory": "Energy burden",
   "tags": [
    "energy cost",
    "utility bills",
@@ -2850,6 +2892,7 @@
   "phrase": "housing insecurity rates",
   "description": "Share of adults who, in the past 12 months, were not able to pay their mortgage, rent or utility bills. Age-adjusted prevalence; model-based small-area estimate.",
   "category": "Health",
+  "subcategory": "Daily needs",
   "tags": [
    "housing insecurity",
    "rent",
@@ -2900,7 +2943,8 @@
   "id": "ice_287g_agreements",
   "title": "287(g) agreements with ICE",
   "description": "Active agreements that let local or state law enforcement agencies carry out immigration enforcement duties for ICE, counted by county.",
-  "category": "Immigration enforcement",
+  "category": "People",
+  "subcategory": "Immigration and language",
   "tags": [
    "ICE",
    "immigration",
@@ -2958,7 +3002,8 @@
   "title": "January low temperature",
   "phrase": "January low temperatures",
   "description": "Average daily minimum temperature in January. Average over 1991–2020.",
-  "category": "Climate",
+  "category": "Environment and climate",
+  "subcategory": "Climate",
   "tags": [
    "cold",
    "winter",
@@ -3016,7 +3061,8 @@
   "title": "Job density",
   "phrase": "job density",
   "description": "Jobs located in the area (all jobs, by workplace) per square mile of land.",
-  "category": "Jobs",
+  "category": "Economy",
+  "subcategory": "Jobs",
   "tags": [
    "jobs",
    "employment",
@@ -3073,7 +3119,8 @@
   "title": "July high temperature",
   "phrase": "July high temperatures",
   "description": "Average daily maximum temperature in July. Average over 1991–2020.",
-  "category": "Climate",
+  "category": "Environment and climate",
+  "subcategory": "Climate",
   "tags": [
    "heat",
    "summer",
@@ -3131,7 +3178,8 @@
   "title": "July low temperature",
   "phrase": "July overnight lows",
   "description": "Average daily minimum temperature in July. Warm nights give bodies no chance to cool down, a major driver of heat illness. Average over 1991–2020.",
-  "category": "Climate",
+  "category": "Environment and climate",
+  "subcategory": "Climate",
   "tags": [
    "heat",
    "summer",
@@ -3189,7 +3237,8 @@
   "id": "labor_force_participation",
   "title": "People working or looking for work",
   "description": "Share of people 16 and over who have a job or are looking for one (the labor force participation rate).",
-  "category": "Jobs",
+  "category": "Economy",
+  "subcategory": "Jobs",
   "tags": [
    "labor force participation",
    "jobs",
@@ -3252,6 +3301,7 @@
   "phrase": "rates of missing social support",
   "description": "Share of adults who say they rarely or never get the social and emotional support they need. Age-adjusted prevalence; model-based small-area estimate.",
   "category": "Health",
+  "subcategory": "Daily needs",
   "tags": [
    "social support",
    "isolation",
@@ -3304,6 +3354,7 @@
   "phrase": "rates of unreliable transportation",
   "description": "Share of adults for whom a lack of reliable transportation kept them from medical appointments, meetings, work or getting things they need in the past 12 months. Age-adjusted prevalence; model-based small-area estimate.",
   "category": "Health",
+  "subcategory": "Daily needs",
   "tags": [
    "transportation",
    "access",
@@ -3356,6 +3407,7 @@
   "phrase": "loneliness rates",
   "description": "Share of adults who always, usually or sometimes feel lonely. Age-adjusted prevalence among adults; model-based small-area estimate.",
   "category": "Health",
+  "subcategory": "Daily needs",
   "tags": [
    "loneliness",
    "social",
@@ -3407,6 +3459,7 @@
   "phrase": "mammogram rates",
   "description": "Share of women aged 50 to 74 who had a mammogram in the past 2 years. Age-adjusted prevalence; model-based small-area estimate.",
   "category": "Health",
+  "subcategory": "Care and coverage",
   "tags": [
    "breast cancer",
    "mammogram",
@@ -3460,7 +3513,8 @@
   "title": "Mean travel time to work",
   "phrase": "commute times",
   "description": "Average one-way travel time to work for workers 16 and over who do not work from home.",
-  "category": "Commuting",
+  "category": "Transportation",
+  "subcategory": "Commuting",
   "tags": [
    "commute",
    "travel time",
@@ -3521,7 +3575,8 @@
   "title": "Average temperature",
   "phrase": "average temperatures",
   "description": "Mean annual air temperature. Average over 1991–2020.",
-  "category": "Climate",
+  "category": "Environment and climate",
+  "subcategory": "Climate",
   "tags": [
    "temperature",
    "climate",
@@ -3588,7 +3643,8 @@
   "id": "median_age",
   "title": "Median age",
   "description": "The age that splits residents into two equal halves: half are younger, half are older.",
-  "category": "Population",
+  "category": "People",
+  "subcategory": "Population and age",
   "tags": [
    "age",
    "demographics",
@@ -3646,6 +3702,7 @@
   "title": "Median rent",
   "description": "Middle monthly rent paid by renter households, including utilities, in 2024 dollars.",
   "category": "Housing",
+  "subcategory": "Costs",
   "tags": [
    "rent",
    "housing",
@@ -3706,6 +3763,7 @@
   "title": "Median home value",
   "description": "Middle value of owner-occupied homes, as estimated by their owners, in 2024 dollars.",
   "category": "Housing",
+  "subcategory": "Costs",
   "tags": [
    "home value",
    "housing",
@@ -3766,7 +3824,8 @@
   "title": "Median household income",
   "phrase": "household incomes",
   "description": "Median household income in the past 12 months, in 2024 inflation-adjusted dollars.",
-  "category": "Income & poverty",
+  "category": "Economy",
+  "subcategory": "Income and poverty",
   "tags": [
    "income",
    "earnings",
@@ -3825,6 +3884,7 @@
   "phrase": "homeowner costs",
   "description": "Middle monthly housing cost for homeowners with a mortgage: mortgage, taxes, insurance, utilities and fees, in 2024 dollars.",
   "category": "Housing",
+  "subcategory": "Costs",
   "tags": [
    "housing costs",
    "mortgage",
@@ -3885,6 +3945,7 @@
   "phrase": "rates of frequent mental distress",
   "description": "Share of adults who say their mental health was not good on 14 or more of the past 30 days. Age-adjusted prevalence; model-based small-area estimate.",
   "category": "Health",
+  "subcategory": "Conditions",
   "tags": [
    "mental health",
    "stress",
@@ -3936,6 +3997,7 @@
   "phrase": "shares of households without a car far from a supermarket",
   "description": "Share of households that have no car and live more than half a mile from the nearest supermarket, supercenter or large grocery store.",
   "category": "Health",
+  "subcategory": "Food access",
   "tags": [
    "vehicle access",
    "no car",
@@ -3996,7 +4058,8 @@
   "title": "Expected yearly coastal flood losses, per resident",
   "phrase": "expected coastal flood losses per resident",
   "description": "FEMA's estimate of what coastal flooding cost here in an average year (damage to buildings and crops, plus deaths and injuries valued in dollars), divided by the number of residents.",
-  "category": "Environment",
+  "category": "Environment and climate",
+  "subcategory": "Natural hazards",
   "tags": [
    "FEMA",
    "National Risk Index",
@@ -4053,7 +4116,8 @@
   "title": "Community resilience to natural hazards",
   "phrase": "community resilience scores",
   "description": "How well a county is equipped to absorb and bounce back from disasters (its social, economic, housing, institutional and environmental capacity), from the University of South Carolina's BRIC index as used in FEMA's National Risk Index, ranked nationally.",
-  "category": "Environment",
+  "category": "Environment and climate",
+  "subcategory": "Social vulnerability",
   "tags": [
    "FEMA",
    "National Risk Index",
@@ -4105,7 +4169,8 @@
   "title": "Expected yearly losses from natural hazards, per resident",
   "phrase": "expected natural-hazard losses per resident",
   "description": "FEMA's estimate of what 18 natural hazards cost here in an average year (damage to buildings and crops, plus deaths and injuries valued in dollars), divided by the number of residents.",
-  "category": "Environment",
+  "category": "Environment and climate",
+  "subcategory": "Natural hazards",
   "tags": [
    "FEMA",
    "National Risk Index",
@@ -4173,7 +4238,8 @@
   "title": "Expected yearly heat wave losses, per resident",
   "phrase": "expected heat wave losses per resident",
   "description": "FEMA's estimate of what heat waves cost here in an average year (damage to buildings and crops, plus deaths and injuries valued in dollars), divided by the number of residents.",
-  "category": "Environment",
+  "category": "Environment and climate",
+  "subcategory": "Natural hazards",
   "tags": [
    "FEMA",
    "National Risk Index",
@@ -4229,7 +4295,8 @@
   "title": "Expected yearly hurricane losses, per resident",
   "phrase": "expected hurricane losses per resident",
   "description": "FEMA's estimate of what hurricanes cost here in an average year (damage to buildings and crops, plus deaths and injuries valued in dollars), divided by the number of residents.",
-  "category": "Environment",
+  "category": "Environment and climate",
+  "subcategory": "Natural hazards",
   "tags": [
    "FEMA",
    "National Risk Index",
@@ -4284,7 +4351,8 @@
   "title": "Expected yearly inland flood losses, per resident",
   "phrase": "expected inland flood losses per resident",
   "description": "FEMA's estimate of what inland (river and rain) flooding cost here in an average year (damage to buildings and crops, plus deaths and injuries valued in dollars), divided by the number of residents.",
-  "category": "Environment",
+  "category": "Environment and climate",
+  "subcategory": "Natural hazards",
   "tags": [
    "FEMA",
    "National Risk Index",
@@ -4340,7 +4408,8 @@
   "title": "Natural hazard risk (FEMA National Risk Index score)",
   "phrase": "natural hazard risk scores",
   "description": "FEMA's overall risk score: expected yearly losses from 18 natural hazards, raised where people are more vulnerable and lowered where communities are more resilient, ranked against all counties (or all tracts) nationwide.",
-  "category": "Environment",
+  "category": "Environment and climate",
+  "subcategory": "Natural hazards",
   "tags": [
    "FEMA",
    "National Risk Index",
@@ -4398,7 +4467,8 @@
   "title": "Social vulnerability to natural hazards",
   "phrase": "social vulnerability scores",
   "description": "How hard it would be for residents to prepare for, cope with and recover from a disaster, from the Census Bureau's Community Resilience Estimates as used in FEMA's National Risk Index, ranked nationally.",
-  "category": "Environment",
+  "category": "Environment and climate",
+  "subcategory": "Social vulnerability",
   "tags": [
    "FEMA",
    "National Risk Index",
@@ -4458,7 +4528,8 @@
   "title": "Expected yearly tornado losses, per resident",
   "phrase": "expected tornado losses per resident",
   "description": "FEMA's estimate of what tornadoes cost here in an average year (damage to buildings and crops, plus deaths and injuries valued in dollars), divided by the number of residents.",
-  "category": "Environment",
+  "category": "Environment and climate",
+  "subcategory": "Natural hazards",
   "tags": [
    "FEMA",
    "National Risk Index",
@@ -4513,7 +4584,8 @@
   "title": "Expected yearly wildfire losses, per resident",
   "phrase": "expected wildfire losses per resident",
   "description": "FEMA's estimate of what wildfire cost here in an average year (damage to buildings and crops, plus deaths and injuries valued in dollars), divided by the number of residents.",
-  "category": "Environment",
+  "category": "Environment and climate",
+  "subcategory": "Natural hazards",
   "tags": [
    "FEMA",
    "National Risk Index",
@@ -4569,6 +4641,7 @@
   "phrase": "obesity rates",
   "description": "Share of adults with a body mass index of 30 or more. Age-adjusted prevalence among adults; model-based small-area estimate.",
   "category": "Health",
+  "subcategory": "Conditions",
   "tags": [
    "obesity",
    "BMI",
@@ -4620,6 +4693,7 @@
   "phrase": "drug overdose death rates",
   "description": "Drug overdose deaths per 100,000 residents in the 12 months ending December 2025, by county of residence. Provisional counts from death certificates. Counties with 1–9 deaths are hidden by CDC to protect privacy.",
   "category": "Health",
+  "subcategory": "Care and coverage",
   "tags": [
    "overdose",
    "drugs",
@@ -4677,7 +4751,8 @@
   "title": "Ground-level ozone (smog)",
   "phrase": "smog (ozone) levels",
   "description": "Ground-level ozone, 2023–2025 design value: the fourth-highest daily peak (8-hour average) each year, averaged over three years, at each county's highest valid monitor. The federal standard is 0.070 parts per million.",
-  "category": "Environment",
+  "category": "Environment and climate",
+  "subcategory": "Air quality",
   "tags": [
    "air quality",
    "pollution",
@@ -4731,7 +4806,8 @@
   "title": "Population 65 and older",
   "phrase": "shares of people 65 and older",
   "description": "Share of the total population aged 65 and over.",
-  "category": "Population",
+  "category": "People",
+  "subcategory": "Population and age",
   "tags": [
    "age",
    "seniors",
@@ -4802,7 +4878,8 @@
   "id": "pct_aian_nh",
   "title": "American Indian and Alaska Native (non-Hispanic) residents",
   "description": "Share of residents who are American Indian or Alaska Native alone and not Hispanic or Latino.",
-  "category": "Race & ethnicity",
+  "category": "People",
+  "subcategory": "Race and ethnicity",
   "tags": [
    "race",
    "ethnicity",
@@ -4867,7 +4944,8 @@
   "id": "pct_asian_nh",
   "title": "Asian (non-Hispanic) residents",
   "description": "Share of residents who are Asian alone and not Hispanic or Latino.",
-  "category": "Race & ethnicity",
+  "category": "People",
+  "subcategory": "Race and ethnicity",
   "tags": [
    "race",
    "ethnicity",
@@ -4928,7 +5006,8 @@
   "id": "pct_bachelors_plus",
   "title": "Bachelor's degree or higher",
   "description": "Share of adults 25 and over with at least a bachelor's degree.",
-  "category": "Education",
+  "category": "People",
+  "subcategory": "Education",
   "tags": [
    "education",
    "college",
@@ -4992,7 +5071,8 @@
   "title": "Bike to work",
   "phrase": "bike commuting rates",
   "description": "Share of workers 16 and over who usually biked to work.",
-  "category": "Commuting",
+  "category": "Transportation",
+  "subcategory": "Commuting",
   "tags": [
    "bicycling",
    "active transportation",
@@ -5052,7 +5132,8 @@
   "id": "pct_black_nh",
   "title": "Black (non-Hispanic) residents",
   "description": "Share of residents who are Black or African American alone and not Hispanic or Latino.",
-  "category": "Race & ethnicity",
+  "category": "People",
+  "subcategory": "Race and ethnicity",
   "tags": [
    "race",
    "ethnicity",
@@ -5115,7 +5196,8 @@
   "title": "Households with broadband",
   "phrase": "broadband rates",
   "description": "Share of households with a broadband internet subscription of any type (cable, fiber, DSL, satellite or cellular data plan).",
-  "category": "Internet access",
+  "category": "Economy",
+  "subcategory": "Internet access",
   "tags": [
    "internet",
    "broadband",
@@ -5170,7 +5252,8 @@
   "id": "pct_carpool",
   "title": "Carpool to work",
   "description": "Share of workers 16 and over who usually share a ride to work in a car, truck or van.",
-  "category": "Commuting",
+  "category": "Transportation",
+  "subcategory": "Commuting",
   "tags": [
    "carpool",
    "car",
@@ -5231,7 +5314,8 @@
   "title": "Children in poverty",
   "phrase": "child poverty rates",
   "description": "Share of children under 18 living in households below the federal poverty line.",
-  "category": "Income & poverty",
+  "category": "Economy",
+  "subcategory": "Income and poverty",
   "tags": [
    "poverty",
    "children",
@@ -5300,6 +5384,7 @@
   "phrase": "disability rates",
   "description": "Share of residents with at least one disability: hearing, vision, thinking, walking, self-care or living independently.",
   "category": "Health",
+  "subcategory": "Disability",
   "tags": [
    "disability",
    "health",
@@ -5363,7 +5448,8 @@
   "id": "pct_drive_alone",
   "title": "Drive to work alone",
   "description": "Share of workers 16 and over who usually drive to work alone in a car, truck or van.",
-  "category": "Commuting",
+  "category": "Transportation",
+  "subcategory": "Commuting",
   "tags": [
    "driving",
    "car",
@@ -5423,7 +5509,8 @@
   "id": "pct_extreme_commute",
   "title": "90-minute-plus commutes",
   "description": "Share of workers who don't work from home whose one-way trip to work takes 90 minutes or more.",
-  "category": "Commuting",
+  "category": "Transportation",
+  "subcategory": "Commuting",
   "tags": [
    "commute time",
    "super commuters",
@@ -5483,7 +5570,8 @@
   "id": "pct_foreign_born",
   "title": "Born outside the U.S.",
   "description": "Share of residents who were not U.S. citizens at birth (immigrants), whatever their citizenship today.",
-  "category": "Population",
+  "category": "People",
+  "subcategory": "Immigration and language",
   "tags": [
    "immigrants",
    "foreign-born",
@@ -5544,7 +5632,8 @@
   "title": "Graduate or professional degree",
   "phrase": "shares of graduate degrees",
   "description": "Share of adults 25 and older with a master's, professional or doctoral degree.",
-  "category": "Education",
+  "category": "People",
+  "subcategory": "Education",
   "tags": [
    "education",
    "graduate degree",
@@ -5607,7 +5696,8 @@
   "id": "pct_hispanic_latino",
   "title": "Hispanic or Latino residents",
   "description": "Share of residents who are Hispanic or Latino, of any race.",
-  "category": "Race & ethnicity",
+  "category": "People",
+  "subcategory": "Race and ethnicity",
   "tags": [
    "race",
    "ethnicity",
@@ -5671,6 +5761,7 @@
   "phrase": "shares of older homes",
   "description": "Share of housing units built before 1960. Older homes are more likely to have lead paint and need repairs.",
   "category": "Housing",
+  "subcategory": "Homes",
   "tags": [
    "housing age",
    "lead paint",
@@ -5727,7 +5818,8 @@
   "id": "pct_leave_before_7am",
   "title": "Leave for work before 7 a.m.",
   "description": "Share of workers who don't work from home who usually leave for work before 7:00 a.m.",
-  "category": "Commuting",
+  "category": "Transportation",
+  "subcategory": "Commuting",
   "tags": [
    "departure time",
    "early shift",
@@ -5791,7 +5883,8 @@
   "id": "pct_limited_english",
   "title": "Households with limited English",
   "description": "Share of households where no one 14 or older speaks English only or speaks it very well.",
-  "category": "Population",
+  "category": "People",
+  "subcategory": "Immigration and language",
   "tags": [
    "language",
    "English",
@@ -5857,7 +5950,8 @@
   "title": "Hour-plus commutes",
   "phrase": "shares of hour-plus commutes",
   "description": "Share of workers who don't work from home whose one-way trip to work takes 60 minutes or more.",
-  "category": "Commuting",
+  "category": "Transportation",
+  "subcategory": "Commuting",
   "tags": [
    "long commute",
    "super commuters",
@@ -5920,6 +6014,7 @@
   "phrase": "shares of mobile homes",
   "description": "Share of housing units that are mobile homes.",
   "category": "Housing",
+  "subcategory": "Homes",
   "tags": [
    "mobile homes",
    "manufactured housing",
@@ -5979,7 +6074,8 @@
   "title": "Moved in the past year",
   "phrase": "shares of recent movers",
   "description": "Share of residents (age 1 and older) who lived in a different home a year earlier, in the U.S. or abroad.",
-  "category": "Population",
+  "category": "People",
+  "subcategory": "Population and age",
   "tags": [
    "mobility",
    "moving",
@@ -6040,7 +6136,8 @@
   "id": "pct_multiracial_nh",
   "title": "Two or more races (non-Hispanic)",
   "description": "Share of residents who report two or more races and are not Hispanic or Latino.",
-  "category": "Race & ethnicity",
+  "category": "People",
+  "subcategory": "Race and ethnicity",
   "tags": [
    "race",
    "ethnicity",
@@ -6102,7 +6199,8 @@
   "id": "pct_nhpi_nh",
   "title": "Native Hawaiian and Pacific Islander (non-Hispanic) residents",
   "description": "Share of residents who are Native Hawaiian or Other Pacific Islander alone and not Hispanic or Latino.",
-  "category": "Race & ethnicity",
+  "category": "People",
+  "subcategory": "Race and ethnicity",
   "tags": [
    "race",
    "ethnicity",
@@ -6166,7 +6264,8 @@
   "title": "Households without a computer",
   "phrase": "shares of households without a computer",
   "description": "Share of households with no computer of any kind, including smartphones and tablets.",
-  "category": "Internet access",
+  "category": "Economy",
+  "subcategory": "Internet access",
   "tags": [
    "computer",
    "digital divide",
@@ -6221,7 +6320,8 @@
   "id": "pct_no_hs_diploma",
   "title": "No high school diploma",
   "description": "Share of adults 25 and over who finished neither high school nor an equivalent such as the GED.",
-  "category": "Education",
+  "category": "People",
+  "subcategory": "Education",
   "tags": [
    "education",
    "high school",
@@ -6296,7 +6396,8 @@
   "title": "Households without internet",
   "phrase": "shares of households offline",
   "description": "Share of households with no internet access at home, by any kind of subscription or free service.",
-  "category": "Internet access",
+  "category": "Economy",
+  "subcategory": "Internet access",
   "tags": [
    "internet",
    "digital divide",
@@ -6353,6 +6454,7 @@
   "phrase": "overcrowding rates",
   "description": "Share of occupied homes with more than one person per room (not counting bathrooms, halls or porches).",
   "category": "Housing",
+  "subcategory": "Homes",
   "tags": [
    "overcrowding",
    "housing",
@@ -6419,6 +6521,7 @@
   "phrase": "homeowner cost-burden rates",
   "description": "Share of homeowners who spend 30% or more of household income on housing costs (mortgage, taxes, insurance, utilities).",
   "category": "Housing",
+  "subcategory": "Costs",
   "tags": [
    "housing costs",
    "affordability",
@@ -6503,7 +6606,8 @@
   "id": "pct_people_of_color",
   "title": "People of color",
   "description": "Share of residents who are Hispanic or Latino, or of any race other than white alone (everyone except non-Hispanic white residents).",
-  "category": "Race & ethnicity",
+  "category": "People",
+  "subcategory": "Race and ethnicity",
   "tags": [
    "race",
    "ethnicity",
@@ -6572,7 +6676,8 @@
   "title": "Population below poverty",
   "phrase": "poverty rates",
   "description": "Share of people whose income in the past 12 months was below the federal poverty level.",
-  "category": "Income & poverty",
+  "category": "Economy",
+  "subcategory": "Income and poverty",
   "tags": [
    "poverty",
    "income",
@@ -6642,7 +6747,8 @@
   "title": "Households on cash public assistance",
   "phrase": "shares of households on public assistance",
   "description": "Share of households that received cash public assistance (such as TANF or general assistance) in the past 12 months. Does not include SNAP food benefits.",
-  "category": "Income & poverty",
+  "category": "Economy",
+  "subcategory": "Income and poverty",
   "tags": [
    "public assistance",
    "welfare",
@@ -6703,6 +6809,7 @@
   "title": "Renters paying 30%+ of income on rent",
   "description": "Share of renter households that spend 30 percent or more of their income on rent and utilities.",
   "category": "Housing",
+  "subcategory": "Costs",
   "tags": [
    "rent burden",
    "housing cost burden",
@@ -6777,6 +6884,7 @@
   "phrase": "shares of renters",
   "description": "Share of occupied housing units that are renter-occupied.",
   "category": "Housing",
+  "subcategory": "Homes",
   "tags": [
    "rent",
    "tenure",
@@ -6836,7 +6944,8 @@
   "title": "Seniors living alone",
   "phrase": "shares of seniors living alone",
   "description": "Share of households that are one person aged 65 or older living alone.",
-  "category": "Population",
+  "category": "People",
+  "subcategory": "Population and age",
   "tags": [
    "seniors",
    "aging",
@@ -6897,7 +7006,8 @@
   "title": "Single-parent families",
   "phrase": "shares of single-parent families",
   "description": "Share of families raising their own children under 18 that are headed by a single parent.",
-  "category": "Population",
+  "category": "People",
+  "subcategory": "Population and age",
   "tags": [
    "families",
    "children",
@@ -6959,7 +7069,8 @@
   "id": "pct_snap_households",
   "title": "Households getting SNAP (food stamps)",
   "description": "Share of households that received SNAP food assistance at some point in the past 12 months.",
-  "category": "Income & poverty",
+  "category": "Economy",
+  "subcategory": "Income and poverty",
   "tags": [
    "SNAP",
    "food stamps",
@@ -7021,7 +7132,8 @@
   "title": "Commute by public transit",
   "phrase": "transit commuting rates",
   "description": "Share of workers 16 and over who usually commute by public transportation (excluding taxicab).",
-  "category": "Commuting",
+  "category": "Transportation",
+  "subcategory": "Commuting",
   "tags": [
    "transit",
    "bus",
@@ -7083,7 +7195,8 @@
   "title": "Children (under 18)",
   "phrase": "shares of children",
   "description": "Share of residents younger than 18.",
-  "category": "Population",
+  "category": "People",
+  "subcategory": "Population and age",
   "tags": [
    "children",
    "age",
@@ -7150,6 +7263,7 @@
   "title": "No health insurance",
   "description": "Share of residents with no health insurance coverage of any kind.",
   "category": "Health",
+  "subcategory": "Care and coverage",
   "tags": [
    "health insurance",
    "uninsured",
@@ -7213,7 +7327,8 @@
   "title": "Veterans",
   "phrase": "shares of veterans",
   "description": "Share of adults 18 and older who served on active duty in the U.S. armed forces.",
-  "category": "Population",
+  "category": "People",
+  "subcategory": "Population and age",
   "tags": [
    "veterans",
    "military"
@@ -7272,7 +7387,8 @@
   "title": "Walk to work",
   "phrase": "walk-to-work rates",
   "description": "Share of workers 16 and over who usually walked to work.",
-  "category": "Commuting",
+  "category": "Transportation",
+  "subcategory": "Commuting",
   "tags": [
    "walking",
    "active transportation",
@@ -7332,7 +7448,8 @@
   "id": "pct_white_nh",
   "title": "White (non-Hispanic) residents",
   "description": "Share of residents who are white alone and not Hispanic or Latino.",
-  "category": "Race & ethnicity",
+  "category": "People",
+  "subcategory": "Race and ethnicity",
   "tags": [
    "race",
    "ethnicity",
@@ -7394,7 +7511,8 @@
   "title": "Work from home",
   "phrase": "work-from-home rates",
   "description": "Share of workers 16 and over who usually worked from home.",
-  "category": "Commuting",
+  "category": "Transportation",
+  "subcategory": "Commuting",
   "tags": [
    "remote work",
    "telework",
@@ -7454,7 +7572,8 @@
   "id": "pct_work_outside_county",
   "title": "Work outside their home county",
   "description": "Share of workers 16 and over whose job is outside the county they live in, including in another state.",
-  "category": "Commuting",
+  "category": "Transportation",
+  "subcategory": "Commuting",
   "tags": [
    "commute flows",
    "regional travel",
@@ -7516,7 +7635,8 @@
   "title": "Households with no vehicle",
   "phrase": "shares of households without a car",
   "description": "Share of households with no vehicle available.",
-  "category": "Vehicles",
+  "category": "Transportation",
+  "subcategory": "Roads and vehicles",
   "tags": [
    "car-free",
    "vehicles",
@@ -7585,7 +7705,8 @@
   "id": "per_capita_income",
   "title": "Income per person",
   "description": "Total income of all residents divided by the number of residents, in 2024 dollars.",
-  "category": "Income & poverty",
+  "category": "Economy",
+  "subcategory": "Income and poverty",
   "tags": [
    "income",
    "per capita income",
@@ -7646,6 +7767,7 @@
   "phrase": "rates of frequent physical distress",
   "description": "Share of adults who say their physical health was not good on 14 or more of the past 30 days. Age-adjusted prevalence; model-based small-area estimate.",
   "category": "Health",
+  "subcategory": "Conditions",
   "tags": [
    "physical health",
    "health status",
@@ -7697,6 +7819,7 @@
   "phrase": "physical inactivity rates",
   "description": "Share of adults with no leisure-time physical activity. Age-adjusted prevalence among adults; model-based small-area estimate.",
   "category": "Health",
+  "subcategory": "Behaviors",
   "tags": [
    "exercise",
    "activity",
@@ -7748,7 +7871,8 @@
   "title": "Fine particle pollution (PM2.5)",
   "phrase": "fine particle pollution levels",
   "description": "Yearly average concentration of fine particles (PM2.5) in the air, averaged over 2023–2025, at each county's highest valid monitor. The federal standard is 9.0 micrograms per cubic meter.",
-  "category": "Environment",
+  "category": "Environment and climate",
+  "subcategory": "Air quality",
   "tags": [
    "air quality",
    "pollution",
@@ -7803,7 +7927,8 @@
   "title": "Population density",
   "phrase": "population density",
   "description": "Total resident population. Shown as people per square mile of land, so large rural areas don't dominate the map.",
-  "category": "Population",
+  "category": "People",
+  "subcategory": "Population and age",
   "tags": [
    "population",
    "density",
@@ -7861,6 +7986,7 @@
   "phrase": "checkup rates",
   "description": "Share of adults who visited a doctor for a routine checkup in the past year. Age-adjusted prevalence; model-based small-area estimate.",
   "category": "Health",
+  "subcategory": "Care and coverage",
   "tags": [
    "checkup",
    "preventive care",
@@ -7913,6 +8039,7 @@
   "phrase": "rates of short sleep",
   "description": "Share of adults who usually sleep less than 7 hours a night. Age-adjusted prevalence among adults; model-based small-area estimate.",
   "category": "Health",
+  "subcategory": "Behaviors",
   "tags": [
    "sleep",
    "health",
@@ -7964,6 +8091,7 @@
   "phrase": "smoking rates",
   "description": "Share of adults who currently smoke cigarettes. Age-adjusted prevalence among adults; model-based small-area estimate.",
   "category": "Health",
+  "subcategory": "Behaviors",
   "tags": [
    "smoking",
    "tobacco",
@@ -8016,6 +8144,7 @@
   "phrase": "stroke rates",
   "description": "Share of adults a doctor has told they have had a stroke. Age-adjusted prevalence; model-based small-area estimate.",
   "category": "Health",
+  "subcategory": "Conditions",
   "tags": [
    "stroke",
    "cardiovascular",
@@ -8062,11 +8191,308 @@
   }
  },
  {
+  "id": "svi_household",
+  "title": "Social vulnerability: age, disability and household (CDC index)",
+  "phrase": "household vulnerability ranks",
+  "description": "CDC's Social Vulnerability Index theme for household characteristics: residents 65 and older or 17 and younger, people with a disability, single-parent households and people with limited English, ranked nationally.",
+  "category": "Environment and climate",
+  "subcategory": "Social vulnerability",
+  "tags": [
+   "CDC",
+   "ATSDR",
+   "SVI",
+   "social vulnerability index",
+   "household characteristics",
+   "older adults",
+   "children",
+   "disability",
+   "single parents",
+   "limited English"
+  ],
+  "source": {
+   "name": "CDC/ATSDR Social Vulnerability Index 2022",
+   "shortName": "CDC SVI",
+   "url": "https://www.atsdr.cdc.gov/place-health/php/svi/index.html",
+   "citation": "Centers for Disease Control and Prevention/Agency for Toxic Substances and Disease Registry/Geospatial Research, Analysis, and Services Program. CDC/ATSDR Social Vulnerability Index 2022 Database U.S. (SVI_2022_US.csv, SVI_2022_US_county.csv), field RPL_THEME2. https://www.atsdr.cdc.gov/place-health/php/svi/svi-data-documentation-download.html Accessed on October 12, 2026."
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105). CDC asks users to cite the SVI with its suggested citation.",
+  "updateCadence": "irregular",
+  "vintage": "2022 (from the 2018–2022 ACS)",
+  "geographyLevels": [
+   "county",
+   "tract"
+  ],
+  "unit": "percentile",
+  "universe": "counties or census tracts (national rank among the same level)",
+  "measure": {
+   "kind": "svi",
+   "year": 2022,
+   "field": "RPL_THEME2"
+  },
+  "modelInputs": [
+   "pct_age_65_plus",
+   "pct_under_18",
+   "pct_disability",
+   "pct_single_parent_families",
+   "pct_limited_english"
+  ],
+  "coverageNote": "A rank from 0 to 100 among all U.S. counties, or among all U.S. tracts (not within each state): the 90th percentile means more vulnerable on this theme than 90% of counties (or tracts). Tracts with no residents, and some where CDC couldn't estimate an input, show no data. Puerto Rico isn't included in CDC's U.S. files. Not comparable with earlier SVI years.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "cdc-svi",
+   "percentile-rank",
+   "acs-5-year"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": false
+  }
+ },
+ {
+  "id": "svi_housing_transport",
+  "title": "Social vulnerability: housing and transportation (CDC index)",
+  "phrase": "housing and transportation vulnerability ranks",
+  "description": "CDC's Social Vulnerability Index theme for housing type and transportation: homes in buildings with 10 or more units, mobile homes, crowded homes, households without a vehicle and people living in group quarters, ranked nationally.",
+  "category": "Environment and climate",
+  "subcategory": "Social vulnerability",
+  "tags": [
+   "CDC",
+   "ATSDR",
+   "SVI",
+   "social vulnerability index",
+   "housing",
+   "mobile homes",
+   "crowding",
+   "no vehicle",
+   "group quarters",
+   "transportation"
+  ],
+  "source": {
+   "name": "CDC/ATSDR Social Vulnerability Index 2022",
+   "shortName": "CDC SVI",
+   "url": "https://www.atsdr.cdc.gov/place-health/php/svi/index.html",
+   "citation": "Centers for Disease Control and Prevention/Agency for Toxic Substances and Disease Registry/Geospatial Research, Analysis, and Services Program. CDC/ATSDR Social Vulnerability Index 2022 Database U.S. (SVI_2022_US.csv, SVI_2022_US_county.csv), field RPL_THEME4. https://www.atsdr.cdc.gov/place-health/php/svi/svi-data-documentation-download.html Accessed on October 12, 2026."
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105). CDC asks users to cite the SVI with its suggested citation.",
+  "updateCadence": "irregular",
+  "vintage": "2022 (from the 2018–2022 ACS)",
+  "geographyLevels": [
+   "county",
+   "tract"
+  ],
+  "unit": "percentile",
+  "universe": "counties or census tracts (national rank among the same level)",
+  "measure": {
+   "kind": "svi",
+   "year": 2022,
+   "field": "RPL_THEME4"
+  },
+  "modelInputs": [
+   "pct_mobile_homes",
+   "pct_overcrowded",
+   "pct_zero_vehicle_households"
+  ],
+  "coverageNote": "A rank from 0 to 100 among all U.S. counties, or among all U.S. tracts (not within each state): the 90th percentile means more vulnerable on this theme than 90% of counties (or tracts). Tracts with no residents, and some where CDC couldn't estimate an input, show no data. Puerto Rico isn't included in CDC's U.S. files. Not comparable with earlier SVI years.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "cdc-svi",
+   "percentile-rank",
+   "acs-5-year"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": false
+  }
+ },
+ {
+  "id": "svi_minority",
+  "title": "Social vulnerability: racial and ethnic minority status (CDC index)",
+  "phrase": "minority status ranks",
+  "description": "CDC's Social Vulnerability Index theme for racial and ethnic minority status: the share of residents who are Hispanic or Latino, or of any race other than white alone, ranked nationally.",
+  "category": "Environment and climate",
+  "subcategory": "Social vulnerability",
+  "tags": [
+   "CDC",
+   "ATSDR",
+   "SVI",
+   "social vulnerability index",
+   "race",
+   "ethnicity",
+   "minority status",
+   "people of color"
+  ],
+  "source": {
+   "name": "CDC/ATSDR Social Vulnerability Index 2022",
+   "shortName": "CDC SVI",
+   "url": "https://www.atsdr.cdc.gov/place-health/php/svi/index.html",
+   "citation": "Centers for Disease Control and Prevention/Agency for Toxic Substances and Disease Registry/Geospatial Research, Analysis, and Services Program. CDC/ATSDR Social Vulnerability Index 2022 Database U.S. (SVI_2022_US.csv, SVI_2022_US_county.csv), field RPL_THEME3. https://www.atsdr.cdc.gov/place-health/php/svi/svi-data-documentation-download.html Accessed on October 12, 2026."
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105). CDC asks users to cite the SVI with its suggested citation.",
+  "updateCadence": "irregular",
+  "vintage": "2022 (from the 2018–2022 ACS)",
+  "geographyLevels": [
+   "county",
+   "tract"
+  ],
+  "unit": "percentile",
+  "universe": "counties or census tracts (national rank among the same level)",
+  "measure": {
+   "kind": "svi",
+   "year": 2022,
+   "field": "RPL_THEME3"
+  },
+  "modelInputs": [
+   "pct_people_of_color"
+  ],
+  "coverageNote": "A rank from 0 to 100 among all U.S. counties, or among all U.S. tracts (not within each state): the 90th percentile means more vulnerable on this theme than 90% of counties (or tracts). Tracts with no residents, and some where CDC couldn't estimate an input, show no data. Puerto Rico isn't included in CDC's U.S. files. Not comparable with earlier SVI years.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "cdc-svi",
+   "percentile-rank",
+   "acs-5-year"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": false
+  }
+ },
+ {
+  "id": "svi_overall",
+  "title": "Social vulnerability, overall (CDC index)",
+  "phrase": "social vulnerability ranks",
+  "description": "How hard a disaster or disease outbreak would hit residents, from CDC's Social Vulnerability Index: 16 census measures of income, age, disability, language, race and ethnicity, housing and transportation, ranked nationally.",
+  "category": "Environment and climate",
+  "subcategory": "Social vulnerability",
+  "tags": [
+   "CDC",
+   "ATSDR",
+   "SVI",
+   "social vulnerability index",
+   "emergency planning",
+   "disasters",
+   "public health",
+   "vulnerability"
+  ],
+  "source": {
+   "name": "CDC/ATSDR Social Vulnerability Index 2022",
+   "shortName": "CDC SVI",
+   "url": "https://www.atsdr.cdc.gov/place-health/php/svi/index.html",
+   "citation": "Centers for Disease Control and Prevention/Agency for Toxic Substances and Disease Registry/Geospatial Research, Analysis, and Services Program. CDC/ATSDR Social Vulnerability Index 2022 Database U.S. (SVI_2022_US.csv, SVI_2022_US_county.csv), field RPL_THEMES. https://www.atsdr.cdc.gov/place-health/php/svi/svi-data-documentation-download.html Accessed on October 12, 2026."
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105). CDC asks users to cite the SVI with its suggested citation.",
+  "updateCadence": "irregular",
+  "vintage": "2022 (from the 2018–2022 ACS)",
+  "geographyLevels": [
+   "county",
+   "tract"
+  ],
+  "unit": "percentile",
+  "universe": "counties or census tracts (national rank among the same level)",
+  "measure": {
+   "kind": "svi",
+   "year": 2022,
+   "field": "RPL_THEMES"
+  },
+  "modelInputs": [
+   "svi_socioeconomic",
+   "svi_household",
+   "svi_minority",
+   "svi_housing_transport"
+  ],
+  "coverageNote": "A rank from 0 to 100 among all U.S. counties, or among all U.S. tracts (not within each state): the 90th percentile means more vulnerable than 90% of counties (or tracts). Tracts with no residents, and some where CDC couldn't estimate an input, show no data. Puerto Rico isn't included in CDC's U.S. files. Not comparable with earlier SVI years.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "cdc-svi",
+   "percentile-rank",
+   "acs-5-year"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": false
+  }
+ },
+ {
+  "id": "svi_socioeconomic",
+  "title": "Social vulnerability: income and jobs (CDC index)",
+  "phrase": "socioeconomic vulnerability ranks",
+  "description": "CDC's Social Vulnerability Index theme for socioeconomic status: residents below 150% of the poverty line, unemployed, paying too much for housing, without a high school diploma or without health insurance, ranked nationally.",
+  "category": "Environment and climate",
+  "subcategory": "Social vulnerability",
+  "tags": [
+   "CDC",
+   "ATSDR",
+   "SVI",
+   "social vulnerability index",
+   "socioeconomic status",
+   "poverty",
+   "unemployment",
+   "housing cost",
+   "uninsured"
+  ],
+  "source": {
+   "name": "CDC/ATSDR Social Vulnerability Index 2022",
+   "shortName": "CDC SVI",
+   "url": "https://www.atsdr.cdc.gov/place-health/php/svi/index.html",
+   "citation": "Centers for Disease Control and Prevention/Agency for Toxic Substances and Disease Registry/Geospatial Research, Analysis, and Services Program. CDC/ATSDR Social Vulnerability Index 2022 Database U.S. (SVI_2022_US.csv, SVI_2022_US_county.csv), field RPL_THEME1. https://www.atsdr.cdc.gov/place-health/php/svi/svi-data-documentation-download.html Accessed on October 12, 2026."
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105). CDC asks users to cite the SVI with its suggested citation.",
+  "updateCadence": "irregular",
+  "vintage": "2022 (from the 2018–2022 ACS)",
+  "geographyLevels": [
+   "county",
+   "tract"
+  ],
+  "unit": "percentile",
+  "universe": "counties or census tracts (national rank among the same level)",
+  "measure": {
+   "kind": "svi",
+   "year": 2022,
+   "field": "RPL_THEME1"
+  },
+  "modelInputs": [
+   "unemployment_rate",
+   "pct_no_hs_diploma",
+   "pct_uninsured"
+  ],
+  "coverageNote": "A rank from 0 to 100 among all U.S. counties, or among all U.S. tracts (not within each state): the 90th percentile means more vulnerable on this theme than 90% of counties (or tracts). Tracts with no residents, and some where CDC couldn't estimate an input, show no data. Puerto Rico isn't included in CDC's U.S. files. Not comparable with earlier SVI years.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "cdc-svi",
+   "percentile-rank",
+   "acs-5-year"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": false
+  }
+ },
+ {
   "id": "traffic_fatalities",
   "title": "Traffic deaths",
   "phrase": "traffic death rates",
   "description": "Average yearly deaths in motor vehicle crashes per 100,000 residents, 2020–2024, counted where the crash happened.",
   "category": "Transportation",
+  "subcategory": "Traffic safety",
   "tags": [
    "safety",
    "crashes",
@@ -8123,7 +8549,8 @@
   "id": "unemployment_rate",
   "title": "Unemployment rate",
   "description": "Share of people in the civilian labor force (working or looking for work) who had no job and were looking for one.",
-  "category": "Jobs",
+  "category": "Economy",
+  "subcategory": "Jobs",
   "tags": [
    "unemployment",
    "jobs",
@@ -8187,6 +8614,7 @@
   "phrase": "rates of utility shut-off threats",
   "description": "Share of adults whose electric, gas, oil or water company threatened to shut off service in the past 12 months. Age-adjusted prevalence; model-based small-area estimate.",
   "category": "Health",
+  "subcategory": "Daily needs",
   "tags": [
    "utilities",
    "energy",
@@ -8239,6 +8667,7 @@
   "phrase": "driving per resident",
   "description": "Daily vehicle miles traveled on counted roads in the area, per resident, from traffic counts (AADT) times road length.",
   "category": "Transportation",
+  "subcategory": "Roads and vehicles",
   "tags": [
    "VMT",
    "driving",

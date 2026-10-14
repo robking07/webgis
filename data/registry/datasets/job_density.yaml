@@ -2,7 +2,8 @@ id: job_density
 title: Job density
 phrase: job density
 description: Jobs located in the area (all jobs, by workplace) per square mile of land.
-category: Jobs
+category: Economy
+subcategory: Jobs
 tags: [jobs, employment, workplace, LODES, LEHD]
 source:
   name: U.S. Census Bureau, LEHD Origin-Destination Employment Statistics (LODES 8)

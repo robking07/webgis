@@ -2,6 +2,7 @@ id: food_access_no_car_tracts
 title: No car, far from a supermarket (tracts)
 description: "Share of each census tract's households that have no car and live more than half a mile from the nearest supermarket, supercenter or large grocery store."
 category: Health
+subcategory: Food access
 tags: [vehicle access, no car, food access, food deserts, supermarkets, grocery stores, low income low access, USDA, Food Access Research Atlas]
 source:
   name: USDA Economic Research Service, Food Access Research Atlas (Large Retailer Access Map, 2019 data)

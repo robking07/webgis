@@ -3,6 +3,7 @@ title: "Cancer"
 phrase: cancer rates
 description: "Share of adults a doctor has ever told they have cancer (melanoma or any cancer other than other skin cancers). Age-adjusted prevalence; model-based small-area estimate."
 category: Health
+subcategory: Conditions
 tags: [cancer, chronic disease, health]
 source:
   name: CDC PLACES (Local Data for Better Health), 2025 release

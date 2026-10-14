@@ -279,6 +279,18 @@
   short: "How well a community is equipped to prepare for, absorb and recover from disasters. Higher is better."
   long: "FEMA's National Risk Index takes community resilience from the University of South Carolina's Baseline Resilience Indicators for Communities (BRIC), which combines measures of social, economic, housing and infrastructure, institutional, community and environmental capacity. It's a 0–100 national rank among counties; FEMA gives every census tract its county's score, so Mapwich shows it for counties only."
   source: https://www.fema.gov/flood-maps/products-tools/national-risk-index
+
+- id: cdc-svi
+  term: CDC Social Vulnerability Index (SVI)
+  short: "CDC's ranking of every county and census tract by how hard a disaster or disease outbreak would hit the people who live there."
+  long: "It combines 16 census measures in four themes: socioeconomic status; household characteristics (age, disability, single parents, limited English); racial and ethnic minority status; and housing type and transportation. The overall score ranks places on all 16 together, so it isn't an average of the four theme ranks. Emergency planners use it to decide where help is needed first. It describes residents, not the hazards they face. Where CDC has no value (its code -999, mostly tracts with no residents), the map shows no data."
+  source: https://www.atsdr.cdc.gov/place-health/php/svi/index.html
+
+- id: percentile-rank
+  term: Percentile rank
+  short: "Where a place falls among all others, from 0 to 100: the 75th percentile means higher than 75% of places."
+  long: "A percentile rank only says how places compare, not how much of something there is. CDC ranks every county against all U.S. counties, and every tract against all U.S. tracts, not just those in the same state, so a tract can be low for its state and still rank high nationally, or the other way round. Because it's a rank, a place can move when others change even if it didn't."
+  source: https://www.atsdr.cdc.gov/place-health/php/svi/svi-data-documentation-download.html
 - id: design-value
   term: >-
     Design value (air quality)

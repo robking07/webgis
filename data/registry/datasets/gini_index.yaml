@@ -1,7 +1,8 @@
 id: gini_index
 title: "Income inequality (Gini index)"
 description: "How unevenly household income is spread, from 0 (every household earns the same) to 1 (one household earns everything)."
-category: Income & poverty
+category: Economy
+subcategory: Income and poverty
 tags: [inequality, Gini, income, economy]
 source:
   name: U.S. Census Bureau, American Community Survey 5-Year Estimates

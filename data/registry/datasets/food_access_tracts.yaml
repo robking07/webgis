@@ -2,6 +2,7 @@ id: food_access_tracts
 title: Far from a supermarket (tracts)
 description: "Share of each census tract's residents who live more than 1 mile (urban tracts) or 10 miles (rural tracts) from the nearest supermarket, supercenter or large grocery store. Tracts that are also low income are USDA's low-income, low-access tracts, often called food deserts."
 category: Health
+subcategory: Food access
 tags: [food access, food deserts, supermarkets, grocery stores, low income low access, USDA, Food Access Research Atlas]
 source:
   name: USDA Economic Research Service, Food Access Research Atlas (Large Retailer Access Map, 2019 data)

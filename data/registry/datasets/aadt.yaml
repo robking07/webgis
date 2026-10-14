@@ -2,6 +2,7 @@ id: aadt
 title: Traffic volume (AADT)
 description: Average annual daily traffic, in vehicles per day, on each road segment with a count. Wider lines are higher road classes.
 category: Transportation
+subcategory: Roads and vehicles
 tags: [traffic, AADT, volume, roads, highways, HPMS, congestion, trucks, interstate, US highway, state highway, county road]
 source:
   name: FHWA Highway Performance Monitoring System (HPMS) 2024

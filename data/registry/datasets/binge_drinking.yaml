@@ -3,6 +3,7 @@ title: Binge drinking
 phrase: binge drinking rates
 description: "Share of adults who binge drank in the past 30 days. Age-adjusted prevalence among adults; model-based small-area estimate."
 category: Health
+subcategory: Behaviors
 tags: [alcohol, drinking, health, behavior]
 source:
   name: CDC PLACES (Local Data for Better Health), 2025 release

@@ -2,7 +2,8 @@ id: pct_work_from_home
 title: Work from home
 phrase: work-from-home rates
 description: Share of workers 16 and over who usually worked from home.
-category: Commuting
+category: Transportation
+subcategory: Commuting
 tags: [remote work, telework, commute, transportation]
 source:
   name: U.S. Census Bureau, American Community Survey 5-Year Estimates

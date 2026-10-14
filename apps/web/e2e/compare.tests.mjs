@@ -19,9 +19,9 @@ export default function compareTests({ test, expect, wait, immerse, tapLonLat, l
       expect(/higher$|^About the same$/.test(said), `headline: "${said}"`);
       const h1 = await page.locator("main h1").innerText();
       expect(h1.includes("Hennepin County, MN") && h1.includes("Ramsey County, MN"), `heading: ${h1}`);
-      // Every topic group is listed; only the metric's own (Income & poverty) starts open.
+      // Every topic group is listed; only the metric's own (Economy) starts open.
       const groups = await page.locator("details[data-topic]").evaluateAll((ds) => ds.map((d) => [d.dataset.topic, d.open]));
-      expect(groups.length > 1 && groups[0][0] === "Income & poverty" && groups[0][1] && groups.slice(1).every(([, o]) => !o), `topic groups: ${JSON.stringify(groups)}`);
+      expect(groups.length > 1 && groups[0][0] === "Economy" && groups[0][1] && groups.slice(1).every(([, o]) => !o), `topic groups: ${JSON.stringify(groups)}`);
       expect((await page.locator("[data-compare-row]").count()) > 0, "no topic-group rows");
       expect(!/No data/.test(await page.locator("main").innerText()), "a No data row on the compare page");
       await page.reload({ waitUntil: "load" });
@@ -62,6 +62,34 @@ export default function compareTests({ test, expect, wait, immerse, tapLonLat, l
     const tiles = page.requests.filter((u) => /\.pmtiles|maplibre-gl-worker|\/values\/[^/]+\/tract\.json/.test(u));
     expect(!tiles.length && !(await page.evaluate(() => !!window.__wgMap)), `map downloads on the phone: ${tiles.join(", ")}`);
   });
+
+  // PR 2b (D-258): counts and shares under the headline everywhere; row counts only on laptops and
+  // up; parts-of-a-whole bars in the race and ethnicity group.
+  for (const vp of ["phone", "laptop"]) {
+    test(`${vp} compare places: counts, share of parent places, parts bars`, async (o) => {
+      const { page } = await o(vp, "/compare/27053/27123?d=pct_poverty", { ready: false });
+      const counts = page.locator("[data-compare-headline] [data-compare-counts]");
+      await counts.first().waitFor({ timeout: 20000 });
+      expect((await counts.count()) === 2, "counts under both places");
+      await page.locator('[data-compare-headline] [data-compare-share="us"]').nth(1).waitFor({ timeout: 20000 });
+      const shares = await page.locator("[data-compare-headline] [data-compare-share]").allInnerTexts();
+      expect(shares.length === 4 && shares.some((s) => /of the Minnesota total$/.test(s)) && shares.some((s) => /of the U\.S\. total$/.test(s)), `shares: ${JSON.stringify(shares)}`);
+      const race = page.locator('details[data-topic="People"]');
+      await race.locator("summary").click();
+      const bars = race.locator("[data-compare-parts]");
+      await bars.waitFor();
+      expect((await bars.locator("tbody tr").count()) === 8, "seven groups plus the remainder");
+      await wait(1500);
+      const rowCounts = await page.locator("[data-compare-row-counts]").count();
+      const countFiles = page.requests.filter((u) => /\.counts\.json|\/values\/counts\//.test(u));
+      if (vp === "phone") {
+        expect(rowCounts === 0, "row counts on the phone");
+        expect(countFiles.every((u) => /\/values\/pct_poverty\//.test(u)), `phone fetched other counts files: ${countFiles.join(", ")}`);
+      } else {
+        expect(rowCounts > 0, "no row counts on a laptop");
+      }
+    });
+  }
 
   test("laptop compare places: no Compare with… on a non-default year", async (o) => {
     // Pick the year in Map options rather than loading with t=2019: a page that opens on an earlier year

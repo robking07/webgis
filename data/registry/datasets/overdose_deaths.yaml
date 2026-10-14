@@ -3,6 +3,7 @@ title: Drug overdose deaths
 phrase: drug overdose death rates
 description: Drug overdose deaths per 100,000 residents in the 12 months ending December 2025, by county of residence. Provisional counts from death certificates. Counties with 1–9 deaths are hidden by CDC to protect privacy.
 category: Health
+subcategory: Care and coverage
 tags: [overdose, drugs, opioids, fentanyl, mortality, deaths, health]
 source:
   name: CDC National Center for Health Statistics, VSRR Provisional County-Level Drug Overdose Death Counts

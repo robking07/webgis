@@ -3,6 +3,7 @@ title: No car, far from a supermarket
 phrase: shares of households without a car far from a supermarket
 description: "Share of households that have no car and live more than half a mile from the nearest supermarket, supercenter or large grocery store."
 category: Health
+subcategory: Food access
 tags: [vehicle access, no car, food access, supermarkets, USDA, Food Access Research Atlas]
 source:
   name: USDA Economic Research Service, Food Access Research Atlas (Large Retailer Access Map, 2019 data)

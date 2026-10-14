@@ -3,6 +3,7 @@ title: "COPD (chronic lung disease)"
 phrase: COPD rates
 description: "Share of adults a doctor has told they have chronic obstructive pulmonary disease (COPD), emphysema or chronic bronchitis. Age-adjusted prevalence; model-based small-area estimate."
 category: Health
+subcategory: Conditions
 tags: [COPD, lung disease, emphysema, chronic disease, health]
 source:
   name: CDC PLACES (Local Data for Better Health), 2025 release

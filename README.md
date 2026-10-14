@@ -20,3 +20,7 @@ Copy `.env.example` to `.env.local` for keys. The build and dev server work with
 - [Roadmap](docs/roadmap.md)
 - [Architecture](docs/architecture.md): where code lives
 - [Changelog](CHANGELOG.md)
+
+## License
+
+Code: [MIT](LICENSE). Map data keeps the license of each source (listed on the site's data pages). The text of Specials in `apps/web/content/specials/` is © Robbie King, all rights reserved.
