@@ -7,7 +7,7 @@
 // Part 2b: the head counts behind a rate, each place's share of the places above it, and
 // parts-of-a-whole bars (lib/counts.ts, D-257 files).
 import { useEffect, useMemo, useState } from "react";
-import { formatValue, gradeEstimate, isGradable, rampColors, SECOND_OUTLINE_DASH, type GeoLevel } from "@webgis/design";
+import { formatEstimate, formatValue, gradeEstimate, isGradable, rampColors, SECOND_OUTLINE_DASH, type GeoLevel } from "@webgis/design";
 import { StatusState } from "@webgis/design/components";
 import { bothHave, compareValues, rowVerdictText, shortName, verdictText, type Verdict } from "@/lib/compare";
 import { countsLabels, PARTS, parentsOf, partsOf, placeCounts, shareOf, type Counts } from "@/lib/counts";
@@ -217,12 +217,12 @@ function Headline({ ds, a, b, names, ranks, counts, geoids, parentNames }: {
       </p>
       <div className="mt-4 grid grid-cols-2 gap-4">
         {(["a", "b"] as const).map((k) => {
-          const e = k === "a" ? ea : eb, rank = ranks?.[k];
+          const e = k === "a" ? ea : eb, rank = ranks?.[k], est = formatEstimate(e.value, e.moe, ds.unit);
           return (
             <div key={k} className="min-w-0">
               <p className="truncate text-sm font-medium">{names[k]}</p>
-              <p className={`text-2xl tabular-nums md:text-3xl ${higherIs(v, k) ? "font-bold" : "font-semibold"}`}>{formatValue(e.value, ds.unit)}</p>
-              {e.moe != null && e.moe > 0 && e.value != null && <p className="text-xs tabular-nums text-muted-foreground">±{formatValue(e.moe, ds.unit)}</p>}
+              <p className={`text-2xl tabular-nums md:text-3xl ${higherIs(v, k) ? "font-bold" : "font-semibold"}`}>{est.value}</p>
+              {est.moe && <p className="text-xs tabular-nums text-muted-foreground">±{est.moe}</p>}
               {rank && <p className="mt-1 text-xs text-muted-foreground">{rank}</p>}
               <CountsBlock ds={ds} c={counts[`${ds.id}:${geoids[k]}`]} parents={parentsOf(geoids[k])} counts={counts} parentNames={parentNames} />
             </div>
@@ -297,13 +297,13 @@ function Rows({ list, data, names, counts, geoids }: { list: Dataset[]; data: { 
               <p className="shrink-0 text-xs text-muted-foreground">{rowVerdictText(v, names)}</p>
             </div>
             <div className="mt-0.5 grid grid-cols-2 gap-3 text-sm tabular-nums">
-              {([ea, eb] as const).map((e, i) => (
+              {([ea, eb] as const).map((e, i) => { const est = formatEstimate(e.value, e.moe, d.unit); return (
                 <p key={i} className={higherIs(v, i === 0 ? "a" : "b") ? "font-semibold" : ""}>
                   <span className="sr-only">{i === 0 ? names.a : names.b}: </span>
-                  {formatValue(e.value, d.unit)}
-                  {e.moe != null && e.moe > 0 && e.value != null && <span className="ml-1 text-xs font-normal text-muted-foreground">±{formatValue(e.moe, d.unit)}</span>}
+                  {est.value}
+                  {est.moe && <span className="ml-1 text-xs font-normal text-muted-foreground">±{est.moe}</span>}
                 </p>
-              ))}
+              ); })}
             </div>
             {ca?.[0] != null && cb?.[0] != null && (
               <div className="mt-0.5 grid grid-cols-2 gap-3 text-xs text-muted-foreground" data-compare-row-counts="">
