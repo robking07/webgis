@@ -67,7 +67,7 @@ export interface Theme {
     /** Fill of the Interstate and U.S. route shields in the OpenFreeMap sprite (white in both themes).
      *  Fixed by the sprite, not by the style; listed so the check can test the number on it. */
     shieldFill: string;
-    /** U.S. land, a step lighter than other countries so the lower 48 reads at a glance. */
+    /** U.S. land: lighter than other countries in light mode, darker in dark mode, so the lower 48 reads at a glance. */
     focusLand: string;
     /** Shoreline drawn around water bodies. */
     coastline: string;

@@ -96,7 +96,8 @@ for (const theme of Object.values(THEMES)) {
 }
 
 // Area fills: every class of every sequential ramp stays clear of focus land, of land outside the
-// U.S. (where the data meets the border) and of the no-data fill, in both themes (a pale first class used to read as "no data"). Diverging ramps are exempt:
+// U.S. (where the data meets the border) and of the no-data fill, in both themes (a pale first
+// class used to read as "no data"). Diverging ramps are exempt:
 // their neutral middle is near-white by design; give a diverging map a distinct no-data treatment.
 let landCases = 0;
 for (const [id, r] of Object.entries(RAMPS) as Array<[RampId, RampDef]>) {
