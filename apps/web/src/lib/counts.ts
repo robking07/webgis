@@ -36,11 +36,13 @@ export async function placeCounts(id: string, geoid: string): Promise<Counts | n
   return (await load<Record<string, Counts>>(`values/${id}/${level}.counts.json`))?.[geoid] ?? null;
 }
 
-/** The places a share is taken of: tract → county, state; county → state, U.S.; state → U.S. */
+/** The places a share is taken of: tract → county, state; county → state, U.S.; state → U.S.
+ *  Puerto Rico has no U.S. share: the Census U.S. totals leave it out (D-257). */
 export function parentsOf(geoid: string): string[] {
+  const us = geoid.startsWith("72") ? [] : ["us"];
   if (geoid.length === 11) return [geoid.slice(0, 5), geoid.slice(0, 2)];
-  if (geoid.length === 5) return [geoid.slice(0, 2), "us"];
-  return ["us"];
+  if (geoid.length === 5) return [geoid.slice(0, 2), ...us];
+  return us;
 }
 
 /**

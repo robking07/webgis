@@ -23,6 +23,8 @@ describe("share of a parent place", () => {
     expect(parentsOf("27053100200")).toEqual(["27053", "27"]);
     expect(parentsOf("27053")).toEqual(["27", "us"]);
     expect(parentsOf("27")).toEqual(["us"]);
+    expect(parentsOf("72127")).toEqual(["72"]);
+    expect(parentsOf("72")).toEqual([]);
   });
 });
 
