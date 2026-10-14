@@ -95,9 +95,9 @@ interface Props {
   onTractCounties?: (counties: string[]) => void;
   /** Report onTractCounties without hatching (a change map testing tract margins of error). */
   watchCounties?: boolean;
-  /** Compare places (D-258): outline `a` (solid) and `b` (dashed), open on `bbox` and fit both (or
-   *  only `fit`) once their tiles are in. Clicks and hover don't select anything else. */
-  compare?: { level: GeoLevel; a: string; b: string; bbox: Bbox; fit?: "a" | "b" };
+  /** Compare places (D-258, D-330): outline `a` (solid) and `b` (dashed), open on `bbox` and fit the
+   *  `fit` place's outline once its tiles are in. Clicks and hover don't select anything else. */
+  compare?: { level: GeoLevel; a: string; b: string; bbox: Bbox; fit: "a" | "b" };
 }
 
 export interface MapApi {
@@ -221,10 +221,10 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
       appliedHatch.current = {};
       syncHatch(m, latest.current.hatch, appliedHatch.current, latest.current.levelZooms);
     });
-    // The opening bbox is an estimate from each place's center and area; frame both exactly once their tiles are in.
+    // The opening bbox is an estimate from the place's center and area; frame it exactly once its tiles are in.
     if (compare) m.once("idle", () => {
-      const bs = (compare.fit ? [compare[compare.fit]] : [compare.a, compare.b]).map((g) => geographyBbox(m, compare.level, g));
-      if (bs.every(Boolean)) fitBbox([Math.min(...bs.map((b) => b![0])), Math.min(...bs.map((b) => b![1])), Math.max(...bs.map((b) => b![2])), Math.max(...bs.map((b) => b![3]))], { top: 40, right: 40, bottom: 40, left: 40 });
+      const b = geographyBbox(m, compare.level, compare[compare.fit]);
+      if (b) fitBbox(b, { top: 40, right: 40, bottom: 40, left: 40 });
     });
     // Hatching on: report which counties' tracts are on screen once the map settles.
     m.on("idle", () => reportTractCounties(m, !!latest.current.hatch || latest.current.watchCounties, latest.current.onTractCounties, reportedCounties));

@@ -41,8 +41,8 @@ export function SpecialMap({ datasets, at, level = "county", legendBelow = false
   className?: string;
   /** Overlays drawn on the map (a tag, a button). */
   children?: React.ReactNode;
-  /** Compare places (D-258): outline these two places of `level` and frame them. */
-  compare?: { a: string; b: string; bbox: Bbox; fit?: "a" | "b" };
+  /** Compare places (D-258, D-330): outline these two places of `level` and frame the `fit` one. */
+  compare?: { a: string; b: string; bbox: Bbox; fit: "a" | "b" };
   /** False: no legend (the second of two maps side by side, which share one). */
   legend?: boolean;
 }) {
