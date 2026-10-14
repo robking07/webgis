@@ -924,6 +924,7 @@ test("laptop earlier year at block-group zoom: no boundary file that doesn't exi
 (await import("./compare.tests.mjs")).default({ test, expect, wait, immerse, tapLonLat, live, HENNEPIN, dbCalls });
 (await import("./share.tests.mjs")).default({ test, expect, wait, mapIdle });
 (await import("./context.tests.mjs")).default({ test, expect, wait });
+(await import("./history.tests.mjs")).default({ test, expect, immerse, mapIdle });
 
 // ── Run ────────────────────────────────────────────────────────────────────────
 // Round-robin keeps the slow tests spread across shards.
