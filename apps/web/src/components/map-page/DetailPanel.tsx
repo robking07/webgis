@@ -1,7 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { X } from "lucide-react";
 import { StatusState } from "@webgis/design/components";
-import { CHANGE_CLASSES, formatValue, GEO_LEVELS, gradeEstimate, isGradable, STATIC_ONLY_LEVELS, TILE_VALUE_LEVELS } from "@webgis/design";
+import { CHANGE_CLASSES, formatEstimate, formatValue, GEO_LEVELS, gradeEstimate, isGradable, STATIC_ONLY_LEVELS, TILE_VALUE_LEVELS } from "@webgis/design";
 import { reliabilityNote } from "@/lib/reliability";
 import { changeSummary, differenceMoe, formatChange, withinMoe } from "@/lib/change";
 import type { ClassedLevel } from "./useViewerData";
@@ -202,12 +202,13 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
                 );
               }
               const rank = rankText(i === 0 ? xv : yv, r?.value, info.level);
+              const est = formatEstimate(r?.value, r?.moe, d.unit);
               return (
                 <div key={d.id} className="rounded-md bg-muted px-3 py-2">
                   <p className="text-xs text-muted-foreground">{d.title}</p>
                   <p className="text-xl font-semibold tabular-nums">
-                    {formatValue(r?.value, d.unit)}
-                    {r?.moe != null && r.moe > 0 && r.value != null && <span className="ml-1 text-xs font-normal text-muted-foreground">±{formatValue(r.moe, d.unit)}</span>}
+                    {est.value}
+                    {est.moe && <span className="ml-1 text-xs font-normal text-muted-foreground">±{est.moe}</span>}
                   </p>
                   {i === 0 && phone && legendKey && <SheetKey {...legendKey} />}
                   {rank && <p className="mt-1 text-xs text-muted-foreground">{rank}</p>}

@@ -1,0 +1,23 @@
+id: svi_housing_transport
+title: "Social vulnerability: housing and transportation (CDC index)"
+phrase: "housing and transportation vulnerability ranks"
+description: "CDC's Social Vulnerability Index theme for housing type and transportation: homes in buildings with 10 or more units, mobile homes, crowded homes, households without a vehicle and people living in group quarters, ranked nationally."
+tags: [CDC, ATSDR, SVI, social vulnerability index, housing, mobile homes, crowding, no vehicle, group quarters, transportation]
+category: Environment and climate
+subcategory: Social vulnerability
+source:
+  name: CDC/ATSDR Social Vulnerability Index 2022
+  shortName: CDC SVI
+  url: https://www.atsdr.cdc.gov/place-health/php/svi/index.html
+  citation: "Centers for Disease Control and Prevention/Agency for Toxic Substances and Disease Registry/Geospatial Research, Analysis, and Services Program. CDC/ATSDR Social Vulnerability Index 2022 Database U.S. (SVI_2022_US.csv, SVI_2022_US_county.csv), field RPL_THEME4. https://www.atsdr.cdc.gov/place-health/php/svi/svi-data-documentation-download.html Accessed on October 12, 2026."
+license: "Public domain (U.S. Government work, 17 U.S.C. § 105). CDC asks users to cite the SVI with its suggested citation."
+updateCadence: irregular
+vintage: "2022 (from the 2018–2022 ACS)"
+geographyLevels: [county, tract]
+unit: percentile
+universe: "counties or census tracts (national rank among the same level)"
+modelInputs: [pct_mobile_homes, pct_overcrowded, pct_zero_vehicle_households]
+coverageNote: "A rank from 0 to 100 among all U.S. counties, or among all U.S. tracts (not within each state): the 90th percentile means more vulnerable on this theme than 90% of counties (or tracts). Tracts with no residents, and some where CDC couldn't estimate an input, show no data. Puerto Rico isn't included in CDC's U.S. files. Not comparable with earlier SVI years."
+terms: [cdc-svi, percentile-rank, acs-5-year]
+measure: { kind: svi, year: 2022, field: RPL_THEME4 }
+symbology: { ramp: purples, classification: quantile, classes: 5, higherIsBetter: false }

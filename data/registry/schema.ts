@@ -150,6 +150,16 @@ const FemaNriMeasure = z.object({
   ratingField: z.string().regex(/^[A-Z][A-Z_]*$/).optional(),
 });
 
+/** CDC/ATSDR Social Vulnerability Index: one percentile-rank field of CDC's U.S.-wide county and
+ *  tract CSVs (ranked nationally, not within each state). Ingest: data/ingest/src/svi.ts. */
+const SviMeasure = z.object({
+  kind: z.literal("svi"),
+  /** SVI release year (the files are SVI_<year>_US.csv and SVI_<year>_US_county.csv). */
+  year: z.number().int(),
+  /** Percentile-rank field, 0–1 in the files (-999 = no data): RPL_THEMES or RPL_THEME1–4. */
+  field: z.enum(["RPL_THEMES", "RPL_THEME1", "RPL_THEME2", "RPL_THEME3", "RPL_THEME4"]),
+});
+
 /** Daily vehicle miles traveled from HPMS: Σ AADT × section length (milepoints), by county,
  *  divided by residents. Counted roads only; uncounted local roads are missing. */
 const HpmsVmtMeasure = z.object({
@@ -264,7 +274,7 @@ export const DatasetEntry = z.object({
   unit: Unit,
   /** For insights: the population the value describes. Pairs that share one are flagged. */
   universe: z.string(),
-  measure: z.discriminatedUnion("kind", [AcsMeasure, Census2020Measure, LodesMeasure, PlacesMeasure, ClimdivMeasure, NbiMeasure, FarsMeasure, FeaturesMeasure, HpmsVmtMeasure, CejstMeasure, Ddp287gMeasure, LeadMeasure, FemaNriMeasure, AirQualityMeasure, OverdoseMeasure]),
+  measure: z.discriminatedUnion("kind", [AcsMeasure, Census2020Measure, LodesMeasure, PlacesMeasure, ClimdivMeasure, NbiMeasure, FarsMeasure, FeaturesMeasure, HpmsVmtMeasure, CejstMeasure, Ddp287gMeasure, LeadMeasure, FemaNriMeasure, SviMeasure, AirQualityMeasure, OverdoseMeasure]),
   /** Other registry datasets used as inputs to this dataset's model (e.g. PLACES uses county poverty).
    *  Insight pairs with these are flagged: they correlate partly by construction. */
   modelInputs: z.array(z.string()).default([]),
