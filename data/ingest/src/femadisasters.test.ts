@@ -35,4 +35,8 @@ describe("declarationSets", () => {
   it("fails loudly on a missing column", () => {
     expect(() => declarationSets("a,b\n1,2", ["DR"], 2000)).toThrow(/missing/);
   });
+  it("leaves out pandemic (Biological) declarations", () => {
+    const csv = "disasterNumber,declarationType,declarationDate,tribalRequest,fipsStateCode,fipsCountyCode,incidentType\n4480,DR,2020-03-20,0,27,053,Biological\n4500,DR,2020-05-01,0,27,053,Flood\n";
+    expect([...declarationSets(csv, ["DR"], 2000).county.get("27053")!]).toEqual(["4500"]);
+  });
 });

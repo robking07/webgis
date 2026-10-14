@@ -21,13 +21,14 @@ export function declarationSets(csv: string, types: string[], since: number) {
   const h = splitCsv(head);
   const col = (n: string) => { const i = h.indexOf(n); if (i < 0) throw new Error(`column ${n} missing`); return i; };
   const iN = col("disasterNumber"), iT = col("declarationType"), iD = col("declarationDate"),
-    iTr = col("tribalRequest"), iS = col("fipsStateCode"), iC = col("fipsCountyCode");
+    iTr = col("tribalRequest"), iS = col("fipsStateCode"), iC = col("fipsCountyCode"), iI = h.indexOf("incidentType");
   const out = { state: new Map<string, Set<string>>(), county: new Map<string, Set<string>>() };
   const add = (m: Map<string, Set<string>>, g: string, n: string) => { if (!m.has(g)) m.set(g, new Set()); m.get(g)!.add(n); };
   let tribal = 0;
   for (const line of lines) {
     const f = splitCsv(line);
     if (!types.includes(f[iT]) || !(Number(f[iD].slice(0, 4)) >= since)) continue; // a blank date never counts
+    if (f[iI] === "Biological") continue; // pandemic declarations (COVID-19 named every county): left out (Robbie, 2026-10-14)
     if (f[iTr] === "1") { tribal++; continue; }
     const st = f[iS].padStart(2, "0"), raw = st + f[iC].padStart(3, "0"), n = f[iN];
     add(out.state, st, n);

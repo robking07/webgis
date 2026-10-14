@@ -26,9 +26,11 @@ Environment and climate › Natural hazards. Source: OpenFEMA Disaster Declarati
   Connecticut under its pre-2022 counties, so Connecticut's planning regions get no value (the state
   value is fine). Island territories (Guam, USVI, CNMI, American Samoa, Palau/FSM/Marshall Islands) are
   not in our geography; Puerto Rico is.
-- **COVID-19 stays in:** the 59 COVID-19 major disasters of 2020 (incident type Biological) named
-  every county, so every county has at least 1 and none shows 0. They were real major disaster
-  declarations; the coverage note says so. Dropping them is a one-line filter if Robbie prefers.
+- **Pandemic declarations left out** (Robbie, 2026-10-14: "leave out pandemic declarations, it's
+  obvious every state declared one"): the 59 COVID-19 major disasters of 2020 (incident type
+  Biological) named every county; rows with `incidentType` Biological are skipped.
+- **Major disasters only, since 2000** (lead, 2026-10-14; Robbie: "I trust your judgement"). Emergency
+  and fire-grant declarations could be a second map later.
 - **Zero is real:** every other county gets a value; none declared = 0.
 - **No counts file** (`counts.json`) for now: the value is itself a count, and the counts output is
   being reworked in parallel. `countsSpec` can add `fema_declarations` later like `ddp_287g`.
