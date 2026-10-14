@@ -123,18 +123,20 @@ Light and dark come from the same token structure; the basemap and the UI chrome
 | light | filter count badge | `accentText` on `accent` | 6.44 | 4.5 |
 | light | on-map control edge vs its own panel (non-text, phones) | `controlEdge` on `surface` | 3.88 | 3 |
 | light | on-map control edge vs U.S. land (non-text, phones) | `controlEdge` on `map.focusLand` | 3.53 | 3 |
-| light | on-map control edge vs land outside the U.S. (non-text, phones) | `controlEdge` on `map.land` | 3.03 | 2 |
+| light | on-map control edge vs land outside the U.S. (non-text, phones) | `controlEdge` on `map.land` | 2.99 | 2 |
 | light | map labels | `map.label` on `map.labelHalo` | 13.37 | 7 |
 | light | minor map labels | `map.labelMuted` on `map.labelHalo` | 6.18 | 4.5 |
 | light | labels outside the U.S. (muted on purpose, still legible) | `map.labelForeign` on `map.labelHalo` | 3.32 | 3 |
-| light | selection outline (non-text) | `map.highlight` on `map.land` | 14.73 | 3 |
+| light | selection outline (non-text) | `map.highlight` on `map.land` | 14.55 | 3 |
 | light | selection outline vs its halo (reads over the darkest and lightest classes) | `map.highlight` on `map.highlightHalo` | 18.88 | 7 |
 | light | data-line casing vs U.S. land (non-text; keeps the quietest class visible) | `map.featureLineCasing` on `map.focusLand` | 3.25 | 3 |
 | light | interstate line vs its casing (non-text, reads over any fill) | `map.interstate` on `map.interstateCasing` | 8.45 | 4.5 |
 | light | river line vs its casing (non-text) | `map.river` on `map.riverCasing` | 3.09 | 3 |
-| light | interstate route number text | `map.shieldText` on `map.interstate` | 8.45 | 4.5 |
+| light | route number on its highway shield | `map.shieldText` on `map.shieldFill` | 17.05 | 4.5 |
 | light | national boundary vs U.S. land (non-text) | `map.countryLine` on `map.focusLand` | 5.65 | 3 |
-| light | shoreline vs water (decorative) | `map.coastline` on `map.water` | 1.71 | 1.5 |
+| light | national boundary vs land outside the U.S. (non-text) | `map.countryLine` on `map.land` | 4.79 | 3 |
+| light | shoreline vs land outside the U.S. (decorative) | `map.coastline` on `map.land` | 2.14 | 1.5 |
+| light | shoreline vs water (decorative) | `map.coastline` on `map.water` | 1.61 | 1.5 |
 | dark | body text | `text` on `bg` | 15.75 | 7 |
 | dark | panel text | `text` on `surface` | 14.30 | 7 |
 | dark | secondary text | `textMuted` on `surface` | 6.92 | 4.5 |
@@ -154,18 +156,20 @@ Light and dark come from the same token structure; the basemap and the UI chrome
 | dark | filter count badge | `accentText` on `accent` | 7.85 | 4.5 |
 | dark | on-map control edge vs its own panel (non-text, phones) | `controlEdge` on `surface` | 3.92 | 3 |
 | dark | on-map control edge vs U.S. land (non-text, phones) | `controlEdge` on `map.focusLand` | 3.57 | 3 |
-| dark | on-map control edge vs land outside the U.S. (non-text, phones) | `controlEdge` on `map.land` | 4.21 | 2 |
+| dark | on-map control edge vs land outside the U.S. (non-text, phones) | `controlEdge` on `map.land` | 2.50 | 2 |
 | dark | map labels | `map.label` on `map.labelHalo` | 12.22 | 7 |
 | dark | minor map labels | `map.labelMuted` on `map.labelHalo` | 6.62 | 4.5 |
 | dark | labels outside the U.S. (muted on purpose, still legible) | `map.labelForeign` on `map.labelHalo` | 3.96 | 3 |
-| dark | selection outline (non-text) | `map.highlight` on `map.land` | 18.13 | 3 |
+| dark | selection outline (non-text) | `map.highlight` on `map.land` | 10.74 | 3 |
 | dark | selection outline vs its halo (reads over the darkest and lightest classes) | `map.highlight` on `map.highlightHalo` | 18.88 | 7 |
 | dark | data-line casing vs U.S. land (non-text; keeps the quietest class visible) | `map.featureLineCasing` on `map.focusLand` | 3.23 | 3 |
 | dark | interstate line vs its casing (non-text, reads over any fill) | `map.interstate` on `map.interstateCasing` | 11.05 | 4.5 |
 | dark | river line vs its casing (non-text) | `map.river` on `map.riverCasing` | 6.96 | 3 |
-| dark | interstate route number text | `map.shieldText` on `map.interstate` | 11.05 | 4.5 |
+| dark | route number on its highway shield | `map.shieldText` on `map.shieldFill` | 17.05 | 4.5 |
 | dark | national boundary vs U.S. land (non-text) | `map.countryLine` on `map.focusLand` | 4.85 | 3 |
-| dark | shoreline vs water (decorative) | `map.coastline` on `map.water` | 2.38 | 1.5 |
+| dark | national boundary vs land outside the U.S. (non-text) | `map.countryLine` on `map.land` | 3.39 | 3 |
+| dark | shoreline vs land outside the U.S. (decorative) | `map.coastline` on `map.land` | 1.87 | 1.5 |
+| dark | shoreline vs water (decorative) | `map.coastline` on `map.water` | 2.28 | 1.5 |
 
 ## Classification and legends
 
