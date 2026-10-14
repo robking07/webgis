@@ -27,7 +27,7 @@ const FORMATTERS: Record<Unit, (v: number, d: number) => string> = {
   per_100k: (v) => `${nf({ maximumFractionDigits: 1 }).format(v)} per 100k`,
   ug_m3: (v) => `${nf({ minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(v)} µg/m³`,
   ppm: (v) => `${nf({ minimumFractionDigits: 3, maximumFractionDigits: 3 }).format(v)} ppm`,
-  percentile: (v) => ordinal(Math.min(99, Math.max(1, Math.round(v)))) + " percentile",
+  percentile: (v) => (Math.round(v) >= 99 ? "top 1%" : `${ordinal(Math.max(1, Math.round(v)))} percentile`),
   degree_days: (v) => `${nf({ maximumFractionDigits: 0 }).format(v)} degree days`,
 };
 
@@ -48,10 +48,10 @@ export const UNIT_LABEL: Record<Unit, string> = {
   degree_days: "degree days (°F)",
 };
 
-/** `plain` skips the "under $0.01" wording (legend labels). `decimals` overrides the default precision. */
+/** `plain` skips the "less than 1¢" wording (legend labels). `decimals` overrides the default precision. */
 export function formatValue(v: number | null | undefined, unit: Unit, opts?: { decimals?: number; plain?: boolean }): string {
   if (v == null || !Number.isFinite(v)) return "No data";
-  if (unit === "dollars" && !opts?.plain && v !== 0 && Math.abs(v) < 0.01) return "under $0.01";
+  if (unit === "dollars" && !opts?.plain && v !== 0 && Math.abs(v) < 0.01) return "less than 1¢";
   return FORMATTERS[unit](v, opts?.decimals ?? DECIMALS[unit]?.(v) ?? 0);
 }
 
@@ -62,7 +62,7 @@ export function formatValue(v: number | null | undefined, unit: Unit, opts?: { d
 export function formatEstimate(v: number | null | undefined, moe: number | null | undefined, unit: Unit): { value: string; moe: string | null } {
   const value = formatValue(v, unit);
   const dec = DECIMALS[unit];
-  if (v == null || !Number.isFinite(v) || moe == null || !Number.isFinite(moe) || moe <= 0 || value.startsWith("under")) return { value, moe: null };
+  if (v == null || !Number.isFinite(v) || moe == null || !Number.isFinite(moe) || moe <= 0 || value.startsWith("less than")) return { value, moe: null };
   if (!dec) return { value, moe: formatValue(moe, unit) };
   // Percent carries one decimal when the margin needs it ("19.8% ±1.9%", not "20% ±1.9%").
   const d = unit === "percent" ? Math.min(Math.max(dec(v), dec(moe)), Math.abs(v) < 1 ? 2 : 1) : dec(v);

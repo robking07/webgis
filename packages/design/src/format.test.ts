@@ -66,10 +66,12 @@ describe("formatEstimate", () => {
     expect(e(1000, null, "count")).toBe("1,000");
   });
   it("handles tiny dollars and top percentiles", () => {
-    expect(e(0.007, 0.002, "dollars")).toBe("under $0.01");
-    expect(formatValue(0.007, "dollars")).toBe("under $0.01");
+    expect(e(0.007, 0.002, "dollars")).toBe("less than 1¢");
+    expect(formatValue(0.007, "dollars")).toBe("less than 1¢");
     expect(formatValue(0.5043, "ratio")).toBe("0.504");
-    expect(formatValue(99.97, "percentile")).toBe("99th percentile");
+    expect(formatValue(99.97, "percentile")).toBe("top 1%");
+    expect(formatValue(98.5, "percentile")).toBe("top 1%");
+    expect(formatValue(98.4, "percentile")).toBe("98th percentile");
     expect(formatValue(0.2, "percentile")).toBe("1st percentile");
     expect(classLabels([0.418, 0.4523], "ratio")).toEqual(["< 0.42", "0.42 – 0.45", "≥ 0.45"]);
     expect(classLabels([0.007, 0.5], "dollars")[0]).toBe("< $0.01");
