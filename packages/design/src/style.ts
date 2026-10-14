@@ -10,7 +10,7 @@ import { US_LABEL_MASK } from "./us-label-mask.ts";
 export const BASEMAP = {
   tilejson: "https://tiles.openfreemap.org/planet",
   glyphs: "https://tiles.openfreemap.org/fonts/{fontstack}/{range}.pbf",
-  /** OpenFreeMap's sprite (from OSM Liberty, design CC BY 4.0): we use only its highway shields (D-<PR>). */
+  /** OpenFreeMap's sprite (from OSM Liberty, design CC BY 4.0): we use only its highway shields (D-316). */
   sprite: "https://tiles.openfreemap.org/sprites/ofm_f384/ofm",
   attribution:
     '<a href="https://openfreemap.org" target="_blank">OpenFreeMap</a> © <a href="https://www.openmaptiles.org/" target="_blank">OpenMapTiles</a> Data from <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>',
