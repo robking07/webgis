@@ -23,7 +23,7 @@ export default function compareTests({ test, expect, wait, immerse, tapLonLat, l
       const groups = await page.locator("details[data-topic]").evaluateAll((ds) => ds.map((d) => [d.dataset.topic, d.open]));
       expect(groups.length > 1 && groups[0][0] === "Economy" && groups[0][1] && groups.slice(1).every(([, o]) => !o), `topic groups: ${JSON.stringify(groups)}`);
       expect((await page.locator("[data-compare-row]").count()) > 0, "no topic-group rows");
-      expect(!/No data/.test(await page.locator("main").innerText()), "a No data row on the compare page");
+      expect(!/No data/.test((await page.locator("[data-compare-headline], details[data-topic]").allInnerTexts()).join(" ")), "a No data row on the compare page"); // the map legend's "No data" swatch is fine
       await page.reload({ waitUntil: "load" });
       await verdict.waitFor({ timeout: 20000 });
       expect((await verdict.innerText()).trim() === said, `after reload: "${await verdict.innerText()}" vs "${said}"`);
