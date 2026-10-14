@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Menu } from "lucide-react";
+import { Menu, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import type { Dataset } from "@/lib/registry";
 import { DatasetHeading } from "../DatasetMenus";
 import { LogoMark } from "../Logo";
@@ -9,7 +10,7 @@ import { ChangeDatasetButton } from "./DatasetCard";
 /** Immersed: menu button and wordmark, then the category above the dataset name (both open the
  *  dataset list), then the filter button with a caption (the level shown, or what's filtered).
  *  Phones drop the wordmark and put the heading beside the menu button, on one row (issue #34). */
-export function ImmersedHeading({ primary, secondary, immersed, hasFilters, filtersOpen, filterCount, caption, captionHint, phone, motion, closeKey, onShowNav, onPick, onOpenFilters, onOpenLevel, levelPill, onMenuChange, onOpenSheet, onBrowse }: {
+export function ImmersedHeading({ primary, secondary, immersed, hasFilters, filtersOpen, filterCount, caption, captionHint, phone, motion, closeKey, onShowNav, onPick, onOpenFilters, onOpenLevel, levelPill, onMenuChange, onOpenSheet, onBrowse, onExit }: {
   primary: Dataset;
   secondary: Dataset | null;
   immersed: boolean;
@@ -37,6 +38,9 @@ export function ImmersedHeading({ primary, secondary, immersed, hasFilters, filt
   onOpenSheet?: () => void;
   /** Laptops and up: open the dataset browser (the Change dataset button). */
   onBrowse: () => void;
+  /** Compare mode: back to the first map alone. Full screen folds the card's compare strip into this
+   *  heading as an Exit button (Robbie, 2026-10-14, issue #198). */
+  onExit: () => void;
 }) {
   // An open menu sits above every other map panel (legend, controls, details), never under one.
   const [menuOpen, setMenuOpen] = useState(false);
@@ -64,6 +68,10 @@ export function ImmersedHeading({ primary, secondary, immersed, hasFilters, filt
       {!phone && <div className="mt-1.5">{heading}</div>}
       <div className={`mt-1 flex max-w-[calc(100vw-1.5rem)] items-center gap-2 ${phone ? "pl-[52px]" : "pl-0.5"}`}>
         {!phone && <ChangeDatasetButton onClick={onBrowse} />}
+        {secondary && (
+          <Button type="button" size="sm" variant="ghost" onClick={onExit} aria-label="Exit comparing" data-compare-exit=""
+            className="wg-panel wg-compare pointer-events-auto rounded-full text-xs font-semibold text-primary"><X aria-hidden />{phone ? "Exit" : "Exit comparing"}</Button>
+        )}
         {hasFilters && <FilterButton count={filterCount} open={filtersOpen} onOpen={onOpenFilters} />}
         {/* The level pill is a real button: it opens Filters at the geography level (D-35), and being
             interactive it keeps clicks off the map behind it (issue #100). It sits on a solid pill like

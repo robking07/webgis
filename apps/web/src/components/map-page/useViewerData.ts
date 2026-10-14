@@ -2,7 +2,7 @@ import { useMemo, useSyncExternalStore } from "react";
 import { bandShift, GEO_LEVELS, type Unit, LAZY_LEVELS, levelAtZoom, levelBands, pinnedBands, TILE_VALUE_LEVELS, type GeoLevel } from "@webgis/design";
 import type { LevelPaint } from "../map/MapView";
 import { DATASET_BY_ID } from "@/lib/registry";
-import { featureLayerSpec, isFeatureDataset } from "@/lib/layers";
+import { featureLayerSpec, isFeatureDataset, pairReason } from "@/lib/layers";
 import type { UrlState } from "@/lib/url-state";
 import { blockPaintFrom, classifyBivariateCached, classifyUnivariateCached, useDatasetValues, type Classed } from "@/lib/values";
 import { changeEnds, stopsFor } from "@/lib/periods";
@@ -27,7 +27,8 @@ export function useViewerData(state: UrlState, tractCounties: readonly string[] 
   // Feature layers (roads, transit…) draw their own geometry: no choropleth, no comparison.
   const isFeature = isFeatureDataset(primary);
   const featureSpec = useMemo(() => (primary && isFeature ? featureLayerSpec(primary) : null), [primary, isFeature]);
-  const secondary = state.b && !isFeature && !isFeatureDataset(DATASET_BY_ID.get(state.b)) ? DATASET_BY_ID.get(state.b)! : null;
+  const b = state.b ? DATASET_BY_ID.get(state.b) : undefined;
+  const secondary = primary && b && !pairReason(primary, b) ? b : null;
   // Year control (D-36): single-dataset maps only; comparisons use the default period.
   const stops = useMemo(() => (secondary || isFeature ? [] : stopsFor(primary)), [primary, secondary, isFeature]);
   // Change map (issue #127): from `since` to the year `t`, or to the latest period (issue #168).

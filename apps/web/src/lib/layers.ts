@@ -1,7 +1,7 @@
 // Feature layers (roads, transit, points): what the map needs to draw each one, written by
 // the `features` ingest step to src/generated/layers.json.
 import manifest from "@/generated/layers.json";
-import { rampColors, type RampId } from "@webgis/design";
+import { rampColors, TILE_VALUE_LEVELS, type RampId } from "@webgis/design";
 import type { Dataset } from "./registry";
 
 /** A popup field: label and unit, plus optional explainers (D-35). */
@@ -26,6 +26,17 @@ export interface FeatureLayerInfo {
 const LAYERS = manifest as unknown as Record<string, FeatureLayerInfo>;
 
 export const isFeatureDataset = (d: Dataset | null | undefined) => d?.measure.kind === "features";
+
+/** Why two datasets can't be compared on one two-variable map, or null when they can (issue #198).
+ *  The viewer and the dataset picker share it, so a pair the picker offers always draws. They need
+ *  area values (not roads or sites) at a geography level in common; blocks carry their values in the
+ *  tiles, so they have no two-variable join. */
+export function pairReason(a: Dataset, b: Dataset): string | null {
+  if (a.id === b.id) return "Already on the map";
+  if (isFeatureDataset(a) || isFeatureDataset(b)) return "Roads and sites can't be compared";
+  const shared = a.geographyLevels.some((l) => !TILE_VALUE_LEVELS.has(l) && b.geographyLevels.includes(l));
+  return shared ? null : "Not mapped for the same kinds of area";
+}
 
 export interface FeatureLayerSpec extends FeatureLayerInfo {
   id: string;
