@@ -58,3 +58,9 @@ The list and its order live in `data/registry/categories.ts`. Each dataset's YAM
 
 The other defaults above stand: the filled accent pill, "Category › Subcategory" labels, registry
 order within a subcategory, and the Odd Pairings rule at the category level.
+
+## Amendment (Robbie, 2026-10-14, #225)
+
+Robbie, 2026-10-14: button removed; the title drop-down is the one menu, #225. The Change dataset
+button (card, full-screen heading, phones) and the dataset browser side panel are gone; the title and
+its caret open the dataset menu. See D-326.
