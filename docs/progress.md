@@ -5,14 +5,14 @@ rows into one summary line. Roadmap: `docs/roadmap.md`. Rules: `docs/handbook.md
 
 ## Now
 
-- **Phase 1 (2026-10-12):** shipped 1.1 part 1 + 2a (compare places, laptop map), 1.2 (change maps with From → To, Map options panel), 1.3, 1.4, 1.5, 1.8, S1, S2. Left: 1.1 part 2b (counts and share of parent; waits on Robbie's `ingest counts` + `publish-counts` upload, D-257), 1.7 map polish (waits on Robbie's phone check), 1.6 disclosures (**on hold** by Robbie, 2026-10-09; nobody rewrites the copy). Then the Phase 1 gate: Robbie uses compare and change maps in a real conversation.
+- **Phase 1 (2026-10-12):** shipped 1.1 part 1 + 2a (compare places, laptop map), 1.2 (change maps with From → To, Map options panel), 1.3, 1.4, 1.5, 1.8, S1, S2. Left: 1.1 part 2b (counts and share of parent; counts are uploaded and live since 2026-10-12, D-257), 1.7 map polish (waits on Robbie's phone check), 1.6 disclosures (**on hold** by Robbie, 2026-10-09; nobody rewrites the copy). Then the Phase 1 gate: Robbie uses compare and change maps in a real conversation.
 - **Robbie's list:** `~/webgis/drafts/robbie-this-week.md` (gitignored) holds every open ask for him, newest under "New items". Add to it rather than asking one question at a time.
 - **Specials:** two drafts await Robbie in `drafts/specials/` (#105 traffic deaths, #141 Holmes County bikes), with numbers scripts beside them. On "publish <name>": copy verbatim, strip `<!-- -->` comments (the loader counts them as words), move the script to `apps/web/scripts/specials-numbers/`, then run `check:special` and the build.
 - **Phase 2 started early (Robbie: "keep building"):** #115 "Why this matters" PR 1 (content gated by `approved`). Transit (2.4) review verdict CHANGE → #176, which waits on Robbie's four calls.
-- **Repo is public (2026-10-10)** after GitHub Actions minutes ran out (#162). gitleaks was clean across the history; secret scanning and push protection are on. #44 still needs a license (Robbie) and branch protection.
+- **Repo is public (2026-10-10)** after GitHub Actions minutes ran out (#162). gitleaks was clean across the history; secret scanning and push protection are on. License is MIT (PR #190, D-290); #44 only needs branch protection (Robbie).
 - **Ponytail (#151, PR #163):** coding workers self-review with `ponytail-review`; the lead runs it again before merging.
 - **CI quirks:** a cancelled draft-stage run leaves a red `click-through ${{ matrix.shard }}/4`; `merge-pr.sh` ignores it. "The job was not started… spending limit" annotations mean billing, not code (#162). Occasional 502s from `tiles.mapwich.org` fail a shard; re-run failed jobs once before digging.
-- **Local data:** the main checkout's complete data is in `data/tiles.old`. Robbie moves it back (#146) before any upload.
+- **Tester agent trial** runs through 2026-10-19 (D-291).
 - **Worker environment:** Chromium can't run in the agent sandbox, so e2e and screenshots happen only in CI on a *ready* PR.
 - **Progress rows:** the lead adds Finished rows and Lessons at merge time from the worker's report.
 
