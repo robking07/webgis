@@ -577,7 +577,7 @@ for (const vp of ["phone", "laptop"]) {
     await mode.getByRole("radio", { name: "Change" }).click();
     // The year picker is gone (not greyed out); From and To take its place.
     expect(await page.locator("#filters-panel [role=radiogroup][aria-label=Years]").count() === 0, "year picker still shown in change mode");
-    expect((await span()).includes("2010–2014 → 2015–2019"), `kept year as To: ${await span()}`);
+    expect((await span()).includes("from 2010–2014 to 2015–2019"), `kept year as To: ${await span()}`);
     expect((await radio("To", "2015–2019").getAttribute("aria-checked")) === "true", "To isn't the year picked in Values");
     // Back to Values restores that year.
     await mode.getByRole("radio", { name: "Values" }).click();
@@ -585,9 +585,9 @@ for (const vp of ["phone", "laptop"]) {
     await mode.getByRole("radio", { name: "Change" }).click();
     // A later To keeps From; then a later From.
     await radio("To", "2020–2024").click();
-    expect((await span()).includes("2010–2014 → 2020–2024"), `after To: ${await span()}`);
+    expect((await span()).includes("from 2010–2014 to 2020–2024"), `after To: ${await span()}`);
     await radio("From", "2015–2019").click();
-    expect((await span()).includes("2015–2019 → 2020–2024"), `after From: ${await span()}`);
+    expect((await span()).includes("from 2015–2019 to 2020–2024"), `after From: ${await span()}`);
     if (page.isPhone) await page.getByRole("button", { name: "Apply", exact: true }).click();
     else await page.getByRole("button", { name: "Close map options" }).click();
     await page.waitForSelector("#filters-panel", { state: "detached" });
@@ -625,6 +625,11 @@ for (const vp of ["phone", "laptop"]) {
     await hover.waitFor({ timeout: 5000 });
     const hoverText = await hover.innerText();
     expect(/[+−][\d.]+ pts|No clear change/.test(hoverText) && hoverText.includes("→"), `hover: ${hoverText}`);
+    // The change leads, in the largest type (#200).
+    const lead = hover.locator(".wg-popup-lead-value");
+    expect(/^([+−][\d.]+ pts|No clear change)$/.test((await lead.innerText()).trim()), `hover lead: ${await lead.innerText()}`);
+    const px = (l) => l.evaluate((el) => parseFloat(getComputedStyle(el).fontSize));
+    expect(await px(lead) > await px(hover.locator(".wg-popup-title")), "hover change isn't larger than the place name");
     await tapLonLat(page, ...HENNEPIN);
     const card = page.locator("[data-change-card]");
     await card.waitFor({ timeout: 15000 });

@@ -33,7 +33,7 @@ export function PlaceHoverPopup({ hover, primary, secondary, xValues, yValues, b
     return (
       <div className="pointer-events-none absolute z-30 rounded-md border bg-popover p-2.5 shadow-md" style={{ left: hover.x + 14, top: hover.y + 14 }} data-change-hover="">
         <Popup title={hover.name} subtitle={`${GEO_LEVELS[hover.level].label} · change, ${change.from.label} → ${change.to.label}`}
-          rows={[{ label: primary.title, unit: primary.unit, value: null, text: s.headline }]} footnote={s.values} />
+          rows={[]} lead={{ label: primary.title, text: s.headline }} footnote={s.values} />
       </div>
     );
   }

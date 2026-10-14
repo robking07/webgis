@@ -125,13 +125,12 @@ function FilterControls({ levels, shown, facets, stops, value, onChange }: Contr
             </div>
           )}
           {ends ? (
+            // No big "A → B" heading over the pickers (issue #200): it repeated their years; the
+            // selected buttons carry the span, and one plain line under them says it in words.
             <>
-              <div data-change-span="">
-                <p className="text-2xl font-semibold tabular-nums">{ends.from.label} → {ends.to.label}</p>
-                <p className="text-xs text-muted-foreground">The map shows how each area changed from {ends.from.label} to {ends.to.label}.</p>
-              </div>
               <TimeControl label="From" stops={changeStops(stops, ends.to).reverse()} value={ends.from.id} onChange={(id) => onChange({ ...value, since: id })} />
               <TimeControl label="To" stops={[...earlier.slice(0, -1).reverse(), latest!]} value={ends.to.id} onChange={setTo} />
+              <p className="text-xs text-muted-foreground" data-change-span="">The map shows how each area changed from {ends.from.label} to {ends.to.label}.</p>
             </>
           ) : (
             <TimeControl stops={stops} value={value.stop ?? defaultStop} onChange={(id) => onChange({ ...value, stop: id === defaultStop ? null : id })} />
