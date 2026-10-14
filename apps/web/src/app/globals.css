@@ -178,3 +178,6 @@
 .wg-prose a.wg-block-link:hover { text-decoration: underline; }
 .wg-prose-sm { gap: 0.75rem; font-size: 0.9375rem; line-height: 1.6; }
 @media (min-width: 768px) { .wg-prose-sm { font-size: 0.9375rem; } }
+
+/* The splash questions' blinking cursor (issue #224). */
+@keyframes splash-blink { 50% { opacity: 0; } }
