@@ -778,7 +778,7 @@ for (const vp of ["phone", "laptop"]) {
     }
     const { page } = await o(vp, "/place/27053100200", { ready: false });
     await page.locator("main h1").waitFor({ timeout: 20000 });
-    expect((await page.locator("main h1").innerText()) === "Tract 1002, Hennepin County, MN", `tract page heading "${await page.locator("main h1").innerText()}"`);
+    expect((await page.locator("main h1").innerText()) === "Census tract 1002, Hennepin County, MN", `tract page heading "${await page.locator("main h1").innerText()}"`);
     const meta = await page.locator("main header p").last().innerText();
     expect(/^[1-9]\d* datasets · 0\.6 sq mi of land$/.test(meta), `tract page: "${meta}"`);
     expect(page.requests.some((u) => u.includes("/geo/tracts/27053.json")), "no request for the county's tract geography file");

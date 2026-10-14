@@ -25,3 +25,6 @@ export function rankText(values: Record<string, number> | undefined, v: number |
   if (lower + others === n - 1) return others > 0 ? `Tied for the highest value with ${others.toLocaleString()} other ${plural}` : `Highest of ${n.toLocaleString()} ${plural}`;
   return `Ranks higher than ${lower.toLocaleString()} of ${n.toLocaleString()} ${plural}`;
 }
+
+/** Names the way the site writes them: DC's county reads "District of Columbia", tracts "Census tract 101, ...". */
+export const tidyPlaceName = (n: string) => (n === "District of Columbia, DC" ? "District of Columbia" : n.replace(/^Tract /, "Census tract "));
