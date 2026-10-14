@@ -47,3 +47,14 @@ The list and its order live in `data/registry/categories.ts`. Each dataset's YAM
   After that only the menu button, the top edge or Esc brings it back, and a reload resets it. The
   immersed heading keeps the category and title drop-downs but has no Change dataset button. Left as
   is for Robbie to decide.
+
+## Amendment (Robbie, 2026-10-14)
+
+1. **Hidden card:** on laptops and larger screens, once the card hides, a small "Change dataset" button
+   (the same pill, `ChangeDatasetButton` in `DatasetCard.tsx`) stays at the top beside Map options and
+   opens the same dataset browser. Checked by the e2e test "laptop hidden card".
+2. **Phones** keep the filled Change dataset button on the card. When the card hides, the title in
+   the heading still opens the dataset sheet.
+
+The other defaults above stand: the filled accent pill, "Category › Subcategory" labels, registry
+order within a subcategory, and the Odd Pairings rule at the category level.

@@ -6,6 +6,16 @@ import { TERM_BY_ID } from "@/lib/glossary";
 import { ShareButton } from "../ShareButton";
 import { FilterButton } from "./FiltersPanel";
 
+/** "Change dataset" is a real button (Robbie, issue #199: "a pretty important thing that needs to be
+ *  highlighted"): the accent-filled pill beside Map options, the same height (D-135). On the card at
+ *  rest, and beside Map options on laptops once the card hides (Robbie, 2026-10-14). */
+export function ChangeDatasetButton({ onClick }: { onClick?: () => void }) {
+  return (
+    <Button type="button" size="sm" onClick={onClick} aria-haspopup="dialog" data-change-dataset=""
+      className="pointer-events-auto rounded-full text-xs font-semibold"><Layers aria-hidden />Change dataset</Button>
+  );
+}
+
 /** At rest: the factual dataset card (category, title, filter button, meta line, explainer, actions). */
 export function DatasetCard({ cardRef, primary, secondary, meta, immersed, isFeature, tableReady, hasFilters, filtersOpen, filterCount, onOpenFilters, onBrowse, onTable, phone, onOpenSheet, contextLink }: {
   cardRef: RefObject<HTMLElement | null>;
@@ -43,12 +53,9 @@ export function DatasetCard({ cardRef, primary, secondary, meta, immersed, isFea
     <button type="button" onClick={() => setExplainOpen((o) => !o)} aria-expanded={explainOpen} aria-label="What do these numbers mean?"
       className="ml-1 shrink-0 rounded align-[-2px] text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring"><Info className="size-3.5" aria-hidden /></button>
   );
-  // "Change dataset" is a real button (Robbie, issue #199: "a pretty important thing that needs to be
-  // highlighted"), the accent-filled pill beside Map options, the same height (D-135) on every screen.
   const buttons = (onChange: (() => void) | undefined) => (
     <div className="mt-2 flex flex-wrap items-center gap-1.5">
-      <Button type="button" size="sm" onClick={onChange} aria-haspopup="dialog" data-change-dataset=""
-        className="rounded-full text-xs font-semibold"><Layers aria-hidden />Change dataset</Button>
+      <ChangeDatasetButton onClick={onChange} />
       {hasFilters && <FilterButton count={filterCount} open={filtersOpen} onOpen={onOpenFilters} />}
     </div>
   );

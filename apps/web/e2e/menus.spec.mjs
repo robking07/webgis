@@ -643,6 +643,17 @@ test("laptop one-period map: no Values / Change switch", async (o) => {
   expect(await page.locator("#filters-panel section[aria-label=Geography]").count() === 1, "no Geography section");
 });
 
+// Robbie (2026-10-14, #199): once the card hides, Change dataset stays beside Map options on laptops.
+test("laptop hidden card: Change dataset stays at the top and opens the dataset browser", async (o) => {
+  const { page } = await o("laptop", "/map?d=median_household_income&at=-93.27,44.97,9");
+  await immerse(page);
+  expect(await opacityOf(page.locator('section[aria-label="Mapped dataset"]')) === 0, "the card didn't hide");
+  const btn = page.locator("[data-immersed-heading] [data-change-dataset]");
+  expect(await btn.isVisible() && await opacityOf(btn) === 1, "no Change dataset button once the card hid");
+  await btn.click();
+  await page.locator('section[role=dialog][aria-label="Datasets"]').waitFor();
+});
+
 test('details with no links show no "Learn more" heading', async (o) => {
   const { page } = await o("laptop", "/map?d=pct_poverty&lv=county&at=-93.4752,45.0061,8");
   await immerse(page);
