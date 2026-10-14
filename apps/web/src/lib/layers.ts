@@ -32,7 +32,7 @@ export const isFeatureDataset = (d: Dataset | null | undefined) => d?.measure.ki
  *  area values (not roads or sites) at a geography level in common; blocks carry their values in the
  *  tiles, so they have no two-variable join. */
 export function pairReason(a: Dataset, b: Dataset): string | null {
-  if (a.id === b.id) return "Already in this comparison";
+  if (a.id === b.id) return "Already on the map";
   if (isFeatureDataset(a) || isFeatureDataset(b)) return "Roads and sites can't be compared";
   const shared = a.geographyLevels.some((l) => !TILE_VALUE_LEVELS.has(l) && b.geographyLevels.includes(l));
   return shared ? null : "Not mapped for the same kinds of area";

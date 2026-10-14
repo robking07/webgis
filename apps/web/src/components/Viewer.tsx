@@ -353,7 +353,7 @@ export function Viewer({ search }: { search: string }) {
       <MapCredits datasets={[primary, secondary].filter((d): d is Dataset => !!d)} />
 
       {browse && primary && (
-        <DatasetsPanel slot={browse} primary={primary} secondary={secondary} onSlot={setBrowse} onClose={() => setBrowse(null)}
+        <DatasetsPanel slot={browse === "ask" && !secondary ? "a" : browse} primary={primary} secondary={secondary} onSlot={setBrowse} onClose={() => setBrowse(null)}
           onPick={(id) => { (browse === "b" ? pickSecond : pickDataset)(id); setBrowse(null); }} />
       )}
 

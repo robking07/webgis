@@ -22,7 +22,7 @@ The two-variable map (`?d=<a>&b=<b>`) now reads as a mode.
   <map>" (after the choice), with the line "Shown on one map with <map>. Greyed-out maps can't be
   paired with it." The per-row "Compare with map (bivariate)" / "Stop comparing" links are gone;
   "Compare datasets" on the card is the way in, and it hides while comparing.
-- Reasons: "Already in this comparison", "Roads and sites can't be compared", "Not mapped for the
+- Reasons: "Already on the map", "Roads and sites can't be compared", "Not mapped for the
   same kinds of area" (no geography level in common; blocks don't count).
 - Phones: the strip takes the category row's place and Share moves to the actions line, so the
   card grows only by the strip's padding (D-135).
