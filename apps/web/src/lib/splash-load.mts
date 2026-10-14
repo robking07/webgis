@@ -34,7 +34,7 @@ export function checkSplash(raw: unknown, datasets: Datasets, names: Record<stri
     if (o.county !== undefined && o.county !== "random") at('county must be "random" (or left out)');
     const county = o.county === "random";
     if (county !== text.includes("{county}") || /\{(?!county\})/.test(text)) at('"{county}" goes in the text exactly when county: random is set');
-    if (typeof o.link !== "string") at("link is missing");
+    if (typeof o.link !== "string" || !o.link.startsWith("/")) at("link must be a Mapwich path starting with /");
     const url = new URL(o.link as string, "https://mapwich.org");
     const params = [...url.searchParams.keys()];
     const known = (id: string | null, what: string) => (id && datasets.get(id)) || at(`${what} "${id ?? ""}" is not a registry dataset`);

@@ -53,6 +53,7 @@ describe("checkSplash", () => {
     expect(() => check({ text: "A or B?", link: "/compare/08999/42101?d=median_gross_rent" })).toThrow(/no place with code 08999/);
     expect(() => check({ text: "A or B?", link: "/compare/08/42?d=smoking" })).toThrow(/no state values/);
     expect(() => check({ text: "Where?", link: "/place/27053" })).toThrow(/must start/);
+    expect(() => check({ text: "Where?", link: "https://example.com/map?d=smoking" })).toThrow(/starting with \//);
     expect(() => checkSplash({ questions: [ok] }, DATASET_BY_ID, names)).toThrow(/approved must be/);
   });
 });
