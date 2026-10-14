@@ -193,6 +193,13 @@
   "source": "https://aspe.hhs.gov/topics/poverty-economic-mobility/poverty-guidelines"
  },
  {
+  "id": "disaster-declaration",
+  "term": "Major disaster declaration",
+  "short": "The President's formal finding that a disaster is too big for a state (or tribe) and its local governments to handle alone, which opens up federal aid.",
+  "long": "Under the Stafford Act a governor or tribal leader asks for help, FEMA reviews the damage, and the President decides. A major disaster declaration can fund repairs to public facilities, aid to households and hazard-mitigation projects, and it lists the counties that qualify. Emergency declarations (smaller and shorter, often before a hurricane lands) and fire management declarations are separate and aren't counted here. A count of declarations reflects damage, but also how often states ask and the federal cost thresholds, so it isn't a direct measure of losses.",
+  "source": "https://www.fema.gov/disaster/how-declared"
+ },
+ {
   "id": "fema-nri",
   "term": "FEMA National Risk Index",
   "short": "FEMA's nationwide model of how much 18 natural hazards are expected to cost each county and census tract, and how well people there could cope.",
