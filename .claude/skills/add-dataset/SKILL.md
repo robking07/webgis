@@ -44,6 +44,17 @@ Then add the map to `data/registry/relations.yaml` (`maps:` with its `group` = c
 
 **Several data PRs at once:** merge their branches into one local worktree (detached, never pushed), resolve the overlaps there, and load everything in one run with Robbie's keys. Then merge the PRs one at a time, and finish with a PR holding the generated `periods.json`, `insights.json` and `docs/data-sources.md` from that run (wave 1, #133).
 
+**The "to make it live" block Robbie runs** (the lead fills in `<worktree>`) starts in the PR's worktree, never the main checkout, which doesn't have the branch's ingest command. Twice it ran in the main checkout:
+
+```bash
+cd <worktree>                                         # the PR's worktree, not ~/webgis
+[ -e data/tiles ] || ln -s ~/webgis/data/tiles data/tiles
+[ -e .env.local ] || ln -s ~/webgis/.env.local .env.local
+grep -qx '/data/tiles' "$(git rev-parse --git-path info/exclude)" || echo '/data/tiles' >> "$(git rev-parse --git-path info/exclude)"
+```
+
+Then the ingest commands:
+
 ```bash
 npm run ingest -- <acs|lodes|places|climdiv|nbi|fars|features> <id>   # writes public.datasets + public.dataset_values
 npm run ingest -- export                             # registry.json, names.json, data/tiles/values/<id>/<level>.json, data/tiles/geo/
