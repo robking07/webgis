@@ -2180,7 +2180,7 @@
    "since": 2000
   },
   "modelInputs": [],
-  "coverageNote": "Counts declarations, not damage: a declaration depends on the governor asking for one and on federal cost thresholds, and requests that were turned down aren't listed. Declarations that name a whole state or a tribal area count toward the state only; declarations requested by tribal governments aren't counted. Connecticut counties show no data (FEMA still lists its old counties).",
+  "coverageNote": "Counts declarations, not damage: a declaration depends on the governor asking for one and on federal cost thresholds, and requests that were turned down aren't listed. The 2020 COVID-19 declarations covered every county and add 1 everywhere. Declarations that name a whole state or a tribal area count toward the state only; declarations requested by tribal governments aren't counted. Connecticut counties show no data (FEMA still lists its old counties).",
   "facets": [],
   "excludeFromInsights": false,
   "learnMore": [],

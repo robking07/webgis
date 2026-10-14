@@ -27,7 +27,7 @@ export function declarationSets(csv: string, types: string[], since: number) {
   let tribal = 0;
   for (const line of lines) {
     const f = splitCsv(line);
-    if (!types.includes(f[iT]) || Number(f[iD].slice(0, 4)) < since) continue;
+    if (!types.includes(f[iT]) || !(Number(f[iD].slice(0, 4)) >= since)) continue; // a blank date never counts
     if (f[iTr] === "1") { tribal++; continue; }
     const st = f[iS].padStart(2, "0"), raw = st + f[iC].padStart(3, "0"), n = f[iN];
     add(out.state, st, n);
