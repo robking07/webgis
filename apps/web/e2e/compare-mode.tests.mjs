@@ -4,21 +4,22 @@ export default function compareModeTests({ test, expect, immerse }) {
   const until = (page, k, v) => page.waitForFunction(([k, v]) => new URL(location.href).searchParams.get(k) === v, [k, v]);
 
   for (const vp of ["laptop", "phone"]) {
-    test(`${vp} compare mode: enter → strip → Swap → Change dataset asks → Exit; Back leaves compare`, async (o) => {
+    test(`${vp} compare mode: enter → strip → Swap → the title asks → Exit; Back leaves compare`, async (o) => {
       const { page } = await o(vp, "/map?d=asthma");
       const card = page.locator('section[aria-label="Mapped dataset"]');
-      const dialog = page.locator('section[role=dialog][aria-label="Datasets"]');
+      // The one dataset menu (issue #225): the title's drop-down on laptops, the dataset sheet on phones.
+      const dialog = page.locator(vp === "phone" ? 'section[aria-label="Dataset list"]' : 'section[role=dialog][aria-label="Datasets"]');
       expect(await card.locator("[data-compare-strip]").count() === 0, "strip shown before comparing");
 
       // Enter: Compare datasets → the picker greys out what can't pair, with the reason.
       await card.getByRole("button", { name: "Compare datasets" }).click();
       await dialog.getByRole("heading", { name: "Choose a second map" }).waitFor();
       await dialog.getByRole("searchbox").fill("Traffic volume");
-      const road = dialog.getByRole("button", { name: /Traffic volume/ });
+      const road = dialog.getByRole("menuitemradio", { name: /Traffic volume/ });
       expect(await road.isDisabled(), "a road layer is offered as a second map");
       expect((await road.innerText()).includes("can't be compared"), `no reason on the greyed-out map: ${await road.innerText()}`);
       await dialog.getByRole("searchbox").fill("Arthritis");
-      await dialog.getByRole("button", { name: /Arthritis/ }).first().click();
+      await dialog.getByRole("menuitemradio", { name: /Arthritis/ }).first().click();
       await until(page, "b", "arthritis");
       const strip = card.locator("[data-compare-strip]");
       expect(await strip.isVisible() && (await strip.innerText()).includes("Comparing"), "no compare strip");
@@ -28,12 +29,14 @@ export default function compareModeTests({ test, expect, immerse }) {
       await until(page, "d", "arthritis");
       expect(param(page, "b") === "asthma", `swap left b=${param(page, "b")}`);
 
-      // Change dataset asks which map to replace, then opens the picker for it.
-      await card.locator("[data-change-dataset]").click();
+      // The title asks which map to replace, then opens the picker for it.
+      expect(await page.locator("[data-change-dataset]").count() === 0, "a Change dataset button is back");
+      await card.getByRole("button", { name: /choose another dataset/ }).click();
       await dialog.getByRole("heading", { name: "Replace which map?" }).waitFor();
       await dialog.getByRole("button", { name: /Asthma/ }).click();
       await dialog.getByRole("heading", { name: /^Replace .*Asthma/ }).waitFor();
-      await dialog.getByRole("button", { name: "Close datasets" }).click();
+      await page.keyboard.press("Escape");
+      await dialog.waitFor({ state: "detached" });
 
       // Exit: back to the first map alone.
       await strip.getByRole("button", { name: /Exit/ }).click();
