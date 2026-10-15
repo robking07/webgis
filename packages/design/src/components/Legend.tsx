@@ -59,14 +59,18 @@ export function BivariateLegend({ xTitle, yTitle, colors }: BivariateLegendProps
   const rows = [2, 1, 0]; // draw high y at the top
   return (
     <figure className="wg-legend wg-legend-biv" aria-label={`Bivariate legend: ${xTitle} by ${yTitle}`}>
-      <div className="wg-biv-grid" role="img" aria-label="3 by 3 grid; color darkens as both values rise">
-        {rows.flatMap((r) => [0, 1, 2].map((c) => (
-          <span key={`${r}${c}`} className="wg-swatch" style={{ background: colors[r * 3 + c] }} />
-        )))}
+      <div>
+        <div className="wg-biv-corner wg-biv-hi">both high</div>
+        <div className="wg-biv-grid" role="img" aria-label="3 by 3 grid; color darkens as both values rise">
+          {rows.flatMap((r) => [0, 1, 2].map((c) => (
+            <span key={`${r}${c}`} className="wg-swatch" style={{ background: colors[r * 3 + c] }} />
+          )))}
+        </div>
+        <div className="wg-biv-corner">both low</div>
       </div>
       <figcaption>
-        <span className="wg-biv-x">{xTitle} →</span>
-        <span className="wg-biv-y">{yTitle} →</span>
+        <span className="wg-biv-x">→ {xTitle}: higher to the right</span>
+        <span className="wg-biv-y">↑ {yTitle}: higher going up</span>
       </figcaption>
     </figure>
   );
