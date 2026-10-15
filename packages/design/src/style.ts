@@ -10,6 +10,8 @@ import { US_LABEL_MASK } from "./us-label-mask.ts";
 export const BASEMAP = {
   tilejson: "https://tiles.openfreemap.org/planet",
   glyphs: "https://tiles.openfreemap.org/fonts/{fontstack}/{range}.pbf",
+  /** OpenFreeMap's sprite (from OSM Liberty, design CC BY 4.0): we use only its highway shields (D-316). */
+  sprite: "https://tiles.openfreemap.org/sprites/ofm_f384/ofm",
   attribution:
     '<a href="https://openfreemap.org" target="_blank">OpenFreeMap</a> © <a href="https://www.openmaptiles.org/" target="_blank">OpenMapTiles</a> Data from <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>',
 };
@@ -128,8 +130,10 @@ export function basemapStyle(themeName: ThemeName): StyleSpecification {
       },
       paint: { "text-color": m.labelForeign, "text-halo-color": m.labelHalo, "text-halo-width": LABEL.haloWidth * 0.7 },
     })),
+    // Route shields (issue #201): Interstates from z7, U.S. routes from z8, from the sprite's
+    // `{network}_{ref_length}` images (1–3 digit refs). Before z7 Interstates get plain "I-25" text.
     {
-      id: "label-interstate", type: "symbol", source: "omt", "source-layer": "transportation_name", minzoom: 6,
+      id: "label-interstate", type: "symbol", source: "omt", "source-layer": "transportation_name", minzoom: 6, maxzoom: 7,
       filter: ["all", ["==", ["get", "network"], "us-interstate"], ["has", "ref"]],
       layout: {
         "symbol-placement": "line",
@@ -139,8 +143,23 @@ export function basemapStyle(themeName: ThemeName): StyleSpecification {
         "text-size": 10,
         "text-rotation-alignment": "viewport",
       },
-      paint: { "text-color": m.shieldText, "text-halo-color": m.interstate, "text-halo-width": 3 },
+      paint: { "text-color": m.interstateCasing, "text-halo-color": m.interstate, "text-halo-width": 3 },
     },
+    ...([["shield-interstate", 7, "us-interstate"], ["shield-us-highway", 8, "us-highway"]] as const).map(([id, minzoom, network]): LayerSpecification => ({
+      id, type: "symbol", source: "omt", "source-layer": "transportation_name", minzoom,
+      filter: ["all", ["==", ["get", "network"], network], ["has", "ref"], ["<=", ["get", "ref_length"], 3]],
+      layout: {
+        "symbol-placement": "line",
+        "symbol-spacing": LABEL.symbolSpacing,
+        "icon-image": ["concat", network, "_", ["get", "ref_length"]],
+        "icon-rotation-alignment": "viewport",
+        "text-field": ["get", "ref"],
+        "text-font": LABEL.fontBold as unknown as string[],
+        "text-size": 10,
+        "text-rotation-alignment": "viewport",
+      },
+      paint: { "text-color": m.shieldText },
+    })),
     {
       id: "label-state", type: "symbol", source: "omt", "source-layer": "place", minzoom: 3, maxzoom: 7,
       filter: ["all", ["==", ["get", "class"], "state"], inUS],
@@ -170,6 +189,7 @@ export function basemapStyle(themeName: ThemeName): StyleSpecification {
   return {
     version: 8,
     glyphs: BASEMAP.glyphs,
+    sprite: BASEMAP.sprite,
     sources: { omt: { type: "vector", url: BASEMAP.tilejson, attribution: BASEMAP.attribution } },
     layers,
   };
