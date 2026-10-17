@@ -36,6 +36,8 @@ import { useUnreliable } from "./map-page/useUnreliable";
 import { FeaturePanel } from "./map-page/FeaturePanel";
 import { ContextLink, ContextPanel, CONTEXT_PANEL_RIGHT } from "./map-page/ContextPanel";
 import { contextFor } from "@/lib/context";
+import { CONUS, usInView } from "@/lib/us-view";
+import type { Bbox } from "./map/MapView";
 
 export function Viewer({ search }: { search: string }) {
   const [initial] = useState<UrlState>(() => {
@@ -171,6 +173,14 @@ export function Viewer({ search }: { search: string }) {
     if (v.pinned !== pinnedLevel || v.stop !== stopId || v.since !== (since?.id ?? null)) update({ lv: v.pinned, t: v.stop, since: v.since });
   };
   const onSearchPlace = (p: PlaceHit) => { setSearchOpen(false); goToPlace(p); };
+  /** "Go to" a region and "Back to the US" (issue #202): leave any focused place, frame the region. */
+  const goToRegion = (b: Bbox) => {
+    if (focus) leaveFocus();
+    mapApi.current?.fitBbox(b, { top: 16, right: 16, bottom: 16, left: 16 });
+  };
+  // Zoomed out to two worlds, or panned off every U.S. region (Viewer renders on the client only).
+  // shortcut: judged on the last settled view, at the window's size; fine while the map is full-window.
+  const usLost = !usInView(state.at, window.innerWidth, window.innerHeight);
   /** Phones: the dataset list and the details share the bottom sheet; opening one closes the other. */
   const openMenu = (slot: BrowseSlot) => {
     setBrowse(slot);
@@ -363,7 +373,7 @@ export function Viewer({ search }: { search: string }) {
           onShowNav={() => { setImmersed(false); setPeek(false); }}
           onOpenFilters={toggleFilters} onOpenLevel={openLevelFilters} levelPill={!isFeature}
           menuOpen={menuOpen && immersed} menu={immersed ? datasetMenu : null} onBrowse={changeDataset} onExit={exitCompare}
-          place={focus && focusName ? { name: focusName, onClear: leaveFocus } : null} backShown={canGoBack} />
+          place={focus && focusName ? { name: focusName, onClear: leaveFocus } : null} backShown={canGoBack || phone} />
       )}
 
       {filters && primary && !phone && (
@@ -375,7 +385,14 @@ export function Viewer({ search }: { search: string }) {
           value={filterValue} onApply={applyFilters} onClose={() => setFilters(null)} />
       )}
 
-      <MapControls mapApi={mapApi} atRest={chromeShown && !immersed} canGoBack={canGoBack} onBack={goBack} phone={phone} cardH={cardH} />
+      <MapControls mapApi={mapApi} atRest={chromeShown && !immersed} canGoBack={canGoBack} onBack={goBack} phone={phone} cardH={cardH}
+        onRegion={goToRegion} onPlace={onSearchPlace} />
+      {usLost && (
+        <button type="button" onClick={() => goToRegion(CONUS)}
+          className="wg-panel wg-zbtn absolute bottom-24 left-1/2 z-20 h-11 -translate-x-1/2 rounded-full px-4 text-sm font-semibold text-foreground">
+          Back to the US
+        </button>
+      )}
 
       <MapLegend theme={theme} primary={primary} secondary={secondary} isFeature={isFeature} featureSpec={featureSpec} current={current}
         error={error} available={available} loading={loading} level={level} periodLabel={periodLabel}
