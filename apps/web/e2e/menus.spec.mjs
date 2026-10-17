@@ -968,6 +968,19 @@ test("laptop earlier year at block-group zoom: no boundary file that doesn't exi
   expect(drawn > 0, "no tracts drawn on the 2019 map at zoom 13");
 });
 
+test("laptop search: \"Du\" lists places and no unrelated datasets; \"asthma\" finds Asthma (#252)", async (o) => {
+  const { page } = await o("laptop", "/map?d=pct_poverty");
+  await page.keyboard.press("/");
+  const dlg = page.getByRole("dialog", { name: "Search places and datasets" });
+  const box = dlg.getByRole("combobox"), datasets = dlg.getByRole("region", { name: "Datasets" });
+  await box.fill("Du");
+  await dlg.getByRole("region", { name: "Places" }).getByRole("option", { name: /^Du/ }).first().waitFor({ timeout: 15000 });
+  expect((await datasets.innerText()).includes("No matching datasets."), `datasets for "Du": ${await datasets.innerText()}`);
+  await box.fill("asthma");
+  await datasets.getByRole("option").first().waitFor();
+  expect(/^Asthma/.test((await datasets.getByRole("option").first().innerText()).trim()), `first dataset for "asthma": ${await datasets.innerText()}`);
+});
+
 // Feature files (one per feature; this file keeps the shared harness).
 (await import("./compare.tests.mjs")).default({ test, expect, wait, immerse, tapLonLat, live, HENNEPIN, dbCalls });
 (await import("./share.tests.mjs")).default({ test, expect, wait, mapIdle });
