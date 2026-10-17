@@ -8,16 +8,16 @@
     "ingest": "node --env-file-if-exists=../../.env.local src/run.ts"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.131.0",
-    "@aws-sdk/client-s3": "^3.1147.0",
-    "@aws-sdk/lib-storage": "^3.1147.0",
+    "@anthropic-ai/sdk": "^0.133.0",
+    "@aws-sdk/client-s3": "^3.1149.0",
+    "@aws-sdk/lib-storage": "^3.1149.0",
     "@webgis/design": "*",
     "@webgis/registry": "*",
     "pg": "^8.16.0",
     "pg-copy-streams": "^7.0.0",
     "shapefile": "^0.6.6",
     "unzipper": "^0.12.3",
-    "zod": "^4.6.5"
+    "zod": "^4.6.6"
   },
   "devDependencies": {
     "@types/pg": "^8.15.0",
