@@ -26,7 +26,7 @@ const readTheme = (): ThemeName => {
   return t === "dark" || t === "light" ? t : window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 };
 
-export function SpecialMap({ datasets, at, level = "county", legendBelow = false, designWidth, poster, className, children, compare }: {
+export function SpecialMap({ datasets, at, level = "county", legendBelow = false, designWidth, poster, className, children, compare, legend: showLegend = true }: {
   datasets: readonly string[];
   at: { lon: number; lat: number; zoom: number } | null;
   /** Geography drawn: county (default), or tract for a single dataset that has tracts (D-122); state on the compare page. */
@@ -41,8 +41,10 @@ export function SpecialMap({ datasets, at, level = "county", legendBelow = false
   className?: string;
   /** Overlays drawn on the map (a tag, a button). */
   children?: React.ReactNode;
-  /** Compare places (D-258): outline these two places of `level` and frame them. */
-  compare?: { a: string; b: string; bbox: Bbox };
+  /** Compare places (D-258, D-330): outline these two places of `level` and frame the `fit` one. */
+  compare?: { a: string; b: string; bbox: Bbox; fit: "a" | "b" };
+  /** False: no legend (the second of two maps side by side, which share one). */
+  legend?: boolean;
 }) {
   const x = DATASET_BY_ID.get(datasets[0])!, y = datasets[1] ? DATASET_BY_ID.get(datasets[1])! : null;
   const theme = useSyncExternalStore(subscribeTheme, readTheme, () => "light" as ThemeName);
@@ -62,7 +64,7 @@ export function SpecialMap({ datasets, at, level = "county", legendBelow = false
     : designWidth && width ? { ...at, zoom: at.zoom + Math.log2(Math.min(1, width / designWidth)) } : { ...at };
   const by = `by ${level === "tract" ? "census tract" : level}`;
   const label = y ? `Map of ${x.title} and ${y.title} ${by}` : `Map of ${x.title} ${by}`;
-  const legend = !paint ? null : paint.kind === "biv"
+  const legend = !paint || !showLegend ? null : paint.kind === "biv"
     ? <BivariateLegend xTitle={x.title} yTitle={y!.title} colors={paint.colors} />
     : <Legend title={x.title} unit={x.unit} colors={paint.colors} breaks={paint.breaks} minClass={paint.minClass} />;
 
@@ -79,7 +81,7 @@ export function SpecialMap({ datasets, at, level = "county", legendBelow = false
             <MapView theme={theme} initialView={view} paint={{ [level]: paint }}
               levelZooms={{ [level]: { minzoom: 0, maxzoom: 24 } }} cooperative compare={compare && { level, ...compare }}
               onViewChange={() => {}} onHover={() => {}} onSelect={() => {}} ariaLabel={label} />
-            {!legendBelow && <div className="pointer-events-none absolute bottom-3 left-3 z-10 hidden rounded-lg border bg-card/95 p-2 text-xs shadow-sm md:block">{legend}</div>}
+            {!legendBelow && legend && <div className="pointer-events-none absolute bottom-3 left-3 z-10 hidden rounded-lg border bg-card/95 p-2 text-xs shadow-sm md:block">{legend}</div>}
           </>
         )}
         {children}
