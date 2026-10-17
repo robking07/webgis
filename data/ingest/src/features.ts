@@ -60,7 +60,8 @@ export async function ingestFeatures(only?: string[]) {
       // Joined through one GeoPackage, where SQLite indexes the join (joining the zipped CSV directly rescans it per row).
       const gpkg = join(work, "joined.gpkg");
       for (const layer of layers) run("ogr2ogr", ["-f", "GPKG", ...(existsSync(gpkg) ? ["-update"] : []), gpkg, ds, layer, "-nlt", "PROMOTE_TO_MULTI"]);
-      run("ogr2ogr", ["-f", "GPKG", "-update", gpkg, `/vsizip/${await cached(m.join.url, m.join.file)}/${m.join.path}`, "-nln", "join"]);
+      const joinFile = await cached(m.join.url, m.join.file);
+      run("ogr2ogr", ["-f", "GPKG", "-update", gpkg, m.join.path ? `/vsizip/${joinFile}/${m.join.path}` : joinFile, "-nln", "join"]);
       ds = gpkg;
     }
     const fields = Object.keys(m.fields);
