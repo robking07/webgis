@@ -96,7 +96,7 @@ export function useViewerData(state: UrlState, tractCounties: readonly string[] 
     return out;
   }, [primary, secondary, x.values, y.values, stopId, xBase.values, blockField, since, xFrom.values, tractMoes]);
 
-  return { primary, secondary, isFeature, featureSpec, stops, stop, stopId, since, xFrom, testMoes, availableLevels, pinnedLevel, focus, bands, x, y, level, classed, blockField };
+  return { primary, secondary, isFeature, featureSpec, stops, stop, stopId, since, xBase, xFrom, testMoes, availableLevels, pinnedLevel, focus, bands, x, y, level, classed, blockField };
 }
 
 const onResize = (cb: () => void) => { window.addEventListener("resize", cb); return () => window.removeEventListener("resize", cb); };

@@ -10,6 +10,7 @@ import type { FeatureLayerSpec } from "@/lib/layers";
 import type { ViewState } from "@/lib/url-state";
 import type { Geometry } from "geojson";
 import { boundaryFile } from "@webgis/registry/timeline";
+import { TILES_BASE } from "@/lib/static-files";
 
 export interface LevelPaint {
   colors: string[];
@@ -65,7 +66,8 @@ interface Props {
   onViewChange: (v: ViewState) => void;
   onHover: (h: HoverInfo | null) => void;
   onSelect: (h: HoverInfo | null) => void;
-  onTilesError?: (msg: string) => void;
+  /** Our own tiles (boundaries or a feature layer) failed to load; null once they load again. */
+  onTilesError?: (msg: string | null) => void;
   ariaLabel: string;
   /** Override the zoom band per level, e.g. show counties at every zoom on an insight page. */
   levelZooms?: Partial<Record<GeoLevel, { minzoom: number; maxzoom: number }>>;
@@ -122,14 +124,15 @@ export interface MapApi {
   isMoving: () => boolean;
 }
 
-const TILES_BASE = process.env.NEXT_PUBLIC_TILES_BASE_URL || "/tiles";
 const LEVELS = Object.keys(GEO_LEVELS) as GeoLevel[];
 let protocolReady = false;
 
-function tilesUrl(level: GeoLevel, boundaries?: string | null) {
+/** A PMTiles archive on the tiles base (made absolute: the pmtiles protocol needs a full URL). */
+function pmtilesUrl(path: string) {
   const base = TILES_BASE.startsWith("http") ? TILES_BASE : `${window.location.origin}${TILES_BASE}`;
-  return `pmtiles://${base}/${boundaryFile(level, boundaries)}.pmtiles`;
+  return `pmtiles://${base}/${path}`;
 }
+const tilesUrl = (level: GeoLevel, boundaries?: string | null) => pmtilesUrl(`${boundaryFile(level, boundaries)}.pmtiles`);
 
 export function MapView({ theme, initialView, paint, onViewChange, onHover, onSelect, onTilesError, ariaLabel, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, onApi, featureFilter, scaleUnit = "imperial", attribution = true, boundaries = null, cooperative = false, hatch = null, onTractCounties, watchCounties = false, compare, focus = null }: Props) {
   const container = useRef<HTMLDivElement>(null);
@@ -211,7 +214,6 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
         m.once("load", () => container.current?.querySelector(".maplibregl-ctrl-attrib")?.classList.remove("maplibregl-compact-show"));
       }
     }
-    m.getCanvas().setAttribute("aria-label", ariaLabel);
 
     m.on("style.load", () => {
       addHatchImage(m, latest.current.theme);
@@ -246,9 +248,22 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
       const c = m.getCenter();
       latest.current.onViewChange({ lon: c.lng, lat: c.lat, zoom: m.getZoom(), fit: true });
     }
+    // Only our sources count: a basemap tile blip isn't "boundary tiles missing". The message clears
+    // once every source that failed has loaded a tile again.
+    const failed = new Set<string>();
+    const ours = (id: unknown): id is string => typeof id === "string" && (id.startsWith("b-") || id === FEATURE_SRC);
     m.on("error", (e) => {
-      const msg = String(e.error?.message ?? e.error ?? "");
-      if (/pmtiles|tiles\//i.test(msg) || /404/.test(msg)) latest.current.onTilesError?.(msg);
+      const id = (e as { sourceId?: unknown }).sourceId;
+      if (!ours(id)) return;
+      failed.add(id);
+      latest.current.onTilesError?.(String(e.error?.message ?? e.error ?? ""));
+    });
+    m.on("data", (e) => {
+      if (!failed.size || e.dataType !== "source" || !("tile" in e) || !e.tile) return;
+      failed.delete(e.sourceId);
+      // A source taken off the map (the feature layer after switching maps) won't load again.
+      for (const id of failed) if (!m.getSource(id)) failed.delete(id);
+      if (!failed.size) latest.current.onTilesError?.(null);
     });
 
     const fillIds = LEVELS.map((l) => `${l}-fill`);
@@ -319,6 +334,8 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
   }, [theme]);
 
   useEffect(() => { scale.current?.setUnit(scaleUnit); }, [scaleUnit]);
+  // The canvas label follows the map shown, so screen readers hear the current one.
+  useEffect(() => { map.current?.getCanvas().setAttribute("aria-label", ariaLabel); }, [ariaLabel]);
 
   // Zoom bands: depend on which levels the shown dataset(s) have.
   useEffect(() => {
@@ -582,8 +599,7 @@ function syncFeatureLayer(m: MlMap, spec: FeatureLayerSpec | null, theme: ThemeN
   if (m.getSource(FEATURE_SRC)) m.removeSource(FEATURE_SRC);
   for (const id of HIDDEN_WITH_LINES) if (m.getLayer(id)) m.setLayoutProperty(id, "visibility", spec?.geometry === "line" ? "none" : "visible");
   if (!spec) return;
-  const base = TILES_BASE.startsWith("http") ? TILES_BASE : `${window.location.origin}${TILES_BASE}`;
-  m.addSource(FEATURE_SRC, { type: "vector", url: `pmtiles://${base}/${spec.tiles}` });
+  m.addSource(FEATURE_SRC, { type: "vector", url: pmtilesUrl(spec.tiles) });
   // Lines sit above the overlays they replace; areas sit with the data, under rivers/interstates.
   const before = spec.geometry === "polygon"
     ? (m.getLayer(DATA_BEFORE_ID) ? DATA_BEFORE_ID : undefined)
