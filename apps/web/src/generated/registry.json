@@ -2137,6 +2137,71 @@
   }
  },
  {
+  "id": "fema_major_disasters",
+  "title": "Major disaster declarations since 2000",
+  "phrase": "counts of major disaster declarations",
+  "description": "How many times since 2000 the President declared a major disaster that covered this area, from FEMA's list of every federal declaration. Each disaster counts once, however many times the area was named in it.",
+  "category": "Environment and climate",
+  "subcategory": "Natural hazards",
+  "tags": [
+   "FEMA",
+   "OpenFEMA",
+   "disaster declarations",
+   "major disaster",
+   "natural hazards",
+   "hurricane",
+   "flood",
+   "tornado",
+   "wildfire",
+   "Stafford Act"
+  ],
+  "source": {
+   "name": "FEMA OpenFEMA Disaster Declarations Summaries (v2)",
+   "shortName": "FEMA declarations",
+   "url": "https://www.fema.gov/openfema-data-page/disaster-declarations-summaries-v2",
+   "citation": "Federal Emergency Management Agency (FEMA), OpenFEMA Dataset: Disaster Declarations Summaries - v2. Retrieved from https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries.csv on October 14, 2026. This product uses the FEMA OpenFEMA API, but is not endorsed by FEMA. The Federal Government or FEMA cannot vouch for the data or analyses derived from these data after the data have been retrieved from the Agency's website(s)."
+  },
+  "license": "U.S. Government work, public domain (data.gov: https://www.usa.gov/government-works). OpenFEMA Terms and Conditions (https://www.fema.gov/about/openfema/terms-conditions) ask users to cite the dataset and access date and to state: “This product uses the Federal Emergency Management Agency's OpenFEMA API, but is not endorsed by FEMA.”",
+  "updateCadence": "irregular",
+  "vintage": "Declared Jan. 2000 to Oct. 14, 2026",
+  "geographyLevels": [
+   "state",
+   "county"
+  ],
+  "unit": "declarations",
+  "universe": "federal major disaster declarations",
+  "measure": {
+   "kind": "fema_declarations",
+   "url": "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries.csv",
+   "file": "openfema-disaster-declarations-summaries-v2-2026-10-14.csv",
+   "types": [
+    "DR"
+   ],
+   "since": 2000
+  },
+  "modelInputs": [],
+  "coverageNote": "Counts declarations, not damage: a declaration depends on the governor asking for one and on federal cost thresholds, and requests that were turned down aren't listed. The 2020 COVID-19 declarations covered every county and add 1 everywhere. Declarations that name a whole state or a tribal area count toward the state only; declarations requested by tribal governments aren't counted. Connecticut counties show no data (FEMA still lists its old counties).",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "disaster-declaration",
+   "fema-nri"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "manual",
+   "classes": 5,
+   "breaks": [
+    5,
+    8,
+    12,
+    17
+   ],
+   "higherIsBetter": false
+  }
+ },
+ {
   "id": "food_access_no_car_tracts",
   "title": "No car, far from a supermarket (tracts)",
   "description": "Share of each census tract's households that have no car and live more than half a mile from the nearest supermarket, supercenter or large grocery store.",

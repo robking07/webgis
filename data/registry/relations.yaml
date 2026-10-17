@@ -79,6 +79,8 @@ links:
   - { maps: [nri_heat_wave_loss, july_high], why: Heat-wave losses are highest where summers are hottest. }
   - { maps: [nri_tornado_loss, pct_mobile_homes], why: Mobile homes are the most exposed to tornadoes. }
   - { maps: [nri_expected_loss_per_person, nri_risk_score], why: Expected loss is the main part of FEMA's risk score. }
+  - { maps: [fema_major_disasters, nri_expected_loss_per_person], why: "Disasters actually declared next to FEMA's estimate of yearly losses." }
+  - { maps: [fema_major_disasters, nri_risk_score], why: "Past federal disaster declarations next to FEMA's overall risk score." }
   - { maps: [cejst_pct_pop_disadvantaged, cejst_disadvantaged_tracts], why: The share of residents and the tracts behind it. }
   # Health and environment
   - { maps: [pm25_annual, asthma], why: Fine-particle pollution worsens asthma. }
@@ -154,6 +156,8 @@ maps:
     group: "People"
     counts: { of: "adults without a high school diploma", per: "adults 25 and older" }
   # Environment and climate: Natural hazards, Air quality, Social vulnerability
+  fema_major_disasters:
+    group: "Environment and climate"
   nri_coastal_flood_loss:
     group: "Environment and climate"
   nri_community_resilience:

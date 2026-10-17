@@ -4,7 +4,7 @@ import { z } from "zod";
 import { CATEGORIES } from "./categories.ts";
 
 const Ramp = z.enum(["blues", "ylgnbu", "oranges", "purples", "viridis", "cividis", "rdbu", "puor", "brbg"]);
-const Unit = z.enum(["dollars", "percent", "minutes", "count", "per_sq_mi", "ratio", "years", "deg_f", "inches", "per_100k", "vehicles_per_day", "miles_per_day", "categories", "agreements", "percentile", "ug_m3", "ppm", "degree_days"]);
+const Unit = z.enum(["dollars", "percent", "minutes", "count", "per_sq_mi", "ratio", "years", "deg_f", "inches", "per_100k", "vehicles_per_day", "miles_per_day", "categories", "agreements", "declarations", "percentile", "ug_m3", "ppm", "degree_days"]);
 export const GeoLevel = z.enum(["state", "county", "tract", "block_group", "block"]);
 
 /** A feature-layer popup field with optional explainers (D-35). */
@@ -121,6 +121,18 @@ const Ddp287gMeasure = z.object({
   file: z.string(),
   /** Agreement statuses counted (e.g. ["Active"]). */
   statuses: z.array(z.string()).min(1),
+});
+
+/** OpenFEMA Disaster Declarations Summaries (public domain): distinct declarations (`disasterNumber`)
+ *  of the given types declared from `since` on, by county and state. Ingest: femadisasters.ts. */
+const FemaDeclarationsMeasure = z.object({
+  kind: z.literal("fema_declarations"),
+  url: z.url(),
+  file: z.string(),
+  /** Declaration types counted: DR major disaster, EM emergency, FM fire management. */
+  types: z.array(z.enum(["DR", "EM", "FM"])).min(1),
+  /** First calendar year of `declarationDate` counted. */
+  since: z.number().int().min(1964),
 });
 
 /** CEJST (Justice40) roll-up: share of residents living in tracts identified as disadvantaged,
@@ -295,7 +307,7 @@ export const DatasetEntry = z.object({
   unit: Unit,
   /** For insights: the population the value describes. Pairs that share one are flagged. */
   universe: z.string(),
-  measure: z.discriminatedUnion("kind", [AcsMeasure, Census2020Measure, LodesMeasure, PlacesMeasure, ClimdivMeasure, NbiMeasure, FarsMeasure, FeaturesMeasure, HpmsVmtMeasure, CejstMeasure, Ddp287gMeasure, LeadMeasure, FoodAccessMeasure, FemaNriMeasure, SviMeasure, AirQualityMeasure, OverdoseMeasure]),
+  measure: z.discriminatedUnion("kind", [AcsMeasure, Census2020Measure, LodesMeasure, PlacesMeasure, ClimdivMeasure, NbiMeasure, FarsMeasure, FeaturesMeasure, HpmsVmtMeasure, CejstMeasure, Ddp287gMeasure, FemaDeclarationsMeasure, LeadMeasure, FoodAccessMeasure, FemaNriMeasure, SviMeasure, AirQualityMeasure, OverdoseMeasure]),
   /** Other registry datasets used as inputs to this dataset's model (e.g. PLACES uses county poverty).
    *  Insight pairs with these are flagged: they correlate partly by construction. */
   modelInputs: z.array(z.string()).default([]),
