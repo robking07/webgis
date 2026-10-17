@@ -10,6 +10,7 @@ import type { FeatureLayerSpec } from "@/lib/layers";
 import type { ViewState } from "@/lib/url-state";
 import type { Geometry } from "geojson";
 import { boundaryFile } from "@webgis/registry/timeline";
+import { CONUS } from "@/lib/us-view";
 
 export interface LevelPaint {
   colors: string[];
@@ -447,9 +448,6 @@ function reportTractCounties(m: MlMap, on: boolean, cb: Props["onTractCounties"]
   last.current = key;
   cb(key.split(","));
 }
-
-/** The lower 48 (search and first load frame it; Alaska, Hawaii and PR are a pan away). */
-const CONUS: Bbox = [-124.8, 24.4, -66.9, 49.4];
 
 /** Panel padding can't leave the map less than ~120 px of room, or fitBounds gives up. */
 function safePadding(m: MlMap, p?: Padding): Padding | undefined {

@@ -1004,6 +1004,7 @@ test("laptop search: \"Du\" lists places and no unrelated datasets; \"asthma\" f
 (await import("./drilldown.tests.mjs")).default({ test, expect, immerse, mapIdle, tapLonLat, HENNEPIN });
 (await import("./compare-mode.tests.mjs")).default({ test, expect, immerse });
 (await import("./splash.tests.mjs")).default({ test, expect, wait });
+(await import("./getting-around.tests.mjs")).default({ test, expect, mapIdle });
 
 // ── Run ────────────────────────────────────────────────────────────────────────
 // Round-robin keeps the slow tests spread across shards.
