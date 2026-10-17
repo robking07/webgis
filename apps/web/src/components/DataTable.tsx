@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import type { Dataset } from "@/lib/registry";
 import type { Values } from "@/lib/values";
 import { staticUrl } from "@/lib/static-files";
+import { useIsNarrow } from "./BottomSheet";
 
 /** geoid → [name, lon, lat] for states and counties (exported by ingest). */
 export type Places = Record<string, [string, number, number]>;
@@ -44,6 +45,24 @@ export const DataTable = memo(function DataTable({ top = 12, level, x, xv, y, yv
   const [viewH, setViewH] = useState(400);
   const scroller = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
+  // Phones and tablets (issue #239): swipe up on the handle or header for full screen, down to go back
+  // (from the docked height, down closes it, like the details drawer).
+  const narrow = useIsNarrow();
+  const [full, setFull] = useState(false);
+  const swipeY = useRef<number | null>(null);
+  const swipe = narrow ? {
+    onPointerDown: (e: React.PointerEvent) => { swipeY.current = e.clientY; },
+    onPointerMove: (e: React.PointerEvent) => {
+      if (swipeY.current != null && Math.abs(e.clientY - swipeY.current) > 6) e.currentTarget.setPointerCapture(e.pointerId);
+    },
+    onPointerUp: (e: React.PointerEvent) => {
+      const dy = swipeY.current == null ? 0 : e.clientY - swipeY.current;
+      swipeY.current = null;
+      if (dy < -40) setFull(true);
+      else if (dy > 40) { if (full) setFull(false); else onClose(); }
+    },
+    onPointerCancel: () => { swipeY.current = null; },
+  } : {};
 
   useEffect(() => { loadPlaces().then(setPlaces, () => setPlaces({})); closeRef.current?.focus(); }, []);
   useEffect(() => {
@@ -89,9 +108,15 @@ export const DataTable = memo(function DataTable({ top = 12, level, x, xv, y, yv
 
   return (
     // Phones and tablets: docked to the bottom 42% so a picked place stays visible above it (D-35).
-    <section role="dialog" aria-modal="false" aria-label={`Table of ${x.title}`} data-obstructs=""
+    <section role="dialog" aria-modal="false" aria-label={`Table of ${x.title}`} data-obstructs="" data-full={full || undefined}
       style={{ "--table-top": `${top}px` } as CSSProperties}
-      className="absolute inset-x-0 bottom-0 z-40 flex h-[42%] flex-col gap-2 rounded-t-2xl border bg-card p-3 shadow-lg lg:bottom-3 lg:left-3 lg:right-auto lg:top-[var(--table-top)] lg:h-auto lg:w-[28rem] lg:rounded-lg">
+      className={`absolute inset-x-0 bottom-0 z-40 flex ${full ? "h-full" : "h-[42%]"} flex-col gap-2 rounded-t-2xl border bg-card p-3 pt-0 shadow-lg motion-safe:transition-[height] motion-safe:duration-200 lg:bottom-3 lg:left-3 lg:right-auto lg:top-[var(--table-top)] lg:h-auto lg:w-[28rem] lg:rounded-lg lg:pt-3`}>
+      <div className="touch-none lg:touch-auto" {...swipe}>
+      <button type="button" aria-expanded={full} aria-label={full ? "Show the map above the table" : "Expand the table to full screen"}
+        onClick={() => setFull((f) => !f)}
+        className="flex w-full justify-center pb-1 pt-2.5 focus-visible:outline-2 focus-visible:outline-ring lg:hidden">
+        <span className="h-1.5 w-10 rounded-full bg-border" aria-hidden />
+      </button>
       <header className="flex items-start justify-between gap-2">
         <div>
           <h2 className="text-sm font-semibold">{x.title}{y ? ` × ${y.title}` : ""}</h2>
@@ -101,6 +126,7 @@ export const DataTable = memo(function DataTable({ top = 12, level, x, xv, y, yv
           <X className="size-4" />
         </button>
       </header>
+      </div>
       {level === "tract" ? (
         <StatusState status="empty" message="The table covers states and counties. Zoom out to county level to use it." />
       ) : !xv || !places ? <StatusState status="loading" /> : (
@@ -120,7 +146,7 @@ export const DataTable = memo(function DataTable({ top = 12, level, x, xv, y, yv
                     <tr key={r.g} className={`border-t hover:bg-muted ${r.g === selected ? "bg-muted font-semibold" : ""}`} aria-selected={r.g === selected || undefined} style={{ height: ROW_H }} aria-rowindex={first + i + 2}>
                       <th scope="row" className="truncate px-2 text-left font-normal">
                         {p ? (
-                          <button type="button" onClick={() => onPick(r.g, r.name, p[1], p[2])}
+                          <button type="button" onClick={() => { setFull(false); onPick(r.g, r.name, p[1], p[2]); }}
                             className="w-full truncate rounded text-left text-primary hover:underline focus-visible:outline-2 focus-visible:outline-ring">{r.name}</button>
                         ) : r.name}
                       </th>
