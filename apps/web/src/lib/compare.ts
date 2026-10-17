@@ -127,3 +127,19 @@ export function rowVerdictText(v: Verdict, names: { a: string; b: string }): str
   if (v.kind === "about_same") return "About the same";
   return `${v.higher === "a" ? names.a : names.b} higher`;
 }
+
+// ── The strip of every place (issue #231) ──────────────────────────────────────
+
+/** The strip's range: the 1st to 99th percentile of every place's value, so a lone outlier
+ *  doesn't squash the pack into a corner (values outside sit at the ends). `clipped*`: an end was cut. */
+export function stripRange(all: number[]): { lo: number; hi: number; clippedLo: boolean; clippedHi: boolean } | null {
+  const v = all.filter(Number.isFinite).sort((x, y) => x - y);
+  if (v.length < 2) return null;
+  const q = (p: number) => v[Math.round(p * (v.length - 1))];
+  const lo = q(0.01), hi = q(0.99);
+  if (!(hi > lo)) return null;
+  return { lo, hi, clippedLo: v[0] < lo, clippedHi: v[v.length - 1] > hi };
+}
+
+/** A value's place along the strip, 0 to 1. */
+export const stripX = (v: number, r: { lo: number; hi: number }) => Math.min(1, Math.max(0, (v - r.lo) / (r.hi - r.lo)));
