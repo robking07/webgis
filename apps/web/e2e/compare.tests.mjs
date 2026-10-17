@@ -54,6 +54,33 @@ export default function compareTests({ test, expect, wait, immerse, tapLonLat, l
     });
   }
 
+  // Issue #242: after Compare with…, a tap on another place on the map opens the comparison, even
+  // though the first click focused (drilled into) the first place; on phones the drawer shrinks first.
+  for (const [vp, level, at, aPt, bPt, url] of [
+    ["phone", "tract", "-93.27,44.97,12", [-93.2739, 44.9598], [-93.295, 44.962], /\/compare\/(\d{11})\/(\d{11})\?d=pct_poverty/],
+    ["laptop", "tract", "-93.27,44.97,12", [-93.2739, 44.9598], [-93.295, 44.962], /\/compare\/(\d{11})\/(\d{11})\?d=pct_poverty/],
+    ["phone", "county", `${HENNEPIN.join(",")},8`, HENNEPIN, [-93.1, 45.02], /\/compare\/(27053)\/(27123)\?d=pct_poverty/],
+  ]) {
+    test(`${vp} compare places: Compare with… then tap another ${level} on the map`, async (o) => {
+      const { page } = await o(vp, `/map?d=pct_poverty&lv=${level}&at=${at}`);
+      await immerse(page);
+      await tapLonLat(page, ...aPt);
+      const det = page.locator('section[aria-label^="Details for"]');
+      await det.waitFor();
+      await det.getByRole("button", { name: "Compare with…" }).click();
+      await page.locator("[data-compare-pick]").waitFor();
+      if (vp === "phone") {
+        await wait(400);
+        const h = (await det.boundingBox()).height;
+        expect(h < 230, `drawer still ${h}px tall while picking`);
+      }
+      await tapLonLat(page, ...bPt);
+      await page.waitForURL(url, { timeout: 20000 });
+      const [, a, b] = page.url().match(url);
+      expect(a !== b, `compared a place with itself: ${page.url()}`);
+    });
+  }
+
   test("phone compare places: no map, no map download", async (o) => {
     const { page } = await o("phone", "/compare/27053/27123?d=pct_poverty", { ready: false });
     await page.locator("[data-compare-verdict]").waitFor({ timeout: 20000 });
