@@ -55,6 +55,7 @@ links:
   - { maps: [pct_leave_before_7am, pct_long_commute], why: Long commutes start early. }
   # Getting around
   - { maps: [pct_zero_vehicle_households, pct_transit_commute], why: Households without a car rely on transit. }
+  - { maps: [transit_routes, pct_transit_commute], why: Where transit runs and where people ride it to work. }
   - { maps: [pct_zero_vehicle_households, lack_transportation], why: Two views of not having a way to get around. }
   - { maps: [traffic_fatalities, vmt_per_capita], why: More driving per person means more exposure to crashes. }
   - { maps: [aadt, vmt_per_capita], why: Road traffic counts are what driving totals are built from. }
@@ -429,6 +430,8 @@ maps:
     counts: { of: "White (non-Hispanic) residents", per: "residents" }
   # Transportation: Roads and vehicles, Traffic safety
   aadt:
+    group: "Transportation"
+  transit_routes:
     group: "Transportation"
   bridges_poor_condition:
     group: "Transportation"

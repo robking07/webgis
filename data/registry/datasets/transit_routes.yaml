@@ -1,0 +1,80 @@
+id: transit_routes
+title: Transit routes
+description: Bus, rail and ferry routes from transit agencies' published schedules, colored by the kind of service. Tap a route for the agency that runs it and how much service that agency runs in a year.
+category: Transportation
+subcategory: Commuting
+tags: [transit, public transit, bus, light rail, subway, metro, commuter rail, streetcar, ferry, routes, GTFS, National Transit Map, NTD, ridership]
+source:
+  name: BTS National Transit Map (NTAD), September 2026; FTA National Transit Database 2025
+  shortName: BTS transit map
+  url: https://geodata.bts.gov/datasets/usdot::national-transit-map-routes
+  citation: "U.S. Department of Transportation, Bureau of Transportation Statistics, National Transit Map Routes (compiled Sept. 23, 2026), National Transportation Atlas Database; agency service from the Federal Transit Administration, National Transit Database 2025 annual data (Service by Agency)"
+license: "Routes: Creative Commons Attribution 3.0 United States (CC BY 3.0 US); credit USDOT/BTS and the agencies BTS names (City of Lawndale; Via Mobility Services). Agency service: public domain (FTA National Transit Database, U.S. Government work)."
+updateCadence: irregular
+vintage: "2026"
+unit: count
+universe: fixed-route transit routes in agencies' published GTFS schedules
+coverageNote: "Only agencies whose schedules BTS collected; some small and on-demand services are missing. Agency trips and hours cover all of an agency's service, not one route. Not for trip planning."
+terms: [transit-mode, ntd]
+facets:
+  - field: mode
+    label: Kind of service
+    term: transit-mode
+    explainer: "How the route runs, as the agency lists it in its schedule. Turn kinds off to see, say, only rail."
+    values:
+      - { value: 1, label: "Subway or metro", description: "Rail in its own tunnels or elevated tracks, such as the New York subway or Washington Metro. Includes monorails." }
+      - { value: 2, label: "Light rail or streetcar", description: "Trains or trams that run partly on city streets, such as the METRO Blue Line. Includes San Francisco's cable cars." }
+      - { value: 3, label: "Commuter or intercity rail", description: "Longer-distance trains, such as Northstar or Metra." }
+      - { value: 4, label: "Ferry", description: "Passenger boats on a schedule." }
+      - { value: 5, label: "Bus", description: "Buses on fixed routes, including bus rapid transit and trolleybuses." }
+      - { value: 6, label: "Other or not stated", description: "Aerial trams, funiculars, and routes whose schedule doesn't say." }
+measure:
+  kind: features
+  geometry: line
+  source:
+    url: https://geodata.bts.gov/api/download/v1/items/985bf490e9fa462f80b1cb8ad5f6e139/filegdb?layers=0
+    file: ntm-routes-2026-09.gdb.zip
+    path: TBD
+    layerPattern: "Routes"
+  # Agency names and yearly service from the NTD, joined on the 5-digit NTD id every route carries.
+  join:
+    url: "https://data.transportation.gov/resource/6y83-7vuw.csv?$select=_5_digit_ntd_id,agency,max_primary_uza_name,sum_unlinked_passenger_trips_upt,sum_actual_vehicles_passenger_car_revenue_hours&$where=report_year=%272025%27&$limit=10000"
+    file: ntd-2025-service-by-agency.csv
+  # GTFS route_type: 0 tram/light rail, 1 subway, 2 rail, 3 bus, 4 ferry, 5 cable tram, 6 aerial,
+  # 7 funicular, 11 trolleybus, 12 monorail. `mode` is also the rank: rail draws wider and first.
+  select: >-
+    SELECT
+    CASE r.route_type WHEN '1' THEN 1 WHEN '12' THEN 1 WHEN '0' THEN 2 WHEN '5' THEN 2 WHEN '2' THEN 3
+    WHEN '4' THEN 4 WHEN '3' THEN 5 WHEN '11' THEN 5 ELSE 6 END AS mode,
+    NULLIF(TRIM(TRIM(COALESCE(r.route_short_name, '')) || CASE WHEN TRIM(COALESCE(r.route_short_name, '')) <> '' AND TRIM(COALESCE(r.route_long_name, '')) <> '' THEN ' · ' ELSE '' END || TRIM(COALESCE(r.route_long_name, ''))), '') AS route,
+    CASE WHEN instr(a.agency, 'dba: ') > 0 THEN substr(a.agency, instr(a.agency, 'dba: ') + 5) ELSE a.agency END AS agency,
+    a.max_primary_uza_name AS urban_area,
+    CAST(a.sum_unlinked_passenger_trips_upt AS INTEGER) AS agency_trips,
+    CAST(a.sum_actual_vehicles_passenger_car_revenue_hours AS INTEGER) AS agency_hours,
+    r.geom FROM {layer} r LEFT JOIN "join" a ON a._5_digit_ntd_id = r.ntd_id
+  valueField: mode
+  fields:
+    route: Route
+    mode: Kind of service
+    agency: Agency
+    urban_area: Agency's main urban area
+    agency_trips:
+      label: Agency's yearly rides (2025)
+      unit: count
+      explainer: "Boardings on all of the agency's routes in 2025, counting each time someone gets on a vehicle (a trip with a transfer counts twice). From the National Transit Database."
+      url: https://www.transit.dot.gov/ntd/national-transit-database-ntd-glossary
+    agency_hours:
+      label: Agency's yearly service hours (2025)
+      unit: count
+      explainer: "Hours the agency's vehicles spent carrying passengers in 2025, across all its routes: a measure of how much service it runs."
+      url: https://www.transit.dot.gov/ntd/national-transit-database-ntd-glossary
+  # Rail and ferries at every zoom; buses join at metro zoom, where they read as a network.
+  rank:
+    field: mode
+    showUpTo: [[2, 4], [7, 6]]
+  zooms: [2, 12]
+symbology:
+  ramp: okabeIto
+  classification: manual
+  classes: 6
+  breaks: [2, 3, 4, 5, 6]

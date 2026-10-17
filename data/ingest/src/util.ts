@@ -20,7 +20,8 @@ export async function cached(url: string, name = url.split("/").pop()!): Promise
   if (existsSync(path)) return path;
   mkdirSync(CACHE, { recursive: true });
   const res = await fetch(url);
-  if (!res.ok || !res.body) throw new Error(`GET ${url} → ${res.status}`);
+  // 202: ArcGIS Hub is still building the export; caching that reply would poison the cache.
+  if (res.status !== 200 || !res.body) throw new Error(`GET ${url} → ${res.status}${res.status === 202 ? " (export still being generated; retry in a few minutes)" : ""}`);
   const tmp = `${path}.part`;
   await pipeline(Readable.fromWeb(res.body as never), createWriteStream(tmp));
   const { renameSync } = await import("node:fs");
