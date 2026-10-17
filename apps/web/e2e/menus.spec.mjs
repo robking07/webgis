@@ -742,6 +742,19 @@ for (const vp of ["phone", "laptop", "monitor"]) {
   });
 }
 
+test("phone: a long dataset title stops short of the back button (issue #243)", async (o) => {
+  const { page } = await o("phone", "/map?d=svi_minority&lv=county&at=-93.4752,45.0061,7.2");
+  await immerse(page);
+  await tapLonLat(page, ...HENNEPIN);
+  await page.locator('section[aria-label^="Details for"]').waitFor();
+  const back = page.locator('button[aria-label="Back to the previous view"]');
+  await back.waitFor();
+  await wait(400);
+  const h = await page.locator("[data-dataset-heading]").boundingBox();
+  const b = await back.boundingBox();
+  expect(h.x + h.width <= b.x, `heading ends at ${Math.round(h.x + h.width)}px, back button starts at ${Math.round(b.x)}px`);
+});
+
 /** Phone chrome over the map: every text, icon and edge against its own backing. */
 const PHONE_ON_MAP = ["[data-dataset-heading]", "[data-filter-button]:not([inert] *)", "[data-filter-note]:not([inert] *)", "button[data-legend]",
   'button[aria-label="Show navigation"]', 'button[aria-label="Back to the previous view"]', ".wg-credits", 'section[aria-label="Mapped dataset"]'];
