@@ -580,7 +580,7 @@ for (const vp of ["phone", "laptop"]) {
     await mode.getByRole("radio", { name: "Change" }).click();
     // The year picker is gone (not greyed out); From and To take its place.
     expect(await page.locator("#filters-panel [role=radiogroup][aria-label=Years]").count() === 0, "year picker still shown in change mode");
-    expect((await span()).includes("2010–2014 → 2015–2019"), `kept year as To: ${await span()}`);
+    expect((await span()).includes("from 2010–2014 to 2015–2019"), `kept year as To: ${await span()}`);
     expect((await radio("To", "2015–2019").getAttribute("aria-checked")) === "true", "To isn't the year picked in Values");
     // Back to Values restores that year.
     await mode.getByRole("radio", { name: "Values" }).click();
@@ -588,9 +588,9 @@ for (const vp of ["phone", "laptop"]) {
     await mode.getByRole("radio", { name: "Change" }).click();
     // A later To keeps From; then a later From.
     await radio("To", "2020–2024").click();
-    expect((await span()).includes("2010–2014 → 2020–2024"), `after To: ${await span()}`);
+    expect((await span()).includes("from 2010–2014 to 2020–2024"), `after To: ${await span()}`);
     await radio("From", "2015–2019").click();
-    expect((await span()).includes("2015–2019 → 2020–2024"), `after From: ${await span()}`);
+    expect((await span()).includes("from 2015–2019 to 2020–2024"), `after From: ${await span()}`);
     if (page.isPhone) await page.getByRole("button", { name: "Apply", exact: true }).click();
     else await page.getByRole("button", { name: "Close map options" }).click();
     await page.waitForSelector("#filters-panel", { state: "detached" });
@@ -628,6 +628,18 @@ for (const vp of ["phone", "laptop"]) {
     await hover.waitFor({ timeout: 5000 });
     const hoverText = await hover.innerText();
     expect(/[+−][\d.]+ pts|No clear change/.test(hoverText) && hoverText.includes("→"), `hover: ${hoverText}`);
+    // The change leads, in the largest type (#200).
+    const lead = hover.locator(".wg-popup-lead-value");
+    expect(/^([+−][\d.]+ pts|No clear change)$/.test((await lead.innerText()).trim()), `hover lead: ${await lead.innerText()}`);
+    const px = (l) => l.evaluate((el) => parseFloat(getComputedStyle(el).fontSize));
+    expect(await px(lead) > await px(hover.locator(".wg-popup-title")), "hover change isn't larger than the place name");
+    // Each value has its period right under it (Robbie, 2026-10-14).
+    const cells = hover.locator(".wg-popup-lead-cell");
+    expect(await cells.count() === 2, "hover doesn't show two values");
+    const periods = await hover.locator(".wg-popup-lead-cell-period").allInnerTexts();
+    expect(periods.join("|") === "2015–2019|2020–2024", `hover periods: ${periods}`);
+    const [v, p] = await Promise.all([".wg-popup-lead-cell-value", ".wg-popup-lead-cell-period"].map((c) => cells.first().locator(c).boundingBox()));
+    expect(p.y >= v.y + v.height - 1 && Math.abs(p.x - v.x) < 2, "period isn't directly under its value");
     await tapLonLat(page, ...HENNEPIN);
     const card = page.locator("[data-change-card]");
     await card.waitFor({ timeout: 15000 });
@@ -741,6 +753,19 @@ for (const vp of ["phone", "laptop", "monitor"]) {
     expect(r.n === 0, `${r.n} block groups drawn at zoom ${r.z.toFixed(1)}`);
   });
 }
+
+test("phone: a long dataset title stops short of the back button (issue #243)", async (o) => {
+  const { page } = await o("phone", "/map?d=svi_minority&lv=county&at=-93.4752,45.0061,7.2");
+  await immerse(page);
+  await tapLonLat(page, ...HENNEPIN);
+  await page.locator('section[aria-label^="Details for"]').waitFor();
+  const back = page.locator('button[aria-label="Back to the previous view"]');
+  await back.waitFor();
+  await wait(400);
+  const h = await page.locator("[data-dataset-heading]").boundingBox();
+  const b = await back.boundingBox();
+  expect(h.x + h.width <= b.x, `heading ends at ${Math.round(h.x + h.width)}px, back button starts at ${Math.round(b.x)}px`);
+});
 
 /** Phone chrome over the map: every text, icon and edge against its own backing. */
 const PHONE_ON_MAP = ["[data-dataset-heading]", "[data-filter-button]:not([inert] *)", "[data-filter-note]:not([inert] *)", "button[data-legend]",
