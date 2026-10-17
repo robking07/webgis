@@ -5,6 +5,7 @@ import { useEffect, useLayoutEffect, useRef } from "react";
 import { AttributionControl, LngLatBounds, Map as MlMap, ScaleControl, addProtocol, setWorkerUrl, type LayerSpecification, type MapGeoJSONFeature } from "maplibre-gl";
 import { Protocol } from "pmtiles";
 import { basemapStyle, choroplethFill, hatchImage, hatchLayerId, HATCH_IMAGE, HATCH_LEVELS, membershipFilter, NO_FEATURES, choroplethFillsByState, DATA_BEFORE_ID, STATIC_ONLY_LEVELS, TILE_VALUE_LEVELS, THEMES, featureLineLayers, featurePolygonLayers, fillLayerIds, focusDimLayer, FOCUS_DIM_LAYER, focusFilters, focusLandLayer, FOCUS_LAND_BEFORE_ID, GEO_LEVELS, MOTION, PER_STATE_LEVELS, thematicLayers, type GeoLevel, type NoDataFill, type PackedClasses, type ThemeName } from "@webgis/design";
+import { comparePickOpen } from "@/lib/compare";
 import type { FeatureLayerSpec } from "@/lib/layers";
 import type { ViewState } from "@/lib/url-state";
 import type { Geometry } from "geojson";
@@ -262,9 +263,11 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
       const z = m.getZoom();
       const bands = latest.current.levelZooms;
       const focused = latest.current.focus;
+      // "Compare with…" is waiting for a second place: the places around the focused one count too.
+      const picking = !!focused && comparePickOpen();
       return m.queryRenderedFeatures(pt as never, { layers: fillIds.filter((id) => m.getLayer(id)) }).find((f) => {
         // Focused: only the places inside it (its child level is filtered to them).
-        if (focused && f.sourceLayer !== focused.child) return false;
+        if (focused && f.sourceLayer !== focused.child && !(picking && f.sourceLayer === focused.level)) return false;
         const band = bands ? bands[f.sourceLayer as GeoLevel] : GEO_LEVELS[f.sourceLayer as GeoLevel];
         return !!band && z >= band.minzoom && z < band.maxzoom;
       });

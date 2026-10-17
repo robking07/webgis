@@ -16,6 +16,10 @@ export function compareHref({ a, b, d }: CompareState): string {
   return `/compare/${a}/${b}${d ? `?d=${encodeURIComponent(d)}` : ""}`;
 }
 
+/** "Compare with…" is waiting for a tap on a second place (issue #242): CompareWith marks itself
+ *  `data-compare-pick`, so the map takes a tap outside a focused place and only selects it. */
+export const comparePickOpen = () => !!document.querySelector("[data-compare-pick]");
+
 /** The route's params back into a state; null when they can't make a comparison (different
  *  levels, the same place twice, or a level finer than tract). */
 export function parseCompare(a: string, b: string, search: string | URLSearchParams): CompareState | null {
