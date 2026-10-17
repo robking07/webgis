@@ -273,7 +273,7 @@ function Strip({ vals, unit, at, names, label }: { vals: Values; unit: Dataset["
           return (
             <div key={k} aria-hidden style={{ left: `${x}%` }} data-compare-strip-mark={k}
               className={`absolute flex ${k === "a" ? "top-0 flex-col" : "bottom-0 flex-col-reverse"} ${x > 50 ? "-translate-x-full items-end" : "items-start"}`}>
-              <span className="whitespace-nowrap text-xs font-medium leading-4">{names[k]}</span>
+              <span className="max-w-40 truncate text-xs font-medium leading-4">{names[k]}</span>
               <span className={`h-6 border-l-2 border-foreground ${k === "b" ? "border-dashed" : ""}`} />
             </div>
           );
