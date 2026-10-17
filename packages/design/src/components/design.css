@@ -18,9 +18,9 @@
   color-mix(in srgb, var(--map-hatch-dark) 60%, transparent) 0 1.25px,
   color-mix(in srgb, var(--map-hatch-light) 60%, transparent) 1.25px 2.5px,
   transparent 2.5px 4.95px); }
-/* Sized to its tracks so the rotation pivots on the diamond's own center; the margin holds the
-   rotated corners (a 70px square turned 45° spans 99px, so 15px a side). */
-.wg-biv-grid { display: grid; width: max-content; grid-template-columns: repeat(3, 22px); grid-auto-rows: 22px; gap: 2px; transform: rotate(-45deg); margin: 16px; }
+.wg-biv-grid { display: grid; width: max-content; grid-template-columns: repeat(3, 22px); grid-auto-rows: 22px; gap: 2px; margin: 2px 0; }
+.wg-biv-corner { color: var(--ui-text-muted); font-size: 0.6875rem; line-height: 1.2; }
+.wg-biv-hi { text-align: right; }
 .wg-legend-biv { display: flex; align-items: center; gap: 0.5rem; }
 .wg-legend-biv figcaption { min-width: 0; display: flex; flex-direction: column; gap: 0.125rem; color: var(--ui-text-muted); font-size: 0.75rem; }
 .wg-popup { min-width: 200px; color: var(--ui-text); font-size: 0.8125rem; }

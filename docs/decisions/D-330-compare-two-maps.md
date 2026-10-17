@@ -25,3 +25,5 @@ screens; design for Alaska and Hawaii.
    longitude east of 0° as west of 180° (lon − 360). Every U.S. place is west of 0°, so this only moves
    the Aleutians past 180° next to the rest of Alaska; a fit never spans the world. The same fix applies
    to fitting a place from the main map.
+
+- 2026-10-16, Robbie: keep all three defaults (phones load the map right away; phone map under the headline numbers; both places outlined on each map).
