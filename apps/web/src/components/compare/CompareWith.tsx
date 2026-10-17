@@ -62,7 +62,8 @@ export function CompareWith({ geoid, level, name, dataset, aValue, otherPeriod }
   );
 }
 
-function Picker({ a, level, name, datasetId, onCancel }: { a: string; level: GeoLevel; name: string; datasetId: string; onCancel: () => void }) {
+/** The search for place B. The place page uses it too, with no dataset (the compare page then leads with the landing map's). */
+export function Picker({ a, level, name, datasetId, onCancel }: { a: string; level: GeoLevel; name: string; datasetId: string | null; onCancel: () => void }) {
   const [rows, setRows] = useState<PlaceRow[] | null>(null);
   const [err, setErr] = useState(false);
   const [q, setQ] = useState("");
