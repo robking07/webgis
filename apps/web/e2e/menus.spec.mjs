@@ -452,8 +452,11 @@ test("phone dataset sheet: chips, pick switches the map, sheet and details close
   await page.getByRole("button", { name: /other .* datasets/ }).click();
   await sheet.waitFor();
   // Tapping the map above the sheet opens details, which closes the list.
-  // The sheet covers the lower part of the screen: tap the map just above it.
+  // The sheet covers the lower part of the screen: tap the map just above it, inside Hennepin (the
+  // focused place since the first tap: issue #203).
   const top = await sheet.evaluate((el) => el.getBoundingClientRect().top);
+  await page.evaluate(([c, dy]) => window.__wgMap.easeTo({ center: c, offset: [0, dy], duration: 0 }), [HENNEPIN, top - 40 - page.viewportSize().height / 2]);
+  await mapIdle(page);
   await tapAt(page, page.viewportSize().width / 2, top - 40);
   await page.locator('section[aria-label^="Details for"]').waitFor();
   expect((await sheet.count()) === 0, "dataset list still open with the details");
@@ -963,6 +966,7 @@ test("laptop earlier year at block-group zoom: no boundary file that doesn't exi
 (await import("./share.tests.mjs")).default({ test, expect, wait, mapIdle });
 (await import("./context.tests.mjs")).default({ test, expect, wait });
 (await import("./history.tests.mjs")).default({ test, expect, immerse, mapIdle });
+(await import("./drilldown.tests.mjs")).default({ test, expect, immerse, mapIdle, tapLonLat, HENNEPIN });
 (await import("./compare-mode.tests.mjs")).default({ test, expect, immerse });
 (await import("./splash.tests.mjs")).default({ test, expect, wait });
 

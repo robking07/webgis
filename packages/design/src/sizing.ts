@@ -74,6 +74,22 @@ export function pinnedBands(available: GeoLevel[], pinned: GeoLevel, shift = 0):
   return { [stand]: { minzoom: 0, maxzoom: floor + shift }, [pinned]: { minzoom: floor + shift, maxzoom: 24 } };
 }
 
+/** Drill-down (issue #203): the level a click on `level` opens, the next one the dataset has; null at
+ *  its finest level (a click there only selects). */
+export function childLevel(available: GeoLevel[], level: GeoLevel): GeoLevel | null {
+  const order = (Object.keys(GEO_LEVELS) as GeoLevel[]).filter((l) => available.includes(l));
+  const i = order.indexOf(level);
+  return i < 0 ? null : order[i + 1] ?? null;
+}
+
+/** Focused on one place (drill-down): its level (the place, and its dimmed neighbors) and the child
+ *  level (inside it only) draw at every zoom, overriding switch-with-zoom and a pinned level (Robbie,
+ *  2026-10-14), except below a level's `pinFloor`. The child comes first, so levelAtZoom names it. */
+export function focusBands(parent: GeoLevel, child: GeoLevel, shift = 0): LevelBands {
+  const from = (l: GeoLevel) => (floorOf(l) ? floorOf(l) + shift : 0);
+  return { [child]: { minzoom: from(child), maxzoom: 24 }, [parent]: { minzoom: from(parent), maxzoom: 24 } };
+}
+
 export function levelAtZoom(bands: LevelBands, zoom: number): GeoLevel | null {
   for (const [l, b] of Object.entries(bands) as Array<[GeoLevel, ZoomBand]>) if (zoom >= b.minzoom && zoom < b.maxzoom) return l;
   return null;

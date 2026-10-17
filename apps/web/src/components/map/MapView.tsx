@@ -4,7 +4,7 @@
 import { useEffect, useLayoutEffect, useRef } from "react";
 import { AttributionControl, LngLatBounds, Map as MlMap, ScaleControl, addProtocol, setWorkerUrl, type LayerSpecification, type MapGeoJSONFeature } from "maplibre-gl";
 import { Protocol } from "pmtiles";
-import { basemapStyle, choroplethFill, hatchImage, hatchLayerId, HATCH_IMAGE, HATCH_LEVELS, membershipFilter, NO_FEATURES, choroplethFillsByState, DATA_BEFORE_ID, STATIC_ONLY_LEVELS, TILE_VALUE_LEVELS, THEMES, featureLineLayers, featurePolygonLayers, fillLayerIds, focusLandLayer, FOCUS_LAND_BEFORE_ID, GEO_LEVELS, MOTION, PER_STATE_LEVELS, thematicLayers, type GeoLevel, type NoDataFill, type PackedClasses, type ThemeName } from "@webgis/design";
+import { basemapStyle, choroplethFill, hatchImage, hatchLayerId, HATCH_IMAGE, HATCH_LEVELS, membershipFilter, NO_FEATURES, choroplethFillsByState, DATA_BEFORE_ID, STATIC_ONLY_LEVELS, TILE_VALUE_LEVELS, THEMES, featureLineLayers, featurePolygonLayers, fillLayerIds, focusDimLayer, FOCUS_DIM_LAYER, focusFilters, focusLandLayer, FOCUS_LAND_BEFORE_ID, GEO_LEVELS, MOTION, PER_STATE_LEVELS, thematicLayers, type GeoLevel, type NoDataFill, type PackedClasses, type ThemeName } from "@webgis/design";
 import type { FeatureLayerSpec } from "@/lib/layers";
 import type { ViewState } from "@/lib/url-state";
 import type { Geometry } from "geojson";
@@ -98,7 +98,12 @@ interface Props {
   /** Compare places (D-258): outline `a` (solid) and `b` (dashed), open on `bbox` and fit both once
    *  their tiles are in. Clicks and hover don't select anything else. */
   compare?: { level: GeoLevel; a: string; b: string; bbox: Bbox };
+  /** Drill-down (issue #203): the clicked-into place. Its `child` level draws only inside it, the rest
+   *  of its level sits under a dim wash, and hover and clicks reach only its children. */
+  focus?: Focus | null;
 }
+
+export interface Focus { level: GeoLevel; geoid: string; child: GeoLevel }
 
 export interface MapApi {
   zoomIn: () => void;
@@ -125,13 +130,13 @@ function tilesUrl(level: GeoLevel, boundaries?: string | null) {
   return `pmtiles://${base}/${boundaryFile(level, boundaries)}.pmtiles`;
 }
 
-export function MapView({ theme, initialView, paint, onViewChange, onHover, onSelect, onTilesError, ariaLabel, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, onApi, featureFilter, scaleUnit = "imperial", attribution = true, boundaries = null, cooperative = false, hatch = null, onTractCounties, watchCounties = false, compare }: Props) {
+export function MapView({ theme, initialView, paint, onViewChange, onHover, onSelect, onTilesError, ariaLabel, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, onApi, featureFilter, scaleUnit = "imperial", attribution = true, boundaries = null, cooperative = false, hatch = null, onTractCounties, watchCounties = false, compare, focus = null }: Props) {
   const container = useRef<HTMLDivElement>(null);
   const map = useRef<MlMap | null>(null);
   const applied = useRef<Partial<Record<GeoLevel, LevelPaint>>>({});
-  const latest = useRef({ paint, theme, onViewChange, onHover, onSelect, onTilesError, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, boundaries, featureFilter, hatch, onTractCounties, watchCounties });
+  const latest = useRef({ paint, theme, onViewChange, onHover, onSelect, onTilesError, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, boundaries, featureFilter, hatch, onTractCounties, watchCounties, focus });
   // Refresh after every render, before any effect or event handler reads it.
-  useLayoutEffect(() => { latest.current = { paint, theme, onViewChange, onHover, onSelect, onTilesError, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, boundaries, featureFilter, hatch, onTractCounties, watchCounties }; });
+  useLayoutEffect(() => { latest.current = { paint, theme, onViewChange, onHover, onSelect, onTilesError, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, boundaries, featureFilter, hatch, onTractCounties, watchCounties, focus }; });
   /** Hatch filters currently on the map, per level (by set identity). */
   const appliedHatch = useRef<Partial<Record<GeoLevel, ReadonlySet<string> | undefined>>>({});
   /** Last county list reported to onTractCounties. */
@@ -220,6 +225,7 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
       restoreFlags(m, hovered.current, selected.current, second.current);
       appliedHatch.current = {};
       syncHatch(m, latest.current.hatch, appliedHatch.current, latest.current.levelZooms);
+      applyFocus(m, latest.current.focus, latest.current.theme);
     });
     // The opening bbox is an estimate from each place's center and area; frame both exactly once their tiles are in.
     if (compare) m.once("idle", () => {
@@ -255,7 +261,10 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
     const placeAt = (pt: { x: number; y: number }): MapGeoJSONFeature | undefined => {
       const z = m.getZoom();
       const bands = latest.current.levelZooms;
+      const focused = latest.current.focus;
       return m.queryRenderedFeatures(pt as never, { layers: fillIds.filter((id) => m.getLayer(id)) }).find((f) => {
+        // Focused: only the places inside it (its child level is filtered to them).
+        if (focused && f.sourceLayer !== focused.child) return false;
         const band = bands ? bands[f.sourceLayer as GeoLevel] : GEO_LEVELS[f.sourceLayer as GeoLevel];
         return !!band && z >= band.minzoom && z < band.maxzoom;
       });
@@ -341,6 +350,12 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
     if (m && ready.current) { syncPaint(m, paint, applied.current, latest.current.theme); restoreFlags(m, hovered.current, selected.current, second.current); }
   }, [paint]);
 
+  // Drill-down focus: filters and the dim wash.
+  useEffect(() => {
+    const m = map.current;
+    if (m && ready.current) applyFocus(m, latest.current.focus, latest.current.theme);
+  }, [focus?.geoid, focus?.child]);
+
   // Feature layer (lines/points): swap in/out, then apply its filter.
   useEffect(() => {
     const m = map.current;
@@ -383,6 +398,17 @@ function applyBands(m: MlMap, bands?: Props["levelZooms"]) {
       } else m.setLayerZoomRange(id, 0, 24);
     }
   }
+}
+
+/** Drill-down (issue #203): the child level only inside the focused place, and the wash over the rest
+ *  of the place's level, under the selection outlines (re-added per style and per focus). */
+function applyFocus(m: MlMap, focus: Focus | null | undefined, theme: ThemeName) {
+  for (const level of LEVELS) {
+    for (const [id, f] of Object.entries(focusFilters(level, level === focus?.child ? focus.geoid : null))) if (m.getLayer(id)) m.setFilter(id, f as never);
+  }
+  if (m.getLayer(FOCUS_DIM_LAYER)) m.removeLayer(FOCUS_DIM_LAYER);
+  const before = "state-highlight-halo";
+  if (focus) m.addLayer(focusDimLayer(`b-${focus.level}`, focus.level, focus.geoid, theme), m.getLayer(before) ? before : undefined);
 }
 
 /** The hatch pattern for this theme, sharp at the screen's pixel density (re-added per style). */
