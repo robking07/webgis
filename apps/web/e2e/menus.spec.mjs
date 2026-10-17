@@ -633,6 +633,13 @@ for (const vp of ["phone", "laptop"]) {
     expect(/^([+−][\d.]+ pts|No clear change)$/.test((await lead.innerText()).trim()), `hover lead: ${await lead.innerText()}`);
     const px = (l) => l.evaluate((el) => parseFloat(getComputedStyle(el).fontSize));
     expect(await px(lead) > await px(hover.locator(".wg-popup-title")), "hover change isn't larger than the place name");
+    // Each value has its period right under it (Robbie, 2026-10-14).
+    const cells = hover.locator(".wg-popup-lead-cell");
+    expect(await cells.count() === 2, "hover doesn't show two values");
+    const periods = await hover.locator(".wg-popup-lead-cell-period").allInnerTexts();
+    expect(periods.join("|") === "2015–2019|2020–2024", `hover periods: ${periods}`);
+    const [v, p] = await Promise.all([".wg-popup-lead-cell-value", ".wg-popup-lead-cell-period"].map((c) => cells.first().locator(c).boundingBox()));
+    expect(p.y >= v.y + v.height - 1 && Math.abs(p.x - v.x) < 2, "period isn't directly under its value");
     await tapLonLat(page, ...HENNEPIN);
     const card = page.locator("[data-change-card]");
     await card.waitFor({ timeout: 15000 });

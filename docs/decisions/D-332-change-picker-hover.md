@@ -16,3 +16,8 @@ the largest line (1.5rem), with the dataset name small above it; the place name 
 "County · change, A → B" line stay on top, and both values ("12.1% → 10.8%") sit just under the
 change. Added as an optional `lead` on the shared `Popup` (`packages/design`), so other popups
 are unchanged.
+
+**Amendment, 2026-10-14 (Robbie, on #232): years under each value.** The two values now sit side by
+side with their period directly under each (**12.1%** / 2010–2014 → **10.8%** / 2020–2024), so a
+value and its year read as one unit. The subtitle drops the years ("County · change"). The change
+stays the largest line. Done through an optional `values` list on `Popup`'s `lead`.
