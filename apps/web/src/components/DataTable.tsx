@@ -50,13 +50,16 @@ export const DataTable = memo(function DataTable({ top = 12, level, x, xv, y, yv
   const narrow = useIsNarrow();
   const [full, setFull] = useState(false);
   const swipeY = useRef<number | null>(null);
+  /** A mouse swipe also fires a click on release; this swallows it. */
+  const swiped = useRef(false);
   const swipe = narrow ? {
-    onPointerDown: (e: React.PointerEvent) => { swipeY.current = e.clientY; },
+    onPointerDown: (e: React.PointerEvent) => { swipeY.current = e.clientY; swiped.current = false; },
     onPointerMove: (e: React.PointerEvent) => {
       if (swipeY.current != null && Math.abs(e.clientY - swipeY.current) > 6) e.currentTarget.setPointerCapture(e.pointerId);
     },
     onPointerUp: (e: React.PointerEvent) => {
       const dy = swipeY.current == null ? 0 : e.clientY - swipeY.current;
+      swiped.current = Math.abs(dy) > 6;
       swipeY.current = null;
       if (dy < -40) setFull(true);
       else if (dy > 40) { if (full) setFull(false); else onClose(); }
@@ -113,7 +116,7 @@ export const DataTable = memo(function DataTable({ top = 12, level, x, xv, y, yv
       className={`absolute inset-x-0 bottom-0 z-40 flex ${full ? "h-full" : "h-[42%]"} flex-col gap-2 rounded-t-2xl border bg-card p-3 pt-0 shadow-lg motion-safe:transition-[height] motion-safe:duration-200 lg:bottom-3 lg:left-3 lg:right-auto lg:top-[var(--table-top)] lg:h-auto lg:w-[28rem] lg:rounded-lg lg:pt-3`}>
       <div className="touch-none lg:touch-auto" {...swipe}>
       <button type="button" aria-expanded={full} aria-label={full ? "Show the map above the table" : "Expand the table to full screen"}
-        onClick={() => setFull((f) => !f)}
+        onClick={() => { if (swiped.current) { swiped.current = false; return; } setFull((f) => !f); }}
         className="flex w-full justify-center pb-1 pt-2.5 focus-visible:outline-2 focus-visible:outline-ring lg:hidden">
         <span className="h-1.5 w-10 rounded-full bg-border" aria-hidden />
       </button>
