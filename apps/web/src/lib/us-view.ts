@@ -16,11 +16,11 @@ export const CONUS: Bbox = [...REGIONS[0].bbox];
 const mx = (lon: number) => (lon + 180) / 360;
 const my = (lat: number) => (1 - Math.log(Math.tan(Math.PI / 4 + (lat * Math.PI) / 360)) / Math.PI) / 2;
 
-/** False when zoomed far out (the whole world fits in half the screen width, so desktops show it
- *  twice) or when no U.S. region is on screen. */
+/** False when zoomed far out (the lower 48 spans under 40% of the screen's width: desktops can show
+ *  the world twice, phones stop at the whole world once) or when no U.S. region is on screen. */
 export function usInView(at: { lon: number; lat: number; zoom: number }, width: number, height: number): boolean {
   const world = 512 * 2 ** at.zoom;
-  if (world < 2 * width) return false;
+  if (world * (mx(CONUS[2]) - mx(CONUS[0])) < 0.4 * width) return false;
   const hw = width / 2 / world, hh = height / 2 / world;
   const cx = mx(at.lon), cy = my(at.lat);
   return REGIONS.some(({ bbox: [w, s, e, n] }) =>

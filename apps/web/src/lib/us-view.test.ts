@@ -11,7 +11,7 @@ describe("usInView", () => {
   });
   it("is false zoomed out to two worlds, or panned off the U.S.", () => {
     expect(usInView({ lon: -98, lat: 39, zoom: 1 }, 1440, 900)).toBe(false);
-    expect(usInView({ lon: -98, lat: 39, zoom: 0.3 }, 390, 844)).toBe(false);
+    expect(usInView({ lon: -98, lat: 39, zoom: 0.72 }, 390, 844)).toBe(false); // the phone's farthest zoom
     expect(usInView({ lon: 10, lat: 50, zoom: 5 }, 1440, 900)).toBe(false); // Europe
     expect(usInView({ lon: -60, lat: -20, zoom: 4 }, 390, 844)).toBe(false); // South America
   });
