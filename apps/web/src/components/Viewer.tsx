@@ -363,7 +363,7 @@ export function Viewer({ search }: { search: string }) {
           onShowNav={() => { setImmersed(false); setPeek(false); }}
           onOpenFilters={toggleFilters} onOpenLevel={openLevelFilters} levelPill={!isFeature}
           menuOpen={menuOpen && immersed} menu={immersed ? datasetMenu : null} onBrowse={changeDataset} onExit={exitCompare}
-          place={focus && focusName ? { name: focusName, onClear: leaveFocus } : null} />
+          place={focus && focusName ? { name: focusName, onClear: leaveFocus } : null} backShown={canGoBack} />
       )}
 
       {filters && primary && !phone && (
