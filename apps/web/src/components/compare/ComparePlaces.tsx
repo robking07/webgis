@@ -263,7 +263,10 @@ function Strip({ vals, unit, at, names, label }: { vals: Values; unit: Dataset["
     <figure className="mt-4" data-compare-strip="">
       <div role="img" aria-label={`All ${all.length.toLocaleString()} ${label}`} className="relative h-14">
         <svg viewBox="0 0 1000 10" preserveAspectRatio="none" aria-hidden className="absolute inset-x-0 top-4 h-6 w-full text-muted-foreground">
-          <path d={all.map((v) => `M${(stripX(v, r) * 1000).toFixed(1)} 0v10`).join("")} stroke="currentColor" strokeOpacity={0.3} vectorEffect="non-scaling-stroke" />
+          {/* One line per place (not one path) so overlapping ticks darken; fainter with more places, so 3,000 counties shade the pack instead of filling it. */}
+          <g stroke="currentColor" strokeOpacity={Math.min(0.35, 150 / all.length)}>
+            {all.map((v, i) => { const x = (stripX(v, r) * 1000).toFixed(1); return <line key={i} x1={x} x2={x} y1={0} y2={10} vectorEffect="non-scaling-stroke" />; })}
+          </g>
         </svg>
         {(["a", "b"] as const).map((k) => {
           const x = stripX(at[k], r) * 100;

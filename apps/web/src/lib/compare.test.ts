@@ -147,6 +147,10 @@ describe("strip of every place", () => {
     expect(stripX(90, r)).toBe(1);
     expect(stripX(-5, r)).toBe(0);
   });
+  it("keeps the full range for 52 states", () => {
+    const r = stripRange(Array.from({ length: 52 }, (_, i) => i))!;
+    expect([r.lo, r.hi, r.clippedLo, r.clippedHi]).toEqual([0, 51, false, false]);
+  });
   it("has no range for one place or all-equal values", () => {
     expect(stripRange([5])).toBeNull();
     expect(stripRange([5, 5, 5])).toBeNull();

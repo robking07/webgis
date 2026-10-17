@@ -135,8 +135,7 @@ export function rowVerdictText(v: Verdict, names: { a: string; b: string }): str
 export function stripRange(all: number[]): { lo: number; hi: number; clippedLo: boolean; clippedHi: boolean } | null {
   const v = all.filter(Number.isFinite).sort((x, y) => x - y);
   if (v.length < 2) return null;
-  const q = (p: number) => v[Math.round(p * (v.length - 1))];
-  const lo = q(0.01), hi = q(0.99);
+  const lo = v[Math.floor(0.01 * (v.length - 1))], hi = v[Math.ceil(0.99 * (v.length - 1))]; // under 101 places (states): the full range
   if (!(hi > lo)) return null;
   return { lo, hi, clippedLo: v[0] < lo, clippedHi: v[v.length - 1] > hi };
 }
