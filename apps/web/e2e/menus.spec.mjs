@@ -989,6 +989,8 @@ test("laptop search: \"Du\" lists places and no unrelated datasets; \"asthma\" f
   await box.fill("Du");
   await dlg.getByRole("region", { name: "Places" }).getByRole("option", { name: /^Du/ }).first().waitFor({ timeout: 15000 });
   expect((await datasets.innerText()).includes("No matching datasets."), `datasets for "Du": ${await datasets.innerText()}`);
+  const places = await dlg.getByRole("region", { name: "Places" }).innerText();
+  expect(places.includes("Duluth"), `"Du" doesn't list Duluth (#258): ${places}`);
   await box.fill("asthma");
   await datasets.getByRole("option").first().waitFor();
   expect(/^Asthma/.test((await datasets.getByRole("option").first().innerText()).trim()), `first dataset for "asthma": ${await datasets.innerText()}`);
