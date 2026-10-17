@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { describe, expect, it, onTestFinished } from "vitest";
 import { CACHE } from "./util.ts";
 import { loadRegistry } from "@webgis/registry/load";
-import { countsRow, remainderRow, sumStates, sumVars, usArea, writeCounts, type Counts } from "./counts.ts";
+import { countsRow, PackedRow, remainderRow, sumStates, sumVars, usArea, writeCounts, type Counts } from "./counts.ts";
 import { acsCounts, derive, remainders } from "./acs.ts";
 import { census2020Counts } from "./census2020.ts";
 import { farsCounts } from "./fars.ts";
@@ -18,6 +18,17 @@ describe("sumVars", () => {
   });
   it("is null when any estimate is missing", () => {
     expect(sumVars(row({ A_001E: 30, A_001M: 3, A_002E: null }), ["A_001", "A_002"])).toEqual({ e: null, m: null });
+  });
+});
+
+describe("PackedRow", () => {
+  it("reads like the Map it replaces: numbers, null where missing, undefined where not fetched", () => {
+    const index = new Map(["A_001E", "A_001M", "A_002E", "A_002M"].map((v, i) => [v, i]));
+    const p = new PackedRow(index);
+    p.set("A_001E", 30); p.set("A_001M", 3); p.set("A_002E", 0); p.set("A_002M", null);
+    expect([p.get("A_001E"), p.get("A_002E"), p.get("A_002M"), p.get("B_001E")]).toEqual([30, 0, null, undefined]);
+    expect(sumVars(p, ["A_001", "A_002"])).toEqual(sumVars(row({ A_001E: 30, A_001M: 3, A_002E: 0, A_002M: null }), ["A_001", "A_002"]));
+    expect(sumVars(new PackedRow(index), ["A_001"])).toEqual({ e: null, m: null }); // never set = missing
   });
 });
 
