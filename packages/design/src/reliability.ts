@@ -15,6 +15,9 @@ export const RELIABILITY = {
   cautionCv: 15,
   /** CV above this (percent) is unreliable. */
   unreliableCv: 30,
+  /** A zero estimate (no CV) with a margin above this, in the value's own units (percentage points
+   *  for the percentages nearly all zeros are), is unreliable (D-<n>, issue #193). */
+  zeroMoe: 5,
 } as const;
 
 /** Coefficient of variation in percent, or null when it can't be computed: no value, a value of
@@ -24,8 +27,10 @@ export function coefficientOfVariation(value: number | null | undefined, moe: nu
   return (moe / RELIABILITY.z90) / Math.abs(value) * 100;
 }
 
-/** The grade of one estimate; null = not graded (see coefficientOfVariation). */
+/** The grade of one estimate; null = not graded (see coefficientOfVariation). A zero has no CV, so
+ *  it's graded by its margin alone: unreliable above `zeroMoe`, otherwise not graded. */
 export function gradeEstimate(value: number | null | undefined, moe: number | null | undefined): Reliability | null {
+  if (value === 0) return moe != null && moe > RELIABILITY.zeroMoe ? "unreliable" : null;
   const cv = coefficientOfVariation(value, moe);
   if (cv == null) return null;
   if (cv > RELIABILITY.unreliableCv) return "unreliable";

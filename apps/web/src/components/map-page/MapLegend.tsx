@@ -129,7 +129,7 @@ function HatchToggle({ on, onChange, loading, fill }: { on: boolean; onChange: (
       </label>
       {on && (
         <p className="mt-1 text-muted-foreground" aria-live="polite">
-          {loading ? "Checking margins of error…" : "Hatched areas have a margin of error about half the estimate or more, so their color is a rough guide."}
+          {loading ? "Checking margins of error…" : "Hatched areas have a margin of error about half the estimate or more (or are zero with a wide margin), so their color is a rough guide."}
         </p>
       )}
     </div>

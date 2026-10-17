@@ -8,7 +8,7 @@
 // Part 2b: the head counts behind a rate, each place's share of the places above it, and
 // parts-of-a-whole bars (lib/counts.ts, D-257 files).
 import { useEffect, useMemo, useState } from "react";
-import { formatEstimate, formatValue, gradeEstimate, isGradable, rampColors, SECOND_OUTLINE_DASH, type GeoLevel } from "@webgis/design";
+import { formatEstimate, formatValue, isGradable, rampColors, SECOND_OUTLINE_DASH, type GeoLevel } from "@webgis/design";
 import { StatusState } from "@webgis/design/components";
 import { bothHave, compareValues, rowVerdictText, shortName, verdictText, type Verdict } from "@/lib/compare";
 import { countsLabels, PARTS, parentsOf, partsOf, placeCounts, shareOf, type Counts } from "@/lib/counts";
@@ -192,7 +192,7 @@ function useCounts(keys: string[]): CountsBy {
 
 /** "142,031 ±4,100" (± only when there's a margin), plus the D-222 grade's title when it's shaky. */
 function countText(n: number, moe: number | null, gradable: boolean): string {
-  const note = gradable ? reliabilityNote(gradeEstimate(n, moe)) : null;
+  const note = gradable ? reliabilityNote(n, moe) : null;
   const est = formatEstimate(n, moe, "count");
   return `${est.value}${est.moe ? ` ±${est.moe}` : ""}${note ? ` · ${note.title}` : ""}`;
 }
