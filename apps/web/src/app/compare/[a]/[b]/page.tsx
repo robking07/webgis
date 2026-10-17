@@ -1,5 +1,5 @@
 // Compare places side by side (roadmap 1.1, issue #117): /compare/<A>/<B>?d=<dataset id>.
-// Laptops and monitors show a map beside the panel with both places outlined (PR 2a); phones get no map.
+// Each place gets its own map (side by side on laptops, tabs on phones; D-258 PR 2a, 2c).
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ComparePlaces } from "@/components/compare/ComparePlaces";
