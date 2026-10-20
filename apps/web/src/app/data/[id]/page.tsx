@@ -150,7 +150,7 @@ export default async function DatasetProfilePage({ params }: PageProps<"/data/[i
             {d.symbology.breaks ? ` (${d.symbology.breaks.map((b) => b.toLocaleString()).join(" / ")})` : ""}
           </span>
         </div>
-        <p className="mt-2 text-xs text-muted-foreground">Colors pass the site’s color-blind and contrast checks. See the <a href="https://github.com/robking07/webgis/blob/main/docs/design-system.md" className="underline">design system</a>.</p>
+        <p className="mt-2 text-xs text-muted-foreground">Colors pass the site’s color-blind and contrast checks. See the <a href="/design-system" className="underline">design system</a>.</p>
       </section>
 
       {insights.length > 0 && (
