@@ -11,8 +11,9 @@ import { areaChangeNote, type Stop } from "@/lib/periods";
 import type { ClassedLevel } from "./useViewerData";
 import { CHANGE_CLASSES } from "@webgis/design";
 
-/** A period short enough to sit under a value: "2020–2024 (5-year estimate)" → "2020–2024", "2023 data" → "2023". */
-const shortPeriod = (p: string) => p.replace(/ \(.*\)$/, "").replace(/ data$/, "");
+/** A period short enough to sit under a value: "2020–2024 (5-year estimate)" → "2020–2024", "2023 data" → "2023",
+ *  "Version 2.0 (Dec. 2024)" → "Dec. 2024" (a version number means less to a visitor than its date). */
+const shortPeriod = (p: string) => p.replace(/^Version [^(]*\((.*)\)$/, "$1").replace(/ \(.*\)$/, "").replace(/ data$/, "");
 
 /** The card beside the pointer. It flips to the pointer's other side when it would run past the
  *  map's right or bottom edge (a 390 px window clipped it, issue #236). */
@@ -71,7 +72,7 @@ export function PlaceHoverPopup({ hover, primary, secondary, xValues, yValues, b
       <Popup title={hover.name} subtitle={GEO_LEVELS[hover.level].label}
         lead={secondary ? undefined : { label: primary.title, text: formatValue(v, primary.unit), period: shortPeriod(periodLabel), none: v == null }}
         rows={secondary ? [primary, secondary].map((d) => ({ label: d.title, unit: d.unit, value: valueOf(d), period: shortPeriod(d === primary ? periodLabel : d.vintage) })) : []}
-        footnote={unreliable ? "Rough estimate: the margin of error is about half the value or more." : undefined} />
+        footnote={!unreliable ? undefined : v === 0 ? "Rough estimate: the margin of error is large for a zero." : "Rough estimate: the margin of error is about half the value or more."} />
     </HoverCard>
   );
 }

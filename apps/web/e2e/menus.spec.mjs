@@ -1057,6 +1057,7 @@ test("laptop map fixes (#187): canvas label follows the map, tiles banner only f
 (await import("./drilldown.tests.mjs")).default({ test, expect, immerse, mapIdle, tapLonLat, HENNEPIN });
 (await import("./compare-mode.tests.mjs")).default({ test, expect, immerse });
 (await import("./splash.tests.mjs")).default({ test, expect, wait });
+(await import("./popups.tests.mjs")).default({ test, expect, wait, mapIdle, pointerAt, hoverCard, HENNEPIN, NEBRASKA });
 
 // ── Run ────────────────────────────────────────────────────────────────────────
 // Round-robin keeps the slow tests spread across shards.
