@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ComparePlaces } from "@/components/compare/ComparePlaces";
 import { SiteHeader } from "@/components/SiteHeader";
+import { SiteFooter } from "@/components/SiteNav";
 import { parseCompare, shortName } from "@/lib/compare";
 import { parentsOf } from "@/lib/counts";
 import { placeName } from "@/lib/place-name";
@@ -45,6 +46,7 @@ export default async function ComparePage(props: Props) {
     <>
       <SiteHeader />
       <ComparePlaces a={c.a} b={c.b} nameA={c.nameA} nameB={c.nameB} datasetId={c.dataset.id} parentNames={c.parentNames} unknownD={c.unknownD} />
+      <div className="mx-auto max-w-3xl px-4 pb-8 md:px-8"><SiteFooter /></div>
     </>
   );
 }
