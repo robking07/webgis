@@ -1,7 +1,7 @@
 ---
 name: data-engineer
 description: Worker for Mapwich (repo webgis) data tasks: adding, swapping or re-vintaging a dataset, ingest fixes, registry changes. Sonnet for S tasks; the lead's brief switches to opus for M and L.
-tools: Read, Write, Edit, Grep, Glob, Bash, WebFetch, WebSearch
+tools: Read, Write, Edit, Grep, Glob, Bash, WebFetch, WebSearch, Skill
 model: sonnet
 effort: medium
 ---
