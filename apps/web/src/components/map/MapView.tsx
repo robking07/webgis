@@ -85,7 +85,7 @@ interface Props {
   /** Scale bar units (Settings). */
   scaleUnit?: "imperial" | "metric";
   /** MapLibre's attribution control. The main map turns it off and shows its own credits
-   *  footnote (MapCredits); smaller maps (Odd Pairings) keep it. */
+   *  footnote (MapCredits); smaller maps (Combinations) keep it. */
   attribution?: boolean;
   /** County and tract boundary vintage for a timeline stop (D-36): "2019" = 2010 tracts and
    *  pre-2022 Connecticut counties; null = the current tiles. */
@@ -214,7 +214,7 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
     if (attribution) {
       m.addControl(new AttributionControl({ compact: true, customAttribution: "Boundaries: U.S. Census Bureau TIGER/Line cartographic boundaries" }), "bottom-right");
       // Compact attribution starts expanded; start it collapsed to its ⓘ button on any map too narrow
-      // for the one-line credit (phones, and the small maps on Odd Pairing pages).
+      // for the one-line credit (phones, and the small maps on Combination pages).
       if (container.current.clientWidth < 900) {
         m.once("load", () => container.current?.querySelector(".maplibregl-ctrl-attrib")?.classList.remove("maplibregl-compact-show"));
       }

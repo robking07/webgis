@@ -10,7 +10,7 @@ import { PairingsKey } from "@/components/specials/parts";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-export const metadata: Metadata = { title: "Odd Pairings · Specials · Mapwich" };
+export const metadata: Metadata = { title: "Combinations · Specials · Mapwich" };
 
 const STEP = 30;
 const SORTS: Array<[PairSort, string]> = [["strongest", "Strongest first"], ["within", "Strongest within states"], ["az", "A to Z"]];
@@ -20,7 +20,7 @@ const chip = "inline-flex min-h-8 items-center rounded-full border px-3 text-xs 
 type Params = { topic?: string; strength?: string; q?: string; sort?: string; n?: string };
 const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v);
 
-// Every approved Odd Pairing (issue #274): filter by topic, strength and dataset name, sorted, 30 at a
+// Every approved Combination (issue #274): filter by topic, strength and dataset name, sorted, 30 at a
 // time. Filters live in the URL so a view can be shared; the pairs held back sit at the bottom (D-115).
 export default async function PairingsPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const sp = await searchParams;
@@ -49,7 +49,7 @@ export default async function PairingsPage({ searchParams }: { searchParams: Pro
       <main className="mx-auto max-w-6xl px-4 py-8 md:px-8">
         <Link href="/specials" className="inline-flex min-h-11 items-center text-sm font-semibold text-primary hover:underline">← Specials</Link>
         <header className="mb-6 flex max-w-2xl flex-col gap-2">
-          <h1 className="text-2xl font-semibold tracking-tight">Odd Pairings</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">Combinations</h1>
           <p className="text-muted-foreground">
             Pairs of datasets that line up across U.S. counties. <strong className="text-foreground">Correlation is not causation:</strong>{" "}
             two things that rise together often both follow a third, like how urban a place is. Each pair passed automatic checks for
@@ -84,12 +84,12 @@ export default async function PairingsPage({ searchParams }: { searchParams: Pro
                 ))}
               </div>
               <p className="text-sm text-muted-foreground" aria-live="polite">
-                {filtered ? `${hits.length.toLocaleString()} of ${published.length.toLocaleString()} pairings` : `${published.length.toLocaleString()} pairings`}
+                {filtered ? `${hits.length.toLocaleString()} of ${published.length.toLocaleString()} combinations` : `${published.length.toLocaleString()} combinations`}
                 {filtered && <> · <Link href={href({ topic: undefined, strength: undefined, q: undefined })} className="text-primary hover:underline">Clear filters</Link></>}
               </p>
             </div>
             {hits.length === 0 ? (
-              <p className="text-muted-foreground">No pairings match. Try another topic or name.</p>
+              <p className="text-muted-foreground">No combinations match. Try another topic or name.</p>
             ) : (
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {hits.slice(0, shown).map((i) => <InsightCard key={i.id} insight={i} />)}
