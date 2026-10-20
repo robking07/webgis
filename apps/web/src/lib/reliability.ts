@@ -1,7 +1,7 @@
 // Which areas' estimates are unreliable (D-222), from files already published beside the tiles:
 // tract values and margins in the per-county shards (values/tracts/<county>.json), block-group
 // margins in values/<id>/block_group.moe.json. Grading itself lives in @webgis/design (reliability.ts).
-import { gradeEstimate, type Reliability } from "@webgis/design";
+import { formatValue, gradeEstimate, type Reliability, type Unit } from "@webgis/design";
 import type { TractShard } from "./details";
 
 /** Tract geoids in one county shard whose estimate for `datasetId` is unreliable. */
@@ -34,6 +34,15 @@ export function reliabilityNote(value: number | null | undefined, moe: number | 
       : "The margin of error is large compared with this estimate (about half of it or more), so the true value could be quite different.",
   };
   return null;
+}
+
+/** The plain-range line under a wide (unreliable) margin: estimate ± margin, floored at 0 and, for
+ *  percent shares, capped at 100. Null for ordinary margins (D-222's "unreliable" is what counts as wide). */
+export function moeRangeLine(value: number | null | undefined, moe: number | null | undefined, unit: Unit): string | null {
+  if (value == null || moe == null || gradeEstimate(value, moe) !== "unreliable") return null;
+  const lo = Math.max(0, value - moe);
+  const hi = unit === "percent" ? Math.min(100, value + moe) : value + moe;
+  return `Few households were surveyed here, so this is a range: likely between ${formatValue(lo, unit)} and ${formatValue(hi, unit)}.`;
 }
 
 /** Why a place has no value (issue #193): from the registry's coverage note and the place's code
