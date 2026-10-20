@@ -38,5 +38,27 @@ export default function mpoTests({ test, expect, mapIdle, tapLonLat, HENNEPIN })
       await shared.waitForFunction(() => !new URL(location.href).searchParams.get("mpo"), null, { timeout: 5000 });
       await shared.waitForFunction(() => !window.__wgMap.getLayer("area-highlight"), null, { timeout: 5000 });
     });
+
+    test(`${vp} MPO search: a pick fits the whole area below the heading (small, two-state and huge MPOs)`, async (o) => {
+      const { page } = await o(vp, "/map?d=pct_poverty");
+      for (const [q, re] of [["Fargo-Moorhead", /^Fargo-Moorhead/], ["Metropolitan Council", /^Metropolitan Council\s*MPO$/], ["Southern California Association", /^Southern California Association/]]) {
+        await page.keyboard.press("/");
+        const dlg = page.getByRole("dialog", { name: "Search places and datasets" });
+        await dlg.getByRole("combobox").fill(q);
+        await dlg.getByRole("region", { name: "Places" }).getByRole("option", { name: re }).first().click();
+        await outlined(page);
+        await mapIdle(page);
+        // The MPO's bbox corners, projected, lie inside the map below the heading (its name chip).
+        const r = await page.evaluate(async () => {
+          const id = new URL(location.href).searchParams.get("mpo");
+          const row = (await (await fetch("/mpo/index.json")).json()).find((x) => x[2] === id);
+          const [w, s, e, n] = row[7], m = window.__wgMap;
+          const a = m.project([w, n]), b = m.project([e, s]);
+          const top = document.querySelector("[data-focus-name]").getBoundingClientRect().bottom;
+          return { id, left: a.x, top: a.y, right: b.x, bottom: b.y, headBottom: top, W: innerWidth, H: innerHeight };
+        });
+        expect(r.left >= 0 && r.right <= r.W && r.top >= r.headBottom && r.bottom <= r.H, `${q} (${r.id}) not fitted: ${JSON.stringify(r)}`);
+      }
+    });
   }
 }
