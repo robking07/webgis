@@ -68,3 +68,12 @@ First run at gain 0.02 (before the amendments): 68 sets tested, 63 passed, 35 af
      Pair captions are written at ingest time, so they change only when `insights` is re-run.
   Result at gain 0.02: 60 tested, 55 passed, 34 after dedupe (21 trios, 9 fours, 4 fives);
   6 urban–rural, 13 sensitive.
+- 2026-10-20 (lead): the fuller `modelInputs` made 9 published pairs by-construction matches
+  (Hispanic, Black and Asian shares × SVI minority; poverty and rent burden × SVI income and jobs;
+  diploma, disability, internet and broadband × FEMA social vulnerability), so the data-page
+  "Built using …" line was untrue for them. Rather than a full `insights` run (database, new
+  captions, voided fingerprints), `npm run ingest -- insights --reflag` re-applies only the
+  non-numeric pair rules (by construction, shared variables, shared denominators) to the committed
+  `insights.json` with the current registry. Those 9 moved to flagged (1,768 → 1,759 published);
+  every other field and pair is byte-identical. The database's `insights` table catches up at the
+  next full run. `combinations.json` was unchanged (the leak rule had already excluded those pairs).

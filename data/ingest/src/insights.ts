@@ -5,7 +5,7 @@
 // Published pairs get a headline + caption written once at build time (D-08) by
 // Claude, or a plain template when no API key is available. Viewers never call the API.
 import { createHash } from "node:crypto";
-import { writeFileSync, mkdirSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
 import Anthropic from "@anthropic-ai/sdk";
 import { z } from "zod";
@@ -213,4 +213,28 @@ export async function computeInsights() {
   const pub = exported.filter((e) => e.status === "published").length;
   log("insights", `${pairs.length} pairs: ${pub} published, ${pairs.length - pub} flagged`);
   for (const e of exported) log("insights", `${e.status === "published" ? "✓" : "✗"} ${e.x} × ${e.y}  ρ=${e.rho} r=${e.r} within=${e.withinState} n=${e.n}${e.flags.length ? `  [${e.flags.join("; ")}]` : ""}`);
+}
+
+type InsightsFile = { insights: { x: string; y: string; n: number; r: number; rho: number; withinState: number; status: string; flags: string[] }[] };
+/** Published pairs that now fail a by-construction rule (modelInputs, shared variables or denominators) under
+ *  the current registry become "flagged". Numbers, captions and fingerprints stay as they are. */
+export function reflag<T extends InsightsFile>(file: T, entries: DatasetEntry[]): T {
+  const byId = new Map(entries.map((e) => [e.id, e]));
+  for (const p of file.insights) {
+    if (p.status !== "published" || !byId.has(p.x) || !byId.has(p.y)) continue;
+    // Only the non-numeric rules: the stored r and ρ are rounded, so the numeric ones could flip borderline pairs.
+    const f = checks(byId.get(p.x)!, byId.get(p.y)!, p.n, p.r, p.rho, p.withinState).filter((s) => /^(by construction|shared)/.test(s));
+    if (f.length) { p.status = "flagged"; p.flags = f; }
+  }
+  return file;
+}
+
+/** `ingest insights --reflag`: `reflag` on the committed insights.json. No database, no captions.
+ *  The database's insights table keeps the old status until the next full `insights` run. */
+export function reflagInsights() {
+  const path = join(ROOT, "apps/web/src/generated/insights.json");
+  const file = JSON.parse(readFileSync(path, "utf8")) as InsightsFile;
+  const before = file.insights.filter((p) => p.status === "published").length;
+  writeFileSync(path, JSON.stringify(reflag(file, loadRegistry()), null, 1));
+  log("insights", `re-flag: ${before} → ${file.insights.filter((p) => p.status === "published").length} published`);
 }
