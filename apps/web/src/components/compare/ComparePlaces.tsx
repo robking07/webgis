@@ -43,7 +43,8 @@ export function ComparePlaces({ a, b, nameA, nameB, datasetId, parentNames, unkn
   const ds = DATASET_BY_ID.get(datasetId)!;
   const [data, setData] = useState<{ a: Detail; b: Detail; back: string } | null>(null);
   const [err, setErr] = useState(false);
-  const [vals, setVals] = useState<Values | null>(null);
+  const [valsFor, setVals] = useState<{ id: string; v: Values } | null>(null);
+  const vals = valsFor?.id === ds.id ? valsFor.v : null; // the previous dataset's values must not rank the new one
   // Side-by-side maps on laptops and monitors (lg, D-135), tabs below that.
   const wide = useMedia("(min-width: 1024px)");
   const mapped = ds.geographyLevels.includes(level);
@@ -65,7 +66,7 @@ export function ComparePlaces({ a, b, nameA, nameB, datasetId, parentNames, unkn
       setData({ a: da, b: db, back });
       // Ranks and the strip of every place, for the lead metric only (one values file, ~15 KB gzipped for counties).
       // shortcut: no tract ranks or strip; the national tract file is too big for a phone. Upgrade if a per-state tract export appears.
-      if (level !== "tract" && ds.geographyLevels.includes(level)) loadValues(ds.id, level).then((v) => live && setVals(v), () => {});
+      if (level !== "tract" && ds.geographyLevels.includes(level)) loadValues(ds.id, level).then((v) => live && setVals({ id: ds.id, v }), () => {});
     }, () => live && setErr(true));
     return () => { live = false; };
   }, [a, b, ds, level]);
