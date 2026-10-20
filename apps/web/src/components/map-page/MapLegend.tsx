@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Search } from "lucide-react";
 import { BivariateLegend, Legend, StatusState } from "@webgis/design/components";
 import { featureLineColors, formatValue, GEO_LEVELS, type GeoLevel, type ThemeName } from "@webgis/design";
 import type { Dataset } from "@/lib/registry";
@@ -14,7 +14,7 @@ const stripEnd = (s: string) => s.replace(/^([<≥]\s*\S+).*$/, "$1");
 /** Legend: full card on desktop; a strip on phones (tap to expand). Both carry `data-legend`, so
  *  the dock above can stop before it reaches them.
  *  The year control (D-36) lives in the filters panel (issue #34). */
-export function MapLegend({ theme, primary, secondary, isFeature, featureSpec, current, error, available, loading, level, periodLabel, stop, stopId, since, desktopStrip, mark, covered, tableReady, onTable, hatchToggle }: {
+export function MapLegend({ theme, primary, secondary, isFeature, featureSpec, current, error, available, loading, level, periodLabel, stop, stopId, since, desktopStrip, mark, covered, tableReady, onTable, hatchToggle, onSearch }: {
   theme: ThemeName;
   primary: Dataset | null;
   secondary: Dataset | null;
@@ -42,6 +42,9 @@ export function MapLegend({ theme, primary, secondary, isFeature, featureSpec, c
   onTable: () => void;
   /** Reliability hatching (D-222): the toggle, only where the shown map can be graded. */
   hatchToggle?: { on: boolean; onChange: (on: boolean) => void; loading: boolean } | null;
+  /** Phones, zoomed in (issue #246): a search button just above the strip. It sits here because only
+   *  the legend knows when the strip (not the taller full legend) is showing. */
+  onSearch?: (() => void) | null;
 }) {
   const [openPicked, setLegendOpen] = useState(false);
   const legendOpen = openPicked && !covered;
@@ -94,6 +97,13 @@ export function MapLegend({ theme, primary, secondary, isFeature, featureSpec, c
             {(secondary && current ? [current.colors[0], current.colors[4], current.colors[8]] : legendStrip).map((c, i) => <span key={i} className={featureSpec ? "h-1.5 w-4 self-center md:w-5" : "h-2 w-4 md:w-5"} style={{ background: c }} />)}
           </span>
           <span>{stripEnd(legendEnds[1])}</span>
+        </button>
+      )}
+      {onSearch && legendStrip && legendEnds && !legendOpen && (
+        // shortcut: hidden while the full legend shows (expanded, or no strip yet); fine while the strip is the phone default.
+        <button type="button" onClick={onSearch} aria-label="Search places or data" title="Search places or data"
+          className="wg-panel wg-zbtn absolute bottom-[66px] left-3 z-20 grid size-11 place-items-center rounded-[14px] text-foreground focus-visible:outline-2 focus-visible:outline-ring md:hidden">
+          <Search className="size-[18px]" aria-hidden />
         </button>
       )}
       <section aria-label="Legend" data-legend=""
