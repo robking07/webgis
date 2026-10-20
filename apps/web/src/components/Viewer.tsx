@@ -126,7 +126,7 @@ export function Viewer({ search }: { search: string }) {
   const { level: tableLevel, within: tableWithin } = tableScope(level, availableLevels, focus?.geoid ?? null);
   // Clear selections and filters when the dataset changes.
   const [seenDataset, setSeenDataset] = useState(state.d);
-  if (seenDataset !== state.d) { setSeenDataset(state.d); setSelected(null); setFeatureSelected(null); setFeatureHover(null); setHidden({}); setCtxOpen(false); }
+  if (seenDataset !== state.d) { setSeenDataset(state.d); setSelected(null); setFeatureSelected(null); setFeatureHover(null); setHidden({}); setCtxOpen(false); setExplainOpen(false); }
   useEffect(() => { mapApi.current?.select("county", null); }, [state.d]);
   const featureFilter = useMemo(() => {
     if (!primary) return undefined;
