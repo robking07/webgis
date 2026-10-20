@@ -1,5 +1,6 @@
 id: census2020_housing_density
 title: Homes per square mile (2020 Census)
+phrase: homes per square mile
 description: Every housing unit (occupied or vacant) counted in the 2020 Census, per square mile of land. Shows built form, including places where few people live.
 category: Housing
 subcategory: Homes

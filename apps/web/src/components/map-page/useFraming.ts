@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState, type Dispatch, type RefObject
 import type { GeoLevel } from "@webgis/design";
 import type { Camera, FeatureHit, HoverInfo, MapApi, Padding } from "../map/MapView";
 import type { Dataset } from "@/lib/registry";
+import { comparePickOpen } from "@/lib/compare";
 import { levelOfGeoid, tidyPlaceName } from "@/lib/place";
 import { loadPlaceIndex, placeByGeoid, zoomForArea } from "@/lib/search";
 
@@ -106,9 +107,12 @@ export function useFraming({ mapApi, setSelected, setFeatureSelected, isFeature,
    *  drawn inside it); at the finest level a click inside a focused place only selects; otherwise it
    *  zooms to the place's extent, with a way back. */
   const onMapSelect = useCallback((h: HoverInfo | null) => {
+    // Picking a place to compare: only select it (CompareWith opens the comparison); a drill would
+    // write the URL and cancel that navigation.
+    const picking = comparePickOpen();
     setSelected(h);
     const api = mapApi.current;
-    if (!h || !api) return;
+    if (!h || !api || picking) return;
     const before = api.getCamera();
     if (childOf(h.level)) {
       trail.current.push({ geoid: h.geoid, name: tidyPlaceName(h.name), before });
@@ -156,5 +160,5 @@ export function useFraming({ mapApi, setSelected, setFeatureSelected, isFeature,
   }, [clearArea, isFeature, primary, tableOpen, narrow, mapApi, setSelected, childOf, leaveTo, setFocus, showTrail]);
 
   const leaveFocus = useCallback(() => leaveTo(null), [leaveTo]);
-  return { root, canGoBack: canGoBack || !!focus, goBack, onMapSelect, onFeatureSelect, goToPlace, focusName, leaveFocus };
+  return { root, canGoBack: canGoBack || !!focus, goBack, onMapSelect, onFeatureSelect, goToPlace, focusName, leaveFocus, clearArea };
 }

@@ -16,6 +16,10 @@ export function compareHref({ a, b, d }: CompareState): string {
   return `/compare/${a}/${b}${d ? `?d=${encodeURIComponent(d)}` : ""}`;
 }
 
+/** "Compare with…" is waiting for a tap on a second place (issue #242): CompareWith marks itself
+ *  `data-compare-pick`, so the map takes a tap outside a focused place and only selects it. */
+export const comparePickOpen = () => !!document.querySelector("[data-compare-pick]");
+
 /** The route's params back into a state; null when they can't make a comparison (different
  *  levels, the same place twice, or a level finer than tract). */
 export function parseCompare(a: string, b: string, search: string | URLSearchParams): CompareState | null {
@@ -127,3 +131,18 @@ export function rowVerdictText(v: Verdict, names: { a: string; b: string }): str
   if (v.kind === "about_same") return "About the same";
   return `${v.higher === "a" ? names.a : names.b} higher`;
 }
+
+// ── The strip of every place (issue #231) ──────────────────────────────────────
+
+/** The strip's range: the 1st to 99th percentile of every place's value, so a lone outlier
+ *  doesn't squash the pack into a corner (values outside sit at the ends). `clipped*`: an end was cut. */
+export function stripRange(all: number[]): { lo: number; hi: number; clippedLo: boolean; clippedHi: boolean } | null {
+  const v = all.filter(Number.isFinite).sort((x, y) => x - y);
+  if (v.length < 2) return null;
+  const lo = v[Math.floor(0.01 * (v.length - 1))], hi = v[Math.ceil(0.99 * (v.length - 1))]; // under 101 places (states): the full range
+  if (!(hi > lo)) return null;
+  return { lo, hi, clippedLo: v[0] < lo, clippedHi: v[v.length - 1] > hi };
+}
+
+/** A value's place along the strip, 0 to 1. */
+export const stripX = (v: number, r: { lo: number; hi: number }) => Math.min(1, Math.max(0, (v - r.lo) / (r.hi - r.lo)));

@@ -37,7 +37,7 @@ export function InsightDetail({ insight }: { insight: Insight }) {
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 md:px-8">
       <nav className="mb-6 flex gap-4 text-sm">
-        <Link href="/specials/pairings" className="text-primary underline-offset-2 hover:underline">← All Odd Pairings</Link>
+        <Link href="/specials/combinations" className="text-primary underline-offset-2 hover:underline">← All Combinations</Link>
         <a href={mapHref} className="text-primary underline-offset-2 hover:underline">Explore in the full map →</a>
       </nav>
       <header className="mb-6 max-w-3xl">

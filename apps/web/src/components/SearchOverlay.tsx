@@ -4,18 +4,20 @@
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { MapPin, Layers, Search, X } from "lucide-react";
 import { searchDatasets, type Dataset } from "@/lib/registry";
-import { loadPlaceIndex, searchPlaces, type PlaceHit, type PlaceRow } from "@/lib/search";
+import { countyForZip, loadPlaceIndex, placeByGeoid, searchPlaces, type PlaceHit, type PlaceRow } from "@/lib/search";
 
 interface Props {
   onClose: () => void;
   onPlace: (p: PlaceHit) => void;
   onDataset: (d: Dataset) => void;
   current: string | null;
+  /** Phones (issue #246): full screen, the field centered until typing starts, then up top; results from the 2nd character. */
+  full?: boolean;
 }
 
 type Item = { kind: "place"; p: PlaceHit } | { kind: "dataset"; d: Dataset };
 
-export function SearchOverlay({ onClose, onPlace, onDataset, current }: Props) {
+export function SearchOverlay({ onClose, onPlace, onDataset, current, full }: Props) {
   const [q, setQ] = useState("");
   const [rows, setRows] = useState<PlaceRow[] | null>(null);
   const [failed, setFailed] = useState(false);
@@ -33,9 +35,18 @@ export function SearchOverlay({ onClose, onPlace, onDataset, current }: Props) {
     return () => window.removeEventListener("keydown", onKey, true);
   }, [onClose]);
 
-  const places = useMemo(() => (rows ? searchPlaces(rows, q) : []), [rows, q]);
+  const typing = q.length > 0;
+  const showResults = !full || q.trim().length >= 2;
+  const [zipGeoid, setZipGeoid] = useState<{ zip: string; geoid: string | null } | null>(null);
+  const zip = /^\d{5}$/.test(q.trim()) ? q.trim() : null;
+  useEffect(() => { if (zip) countyForZip(zip).then((geoid) => setZipGeoid({ zip, geoid }), () => {}); }, [zip]);
+  const places = useMemo(() => {
+    if (!rows) return [];
+    const z = zip && zipGeoid?.zip === zip && zipGeoid.geoid ? placeByGeoid(rows, zipGeoid.geoid) : null;
+    return z ? [z] : searchPlaces(rows, q);
+  }, [rows, q, zip, zipGeoid]);
   const datasets = useMemo(() => (q.trim() ? searchDatasets(q, null).slice(0, 6) : []), [q]);
-  const items: Item[] = [...places.map((p) => ({ kind: "place" as const, p })), ...datasets.map((d) => ({ kind: "dataset" as const, d }))];
+  const items: Item[] = !showResults ? [] : [...places.map((p) => ({ kind: "place" as const, p })), ...datasets.map((d) => ({ kind: "dataset" as const, d }))];
 
   const pick = (it: Item) => (it.kind === "place" ? onPlace(it.p) : onDataset(it.d));
   const onKeyDown = (e: React.KeyboardEvent) => {
@@ -70,19 +81,21 @@ export function SearchOverlay({ onClose, onPlace, onDataset, current }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-center bg-black/55 px-3 pt-[8vh] md:pt-[12vh]" onPointerDown={(e) => { if (e.target === e.currentTarget) onClose(); }}>
-      <div role="dialog" aria-modal="true" aria-label="Search places and datasets" className="flex max-h-[80vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border bg-background shadow-2xl">
+    <div className={`fixed inset-0 z-50 flex justify-center ${full ? "bg-background" : "bg-black/55 px-3 pt-[8vh] md:pt-[12vh]"}`} onPointerDown={(e) => { if (e.target === e.currentTarget) onClose(); }}>
+      <div role="dialog" aria-modal="true" aria-label="Search places and datasets"
+        // Phones: the field rests mid-screen and slides up once typing starts (the global reduced-motion rule stops the slide).
+        className={full ? `flex w-full flex-col transition-[padding] duration-300 ease-out ${typing ? "pt-2" : "pt-[calc(50dvh-2rem)]"}` : "flex max-h-[80vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border bg-background shadow-2xl"}>
         <div className="flex items-center gap-3 border-b px-4">
           <Search className="size-5 shrink-0 text-muted-foreground" aria-hidden />
           <input ref={input} value={q} onChange={(e) => { setQ(e.target.value); setActive(0); }} onKeyDown={onKeyDown}
-            placeholder="Search a place or a dataset" aria-label="Search places and datasets"
+            placeholder={full ? "Search places or data..." : "Search a place or a dataset"} aria-label="Search places and datasets"
             role="combobox" aria-expanded={items.length > 0} aria-controls={listId} aria-activedescendant={items[active] ? optId(active) : undefined}
-            className="h-16 min-w-0 flex-1 bg-transparent text-lg outline-none placeholder:text-muted-foreground md:text-xl" />
+            className={`h-16 min-w-0 flex-1 bg-transparent text-lg outline-none placeholder:text-muted-foreground md:text-xl ${full && !typing ? "text-center" : ""}`} />
           <button type="button" onClick={onClose} aria-label="Close search" className="rounded p-1 text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring"><X className="size-5" /></button>
         </div>
         <div id={listId} role="listbox" aria-label="Results" className="min-h-0 overflow-y-auto p-2">
-          {!q.trim() && <p className="px-3 py-6 text-center text-sm text-muted-foreground">Try a city, county or state (“Duluth”, “Cook County”) or a topic (“commute”, “asthma”).</p>}
-          {q.trim() && (
+          {!q.trim() && !full && <p className="px-3 py-6 text-center text-sm text-muted-foreground">Try a city, county or state (“Duluth”, “Cook County”) or a topic (“commute”, “asthma”).</p>}
+          {q.trim() && showResults && (
             <>
               <Group label="Places" empty={q.trim().length < 2 ? "Keep typing…" : failed ? "Place search is unavailable right now." : !rows ? "Loading places…" : "No matching places."}>
                 {places.map((p, i) => row({ kind: "place", p }, i))}

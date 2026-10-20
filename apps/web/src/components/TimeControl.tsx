@@ -31,8 +31,10 @@ export function TimeControl({ stops, value, onChange, docked, label }: {
 
   if (stops.length <= 4) {
     return (
-      <fieldset className="space-y-1.5">
-        <legend className="text-xs font-semibold">{label ?? "Years"}</legend>
+      // A labeled row (From, To) reads like a table, label left of its buttons (issue #200); the
+      // floated legend joins the flex row.
+      <fieldset className={label ? "flex items-center gap-2" : "space-y-1.5"}>
+        <legend className={label ? "float-left w-10 shrink-0 text-sm font-semibold" : "text-xs font-semibold"}>{label ?? "Years"}</legend>
         <div role="radiogroup" aria-label={label ?? "Years"} className="flex flex-wrap gap-1">
           {stops.map((s) => (
             <button key={s.id} type="button" role="radio" aria-checked={s.id === current.id} onClick={() => onChange(s.id)} className={chip(s.id === current.id)}>
@@ -64,7 +66,7 @@ export function TimeControl({ stops, value, onChange, docked, label }: {
   return (
     <div className="space-y-1.5">
       <div className="flex items-baseline justify-between gap-2">
-        <span className="text-xs font-semibold" data-time-label="">{label ?? (summary ? "Show" : "Year")}</span>
+        <span className={`${label ? "text-sm" : "text-xs"} font-semibold`} data-time-label="">{label ?? (summary ? "Show" : "Year")}</span>
         <span className="text-2xl leading-none font-semibold tabular-nums" aria-live="polite">
           <span key={big} className="inline-block animate-in fade-in slide-in-from-bottom-1 duration-150">{big}</span>
         </span>

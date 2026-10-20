@@ -58,7 +58,7 @@ network connection is required). Nothing on R2 changes.
 ## Things it ignores
 
 - `/_vercel/insights/script.js` 404s locally (Vercel Web Analytics only exists on Vercel); that
-  console error is skipped. Every other console error or page error fails the test it happened in.
+  console error is skipped, as is a network-level failure (`net::ERR_*`) fetching from tiles.mapwich.org (CDN blips); HTTP 4xx/5xx still fail. Every other console error or page error fails the test it happened in.
 
 ## Adding a test
 

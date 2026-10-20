@@ -84,6 +84,8 @@ async function open(vp, path, { scheme = "light", ready = true } = {}) {
     if (/\.counts\.json$|\/values\/counts\//.test(m.location()?.url ?? "") && /404/.test(m.text())) return;
     // Vercel Web Analytics only exists on Vercel; locally its script 404s.
     if ((m.location()?.url ?? "").includes("/_vercel/")) return;
+    // A brief CDN blip (net::ERR_*, no HTTP status) on the tile host is not our bug; 4xx/5xx still fail (#275).
+    if (/net::ERR_/.test(m.text()) && /tiles\.mapwich\.org/.test(`${m.text()} ${m.location()?.url ?? ""}`)) return;
     page.errors.push(`console: ${m.text()} ${m.location()?.url ?? ""}`);
   });
   page.isPhone = (typeof vp === "string" ? VP[vp] : vp).isMobile === true;
@@ -580,7 +582,7 @@ for (const vp of ["phone", "laptop"]) {
     await mode.getByRole("radio", { name: "Change" }).click();
     // The year picker is gone (not greyed out); From and To take its place.
     expect(await page.locator("#filters-panel [role=radiogroup][aria-label=Years]").count() === 0, "year picker still shown in change mode");
-    expect((await span()).includes("2010–2014 → 2015–2019"), `kept year as To: ${await span()}`);
+    expect((await span()).includes("from 2010–2014 to 2015–2019"), `kept year as To: ${await span()}`);
     expect((await radio("To", "2015–2019").getAttribute("aria-checked")) === "true", "To isn't the year picked in Values");
     // Back to Values restores that year.
     await mode.getByRole("radio", { name: "Values" }).click();
@@ -588,9 +590,9 @@ for (const vp of ["phone", "laptop"]) {
     await mode.getByRole("radio", { name: "Change" }).click();
     // A later To keeps From; then a later From.
     await radio("To", "2020–2024").click();
-    expect((await span()).includes("2010–2014 → 2020–2024"), `after To: ${await span()}`);
+    expect((await span()).includes("from 2010–2014 to 2020–2024"), `after To: ${await span()}`);
     await radio("From", "2015–2019").click();
-    expect((await span()).includes("2015–2019 → 2020–2024"), `after From: ${await span()}`);
+    expect((await span()).includes("from 2015–2019 to 2020–2024"), `after From: ${await span()}`);
     if (page.isPhone) await page.getByRole("button", { name: "Apply", exact: true }).click();
     else await page.getByRole("button", { name: "Close map options" }).click();
     await page.waitForSelector("#filters-panel", { state: "detached" });
@@ -628,6 +630,18 @@ for (const vp of ["phone", "laptop"]) {
     await hover.waitFor({ timeout: 5000 });
     const hoverText = await hover.innerText();
     expect(/[+−][\d.]+ pts|No clear change/.test(hoverText) && hoverText.includes("→"), `hover: ${hoverText}`);
+    // The change leads, in the largest type (#200).
+    const lead = hover.locator(".wg-popup-lead-value");
+    expect(/^([+−][\d.]+ pts|No clear change)$/.test((await lead.innerText()).trim()), `hover lead: ${await lead.innerText()}`);
+    const px = (l) => l.evaluate((el) => parseFloat(getComputedStyle(el).fontSize));
+    expect(await px(lead) > await px(hover.locator(".wg-popup-title")), "hover change isn't larger than the place name");
+    // Each value has its period right under it (Robbie, 2026-10-14).
+    const cells = hover.locator(".wg-popup-lead-cell");
+    expect(await cells.count() === 2, "hover doesn't show two values");
+    const periods = await hover.locator(".wg-popup-lead-cell-period").allInnerTexts();
+    expect(periods.join("|") === "2015–2019|2020–2024", `hover periods: ${periods}`);
+    const [v, p] = await Promise.all([".wg-popup-lead-cell-value", ".wg-popup-lead-cell-period"].map((c) => cells.first().locator(c).boundingBox()));
+    expect(p.y >= v.y + v.height - 1 && Math.abs(p.x - v.x) < 2, "period isn't directly under its value");
     await tapLonLat(page, ...HENNEPIN);
     const card = page.locator("[data-change-card]");
     await card.waitFor({ timeout: 15000 });
@@ -729,6 +743,32 @@ for (const vp of ["phone", "laptop"]) {
   });
 }
 
+// Issue #193 (D-364): a zero with a huge margin reads as unreliable; a missing value says why.
+for (const vp of ["phone", "laptop"]) {
+  test(`${vp} shaky zeros: Loving County's 0% ±57.7 bike commuting is unreliable; no-data rows say why`, async (o) => {
+    const row = (page, title) => page.locator("main li").filter({ has: page.getByText(title, { exact: true }) });
+    const { page } = await o(vp, "/place/48301", { ready: false });
+    await page.locator("main h1").waitFor({ timeout: 20000 });
+    expect((await row(page, "Bike to work").locator("[data-value-note]").innerText()) === "Unreliable estimate", "Loving bike row note");
+    expect((await row(page, "Mean travel time to work").locator("[data-value-note]").innerText()) === "The Census Bureau doesn't publish this figure for this area.", "Loving mean commute reason");
+    const { page: cook } = await o(vp, "/place/17031", { ready: false });
+    await cook.locator("main h1").waitFor({ timeout: 20000 });
+    expect((await row(cook, "Bike to work").locator("[data-value-note]").count()) === 0, "Cook County's solid bike share flagged");
+    const { page: cmp } = await o(vp, "/compare/48301/17031?d=pct_bike_commute", { ready: false });
+    const head = cmp.locator("[data-compare-headline]");
+    await head.waitFor({ timeout: 20000 });
+    const notes = await head.locator("[data-value-note]").allInnerTexts();
+    expect(notes.length === 1 && notes[0] === "Unreliable estimate", `compare headline notes: ${notes}`);
+    const { page: map } = await o(vp, "/map?d=pct_bike_commute&lv=county&at=-103.58,31.84,8");
+    await immerse(map);
+    await tapLonLat(map, -103.58, 31.84);
+    const det = map.locator('section[aria-label^="Details for Loving County"]');
+    await det.waitFor();
+    await det.locator("[data-reliability]").first().waitFor({ timeout: 15000 });
+    expect(/Unreliable estimate\. The margin of error is large for an estimate of zero/.test(await det.locator("[data-reliability]").first().innerText()), "details note");
+  });
+}
+
 for (const vp of ["phone", "laptop", "monitor"]) {
   test(`${vp} zoom levels: block groups never draw at the national view, even pinned`, async (o) => {
     const { page } = await o(vp, "/map?d=median_household_income&lv=block_group");
@@ -741,6 +781,43 @@ for (const vp of ["phone", "laptop", "monitor"]) {
     expect(r.n === 0, `${r.n} block groups drawn at zoom ${r.z.toFixed(1)}`);
   });
 }
+
+test("phone: a long dataset title stops short of the back button (issue #243)", async (o) => {
+  const { page } = await o("phone", "/map?d=svi_minority&lv=county&at=-93.4752,45.0061,7.2");
+  await immerse(page);
+  await tapLonLat(page, ...HENNEPIN);
+  await page.locator('section[aria-label^="Details for"]').waitFor();
+  const back = page.locator('button[aria-label="Back to the previous view"]');
+  await back.waitFor();
+  await wait(400);
+  const h = await page.locator("[data-dataset-heading]").boundingBox();
+  const b = await back.boundingBox();
+  expect(h.x + h.width <= b.x, `heading ends at ${Math.round(h.x + h.width)}px, back button starts at ${Math.round(b.x)}px`);
+});
+
+test("phone: zoomed in, search sits above the legend and opens full screen (issue #246)", async (o) => {
+  const { page } = await o("phone", "/map?d=median_household_income&lv=county&at=-93.4752,45.0061,7.2");
+  const btn = page.locator('button[aria-label="Search places or data"]');
+  await immerse(page);
+  expect(!(await btn.count()), "search button shows before any zoom");
+  await tapLonLat(page, ...HENNEPIN);
+  await page.locator('section[aria-label^="Details for"]').waitFor();
+  await page.locator('button[aria-label="Close details"]').click();
+  await btn.waitFor();
+  const b = await btn.boundingBox(), l = await page.locator("button[data-legend]").boundingBox();
+  expect(b.y + b.height <= l.y && b.x < l.x + 20, `search ${JSON.stringify(b)} not just above the legend strip ${JSON.stringify(l)}`);
+  await btn.click();
+  const input = page.getByPlaceholder("Search places or data...");
+  await input.waitFor();
+  const vh = page.viewportSize().height, r = await input.boundingBox();
+  expect(Math.abs(r.y + r.height / 2 - vh / 2) < 60, `field not mid-screen (center ${Math.round(r.y + r.height / 2)} of ${vh})`);
+  await page.keyboard.type("D");
+  await wait(500);
+  expect(!(await page.locator('[role="option"]').count()), "results after one character");
+  await page.keyboard.type("u");
+  await page.locator('[role="option"]').first().waitFor();
+  expect((await input.boundingBox()).y < 40, "field didn't move to the top once typing started");
+});
 
 /** Phone chrome over the map: every text, icon and edge against its own backing. */
 const PHONE_ON_MAP = ["[data-dataset-heading]", "[data-filter-button]:not([inert] *)", "[data-filter-note]:not([inert] *)", "button[data-legend]",
@@ -847,6 +924,7 @@ for (const vp of ["phone", "laptop"]) {
     await panel.waitFor();
     await wait(400);
     const slider = panel.locator("input[type=range]");
+    await slider.scrollIntoViewIfNeeded(); // the card's Why link makes the panel shorter, so the slider can sit below its fold
     const notches = await panel.locator("[data-notch]").count();
     expect(notches === 10, `expected 10 notches (2015-2024), got ${notches}`);
     const bg = await slider.evaluate((el) => getComputedStyle(el, "::-webkit-slider-runnable-track").backgroundImage);
@@ -956,6 +1034,48 @@ test("laptop earlier year at block-group zoom: no boundary file that doesn't exi
   expect(drawn > 0, "no tracts drawn on the 2019 map at zoom 13");
 });
 
+test("laptop search: \"Du\" lists places and no unrelated datasets; \"asthma\" finds Asthma (#252)", async (o) => {
+  const { page } = await o("laptop", "/map?d=pct_poverty");
+  await page.keyboard.press("/");
+  const dlg = page.getByRole("dialog", { name: "Search places and datasets" });
+  const box = dlg.getByRole("combobox"), datasets = dlg.getByRole("region", { name: "Datasets" });
+  await box.fill("Du");
+  await dlg.getByRole("region", { name: "Places" }).getByRole("option", { name: /^Du/ }).first().waitFor({ timeout: 15000 });
+  expect((await datasets.innerText()).includes("No matching datasets."), `datasets for "Du": ${await datasets.innerText()}`);
+  const places = await dlg.getByRole("region", { name: "Places" }).innerText();
+  expect(places.includes("Duluth"), `"Du" doesn't list Duluth (#258): ${places}`);
+  await box.fill("asthma");
+  await datasets.getByRole("option").first().waitFor();
+  expect(/^Asthma/.test((await datasets.getByRole("option").first().innerText()).trim()), `first dataset for "asthma": ${await datasets.innerText()}`);
+});
+
+test("laptop map fixes (#187): canvas label follows the map, tiles banner only for our tiles and clears, failed default year errors", async (o) => {
+  const { page } = await o("laptop", "/map?d=pct_poverty");
+  const label = () => page.evaluate(() => window.__wgMap.getCanvas().getAttribute("aria-label"));
+  expect(/poverty/i.test(await label()), `first label: ${await label()}`);
+  await page.keyboard.press("/");
+  const dlg = page.getByRole("dialog", { name: "Search places and datasets" });
+  await dlg.getByRole("combobox").fill("asthma");
+  await dlg.getByRole("region", { name: "Datasets" }).getByRole("option").first().click();
+  await page.waitForFunction(() => /asthma/i.test(window.__wgMap.getCanvas().getAttribute("aria-label")), null, { timeout: 15000 });
+
+  const banner = page.getByText("Boundary tiles aren't available yet.");
+  const fire = (ev) => page.evaluate((ev) => window.__wgMap.fire({ ...ev, error: ev.error && new Error(ev.error) }), ev);
+  await fire({ type: "error", error: "404 basemap", sourceId: "basemap" });
+  await wait(300);
+  expect(!(await banner.count()), "a basemap error showed the boundary tiles banner");
+  await fire({ type: "error", error: "404 state.pmtiles", sourceId: "b-state" });
+  await banner.waitFor({ timeout: 5000 });
+  await fire({ type: "data", dataType: "source", sourceId: "b-state", tile: {} });
+  await banner.waitFor({ state: "detached", timeout: 5000 });
+
+  // The default year's file fails while an earlier year shows: a message, not an endless spinner.
+  await page.route(/\/values\/pct_poverty\/(state|county)\.json/, (r) => r.fulfill({ status: 404, body: "" }));
+  await page.goto(`${BASE}/map?d=pct_poverty&t=2019&theme=light`);
+  await page.getByText("This map didn't load. Try again in a minute.").first().waitFor({ timeout: 15000 });
+  page.errors = page.errors.filter((e) => !/404/.test(e));
+});
+
 // Feature files (one per feature; this file keeps the shared harness).
 (await import("./compare.tests.mjs")).default({ test, expect, wait, immerse, tapLonLat, live, HENNEPIN, dbCalls });
 (await import("./share.tests.mjs")).default({ test, expect, wait, mapIdle });
@@ -964,6 +1084,16 @@ test("laptop earlier year at block-group zoom: no boundary file that doesn't exi
 (await import("./drilldown.tests.mjs")).default({ test, expect, immerse, mapIdle, tapLonLat, HENNEPIN });
 (await import("./compare-mode.tests.mjs")).default({ test, expect, immerse });
 (await import("./splash.tests.mjs")).default({ test, expect, wait });
+(await import("./getting-around.tests.mjs")).default({ test, expect, mapIdle });
+(await import("./table.tests.mjs")).default({ test, expect, wait });
+(await import("./popups.tests.mjs")).default({ test, expect, wait, mapIdle, pointerAt, hoverCard, HENNEPIN, NEBRASKA });
+(await import("./mpo.tests.mjs")).default({ test, expect, mapIdle, tapLonLat, HENNEPIN });
+
+test("old /specials/pairings?topic=Health redirects to /specials/combinations?topic=Health", async (o) => {
+  const { page } = await o("laptop", "/specials/pairings?topic=Health", { ready: false });
+  const u = new URL(page.url());
+  expect(u.pathname === "/specials/combinations" && u.searchParams.get("topic") === "Health", `landed on ${page.url()}`);
+});
 
 // ── Run ────────────────────────────────────────────────────────────────────────
 // Round-robin keeps the slow tests spread across shards.

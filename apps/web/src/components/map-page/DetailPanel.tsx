@@ -1,8 +1,8 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { X } from "lucide-react";
 import { StatusState } from "@webgis/design/components";
-import { CHANGE_CLASSES, formatEstimate, formatValue, GEO_LEVELS, gradeEstimate, isGradable, STATIC_ONLY_LEVELS, TILE_VALUE_LEVELS } from "@webgis/design";
-import { reliabilityNote } from "@/lib/reliability";
+import { CHANGE_CLASSES, formatEstimate, formatValue, GEO_LEVELS, isGradable, STATIC_ONLY_LEVELS, TILE_VALUE_LEVELS } from "@webgis/design";
+import { moeRangeLine, noDataReason, reliabilityNote } from "@/lib/reliability";
 import { changeSummary, differenceMoe, formatChange, withinMoe } from "@/lib/change";
 import type { ClassedLevel } from "./useViewerData";
 import type { HoverInfo } from "../map/MapView";
@@ -13,6 +13,7 @@ import { fetchDetail } from "@/lib/details";
 import { loadMoes, type Values } from "@/lib/values";
 import { BottomSheet, useIsPhone } from "../BottomSheet";
 import { PlaceDataList, type Detail } from "../PlaceDataList";
+import { Benchmarks } from "../Benchmarks";
 import { LearnMore } from "./LearnMore";
 import { loadPlaceIndex, placeByGeoid, type PlaceHit } from "@/lib/search";
 import { CompareWith } from "../compare/CompareWith";
@@ -95,13 +96,17 @@ function SheetKey({ colors, cls, ends }: { colors: string[]; cls: number | null;
 }
 
 /** "Use with caution" / "Unreliable estimate" under an ACS value whose margin of error is large
- *  (D-222). Shown whether or not the map's hatching is on; nothing for other sources. */
-function ReliabilityNote({ dataset, value, moe }: { dataset: Dataset; value?: number | null; moe?: number | null }) {
-  const note = isGradable(dataset.measure.kind) ? reliabilityNote(gradeEstimate(value, moe)) : null;
+ *  (D-222). Shown whether or not the map's hatching is on; nothing for other sources. With no value,
+ *  why not (issue #193). */
+function ReliabilityNote({ dataset, geoid, value, moe }: { dataset: Dataset; geoid: string; value?: number | null; moe?: number | null }) {
+  if (value == null) return <p className="mt-1 text-xs text-muted-foreground" data-no-data-reason="">{noDataReason(dataset, geoid)}</p>;
+  const note = isGradable(dataset.measure.kind) ? reliabilityNote(value, moe) : null;
   if (!note) return null;
+  const range = moeRangeLine(value, moe, dataset.unit);
   return (
     <p className="mt-1 text-xs text-muted-foreground" data-reliability="">
       <span className="font-semibold text-foreground">{note.title}.</span> {note.body}
+      {range && <span data-moe-range=""> {range}</span>}
     </p>
   );
 }
@@ -139,6 +144,9 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
   const [rows, setRows] = useState<Detail | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const phone = useIsPhone();
+  /** "Compare with…" is waiting for a tap on the map: the phone drawer shrinks to the name and that prompt (issue #242). */
+  const [picking, setPicking] = useState(false);
+  const shrunk = phone && picking;
   // Block groups and blocks aren't in the database (D-124): the mapped values come from the static
   // files (block groups, with margins of error from side files) or the tiles (blocks); there's no
   // all-datasets list or place profile below tracts.
@@ -172,7 +180,7 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
   const links = dedupe(featured.flatMap((d) => learnMoreLinks(d, { level: info.level, geoid: info.geoid, lon: info.lon, lat: info.lat })));
   const summary = (
     <>
-      <InsideLinks inside={inside} name={info.name} onPlace={onPlace} />
+      {!shrunk && <InsideLinks inside={inside} name={info.name} onPlace={onPlace} />}
       <div className="mb-2 flex items-start justify-between gap-2">
         <div>
           <h2 className="text-sm font-semibold leading-snug">{info.name}</h2>
@@ -182,7 +190,7 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
           <X className="size-4" />
         </button>
       </div>
-      {err ? <StatusState status="error" message="Details are unavailable right now." />
+      {shrunk ? null : err ? <StatusState status="error" message="Details are unavailable right now." />
         : !rows ? <StatusState status="loading" />
         : (
           <div className="space-y-2">
@@ -212,27 +220,28 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
                     {est.value}
                     {est.moe && <span className="ml-1 text-xs font-normal text-muted-foreground">±{est.moe}</span>}
                   </p>
+                  {r?.value != null && <Benchmarks dataset={d} geoid={info.geoid} />}
                   {i === 0 && phone && legendKey && <SheetKey {...legendKey} />}
-                  {rank && <p className="mt-1 text-xs text-muted-foreground">{rank}</p>}
-                  <ReliabilityNote dataset={d} value={r?.value} moe={r?.moe} />
+                  {rank &&<p className="mt-1 text-xs text-muted-foreground">{rank}</p>}
+                  <ReliabilityNote dataset={d} geoid={info.geoid} value={r?.value} moe={r?.moe} />
                 </div>
               );
             })}
           </div>
         )}
       <CompareWith geoid={info.geoid} level={info.level} name={info.name} dataset={primary} otherPeriod={!!period}
-        aValue={!rows ? null : staticOnly ? undefined : rows[primary.id]?.value ?? null} />
-      <LearnMore links={links} />
-      {phone && rows && !staticOnly && <p className="mt-2 text-center text-xs text-muted-foreground group-data-[snap=full]:hidden">Swipe up for all {Object.keys(rows).length} datasets here</p>}
+        aValue={!rows ? null : staticOnly ? undefined : rows[primary.id]?.value ?? null} onPicking={setPicking} />
+      {!shrunk && <LearnMore links={links} />}
+      {phone && !shrunk && rows && !staticOnly && <p className="mt-2 text-center text-xs text-muted-foreground group-data-[snap=full]:hidden">Swipe up for all {Object.keys(rows).length} datasets here</p>}
     </>
   );
 
   if (phone) {
     return (
-      <BottomSheet label={`Details for ${info.name}`} summary={summary} onClose={onClose}>
+      <BottomSheet label={`Details for ${info.name}`} summary={summary} onClose={onClose} collapsed={picking}>
         {rows && !staticOnly && (
           <>
-            <PlaceDataList level={info.level} detail={rows} onMapIt={onMapIt} compact />
+            <PlaceDataList geoid={info.geoid} level={info.level} detail={rows} onMapIt={onMapIt} compact />
             <a href={placeHref(info.geoid)} className="mt-4 block text-sm font-medium text-primary underline-offset-2 hover:underline">Open the full place profile →</a>
           </>
         )}

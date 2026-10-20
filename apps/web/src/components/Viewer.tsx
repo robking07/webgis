@@ -14,11 +14,12 @@ import { LANDING } from "@/lib/landing";
 import { readStoredTheme, useResolvedTheme } from "@/lib/theme";
 import { MapView, type FeatureHit, type HoverInfo, type MapApi } from "./map/MapView";
 import { DATASET_BY_ID, DATASETS, type Dataset } from "@/lib/registry";
-import { loadPlaceIndex, placeByGeoid, type PlaceHit } from "@/lib/search";
+import { loadMpoShape, loadPlaceIndex, mpoById, placeByGeoid, type PlaceHit } from "@/lib/search";
 import { useIsCompact, useIsNarrow, useIsPhone } from "./BottomSheet";
 import { DatasetMenu, DatasetSheet, type BrowseSlot } from "./DatasetMenus";
 import { parseUrlState, useUrlState, type UrlState } from "@/lib/url-state";
 import { areaChangeNote, stopsFor } from "@/lib/periods";
+import { tableScope } from "@/lib/table-scope";
 import { useViewerData } from "./map-page/useViewerData";
 import { useFraming } from "./map-page/useFraming";
 import { HEADER_GAP } from "./map-page/layout";
@@ -36,6 +37,8 @@ import { useUnreliable } from "./map-page/useUnreliable";
 import { FeaturePanel } from "./map-page/FeaturePanel";
 import { ContextLink, ContextPanel, CONTEXT_PANEL_RIGHT } from "./map-page/ContextPanel";
 import { contextFor } from "@/lib/context";
+import { CONUS, usInView } from "@/lib/us-view";
+import type { Bbox } from "./map/MapView";
 
 export function Viewer({ search }: { search: string }) {
   const [initial] = useState<UrlState>(() => {
@@ -64,7 +67,7 @@ export function Viewer({ search }: { search: string }) {
   const [leaveFor, setLeaveFor] = useState<string | null>(null);
   const [searchOpen, setSearchOpen] = useState(false);
   // A shared drill-down link opens full screen, where the focused place's name shows (issue #203).
-  const [immersed, setImmersed] = useState(() => !!initial.in);
+  const [immersed, setImmersed] = useState(() => !!initial.in || !!initial.mpo);
   /** The filters panel (issue #34): a sidebar on desktop, a full-screen sheet on phones. `anchor`
    *  is the filter button it grows from and shrinks back into. */
   const [filters, setFilters] = useState<{ anchor: HTMLElement | null } | null>(null);
@@ -113,12 +116,13 @@ export function Viewer({ search }: { search: string }) {
 
   /** Counties whose tracts are on screen, while hatching or a change map's margin test needs them. */
   const [tractCounties, setTractCounties] = useState<string[]>([]);
-  const { primary, secondary, isFeature, featureSpec, stops, stop, stopId, since, xFrom, testMoes, availableLevels, pinnedLevel, focus, bands, x, y, level, classed, blockField } = useViewerData(state, tractCounties);
+  const { primary, secondary, isFeature, featureSpec, stops, stop, stopId, since, xBase, xFrom, testMoes, availableLevels, pinnedLevel, focus, bands, x, y, level, classed, blockField } = useViewerData(state, tractCounties);
   const current = classed[level];
-  const error = x.error ?? y.error ?? xFrom.error;
+  // A year off the default is colored with the default's breaks (xBase): its failure is an error, not a spinner.
+  const error = x.error ?? y.error ?? xFrom.error ?? xBase.error;
   const available = !!primary && !isFeature && availableLevels.includes(level);
-  // The table lists states or counties (finer areas have no names to search); below counties it shows counties.
-  const tableLevel: GeoLevel | null = level === "state" || level === "county" ? level : availableLevels.includes("county") ? "county" : null;
+  // The table follows the map's level; tracts and block groups only inside a focused area (issue #293).
+  const { level: tableLevel, within: tableWithin } = tableScope(level, availableLevels, focus?.geoid ?? null);
   // Clear selections and filters when the dataset changes.
   const [seenDataset, setSeenDataset] = useState(state.d);
   if (seenDataset !== state.d) { setSeenDataset(state.d); setSelected(null); setFeatureSelected(null); setFeatureHover(null); setHidden({}); setCtxOpen(false); }
@@ -144,7 +148,7 @@ export function Viewer({ search }: { search: string }) {
   // Drill-down (issue #203): a click on a place with a finer level focuses it; each step is a Back step.
   const setFocus = useCallback((geoid: string | null) => update({ in: geoid }), [update]);
   const childOf = useCallback((l: GeoLevel) => childLevel(availableLevels, l), [availableLevels]);
-  const { root, canGoBack, goBack, onMapSelect, onFeatureSelect, goToPlace, focusName, leaveFocus } = useFraming({ mapApi, setSelected, setFeatureSelected, isFeature, primary, tableOpen, narrow, focus: state.in ?? null, setFocus, childOf });
+  const { root, canGoBack, goBack, onMapSelect, onFeatureSelect, goToPlace, focusName, leaveFocus, clearArea } = useFraming({ mapApi, setSelected, setFeatureSelected, isFeature, primary, tableOpen, narrow, focus: state.in ?? null, setFocus, childOf });
   useEffect(() => { focusedRef.current = !!focus; });
   // Focusing a place goes full screen, where the heading names it (adjusted during render).
   const [seenFocus, setSeenFocus] = useState(focus?.geoid);
@@ -170,7 +174,43 @@ export function Viewer({ search }: { search: string }) {
     setHidden(v.hidden);
     if (v.pinned !== pinnedLevel || v.stop !== stopId || v.since !== (since?.id ?? null)) update({ lv: v.pinned, t: v.stop, since: v.since });
   };
-  const onSearchPlace = (p: PlaceHit) => { setSearchOpen(false); goToPlace(p); };
+  /** A searched MPO (issue #276; the URL's `mpo`): outlined and named, never a geography level, so
+   *  nothing on the map selects it. Its shape loads only once it's picked or linked. */
+  const [mpoHit, setMpoHit] = useState<PlaceHit | null>(null);
+  const mpo = mpoHit?.mpo?.id === state.mpo ? mpoHit : null;
+  useEffect(() => {
+    const id = state.mpo;
+    mapApi.current?.showArea(null);
+    if (!id) return;
+    let live = true;
+    loadPlaceIndex().then((rows) => {
+      const hit = mpoById(rows, id);
+      if (!hit || !live) return;
+      setMpoHit(hit);
+      return loadMpoShape(id).then((shape) => { if (live) mapApi.current?.showArea(shape); });
+    }).catch(() => {}); // shortcut: an unknown or failed MPO just shows no outline; say so if visitors hit it.
+    return () => { live = false; };
+  }, [state.mpo]);
+  const onSearchPlace = (p: PlaceHit) => {
+    setSearchOpen(false);
+    if (!p.mpo) { if (state.mpo) update({ mpo: null }); goToPlace(p); return; }
+    const { id, bbox } = p.mpo;
+    setSelected(null); setFeatureSelected(null); mapApi.current?.select("county", null);
+    if (focus) leaveFocus();
+    setMpoHit(p);
+    update({ mpo: id });
+    setImmersed(true); setPeek(false);
+    // Wait a frame so panels that just closed are measured where they now are (as goToPlace does).
+    requestAnimationFrame(() => requestAnimationFrame(() => mapApi.current?.fitBbox(bbox, clearArea())));
+  };
+  /** "Go to" a region and "Back to the US" (issue #202): leave any focused place, frame the region. */
+  const goToRegion = (b: Bbox) => {
+    if (focus) leaveFocus();
+    mapApi.current?.fitBbox(b, { top: 16, right: 16, bottom: 16, left: 16 });
+  };
+  // Zoomed out to two worlds, or panned off every U.S. region (Viewer renders on the client only).
+  // shortcut: judged on the last settled view, at the window's size; fine while the map is full-window.
+  const usLost = !usInView(state.at, window.innerWidth, window.innerHeight);
   /** Phones: the dataset list and the details share the bottom sheet; opening one closes the other. */
   const openMenu = (slot: BrowseSlot) => {
     setBrowse(slot);
@@ -363,7 +403,7 @@ export function Viewer({ search }: { search: string }) {
           onShowNav={() => { setImmersed(false); setPeek(false); }}
           onOpenFilters={toggleFilters} onOpenLevel={openLevelFilters} levelPill={!isFeature}
           menuOpen={menuOpen && immersed} menu={immersed ? datasetMenu : null} onBrowse={changeDataset} onExit={exitCompare}
-          place={focus && focusName ? { name: focusName, onClear: leaveFocus } : null} />
+          place={mpo ? { name: `${mpo.name} · ${mpo.mpo!.states}`, onClear: () => update({ mpo: null }) } : focus && focusName ? { name: focusName, onClear: leaveFocus } : null} backShown={canGoBack || phone} />
       )}
 
       {filters && primary && !phone && (
@@ -375,14 +415,23 @@ export function Viewer({ search }: { search: string }) {
           value={filterValue} onApply={applyFilters} onClose={() => setFilters(null)} />
       )}
 
-      <MapControls mapApi={mapApi} atRest={chromeShown && !immersed} canGoBack={canGoBack} onBack={goBack} phone={phone} cardH={cardH} />
+      <MapControls mapApi={mapApi} atRest={chromeShown && !immersed} canGoBack={canGoBack} onBack={goBack} phone={phone} cardH={cardH}
+        onRegion={goToRegion} onPlace={onSearchPlace} />
+      {usLost && (
+        <button type="button" onClick={() => goToRegion(CONUS)}
+          className="wg-panel wg-zbtn absolute bottom-24 left-1/2 z-20 h-11 -translate-x-1/2 rounded-full px-4 text-sm font-semibold text-foreground">
+          Back to the US
+        </button>
+      )}
 
       <MapLegend theme={theme} primary={primary} secondary={secondary} isFeature={isFeature} featureSpec={featureSpec} current={current}
         error={error} available={available} loading={loading} level={level} periodLabel={periodLabel}
         stop={stop} stopId={stopId} since={since}
         hatchToggle={hatchable ? { on: hatchOn, onChange: setHatchOn, loading: hatchOn && !hatch?.[level] } : null}
         desktopStrip={desktopStrip} mark={selected && selected.level === level ? selClass : null}
-        covered={phone && (placeOpen || tableOpen || listOpen || stepAside || ctxOpen)} tableReady={tableReady} onTable={() => setTableOpen(true)} />
+        covered={phone && (placeOpen || tableOpen || listOpen || stepAside || ctxOpen)} tableReady={tableReady} tableLevel={tableLevel} onTable={() => setTableOpen(true)}
+        // Phones, once a tap or pick has zoomed in (the header and its search are gone): search above the legend (issue #246).
+        onSearch={phone && immersed && (canGoBack || !!focus) ? () => setSearchOpen(true) : null} />
 
       <MapCredits datasets={[primary, secondary].filter((d): d is Dataset => !!d)} />
 
@@ -393,10 +442,10 @@ export function Viewer({ search }: { search: string }) {
 
       {listOpen && slot && primary && <DatasetSheet key={slot} slot={slot} primary={primary} secondary={secondary} onSlot={setBrowse} onPick={onMenuPick} onClose={() => setBrowse(null)} />}
 
-      {searchOpen && <SearchOverlay current={state.d} onClose={() => setSearchOpen(false)} onPlace={onSearchPlace} onDataset={onSearchDataset} />}
+      {searchOpen && <SearchOverlay full={phone} current={state.d} onClose={() => setSearchOpen(false)} onPlace={onSearchPlace} onDataset={onSearchDataset} />}
 
       {tableOpen && primary && tableLevel && (
-        <DataTable top={panelTop} level={tableLevel} x={primary} xv={x.values[tableLevel]} y={secondary} yv={y.values[tableLevel]} period={stopId ? stop!.label : undefined} selected={selected?.geoid ?? null}
+        <DataTable top={panelTop} level={tableLevel} within={tableWithin} x={primary} xv={x.values[tableLevel]} y={secondary} yv={y.values[tableLevel]} period={stopId ? stop!.label : undefined} selected={selected?.geoid ?? null}
           onClose={onTableClose} onPick={onTablePick} />
       )}
 
@@ -408,7 +457,7 @@ export function Viewer({ search }: { search: string }) {
 
       {/* Hover popups wait while the map moves (issue #34). Inside a focused place they show beside its details. */}
       {hover && (!selected || !!focus) && !moving && primary && (
-        <PlaceHoverPopup hover={hover} primary={primary} secondary={secondary} xValues={x.values} yValues={y.values} blockField={blockField} periodLabel={stopId ? stop!.label : undefined}
+        <PlaceHoverPopup hover={hover} primary={primary} secondary={secondary} xValues={x.values} yValues={y.values} blockField={blockField} periodLabel={stopId ? stop!.label : primary.vintage} unreliable={!!hatch?.[hover.level]?.has(hover.geoid)}
           change={since && classed[hover.level]?.change ? { from: since, to: stop!, fromValues: xFrom.values[hover.level], classed: classed[hover.level]! } : undefined} />
       )}
       {featureHover && !featureSelected && !moving && featureSpec && <FeatureHoverPopup hit={featureHover} spec={featureSpec} primary={primary} />}

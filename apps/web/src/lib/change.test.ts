@@ -117,7 +117,8 @@ describe("changeStops", () => {
 
 describe("changeSummary", () => {
   it("leads with the change, or no clear change, with both values after", () => {
-    expect(changeSummary(2.34, 10, 12.34, "points", "percent", false)).toEqual({ headline: "+2.3 pts", values: "10% → 12%" });
+    expect(changeSummary(2.34, 10, 12.34, "points", "percent", false)).toEqual({ headline: "+2.3 pts", values: ["10%", "12.3%"] });
+    expect(changeSummary(-0.5, 12.84, 12.34, "points", "percent", false).values).toEqual(["12.8%", "12.3%"]);
     expect(changeSummary(0.8, 10, 10.8, "points", "percent", true).headline).toBe("No clear change");
   });
   it("says why an area has no change", () => {

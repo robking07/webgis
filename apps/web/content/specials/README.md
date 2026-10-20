@@ -52,7 +52,7 @@ More text, [a link](https://example.org), **bold**, *italic*, lists, and images:
 | `topic` | yes | The small label above the headline (Health, Commuting, Climate…). |
 | `date` | yes | Publication date, `YYYY-MM-DD`. Newest is the lead piece on the Specials page. |
 | `datasets` | yes | One dataset id (a single-measure map) or two (the bivariate map). Ids are the file names in `data/registry/datasets/`. Both must have county data. |
-| `pairing` | no | The Odd Pairing this grew from (its id, like `x__y`). Adds the "How they line up" box and the link back. |
+| `pairing` | no | The Combination this grew from (its id, like `x__y`). Adds the "How they line up" box and the link back. |
 | `at` | no | Where the map opens: `[longitude, latitude, zoom]`, e.g. `[-93.3, 45.0, 6]`. Leave it out for the whole country. "Open this map" uses it too. |
 | `caption` | no | The line under the map. Without it, the page describes what's mapped. |
 | `method` | no | Anything extra for "How this was made" (filters, years, exclusions). Markdown. |
@@ -165,6 +165,6 @@ it (or run `npm run prepare:assets -w web`) to see the change.
    `apps/web/src/lib/landing.ts`. The Specials page then tags the map "On the map now".
 
 The build checks every file: an unknown dataset, a dataset without county data, a pairing that isn't
-published, a missing `image` file, a file name that matches an Odd Pairing, or a mistake in a map, chart or
+published, a missing `image` file, a file name that matches a Combination, or a mistake in a map, chart or
 table block (an unknown field or dataset, an `at` outside the U.S., a tract map of two datasets, an
 unclosed block) stops the build with a message naming the file and the block.

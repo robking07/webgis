@@ -50,7 +50,7 @@ export function PlaceProfile({ geoid }: { geoid: string }) {
           </div>
         )}
       </header>
-      <PlaceDataList level={level} detail={detail} mapHref={mapHref} />
+      <PlaceDataList geoid={geoid} level={level} detail={detail} mapHref={mapHref} />
     </main>
   );
 }

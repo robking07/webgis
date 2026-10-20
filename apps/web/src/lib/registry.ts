@@ -15,11 +15,19 @@ export function bySubcategory(ds: Dataset[]): Array<{ category: string; subcateg
   }))).filter((g) => g.datasets.length);
 }
 
+/** Lowercase words with a space before and after each, so `includes(" du")` matches a word start
+ *  and `includes(" du ")` a whole word. */
+const words = (s: string) => ` ${s.toLowerCase().replace(/[^a-z0-9]+/g, " ")} `;
+
+/** Each term must start a word in the title, topic, tags or source, or be a whole word in the
+ *  description (issue #252: "du" matched "adults", "during", "duty" in the prose). Maps whose
+ *  title has every term come first. */
 export function searchDatasets(q: string, category: string | null): Dataset[] {
-  const terms = q.toLowerCase().split(/\s+/).filter(Boolean);
+  const terms = words(q).split(" ").filter(Boolean);
+  const inTitle = (d: Dataset) => terms.every((t) => words(d.title).includes(` ${t}`));
   return DATASETS.filter((d) => {
     if (category && d.category !== category) return false;
-    const hay = [d.title, d.description, d.category, d.subcategory, ...d.tags, d.source.name].join(" ").toLowerCase();
-    return terms.every((t) => hay.includes(t));
-  });
+    const names = words([d.title, d.category, d.subcategory, ...d.tags, d.source.name].join(" ")), prose = words(d.description);
+    return terms.every((t) => names.includes(` ${t}`) || prose.includes(` ${t} `));
+  }).sort((x, y) => Number(!inTitle(x)) - Number(!inTitle(y))); // stable: registry order within each group
 }

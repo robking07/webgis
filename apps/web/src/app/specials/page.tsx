@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { approvedInsights } from "@/lib/approvals";
+import { pickInteresting } from "@/lib/insights";
 import { LANDING } from "@/lib/landing";
 import { SPECIALS, formatDate } from "@/lib/specials";
 import { SiteFooter } from "@/components/SiteNav";
@@ -11,7 +12,7 @@ import { DataBox, DraftTag, PairingsKey, PairingsList, SpecialCard, byline, mapH
 export const metadata: Metadata = { title: "Specials · Mapwich" };
 
 // The Specials front page, direction A (D-115): the latest piece over its map, earlier pieces, then
-// the Odd Pairings index. With no piece published yet it opens on Odd Pairings.
+// the Combinations index. With no piece published yet it opens on Combinations.
 export default async function SpecialsPage() {
   // Only cards Robbie approved (D-116).
   const published = await approvedInsights();
@@ -69,16 +70,16 @@ export default async function SpecialsPage() {
         <section aria-labelledby="pairings" className="flex flex-col gap-3.5">
           <div className="flex flex-col gap-1.5 md:flex-row md:items-end md:justify-between md:gap-4">
             <div className="flex flex-col gap-1.5">
-              <h2 id="pairings" className="text-[19px] font-bold md:text-xl">Odd Pairings</h2>
+              <h2 id="pairings" className="text-[19px] font-bold md:text-xl">Combinations</h2>
               <p className="max-w-[640px] text-[13px] leading-normal text-muted-foreground md:text-sm">
                 Datasets that line up across U.S. counties. Correlation is not causation; each pair passed automatic checks, then was read and approved by hand.
               </p>
               <PairingsKey />
             </div>
-            <Link href="/specials/pairings" className="hidden whitespace-nowrap text-sm font-semibold text-primary hover:underline md:inline">All {published.length} pairings →</Link>
+            <Link href="/specials/combinations" className="hidden whitespace-nowrap text-sm font-semibold text-primary hover:underline md:inline">All {published.length} combinations →</Link>
           </div>
-          <PairingsList pairs={published.slice(0, 6)} />
-          <Link href="/specials/pairings" className="flex h-12 items-center justify-center text-[15px] font-semibold text-primary hover:underline md:hidden">All {published.length} pairings →</Link>
+          <PairingsList pairs={pickInteresting(published)} />
+          <Link href="/specials/combinations" className="flex h-12 items-center justify-center text-[15px] font-semibold text-primary hover:underline md:hidden">All {published.length} combinations →</Link>
         </section>
 
         <SiteFooter />
