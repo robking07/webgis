@@ -13,7 +13,7 @@ import {
   formatHex, interpolate, oklab, wcagContrast,
 } from "culori";
 import { CHANGE_CLASSES, CHANGE_RAMP, RAMPS, rampColors, type RampDef, type RampId } from "../src/ramps.ts";
-import { CONTRAST_RULES, GLASS_ALPHA, HATCH, THEMES, themeColor } from "../src/themes.ts";
+import { CONTRAST_RULES, FOCUS_DIM, GLASS_ALPHA, HATCH, THEMES, themeColor } from "../src/themes.ts";
 import { featureLineColors } from "../src/style.ts";
 
 export const THRESHOLDS = { MIN_ADJ: 5, MIN_CAT: 10, MIN_BIV: 8 };
@@ -151,9 +151,29 @@ for (const theme of Object.values(THEMES)) {
   }
 }
 
+// Drill-down dimming (issue #203): the wash sets each area ramp back visibly on average (a class
+// already near the wash color can't change much; the focused place's selection outline marks its
+// edge), and the dimmed ramp keeps its ends apart (the rest of the map stays readable), in both themes.
+let dimCases = 0;
+for (const theme of Object.values(THEMES)) {
+  const dim = (c: string) => formatHex(interpolate([c, theme.map.focusDim], "rgb")(FOCUS_DIM.opacity[theme.name]))!;
+  for (const [id, r] of Object.entries(RAMPS) as Array<[RampId, RampDef]>) {
+    if (r.kind === "categorical") continue;
+    for (let n = r.minClasses; n <= r.maxClasses; n++) {
+      const cs = rampColors(id, n);
+      dimCases++;
+      const mean = cs.reduce((a, c) => a + de(c, dim(c)), 0) / n;
+      if (mean < FOCUS_DIM.minMeanShift) failures.push(`${id} n=${n} theme ${theme.name}: the dim wash shifts classes only ΔE ${mean.toFixed(1)} on average < ${FOCUS_DIM.minMeanShift}`);
+      if (r.kind !== "sequential") continue;
+      const spread = de(dim(cs[0]), dim(cs[n - 1]));
+      if (spread < FOCUS_DIM.minSpread) failures.push(`${id} n=${n} theme ${theme.name}: dimmed ends ΔE ${spread.toFixed(1)} < ${FOCUS_DIM.minSpread}`);
+    }
+  }
+}
+
 if (isMain && process.argv.includes("--verbose")) console.table(report);
 if (isMain && failures.length) {
   console.error(`✗ design check failed (${failures.length}):\n  ` + failures.join("\n  "));
   process.exit(1);
 }
-if (isMain) console.log(`✓ design check passed: ${Object.keys(RAMPS).length} ramps, ${report.length} ramp/class/vision cases, ${CONTRAST_RULES.length * 2} contrast pairs, ${glassCases} glass-over-map cases, ${landCases} class-vs-land cases, ${lineCases} line-on-land cases, ${hatchCases} hatch-over-fill cases`);
+if (isMain) console.log(`✓ design check passed: ${Object.keys(RAMPS).length} ramps, ${report.length} ramp/class/vision cases, ${CONTRAST_RULES.length * 2} contrast pairs, ${glassCases} glass-over-map cases, ${landCases} class-vs-land cases, ${lineCases} line-on-land cases, ${hatchCases} hatch-over-fill cases, ${dimCases} dimmed-class cases`);

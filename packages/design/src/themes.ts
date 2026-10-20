@@ -65,6 +65,8 @@ export interface Theme {
     shieldText: string;
     /** U.S. land, a step lighter than other countries so the lower 48 reads at a glance. */
     focusLand: string;
+    /** Drill-down (issue #203): the wash over everything outside the focused place, at FOCUS_DIM.opacity. */
+    focusDim: string;
     /** Shoreline drawn around water bodies. */
     coastline: string;
     /** National boundary (and its halo). */
@@ -126,6 +128,7 @@ export const THEMES: Record<ThemeName, Theme> = {
       riverCasing: "#eef4f9",
       shieldText: "#ffffff",
       focusLand: "#f6f4ef",
+      focusDim: "#f6f4ef",
       coastline: "#7f9fba",
       countryLine: "#5d6169",
       countryHalo: "#ffffff",
@@ -180,6 +183,7 @@ export const THEMES: Record<ThemeName, Theme> = {
       riverCasing: "#0f1a24",
       shieldText: "#16181b",
       focusLand: "#22252b",
+      focusDim: "#141619",
       coastline: "#2f5878",
       countryLine: "#8b919c",
       countryHalo: "#0a1824",
@@ -239,6 +243,17 @@ export const HATCH = {
   opacity: { light: 0.6, dark: 0.6 } as Record<ThemeName, number>,
   /** The hatch must stand out (WCAG ratio, composited) from every class of every sequential ramp. */
   minContrast: 1.5,
+} as const;
+
+/** Drill-down (issue #203): how strongly `map.focusDim` covers the places outside the focused one.
+ *  `scripts/check.ts` requires each ramp to change visibly under it on average (the focused place
+ *  stands out) while the dimmed ramp's ends stay apart (the rest stays readable). */
+export const FOCUS_DIM = {
+  opacity: { light: 0.6, dark: 0.6 } as Record<ThemeName, number>,
+  /** Mean ΔE2000 between each class of a ramp and the same class dimmed. */
+  minMeanShift: 15,
+  /** ΔE2000 between the lightest and darkest class, both dimmed. */
+  minSpread: 10,
 } as const;
 
 /** Opacity of the frosted-glass desktop filters sidebar (`.wg-glass` in components/design.css,

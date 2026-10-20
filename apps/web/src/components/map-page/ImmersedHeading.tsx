@@ -9,7 +9,7 @@ import { FilterButton } from "./FiltersPanel";
 /** Immersed: menu button and wordmark, then the category above the dataset name (both open the
  *  dataset menu, issue #225), then the filter button with a caption (the level shown, or what's filtered).
  *  Phones drop the wordmark and put the heading beside the menu button, on one row (issue #34). */
-export function ImmersedHeading({ primary, secondary, immersed, hasFilters, filtersOpen, filterCount, caption, captionHint, phone, motion, onShowNav, onOpenFilters, onOpenLevel, levelPill, menuOpen, menu, onBrowse, onExit }: {
+export function ImmersedHeading({ primary, secondary, immersed, hasFilters, filtersOpen, filterCount, caption, captionHint, phone, motion, onShowNav, onOpenFilters, onOpenLevel, levelPill, menuOpen, menu, onBrowse, onExit, place, backShown }: {
   primary: Dataset;
   secondary: Dataset | null;
   immersed: boolean;
@@ -37,10 +37,14 @@ export function ImmersedHeading({ primary, secondary, immersed, hasFilters, filt
   /** Compare mode: back to the first map alone. Full screen folds the card's compare strip into this
    *  heading as an Exit button (Robbie, 2026-10-14, issue #198). */
   onExit: () => void;
+  /** Drill-down (issue #203): the focused place's name, larger, with a control that leaves it. */
+  place?: { name: string; onClear: () => void } | null;
+  /** The map's back button is showing (top right on phones): keep the heading clear of it. */
+  backShown?: boolean;
 }) {
   const motionClass = motion === "hide" ? "wg-step-aside" : motion === "dim" ? "wg-dim" : "";
   const heading = (
-    <DatasetHeading primary={primary} secondary={secondary} compact={phone} open={menuOpen} onToggle={onBrowse}>{menu}</DatasetHeading>
+    <DatasetHeading primary={primary} secondary={secondary} compact={phone} clearBack={backShown} open={menuOpen} onToggle={onBrowse}>{menu}</DatasetHeading>
   );
   return (
     // An open menu sits above every other map panel (legend, controls, details), never under one.
@@ -60,6 +64,17 @@ export function ImmersedHeading({ primary, secondary, immersed, hasFilters, filt
         )}
       </div>
       {!phone && <div className="mt-1.5">{heading}</div>}
+      {place && (
+        <div className={`pointer-events-auto mt-1 flex ${phone ? "pl-[52px]" : ""}`}>
+          <p data-focus-name="" className={`wg-panel inline-flex min-w-0 items-center gap-1 rounded-xl py-0.5 pl-3 pr-1 font-bold text-foreground ${phone ? "text-lg" : "text-2xl"}`}>
+            <span className="truncate">{place.name}</span>
+            <button type="button" onClick={place.onClear} aria-label={`Leave ${place.name}: show the whole map`} title="Show the whole map"
+              className="grid size-8 shrink-0 place-items-center rounded-lg text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring">
+              <X className="size-4" aria-hidden />
+            </button>
+          </p>
+        </div>
+      )}
       <div className={`mt-1 flex max-w-[calc(100vw-1.5rem)] items-center gap-2 ${phone ? "pl-[52px]" : "pl-0.5"}`}>
         {secondary && (
           <Button type="button" size="sm" variant="ghost" onClick={onExit} aria-label="Exit comparing" data-compare-exit=""

@@ -4,7 +4,7 @@
 // framing in useFraming, and one file per panel).
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { StatusState } from "@webgis/design/components";
-import { formatValue, GEO_LEVELS, HATCH_LEVELS, isGradable, type GeoLevel } from "@webgis/design";
+import { childLevel, formatValue, GEO_LEVELS, HATCH_LEVELS, isGradable, type GeoLevel } from "@webgis/design";
 import { DataTable } from "./DataTable";
 import { MapCredits } from "./MapCredits";
 import { SearchOverlay } from "./SearchOverlay";
@@ -63,7 +63,8 @@ export function Viewer({ search }: { search: string }) {
   /** Comparing, a map that can't pair with the second one was opened: ask before leaving compare. */
   const [leaveFor, setLeaveFor] = useState<string | null>(null);
   const [searchOpen, setSearchOpen] = useState(false);
-  const [immersed, setImmersed] = useState(false);
+  // A shared drill-down link opens full screen, where the focused place's name shows (issue #203).
+  const [immersed, setImmersed] = useState(() => !!initial.in);
   /** The filters panel (issue #34): a sidebar on desktop, a full-screen sheet on phones. `anchor`
    *  is the filter button it grows from and shrinks back into. */
   const [filters, setFilters] = useState<{ anchor: HTMLElement | null } | null>(null);
@@ -97,10 +98,12 @@ export function Viewer({ search }: { search: string }) {
   const { moving, start: startMotion } = useMapMotion(mapApi);
   const stepAside = moving && compact;
 
+  /** A place is focused (drill-down): Esc keeps the full-screen heading, which shows its name. */
+  const focusedRef = useRef(false);
   // Esc brings the chrome back (panels and menus handle their own Esc first).
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") { setImmersed(false); setPeek(false); setBrowse(null); setLeaveFor(null); }
+      if (e.key === "Escape") { if (!focusedRef.current) setImmersed(false); setPeek(false); setBrowse(null); setLeaveFor(null); }
       // "/" opens search, unless the user is typing somewhere.
       if (e.key === "/" && !(e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement)) { e.preventDefault(); setSearchOpen(true); }
     };
@@ -110,9 +113,10 @@ export function Viewer({ search }: { search: string }) {
 
   /** Counties whose tracts are on screen, while hatching or a change map's margin test needs them. */
   const [tractCounties, setTractCounties] = useState<string[]>([]);
-  const { primary, secondary, isFeature, featureSpec, stops, stop, stopId, since, xFrom, testMoes, availableLevels, pinnedLevel, bands, x, y, level, classed, blockField } = useViewerData(state, tractCounties);
+  const { primary, secondary, isFeature, featureSpec, stops, stop, stopId, since, xBase, xFrom, testMoes, availableLevels, pinnedLevel, focus, bands, x, y, level, classed, blockField } = useViewerData(state, tractCounties);
   const current = classed[level];
-  const error = x.error ?? y.error ?? xFrom.error;
+  // A year off the default is colored with the default's breaks (xBase): its failure is an error, not a spinner.
+  const error = x.error ?? y.error ?? xFrom.error ?? xBase.error;
   const available = !!primary && !isFeature && availableLevels.includes(level);
   // The table lists states or counties (finer areas have no names to search); below counties it shows counties.
   const tableLevel: GeoLevel | null = level === "state" || level === "county" ? level : availableLevels.includes("county") ? "county" : null;
@@ -138,7 +142,14 @@ export function Viewer({ search }: { search: string }) {
   }, [primary, hidden]);
 
   // Framing (D-35): clicks and picks zoom to their target, clear of open panels, with a way back.
-  const { root, canGoBack, goBack, onMapSelect, onFeatureSelect, goToPlace } = useFraming({ mapApi, setSelected, setFeatureSelected, isFeature, primary, tableOpen, narrow });
+  // Drill-down (issue #203): a click on a place with a finer level focuses it; each step is a Back step.
+  const setFocus = useCallback((geoid: string | null) => update({ in: geoid }), [update]);
+  const childOf = useCallback((l: GeoLevel) => childLevel(availableLevels, l), [availableLevels]);
+  const { root, canGoBack, goBack, onMapSelect, onFeatureSelect, goToPlace, focusName, leaveFocus } = useFraming({ mapApi, setSelected, setFeatureSelected, isFeature, primary, tableOpen, narrow, focus: state.in ?? null, setFocus, childOf });
+  useEffect(() => { focusedRef.current = !!focus; });
+  // Focusing a place goes full screen, where the heading names it (adjusted during render).
+  const [seenFocus, setSeenFocus] = useState(focus?.geoid);
+  if (seenFocus !== focus?.geoid) { setSeenFocus(focus?.geoid); if (focus) { setImmersed(true); setPeek(false); } }
   const onTableClose = useCallback(() => setTableOpen(false), []);
   const onTablePick = useCallback((geoid: string, name: string, lon: number, lat: number) => {
     if (!tableLevel) return;
@@ -214,6 +225,14 @@ export function Viewer({ search }: { search: string }) {
     const c = api.getCamera();
     api.flyTo(c.center[0], c.center[1], c.zoom, { top: 0, bottom: 0, left: 0, right: ctxOpen ? CONTEXT_PANEL_RIGHT : 0 });
   }, [ctxOpen, phone, selected, featureSelected]);
+  // Esc with nothing else open leaves the focused place entirely.
+  const nothingOpen = !selected && !featureSelected && !browse && !filters && !searchOpen && !tableOpen && !ctxOpen && !leaveFor;
+  useEffect(() => {
+    if (!focus || !nothingOpen) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") leaveFocus(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [focus, nothingOpen, leaveFocus]);
   const toggleContext = () => {
     if (!ctxOpen) { setSelected(null); setFeatureSelected(null); mapApi.current?.select("county", null); }
     setCtxOpen(!ctxOpen);
@@ -252,12 +271,12 @@ export function Viewer({ search }: { search: string }) {
   // The level caption hints at the next level near a band edge ("block groups closer in"), while
   // switching with zoom.
   const chipHint = useMemo(() => {
-    if (isFeature || pinnedLevel) return null;
+    if (isFeature || pinnedLevel || focus) return null;
     const next = availableLevels[availableLevels.indexOf(level) + 1];
     const b = next && bands[next];
     const z = state.at.zoom;
     return b && z >= b.minzoom - 0.75 && z < b.minzoom ? `${GEO_LEVELS[next].plural.toLowerCase()} closer in` : null;
-  }, [isFeature, pinnedLevel, availableLevels, level, bands, state.at.zoom]);
+  }, [isFeature, pinnedLevel, focus, availableLevels, level, bands, state.at.zoom]);
   // Left column (desktop): the filters sidebar opens below the title (or the at-rest card) and
   // stops above the legend strip.
   const [sidebarTop, setSidebarTop] = useState(160);
@@ -317,6 +336,7 @@ export function Viewer({ search }: { search: string }) {
           hatch={hatch}
           onTractCounties={setTractCounties}
           watchCounties={testMoes}
+          focus={focus}
           ariaLabel={primary ? `Map of ${since ? "change in " : ""}${primary.title}${since ? ` from ${since.label} to ${stop!.label}` : ""}${secondary ? ` compared with ${secondary.title}` : ""} by ${GEO_LEVELS[level].label.toLowerCase()}` : "Map"}
         />
       </main>
@@ -343,7 +363,8 @@ export function Viewer({ search }: { search: string }) {
           phone={phone} motion={stepAside ? (phone ? "hide" : "dim") : null}
           onShowNav={() => { setImmersed(false); setPeek(false); }}
           onOpenFilters={toggleFilters} onOpenLevel={openLevelFilters} levelPill={!isFeature}
-          menuOpen={menuOpen && immersed} menu={immersed ? datasetMenu : null} onBrowse={changeDataset} onExit={exitCompare} />
+          menuOpen={menuOpen && immersed} menu={immersed ? datasetMenu : null} onBrowse={changeDataset} onExit={exitCompare}
+          place={focus && focusName ? { name: focusName, onClear: leaveFocus } : null} backShown={canGoBack} />
       )}
 
       {filters && primary && !phone && (
@@ -386,8 +407,8 @@ export function Viewer({ search }: { search: string }) {
         </div>
       )}
 
-      {/* Hover popups wait while the map moves (issue #34). */}
-      {hover && !selected && !moving && primary && (
+      {/* Hover popups wait while the map moves (issue #34). Inside a focused place they show beside its details. */}
+      {hover && (!selected || !!focus) && !moving && primary && (
         <PlaceHoverPopup hover={hover} primary={primary} secondary={secondary} xValues={x.values} yValues={y.values} blockField={blockField} periodLabel={stopId ? stop!.label : undefined}
           change={since && classed[hover.level]?.change ? { from: since, to: stop!, fromValues: xFrom.values[hover.level], classed: classed[hover.level]! } : undefined} />
       )}
@@ -404,7 +425,7 @@ export function Viewer({ search }: { search: string }) {
           xv={x.values[selected.level]} yv={y.values[selected.level]}
           period={stopId && !since ? { label: stop!.label, defaultLabel: primary.vintage } : undefined}
           change={since && selClassed?.change ? { fromLabel: since.label, toLabel: stop!.label, fromValues: xFrom.values[selected.level], classed: selClassed, toIsDefault: !!stop?.isDefault, boundaryNote: areaChangeNote(since, stop!, selected.level, selected.geoid) } : undefined}
-          onMapIt={pickDataset} onPlace={goToPlace} legendKey={legendKey} />
+          onMapIt={pickDataset} onPlace={goToPlace} legendKey={legendKey} finest={!childLevel(availableLevels, selected.level)} />
       )}
     </div>
   );

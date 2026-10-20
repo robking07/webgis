@@ -150,20 +150,22 @@ function DatasetList({ p, onPick, className }: { p: Picker; onPick: (id: string)
 
 /** The heading over the map: the category above the dataset name, both opening the dataset menu
  *  (`children`, the open drop-down on larger screens). */
-export function DatasetHeading({ primary, secondary, open, onToggle, compact, children }: {
+export function DatasetHeading({ primary, secondary, open, onToggle, compact, clearBack, children }: {
   primary: Dataset;
   secondary: Dataset | null;
   open: boolean;
   onToggle: () => void;
   /** The phone heading sits beside the menu button, on one line (no wordmark). */
   compact?: boolean;
+  /** Phones: the back button sits at the top right, so a long title stops short of it (issue #243). */
+  clearBack?: boolean;
   children?: ReactNode;
 }) {
   return (
     // The heading sits on a solid panel with full-contrast text, never halo-only text over the map
     // (Robbie, 2026-10-03, issue #34: "get serious about making this easier to see on mobile"; the
     // halo read just as badly over dark classes on laptops and monitors, so every size gets it).
-    <div data-dataset-heading="" className={`wg-panel relative pointer-events-auto w-fit rounded-xl px-2.5 py-1 ${compact ? "min-w-0 max-w-[calc(100vw-5.25rem)]" : "max-w-[calc(100vw-1.5rem)]"}`}>
+    <div data-dataset-heading="" className={`wg-panel relative pointer-events-auto w-fit rounded-xl px-2.5 py-1 ${compact ? `min-w-0 ${clearBack ? "max-w-[calc(100vw-8rem)]" : "max-w-[calc(100vw-5.25rem)]"}` :"max-w-[calc(100vw-1.5rem)]"}`}>
       <button type="button" onClick={onToggle} aria-expanded={open} aria-haspopup="dialog" aria-label={`${primary.category}: choose a category`}
         className="flex items-center gap-1 rounded text-[11px] font-semibold uppercase tracking-wider text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring">
         {primary.category} <ChevronDown className="size-3" aria-hidden />
