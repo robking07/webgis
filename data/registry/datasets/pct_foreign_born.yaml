@@ -1,5 +1,6 @@
 id: pct_foreign_born
 title: "Born outside the U.S."
+phrase: shares of residents born outside the U.S.
 description: "Share of residents who were not U.S. citizens at birth (immigrants), whatever their citizenship today."
 category: People
 subcategory: Immigration and language

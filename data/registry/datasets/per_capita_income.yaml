@@ -1,5 +1,6 @@
 id: per_capita_income
 title: "Income per person"
+phrase: incomes per person
 description: "Total income of all residents divided by the number of residents, in 2024 dollars."
 category: Economy
 subcategory: Income and poverty

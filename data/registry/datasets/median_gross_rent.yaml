@@ -1,5 +1,6 @@
 id: median_gross_rent
 title: "Median rent"
+phrase: median rents
 description: "Middle monthly rent paid by renter households, including utilities, in 2024 dollars."
 category: Housing
 subcategory: Costs
