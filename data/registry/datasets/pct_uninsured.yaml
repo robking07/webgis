@@ -1,5 +1,6 @@
 id: pct_uninsured
 title: "No health insurance"
+phrase: uninsured rates
 description: "Share of residents with no health insurance coverage of any kind."
 category: Health
 subcategory: Care and coverage

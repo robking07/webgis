@@ -45,6 +45,12 @@
    then the two values it compares, each with its period directly under it. */
 .wg-popup-lead-label { margin: 0; font-size: 0.75rem; color: var(--ui-text-muted); }
 .wg-popup-lead-value { margin: 0; max-width: 16rem; font-size: 1.5rem; line-height: 1.2; font-weight: 600; font-variant-numeric: tabular-nums; }
+/* Issue #236 prototype: every hover value carries its period right under it. */
+.wg-popup-lead-period, .wg-popup-row-period { margin: 0; font-size: 0.6875rem; font-weight: 400; color: var(--ui-text-muted); font-variant-numeric: tabular-nums; }
+.wg-popup-row-period { display: block; }
+.wg-popup-lead-none { font-size: 1rem; color: var(--ui-text-muted); }
+.wg-popup-lead + section { margin-top: 0.5rem; }
+.wg-popup-footnote { max-width: 16rem; }
 .wg-popup-lead-pair { display: flex; align-items: flex-start; gap: 0.625rem; margin-top: 0.375rem; }
 .wg-popup-lead-arrow { color: var(--ui-text-muted); line-height: 1.25rem; }
 .wg-popup-lead-cell { margin: 0; display: flex; flex-direction: column; }

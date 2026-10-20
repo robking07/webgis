@@ -456,7 +456,7 @@ export function Viewer({ search }: { search: string }) {
 
       {/* Hover popups wait while the map moves (issue #34). Inside a focused place they show beside its details. */}
       {hover && (!selected || !!focus) && !moving && primary && (
-        <PlaceHoverPopup hover={hover} primary={primary} secondary={secondary} xValues={x.values} yValues={y.values} blockField={blockField} periodLabel={stopId ? stop!.label : undefined}
+        <PlaceHoverPopup hover={hover} primary={primary} secondary={secondary} xValues={x.values} yValues={y.values} blockField={blockField} periodLabel={stopId ? stop!.label : primary.vintage} unreliable={!!hatch?.[hover.level]?.has(hover.geoid)}
           change={since && classed[hover.level]?.change ? { from: since, to: stop!, fromValues: xFrom.values[hover.level], classed: classed[hover.level]! } : undefined} />
       )}
       {featureHover && !featureSelected && !moving && featureSpec && <FeatureHoverPopup hit={featureHover} spec={featureSpec} primary={primary} />}

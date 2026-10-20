@@ -148,7 +148,10 @@ export function classifyChangeCached(from: Values, to: Values, unit: Unit, toMoe
  *  from the earlier period has no change (its boundaries changed), if that's the reason. */
 export function changeSummary(change: number | null | undefined, from: number | null | undefined, to: number | null | undefined,
   m: ChangeMeasure, unit: Unit, steady: boolean, boundaryNote?: string | null): { headline: string; values: [string, string] } {
-  const values: [string, string] = [formatValue(from, unit), formatValue(to, unit)];
+  // Points: one decimal on both values so they visibly add up to the change ("12.8% → 12.3%", −0.5 pts, #200).
+  // Only the hover shows these values; the detail panel keeps its own rounding.
+  const d = m === "points" ? { decimals: 1 } : undefined;
+  const values: [string, string] = [formatValue(from, unit, d), formatValue(to, unit, d)];
   if (change == null || !Number.isFinite(change)) {
     const why = from == null && to != null ? boundaryNote : from === 0 && m === "percent" ? "no earlier amount" : null;
     return { headline: why ? `No data: ${why}` : "No data", values };
