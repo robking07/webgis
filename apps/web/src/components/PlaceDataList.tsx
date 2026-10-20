@@ -55,7 +55,7 @@ export function PlaceDataList({ geoid, level, detail, mapHref, onMapIt, compact 
 
   return (
     <div className="flex flex-col gap-3">
-      <DatasetFilter q={q} setQ={setQ} cat={cat} setCat={setCat} placeholder="Filter this place's data…" />
+      <div className="flex flex-col gap-3 print:hidden"><DatasetFilter q={q} setQ={setQ} cat={cat} setCat={setCat} placeholder="Filter this place's data…" /></div>
       {grouped.length === 0 ? <StatusState status="empty" message="No datasets match." /> : grouped.map(([category, ds]) => (
         <section key={category} aria-label={category}>
           <h3 className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{category}</h3>
@@ -72,8 +72,9 @@ export function PlaceDataList({ geoid, level, detail, mapHref, onMapIt, compact 
                     <p className="text-xs text-muted-foreground">{ranks[d.id] ? `${ranks[d.id]} · ` : ""}{d.vintage}</p>
                     {r.value != null && <Benchmarks dataset={d} geoid={geoid} />}
                     {note && <p className="text-xs font-medium text-foreground" data-value-note="">{note}</p>}
+                    <p className="hidden text-xs text-muted-foreground print:block" data-print-source="">Source: {d.source.name}</p>
                   </div>
-                  <div className="shrink-0 text-right">
+                  <div className="shrink-0 text-right print:[&_a]:hidden print:[&_button]:hidden">
                     <p className="text-sm font-semibold tabular-nums">
                       {est.value}
                       {est.moe && <span className="ml-1 text-xs font-normal text-muted-foreground">±{est.moe}</span>}
