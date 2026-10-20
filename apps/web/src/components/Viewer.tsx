@@ -14,7 +14,7 @@ import { LANDING } from "@/lib/landing";
 import { readStoredTheme, useResolvedTheme } from "@/lib/theme";
 import { MapView, type FeatureHit, type HoverInfo, type MapApi } from "./map/MapView";
 import { DATASET_BY_ID, DATASETS, type Dataset } from "@/lib/registry";
-import { loadPlaceIndex, placeByGeoid, type PlaceHit } from "@/lib/search";
+import { loadMpoShape, loadPlaceIndex, mpoById, placeByGeoid, type PlaceHit } from "@/lib/search";
 import { useIsCompact, useIsNarrow, useIsPhone } from "./BottomSheet";
 import { DatasetMenu, DatasetSheet, type BrowseSlot } from "./DatasetMenus";
 import { parseUrlState, useUrlState, type UrlState } from "@/lib/url-state";
@@ -64,7 +64,7 @@ export function Viewer({ search }: { search: string }) {
   const [leaveFor, setLeaveFor] = useState<string | null>(null);
   const [searchOpen, setSearchOpen] = useState(false);
   // A shared drill-down link opens full screen, where the focused place's name shows (issue #203).
-  const [immersed, setImmersed] = useState(() => !!initial.in);
+  const [immersed, setImmersed] = useState(() => !!initial.in || !!initial.mpo);
   /** The filters panel (issue #34): a sidebar on desktop, a full-screen sheet on phones. `anchor`
    *  is the filter button it grows from and shrinks back into. */
   const [filters, setFilters] = useState<{ anchor: HTMLElement | null } | null>(null);
@@ -145,7 +145,7 @@ export function Viewer({ search }: { search: string }) {
   // Drill-down (issue #203): a click on a place with a finer level focuses it; each step is a Back step.
   const setFocus = useCallback((geoid: string | null) => update({ in: geoid }), [update]);
   const childOf = useCallback((l: GeoLevel) => childLevel(availableLevels, l), [availableLevels]);
-  const { root, canGoBack, goBack, onMapSelect, onFeatureSelect, goToPlace, focusName, leaveFocus } = useFraming({ mapApi, setSelected, setFeatureSelected, isFeature, primary, tableOpen, narrow, focus: state.in ?? null, setFocus, childOf });
+  const { root, canGoBack, goBack, onMapSelect, onFeatureSelect, goToPlace, focusName, leaveFocus, clearArea } = useFraming({ mapApi, setSelected, setFeatureSelected, isFeature, primary, tableOpen, narrow, focus: state.in ?? null, setFocus, childOf });
   useEffect(() => { focusedRef.current = !!focus; });
   // Focusing a place goes full screen, where the heading names it (adjusted during render).
   const [seenFocus, setSeenFocus] = useState(focus?.geoid);
@@ -171,7 +171,35 @@ export function Viewer({ search }: { search: string }) {
     setHidden(v.hidden);
     if (v.pinned !== pinnedLevel || v.stop !== stopId || v.since !== (since?.id ?? null)) update({ lv: v.pinned, t: v.stop, since: v.since });
   };
-  const onSearchPlace = (p: PlaceHit) => { setSearchOpen(false); goToPlace(p); };
+  /** A searched MPO (issue #276; the URL's `mpo`): outlined and named, never a geography level, so
+   *  nothing on the map selects it. Its shape loads only once it's picked or linked. */
+  const [mpoHit, setMpoHit] = useState<PlaceHit | null>(null);
+  const mpo = mpoHit?.mpo?.id === state.mpo ? mpoHit : null;
+  useEffect(() => {
+    const id = state.mpo;
+    mapApi.current?.showArea(null);
+    if (!id) return;
+    let live = true;
+    loadPlaceIndex().then((rows) => {
+      const hit = mpoById(rows, id);
+      if (!hit || !live) return;
+      setMpoHit(hit);
+      return loadMpoShape(id).then((shape) => { if (live) mapApi.current?.showArea(shape); });
+    }).catch(() => {}); // shortcut: an unknown or failed MPO just shows no outline; say so if visitors hit it.
+    return () => { live = false; };
+  }, [state.mpo]);
+  const onSearchPlace = (p: PlaceHit) => {
+    setSearchOpen(false);
+    if (!p.mpo) { if (state.mpo) update({ mpo: null }); goToPlace(p); return; }
+    const { id, bbox } = p.mpo;
+    setSelected(null); setFeatureSelected(null); mapApi.current?.select("county", null);
+    if (focus) leaveFocus();
+    setMpoHit(p);
+    update({ mpo: id });
+    setImmersed(true); setPeek(false);
+    // Wait a frame so panels that just closed are measured where they now are (as goToPlace does).
+    requestAnimationFrame(() => requestAnimationFrame(() => mapApi.current?.fitBbox(bbox, clearArea())));
+  };
   /** Phones: the dataset list and the details share the bottom sheet; opening one closes the other. */
   const openMenu = (slot: BrowseSlot) => {
     setBrowse(slot);
@@ -364,7 +392,7 @@ export function Viewer({ search }: { search: string }) {
           onShowNav={() => { setImmersed(false); setPeek(false); }}
           onOpenFilters={toggleFilters} onOpenLevel={openLevelFilters} levelPill={!isFeature}
           menuOpen={menuOpen && immersed} menu={immersed ? datasetMenu : null} onBrowse={changeDataset} onExit={exitCompare}
-          place={focus && focusName ? { name: focusName, onClear: leaveFocus } : null} backShown={canGoBack} />
+          place={mpo ? { name: `${mpo.name} · ${mpo.mpo!.states}`, onClear: () => update({ mpo: null }) } : focus && focusName ? { name: focusName, onClear: leaveFocus } : null} backShown={canGoBack} />
       )}
 
       {filters && primary && !phone && (

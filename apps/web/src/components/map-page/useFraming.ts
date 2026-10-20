@@ -160,5 +160,5 @@ export function useFraming({ mapApi, setSelected, setFeatureSelected, isFeature,
   }, [clearArea, isFeature, primary, tableOpen, narrow, mapApi, setSelected, childOf, leaveTo, setFocus, showTrail]);
 
   const leaveFocus = useCallback(() => leaveTo(null), [leaveTo]);
-  return { root, canGoBack: canGoBack || !!focus, goBack, onMapSelect, onFeatureSelect, goToPlace, focusName, leaveFocus };
+  return { root, canGoBack: canGoBack || !!focus, goBack, onMapSelect, onFeatureSelect, goToPlace, focusName, leaveFocus, clearArea };
 }
