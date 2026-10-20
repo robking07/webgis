@@ -10,13 +10,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { formatEstimate, formatValue, isGradable, rampColors, SECOND_OUTLINE_DASH, type GeoLevel } from "@webgis/design";
 import { StatusState } from "@webgis/design/components";
-import { bothHave, compareValues, rowVerdictText, shortName, verdictText, type Verdict } from "@/lib/compare";
+import { bothHave, compareValues, rowVerdictText, shortName, stripRange, stripX, verdictText, type Verdict } from "@/lib/compare";
 import { countsLabels, PARTS, parentsOf, partsOf, placeCounts, shareOf, type Counts } from "@/lib/counts";
 import { reliabilityNote } from "@/lib/reliability";
 import { fetchDetail, fetchGeography, type Detail, type Geography } from "@/lib/details";
 import { levelOfGeoid, PLACE_ZOOM, placeHref, rankText } from "@/lib/place";
 import { CATEGORIES, DATASET_BY_ID, DATASETS, type Dataset } from "@/lib/registry";
-import { loadValues } from "@/lib/values";
+import { loadValues, type Values } from "@/lib/values";
 import { serializeUrlState } from "@/lib/url-state";
 import { ShareButton } from "../ShareButton";
 import { useMedia } from "../BottomSheet";
@@ -34,7 +34,7 @@ export function ComparePlaces({ a, b, nameA, nameB, datasetId, parentNames }: Pr
   const ds = DATASET_BY_ID.get(datasetId)!;
   const [data, setData] = useState<{ a: Detail; b: Detail; back: string } | null>(null);
   const [err, setErr] = useState(false);
-  const [ranks, setRanks] = useState<{ a: string | null; b: string | null } | null>(null);
+  const [vals, setVals] = useState<Values | null>(null);
   // Side-by-side maps on laptops and monitors (lg, D-135), tabs below that.
   const wide = useMedia("(min-width: 1024px)");
   const mapped = ds.geographyLevels.includes(level);
@@ -54,11 +54,9 @@ export function ComparePlaces({ a, b, nameA, nameB, datasetId, parentNames }: Pr
       const back = `/map${serializeUrlState({ d: ds.id, b: null, theme: null, lv: null,
         at: geo ? { lon: geo.lon, lat: geo.lat, zoom: PLACE_ZOOM[level] } : { lon: -96.5, lat: 38.5, zoom: 3.6, fit: true } })}`;
       setData({ a: da, b: db, back });
-      // Ranks for the lead metric only (one values file, ~15 KB gzipped for counties).
-      // shortcut: no tract ranks; the national tract file is too big for a phone. Upgrade if a per-state tract export appears.
-      if (level !== "tract" && ds.geographyLevels.includes(level)) {
-        loadValues(ds.id, level).then((vals) => live && setRanks({ a: rankText(vals, da[ds.id]?.value, level), b: rankText(vals, db[ds.id]?.value, level) }), () => {});
-      }
+      // Ranks and the strip of every place, for the lead metric only (one values file, ~15 KB gzipped for counties).
+      // shortcut: no tract ranks or strip; the national tract file is too big for a phone. Upgrade if a per-state tract export appears.
+      if (level !== "tract" && ds.geographyLevels.includes(level)) loadValues(ds.id, level).then((v) => live && setVals(v), () => {});
     }, () => live && setErr(true));
     return () => { live = false; };
   }, [a, b, ds, level]);
@@ -112,7 +110,7 @@ export function ComparePlaces({ a, b, nameA, nameB, datasetId, parentNames }: Pr
         : !data || !groups ? <StatusState status="loading" message="Loading both places…" />
         : (
           <>
-            <Headline ds={ds} a={data.a[ds.id]} b={data.b[ds.id]} names={names} ranks={ranks} counts={counts} geoids={{ a, b }} parentNames={parentNames} />
+            <Headline ds={ds} a={data.a[ds.id]} b={data.b[ds.id]} names={names} vals={vals} level={level} counts={counts} geoids={{ a, b }} parentNames={parentNames} />
             {mapped && !wide && (
               <section aria-label="Maps of both places" className="mt-6" data-compare-map="">
                 <div role="tablist" aria-label="Map of which place" className="mb-2 flex gap-1.5">
@@ -215,11 +213,12 @@ function CountsBlock({ ds, c, parents, counts, parentNames }: { ds: Dataset; c: 
   );
 }
 
-function Headline({ ds, a, b, names, ranks, counts, geoids, parentNames }: {
-  ds: Dataset; a?: Detail[string]; b?: Detail[string]; names: { a: string; b: string }; ranks: { a: string | null; b: string | null } | null;
+function Headline({ ds, a, b, names, vals, level, counts, geoids, parentNames }: {
+  ds: Dataset; a?: Detail[string]; b?: Detail[string]; names: { a: string; b: string }; vals: Values | null; level: GeoLevel;
   counts: CountsBy; geoids: { a: string; b: string }; parentNames: Record<string, string>;
 }) {
   const ea = a ?? { value: null, moe: null }, eb = b ?? { value: null, moe: null };
+  const ranks = vals && { a: rankText(vals, ea.value, level), b: rankText(vals, eb.value, level) };
   const v = compareValues(ds.measure.kind, ea, eb);
   const survey = isGradable(ds.measure.kind);
   const note = v.kind === "about_same" ? "The gap is within the margins of error (90% confidence), so it may not be real."
@@ -247,8 +246,46 @@ function Headline({ ds, a, b, names, ranks, counts, geoids, parentNames }: {
           );
         })}
       </div>
+      {vals && ranks?.a && ranks.b && ea.value != null && eb.value != null && (
+        <Strip vals={vals} unit={ds.unit} at={{ a: ea.value, b: eb.value }} names={names}
+          label={`${LEVEL_WORD[level]}, lowest to highest. ${names.a}: ${ranks.a}. ${names.b}: ${ranks.b}.`} />
+      )}
       {note && <p className="mt-3 text-xs text-muted-foreground">{note}</p>}
     </section>
+  );
+}
+
+/** Every place's value as a faint tick, the two places marked and named (A solid, B dashed, as on
+ *  their maps), so a gap reads against the usual spread (issue #231). */
+function Strip({ vals, unit, at, names, label }: { vals: Values; unit: Dataset["unit"]; at: { a: number; b: number }; names: { a: string; b: string }; label: string }) {
+  const all = useMemo(() => Object.values(vals), [vals]);
+  const r = useMemo(() => stripRange(all), [all]);
+  if (!r) return null;
+  return (
+    <figure className="mt-4" data-compare-strip="">
+      <div role="img" aria-label={`All ${all.length.toLocaleString()} ${label}`} className="relative h-14">
+        <svg viewBox="0 0 1000 10" preserveAspectRatio="none" aria-hidden className="absolute inset-x-0 top-4 h-6 w-full text-muted-foreground">
+          {/* One line per place (not one path) so overlapping ticks darken; fainter with more places, so 3,000 counties shade the pack instead of filling it. */}
+          <g stroke="currentColor" strokeOpacity={Math.min(0.35, 150 / all.length)}>
+            {all.map((v, i) => { const x = (stripX(v, r) * 1000).toFixed(1); return <line key={i} x1={x} x2={x} y1={0} y2={10} vectorEffect="non-scaling-stroke" />; })}
+          </g>
+        </svg>
+        {(["a", "b"] as const).map((k) => {
+          const x = stripX(at[k], r) * 100;
+          return (
+            <div key={k} aria-hidden style={{ left: `${x}%` }} data-compare-strip-mark={k}
+              className={`absolute flex ${k === "a" ? "top-0 flex-col" : "bottom-0 flex-col-reverse"} ${x > 50 ? "-translate-x-full items-end" : "items-start"}`}>
+              <span className="max-w-40 truncate text-xs font-medium leading-4">{names[k]}</span>
+              <span className={`h-6 border-l-2 border-foreground ${k === "b" ? "border-dashed" : ""}`} />
+            </div>
+          );
+        })}
+      </div>
+      <figcaption aria-hidden className="mt-0.5 flex justify-between gap-2 text-xs tabular-nums text-muted-foreground">
+        <span>{r.clippedLo ? "≤ " : ""}{formatValue(r.lo, unit)}</span>
+        <span>{r.clippedHi ? "≥ " : ""}{formatValue(r.hi, unit)}</span>
+      </figcaption>
+    </figure>
   );
 }
 
