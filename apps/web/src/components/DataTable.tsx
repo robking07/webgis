@@ -2,7 +2,7 @@
 // Text alternative to the map: every geography at the current level with its value(s),
 // sortable, searchable, and clickable (a row flies the map there and opens its details).
 // Rows are windowed (only the visible ones render), so 3,000+ counties scroll smoothly.
-// Tract level is too large and has no name lookup, so the table offers state and county.
+// Tracts and block groups list a focused area only (`within`), named through their county.
 import { memo, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { X } from "lucide-react";
 import { formatValue, type GeoLevel } from "@webgis/design";
@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import type { Dataset } from "@/lib/registry";
 import type { Values } from "@/lib/values";
 import { staticUrl } from "@/lib/static-files";
+import { placeLabel } from "@/lib/csv";
 import { useIsNarrow } from "./BottomSheet";
 
 /** geoid → [name, lon, lat] for states and counties (exported by ingest). */
@@ -23,6 +24,8 @@ const OVERSCAN = 8;
 
 interface Props {
   level: GeoLevel;
+  /** Only rows whose GEOID starts with this (the focused area). */
+  within?: string | null;
   x: Dataset; xv?: Values;
   y?: Dataset | null; yv?: Values;
   /** Timeline stop shown (D-36), e.g. "2015–2019"; omitted = the default period. */
@@ -37,7 +40,7 @@ interface Props {
 }
 
 /** Memoized: the map page re-renders on every hover; the table must not. */
-export const DataTable = memo(function DataTable({ top = 12, level, x, xv, y, yv, period, selected, onClose, onPick }: Props) {
+export const DataTable = memo(function DataTable({ top = 12, level, within, x, xv, y, yv, period, selected, onClose, onPick }: Props) {
   const [places, setPlaces] = useState<Places | null>(null);
   const [q, setQ] = useState("");
   const [sort, setSort] = useState<{ col: "name" | "x" | "y"; desc: boolean }>({ col: "x", desc: true });
@@ -84,11 +87,11 @@ export const DataTable = memo(function DataTable({ top = 12, level, x, xv, y, yv
   // Sort once per input change; filtering is a cheap pass over the sorted list.
   const sorted = useMemo(() => {
     if (!xv || !places) return [];
-    const r = Object.keys(xv).map((g) => ({ g, name: places[g]?.[0] ?? g, x: xv[g], y: yv?.[g] }));
+    const r = Object.keys(xv).filter((g) => !within || g.startsWith(within)).map((g) => ({ g, name: places[g]?.[0] ?? placeLabel(g, { [g.slice(0, 5)]: places[g.slice(0, 5)]?.[0] ?? "" }), x: xv[g], y: yv?.[g] }));
     const dir = sort.desc ? -1 : 1;
     r.sort((a, b) => sort.col === "name" ? dir * a.name.localeCompare(b.name) : dir * ((a[sort.col] ?? -Infinity) - (b[sort.col] ?? -Infinity)));
     return r;
-  }, [xv, yv, places, sort]);
+  }, [xv, yv, places, sort, within]);
   const rows = useMemo(() => {
     const term = q.trim().toLowerCase();
     return term ? sorted.filter((r) => r.name.toLowerCase().includes(term)) : sorted;
@@ -123,16 +126,14 @@ export const DataTable = memo(function DataTable({ top = 12, level, x, xv, y, yv
       <header className="flex items-start justify-between gap-2">
         <div>
           <h2 className="text-sm font-semibold">{x.title}{y ? ` × ${y.title}` : ""}</h2>
-          <p className="text-xs text-muted-foreground">By {level}{period ? ` · ${period}` : ""} · {rows.length.toLocaleString()} {rows.length === 1 ? "row" : "rows"} · select a place to go there</p>
+          <p className="text-xs text-muted-foreground">By {level.replace("_", " ")}{period ? ` · ${period}` : ""} · {rows.length.toLocaleString()} {rows.length === 1 ? "row" : "rows"} · select a place to go there</p>
         </div>
         <button ref={closeRef} type="button" onClick={onClose} aria-label="Close table" className="rounded p-1 text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring">
           <X className="size-4" />
         </button>
       </header>
       </div>
-      {level === "tract" ? (
-        <StatusState status="empty" message="The table covers states and counties. Zoom out to county level to use it." />
-      ) : !xv || !places ? <StatusState status="loading" /> : (
+      {!xv || !places ? <StatusState status="loading" /> : (
         <>
           <label className="sr-only" htmlFor="table-filter">Filter by name</label>
           <Input id="table-filter" type="search" placeholder="Filter by name…" value={q} onChange={(e) => setQ(e.target.value)} />
