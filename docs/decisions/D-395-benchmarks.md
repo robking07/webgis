@@ -20,10 +20,9 @@ against every other county.
 3. **U.S. value:** `values/<id>/us.json` (D-257). ACS uses the Census Bureau's published U.S. row;
    the 2020 Census, LODES and FARS files are summed counts (numerator over denominator), never an
    average of state rates. Maps with no U.S. file (NRI, CEJST, bridges, energy burden, food access,
-   VMT, CDC PLACES, SVI, climate…) show the state only, or nothing, and the browser only asks for
-   a U.S. file for the kinds whose ingest writes one (`acs5`, `census2020`, `lodes`, `fars`), so
-   there are no 404s. No new ingest code: the writers exist; only some files were never uploaded
-   (below).
+   VMT, CDC PLACES, SVI, climate…) show the state only, or nothing. The browser asks for a U.S.
+   file only for kinds whose file is on R2 (`US_KINDS` in `lib/benchmarks.ts`), so there are no
+   404s. No new ingest code: the writers exist; only some files were never uploaded (below).
 4. **What gets none (feature-fit rule):** units `count`, `agreements` (totals aren't like-for-like
    with a state total), `categories` and `percentile` (SVI ranks within the nation, so a state
    figure means nothing). Point and feature maps have no place value, so no row. Puerto Rico gets no
@@ -33,9 +32,9 @@ against every other county.
 
 **Upload needed (lead).** On 2026-10-20 R2 had `us.json` for every ACS map but none for
 `census2020_pop_density`, `census2020_housing_density`, `census2020_pct_vacant`, `job_density`
-and `traffic_fatalities`. **Upload them before merging:** the CI click-through fails on the
-browser's 404 console errors for these files (the S2 rule: data first, then merge). Once uploaded,
-those rows show the U.S. value too:
+and `traffic_fatalities`, so `US_KINDS` is `acs5` only for now and those rows show the state value
+only (lead, 2026-10-20: merge without waiting on the upload). Once #234 step 1 publishes them with
+the commands below, add `census2020`, `lodes` and `fars` to `US_KINDS`:
 
 ```
 npm run ingest -- counts census2020_pop_density census2020_housing_density census2020_pct_vacant job_density traffic_fatalities

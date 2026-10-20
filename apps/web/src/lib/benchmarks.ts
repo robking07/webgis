@@ -8,8 +8,9 @@ import type { Dataset } from "./registry";
 /** Totals, categories and percentiles have no like-for-like state or U.S. figure. */
 const NO_BENCHMARK = new Set<Unit>(["count", "agreements", "categories", "percentile"]);
 
-/** The ingests that write a U.S. file (D-257; 287(g) is a total, above). Others would only 404. */
-const US_KINDS = new Set(["acs5", "census2020", "lodes", "fars"]);
+/** The kinds whose U.S. file is on R2 (D-257); others would only 404. */
+// shortcut: ACS only; census2020, lodes and fars join once their us.json files are published (#234 step 1).
+export const US_KINDS = new Set(["acs5"]);
 
 export type Benchmark = { label: string; value: number };
 
