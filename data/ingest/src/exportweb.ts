@@ -6,15 +6,13 @@
 //   apps/web/src/generated/names.json         — state and county names (bundled for share cards, Specials)
 //   data/tiles/values/<id>/<level>.json       — { geoid: value } for each dataset/level  ┐ published to R2 by
 //   data/tiles/geo/{names,places,search}.json — names, map points, place search index   ┘ `ingest publish-data` (S2)
-import { existsSync, mkdirSync, readdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { loadGlossary, loadRegistry, loadRelations } from "@webgis/registry/load";
 import { GeoLevel } from "@webgis/registry";
 import { relationsExport } from "@webgis/registry/relations";
 import { timelineStops } from "@webgis/registry/timeline";
-import { db, log, NAMES_JSON, ROOT, STATES, TILES } from "./util.ts";
-import { readFileSync } from "node:fs";
-import { cached } from "./util.ts";
+import { cached, db, log, NAMES_JSON, ROOT, STATES, TILES } from "./util.ts";
 import { readGazetteer } from "./geographies.ts";
 
 const round = (v: number) => Number(v.toPrecision(4));
