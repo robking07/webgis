@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { bothHave, canCompare, compareGeoid, compareHref, compareValues, gapIsClear, gapText, parseCompare, rowVerdictText, searchAtLevel, shortName, verdictText } from "./compare";
+import { bothHave, canCompare, compareGeoid, compareHref, compareValues, gapIsClear, gapText, parseCompare, rowVerdictText, searchAtLevel, shortName, stripRange, stripX, verdictText } from "./compare";
 import type { PlaceRow } from "./search";
 
 describe("compare route", () => {
@@ -132,5 +132,28 @@ describe("only what works for compare (Robbie, 2026-10-09)", () => {
     expect(bothHave({ value: 1, moe: null }, { value: 0, moe: null })).toBe(true);
     expect(bothHave({ value: 1, moe: null }, { value: null, moe: null })).toBe(false);
     expect(bothHave(undefined, { value: 2, moe: null })).toBe(false);
+  });
+});
+
+describe("strip of every place", () => {
+  it("spans the 1st to 99th percentile, so one outlier doesn't squash a tight pack", () => {
+    // 200 places packed between 10 and 12, plus one at 90.
+    const all = [...Array.from({ length: 200 }, (_, i) => 10 + i / 100), 90];
+    const r = stripRange(all)!;
+    expect(r.hi).toBeLessThan(12);
+    expect(r.clippedHi).toBe(true);
+    // A 1-point gap inside the pack spans about half the strip.
+    expect(stripX(11.5, r) - stripX(10.5, r)).toBeGreaterThan(0.4);
+    expect(stripX(90, r)).toBe(1);
+    expect(stripX(-5, r)).toBe(0);
+  });
+  it("keeps the full range for 52 states", () => {
+    const r = stripRange(Array.from({ length: 52 }, (_, i) => i))!;
+    expect([r.lo, r.hi, r.clippedLo, r.clippedHi]).toEqual([0, 51, false, false]);
+  });
+  it("has no range for one place or all-equal values", () => {
+    expect(stripRange([5])).toBeNull();
+    expect(stripRange([5, 5, 5])).toBeNull();
+    expect(stripRange([NaN, 1, 2])).toMatchObject({ lo: 1, hi: 2 });
   });
 });
