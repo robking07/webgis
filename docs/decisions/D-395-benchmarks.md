@@ -20,8 +20,10 @@ against every other county.
 3. **U.S. value:** `values/<id>/us.json` (D-257). ACS uses the Census Bureau's published U.S. row;
    the 2020 Census, LODES and FARS files are summed counts (numerator over denominator), never an
    average of state rates. Maps with no U.S. file (NRI, CEJST, bridges, energy burden, food access,
-   VMT, CDC PLACES, SVI, climate…) show the state only, or nothing. No new ingest code: the
-   writers exist; only some files were never uploaded (below).
+   VMT, CDC PLACES, SVI, climate…) show the state only, or nothing, and the browser only asks for
+   a U.S. file for the kinds whose ingest writes one (`acs5`, `census2020`, `lodes`, `fars`), so
+   there are no 404s. No new ingest code: the writers exist; only some files were never uploaded
+   (below).
 4. **What gets none (feature-fit rule):** units `count`, `agreements` (totals aren't like-for-like
    with a state total), `categories` and `percentile` (SVI ranks within the nation, so a state
    figure means nothing). Point and feature maps have no place value, so no row. Puerto Rico gets no
@@ -31,14 +33,16 @@ against every other county.
 
 **Upload needed (lead).** On 2026-10-20 R2 had `us.json` for every ACS map but none for
 `census2020_pop_density`, `census2020_housing_density`, `census2020_pct_vacant`, `job_density`
-and `traffic_fatalities`. Until they are uploaded those rows show the state value only:
+and `traffic_fatalities`. **Upload them before merging:** the CI click-through fails on the
+browser's 404 console errors for these files (the S2 rule: data first, then merge). Once uploaded,
+those rows show the U.S. value too:
 
 ```
 npm run ingest -- counts census2020_pop_density census2020_housing_density census2020_pct_vacant job_density traffic_fatalities
 npm run ingest -- publish-counts census2020_pop_density census2020_housing_density census2020_pct_vacant job_density traffic_fatalities
 ```
 
-**Known limit.** One small `us.json` fetch per map on a place page (about 80, cached). A single
+**Known limit.** One small `us.json` fetch per map on a place page (about 60, cached). A single
 bundled U.S. file would cut that to one if it shows up as slow (`shortcut:` in `lib/benchmarks.ts`).
 
 **Not done here.** Compare places "vs state / vs U.S." (follow-up, reusing `lib/benchmarks.ts`);
