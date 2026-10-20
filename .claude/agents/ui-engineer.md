@@ -1,7 +1,7 @@
 ---
 name: ui-engineer
 description: Worker for Mapwich (repo webgis) UI tasks: map page, menus, panels, compare, place pages, layout, front-end performance. Sonnet for S tasks; the lead's brief switches to opus for M and L.
-tools: Read, Write, Edit, Grep, Glob, Bash, WebFetch
+tools: Read, Write, Edit, Grep, Glob, Bash, WebFetch, Skill
 model: sonnet
 effort: medium
 ---
