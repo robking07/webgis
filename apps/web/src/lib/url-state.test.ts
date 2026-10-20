@@ -21,3 +21,13 @@ describe("in (drill-down focus)", () => {
     expect(serializeUrlState(parseUrlState("?d=a&in=48113"))).toContain("in=48113");
   });
 });
+
+describe("mpo (a searched MPO, issue #276)", () => {
+  it("round-trips an MPO id, adds a Back step, and rejects anything else", () => {
+    expect(parseUrlState("?mpo=27197300").mpo).toBe("27197300");
+    expect(parseUrlState("?mpo=../x").mpo).toBeNull();
+    expect(serializeUrlState(parseUrlState("?d=a&mpo=27197300"))).toContain("mpo=27197300");
+    const base = parseUrlState("?d=a");
+    expect(historyKey({ ...base, mpo: "27197300" })).not.toBe(historyKey(base));
+  });
+});

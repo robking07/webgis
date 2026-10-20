@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { searchPlaces, type PlaceRow } from "./search";
+import { mpoById, placeByGeoid, searchPlaces, type PlaceRow } from "./search";
 
 // Rows from the live geo/search.json (issue #258): every county starting "Du" or "Cook", and the places tested.
 const ROWS: PlaceRow[] = [
@@ -53,5 +53,18 @@ describe("searchPlaces", () => {
   });
   it("lets counties fill the list when few places match", () => {
     expect(searchPlaces(ROWS.filter((r) => r[1] === "County"), "Du")).toHaveLength(6);
+  });
+});
+
+describe("MPOs in place search (issue #276)", () => {
+  const mpo: PlaceRow = ["Metropolitan Council", "MPO", "27197300", -93.3, 44.97, 3040, "MN", [-94.01, 44.47, -92.73, 45.41]];
+  const rows: PlaceRow[] = [...ROWS, mpo];
+  it("finds one by name or by its kind, with its id, states and bbox", () => {
+    expect(searchPlaces(rows, "metropolitan council")[0]).toMatchObject({ kind: "MPO", geoid: null, level: null, mpo: { id: "27197300", states: "MN", bbox: mpo[7] } });
+    expect(searchPlaces(rows, "MPO").map((h) => h.name)).toEqual(["Metropolitan Council"]);
+  });
+  it("never answers a geoid lookup", () => {
+    expect(placeByGeoid(rows, "27197300")).toBeNull();
+    expect(mpoById(rows, "27197300")?.name).toBe("Metropolitan Council");
   });
 });

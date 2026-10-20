@@ -4,7 +4,7 @@
 import { useEffect, useLayoutEffect, useRef } from "react";
 import { AttributionControl, LngLatBounds, Map as MlMap, ScaleControl, addProtocol, setWorkerUrl, type LayerSpecification, type MapGeoJSONFeature } from "maplibre-gl";
 import { Protocol } from "pmtiles";
-import { basemapStyle, choroplethFill, hatchImage, hatchLayerId, HATCH_IMAGE, HATCH_LEVELS, membershipFilter, NO_FEATURES, choroplethFillsByState, DATA_BEFORE_ID, STATIC_ONLY_LEVELS, TILE_VALUE_LEVELS, THEMES, featureLineLayers, featurePolygonLayers, fillLayerIds, focusDimLayer, FOCUS_DIM_LAYER, focusFilters, focusLandLayer, FOCUS_LAND_BEFORE_ID, GEO_LEVELS, MOTION, PER_STATE_LEVELS, thematicLayers, type GeoLevel, type NoDataFill, type PackedClasses, type ThemeName } from "@webgis/design";
+import { areaHighlightLayers, AREA_SOURCE, basemapStyle, choroplethFill, hatchImage, hatchLayerId, HATCH_IMAGE, HATCH_LEVELS, membershipFilter, NO_FEATURES, choroplethFillsByState, DATA_BEFORE_ID, STATIC_ONLY_LEVELS, TILE_VALUE_LEVELS, THEMES, featureLineLayers, featurePolygonLayers, fillLayerIds, focusDimLayer, FOCUS_DIM_LAYER, focusFilters, focusLandLayer, FOCUS_LAND_BEFORE_ID, GEO_LEVELS, MOTION, PER_STATE_LEVELS, thematicLayers, type GeoLevel, type NoDataFill, type PackedClasses, type ThemeName } from "@webgis/design";
 import { comparePickOpen } from "@/lib/compare";
 import type { FeatureLayerSpec } from "@/lib/layers";
 import type { ViewState } from "@/lib/url-state";
@@ -123,6 +123,8 @@ export interface MapApi {
   setCamera: (c: Camera) => void;
   /** A gesture or camera animation is in progress (a finger held down mid-drag counts). */
   isMoving: () => boolean;
+  /** Outline an area that has no tiles (a searched MPO, issue #276), or clear with null. Never clickable. */
+  showArea: (shape: Geometry | null) => void;
 }
 
 const LEVELS = Object.keys(GEO_LEVELS) as GeoLevel[];
@@ -154,6 +156,7 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
   const hovered = useRef<{ level: GeoLevel; id: string } | null>(null);
   const selected = useRef<Flag>(compare ? { level: compare.level, id: compare.a } : null);
   const second = useRef<Flag>(compare ? { level: compare.level, id: compare.b } : null);
+  const area = useRef<Geometry | null>(null);
   const scale = useRef<ScaleControl | null>(null);
 
   // Create the map once.
@@ -200,6 +203,7 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
       getCamera: () => ({ center: m.getCenter().toArray() as [number, number], zoom: m.getZoom() }),
       setCamera: (c) => m.flyTo({ ...c, padding: 0, duration: fly, essential: true }),
       isMoving: () => m.isMoving(),
+      showArea: (shape) => { area.current = shape; if (ready.current) applyArea(m, shape, latest.current.theme); },
     });
     // User gestures only (programmatic flyTo etc. must not immerse): wheel/trackpad scroll,
     // drag-pan (mouse or touch), pinch and double-click zoom.
@@ -230,6 +234,7 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
       appliedHatch.current = {};
       syncHatch(m, latest.current.hatch, appliedHatch.current, latest.current.levelZooms);
       applyFocus(m, latest.current.focus, latest.current.theme);
+      applyArea(m, area.current, latest.current.theme);
     });
     // The opening bbox is an estimate from the place's center and area; frame it exactly once its tiles are in.
     if (compare) m.once("idle", () => {
@@ -515,6 +520,16 @@ function addThematic(m: MlMap, theme: ThemeName, boundaries: string | null) {
   for (const level of LEVELS) for (const id of [`${level}-highlight-halo`, `${level}-highlight`, `${level}-highlight-second`]) {
     if (m.getLayer(id)) m.moveLayer(id, m.getLayer(DATA_BEFORE_ID) ? DATA_BEFORE_ID : undefined);
   }
+}
+
+/** The searched area's outline: a GeoJSON source with the selection outline, above every fill. */
+function applyArea(m: MlMap, shape: Geometry | null, theme: ThemeName) {
+  const layers = areaHighlightLayers(theme);
+  for (const l of layers) if (m.getLayer(l.id)) m.removeLayer(l.id);
+  if (m.getSource(AREA_SOURCE)) m.removeSource(AREA_SOURCE);
+  if (!shape) return;
+  m.addSource(AREA_SOURCE, { type: "geojson", data: shape });
+  for (const l of layers) m.addLayer(l, m.getLayer(DATA_BEFORE_ID) ? DATA_BEFORE_ID : undefined);
 }
 
 /** Point the county and tract sources at another boundary vintage. A source's URL can't be
