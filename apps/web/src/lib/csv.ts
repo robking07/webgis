@@ -30,17 +30,25 @@ export function placeLabel(geoid: string, names: Record<string, string>): string
 
 const tick = () => new Promise<void>((r) => setTimeout(r, 0));
 
-/** Builds the CSV in slices so a ~85k-row level never freezes the page. */
-export async function buildCsv(d: Dataset, level: GeoLevel, load = loadValues, names?: Record<string, string>): Promise<{ blob: Blob; rows: number }> {
+/** A level's whole CSV from the published value files (the data page). */
+export async function buildCsv(d: Dataset, level: GeoLevel, load = loadValues, names?: Record<string, string>, loadMoe = loadMoes): Promise<{ blob: Blob; rows: number }> {
   const [values, nm, moes] = await Promise.all([
     load(d.id, level),
     names ?? fetch(staticUrl("geo/names.json")).then((r) => r.json() as Promise<Record<string, string>>),
-    // Margins of error exist only for survey (ACS) datasets, and only as a separate file at block-group level.
-    d.measure.kind === "acs5" && level === "block_group" ? loadMoes(d.id, level).catch((): Values => ({})) : Promise.resolve({} as Values),
+    marginsFor(d, level, loadMoe),
   ]);
+  return csvFile(d, Object.keys(values).sort(), values, moes, nm);
+}
+
+/** Margins of error (survey datasets only; values/<id>/<level>.moe.json, D-257). Empty when none are published, so no column is written. */
+export const marginsFor = (d: Dataset, level: GeoLevel, loadMoe = loadMoes): Promise<Values> =>
+  d.measure.kind === "acs5" ? loadMoe(d.id, level).catch((): Values => ({})) : Promise.resolve({});
+
+/** Writes `ids` (in that order) as CSV, in slices so a ~85k-row level never freezes the page.
+ *  The margin column appears only when `moes` has any entries. */
+export async function csvFile(d: Dataset, ids: string[], values: Values, moes: Values, nm: Record<string, string>): Promise<{ blob: Blob; rows: number }> {
   const hasMoe = Object.keys(moes).length > 0;
-  const ids = Object.keys(values).sort();
-  const parts: string[] = ["﻿" + ["geoid", "name", "value", ...(hasMoe ? ["moe"] : []), "unit"].join(",") + "\r\n"];
+  const parts: string[] = ["﻿" + ["geoid", "name", "value", ...(hasMoe ? ["margin of error (±)"] : []), "unit"].join(",") + "\r\n"];
   const unit = csvField(d.unit);
   for (let i = 0; i < ids.length; i += 10000) {
     parts.push(ids.slice(i, i + 10000).map((g) =>
