@@ -139,6 +139,9 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
   const [rows, setRows] = useState<Detail | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const phone = useIsPhone();
+  /** "Compare with…" is waiting for a tap on the map: the phone drawer shrinks to the name and that prompt (issue #242). */
+  const [picking, setPicking] = useState(false);
+  const shrunk = phone && picking;
   // Block groups and blocks aren't in the database (D-124): the mapped values come from the static
   // files (block groups, with margins of error from side files) or the tiles (blocks); there's no
   // all-datasets list or place profile below tracts.
@@ -172,7 +175,7 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
   const links = dedupe(featured.flatMap((d) => learnMoreLinks(d, { level: info.level, geoid: info.geoid, lon: info.lon, lat: info.lat })));
   const summary = (
     <>
-      <InsideLinks inside={inside} name={info.name} onPlace={onPlace} />
+      {!shrunk && <InsideLinks inside={inside} name={info.name} onPlace={onPlace} />}
       <div className="mb-2 flex items-start justify-between gap-2">
         <div>
           <h2 className="text-sm font-semibold leading-snug">{info.name}</h2>
@@ -182,7 +185,7 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
           <X className="size-4" />
         </button>
       </div>
-      {err ? <StatusState status="error" message="Details are unavailable right now." />
+      {shrunk ? null : err ? <StatusState status="error" message="Details are unavailable right now." />
         : !rows ? <StatusState status="loading" />
         : (
           <div className="space-y-2">
@@ -221,15 +224,15 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
           </div>
         )}
       <CompareWith geoid={info.geoid} level={info.level} name={info.name} dataset={primary} otherPeriod={!!period}
-        aValue={!rows ? null : staticOnly ? undefined : rows[primary.id]?.value ?? null} />
-      <LearnMore links={links} />
-      {phone && rows && !staticOnly && <p className="mt-2 text-center text-xs text-muted-foreground group-data-[snap=full]:hidden">Swipe up for all {Object.keys(rows).length} datasets here</p>}
+        aValue={!rows ? null : staticOnly ? undefined : rows[primary.id]?.value ?? null} onPicking={setPicking} />
+      {!shrunk && <LearnMore links={links} />}
+      {phone && !shrunk && rows && !staticOnly && <p className="mt-2 text-center text-xs text-muted-foreground group-data-[snap=full]:hidden">Swipe up for all {Object.keys(rows).length} datasets here</p>}
     </>
   );
 
   if (phone) {
     return (
-      <BottomSheet label={`Details for ${info.name}`} summary={summary} onClose={onClose}>
+      <BottomSheet label={`Details for ${info.name}`} summary={summary} onClose={onClose} collapsed={picking}>
         {rows && !staticOnly && (
           <>
             <PlaceDataList level={info.level} detail={rows} onMapIt={onMapIt} compact />
