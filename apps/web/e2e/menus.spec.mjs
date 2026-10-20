@@ -1071,7 +1071,7 @@ test("laptop map fixes (#187): canvas label follows the map, tiles banner only f
   // The default year's file fails while an earlier year shows: a message, not an endless spinner.
   await page.route(/\/values\/pct_poverty\/(state|county)\.json/, (r) => r.fulfill({ status: 404, body: "" }));
   await page.goto(`${BASE}/map?d=pct_poverty&t=2019&theme=light`);
-  await page.getByText(/No (state|county) data for pct_poverty/).first().waitFor({ timeout: 15000 });
+  await page.getByText("This map didn't load. Try again in a minute.").first().waitFor({ timeout: 15000 });
   page.errors = page.errors.filter((e) => !/404/.test(e));
 });
 
