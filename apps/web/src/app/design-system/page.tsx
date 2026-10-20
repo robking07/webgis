@@ -22,7 +22,7 @@ export default function DesignSystemPage() {
       <SiteHeader />
       <main className="mx-auto max-w-3xl px-4 py-6 md:px-8 md:py-8">
         <div
-          className="wg-prose [&_table]:block [&_table]:overflow-x-auto [&_table]:text-sm [&_th]:text-left [&_th]:pr-4 [&_td]:pr-4 [&_td]:py-1 [&_img]:max-w-full [&_code]:text-[0.9em] [&_code]:break-words [&_ul]:list-disc [&_ul]:pl-6 [&_blockquote]:text-muted-foreground [&_h1]:text-3xl [&_h1]:font-bold"
+          className="wg-prose [&_img]:max-w-full [&_ul]:list-disc [&_ul]:pl-6 [&_h1]:text-3xl [&_h1]:font-bold"
           dangerouslySetInnerHTML={{ __html: html }}
         />
       </main>
