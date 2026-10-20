@@ -200,7 +200,7 @@ export default function compareTests({ test, expect, wait, immerse, tapLonLat, l
     const back = (page) => page.getByRole("link", { name: "← Back to the map" }).getAttribute("href", { timeout: 20000 });
     const { page } = await o("laptop", "/place/27053?d=pct_poverty", { ready: false });
     expect(/[?&]d=pct_poverty(&|$)/.test(await back(page)), "dataset not carried");
-    await page.goto(page.url().replace("?d=pct_poverty", ""));
-    expect(/[?&]d=median_household_income(&|$)/.test(await back(page)), "landing dataset missing");
+    const { page: cold } = await o("laptop", "/place/27053", { ready: false });
+    expect(/[?&]d=median_household_income(&|$)/.test(await back(cold)), "landing dataset missing");
   });
 }
