@@ -1,7 +1,7 @@
 # "Why this matters" for the traffic deaths map (issue #115). DRAFT by Claude from the cited
-# sources; not shown on mapwich.org until Robbie sets approved: true. Robbie's editable copy:
+# sources; approved by Robbie 2026-10-20 (#272). Robbie's editable copy:
 # drafts/site-copy/why-this-matters-traffic_fatalities.md. Format: docs/decisions/D-279-why-this-matters.md.
-approved: false
+approved: true
 framing: preventable-harm
 reviewed: "2026-10-12"
 review_by: "2028-04-12"
