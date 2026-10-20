@@ -97,7 +97,7 @@ export function DataBox({ special, showOrigin }: { special: Special; showOrigin?
       })}
       {showOrigin && origin && (
         <p className="mt-1.5 border-t pt-2.5 text-[13px] leading-normal text-muted-foreground">
-          Started from the Odd Pairing “<Link href={`/specials/${origin.id}`} className="hover:text-foreground hover:underline">{origin.headline}</Link>.”
+          Started from the Combination “<Link href={`/specials/${origin.id}`} className="hover:text-foreground hover:underline">{origin.headline}</Link>.”
         </p>
       )}
     </div>
@@ -121,7 +121,7 @@ export function LineUpBox({ insight }: { insight: Insight }) {
         Correlation is not causation: both may reflect something else, such as how urban a county is.
       </p>
       <Link href={`/specials/${insight.id}`} className="inline-flex min-h-11 items-center text-sm font-semibold text-primary hover:underline">
-        The Odd Pairing this started from →
+        The Combination this started from →
       </Link>
     </div>
   );

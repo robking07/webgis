@@ -20,6 +20,8 @@ const nextConfig: NextConfig = {
       ...oldMapLinks,
       { source: "/insights", destination: "/specials", permanent: true },
       { source: "/insights/:id", destination: "/specials/:id", permanent: true },
+      // "Odd Pairings" became "Combinations" (#280); Next carries the query string (?topic=...) over.
+      { source: "/specials/pairings", destination: "/specials/combinations", permanent: true },
     ];
   },
 };
