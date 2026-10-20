@@ -13,6 +13,8 @@ import { GeoLevel } from "@webgis/registry";
 import { relationsExport } from "@webgis/registry/relations";
 import { timelineStops } from "@webgis/registry/timeline";
 import { db, log, NAMES_JSON, ROOT, STATES, TILES } from "./util.ts";
+import { readFileSync } from "node:fs";
+import { cached } from "./util.ts";
 import { readGazetteer } from "./geographies.ts";
 
 const round = (v: number) => Number(v.toPrecision(4));
@@ -86,6 +88,15 @@ export async function exportSearch() {
   const dir = join(TILES, "geo");
   mkdirSync(dir, { recursive: true });
   writeFileSync(join(dir, "search.json"), JSON.stringify(out));
+  // ZIP lookup: each ZCTA maps to the county holding most of its land (Census 2020 ZCTA-county relationship file).
+  const rel = readFileSync(await cached("https://www2.census.gov/geo/docs/maps-data/data/rel2020/zcta520/tab20_zcta520_county20_natl.txt"), "utf8").trim().split(/\r?\n/).slice(1);
+  const best: Record<string, [string, number]> = {};
+  for (const l of rel) {
+    const c = l.split("|"), zip = c[1], area = +c[16];
+    if (zip && (!best[zip] || area > best[zip][1])) best[zip] = [c[9], area];
+  }
+  writeFileSync(join(dir, "zips.json"), JSON.stringify(Object.fromEntries(Object.entries(best).map(([z, [g]]) => [z, g]))));
+  log("export", `geo/zips.json: ${Object.keys(best).length} ZIP codes`);
   log("export", `geo/search.json: ${rows.length} states/counties + ${n} cities, towns and communities`);
 }
 
