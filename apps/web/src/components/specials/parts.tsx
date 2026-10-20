@@ -6,7 +6,7 @@ import { formatDate, type Special } from "@/lib/specials";
 
 /** The full map for a piece: its datasets, at its position. Same URL format as lib/url-state.ts
  *  (a client module, so not callable here). */
-export function mapHref(s: Pick<Special, "datasets" | "at">) {
+export function mapHref(s: Pick<Special, "datasets"> & Partial<Pick<Special, "at">>) {
   const q = [`d=${s.datasets[0]}`, ...(s.datasets[1] ? [`b=${s.datasets[1]}`] : [])];
   if (s.at) q.push(`at=${s.at.lon.toFixed(4)},${s.at.lat.toFixed(4)},${s.at.zoom.toFixed(2)}`);
   return `/map?${q.join("&")}`;
@@ -97,7 +97,7 @@ export function DataBox({ special, showOrigin }: { special: Special; showOrigin?
       })}
       {showOrigin && origin && (
         <p className="mt-1.5 border-t pt-2.5 text-[13px] leading-normal text-muted-foreground">
-          Started from the Combination “<Link href={`/specials/${origin.id}`} className="hover:text-foreground hover:underline">{origin.headline}</Link>.”
+          Started from the Combination “<Link href={mapHref({ datasets: [origin.x, origin.y] })} className="hover:text-foreground hover:underline">{origin.headline}</Link>.”
         </p>
       )}
     </div>
@@ -120,8 +120,8 @@ export function LineUpBox({ insight }: { insight: Insight }) {
       <p className="text-[13px] leading-normal text-muted-foreground">
         Correlation is not causation: both may reflect something else, such as how urban a county is.
       </p>
-      <Link href={`/specials/${insight.id}`} className="inline-flex min-h-11 items-center text-sm font-semibold text-primary hover:underline">
-        The Combination this started from →
+      <Link href={mapHref({ datasets: [insight.x, insight.y] })} className="inline-flex min-h-11 items-center text-sm font-semibold text-primary hover:underline">
+        See this pair on the map →
       </Link>
     </div>
   );

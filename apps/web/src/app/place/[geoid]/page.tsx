@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PlaceProfile } from "@/components/PlaceProfile";
 import { SiteHeader } from "@/components/SiteHeader";
+import { SiteFooter } from "@/components/SiteNav";
 import { placeNameChecked } from "@/lib/place-name";
 import { shareMeta } from "@/lib/share-meta";
 
@@ -22,6 +23,7 @@ export default async function PlacePage({ params }: PageProps<"/place/[geoid]">)
     <>
       <SiteHeader />
       <PlaceProfile geoid={geoid} />
+      <div className="mx-auto max-w-3xl px-4 pb-8 md:px-8"><SiteFooter /></div>
     </>
   );
 }
