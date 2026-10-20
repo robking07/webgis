@@ -62,8 +62,18 @@ describe("combinations", () => {
   });
   it("effective n ≈ n for unrelated, unclustered noise", () => {
     const idx = geoids.map((_, i) => i), x = idx.map(norm), z = idx.map(norm);
-    const ne = nEff(x, z, idx, distanceClasses(lat, lon, 10), geoids.length, 10);
+    const ne = nEff(x, z, idx, distanceClasses(lat, lon, 200), geoids.length, 200);
     expect(ne).toBeGreaterThan(0.85 * idx.length);
+  });
+  it("effective n falls well below n for spatially smoothed fields", () => {
+    // Two independent noise fields, each smoothed with a ~100 km Gaussian kernel (≈ 0.9°).
+    const N = geoids.length, smooth = () => {
+      const e = geoids.map(norm);
+      return geoids.map((_, i) => { let s = 0, w = 0; for (let j = 0; j < N; j++) { const d2 = (lat[i] - lat[j]) ** 2 + (lon[i] - lon[j]) ** 2, k = Math.exp(-d2 / (2 * 0.9 ** 2)); s += k * e[j]; w += k; } return s / w; });
+    };
+    const idx = geoids.map((_, i) => i), K = 200;
+    const ne = nEff(smooth(), smooth(), idx, distanceClasses(lat, lon, K), N, K);
+    expect(ne).toBeLessThan(0.08 * N); // ≈ 73 of 1,530 here; 10 coarse classes gave ≈ 177
   });
   it("F p-values and Benjamini–Yekutieli", () => {
     expect(fP(3.841, 1, 1e7)).toBeCloseTo(0.05, 3);

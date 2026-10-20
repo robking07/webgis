@@ -14,18 +14,19 @@ Yekutieli 2001), with the amendments the lead and ponytail both agreed:
    forward selection from the focus's passing pairs (top 30 by |within-state ρ|) on rank-transformed,
    state-demeaned values. A companion joins only if it raises R² by at least the gain threshold.
 2. **Separate script and output.** `data/ingest/src/combinations.ts` (`npm run ingest -- combinations
-   [--dry-run]`) writes `apps/web/src/generated/combinations.json`. `insights.ts` only gained
-   `export`s; `insights.json`, its caption prompt and pair fingerprints are untouched.
-3. **Stability = found in both split directions.** States split in two, alternating within each
-   Census division. A set counts only if discovery on half A and discovery on half B both find it,
-   and it confirms on the half it never saw, both ways. This replaces the proposal's 100 bootstraps
-   (`shortcut:` comment marks the bootstrap / spatial-permutation upgrade).
+   [--dry-run]`) writes `apps/web/src/generated/combinations.json`. `insights.ts` gained `export`s
+   and, per the second amendment, a DB-free `reflag` step that flagged 9 pairs; its caption prompt,
+   captions, numbers and pair fingerprints are untouched.
+3. **Holdout and stability.** States split in two, alternating within each Census division. As
+   amended (third amendment): a set discovered on one half is confirmed only on the other; being
+   found from both halves (`stable`) ranks it higher but no longer gates it. This replaces the
+   proposal's 100 bootstraps (`shortcut:` comment marks the bootstrap / spatial-permutation upgrade).
 4. **Confirmation**, on the held-out half: beats its best single member by ≥ the gain threshold
-   (0.02 within-state R²); every member earns its place (dropping it lowers R²) and keeps its
-   discovery sign; partial-F test of the gain on a Clifford effective n (Moran correlograms over 10
-   equal-count distance classes between 2024 Gazetteer county internal points), then
-   Benjamini–Yekutieli at 5% across every set that reached confirmation; the full-data weights still
-   beat the best member in ≥ 3 of the 4 Census regions.
+   (0.02 within-state R²); every member earns its place (dropping it costs ≥ half the gain
+   threshold) and keeps its discovery sign; partial-F test of the gain on a Clifford effective n
+   (Moran correlograms over 200 equal-count distance classes between 2024 Gazetteer county internal
+   points), then Benjamini–Yekutieli at 5% across every set confirmed; the held-out fit still beats
+   the best member in ≥ 3 of the 4 Census regions.
 5. **Guardrails.** Focus–companion pairs pass today's pair screen; companion pairs pass every pair
    rule except "weak" and "same category"; companions |ρ| ≤ 0.7, ≤ 2 per category, ≤ 1 CDC PLACES
    estimate; ≥ 1,000 complete counties.
@@ -33,11 +34,12 @@ Yekutieli 2001), with the amendments the lead and ponytail both agreed:
    larger set's members are merged, keeping the higher held-out gain.
 7. **Flags.** `urbanRural`: the gain drops below 0.01 once population density joins the baseline
    (or the focus is population density). `sensitive`: any member is in People › Race and ethnicity,
-   People › Immigration and language or Health › Disability, has "disability" or "minority" in its
-   title, or is modelled from such a dataset (`modelInputs`, e.g. the CDC SVI and FEMA social
-   vulnerability indexes). Per the lead's gate, sensitive combinations wait for Robbie's review.
+   People › Immigration and language or Health › Disability, or has "disability" or "minority" in
+   its title. Direct members only; `modelInputs` are not followed (first amendment). Per the lead's
+   gate, sensitive combinations wait for Robbie's review.
 8. **Captions** are a template, no model calls: "Counties with higher A, higher B and lower C tend to
-   have lower Y. Together they line up with Y much more closely than any one alone." Each
+   have lower Y. Together they line up with Y [much] more closely than any one alone." ("much" only
+   when the held-out gain is ≥ 0.10; third amendment.) Each
    combination has a `fingerprint` (members, numbers, caption) so D-116's re-review rule applies.
 
 Deviations, small: ranks stand in for the proposal's rank-normal transform (same as the pair
@@ -77,3 +79,16 @@ First run at gain 0.02 (before the amendments): 68 sets tested, 63 passed, 35 af
   `insights.json` with the current registry. Those 9 moved to flagged (1,768 → 1,759 published);
   every other field and pair is byte-identical. The database's `insights` table catches up at the
   next full run. `combinations.json` was unchanged (the leak rule had already excluded those pairs).
+- 2026-10-20 (lead, after an independent ponytail-review voted HOLD):
+  1. **Effective n.** 10 distance classes put 0–450 km in the nearest class and washed out
+     neighbour similarity (reviewer: nEff 438 vs 101 on a 100 km smoothed field). Now 200
+     equal-count classes (binary search over the cuts); a smoothed-field test expects nEff < 8% of n.
+  2. **True holdout.** Discovery (candidate ranking by |within-state ρ| and greedy fitting) uses only
+     its half; confirmation (gain, signs, F and BY p-values, regions) uses only the other half.
+     Found-in-both is a `stable` field and a ranking signal; the union of both directions is then
+     deduped as before. The pair screen that admits candidates is still today's all-county screen
+     (`shortcut:` comment).
+  3. **Earns its place.** Dropping any member must cost ≥ half the gain threshold on the held-out half.
+  4. **Caption strength.** "much more closely" only when the held-out gain is ≥ 0.10, else "more closely".
+  Result at gain 0.02: 367 sets tested (each discovered set, each direction), 294 passed, 72 after
+  dedupe (26 trios, 32 fours, 14 fives); 7 urban–rural, 35 sensitive, 27 stable; held-out nEff 220–1,332.
