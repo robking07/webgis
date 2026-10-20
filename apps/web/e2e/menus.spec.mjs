@@ -1022,6 +1022,33 @@ test("laptop search: \"Du\" lists places and no unrelated datasets; \"asthma\" f
   expect(/^Asthma/.test((await datasets.getByRole("option").first().innerText()).trim()), `first dataset for "asthma": ${await datasets.innerText()}`);
 });
 
+test("laptop map fixes (#187): canvas label follows the map, tiles banner only for our tiles and clears, failed default year errors", async (o) => {
+  const { page } = await o("laptop", "/map?d=pct_poverty");
+  const label = () => page.evaluate(() => window.__wgMap.getCanvas().getAttribute("aria-label"));
+  expect(/poverty/i.test(await label()), `first label: ${await label()}`);
+  await page.keyboard.press("/");
+  const dlg = page.getByRole("dialog", { name: "Search places and datasets" });
+  await dlg.getByRole("combobox").fill("asthma");
+  await dlg.getByRole("region", { name: "Datasets" }).getByRole("option").first().click();
+  await page.waitForFunction(() => /asthma/i.test(window.__wgMap.getCanvas().getAttribute("aria-label")), null, { timeout: 15000 });
+
+  const banner = page.getByText("Boundary tiles aren't available yet.");
+  const fire = (ev) => page.evaluate((ev) => window.__wgMap.fire({ ...ev, error: ev.error && new Error(ev.error) }), ev);
+  await fire({ type: "error", error: "404 basemap", sourceId: "basemap" });
+  await wait(300);
+  expect(!(await banner.count()), "a basemap error showed the boundary tiles banner");
+  await fire({ type: "error", error: "404 state.pmtiles", sourceId: "b-state" });
+  await banner.waitFor({ timeout: 5000 });
+  await fire({ type: "data", dataType: "source", sourceId: "b-state", tile: {} });
+  await banner.waitFor({ state: "detached", timeout: 5000 });
+
+  // The default year's file fails while an earlier year shows: a message, not an endless spinner.
+  await page.route(/\/values\/pct_poverty\/(state|county)\.json/, (r) => r.fulfill({ status: 404, body: "" }));
+  await page.goto(`${BASE}/map?d=pct_poverty&t=2019&theme=light`);
+  await page.getByText(/No (state|county) data for pct_poverty/).first().waitFor({ timeout: 15000 });
+  page.errors = page.errors.filter((e) => !/404/.test(e));
+});
+
 // Feature files (one per feature; this file keeps the shared harness).
 (await import("./compare.tests.mjs")).default({ test, expect, wait, immerse, tapLonLat, live, HENNEPIN, dbCalls });
 (await import("./share.tests.mjs")).default({ test, expect, wait, mapIdle });

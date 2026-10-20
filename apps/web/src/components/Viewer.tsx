@@ -113,9 +113,10 @@ export function Viewer({ search }: { search: string }) {
 
   /** Counties whose tracts are on screen, while hatching or a change map's margin test needs them. */
   const [tractCounties, setTractCounties] = useState<string[]>([]);
-  const { primary, secondary, isFeature, featureSpec, stops, stop, stopId, since, xFrom, testMoes, availableLevels, pinnedLevel, focus, bands, x, y, level, classed, blockField } = useViewerData(state, tractCounties);
+  const { primary, secondary, isFeature, featureSpec, stops, stop, stopId, since, xBase, xFrom, testMoes, availableLevels, pinnedLevel, focus, bands, x, y, level, classed, blockField } = useViewerData(state, tractCounties);
   const current = classed[level];
-  const error = x.error ?? y.error ?? xFrom.error;
+  // A year off the default is colored with the default's breaks (xBase): its failure is an error, not a spinner.
+  const error = x.error ?? y.error ?? xFrom.error ?? xBase.error;
   const available = !!primary && !isFeature && availableLevels.includes(level);
   // The table lists states or counties (finer areas have no names to search); below counties it shows counties.
   const tableLevel: GeoLevel | null = level === "state" || level === "county" ? level : availableLevels.includes("county") ? "county" : null;
