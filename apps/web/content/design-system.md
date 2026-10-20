@@ -4,7 +4,7 @@ Every map on Mapwich follows the same rules for color, legends and zoom. That's 
 
 ## Colors anyone can read
 
-About 1 in 12 men and 1 in 200 women have some form of color blindness. A map that only works for normal color vision quietly fails a lot of people.
+About 1 in 12 men and 1 in 200 women have some form of color blindness ([National Eye Institute](https://www.nei.nih.gov/learn-about-eye-health/eye-conditions-and-diseases/color-blindness)). A map that only works for normal color vision quietly fails a lot of people.
 
 So before the site goes live, every color scheme is tested automatically against simulations of the three main kinds of color blindness. If any two neighboring colors in a legend get too close to tell apart for any of these viewers, the site doesn't publish. Text and labels are checked the same way for contrast, in both light and dark mode.
 
