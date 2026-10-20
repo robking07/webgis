@@ -1,5 +1,6 @@
 id: unemployment_rate
 title: "Unemployment rate"
+phrase: unemployment rates
 description: "Share of people in the civilian labor force (working or looking for work) who had no job and were looking for one."
 category: Economy
 subcategory: Jobs

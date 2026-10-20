@@ -1,5 +1,6 @@
 id: median_home_value
 title: "Median home value"
+phrase: median home values
 description: "Middle value of owner-occupied homes, as estimated by their owners, in 2024 dollars."
 category: Housing
 subcategory: Costs

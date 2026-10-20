@@ -1,5 +1,6 @@
 id: census2020_pop_density
 title: Residents per square mile (2020 Census)
+phrase: residents per square mile
 description: Everyone counted in the 2020 Census, per square mile of land. Down to single blocks.
 category: People
 subcategory: Population and age
