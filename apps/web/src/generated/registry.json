@@ -8574,7 +8574,7 @@
   },
   "license": "Public domain (U.S. Government work, 17 U.S.C. § 105; EPA permits free non-commercial and educational use)",
   "updateCadence": "annual",
-  "vintage": "2024 reporting year",
+  "vintage": "2024 data",
   "geographyLevels": [
    "state",
    "county"
@@ -8588,7 +8588,7 @@
    "file": "tri-2024-us.csv"
   },
   "modelInputs": [],
-  "coverageNote": "Only larger facilities in covered industries report (generally 10 or more employees and above set chemical amounts), so a county shown at zero has no reporting facility, not no pollution. Amounts are the facilities' own estimates. A few metal mines account for about half of all pounds, mostly rock and waste placed on land at the mine. Pounds say nothing about how toxic a chemical is or whether anyone is exposed to it. Connecticut counties show no data (facility records use its pre-2022 counties).",
+  "coverageNote": "Only larger facilities in covered industries report (generally 10 or more employees and above set chemical amounts), so a county shown at zero has no reporting facility, not no pollution. Amounts are the facilities' own estimates. Metal mines account for nearly half of all pounds, mostly waste rock placed on land at the mine. Pounds say nothing about how toxic a chemical is or whether anyone is exposed to it. Connecticut counties show no data (facility records use its pre-2022 counties).",
   "facets": [],
   "excludeFromInsights": true,
   "learnMore": [],

@@ -311,7 +311,7 @@
   term: >-
     Toxics Release Inventory (TRI)
   short: >-
-    EPA's yearly record of how many pounds of several hundred listed toxic chemicals larger industrial facilities report releasing or managing as waste. Pounds released are not a measure of exposure or health risk.
+    EPA's yearly count of the pounds of listed toxic chemicals that larger industrial sites report releasing. Pounds released are not people's exposure or health risk.
   long: >-
-    Under a 1986 federal right-to-know law, facilities in covered industries, generally with 10 or more full-time employees and above set amounts of a listed chemical, report to EPA each July what they released the year before. "On-site releases" are what went into the air, into water, underground into wells, or onto land at the facility itself. The amounts are mostly the facilities' own estimates, and smaller sites, many industries and some chemicals are not covered. EPA warns that the quantity released alone does not show exposure: that depends on how toxic the chemical is, where it goes, and who is nearby. Metal mines put very large amounts of rock and waste on land at the mine, so they dominate total pounds.
+    Larger facilities in covered industries report each year what they released at their own site: into the air or water, underground, or onto land. The amounts are mostly their own estimates, and small sites and many industries don't report, so zero means no reporting facility, not no pollution. Pounds don't show how toxic a chemical is, where it goes or who breathes or drinks it; EPA says the amount alone is not a measure of exposure. Metal mines, which put waste rock on land, make up nearly half of all pounds.
   source: https://www.epa.gov/toxics-release-inventory-tri-program/what-toxics-release-inventory
