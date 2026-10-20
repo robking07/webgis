@@ -741,6 +741,32 @@ for (const vp of ["phone", "laptop"]) {
   });
 }
 
+// Issue #193 (D-364): a zero with a huge margin reads as unreliable; a missing value says why.
+for (const vp of ["phone", "laptop"]) {
+  test(`${vp} shaky zeros: Loving County's 0% ±57.7 bike commuting is unreliable; no-data rows say why`, async (o) => {
+    const row = (page, title) => page.locator("main li").filter({ has: page.getByText(title, { exact: true }) });
+    const { page } = await o(vp, "/place/48301", { ready: false });
+    await page.locator("main h1").waitFor({ timeout: 20000 });
+    expect((await row(page, "Bike to work").locator("[data-value-note]").innerText()) === "Unreliable estimate", "Loving bike row note");
+    expect((await row(page, "Mean travel time to work").locator("[data-value-note]").innerText()) === "The Census Bureau doesn't publish this figure for this area.", "Loving mean commute reason");
+    const { page: cook } = await o(vp, "/place/17031", { ready: false });
+    await cook.locator("main h1").waitFor({ timeout: 20000 });
+    expect((await row(cook, "Bike to work").locator("[data-value-note]").count()) === 0, "Cook County's solid bike share flagged");
+    const { page: cmp } = await o(vp, "/compare/48301/17031?d=pct_bike_commute", { ready: false });
+    const head = cmp.locator("[data-compare-headline]");
+    await head.waitFor({ timeout: 20000 });
+    const notes = await head.locator("[data-value-note]").allInnerTexts();
+    expect(notes.length === 1 && notes[0] === "Unreliable estimate", `compare headline notes: ${notes}`);
+    const { page: map } = await o(vp, "/map?d=pct_bike_commute&lv=county&at=-103.58,31.84,8");
+    await immerse(map);
+    await tapLonLat(map, -103.58, 31.84);
+    const det = map.locator('section[aria-label^="Details for Loving County"]');
+    await det.waitFor();
+    await det.locator("[data-reliability]").first().waitFor({ timeout: 15000 });
+    expect(/Unreliable estimate\. The margin of error is large for an estimate of zero/.test(await det.locator("[data-reliability]").first().innerText()), "details note");
+  });
+}
+
 for (const vp of ["phone", "laptop", "monitor"]) {
   test(`${vp} zoom levels: block groups never draw at the national view, even pinned`, async (o) => {
     const { page } = await o(vp, "/map?d=median_household_income&lv=block_group");
@@ -989,9 +1015,38 @@ test("laptop search: \"Du\" lists places and no unrelated datasets; \"asthma\" f
   await box.fill("Du");
   await dlg.getByRole("region", { name: "Places" }).getByRole("option", { name: /^Du/ }).first().waitFor({ timeout: 15000 });
   expect((await datasets.innerText()).includes("No matching datasets."), `datasets for "Du": ${await datasets.innerText()}`);
+  const places = await dlg.getByRole("region", { name: "Places" }).innerText();
+  expect(places.includes("Duluth"), `"Du" doesn't list Duluth (#258): ${places}`);
   await box.fill("asthma");
   await datasets.getByRole("option").first().waitFor();
   expect(/^Asthma/.test((await datasets.getByRole("option").first().innerText()).trim()), `first dataset for "asthma": ${await datasets.innerText()}`);
+});
+
+test("laptop map fixes (#187): canvas label follows the map, tiles banner only for our tiles and clears, failed default year errors", async (o) => {
+  const { page } = await o("laptop", "/map?d=pct_poverty");
+  const label = () => page.evaluate(() => window.__wgMap.getCanvas().getAttribute("aria-label"));
+  expect(/poverty/i.test(await label()), `first label: ${await label()}`);
+  await page.keyboard.press("/");
+  const dlg = page.getByRole("dialog", { name: "Search places and datasets" });
+  await dlg.getByRole("combobox").fill("asthma");
+  await dlg.getByRole("region", { name: "Datasets" }).getByRole("option").first().click();
+  await page.waitForFunction(() => /asthma/i.test(window.__wgMap.getCanvas().getAttribute("aria-label")), null, { timeout: 15000 });
+
+  const banner = page.getByText("Boundary tiles aren't available yet.");
+  const fire = (ev) => page.evaluate((ev) => window.__wgMap.fire({ ...ev, error: ev.error && new Error(ev.error) }), ev);
+  await fire({ type: "error", error: "404 basemap", sourceId: "basemap" });
+  await wait(300);
+  expect(!(await banner.count()), "a basemap error showed the boundary tiles banner");
+  await fire({ type: "error", error: "404 state.pmtiles", sourceId: "b-state" });
+  await banner.waitFor({ timeout: 5000 });
+  await fire({ type: "data", dataType: "source", sourceId: "b-state", tile: {} });
+  await banner.waitFor({ state: "detached", timeout: 5000 });
+
+  // The default year's file fails while an earlier year shows: a message, not an endless spinner.
+  await page.route(/\/values\/pct_poverty\/(state|county)\.json/, (r) => r.fulfill({ status: 404, body: "" }));
+  await page.goto(`${BASE}/map?d=pct_poverty&t=2019&theme=light`);
+  await page.getByText(/No (state|county) data for pct_poverty/).first().waitFor({ timeout: 15000 });
+  page.errors = page.errors.filter((e) => !/404/.test(e));
 });
 
 // Feature files (one per feature; this file keeps the shared harness).

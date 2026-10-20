@@ -14,11 +14,14 @@ each in `docs/decisions/` (D-100 and up); D-01 to D-99 are in `docs/DECISIONS.md
 
 ## Who asks whom
 
-- Robbie talks to the project lead (`claude --agent lead`, `.claude/agents/lead.md`). It files
-  GitHub issues, assigns workers, verifies and merges, and batches plain-language questions to him.
+- Robbie talks to the project lead (`claude --agent lead`, `.claude/agents/lead.md`). It owns
+  product and build calls, files GitHub issues, assigns workers, verifies and merges, and asks
+  Robbie only about money, his voice (he reviews every Special draft), potentially sensitive
+  language, high-stakes data judgment and direction.
 - **Workers the lead briefed:** never ask Robbie anything and never merge. Open a draft PR with
-  "Closes #N". Put any choice that is Robbie's (what users see, scope, editorial, data judgment,
-  cost) in your final report to the lead, with the options you see.
+  "Closes #N". Take the sensible default on any product choice, note it in your final report
+  with the alternatives you saw, and keep going; the lead decides. Flag any wording about
+  people or sensitive topics in the report so the lead can send it to Robbie.
 - **Sessions Robbie runs directly:** ask him before product decisions (same list), one clear
   question at a time, and wait for the answer.
 

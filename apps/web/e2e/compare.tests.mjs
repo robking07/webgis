@@ -168,4 +168,30 @@ export default function compareTests({ test, expect, wait, immerse, tapLonLat, l
     await wait(500);
     expect((await det.getByRole("button", { name: "Compare with…" }).count()) === 0, "Compare with… offered for another year");
   });
+
+  // The strip of every place under the headline (issue #231): every county or state a tick, both places marked and named.
+  for (const [vp, path, n, names] of [
+    ["phone", "/compare/27053/31031?d=pct_poverty", 3000, ["Hennepin County", "Cherry County"]],
+    ["laptop", "/compare/02/27?d=pct_poverty", 50, ["Alaska", "Minnesota"]],
+  ]) {
+    test(`${vp} compare places: strip of every place marks ${names.join(" and ")}`, async (o) => {
+      const { page } = await o(vp, path, { ready: false });
+      const strip = page.locator("[data-compare-headline] [data-compare-strip]");
+      await strip.waitFor({ timeout: 20000 });
+      const ticks = await strip.locator("svg line").count();
+      expect(ticks >= n, `ticks: ${ticks}`);
+      const marks = await strip.locator("[data-compare-strip-mark]").allInnerTexts();
+      expect(marks.length === 2 && marks[0].trim() === names[0] && marks[1].trim() === names[1], `marks: ${JSON.stringify(marks)}`);
+      const alt = await strip.getByRole("img").getAttribute("aria-label");
+      expect(alt.includes(`${names[0]}: `) && alt.includes(`${names[1]}: `) && /lowest to highest/.test(alt), `text alternative: ${alt}`);
+      const box = await strip.boundingBox(), vw = page.viewportSize().width;
+      expect(box && box.x >= 0 && box.x + box.width <= vw, `strip off screen: ${JSON.stringify(box)}`);
+    });
+  }
+  test("laptop compare places: no strip for tracts", async (o) => {
+    const { page } = await o("laptop", "/compare/27053100400/27053100200?d=gini_index", { ready: false });
+    await page.locator("[data-compare-verdict]").waitFor({ timeout: 20000 });
+    await wait(1500);
+    expect((await page.locator("[data-compare-strip]").count()) === 0, "a strip on a tract comparison");
+  });
 }

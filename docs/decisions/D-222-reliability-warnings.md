@@ -50,3 +50,4 @@ hatched); over 30% unreliable (hatched when the toggle is on, and a details-pane
 ## Amendments
 
 - Amended 2026-10-06 (Robbie): hatching with legend entry, color shows; off by default with a toggle; CV cut-offs 15% / 30%.
+- Amended 2026-10-17 (Robbie decided 2026-10-16, threshold defaulted): a zero with a margin over 5 is graded unreliable; see D-364 (issue #193).
