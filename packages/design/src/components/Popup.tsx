@@ -10,6 +10,8 @@ export interface PopupRow {
   group?: string;
   /** A text value (e.g. "Interstate") shown instead of a formatted number. */
   text?: string;
+  /** The period the value is for, shown right under it (issue #236). */
+  period?: string;
 }
 
 export interface PopupProps {
@@ -18,7 +20,7 @@ export interface PopupProps {
   rows: PopupRow[];
   /** The key takeaway in large type (a change map's "−1.3 pts"), with what it measures above it
    *  and, optionally, the values it compares, each with its period right under it. */
-  lead?: { label: string; text: string; values?: Array<{ value: string; period: string }> };
+  lead?: { label: string; text: string; period?: string; none?: boolean; values?: Array<{ value: string; period: string }> };
   /** One-line note under the rows (e.g. what ± means). */
   footnote?: string;
 }
@@ -38,7 +40,8 @@ export function Popup({ title, subtitle, rows, lead, footnote }: PopupProps) {
       {lead && (
         <div className="wg-popup-lead">
           <p className="wg-popup-lead-label">{lead.label}</p>
-          <p className="wg-popup-lead-value">{lead.text}</p>
+          <p className={lead.none ? "wg-popup-lead-value wg-popup-lead-none" : "wg-popup-lead-value"}>{lead.text}</p>
+          {lead.period && <p className="wg-popup-lead-period">{lead.period}</p>}
           {lead.values && (
             <div className="wg-popup-lead-pair">
               {lead.values.map((v, i) => (
@@ -67,6 +70,7 @@ export function Popup({ title, subtitle, rows, lead, footnote }: PopupProps) {
                   <dd>
                     {r.text ?? est.value}
                     {est.moe && <span className="wg-moe"> ±{est.moe}</span>}
+                    {r.period && <span className="wg-popup-row-period">{r.period}</span>}
                   </dd>
                 </div>
               );
