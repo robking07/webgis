@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { DatasetEntry } from "@webgis/registry";
-import { by, combinations, confirm, context, fP, nEff, distanceClasses, type Data, type Pairs } from "./combinations.ts";
+import { by, combinations, confirm, context, fP, ingredients, nEff, distanceClasses, type Data, type Pairs } from "./combinations.ts";
 import { checks, pearson, ranks, withinStateRho } from "./insights.ts";
 
 // Seeded normal noise, so the test is deterministic.
@@ -51,6 +51,14 @@ describe("combinations", () => {
     expect(decoy.gain).toBeLessThan(0.02);
     expect(decoy.ok).toBe(false);
     expect(confirm(ctx, "y", ["a", "b", "c"], 1).ok).toBe(true);
+  });
+  it("never pairs a focus with a companion built from it, and survives modelInputs cycles", () => {
+    const leaky = entries.map((e) => (e.id === "b" ? { ...e, modelInputs: ["x1"] } : e.id === "y" ? { ...e, modelInputs: ["y"] } : e));
+    leaky.push({ ...entries[0], id: "x1", modelInputs: ["x2"] }, { ...entries[0], id: "x2", modelInputs: ["x1", "y"] });
+    const byId = new Map(leaky.map((e) => [e.id, e]));
+    expect([...ingredients("b", byId)].sort()).toEqual(["x1", "x2", "y"]);
+    const out = combinations(context(data, leaky, pairs)).combinations;
+    expect(out.every((x) => !([x.focus, ...x.companions].includes("b") && [x.focus, ...x.companions].includes("y")))).toBe(true);
   });
   it("effective n ≈ n for unrelated, unclustered noise", () => {
     const idx = geoids.map((_, i) => i), x = idx.map(norm), z = idx.map(norm);

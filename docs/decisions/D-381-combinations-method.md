@@ -45,5 +45,26 @@ screen's Spearman); values come from the published county value files rather tha
 Puerto Rico (no Census region) and counties without a 2024 centroid sit out. Captions say
 "higher/lower" rather than "more/fewer" because registry `phrase`s are written to follow those words.
 
-Result at gain 0.02: 68 sets tested, 63 passed, 35 after dedupe (19 trios, 13 fours, 3 fives);
+First run at gain 0.02 (before the amendments): 68 sets tested, 63 passed, 35 after dedupe (19 trios, 13 fours, 3 fives);
 6 urban–rural, 20 sensitive. Thresholds are judgment calls, set to be conservative.
+
+## Amendments
+
+- 2026-10-20 (lead, after the first dry run):
+  1. **Ingredient leak.** A companion may not be built from the focus or another member, or they
+     from it, following `modelInputs` transitively (a seen-set guards against cycles). The
+     registry's `modelInputs` now list the inputs from the CDC/ATSDR SVI 2022 documentation and the
+     Census Community Resilience Estimates that FEMA NRI v1.20 social vulnerability uses, mapped to
+     Mapwich ids: `svi_socioeconomic` adds poverty and housing-cost burden (renters and owners);
+     `svi_minority` adds every race and ethnicity share; `nri_social_vulnerability` adds no diploma,
+     crowding, disability and broadband/internet. (SVI's 10+ unit housing, group quarters and CRE's
+     caregiver and employment factors have no Mapwich dataset.)
+  2. **Composites.** At most one composite index per combination, focus included: CDC SVI (overall
+     and themes), CEJST, FEMA NRI risk score, social vulnerability, community resilience and total
+     expected loss.
+  3. **Sensitive = direct members only.** Subcategory Race and ethnicity, Immigration and language
+     or Disability, or "disability"/"minority" in the title. `modelInputs` are not followed.
+  4. **Caption phrases.** 26 registry entries gained a `phrase` written to follow "higher/lower".
+     Pair captions are written at ingest time, so they change only when `insights` is re-run.
+  Result at gain 0.02: 60 tested, 55 passed, 34 after dedupe (21 trios, 9 fours, 4 fives);
+  6 urban–rural, 13 sensitive.

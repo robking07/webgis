@@ -24,6 +24,7 @@ export const COMBO_RULES = {
   maxInterRho: 0.7,    // |ρ| between two companions
   maxPerCategory: 2,   // companions from one category
   maxPlaces: 1,        // CDC PLACES modelled estimates among the companions
+  maxComposites: 1,    // composite indexes (SVI, FEMA NRI scores, CEJST) in the whole set
   minN: 1000,          // complete counties for the set
   minRegions: 3,       // of the 4 Census regions where the full-data weights still add something
   fdrQ: 0.05,          // Benjamini–Yekutieli across every set that reached confirmation
@@ -45,9 +46,17 @@ const URBAN = "population_density";
 
 /** Who reviews before publishing (#280, D-373): race/ethnicity, immigration, disability or minority status. */
 const SENSITIVE_SUBCATEGORIES = ["Race and ethnicity", "Immigration and language", "Disability"];
-export function sensitive(e: DatasetEntry, byId: Map<string, DatasetEntry>): boolean {
-  return SENSITIVE_SUBCATEGORIES.includes(e.subcategory) || /disabilit|minority/i.test(e.title)
-    || e.modelInputs.some((id) => byId.has(id) && sensitive(byId.get(id)!, byId));
+/** Direct members only (lead, 2026-10-20): `modelInputs` are not followed. */
+export const sensitive = (e: DatasetEntry) => SENSITIVE_SUBCATEGORIES.includes(e.subcategory) || /disabilit|minority/i.test(e.title);
+
+/** Composite indexes built from other datasets: at most one per combination. */
+const COMPOSITES = new Set(["nri_risk_score", "nri_social_vulnerability", "nri_community_resilience", "nri_expected_loss_per_person"]);
+const composite = (e: DatasetEntry) => e.measure.kind === "svi" || e.measure.kind === "cejst" || COMPOSITES.has(e.id);
+
+/** Every dataset `id` is built from, following `modelInputs` transitively (the seen set stops cycles). */
+export function ingredients(id: string, byId: Map<string, DatasetEntry>, seen = new Set<string>()): Set<string> {
+  for (const m of byId.get(id)?.modelInputs ?? []) if (!seen.has(m)) { seen.add(m); ingredients(m, byId, seen); }
+  return seen;
 }
 
 /** County values (NaN = missing) with centroids; PR and counties without a 2024 centroid are left out. */
@@ -145,16 +154,16 @@ export function nEff(x: number[], y: number[], idx: number[], cls: Uint8Array, N
 
 // ---- method ----------------------------------------------------------------------------------
 
-interface Ctx { d: Data; byId: Map<string, DatasetEntry>; pairs: Pairs; half: Uint8Array; region: Int8Array; cls: Uint8Array; rules: Rules; wcache: Map<string, number> }
+interface Ctx { d: Data; byId: Map<string, DatasetEntry>; pairs: Pairs; half: Uint8Array; region: Int8Array; cls: Uint8Array; rules: Rules; wcache: Map<string, number>; ing: Map<string, Set<string>> }
 
 export function context(d: Data, entries: DatasetEntry[], pairs: Pairs, rules: Rules = COMBO_RULES): Ctx {
   // Halves: alternate states within each division, so both halves cover every region.
   const halfOf = new Map<string, number>(), regionOf = new Map<string, number>();
   DIVISIONS.forEach((states, dv) => states.forEach((s, i) => { halfOf.set(s, i % 2); regionOf.set(s, REGION_OF_DIVISION[dv]); }));
-  const st = d.geoids.map((g) => g.slice(0, 2));
+  const st = d.geoids.map((g) => g.slice(0, 2)), byId = new Map(entries.map((e) => [e.id, e]));
   if (st.some((s) => !halfOf.has(s))) throw new Error("combinations: county outside the 50 states + DC");
   return {
-    d, byId: new Map(entries.map((e) => [e.id, e])), pairs, rules, wcache: new Map(),
+    d, byId, pairs, rules, wcache: new Map(), ing: new Map(entries.map((e) => [e.id, ingredients(e.id, byId)])),
     half: Uint8Array.from(st, (s) => halfOf.get(s)!), region: Int8Array.from(st, (s) => regionOf.get(s)!),
     cls: distanceClasses(d.lat, d.lon, rules.distanceClasses),
   };
@@ -186,6 +195,9 @@ function allowed(c: Ctx, f: string, set: string[], x: string) {
   const ex = c.byId.get(x)!, members = [...set, x].map((id) => c.byId.get(id)!);
   if (members.filter((e) => e.category === ex.category).length > c.rules.maxPerCategory) return false;
   if (members.filter((e) => e.measure.kind === "places").length > c.rules.maxPlaces) return false;
+  if ([f, ...set, x].filter((id) => composite(c.byId.get(id)!)).length > c.rules.maxComposites) return false;
+  // Ingredient leak: x may not be built from the focus or a member, nor they from x (transitively).
+  if ([f, ...set].some((id) => c.ing.get(x)?.has(id) || c.ing.get(id)?.has(x))) return false;
   for (const s of set) {
     const p = c.pairs.get(key(s, x));
     if (!p || Math.abs(p.rho) > c.rules.maxInterRho) return false;
@@ -314,7 +326,7 @@ export function combinations(c: Ctx, gain = c.rules.gain) {
       id: members.join("__"), focus: p.f, companions: p.comps, size: members.length, n: p.all.n,
       r2Best: r3(p.all.r2Best), r2Set: r3(p.all.r2Set), gain: { a: r3(p.onA.gain), b: r3(p.onB.gain) }, // confirmed gain on each half
       weights: p.all.beta.map(r3), nEff: Math.round(Math.min(p.onA.nEff, p.onB.nEff)), p: Math.max(p.onA.p, p.onB.p), regions: p.regions,
-      urbanRural: urbanRural(c, p.f, p.comps), sensitive: members.some((id) => sensitive(c.byId.get(id)!, c.byId)),
+      urbanRural: urbanRural(c, p.f, p.comps), sensitive: members.some((id) => sensitive(c.byId.get(id)!)),
       caption: caption(c, p.f, p.comps, p.all.beta),
     };
     // What a reviewer approves (D-116): if the members, numbers or wording change, it needs review again.
