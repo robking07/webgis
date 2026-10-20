@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { classify, classifyValues, classOf, LAZY_LEVELS, rampColors, TILE_VALUE_LEVELS, type GeoLevel, type PackedClasses } from "@webgis/design";
 import { DATASET_BY_ID, type Dataset } from "./registry";
 // Every level's file lives with the tiles (R2 in production, the /tiles link locally; D-124, S2).
+import { reportError } from "./report-error";
 import { staticUrl } from "./static-files";
 
 export type Values = Record<string, number>;
@@ -99,7 +100,10 @@ export function useDatasetValues(ds: Dataset | null, want: GeoLevel[], stop: str
     for (const level of load) {
       loadValues(ds.id, level, stop).then(
         (v) => live && setData((d) => ({ key, values: { ...(d.key === key ? d.values : {}), [level]: v }, error: null })),
-        (e: Error) => live && setData((d) => ({ key, values: d.key === key ? d.values : {}, error: e.message })),
+        (e: Error) => {
+          reportError(e); // the technical detail goes to monitoring; the visitor gets plain words
+          if (live) setData((d) => ({ key, values: d.key === key ? d.values : {}, error: "This map didn't load. Try again in a minute." }));
+        },
       );
     }
     return () => { live = false; };
