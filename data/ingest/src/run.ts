@@ -1,5 +1,5 @@
 // npm run ingest -- <step> [dataset or level ids…]
-// Steps: geographies | label-mask | timeline | acs | acs-bg | census2020 | lodes | places | climdiv | nbi | fars | overdose | airquality | features | vmt | cejst | ddp287g | nri | svi | lead | food-access | tiles | publish-tiles | publish-values | publish-geo | publish-data | counts | publish-counts | details | publish-details | tract-geo | export | insights | tracts-out | docs | mn-catalog | all
+// Steps: geographies | label-mask | timeline | acs | acs-bg | census2020 | lodes | places | climdiv | nbi | fars | overdose | airquality | features | vmt | cejst | ddp287g | nri | svi | lead | food-access | tiles | publish-tiles | publish-values | publish-geo | publish-data | counts | publish-counts | details | publish-details | tract-geo | export | insights | combinations [--dry-run] | tracts-out | docs | mn-catalog | all
 import { ingestGeographies, tractGeography } from "./geographies.ts";
 import { ingestAcs, ingestAcsTimeline } from "./acs.ts";
 import { ingestCensus2020 } from "./census2020.ts";
@@ -7,6 +7,7 @@ import { ingestLodes, ingestLodesTimeline } from "./lodes.ts";
 import { buildTiles } from "./tiles.ts";
 import { exportNames, exportRegistry, exportSearch, exportValues } from "./exportweb.ts";
 import { computeInsights } from "./insights.ts";
+import { computeCombinations } from "./combinations.ts";
 import { ingestPlaces } from "./places.ts";
 import { ingestClimdiv, ingestClimdivTimeline } from "./climdiv.ts";
 import { publishCounts, publishData, publishDetails, publishGeo, publishTiles, publishValues } from "./publish-tiles.ts";
@@ -80,6 +81,8 @@ const steps: Record<string, () => Promise<void> | void> = {
   export: async () => { exportRegistry(); await exportNames(); await exportSearch(); await exportValues(only); },
   search: exportSearch,
   insights: computeInsights,
+  // #280: sets of 3–5 datasets from the pair screen in insights.json; --dry-run prints yields at 3 thresholds, writes nothing.
+  combinations: () => computeCombinations(rest.includes("--dry-run")),
   // D-113: tract values live in static files; moves the database's tract rows out (--drop deletes them).
   "tracts-out": () => tractsOut(rest),
   // Every ingest step above also goes in `all`.
@@ -88,7 +91,7 @@ const steps: Record<string, () => Promise<void> | void> = {
     await ingestFeatures(); await ingestVmt(); await ingestCejst(); await ingestDdp287g(); await ingestNri(); await ingestLead(); await ingestSvi(); await ingestFoodAccess();
     await ingestAcsTimeline(); await ingestFarsTimeline(); await ingestClimdivTimeline(); await ingestNbiTimeline(); await ingestLodesTimeline(); await ingestOverdoseTimeline(); await buildLabelMask(); await buildTiles();
     await tractGeography();
-    exportRegistry(); await exportNames(); await exportSearch(); await exportValues(); await detailsOut(); await computeInsights(); await writeDataSourcesDoc();
+    exportRegistry(); await exportNames(); await exportSearch(); await exportValues(); await detailsOut(); await computeInsights(); await computeCombinations(); await writeDataSourcesDoc();
   },
 };
 if (!step || !steps[step]) {
