@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Search } from "lucide-react";
 import { BivariateLegend, Legend, StatusState } from "@webgis/design/components";
 import { featureLineColors, formatValue, GEO_LEVELS, type GeoLevel, type ThemeName } from "@webgis/design";
 import type { Dataset } from "@/lib/registry";
@@ -14,7 +14,7 @@ const stripEnd = (s: string) => s.replace(/^([<≥]\s*\S+).*$/, "$1");
 /** Legend: full card on desktop; a strip on phones (tap to expand). Both carry `data-legend`, so
  *  the dock above can stop before it reaches them.
  *  The year control (D-36) lives in the filters panel (issue #34). */
-export function MapLegend({ theme, primary, secondary, isFeature, featureSpec, current, error, available, loading, level, periodLabel, stop, stopId, since, desktopStrip, mark, covered, tableReady, onTable, hatchToggle }: {
+export function MapLegend({ theme, primary, secondary, isFeature, featureSpec, current, error, available, loading, level, periodLabel, stop, stopId, since, desktopStrip, mark, covered, tableReady, onTable, hatchToggle, onSearch }: {
   theme: ThemeName;
   primary: Dataset | null;
   secondary: Dataset | null;
@@ -42,6 +42,9 @@ export function MapLegend({ theme, primary, secondary, isFeature, featureSpec, c
   onTable: () => void;
   /** Reliability hatching (D-222): the toggle, only where the shown map can be graded. */
   hatchToggle?: { on: boolean; onChange: (on: boolean) => void; loading: boolean } | null;
+  /** Phones, zoomed in (issue #246): a search button just above the strip. It sits here because only
+   *  the legend knows when the strip (not the taller full legend) is showing. */
+  onSearch?: (() => void) | null;
 }) {
   const [openPicked, setLegendOpen] = useState(false);
   const legendOpen = openPicked && !covered;
@@ -96,6 +99,13 @@ export function MapLegend({ theme, primary, secondary, isFeature, featureSpec, c
           <span>{stripEnd(legendEnds[1])}</span>
         </button>
       )}
+      {onSearch && legendStrip && legendEnds && !legendOpen && (
+        // shortcut: hidden while the full legend shows (expanded, or no strip yet); fine while the strip is the phone default.
+        <button type="button" onClick={onSearch} aria-label="Search places or data" title="Search places or data"
+          className="wg-panel wg-zbtn absolute bottom-[66px] left-3 z-20 grid size-11 place-items-center rounded-[14px] text-foreground focus-visible:outline-2 focus-visible:outline-ring md:hidden">
+          <Search className="size-[18px]" aria-hidden />
+        </button>
+      )}
       <section aria-label="Legend" data-legend=""
         className={`absolute bottom-6 left-3 right-3 z-20 max-h-[55%] overflow-y-auto rounded-lg border bg-card p-3 shadow-sm md:left-4 md:right-auto md:max-h-[60%] md:w-64 ${legendOpen || !(legendStrip && legendEnds) ? "block" : desktopStrip ? "hidden" : "hidden md:block"}`}>
         {legendOpen && (
@@ -129,7 +139,7 @@ function HatchToggle({ on, onChange, loading, fill }: { on: boolean; onChange: (
       </label>
       {on && (
         <p className="mt-1 text-muted-foreground" aria-live="polite">
-          {loading ? "Checking margins of error…" : "Hatched areas have a margin of error about half the estimate or more, so their color is a rough guide."}
+          {loading ? "Checking margins of error…" : "Hatched areas have a margin of error about half the estimate or more (or are zero with a wide margin), so their color is a rough guide."}
         </p>
       )}
     </div>

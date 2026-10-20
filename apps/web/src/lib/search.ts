@@ -10,7 +10,7 @@ export interface PlaceHit { name: string; kind: string; geoid: string | null; le
 let cache: Promise<PlaceRow[]> | null = null;
 export const loadPlaceIndex = () => (cache ??= fetch(staticUrl("geo/search.json")).then((r) => r.json()).catch((e) => { cache = null; throw e; }));
 
-const toHit = (r: PlaceRow): PlaceHit => ({
+export const toHit = (r: PlaceRow): PlaceHit => ({
   name: r[0], kind: r[1], geoid: r[2] || null,
   level: r[1] === "State" ? "state" : r[1] === "County" ? "county" : null,
   lon: r[3], lat: r[4], sqmi: r[5],
