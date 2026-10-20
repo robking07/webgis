@@ -1,6 +1,6 @@
 // MPOs in search (issue #276), registered by menus.spec.mjs: picking one outlines the whole area
 // and names it; the share URL reopens it; a click on the map never selects it.
-export default function mpoTests({ test, expect, immerse, mapIdle, tapLonLat, HENNEPIN }) {
+export default function mpoTests({ test, expect, mapIdle, tapLonLat, HENNEPIN }) {
   const MET_COUNCIL = "27197300";
   const mpoParam = (page) => new URL(page.url()).searchParams.get("mpo");
   /** The outline's GeoJSON source is on the map and has its shape. */
