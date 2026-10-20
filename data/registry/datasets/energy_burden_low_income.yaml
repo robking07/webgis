@@ -2,7 +2,8 @@ id: energy_burden_low_income
 title: Home energy burden, lower-income households
 phrase: home energy burdens for lower-income households
 description: "Share of income spent on home energy by households with incomes at or below twice the federal poverty line (about $55,500 for a family of four in 2022): their average yearly energy bill divided by their average income."
-category: Environmental justice
+category: Environment and climate
+subcategory: Energy burden
 tags: [energy burden, energy affordability, low-income, utility bills, heating, LEAD, Justice40, environmental justice, poverty, federal poverty level]
 source:
   name: U.S. Department of Energy, Low-Income Energy Affordability Data (LEAD) Tool, 2022 Update (with NREL; via OEDI)

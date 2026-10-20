@@ -3,7 +3,8 @@ title: "Social vulnerability: income and jobs (CDC index)"
 phrase: "socioeconomic vulnerability ranks"
 description: "CDC's Social Vulnerability Index theme for socioeconomic status: residents below 150% of the poverty line, unemployed, paying too much for housing, without a high school diploma or without health insurance, ranked nationally."
 tags: [CDC, ATSDR, SVI, social vulnerability index, socioeconomic status, poverty, unemployment, housing cost, uninsured]
-category: Environmental justice
+category: Environment and climate
+subcategory: Social vulnerability
 source:
   name: CDC/ATSDR Social Vulnerability Index 2022
   shortName: CDC SVI

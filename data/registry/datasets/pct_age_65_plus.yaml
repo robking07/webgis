@@ -2,7 +2,8 @@ id: pct_age_65_plus
 title: Population 65 and older
 phrase: shares of people 65 and older
 description: Share of the total population aged 65 and over.
-category: Population
+category: People
+subcategory: Population and age
 tags: [age, seniors, aging, demographics]
 source:
   name: U.S. Census Bureau, American Community Survey 5-Year Estimates

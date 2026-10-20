@@ -49,13 +49,20 @@ export async function ingestFeatures(only?: string[]) {
     const zip = await cached(m.source.url, m.source.file);
     // `path` may go through a zip inside the zip ("usa.zip/usa.shp"): GDAL nests /vsizip/.
     const nested = m.source.path.match(/^(.*?\.zip)\/(.+)$/);
-    const ds = nested ? `/vsizip//vsizip/${zip}/${nested[1]}/${nested[2]}` : `/vsizip/${zip}/${m.source.path}`;
+    let ds = nested ? `/vsizip//vsizip/${zip}/${nested[1]}/${nested[2]}` : `/vsizip/${zip}/${m.source.path}`;
     const layers = run("ogrinfo", ["-ro", "-q", ds]).split("\n")
       .map((l) => l.match(/^(?:Layer: |\d+: )(\S+)/)?.[1]).filter((n): n is string => !!n && new RegExp(m.source.layerPattern).test(n));
     if (!layers.length) throw new Error(`${e.id}: no layers match ${m.source.layerPattern}`);
     const work = join(CACHE, `features-${e.id}`);
     rmSync(work, { recursive: true, force: true });
     mkdirSync(work, { recursive: true });
+    if (m.join) {
+      // Joined through one GeoPackage, where SQLite indexes the join (joining the zipped CSV directly rescans it per row).
+      const gpkg = join(work, "joined.gpkg");
+      for (const layer of layers) run("ogr2ogr", ["-f", "GPKG", ...(existsSync(gpkg) ? ["-update"] : []), gpkg, ds, layer, "-nlt", "PROMOTE_TO_MULTI"]);
+      run("ogr2ogr", ["-f", "GPKG", "-update", gpkg, `/vsizip/${await cached(m.join.url, m.join.file)}/${m.join.path}`, "-nln", "join"]);
+      ds = gpkg;
+    }
     const fields = Object.keys(m.fields);
     const files: string[] = [];
     let total = 0;

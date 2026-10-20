@@ -2,7 +2,8 @@ id: cooling_degree_days
 title: Cooling degree days
 phrase: cooling needs
 description: "How much air conditioning homes and buildings need in a year: the sum, over every day, of how many degrees the day's average temperature rose above 65°F. Average over 1991–2020."
-category: Climate
+category: Environment and climate
+subcategory: Climate
 tags: [cooling, air conditioning, heat, energy, climate]
 source:
   name: NOAA NCEI nClimDiv county climate data

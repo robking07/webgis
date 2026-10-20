@@ -17,6 +17,9 @@ export interface Theme {
     textMuted: string;
     accent: string;
     accentText: string;
+    /** The "Comparing two maps" strip on the dataset card and the Exit button in full-screen (issue #198):
+     *  a pale accent wash, so compare reads as a mode you are in. */
+    compareTint: string;
     focus: string;
     danger: string;
     /** Bread in the Mapwich logo (the map layer between the slices is `accent`). */
@@ -69,6 +72,8 @@ export interface Theme {
     shieldFill: string;
     /** U.S. land: lighter than other countries in light mode, darker in dark mode, so the lower 48 reads at a glance. */
     focusLand: string;
+    /** Drill-down (issue #203): the wash over everything outside the focused place, at FOCUS_DIM.opacity. */
+    focusDim: string;
     /** Shoreline drawn around water bodies. */
     coastline: string;
     /** National boundary (and its halo). */
@@ -96,6 +101,7 @@ export const THEMES: Record<ThemeName, Theme> = {
       textMuted: "#5b5d63",
       accent: "#1f5fa8",
       accentText: "#ffffff",
+      compareTint: "#e2ecf7",
       focus: "#1f5fa8",
       danger: "#b3261e",
       brandBread: "#a8652a",
@@ -130,6 +136,7 @@ export const THEMES: Record<ThemeName, Theme> = {
       shieldText: "#1b1c1e",
       shieldFill: "#ffffff",
       focusLand: "#f6f4ef",
+      focusDim: "#f6f4ef",
       coastline: "#7f9fba",
       countryLine: "#5d6169",
       countryHalo: "#ffffff",
@@ -150,6 +157,7 @@ export const THEMES: Record<ThemeName, Theme> = {
       textMuted: "#a3a6ad",
       accent: "#7fb2ec",
       accentText: "#0d1b2a",
+      compareTint: "#1d3048",
       focus: "#7fb2ec",
       danger: "#f2b8b5",
       brandBread: "#e0a25c",
@@ -184,6 +192,7 @@ export const THEMES: Record<ThemeName, Theme> = {
       shieldText: "#1b1c1e",
       shieldFill: "#ffffff",
       focusLand: "#22252b",
+      focusDim: "#141619",
       coastline: "#3d6a8e",
       countryLine: "#8b919c",
       countryHalo: "#1d3248",
@@ -216,6 +225,8 @@ export const CONTRAST_RULES: Array<[keyof Theme["ui"] | `map.${keyof Theme["map"
   ["textMuted", "surface", 4.5, "on-map secondary text on its panel: category, 'closer in' hint"],
   ["text", "surface", 3, "on-map icons on their panel: menu, Back, zoom, carets (non-text)"],
   ["accentText", "accent", 4.5, "filter count badge"],
+  ["text", "compareTint", 7, "compare strip text (issue #198)"],
+  ["accent", "compareTint", 4.5, "compare strip buttons' accent text (issue #198)"],
   ["controlEdge", "surface", 3, "on-map control edge vs its own panel (non-text, phones)"],
   ["controlEdge", "map.focusLand", 3, "on-map control edge vs U.S. land (non-text, phones)"],
   ["controlEdge", "map.land", 2, "on-map control edge vs land outside the U.S. (non-text, phones)"],
@@ -243,6 +254,17 @@ export const HATCH = {
   opacity: { light: 0.6, dark: 0.6 } as Record<ThemeName, number>,
   /** The hatch must stand out (WCAG ratio, composited) from every class of every sequential ramp. */
   minContrast: 1.5,
+} as const;
+
+/** Drill-down (issue #203): how strongly `map.focusDim` covers the places outside the focused one.
+ *  `scripts/check.ts` requires each ramp to change visibly under it on average (the focused place
+ *  stands out) while the dimmed ramp's ends stay apart (the rest stays readable). */
+export const FOCUS_DIM = {
+  opacity: { light: 0.6, dark: 0.6 } as Record<ThemeName, number>,
+  /** Mean ΔE2000 between each class of a ramp and the same class dimmed. */
+  minMeanShift: 15,
+  /** ΔE2000 between the lightest and darkest class, both dimmed. */
+  minSpread: 10,
 } as const;
 
 /** Opacity of the frosted-glass desktop filters sidebar (`.wg-glass` in components/design.css,

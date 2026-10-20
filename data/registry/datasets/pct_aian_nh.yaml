@@ -1,7 +1,8 @@
 id: pct_aian_nh
 title: "American Indian and Alaska Native (non-Hispanic) residents"
 description: "Share of residents who are American Indian or Alaska Native alone and not Hispanic or Latino."
-category: Race & ethnicity
+category: People
+subcategory: Race and ethnicity
 tags: [race, ethnicity, Native American, American Indian, Alaska Native, tribal, demographics]
 source:
   name: U.S. Census Bureau, American Community Survey 5-Year Estimates

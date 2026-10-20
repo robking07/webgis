@@ -3,7 +3,7 @@
 // the client through feature state: each feature gets `c` = its class index, so the
 // same tiles serve every dataset and adding one needs no re-tiling.
 import type { LayerSpecification, StyleSpecification } from "maplibre-gl";
-import { HATCH, THEMES, type ThemeName } from "./themes.ts";
+import { FOCUS_DIM, HATCH, THEMES, type ThemeName } from "./themes.ts";
 import { LABEL, RANK_WIDTH, SECOND_OUTLINE_DASH, SIZE, zoomInterp, GEO_LEVELS, type GeoLevel } from "./sizing.ts";
 import { US_LABEL_MASK } from "./us-label-mask.ts";
 
@@ -366,11 +366,40 @@ function rgb(hex: string): [number, number, number] {
   return [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16)) as [number, number, number];
 }
 
-/** Geoids that start with `st` (string range, so the filter needs no `slice`). */
-function stateFilter(st: string): unknown {
-  const next = String(Number(st) + 1).padStart(2, "0");
+/** Geoids that start with `prefix` (a string range, so the filter needs no `slice`). */
+function prefixFilter(prefix: string): unknown {
+  const next = String(Number(prefix) + 1).padStart(prefix.length, "0");
   const g = ["to-string", ["get", "geoid"]];
-  return ["all", [">=", g, st], ["<", g, next]];
+  return ["all", [">=", g, prefix], ["<", g, next]];
+}
+/** Per-state fills: geoids outside STATE_PREFIXES. */
+const OTHER_STATES = ["match", ["slice", ["to-string", ["get", "geoid"]], 0, 2], [...STATE_PREFIXES], false, true];
+
+/** Drill-down (issue #203): filters for one level's fill, outline and selection layers, keeping only
+ *  the places inside `parent` (by GEOID prefix: state 2 digits, county 5, tract 11), or every place
+ *  (null). Per-state fills keep their own state filter. */
+// shortcut: the hatch layer isn't filtered (outside the focus it draws under the dim wash); filter it too if that reads badly.
+export function focusFilters(level: GeoLevel, parent: string | null): Record<string, unknown> {
+  const inside = parent ? prefixFilter(parent) : null;
+  const both = (own: unknown) => (inside ? ["all", own, inside] : own);
+  const out: Record<string, unknown> = {};
+  for (const id of [`${level}-fill`, `${level}-outline`, `${level}-highlight-halo`, `${level}-highlight`, `${level}-highlight-second`]) out[id] = inside;
+  if (PER_STATE_LEVELS.has(level)) {
+    for (const st of STATE_PREFIXES) out[`${level}-fill-${st}`] = both(prefixFilter(st));
+    out[`${level}-fill-other`] = both(OTHER_STATES);
+  }
+  return out;
+}
+
+export const FOCUS_DIM_LAYER = "focus-dim";
+/** Drill-down: a wash over every place at the focused place's level except the focused one. It goes
+ *  above every fill and outline, under the selection outlines and the reference overlays. */
+export function focusDimLayer(source: string, level: GeoLevel, geoid: string, theme: ThemeName): LayerSpecification {
+  return {
+    id: FOCUS_DIM_LAYER, type: "fill", source, "source-layer": level,
+    filter: ["!=", ["to-string", ["get", "geoid"]], geoid],
+    paint: { "fill-color": THEMES[theme].map.focusDim, "fill-opacity": FOCUS_DIM.opacity[theme] },
+  };
 }
 
 /** Fill, outline and hover/selection outline for one geography level. */
@@ -389,9 +418,8 @@ export function thematicLayers(o: ThematicLayerOptions): LayerSpecification[] {
   ];
   if (perState) {
     const fill = { "fill-color": THEMES[o.theme].map.noData, "fill-opacity": 0.92 };
-    for (const st of STATE_PREFIXES) fills.push({ id: `${o.level}-fill-${st}`, type: "fill", ...base, filter: stateFilter(st) as never, paint: fill });
-    const known = ["match", ["slice", ["to-string", ["get", "geoid"]], 0, 2], [...STATE_PREFIXES], false, true];
-    fills.push({ id: `${o.level}-fill-other`, type: "fill", ...base, filter: known as never, paint: fill });
+    for (const st of STATE_PREFIXES) fills.push({ id: `${o.level}-fill-${st}`, type: "fill", ...base, filter: prefixFilter(st) as never, paint: fill });
+    fills.push({ id: `${o.level}-fill-other`, type: "fill", ...base, filter: OTHER_STATES as never, paint: fill });
   }
   return [
     ...fills,

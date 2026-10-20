@@ -3,6 +3,7 @@ title: "Coronary heart disease"
 phrase: heart disease rates
 description: "Share of adults a doctor has told they have coronary heart disease or angina. Age-adjusted prevalence; model-based small-area estimate."
 category: Health
+subcategory: Conditions
 tags: [heart disease, cardiovascular, chronic disease, health]
 source:
   name: CDC PLACES (Local Data for Better Health), 2025 release

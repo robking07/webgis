@@ -67,7 +67,7 @@ describe("fetchDetail / fetchGeography", () => {
     expect(TRACT_URL).toMatch(/\/values\/tracts\/27053\.json$/);
   });
   it("reads a tract's name, point and land area from its county's geography file, not the database", async () => {
-    expect(await fetchGeography("27053026100")).toEqual({ geoid: "27053026100", level: "tract", name: "Tract 261, Hennepin County, MN", lon: -93.2567, lat: 44.9706, aland_sqmi: 0.512 });
+    expect(await fetchGeography("27053026100")).toEqual({ geoid: "27053026100", level: "tract", name: "Census tract 261, Hennepin County, MN", lon: -93.2567, lat: 44.9706, aland_sqmi: 0.512 });
     expect(await fetchGeography("27053999999")).toBeNull();
     expect(calls).toEqual([TRACT_GEO_URL]);
     expect(TRACT_GEO_URL).toMatch(/\/geo\/tracts\/27053\.json$/);

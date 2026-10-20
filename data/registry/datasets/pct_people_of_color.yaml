@@ -1,7 +1,8 @@
 id: pct_people_of_color
 title: "People of color"
 description: "Share of residents who are Hispanic or Latino, or of any race other than white alone (everyone except non-Hispanic white residents)."
-category: Race & ethnicity
+category: People
+subcategory: Race and ethnicity
 tags: [race, ethnicity, diversity, minority, demographics]
 source:
   name: U.S. Census Bureau, American Community Survey 5-Year Estimates

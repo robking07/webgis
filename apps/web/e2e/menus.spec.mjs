@@ -80,6 +80,8 @@ async function open(vp, path, { scheme = "light", ready = true } = {}) {
   page.on("pageerror", (e) => page.errors.push(`pageerror: ${e.message}`));
   page.on("console", (m) => {
     if (m.type() !== "error") return;
+    // shortcut: LODES, Census 2020, FARS and 287(g) counts files are not on R2 yet, so they 404; remove when Robbie uploads them.
+    if (/\.counts\.json$|\/values\/counts\//.test(m.location()?.url ?? "") && /404/.test(m.text())) return;
     // Vercel Web Analytics only exists on Vercel; locally its script 404s.
     if ((m.location()?.url ?? "").includes("/_vercel/")) return;
     page.errors.push(`console: ${m.text()} ${m.location()?.url ?? ""}`);
@@ -401,7 +403,7 @@ test("monitor: an open dataset drop-down closes on pan and sits above the sideba
   await wait(400);
   // Regression: the dataset list must not sit under (or tangle with) the filters sidebar.
   const onTop = await page.evaluate(() => {
-    const panel = document.querySelector('[role=menu][aria-label="Categories"]').parentElement;
+    const panel = document.querySelector('[role=menu][aria-label="Categories"]').closest("[role=dialog]");
     const r = panel.getBoundingClientRect();
     const pts = [[r.left + 20, r.top + 20], [r.left + r.width / 2, r.top + r.height / 2], [r.right - 20, r.bottom - 20]];
     return pts.every(([x, y]) => panel.contains(document.elementFromPoint(x, y)));
@@ -411,7 +413,7 @@ test("monitor: an open dataset drop-down closes on pan and sits above the sideba
   const sideShown = (await side.count()) ? await opacityOf(side) : 0;
   if (sideShown > 0) {
     const overlap = await page.evaluate(() => {
-      const a = document.querySelector('[role=menu][aria-label="Categories"]').parentElement.getBoundingClientRect();
+      const a = document.querySelector('[role=menu][aria-label="Categories"]').closest("[role=dialog]").getBoundingClientRect();
       const b = document.querySelector("section#filters-panel").getBoundingClientRect();
       return a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom;
     });
@@ -434,9 +436,9 @@ test("phone dataset sheet: chips, pick switches the map, sheet and details close
   await sheet.waitFor();
   expect((await page.locator('section[aria-label^="Details for"]').count()) === 0, "details still open under the dataset list");
   const chips = sheet.locator('[role=radiogroup][aria-label=Categories] [role=radio]');
-  expect((await chips.count()) >= 8, `only ${await chips.count()} category chips`);
-  expect((await sheet.locator("[role=radio][aria-checked=true]").innerText()).trim() === "Income & poverty", "current category chip not selected");
-  await chips.filter({ hasText: "Commuting" }).click();
+  expect((await chips.count()) === 6, `${await chips.count()} category chips, expected 6`);
+  expect((await sheet.locator("[role=radio][aria-checked=true]").innerText()).trim() === "Economy", "current category chip not selected");
+  await chips.filter({ hasText: "Transportation" }).click();
   await sheet.getByRole("menuitemradio", { name: /Work from home/i }).first().click();
   await sheet.waitFor({ state: "detached" });
   await page.waitForFunction(() => new URL(location.href).searchParams.get("d") === "pct_work_from_home");
@@ -450,8 +452,11 @@ test("phone dataset sheet: chips, pick switches the map, sheet and details close
   await page.getByRole("button", { name: /other .* datasets/ }).click();
   await sheet.waitFor();
   // Tapping the map above the sheet opens details, which closes the list.
-  // The sheet covers the lower part of the screen: tap the map just above it.
+  // The sheet covers the lower part of the screen: tap the map just above it, inside Hennepin (the
+  // focused place since the first tap: issue #203).
   const top = await sheet.evaluate((el) => el.getBoundingClientRect().top);
+  await page.evaluate(([c, dy]) => window.__wgMap.easeTo({ center: c, offset: [0, dy], duration: 0 }), [HENNEPIN, top - 40 - page.viewportSize().height / 2]);
+  await mapIdle(page);
   await tapAt(page, page.viewportSize().width / 2, top - 40);
   await page.locator('section[aria-label^="Details for"]').waitFor();
   expect((await sheet.count()) === 0, "dataset list still open with the details");
@@ -575,7 +580,7 @@ for (const vp of ["phone", "laptop"]) {
     await mode.getByRole("radio", { name: "Change" }).click();
     // The year picker is gone (not greyed out); From and To take its place.
     expect(await page.locator("#filters-panel [role=radiogroup][aria-label=Years]").count() === 0, "year picker still shown in change mode");
-    expect((await span()).includes("2010–2014 → 2015–2019"), `kept year as To: ${await span()}`);
+    expect((await span()).includes("from 2010–2014 to 2015–2019"), `kept year as To: ${await span()}`);
     expect((await radio("To", "2015–2019").getAttribute("aria-checked")) === "true", "To isn't the year picked in Values");
     // Back to Values restores that year.
     await mode.getByRole("radio", { name: "Values" }).click();
@@ -583,9 +588,9 @@ for (const vp of ["phone", "laptop"]) {
     await mode.getByRole("radio", { name: "Change" }).click();
     // A later To keeps From; then a later From.
     await radio("To", "2020–2024").click();
-    expect((await span()).includes("2010–2014 → 2020–2024"), `after To: ${await span()}`);
+    expect((await span()).includes("from 2010–2014 to 2020–2024"), `after To: ${await span()}`);
     await radio("From", "2015–2019").click();
-    expect((await span()).includes("2015–2019 → 2020–2024"), `after From: ${await span()}`);
+    expect((await span()).includes("from 2015–2019 to 2020–2024"), `after From: ${await span()}`);
     if (page.isPhone) await page.getByRole("button", { name: "Apply", exact: true }).click();
     else await page.getByRole("button", { name: "Close map options" }).click();
     await page.waitForSelector("#filters-panel", { state: "detached" });
@@ -623,6 +628,18 @@ for (const vp of ["phone", "laptop"]) {
     await hover.waitFor({ timeout: 5000 });
     const hoverText = await hover.innerText();
     expect(/[+−][\d.]+ pts|No clear change/.test(hoverText) && hoverText.includes("→"), `hover: ${hoverText}`);
+    // The change leads, in the largest type (#200).
+    const lead = hover.locator(".wg-popup-lead-value");
+    expect(/^([+−][\d.]+ pts|No clear change)$/.test((await lead.innerText()).trim()), `hover lead: ${await lead.innerText()}`);
+    const px = (l) => l.evaluate((el) => parseFloat(getComputedStyle(el).fontSize));
+    expect(await px(lead) > await px(hover.locator(".wg-popup-title")), "hover change isn't larger than the place name");
+    // Each value has its period right under it (Robbie, 2026-10-14).
+    const cells = hover.locator(".wg-popup-lead-cell");
+    expect(await cells.count() === 2, "hover doesn't show two values");
+    const periods = await hover.locator(".wg-popup-lead-cell-period").allInnerTexts();
+    expect(periods.join("|") === "2015–2019|2020–2024", `hover periods: ${periods}`);
+    const [v, p] = await Promise.all([".wg-popup-lead-cell-value", ".wg-popup-lead-cell-period"].map((c) => cells.first().locator(c).boundingBox()));
+    expect(p.y >= v.y + v.height - 1 && Math.abs(p.x - v.x) < 2, "period isn't directly under its value");
     await tapLonLat(page, ...HENNEPIN);
     const card = page.locator("[data-change-card]");
     await card.waitFor({ timeout: 15000 });
@@ -641,6 +658,50 @@ test("laptop one-period map: no Values / Change switch", async (o) => {
   await page.locator("#filters-panel").waitFor();
   expect(await page.locator("#filters-panel [role=radiogroup][aria-label='Map shows']").count() === 0, "Change offered on a one-period map");
   expect(await page.locator("#filters-panel section[aria-label=Geography]").count() === 1, "no Geography section");
+});
+
+// Robbie (2026-10-14, #225): the title's drop-down is the one dataset menu; no Change dataset button.
+test("laptop dataset menu: the card title opens it tall, with search, the data library link, and Esc", async (o) => {
+  const { page } = await o("laptop", "/map?d=median_household_income&at=-93.27,44.97,9");
+  expect(await page.locator("[data-change-dataset]").count() === 0, "a Change dataset button is back");
+  const title = page.locator('section[aria-label="Mapped dataset"]').getByRole("button", { name: /choose another dataset/ });
+  await title.click();
+  const menu = page.locator('section[role=dialog][aria-label="Datasets"]');
+  await menu.waitFor();
+  const search = menu.getByRole("searchbox");
+  expect(await search.evaluate((el) => el === document.activeElement), "focus didn't move into the search box");
+  // Taller than the old drop-down: most of the screen below the title, clear of the legend strip.
+  const box = await menu.boundingBox();
+  expect(box.height > page.viewportSize().height * 0.6, `menu only ${Math.round(box.height)} px tall`);
+  const legend = await page.evaluate(() => [...document.querySelectorAll("[data-legend]")].filter((el) => el.offsetParent).map((el) => el.getBoundingClientRect().top));
+  expect(legend.every((top) => top >= box.y + box.height), "the menu covers the legend");
+  expect(await menu.getByRole("link", { name: /Browse the full data library/ }).getAttribute("href") === "/data", "no data library link");
+  // Search spans categories: no category stays selected, and the match is listed.
+  await search.fill("work from home");
+  expect(await menu.locator('[role=menu][aria-label="Categories"] [aria-checked=true]').count() === 0, "a category stays selected while searching");
+  await menu.getByRole("menuitemradio", { name: /Work from home/i }).first().waitFor();
+  await search.fill("zzzz no such map");
+  await menu.getByText(/No datasets match/).waitFor();
+  // Esc closes it and hands focus back to the title.
+  await page.keyboard.press("Escape");
+  await menu.waitFor({ state: "detached" });
+  expect(await title.evaluate((el) => el === document.activeElement), "focus didn't return to the title");
+  // Picking from the matches switches the map.
+  await title.click();
+  await menu.getByRole("searchbox").fill("work from home");
+  await menu.getByRole("menuitemradio", { name: /Work from home/i }).first().click();
+  await menu.waitFor({ state: "detached" });
+  await page.waitForFunction(() => new URL(location.href).searchParams.get("d") === "pct_work_from_home");
+});
+
+test("laptop hidden card: the heading's title opens the same menu", async (o) => {
+  const { page } = await o("laptop", "/map?d=median_household_income&at=-93.27,44.97,9");
+  await immerse(page);
+  expect(await opacityOf(page.locator('section[aria-label="Mapped dataset"]')) === 0, "the card didn't hide");
+  await page.locator("[data-immersed-heading]").getByRole("button", { name: /other .* datasets/ }).click();
+  const menu = page.locator('[data-immersed-heading] section[role=dialog][aria-label="Datasets"]');
+  await menu.waitFor();
+  await menu.getByRole("searchbox").waitFor();
 });
 
 test('details with no links show no "Learn more" heading', async (o) => {
@@ -692,6 +753,19 @@ for (const vp of ["phone", "laptop", "monitor"]) {
     expect(r.n === 0, `${r.n} block groups drawn at zoom ${r.z.toFixed(1)}`);
   });
 }
+
+test("phone: a long dataset title stops short of the back button (issue #243)", async (o) => {
+  const { page } = await o("phone", "/map?d=svi_minority&lv=county&at=-93.4752,45.0061,7.2");
+  await immerse(page);
+  await tapLonLat(page, ...HENNEPIN);
+  await page.locator('section[aria-label^="Details for"]').waitFor();
+  const back = page.locator('button[aria-label="Back to the previous view"]');
+  await back.waitFor();
+  await wait(400);
+  const h = await page.locator("[data-dataset-heading]").boundingBox();
+  const b = await back.boundingBox();
+  expect(h.x + h.width <= b.x, `heading ends at ${Math.round(h.x + h.width)}px, back button starts at ${Math.round(b.x)}px`);
+});
 
 /** Phone chrome over the map: every text, icon and edge against its own backing. */
 const PHONE_ON_MAP = ["[data-dataset-heading]", "[data-filter-button]:not([inert] *)", "[data-filter-note]:not([inert] *)", "button[data-legend]",
@@ -765,7 +839,7 @@ for (const vp of ["phone", "laptop"]) {
     }
     const { page } = await o(vp, "/place/27053100200", { ready: false });
     await page.locator("main h1").waitFor({ timeout: 20000 });
-    expect((await page.locator("main h1").innerText()) === "Tract 1002, Hennepin County, MN", `tract page heading "${await page.locator("main h1").innerText()}"`);
+    expect((await page.locator("main h1").innerText()) === "Census tract 1002, Hennepin County, MN", `tract page heading "${await page.locator("main h1").innerText()}"`);
     const meta = await page.locator("main header p").last().innerText();
     expect(/^[1-9]\d* datasets · 0\.6 sq mi of land$/.test(meta), `tract page: "${meta}"`);
     expect(page.requests.some((u) => u.includes("/geo/tracts/27053.json")), "no request for the county's tract geography file");
@@ -907,10 +981,56 @@ test("laptop earlier year at block-group zoom: no boundary file that doesn't exi
   expect(drawn > 0, "no tracts drawn on the 2019 map at zoom 13");
 });
 
+test("laptop search: \"Du\" lists places and no unrelated datasets; \"asthma\" finds Asthma (#252)", async (o) => {
+  const { page } = await o("laptop", "/map?d=pct_poverty");
+  await page.keyboard.press("/");
+  const dlg = page.getByRole("dialog", { name: "Search places and datasets" });
+  const box = dlg.getByRole("combobox"), datasets = dlg.getByRole("region", { name: "Datasets" });
+  await box.fill("Du");
+  await dlg.getByRole("region", { name: "Places" }).getByRole("option", { name: /^Du/ }).first().waitFor({ timeout: 15000 });
+  expect((await datasets.innerText()).includes("No matching datasets."), `datasets for "Du": ${await datasets.innerText()}`);
+  const places = await dlg.getByRole("region", { name: "Places" }).innerText();
+  expect(places.includes("Duluth"), `"Du" doesn't list Duluth (#258): ${places}`);
+  await box.fill("asthma");
+  await datasets.getByRole("option").first().waitFor();
+  expect(/^Asthma/.test((await datasets.getByRole("option").first().innerText()).trim()), `first dataset for "asthma": ${await datasets.innerText()}`);
+});
+
+test("laptop map fixes (#187): canvas label follows the map, tiles banner only for our tiles and clears, failed default year errors", async (o) => {
+  const { page } = await o("laptop", "/map?d=pct_poverty");
+  const label = () => page.evaluate(() => window.__wgMap.getCanvas().getAttribute("aria-label"));
+  expect(/poverty/i.test(await label()), `first label: ${await label()}`);
+  await page.keyboard.press("/");
+  const dlg = page.getByRole("dialog", { name: "Search places and datasets" });
+  await dlg.getByRole("combobox").fill("asthma");
+  await dlg.getByRole("region", { name: "Datasets" }).getByRole("option").first().click();
+  await page.waitForFunction(() => /asthma/i.test(window.__wgMap.getCanvas().getAttribute("aria-label")), null, { timeout: 15000 });
+
+  const banner = page.getByText("Boundary tiles aren't available yet.");
+  const fire = (ev) => page.evaluate((ev) => window.__wgMap.fire({ ...ev, error: ev.error && new Error(ev.error) }), ev);
+  await fire({ type: "error", error: "404 basemap", sourceId: "basemap" });
+  await wait(300);
+  expect(!(await banner.count()), "a basemap error showed the boundary tiles banner");
+  await fire({ type: "error", error: "404 state.pmtiles", sourceId: "b-state" });
+  await banner.waitFor({ timeout: 5000 });
+  await fire({ type: "data", dataType: "source", sourceId: "b-state", tile: {} });
+  await banner.waitFor({ state: "detached", timeout: 5000 });
+
+  // The default year's file fails while an earlier year shows: a message, not an endless spinner.
+  await page.route(/\/values\/pct_poverty\/(state|county)\.json/, (r) => r.fulfill({ status: 404, body: "" }));
+  await page.goto(`${BASE}/map?d=pct_poverty&t=2019&theme=light`);
+  await page.getByText(/No (state|county) data for pct_poverty/).first().waitFor({ timeout: 15000 });
+  page.errors = page.errors.filter((e) => !/404/.test(e));
+});
+
 // Feature files (one per feature; this file keeps the shared harness).
 (await import("./compare.tests.mjs")).default({ test, expect, wait, immerse, tapLonLat, live, HENNEPIN, dbCalls });
 (await import("./share.tests.mjs")).default({ test, expect, wait, mapIdle });
 (await import("./context.tests.mjs")).default({ test, expect, wait });
+(await import("./history.tests.mjs")).default({ test, expect, immerse, mapIdle });
+(await import("./drilldown.tests.mjs")).default({ test, expect, immerse, mapIdle, tapLonLat, HENNEPIN });
+(await import("./compare-mode.tests.mjs")).default({ test, expect, immerse });
+(await import("./splash.tests.mjs")).default({ test, expect, wait });
 
 // ── Run ────────────────────────────────────────────────────────────────────────
 // Round-robin keeps the slow tests spread across shards.

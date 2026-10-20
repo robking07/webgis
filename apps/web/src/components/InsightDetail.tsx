@@ -32,7 +32,7 @@ export function InsightDetail({ insight }: { insight: Insight }) {
     fetch(staticUrl("geo/names.json")).then((r) => r.json()).then(setNames, () => {});
   }, [x.id, y.id]);
   const biv = useMemo(() => (vals ? classifyBivariate(vals[0], vals[1]) : null), [vals]);
-  const mapHref = `/map${serializeUrlState({ d: x.id, b: y.id, at: { lon: DEFAULT_VIEW.lon, lat: DEFAULT_VIEW.lat, zoom: 5 }, theme: null, lv: null })}`;
+  const mapHref = `/map${serializeUrlState({ d: x.id, b: y.id, at: { lon: DEFAULT_VIEW.lon, lat: DEFAULT_VIEW.lat, zoom: 6 }, theme: null, lv: null })}`;
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 md:px-8">

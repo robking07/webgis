@@ -1,10 +1,11 @@
 // Compare places side by side (roadmap 1.1, issue #117): /compare/<A>/<B>?d=<dataset id>.
-// Laptops and monitors show a map beside the panel with both places outlined (PR 2a); phones get no map.
+// Each place gets its own map (side by side on laptops, tabs on phones; D-258 PR 2a, 2c).
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ComparePlaces } from "@/components/compare/ComparePlaces";
 import { SiteHeader } from "@/components/SiteHeader";
-import { parseCompare } from "@/lib/compare";
+import { parseCompare, shortName } from "@/lib/compare";
+import { parentsOf } from "@/lib/counts";
 import { placeName } from "@/lib/place-name";
 import { DATASET_BY_ID } from "@/lib/registry";
 import { LANDING } from "@/lib/landing";
@@ -20,7 +21,9 @@ async function load({ params, searchParams }: Props) {
   if (!nameA || !nameB) return null;
   // No metric named (or an unknown one): lead with the landing map's.
   const dataset = DATASET_BY_ID.get(state.d ?? "") ?? DATASET_BY_ID.get(LANDING.d)!;
-  return { ...state, nameA, nameB, dataset };
+  // Names of the places each one's share is taken of (county, state, U.S.), for the counts (2b).
+  const parentNames = Object.fromEntries([...parentsOf(state.a), ...parentsOf(state.b)].map((g) => [g, g === "us" ? "U.S." : shortName(placeName(g) ?? g)]));
+  return { ...state, nameA, nameB, dataset, parentNames };
 }
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
@@ -39,7 +42,7 @@ export default async function ComparePage(props: Props) {
   return (
     <>
       <SiteHeader />
-      <ComparePlaces a={c.a} b={c.b} nameA={c.nameA} nameB={c.nameB} datasetId={c.dataset.id} />
+      <ComparePlaces a={c.a} b={c.b} nameA={c.nameA} nameB={c.nameB} datasetId={c.dataset.id} parentNames={c.parentNames} />
     </>
   );
 }

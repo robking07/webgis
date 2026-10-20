@@ -16,16 +16,21 @@ interface Props {
   initialSnap?: "peek" | "full";
   /** Full height as a share of the map area (the dataset list stops lower, so the map shows above). */
   fullRatio?: number;
+  /** Turning true drops the drawer to "peek", out of the way of the map (a "Compare with…" pick). */
+  collapsed?: boolean;
 }
 
 const DRAG_THRESHOLD = 40; // px of travel that counts as a deliberate swipe
 const FULL_RATIO = 0.9;    // full height as a share of the map area
 const PEEK_MAX = 0.55;
 
-export function BottomSheet({ summary, children, onClose, label, initialSnap = "peek", fullRatio = FULL_RATIO }: Props) {
+export function BottomSheet({ summary, children, onClose, label, initialSnap = "peek", fullRatio = FULL_RATIO, collapsed = false }: Props) {
   const sheet = useRef<HTMLDivElement>(null);
   const peekRef = useRef<HTMLDivElement>(null);
   const [snap, setSnap] = useState<"peek" | "full">(initialSnap);
+  // Adjusted during render, not in an effect.
+  const [wasCollapsed, setWasCollapsed] = useState(collapsed);
+  if (wasCollapsed !== collapsed) { setWasCollapsed(collapsed); if (collapsed) setSnap("peek"); }
   const [heights, setHeights] = useState({ peek: 220, full: 600 });
   const [drag, setDrag] = useState<{ startY: number; startH: number; dy: number } | null>(null);
   /** A swipe also fires a click on release; this swallows that click. */

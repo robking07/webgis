@@ -3,6 +3,7 @@ title: Obesity
 phrase: obesity rates
 description: "Share of adults with a body mass index of 30 or more. Age-adjusted prevalence among adults; model-based small-area estimate."
 category: Health
+subcategory: Conditions
 tags: [obesity, BMI, health]
 source:
   name: CDC PLACES (Local Data for Better Health), 2025 release

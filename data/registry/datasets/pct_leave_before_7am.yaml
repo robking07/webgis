@@ -1,7 +1,8 @@
 id: pct_leave_before_7am
 title: "Leave for work before 7 a.m."
-description: "Share of workers who don't work from home who usually leave for work before 7:00 a.m."
-category: Commuting
+description: "Share of commuters (workers 16 and over who don't work from home), not of all workers, who usually leave for work before 7:00 a.m."
+category: Transportation
+subcategory: Commuting
 tags: [departure time, early shift, rush hour, transportation]
 source:
   name: U.S. Census Bureau, American Community Survey 5-Year Estimates

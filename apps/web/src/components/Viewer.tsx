@@ -4,7 +4,7 @@
 // framing in useFraming, and one file per panel).
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { StatusState } from "@webgis/design/components";
-import { formatValue, GEO_LEVELS, HATCH_LEVELS, isGradable, type GeoLevel } from "@webgis/design";
+import { childLevel, formatValue, GEO_LEVELS, HATCH_LEVELS, isGradable, type GeoLevel } from "@webgis/design";
 import { DataTable } from "./DataTable";
 import { MapCredits } from "./MapCredits";
 import { SearchOverlay } from "./SearchOverlay";
@@ -16,7 +16,7 @@ import { MapView, type FeatureHit, type HoverInfo, type MapApi } from "./map/Map
 import { DATASET_BY_ID, DATASETS, type Dataset } from "@/lib/registry";
 import { loadPlaceIndex, placeByGeoid, type PlaceHit } from "@/lib/search";
 import { useIsCompact, useIsNarrow, useIsPhone } from "./BottomSheet";
-import { DatasetSheet } from "./DatasetMenus";
+import { DatasetMenu, DatasetSheet, type BrowseSlot } from "./DatasetMenus";
 import { parseUrlState, useUrlState, type UrlState } from "@/lib/url-state";
 import { areaChangeNote, stopsFor } from "@/lib/periods";
 import { useViewerData } from "./map-page/useViewerData";
@@ -28,7 +28,8 @@ import { filterCount, FiltersSheet, FiltersSidebar, pluralLabel, type FilterValu
 import { useMapMotion } from "./map-page/useMapMotion";
 import { MapControls } from "./map-page/MapControls";
 import { MapLegend } from "./map-page/MapLegend";
-import { DatasetsPanel } from "./map-page/DatasetsPanel";
+import { LeaveComparePrompt } from "./map-page/LeaveComparePrompt";
+import { pairReason } from "@/lib/layers";
 import { FeatureHoverPopup, PlaceHoverPopup } from "./map-page/HoverPopups";
 import { DetailPanel } from "./map-page/DetailPanel";
 import { useUnreliable } from "./map-page/useUnreliable";
@@ -56,14 +57,17 @@ export function Viewer({ search }: { search: string }) {
   const [featureSelected, setFeatureSelected] = useState<FeatureHit | null>(null);
   const [tilesError, setTilesError] = useState<string | null>(null);
   const [tableOpen, setTableOpen] = useState(false);
-  const [browserOpen, setBrowserOpen] = useState(false);
+  /** The dataset menu is open, and which map it picks (issue #198); null = closed. Laptops and up:
+   *  the title's drop-down; phones: the dataset sheet (issue #225). */
+  const [browse, setBrowse] = useState<BrowseSlot | null>(null);
+  /** Comparing, a map that can't pair with the second one was opened: ask before leaving compare. */
+  const [leaveFor, setLeaveFor] = useState<string | null>(null);
   const [searchOpen, setSearchOpen] = useState(false);
-  const [immersed, setImmersed] = useState(false);
+  // A shared drill-down link opens full screen, where the focused place's name shows (issue #203).
+  const [immersed, setImmersed] = useState(() => !!initial.in);
   /** The filters panel (issue #34): a sidebar on desktop, a full-screen sheet on phones. `anchor`
    *  is the filter button it grows from and shrinks back into. */
   const [filters, setFilters] = useState<{ anchor: HTMLElement | null } | null>(null);
-  /** Immersed: the category or dataset menu is open. */
-  const [headingMenu, setHeadingMenu] = useState(false);
   /** Feature-layer facet filters: field → values HIDDEN by the user. */
   const [hidden, setHidden] = useState<Record<string, Set<string>>>({});
   const [peek, setPeek] = useState(false);
@@ -85,20 +89,21 @@ export function Viewer({ search }: { search: string }) {
   const phone = useIsPhone();
   const narrow = useIsNarrow();
   const compact = useIsCompact();
+  const menuOpen = !!browse && !phone;
   /** Phones: the dataset list is open as a bottom sheet (issue #34). */
-  const [listOpen, setListOpen] = useState(false);
-  /** Bumped to close an open dataset drop-down when the map starts moving. */
-  const [closeKey, setCloseKey] = useState(0);
+  const listOpen = !!browse && phone;
   // "The map wins while it moves" (issue #34): on smaller screens a pan, pinch or scroll closes
   // menus and sets the filters sidebar aside until the map settles; larger monitors keep the
   // sidebar and legend, and only an open dataset list closes.
   const { moving, start: startMotion } = useMapMotion(mapApi);
   const stepAside = moving && compact;
 
+  /** A place is focused (drill-down): Esc keeps the full-screen heading, which shows its name. */
+  const focusedRef = useRef(false);
   // Esc brings the chrome back (panels and menus handle their own Esc first).
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") { setImmersed(false); setPeek(false); setBrowserOpen(false); }
+      if (e.key === "Escape") { if (!focusedRef.current) setImmersed(false); setPeek(false); setBrowse(null); setLeaveFor(null); }
       // "/" opens search, unless the user is typing somewhere.
       if (e.key === "/" && !(e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement)) { e.preventDefault(); setSearchOpen(true); }
     };
@@ -108,9 +113,10 @@ export function Viewer({ search }: { search: string }) {
 
   /** Counties whose tracts are on screen, while hatching or a change map's margin test needs them. */
   const [tractCounties, setTractCounties] = useState<string[]>([]);
-  const { primary, secondary, isFeature, featureSpec, stops, stop, stopId, since, xFrom, testMoes, availableLevels, pinnedLevel, bands, x, y, level, classed, blockField } = useViewerData(state, tractCounties);
+  const { primary, secondary, isFeature, featureSpec, stops, stop, stopId, since, xBase, xFrom, testMoes, availableLevels, pinnedLevel, focus, bands, x, y, level, classed, blockField } = useViewerData(state, tractCounties);
   const current = classed[level];
-  const error = x.error ?? y.error ?? xFrom.error;
+  // A year off the default is colored with the default's breaks (xBase): its failure is an error, not a spinner.
+  const error = x.error ?? y.error ?? xFrom.error ?? xBase.error;
   const available = !!primary && !isFeature && availableLevels.includes(level);
   // The table lists states or counties (finer areas have no names to search); below counties it shows counties.
   const tableLevel: GeoLevel | null = level === "state" || level === "county" ? level : availableLevels.includes("county") ? "county" : null;
@@ -136,7 +142,14 @@ export function Viewer({ search }: { search: string }) {
   }, [primary, hidden]);
 
   // Framing (D-35): clicks and picks zoom to their target, clear of open panels, with a way back.
-  const { root, canGoBack, goBack, onMapSelect, onFeatureSelect, goToPlace } = useFraming({ mapApi, setSelected, setFeatureSelected, isFeature, primary, tableOpen, narrow });
+  // Drill-down (issue #203): a click on a place with a finer level focuses it; each step is a Back step.
+  const setFocus = useCallback((geoid: string | null) => update({ in: geoid }), [update]);
+  const childOf = useCallback((l: GeoLevel) => childLevel(availableLevels, l), [availableLevels]);
+  const { root, canGoBack, goBack, onMapSelect, onFeatureSelect, goToPlace, focusName, leaveFocus } = useFraming({ mapApi, setSelected, setFeatureSelected, isFeature, primary, tableOpen, narrow, focus: state.in ?? null, setFocus, childOf });
+  useEffect(() => { focusedRef.current = !!focus; });
+  // Focusing a place goes full screen, where the heading names it (adjusted during render).
+  const [seenFocus, setSeenFocus] = useState(focus?.geoid);
+  if (seenFocus !== focus?.geoid) { setSeenFocus(focus?.geoid); if (focus) { setImmersed(true); setPeek(false); } }
   const onTableClose = useCallback(() => setTableOpen(false), []);
   const onTablePick = useCallback((geoid: string, name: string, lon: number, lat: number) => {
     if (!tableLevel) return;
@@ -160,15 +173,40 @@ export function Viewer({ search }: { search: string }) {
   };
   const onSearchPlace = (p: PlaceHit) => { setSearchOpen(false); goToPlace(p); };
   /** Phones: the dataset list and the details share the bottom sheet; opening one closes the other. */
-  const openSheet = () => { setListOpen(true); setSelected(null); setFeatureSelected(null); setTableOpen(false); mapApi.current?.select("county", null); };
+  const openMenu = (slot: BrowseSlot) => {
+    setBrowse(slot);
+    if (phone) { setSelected(null); setFeatureSelected(null); setTableOpen(false); mapApi.current?.select("county", null); }
+  };
   // Opening a place or the table closes the dataset list (adjusted during render, not in an effect).
-  if (listOpen && (selected || featureSelected || tableOpen)) setListOpen(false);
+  if (listOpen && (selected || featureSelected || tableOpen)) setBrowse(null);
   /** Keep the shown year when the next dataset has it too. */
   const keep = (id: string, t: string | null | undefined) => (t && stopsFor(DATASET_BY_ID.get(id) ?? null).some((s) => s.id === t) ? t : null);
   /** The next dataset keeps the shown year, and the change map's start year, when it has them. */
   const keepStops = (id: string) => ({ t: keep(id, state.t), since: keep(id, since?.id) });
-  const onSearchDataset = (d: Dataset) => { setSearchOpen(false); update({ d: d.id, b: state.b === d.id ? null : state.b, lv: null, ...keepStops(d.id) }); };
-  const pickDataset = (id: string) => update({ d: id, b: state.b === id ? null : state.b, lv: null, ...keepStops(id) });
+  const openAlone = (id: string) => update({ d: id, b: null, lv: null, ...keepStops(id) });
+  /** A new first map keeps the second while the two can still be compared. The picker greys out the
+   *  rest; "Map it", search and the like ask first (Robbie, 2026-10-14). */
+  const pickDataset = (id: string) => {
+    // Opening the second map itself shows it alone, as before.
+    if (!secondary || id === secondary.id) openAlone(id);
+    else if (pairReason(DATASET_BY_ID.get(id)!, secondary)) setLeaveFor(id);
+    else update({ d: id, lv: null, ...keepStops(id) });
+  };
+  const onSearchDataset = (d: Dataset) => { setSearchOpen(false); pickDataset(d.id); };
+  // Compare mode (issue #198). Entering, swapping and leaving each add a Back step (useUrlState).
+  const pickSecond = (id: string) => update({ b: id, t: null, since: null });
+  const swapMaps = () => update({ d: state.b, b: state.d, lv: null, t: null, since: null });
+  const exitCompare = () => update({ b: null });
+  /** The title opens and closes the dataset menu. While comparing, it first asks which map to
+   *  replace (Robbie, 2026-10-14). */
+  const changeDataset = () => (browse ? setBrowse(null) : openMenu(secondary ? "ask" : "a"));
+  const onMenuPick = (id: string) => { (browse === "b" ? pickSecond : pickDataset)(id); setBrowse(null); };
+  // A stale "ask" (the comparison ended) falls back to the one map.
+  const slot = browse === "ask" && !secondary ? "a" : browse;
+  // Keyed by slot: choosing which map to replace starts a fresh list, with focus in its search box.
+  const datasetMenu = menuOpen && slot && primary
+    ? <DatasetMenu key={slot} slot={slot} primary={primary} secondary={secondary} onSlot={setBrowse} onPick={onMenuPick} onClose={() => setBrowse(null)} />
+    : null;
   const loading = available && !current && !error;
   // Context is about one map, so a comparison shows none.
   const ctx = primary && !secondary ? contextFor(primary.id, ctxPreview) : null;
@@ -187,6 +225,14 @@ export function Viewer({ search }: { search: string }) {
     const c = api.getCamera();
     api.flyTo(c.center[0], c.center[1], c.zoom, { top: 0, bottom: 0, left: 0, right: ctxOpen ? CONTEXT_PANEL_RIGHT : 0 });
   }, [ctxOpen, phone, selected, featureSelected]);
+  // Esc with nothing else open leaves the focused place entirely.
+  const nothingOpen = !selected && !featureSelected && !browse && !filters && !searchOpen && !tableOpen && !ctxOpen && !leaveFor;
+  useEffect(() => {
+    if (!focus || !nothingOpen) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") leaveFocus(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [focus, nothingOpen, leaveFocus]);
   const toggleContext = () => {
     if (!ctxOpen) { setSelected(null); setFeatureSelected(null); mapApi.current?.select("county", null); }
     setCtxOpen(!ctxOpen);
@@ -209,8 +255,9 @@ export function Viewer({ search }: { search: string }) {
   const chromeShown = !immersed || peek;
   // Popups sit under the header while it's showing and move back up when it falls away.
   const panelTop = chromeShown ? HEADER_GAP : 12;
-  // Legend: desktop shows it in full; it shrinks to its strip while the filters sidebar needs the room.
-  const desktopStrip = !!filters && !phone;
+  // Legend: desktop shows it in full; it shrinks to its strip while the filters sidebar or the
+  // dataset menu needs the room.
+  const desktopStrip = (!!filters || menuOpen) && !phone;
   const hasFilters = !!primary && (availableLevels.length > 1 || primary.facets.length > 0 || stops.length > 0);
   const featureNoun = featureSpec?.geometry === "polygon" ? "Census tracts (2010)" : "Road segments";
   const periodLabel = primary ? (since ? `${since.label} → ${stop!.label}` : stopId ? stop!.label : primary.vintage) : "";
@@ -224,12 +271,12 @@ export function Viewer({ search }: { search: string }) {
   // The level caption hints at the next level near a band edge ("block groups closer in"), while
   // switching with zoom.
   const chipHint = useMemo(() => {
-    if (isFeature || pinnedLevel) return null;
+    if (isFeature || pinnedLevel || focus) return null;
     const next = availableLevels[availableLevels.indexOf(level) + 1];
     const b = next && bands[next];
     const z = state.at.zoom;
     return b && z >= b.minzoom - 0.75 && z < b.minzoom ? `${GEO_LEVELS[next].plural.toLowerCase()} closer in` : null;
-  }, [isFeature, pinnedLevel, availableLevels, level, bands, state.at.zoom]);
+  }, [isFeature, pinnedLevel, focus, availableLevels, level, bands, state.at.zoom]);
   // Left column (desktop): the filters sidebar opens below the title (or the at-rest card) and
   // stops above the legend strip.
   const [sidebarTop, setSidebarTop] = useState(160);
@@ -259,7 +306,7 @@ export function Viewer({ search }: { search: string }) {
   return (
     <div ref={root} className="fixed inset-0 overflow-hidden"
       onMouseMove={(e) => { if (immersed && !peek && e.clientY < 14) setPeek(true); }}>
-      <button type="button" onClick={() => setBrowserOpen(true)}
+      <button type="button" onClick={changeDataset}
         className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-50 focus:rounded focus:bg-card focus:px-3 focus:py-2 focus:shadow">Choose a dataset</button>
 
       <main className="absolute inset-0">
@@ -279,9 +326,9 @@ export function Viewer({ search }: { search: string }) {
           onFeatureSelect={onFeatureSelect}
           onUserMove={() => {
             startMotion();
-            if (headingMenu) setCloseKey((k) => k + 1);
-            setListOpen(false);
-            if (!browserOpen) { setImmersed(true); setPeek(false); }
+            // An open dataset menu closes on pan everywhere (D-135).
+            setBrowse(null);
+            setImmersed(true); setPeek(false);
           }}
           onApi={(api) => { mapApi.current = api; }}
           scaleUnit={scaleUnit}
@@ -289,6 +336,7 @@ export function Viewer({ search }: { search: string }) {
           hatch={hatch}
           onTractCounties={setTractCounties}
           watchCounties={testMoes}
+          focus={focus}
           ariaLabel={primary ? `Map of ${since ? "change in " : ""}${primary.title}${since ? ` from ${since.label} to ${stop!.label}` : ""}${secondary ? ` compared with ${secondary.title}` : ""} by ${GEO_LEVELS[level].label.toLowerCase()}` : "Map"}
         />
       </main>
@@ -304,23 +352,24 @@ export function Viewer({ search }: { search: string }) {
       {primary && (
         <DatasetCard cardRef={card} primary={primary} secondary={secondary} meta={meta} immersed={immersed} isFeature={isFeature}
           tableReady={tableReady} hasFilters={hasFilters} filtersOpen={!!filters} filterCount={nFilters} onOpenFilters={toggleFilters}
-          onBrowse={() => setBrowserOpen(true)} onTable={() => setTableOpen(true)}
-          phone={phone} onOpenSheet={openSheet}
+          onBrowse={changeDataset} menuOpen={menuOpen && !immersed} menu={immersed ? null : datasetMenu}
+          onCompare={() => openMenu("b")} onSwap={swapMaps} onExit={exitCompare} onTable={() => setTableOpen(true)} phone={phone}
           contextLink={ctx ? <ContextLink open={ctxOpen} onToggle={toggleContext} /> : undefined} />
       )}
 
       {primary && (
         <ImmersedHeading primary={primary} secondary={secondary} immersed={immersed} hasFilters={hasFilters} filtersOpen={!!filters} filterCount={nFilters}
           caption={isFeature ? filterSummary ?? "All roads shown" : GEO_LEVELS[level].plural} captionHint={isFeature ? null : chipHint}
-          phone={phone} motion={stepAside ? (phone ? "hide" : "dim") : null} closeKey={closeKey}
-          onShowNav={() => { setImmersed(false); setPeek(false); }} onPick={pickDataset}
-          onOpenFilters={toggleFilters} onOpenLevel={openLevelFilters} levelPill={!isFeature} onMenuChange={setHeadingMenu}
-          onOpenSheet={phone ? openSheet : undefined} />
+          phone={phone} motion={stepAside ? (phone ? "hide" : "dim") : null}
+          onShowNav={() => { setImmersed(false); setPeek(false); }}
+          onOpenFilters={toggleFilters} onOpenLevel={openLevelFilters} levelPill={!isFeature}
+          menuOpen={menuOpen && immersed} menu={immersed ? datasetMenu : null} onBrowse={changeDataset} onExit={exitCompare}
+          place={focus && focusName ? { name: focusName, onClear: leaveFocus } : null} backShown={canGoBack} />
       )}
 
       {filters && primary && !phone && (
         <FiltersSidebar top={sidebarTop} bottom={84} levels={availableLevels} shown={level} facets={primary.facets} stops={stops}
-          value={filterValue} onChange={applyFilters} onClose={() => setFilters(null)} hiddenWhileMoving={stepAside || headingMenu} />
+          value={filterValue} onChange={applyFilters} onClose={() => setFilters(null)} hiddenWhileMoving={stepAside || menuOpen} />
       )}
       {filters && primary && phone && (
         <FiltersSheet anchor={filters.anchor} title={primary.title} levels={availableLevels} shown={level} facets={primary.facets} stops={stops}
@@ -338,13 +387,12 @@ export function Viewer({ search }: { search: string }) {
 
       <MapCredits datasets={[primary, secondary].filter((d): d is Dataset => !!d)} />
 
-      {browserOpen && (
-        <DatasetsPanel primary={state.d} secondary={state.b} onClose={() => setBrowserOpen(false)}
-          onPrimary={(id) => { pickDataset(id); setBrowserOpen(false); }}
-          onSecondary={(id) => { update({ b: id, t: null, since: null }); setBrowserOpen(false); }} />
+      {leaveFor && secondary && (
+        <LeaveComparePrompt next={DATASET_BY_ID.get(leaveFor)!} other={secondary} onCancel={() => setLeaveFor(null)}
+          onOpen={() => { openAlone(leaveFor); setLeaveFor(null); }} />
       )}
 
-      {listOpen && phone && primary && <DatasetSheet primary={primary} onPick={pickDataset} onClose={() => setListOpen(false)} />}
+      {listOpen && slot && primary && <DatasetSheet key={slot} slot={slot} primary={primary} secondary={secondary} onSlot={setBrowse} onPick={onMenuPick} onClose={() => setBrowse(null)} />}
 
       {searchOpen && <SearchOverlay current={state.d} onClose={() => setSearchOpen(false)} onPlace={onSearchPlace} onDataset={onSearchDataset} />}
 
@@ -359,8 +407,8 @@ export function Viewer({ search }: { search: string }) {
         </div>
       )}
 
-      {/* Hover popups wait while the map moves (issue #34). */}
-      {hover && !selected && !moving && primary && (
+      {/* Hover popups wait while the map moves (issue #34). Inside a focused place they show beside its details. */}
+      {hover && (!selected || !!focus) && !moving && primary && (
         <PlaceHoverPopup hover={hover} primary={primary} secondary={secondary} xValues={x.values} yValues={y.values} blockField={blockField} periodLabel={stopId ? stop!.label : undefined}
           change={since && classed[hover.level]?.change ? { from: since, to: stop!, fromValues: xFrom.values[hover.level], classed: classed[hover.level]! } : undefined} />
       )}
@@ -377,7 +425,7 @@ export function Viewer({ search }: { search: string }) {
           xv={x.values[selected.level]} yv={y.values[selected.level]}
           period={stopId && !since ? { label: stop!.label, defaultLabel: primary.vintage } : undefined}
           change={since && selClassed?.change ? { fromLabel: since.label, toLabel: stop!.label, fromValues: xFrom.values[selected.level], classed: selClassed, toIsDefault: !!stop?.isDefault, boundaryNote: areaChangeNote(since, stop!, selected.level, selected.geoid) } : undefined}
-          onMapIt={pickDataset} onPlace={goToPlace} legendKey={legendKey} />
+          onMapIt={pickDataset} onPlace={goToPlace} legendKey={legendKey} finest={!childLevel(availableLevels, selected.level)} />
       )}
     </div>
   );

@@ -3,7 +3,8 @@ title: "Social vulnerability: age, disability and household (CDC index)"
 phrase: "household vulnerability ranks"
 description: "CDC's Social Vulnerability Index theme for household characteristics: residents 65 and older or 17 and younger, people with a disability, single-parent households and people with limited English, ranked nationally."
 tags: [CDC, ATSDR, SVI, social vulnerability index, household characteristics, older adults, children, disability, single parents, limited English]
-category: Environmental justice
+category: Environment and climate
+subcategory: Social vulnerability
 source:
   name: CDC/ATSDR Social Vulnerability Index 2022
   shortName: CDC SVI

@@ -2,7 +2,8 @@ id: nri_inland_flood_loss
 title: "Expected yearly inland flood losses, per resident"
 phrase: "expected inland flood losses per resident"
 description: "FEMA's estimate of what inland (river and rain) flooding cost here in an average year (damage to buildings and crops, plus deaths and injuries valued in dollars), divided by the number of residents."
-category: Environment
+category: Environment and climate
+subcategory: Natural hazards
 tags: [FEMA, National Risk Index, NRI, natural hazards, flood, flooding, riverine flooding]
 source:
   name: FEMA National Risk Index v1.20.0 (December 2025)

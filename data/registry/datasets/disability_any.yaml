@@ -3,6 +3,7 @@ title: "Any disability (adults)"
 phrase: adult disability rates
 description: "Share of adults with at least one disability: hearing, vision, thinking, walking, self-care or living independently. Age-adjusted prevalence; model-based small-area estimate."
 category: Health
+subcategory: Disability
 tags: [disability, health]
 source:
   name: CDC PLACES (Local Data for Better Health), 2025 release

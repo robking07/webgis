@@ -2,7 +2,8 @@ id: pct_zero_vehicle_households
 title: Households with no vehicle
 phrase: shares of households without a car
 description: Share of households with no vehicle available.
-category: Vehicles
+category: Transportation
+subcategory: Roads and vehicles
 tags: [car-free, vehicles, mobility, transportation]
 source:
   name: U.S. Census Bureau, American Community Survey 5-Year Estimates

@@ -1,8 +1,9 @@
 import { useMemo, useSyncExternalStore } from "react";
-import { bandShift, GEO_LEVELS, type Unit, LAZY_LEVELS, levelAtZoom, levelBands, pinnedBands, TILE_VALUE_LEVELS, type GeoLevel } from "@webgis/design";
-import type { LevelPaint } from "../map/MapView";
+import { bandShift, childLevel, focusBands, GEO_LEVELS, type Unit, LAZY_LEVELS, levelAtZoom, levelBands, pinnedBands, TILE_VALUE_LEVELS, type GeoLevel } from "@webgis/design";
+import type { Focus, LevelPaint } from "../map/MapView";
+import { levelOfGeoid } from "@/lib/place";
 import { DATASET_BY_ID } from "@/lib/registry";
-import { featureLayerSpec, isFeatureDataset } from "@/lib/layers";
+import { featureLayerSpec, isFeatureDataset, pairReason } from "@/lib/layers";
 import type { UrlState } from "@/lib/url-state";
 import { blockPaintFrom, classifyBivariateCached, classifyUnivariateCached, useDatasetValues, type Classed } from "@/lib/values";
 import { changeEnds, stopsFor } from "@/lib/periods";
@@ -27,7 +28,8 @@ export function useViewerData(state: UrlState, tractCounties: readonly string[] 
   // Feature layers (roads, transit…) draw their own geometry: no choropleth, no comparison.
   const isFeature = isFeatureDataset(primary);
   const featureSpec = useMemo(() => (primary && isFeature ? featureLayerSpec(primary) : null), [primary, isFeature]);
-  const secondary = state.b && !isFeature && !isFeatureDataset(DATASET_BY_ID.get(state.b)) ? DATASET_BY_ID.get(state.b)! : null;
+  const b = state.b ? DATASET_BY_ID.get(state.b) : undefined;
+  const secondary = primary && b && !pairReason(primary, b) ? b : null;
   // Year control (D-36): single-dataset maps only; comparisons use the default period.
   const stops = useMemo(() => (secondary || isFeature ? [] : stopsFor(primary)), [primary, secondary, isFeature]);
   // Change map (issue #127): from `since` to the year `t`, or to the latest period (issue #168).
@@ -45,8 +47,13 @@ export function useViewerData(state: UrlState, tractCounties: readonly string[] 
   // "finest level at every zoom"). lv=<level> pins one; lv=auto is the old spelling of the default.
   // A pinned block group or block never draws at national or multi-state zoom (pinFloor).
   const pinnedLevel = state.lv && state.lv !== "auto" && availableLevels.includes(state.lv) ? state.lv : null;
+  // Drill-down (issue #203): `in=<geoid>` focuses a place with a finer level inside it; its bands
+  // override switch-with-zoom and a pinned level (Robbie, 2026-10-14).
+  const focusLevel = state.in ? levelOfGeoid(state.in) : null;
+  const focusChild = focusLevel && availableLevels.includes(focusLevel) ? childLevel(availableLevels, focusLevel) : null;
+  const focus = useMemo<Focus | null>(() => (focusChild ? { level: focusLevel!, geoid: state.in!, child: focusChild } : null), [focusLevel, focusChild, state.in]);
   const shift = useBandShift();
-  const bands = useMemo(() => (pinnedLevel ? pinnedBands(availableLevels, pinnedLevel, shift) : levelBands(availableLevels, shift)), [availableLevels, pinnedLevel, shift]);
+  const bands = useMemo(() => (focus ? focusBands(focus.level, focus.child, shift) : pinnedLevel ? pinnedBands(availableLevels, pinnedLevel, shift) : levelBands(availableLevels, shift)), [focus, availableLevels, pinnedLevel, shift]);
   // Start loading tract / block-group values a little before they appear. Blocks are colored
   // with the block-group classes, so block groups load when blocks are near too.
   const nearBlocks = !!bands.block && state.at.zoom >= bands.block.minzoom - 1;
@@ -89,7 +96,7 @@ export function useViewerData(state: UrlState, tractCounties: readonly string[] 
     return out;
   }, [primary, secondary, x.values, y.values, stopId, xBase.values, blockField, since, xFrom.values, tractMoes]);
 
-  return { primary, secondary, isFeature, featureSpec, stops, stop, stopId, since, xFrom, testMoes, availableLevels, pinnedLevel, bands, x, y, level, classed, blockField };
+  return { primary, secondary, isFeature, featureSpec, stops, stop, stopId, since, xBase, xFrom, testMoes, availableLevels, pinnedLevel, focus, bands, x, y, level, classed, blockField };
 }
 
 const onResize = (cb: () => void) => { window.addEventListener("resize", cb); return () => window.removeEventListener("resize", cb); };

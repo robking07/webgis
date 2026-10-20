@@ -2,7 +2,8 @@ id: pct_no_internet
 title: "Households without internet"
 phrase: shares of households offline
 description: "Share of households with no internet access at home, by any kind of subscription or free service."
-category: Internet access
+category: Economy
+subcategory: Internet access
 tags: [internet, digital divide, broadband]
 source:
   name: U.S. Census Bureau, American Community Survey 5-Year Estimates

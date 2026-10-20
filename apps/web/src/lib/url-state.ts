@@ -2,6 +2,7 @@
 //   ?d=<dataset>&b=<second dataset for bivariate>&at=<lon>,<lat>,<zoom>&theme=light|dark
 //   &lv=<level>&t=<timeline stop, e.g. 2019; omitted = the default period>
 //   &since=<earlier stop: map the change from it to the shown stop (issue #127)>
+//   &in=<geoid: the place clicked into, drawn with the next level inside it (issue #203)>
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -22,6 +23,8 @@ export interface UrlState {
   t?: string | null;
   /** Change map: the earlier timeline stop the change is measured from; null = values, not change. */
   since?: string | null;
+  /** Drill-down: the GEOID of the focused place; null = the whole map. */
+  in?: string | null;
 }
 
 export const DEFAULT_VIEW: ViewState = { lon: -96.5, lat: 38.5, zoom: 3.6, fit: true };
@@ -38,6 +41,7 @@ export function parseUrlState(search: string): UrlState {
     lv: (["state", "county", "tract", "block_group", "block", "auto"] as const).find((l) => l === p.get("lv")) ?? null,
     t: p.get("t")?.match(/^[a-z0-9]{1,12}$/)?.[0] ?? null,
     since: p.get("since")?.match(/^[a-z0-9]{1,12}$/)?.[0] ?? null,
+    in: p.get("in")?.match(/^\d{2,15}$/)?.[0] ?? null,
   };
 }
 
@@ -50,18 +54,41 @@ export function serializeUrlState(s: UrlState): string {
   if (s.lv) p.set("lv", s.lv);
   if (s.t) p.set("t", s.t);
   if (s.since) p.set("since", s.since);
+  if (s.in) p.set("in", s.in);
   return `?${p.toString().replaceAll("%2C", ",")}`;
 }
 
-/** URL-backed state. Writes use replaceState (debounced) so panning doesn't flood history. */
+/** The deliberate choices; changing one adds a Back step (each drill-down step too). Panning, zooming and theme don't. */
+export const historyKey = (s: UrlState) => [s.d, s.b, s.lv, s.t, s.since, s.in].join("|");
+
+/** URL-backed state. Pan/zoom write with replaceState (debounced); a change to the dataset, second
+ *  dataset, level, period or focused place pushes a history entry, and Back/Forward re-read the URL. */
 export function useUrlState(initial: UrlState) {
   const [state, setState] = useState<UrlState>(initial);
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const lastKey = useRef(historyKey(initial));
   useEffect(() => {
     clearTimeout(timer.current);
-    timer.current = setTimeout(() => window.history.replaceState(null, "", serializeUrlState(state)), 250);
+    const key = historyKey(state);
+    const push = key !== lastKey.current;
+    lastKey.current = key;
+    const write = () => window.history[push ? "pushState" : "replaceState"](null, "", serializeUrlState(state));
+    if (push) write(); else timer.current = setTimeout(write, 250);
     return () => clearTimeout(timer.current);
   }, [state]);
+  useEffect(() => {
+    // shortcut: Back restores the dataset/level/period; the camera stays where the visitor left it.
+    const onPop = () => {
+      const p = parseUrlState(window.location.search);
+      setState((s) => {
+        const next = { ...s, d: p.d ?? initial.d, b: p.b, lv: p.lv, t: p.t, since: p.since, in: p.in };
+        lastKey.current = historyKey(next); // the URL already holds it: don't push it again
+        return next;
+      });
+    };
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, [initial.d]);
   const update = useCallback((patch: Partial<UrlState>) => setState((s) => ({ ...s, ...patch })), []);
   return [state, update] as const;
 }

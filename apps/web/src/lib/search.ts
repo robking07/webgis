@@ -16,11 +16,13 @@ const toHit = (r: PlaceRow): PlaceHit => ({
   lon: r[3], lat: r[4], sqmi: r[5],
 });
 
-/** Prefix matches first (states, then counties, then larger places), then word matches. */
+/** Prefix matches first (states, then counties, then cities, then other places, larger first),
+ *  then word matches. Counties fill at most half the list while places also match: a short prefix
+ *  like "Du" matches dozens of rural counties, which used to crowd out Duluth (issue #258). */
 export function searchPlaces(rows: PlaceRow[], q: string, limit = 6): PlaceHit[] {
   const t = q.trim().toLowerCase();
   if (t.length < 2) return [];
-  const rank = (r: PlaceRow) => (r[1] === "State" ? 0 : r[1] === "County" ? 1 : 2);
+  const rank = (r: PlaceRow) => (r[1] === "State" ? 0 : r[1] === "County" ? 1 : r[1] === "City" ? 2 : 3);
   const prefix: PlaceRow[] = [], word: PlaceRow[] = [];
   for (const r of rows) {
     const n = r[0].toLowerCase();
@@ -28,7 +30,10 @@ export function searchPlaces(rows: PlaceRow[], q: string, limit = 6): PlaceHit[]
     else if (n.includes(` ${t}`) || n.includes(t)) word.push(r);
   }
   const order = (a: PlaceRow, b: PlaceRow) => rank(a) - rank(b) || b[5] - a[5];
-  return [...prefix.sort(order), ...word.sort(order)].slice(0, limit).map(toHit);
+  const countyCap = Math.max(Math.ceil(limit / 2), limit - prefix.filter((r) => r[1] !== "County").length);
+  let counties = 0;
+  const top = prefix.sort(order).filter((r) => r[1] !== "County" || counties++ < countyCap);
+  return [...top, ...word.sort(order)].slice(0, limit).map(toHit);
 }
 
 export function placeByGeoid(rows: PlaceRow[], geoid: string): PlaceHit | null {

@@ -4,11 +4,13 @@
 import { useEffect, useLayoutEffect, useRef } from "react";
 import { AttributionControl, LngLatBounds, Map as MlMap, ScaleControl, addProtocol, setWorkerUrl, type LayerSpecification, type MapGeoJSONFeature } from "maplibre-gl";
 import { Protocol } from "pmtiles";
-import { basemapStyle, choroplethFill, hatchImage, hatchLayerId, HATCH_IMAGE, HATCH_LEVELS, membershipFilter, NO_FEATURES, choroplethFillsByState, DATA_BEFORE_ID, STATIC_ONLY_LEVELS, TILE_VALUE_LEVELS, THEMES, featureLineLayers, featurePolygonLayers, fillLayerIds, focusLandLayer, FOCUS_LAND_BEFORE_ID, GEO_LEVELS, MOTION, PER_STATE_LEVELS, thematicLayers, type GeoLevel, type NoDataFill, type PackedClasses, type ThemeName } from "@webgis/design";
+import { basemapStyle, choroplethFill, hatchImage, hatchLayerId, HATCH_IMAGE, HATCH_LEVELS, membershipFilter, NO_FEATURES, choroplethFillsByState, DATA_BEFORE_ID, STATIC_ONLY_LEVELS, TILE_VALUE_LEVELS, THEMES, featureLineLayers, featurePolygonLayers, fillLayerIds, focusDimLayer, FOCUS_DIM_LAYER, focusFilters, focusLandLayer, FOCUS_LAND_BEFORE_ID, GEO_LEVELS, MOTION, PER_STATE_LEVELS, thematicLayers, type GeoLevel, type NoDataFill, type PackedClasses, type ThemeName } from "@webgis/design";
+import { comparePickOpen } from "@/lib/compare";
 import type { FeatureLayerSpec } from "@/lib/layers";
 import type { ViewState } from "@/lib/url-state";
 import type { Geometry } from "geojson";
 import { boundaryFile } from "@webgis/registry/timeline";
+import { TILES_BASE } from "@/lib/static-files";
 
 export interface LevelPaint {
   colors: string[];
@@ -64,7 +66,8 @@ interface Props {
   onViewChange: (v: ViewState) => void;
   onHover: (h: HoverInfo | null) => void;
   onSelect: (h: HoverInfo | null) => void;
-  onTilesError?: (msg: string) => void;
+  /** Our own tiles (boundaries or a feature layer) failed to load; null once they load again. */
+  onTilesError?: (msg: string | null) => void;
   ariaLabel: string;
   /** Override the zoom band per level, e.g. show counties at every zoom on an insight page. */
   levelZooms?: Partial<Record<GeoLevel, { minzoom: number; maxzoom: number }>>;
@@ -95,10 +98,15 @@ interface Props {
   onTractCounties?: (counties: string[]) => void;
   /** Report onTractCounties without hatching (a change map testing tract margins of error). */
   watchCounties?: boolean;
-  /** Compare places (D-258): outline `a` (solid) and `b` (dashed), open on `bbox` and fit both once
-   *  their tiles are in. Clicks and hover don't select anything else. */
-  compare?: { level: GeoLevel; a: string; b: string; bbox: Bbox };
+  /** Compare places (D-258, D-330): outline `a` (solid) and `b` (dashed), open on `bbox` and fit the
+   *  `fit` place's outline once its tiles are in. Clicks and hover don't select anything else. */
+  compare?: { level: GeoLevel; a: string; b: string; bbox: Bbox; fit: "a" | "b" };
+  /** Drill-down (issue #203): the clicked-into place. Its `child` level draws only inside it, the rest
+   *  of its level sits under a dim wash, and hover and clicks reach only its children. */
+  focus?: Focus | null;
 }
+
+export interface Focus { level: GeoLevel; geoid: string; child: GeoLevel }
 
 export interface MapApi {
   zoomIn: () => void;
@@ -116,22 +124,23 @@ export interface MapApi {
   isMoving: () => boolean;
 }
 
-const TILES_BASE = process.env.NEXT_PUBLIC_TILES_BASE_URL || "/tiles";
 const LEVELS = Object.keys(GEO_LEVELS) as GeoLevel[];
 let protocolReady = false;
 
-function tilesUrl(level: GeoLevel, boundaries?: string | null) {
+/** A PMTiles archive on the tiles base (made absolute: the pmtiles protocol needs a full URL). */
+function pmtilesUrl(path: string) {
   const base = TILES_BASE.startsWith("http") ? TILES_BASE : `${window.location.origin}${TILES_BASE}`;
-  return `pmtiles://${base}/${boundaryFile(level, boundaries)}.pmtiles`;
+  return `pmtiles://${base}/${path}`;
 }
+const tilesUrl = (level: GeoLevel, boundaries?: string | null) => pmtilesUrl(`${boundaryFile(level, boundaries)}.pmtiles`);
 
-export function MapView({ theme, initialView, paint, onViewChange, onHover, onSelect, onTilesError, ariaLabel, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, onApi, featureFilter, scaleUnit = "imperial", attribution = true, boundaries = null, cooperative = false, hatch = null, onTractCounties, watchCounties = false, compare }: Props) {
+export function MapView({ theme, initialView, paint, onViewChange, onHover, onSelect, onTilesError, ariaLabel, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, onApi, featureFilter, scaleUnit = "imperial", attribution = true, boundaries = null, cooperative = false, hatch = null, onTractCounties, watchCounties = false, compare, focus = null }: Props) {
   const container = useRef<HTMLDivElement>(null);
   const map = useRef<MlMap | null>(null);
   const applied = useRef<Partial<Record<GeoLevel, LevelPaint>>>({});
-  const latest = useRef({ paint, theme, onViewChange, onHover, onSelect, onTilesError, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, boundaries, featureFilter, hatch, onTractCounties, watchCounties });
+  const latest = useRef({ paint, theme, onViewChange, onHover, onSelect, onTilesError, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, boundaries, featureFilter, hatch, onTractCounties, watchCounties, focus });
   // Refresh after every render, before any effect or event handler reads it.
-  useLayoutEffect(() => { latest.current = { paint, theme, onViewChange, onHover, onSelect, onTilesError, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, boundaries, featureFilter, hatch, onTractCounties, watchCounties }; });
+  useLayoutEffect(() => { latest.current = { paint, theme, onViewChange, onHover, onSelect, onTilesError, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, boundaries, featureFilter, hatch, onTractCounties, watchCounties, focus }; });
   /** Hatch filters currently on the map, per level (by set identity). */
   const appliedHatch = useRef<Partial<Record<GeoLevel, ReadonlySet<string> | undefined>>>({});
   /** Last county list reported to onTractCounties. */
@@ -169,7 +178,7 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
     });
     map.current = m;
     // ?debug (or window.__wgDebug, set by the e2e init script so reloads keep it) exposes the map for devtools / headless checks.
-    if ((window as unknown as { __wgDebug?: boolean }).__wgDebug || new URLSearchParams(window.location.search).has("debug")) (window as unknown as { __wgMap: MlMap }).__wgMap = m;
+    if ((window as unknown as { __wgDebug?: boolean }).__wgDebug || new URLSearchParams(window.location.search).has("debug")) (window as unknown as { __wgMap: MlMap }).__wgMap = (container.current as unknown as { __wgMap: MlMap }).__wgMap = m;
     m.touchZoomRotate.disableRotation();
     // Zoom buttons are the page's own (frosted, design-token styled); see onApi.
     scale.current = new ScaleControl({ unit: scaleUnit });
@@ -205,7 +214,6 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
         m.once("load", () => container.current?.querySelector(".maplibregl-ctrl-attrib")?.classList.remove("maplibregl-compact-show"));
       }
     }
-    m.getCanvas().setAttribute("aria-label", ariaLabel);
 
     m.on("style.load", () => {
       addHatchImage(m, latest.current.theme);
@@ -220,11 +228,12 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
       restoreFlags(m, hovered.current, selected.current, second.current);
       appliedHatch.current = {};
       syncHatch(m, latest.current.hatch, appliedHatch.current, latest.current.levelZooms);
+      applyFocus(m, latest.current.focus, latest.current.theme);
     });
-    // The opening bbox is an estimate from each place's center and area; frame both exactly once their tiles are in.
+    // The opening bbox is an estimate from the place's center and area; frame it exactly once its tiles are in.
     if (compare) m.once("idle", () => {
-      const [a, b] = [geographyBbox(m, compare.level, compare.a), geographyBbox(m, compare.level, compare.b)];
-      if (a && b) fitBbox([Math.min(a[0], b[0]), Math.min(a[1], b[1]), Math.max(a[2], b[2]), Math.max(a[3], b[3])], { top: 40, right: 40, bottom: 40, left: 40 });
+      const b = geographyBbox(m, compare.level, compare[compare.fit]);
+      if (b) fitBbox(b, { top: 40, right: 40, bottom: 40, left: 40 });
     });
     // Hatching on: report which counties' tracts are on screen once the map settles.
     m.on("idle", () => reportTractCounties(m, !!latest.current.hatch || latest.current.watchCounties, latest.current.onTractCounties, reportedCounties));
@@ -239,9 +248,22 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
       const c = m.getCenter();
       latest.current.onViewChange({ lon: c.lng, lat: c.lat, zoom: m.getZoom(), fit: true });
     }
+    // Only our sources count: a basemap tile blip isn't "boundary tiles missing". The message clears
+    // once every source that failed has loaded a tile again.
+    const failed = new Set<string>();
+    const ours = (id: unknown): id is string => typeof id === "string" && (id.startsWith("b-") || id === FEATURE_SRC);
     m.on("error", (e) => {
-      const msg = String(e.error?.message ?? e.error ?? "");
-      if (/pmtiles|tiles\//i.test(msg) || /404/.test(msg)) latest.current.onTilesError?.(msg);
+      const id = (e as { sourceId?: unknown }).sourceId;
+      if (!ours(id)) return;
+      failed.add(id);
+      latest.current.onTilesError?.(String(e.error?.message ?? e.error ?? ""));
+    });
+    m.on("data", (e) => {
+      if (!failed.size || e.dataType !== "source" || !("tile" in e) || !e.tile) return;
+      failed.delete(e.sourceId);
+      // A source taken off the map (the feature layer after switching maps) won't load again.
+      for (const id of failed) if (!m.getSource(id)) failed.delete(id);
+      if (!failed.size) latest.current.onTilesError?.(null);
     });
 
     const fillIds = LEVELS.map((l) => `${l}-fill`);
@@ -255,7 +277,12 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
     const placeAt = (pt: { x: number; y: number }): MapGeoJSONFeature | undefined => {
       const z = m.getZoom();
       const bands = latest.current.levelZooms;
+      const focused = latest.current.focus;
+      // "Compare with…" is waiting for a second place: the places around the focused one count too.
+      const picking = !!focused && comparePickOpen();
       return m.queryRenderedFeatures(pt as never, { layers: fillIds.filter((id) => m.getLayer(id)) }).find((f) => {
+        // Focused: only the places inside it (its child level is filtered to them).
+        if (focused && f.sourceLayer !== focused.child && !(picking && f.sourceLayer === focused.level)) return false;
         const band = bands ? bands[f.sourceLayer as GeoLevel] : GEO_LEVELS[f.sourceLayer as GeoLevel];
         return !!band && z >= band.minzoom && z < band.maxzoom;
       });
@@ -307,6 +334,8 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
   }, [theme]);
 
   useEffect(() => { scale.current?.setUnit(scaleUnit); }, [scaleUnit]);
+  // The canvas label follows the map shown, so screen readers hear the current one.
+  useEffect(() => { map.current?.getCanvas().setAttribute("aria-label", ariaLabel); }, [ariaLabel]);
 
   // Zoom bands: depend on which levels the shown dataset(s) have.
   useEffect(() => {
@@ -340,6 +369,12 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
     const m = map.current;
     if (m && ready.current) { syncPaint(m, paint, applied.current, latest.current.theme); restoreFlags(m, hovered.current, selected.current, second.current); }
   }, [paint]);
+
+  // Drill-down focus: filters and the dim wash.
+  useEffect(() => {
+    const m = map.current;
+    if (m && ready.current) applyFocus(m, latest.current.focus, latest.current.theme);
+  }, [focus?.geoid, focus?.child]);
 
   // Feature layer (lines/points): swap in/out, then apply its filter.
   useEffect(() => {
@@ -383,6 +418,17 @@ function applyBands(m: MlMap, bands?: Props["levelZooms"]) {
       } else m.setLayerZoomRange(id, 0, 24);
     }
   }
+}
+
+/** Drill-down (issue #203): the child level only inside the focused place, and the wash over the rest
+ *  of the place's level, under the selection outlines (re-added per style and per focus). */
+function applyFocus(m: MlMap, focus: Focus | null | undefined, theme: ThemeName) {
+  for (const level of LEVELS) {
+    for (const [id, f] of Object.entries(focusFilters(level, level === focus?.child ? focus.geoid : null))) if (m.getLayer(id)) m.setFilter(id, f as never);
+  }
+  if (m.getLayer(FOCUS_DIM_LAYER)) m.removeLayer(FOCUS_DIM_LAYER);
+  const before = "state-highlight-halo";
+  if (focus) m.addLayer(focusDimLayer(`b-${focus.level}`, focus.level, focus.geoid, theme), m.getLayer(before) ? before : undefined);
 }
 
 /** The hatch pattern for this theme, sharp at the screen's pixel density (re-added per style). */
@@ -446,7 +492,8 @@ function geometryBbox(g: Geometry): Bbox | undefined {
   let w = Infinity, s = Infinity, e = -Infinity, n = -Infinity;
   const walk = (c: unknown): void => {
     if (typeof (c as number[])[0] === "number") {
-      const [x, y] = c as number[];
+      const [lon, y] = c as number[];
+      const x = lon > 0 ? lon - 360 : lon; // U.S. places are all west of 0°: the Aleutians past 180° stay next to Alaska
       if (x < w) w = x; if (x > e) e = x; if (y < s) s = y; if (y > n) n = y;
     } else (c as unknown[]).forEach(walk);
   };
@@ -552,8 +599,7 @@ function syncFeatureLayer(m: MlMap, spec: FeatureLayerSpec | null, theme: ThemeN
   if (m.getSource(FEATURE_SRC)) m.removeSource(FEATURE_SRC);
   for (const id of HIDDEN_WITH_LINES) if (m.getLayer(id)) m.setLayoutProperty(id, "visibility", spec?.geometry === "line" ? "none" : "visible");
   if (!spec) return;
-  const base = TILES_BASE.startsWith("http") ? TILES_BASE : `${window.location.origin}${TILES_BASE}`;
-  m.addSource(FEATURE_SRC, { type: "vector", url: `pmtiles://${base}/${spec.tiles}` });
+  m.addSource(FEATURE_SRC, { type: "vector", url: pmtilesUrl(spec.tiles) });
   // Lines sit above the overlays they replace; areas sit with the data, under rivers/interstates.
   const before = spec.geometry === "polygon"
     ? (m.getLayer(DATA_BEFORE_ID) ? DATA_BEFORE_ID : undefined)

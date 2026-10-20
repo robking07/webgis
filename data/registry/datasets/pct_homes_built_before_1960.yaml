@@ -3,6 +3,7 @@ title: "Homes built before 1960"
 phrase: shares of older homes
 description: "Share of housing units built before 1960. Older homes are more likely to have lead paint and need repairs."
 category: Housing
+subcategory: Homes
 tags: [housing age, lead paint, older homes, housing]
 source:
   name: U.S. Census Bureau, American Community Survey 5-Year Estimates

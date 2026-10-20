@@ -2,7 +2,8 @@ id: ozone_8hr
 title: Ground-level ozone (smog)
 phrase: smog (ozone) levels
 description: "Ground-level ozone, 2023–2025 design value: the fourth-highest daily peak (8-hour average) each year, averaged over three years, at each county's highest valid monitor. The federal standard is 0.070 parts per million."
-category: Environment
+category: Environment and climate
+subcategory: Air quality
 tags: [air quality, pollution, ozone, smog, health]
 source:
   name: U.S. EPA, Office of Air Quality Planning and Standards, Ozone Design Values (2015 8-hour NAAQS)

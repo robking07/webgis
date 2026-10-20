@@ -40,3 +40,7 @@ has no wider image).
 stays ΔE ≥ 10 from land outside the US; land vs water ΔE ≥ 8; national boundary vs outside land
 3:1; shoreline vs outside land 1.5:1; route number on its shield 4.5:1 (new token `shieldFill`,
 the sprite's white).
+
+**Merge with main (2026-10-19):** kept main's drill-down `focusDim` token unchanged (dark
+`#141619`, the old dark background). It washes only US polygons outside the focused place, so in
+dark mode those now dim darker than the gray land outside the US; the dimmed-class check passes.

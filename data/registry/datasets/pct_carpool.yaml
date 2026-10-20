@@ -1,7 +1,9 @@
 id: pct_carpool
 title: "Carpool to work"
+phrase: carpooling rates
 description: "Share of workers 16 and over who usually share a ride to work in a car, truck or van."
-category: Commuting
+category: Transportation
+subcategory: Commuting
 tags: [carpool, car, mode share, transportation]
 source:
   name: U.S. Census Bureau, American Community Survey 5-Year Estimates

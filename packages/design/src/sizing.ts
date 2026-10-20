@@ -9,8 +9,8 @@
  *  visitor pins it (no block groups or blocks at national or multi-state zoom); the finest
  *  coarser level without a floor stands in. */
 export const GEO_LEVELS = {
-  state: { label: "State", plural: "States", minzoom: 0, maxzoom: 4.6 },
-  county: { label: "County", plural: "Counties", minzoom: 4.6, maxzoom: 8.5 },
+  state: { label: "State", plural: "States", minzoom: 0, maxzoom: 5.5 },
+  county: { label: "County", plural: "Counties", minzoom: 5.5, maxzoom: 8.5 },
   tract: { label: "Census tract", plural: "Census tracts", minzoom: 8.5, maxzoom: 11 },
   /** ACS publishes most tables here; values live only in static exports (D-124). */
   block_group: { label: "Block group", plural: "Block groups", minzoom: 11, maxzoom: 13, pinFloor: 7 },
@@ -72,6 +72,22 @@ export function pinnedBands(available: GeoLevel[], pinned: GeoLevel, shift = 0):
   const stand = order.slice(0, order.indexOf(pinned)).reverse().find((l) => !floorOf(l));
   if (!stand) return { [pinned]: { minzoom: 0, maxzoom: 24 } };
   return { [stand]: { minzoom: 0, maxzoom: floor + shift }, [pinned]: { minzoom: floor + shift, maxzoom: 24 } };
+}
+
+/** Drill-down (issue #203): the level a click on `level` opens, the next one the dataset has; null at
+ *  its finest level (a click there only selects). */
+export function childLevel(available: GeoLevel[], level: GeoLevel): GeoLevel | null {
+  const order = (Object.keys(GEO_LEVELS) as GeoLevel[]).filter((l) => available.includes(l));
+  const i = order.indexOf(level);
+  return i < 0 ? null : order[i + 1] ?? null;
+}
+
+/** Focused on one place (drill-down): its level (the place, and its dimmed neighbors) and the child
+ *  level (inside it only) draw at every zoom, overriding switch-with-zoom and a pinned level (Robbie,
+ *  2026-10-14), except below a level's `pinFloor`. The child comes first, so levelAtZoom names it. */
+export function focusBands(parent: GeoLevel, child: GeoLevel, shift = 0): LevelBands {
+  const from = (l: GeoLevel) => (floorOf(l) ? floorOf(l) + shift : 0);
+  return { [child]: { minzoom: from(child), maxzoom: 24 }, [parent]: { minzoom: from(parent), maxzoom: 24 } };
 }
 
 export function levelAtZoom(bands: LevelBands, zoom: number): GeoLevel | null {

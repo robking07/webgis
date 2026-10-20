@@ -4,6 +4,7 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parse } from "yaml";
 import { DatasetEntry, GlossaryTerm } from "./schema.ts";
+import { CATEGORY_TREE } from "./categories.ts";
 import { checkRelations, Relations } from "./relations.ts";
 
 export const REGISTRY_DIR = join(dirname(fileURLToPath(import.meta.url)), "datasets");
@@ -25,6 +26,8 @@ export function loadRegistry(): DatasetEntry[] {
     const res = DatasetEntry.safeParse(raw);
     if (!res.success) throw new Error(`${f}: ${res.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`).join("; ")}`);
     if (`${res.data.id}.yaml` !== f) throw new Error(`${f}: id "${res.data.id}" must match the file name`);
+    const subs: readonly string[] = CATEGORY_TREE[res.data.category];
+    if (!subs.includes(res.data.subcategory)) throw new Error(`${f}: subcategory "${res.data.subcategory}" must be one of ${res.data.category}'s: ${subs.join(", ")}`);
     if (res.data.measure.kind !== "features" && res.data.geographyLevels.length === 0) throw new Error(`${f}: geographyLevels is required for ${res.data.measure.kind} datasets`);
     return res.data;
   });

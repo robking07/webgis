@@ -2,7 +2,8 @@ id: pct_veterans
 title: "Veterans"
 phrase: shares of veterans
 description: "Share of adults 18 and older who served on active duty in the U.S. armed forces."
-category: Population
+category: People
+subcategory: Population and age
 tags: [veterans, military]
 source:
   name: U.S. Census Bureau, American Community Survey 5-Year Estimates

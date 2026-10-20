@@ -3,6 +3,7 @@ title: Vehicle miles per resident
 phrase: driving per resident
 description: Daily vehicle miles traveled on counted roads in the area, per resident, from traffic counts (AADT) times road length.
 category: Transportation
+subcategory: Roads and vehicles
 tags: [VMT, driving, traffic, travel, HPMS, emissions]
 source:
   name: FHWA Highway Performance Monitoring System (HPMS) 2024

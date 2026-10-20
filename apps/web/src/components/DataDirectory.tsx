@@ -1,6 +1,7 @@
 "use client";
 // Every dataset, filterable with the shared dataset filter, grouped by source.
 import { useMemo } from "react";
+import { GEO_LEVELS, type GeoLevel } from "@webgis/design";
 import { StatusState } from "@webgis/design/components";
 import { DatasetFilter, useDatasetFilter } from "./DatasetFilter";
 import { SOURCES, datasetHref } from "@/lib/sources";
@@ -31,8 +32,8 @@ export function DataDirectory() {
                     <span className="block text-xs text-muted-foreground">{d.description}</span>
                   </span>
                   <span className="shrink-0 text-xs text-muted-foreground sm:text-right">
-                    {d.category} · {d.vintage}
-                    <span className="block">{d.measure.kind === "features" ? "Road segments" : d.geographyLevels.map((l) => l[0].toUpperCase() + l.slice(1)).join(", ")}</span>
+                    {d.category} › {d.subcategory} · {d.vintage}
+                    <span className="block">{d.measure.kind === "features" ? "Road segments" : d.geographyLevels.map((l) => GEO_LEVELS[l as GeoLevel].plural).join(", ")}</span>
                   </span>
                 </a>
               </li>

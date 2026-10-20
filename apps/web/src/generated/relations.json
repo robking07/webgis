@@ -1,0 +1,1366 @@
+{
+ "parts": {
+  "race_ethnicity": {
+   "label": "Race and ethnicity",
+   "explainer": "Every resident is counted once, in one of these groups. \"People of color\" is everyone except non-Hispanic White residents, so it overlaps these and isn't one of them.",
+   "members": [
+    "pct_white_nh",
+    "pct_hispanic_latino",
+    "pct_black_nh",
+    "pct_asian_nh",
+    "pct_multiracial_nh",
+    "pct_aian_nh",
+    "pct_nhpi_nh"
+   ],
+   "remainder": {
+    "id": "some_other_race_nh",
+    "label": "Some other race (non-Hispanic)",
+    "variables": [
+     "B03002_008"
+    ]
+   }
+  },
+  "commute_modes": {
+   "label": "How people get to work",
+   "explainer": "Every worker 16 and older is counted once, by the way they usually got to work in the week before the survey.",
+   "members": [
+    "pct_drive_alone",
+    "pct_carpool",
+    "pct_work_from_home",
+    "pct_transit_commute",
+    "pct_walk_commute",
+    "pct_bike_commute"
+   ],
+   "remainder": {
+    "id": "other_commute_mode",
+    "label": "Taxi, motorcycle or another way",
+    "variables": [
+     "B08301_016",
+     "B08301_017",
+     "B08301_020"
+    ]
+   }
+  }
+ },
+ "maps": {
+  "annual_precipitation": {
+   "group": "Environment and climate",
+   "links": []
+  },
+  "cooling_degree_days": {
+   "group": "Environment and climate",
+   "links": [
+    {
+     "id": "home_energy_cost",
+     "why": "Hotter places spend more on cooling."
+    }
+   ]
+  },
+  "heating_degree_days": {
+   "group": "Environment and climate",
+   "links": [
+    {
+     "id": "home_energy_cost",
+     "why": "Colder places spend more on heating."
+    }
+   ]
+  },
+  "january_low": {
+   "group": "Environment and climate",
+   "links": []
+  },
+  "july_high": {
+   "group": "Environment and climate",
+   "links": [
+    {
+     "id": "nri_heat_wave_loss",
+     "why": "Heat-wave losses are highest where summers are hottest."
+    }
+   ]
+  },
+  "july_low": {
+   "group": "Environment and climate",
+   "links": []
+  },
+  "mean_temperature": {
+   "group": "Environment and climate",
+   "links": []
+  },
+  "mean_commute_minutes": {
+   "group": "Transportation",
+   "counts": {
+    "of": "minutes spent commuting, all workers combined",
+    "per": "workers who commute (not working from home)"
+   },
+   "links": [
+    {
+     "id": "pct_work_outside_county",
+     "why": "Working in another county usually means a longer trip."
+    },
+    {
+     "id": "pct_long_commute",
+     "why": "The average and the share of long trips."
+    }
+   ]
+  },
+  "pct_bike_commute": {
+   "group": "Transportation",
+   "counts": {
+    "of": "workers who bike to work",
+    "per": "workers 16 and older"
+   },
+   "links": [],
+   "parts": "commute_modes"
+  },
+  "pct_carpool": {
+   "group": "Transportation",
+   "counts": {
+    "of": "workers who carpool",
+    "per": "workers 16 and older"
+   },
+   "links": [],
+   "parts": "commute_modes"
+  },
+  "pct_drive_alone": {
+   "group": "Transportation",
+   "counts": {
+    "of": "workers who drive alone",
+    "per": "workers 16 and older"
+   },
+   "links": [],
+   "parts": "commute_modes"
+  },
+  "pct_extreme_commute": {
+   "group": "Transportation",
+   "counts": {
+    "of": "workers with a 90-minute-plus commute",
+    "per": "workers who commute (not working from home)"
+   },
+   "links": [
+    {
+     "id": "pct_long_commute",
+     "why": "90-minute-plus commutes are part of hour-plus commutes."
+    }
+   ]
+  },
+  "pct_leave_before_7am": {
+   "group": "Transportation",
+   "counts": {
+    "of": "workers who leave before 7 a.m.",
+    "per": "workers who commute (not working from home)"
+   },
+   "links": [
+    {
+     "id": "pct_long_commute",
+     "why": "Long commutes start early."
+    }
+   ]
+  },
+  "pct_long_commute": {
+   "group": "Transportation",
+   "counts": {
+    "of": "workers with an hour-plus commute",
+    "per": "workers who commute (not working from home)"
+   },
+   "links": [
+    {
+     "id": "mean_commute_minutes",
+     "why": "The average and the share of long trips."
+    },
+    {
+     "id": "pct_extreme_commute",
+     "why": "90-minute-plus commutes are part of hour-plus commutes."
+    },
+    {
+     "id": "pct_leave_before_7am",
+     "why": "Long commutes start early."
+    }
+   ]
+  },
+  "pct_transit_commute": {
+   "group": "Transportation",
+   "counts": {
+    "of": "workers who take public transit",
+    "per": "workers 16 and older"
+   },
+   "links": [
+    {
+     "id": "pct_zero_vehicle_households",
+     "why": "Households without a car rely on transit."
+    }
+   ],
+   "parts": "commute_modes"
+  },
+  "pct_walk_commute": {
+   "group": "Transportation",
+   "counts": {
+    "of": "workers who walk to work",
+    "per": "workers 16 and older"
+   },
+   "links": [],
+   "parts": "commute_modes"
+  },
+  "pct_work_from_home": {
+   "group": "Transportation",
+   "counts": {
+    "of": "workers who work from home",
+    "per": "workers 16 and older"
+   },
+   "links": [],
+   "parts": "commute_modes"
+  },
+  "pct_work_outside_county": {
+   "group": "Transportation",
+   "counts": {
+    "of": "workers who work outside their home county",
+    "per": "workers 16 and older"
+   },
+   "links": [
+    {
+     "id": "mean_commute_minutes",
+     "why": "Working in another county usually means a longer trip."
+    }
+   ]
+  },
+  "pct_bachelors_plus": {
+   "group": "People",
+   "counts": {
+    "of": "adults with a bachelor's degree or higher",
+    "per": "adults 25 and older"
+   },
+   "links": [
+    {
+     "id": "median_household_income",
+     "why": "Education and earnings go together."
+    }
+   ]
+  },
+  "pct_graduate_degree": {
+   "group": "People",
+   "counts": {
+    "of": "adults with a graduate or professional degree",
+    "per": "adults 25 and older"
+   },
+   "links": []
+  },
+  "pct_no_hs_diploma": {
+   "group": "People",
+   "counts": {
+    "of": "adults without a high school diploma",
+    "per": "adults 25 and older"
+   },
+   "links": [
+    {
+     "id": "pct_poverty",
+     "why": "Adults without a diploma earn less on average."
+    }
+   ]
+  },
+  "nri_coastal_flood_loss": {
+   "group": "Environment and climate",
+   "links": []
+  },
+  "nri_community_resilience": {
+   "group": "Environment and climate",
+   "links": []
+  },
+  "nri_expected_loss_per_person": {
+   "group": "Environment and climate",
+   "links": [
+    {
+     "id": "nri_risk_score",
+     "why": "Expected loss is the main part of FEMA's risk score."
+    }
+   ]
+  },
+  "nri_heat_wave_loss": {
+   "group": "Environment and climate",
+   "links": [
+    {
+     "id": "july_high",
+     "why": "Heat-wave losses are highest where summers are hottest."
+    }
+   ]
+  },
+  "nri_hurricane_loss": {
+   "group": "Environment and climate",
+   "links": []
+  },
+  "nri_inland_flood_loss": {
+   "group": "Environment and climate",
+   "links": []
+  },
+  "nri_risk_score": {
+   "group": "Environment and climate",
+   "links": [
+    {
+     "id": "nri_expected_loss_per_person",
+     "why": "Expected loss is the main part of FEMA's risk score."
+    }
+   ]
+  },
+  "nri_social_vulnerability": {
+   "group": "Environment and climate",
+   "links": [
+    {
+     "id": "pct_poverty",
+     "why": "Poverty is one of the inputs to FEMA's social vulnerability score."
+    },
+    {
+     "id": "svi_overall",
+     "why": "Two federal measures of who a disaster would hit hardest."
+    }
+   ]
+  },
+  "nri_tornado_loss": {
+   "group": "Environment and climate",
+   "links": [
+    {
+     "id": "pct_mobile_homes",
+     "why": "Mobile homes are the most exposed to tornadoes."
+    }
+   ]
+  },
+  "nri_wildfire_loss": {
+   "group": "Environment and climate",
+   "links": []
+  },
+  "ozone_8hr": {
+   "group": "Environment and climate",
+   "links": [
+    {
+     "id": "asthma",
+     "why": "Ozone worsens asthma."
+    }
+   ]
+  },
+  "pm25_annual": {
+   "group": "Environment and climate",
+   "links": [
+    {
+     "id": "asthma",
+     "why": "Fine-particle pollution worsens asthma."
+    },
+    {
+     "id": "copd",
+     "why": "Fine-particle pollution worsens lung disease."
+    }
+   ]
+  },
+  "cejst_disadvantaged_tracts": {
+   "group": "Health",
+   "links": [
+    {
+     "id": "cejst_pct_pop_disadvantaged",
+     "why": "The share of residents and the tracts behind it."
+    }
+   ]
+  },
+  "cejst_pct_pop_disadvantaged": {
+   "group": "Health",
+   "links": [
+    {
+     "id": "cejst_disadvantaged_tracts",
+     "why": "The share of residents and the tracts behind it."
+    }
+   ]
+  },
+  "energy_burden": {
+   "group": "Environment and climate",
+   "links": [
+    {
+     "id": "home_energy_cost",
+     "why": "Energy burden is energy cost divided by income."
+    },
+    {
+     "id": "median_household_income",
+     "why": "The same bill is a bigger share of a smaller income."
+    },
+    {
+     "id": "energy_burden_low_income",
+     "why": "All households and lower-income households only."
+    }
+   ]
+  },
+  "energy_burden_low_income": {
+   "group": "Environment and climate",
+   "links": [
+    {
+     "id": "energy_burden",
+     "why": "All households and lower-income households only."
+    }
+   ]
+  },
+  "home_energy_cost": {
+   "group": "Environment and climate",
+   "links": [
+    {
+     "id": "energy_burden",
+     "why": "Energy burden is energy cost divided by income."
+    },
+    {
+     "id": "heating_degree_days",
+     "why": "Colder places spend more on heating."
+    },
+    {
+     "id": "cooling_degree_days",
+     "why": "Hotter places spend more on cooling."
+    },
+    {
+     "id": "pct_homes_built_before_1960",
+     "why": "Older homes are often harder to heat and cool."
+    }
+   ]
+  },
+  "svi_household": {
+   "group": "Environment and climate",
+   "links": []
+  },
+  "svi_housing_transport": {
+   "group": "Environment and climate",
+   "links": []
+  },
+  "svi_minority": {
+   "group": "Environment and climate",
+   "links": [
+    {
+     "id": "pct_people_of_color",
+     "why": "CDC's minority-status theme ranks the share of people of color."
+    }
+   ]
+  },
+  "svi_overall": {
+   "group": "Environment and climate",
+   "links": [
+    {
+     "id": "nri_social_vulnerability",
+     "why": "Two federal measures of who a disaster would hit hardest."
+    }
+   ]
+  },
+  "svi_socioeconomic": {
+   "group": "Environment and climate",
+   "links": []
+  },
+  "all_teeth_lost": {
+   "group": "Health",
+   "links": []
+  },
+  "arthritis": {
+   "group": "Health",
+   "links": []
+  },
+  "asthma": {
+   "group": "Health",
+   "links": [
+    {
+     "id": "pm25_annual",
+     "why": "Fine-particle pollution worsens asthma."
+    },
+    {
+     "id": "ozone_8hr",
+     "why": "Ozone worsens asthma."
+    }
+   ]
+  },
+  "binge_drinking": {
+   "group": "Health",
+   "links": []
+  },
+  "blood_pressure_medication": {
+   "group": "Health",
+   "links": []
+  },
+  "cancer": {
+   "group": "Health",
+   "links": []
+  },
+  "cholesterol_screening": {
+   "group": "Health",
+   "links": []
+  },
+  "colorectal_screening": {
+   "group": "Health",
+   "links": []
+  },
+  "copd": {
+   "group": "Health",
+   "links": [
+    {
+     "id": "pm25_annual",
+     "why": "Fine-particle pollution worsens lung disease."
+    }
+   ]
+  },
+  "dentist_visit": {
+   "group": "Health",
+   "links": []
+  },
+  "depression": {
+   "group": "Health",
+   "links": []
+  },
+  "diabetes": {
+   "group": "Health",
+   "links": []
+  },
+  "disability_any": {
+   "group": "Health",
+   "links": [
+    {
+     "id": "pct_disability",
+     "why": "The same question from the Census survey and CDC's model."
+    }
+   ]
+  },
+  "disability_cognition": {
+   "group": "Health",
+   "links": []
+  },
+  "disability_hearing": {
+   "group": "Health",
+   "links": []
+  },
+  "disability_independent_living": {
+   "group": "Health",
+   "links": []
+  },
+  "disability_mobility": {
+   "group": "Health",
+   "links": []
+  },
+  "disability_selfcare": {
+   "group": "Health",
+   "links": []
+  },
+  "disability_vision": {
+   "group": "Health",
+   "links": []
+  },
+  "fair_poor_health": {
+   "group": "Health",
+   "links": []
+  },
+  "far_from_supermarket": {
+   "group": "Health",
+   "links": [
+    {
+     "id": "food_access_tracts",
+     "why": "The share of residents and the tracts behind it."
+    },
+    {
+     "id": "food_desert_residents",
+     "why": "Low-income"
+    }
+   ]
+  },
+  "food_access_no_car_tracts": {
+   "group": "Health",
+   "links": [
+    {
+     "id": "no_car_far_from_supermarket",
+     "why": "The share of households and the tracts behind it."
+    }
+   ]
+  },
+  "food_access_tracts": {
+   "group": "Health",
+   "links": [
+    {
+     "id": "far_from_supermarket",
+     "why": "The share of residents and the tracts behind it."
+    }
+   ]
+  },
+  "food_desert_residents": {
+   "group": "Health",
+   "links": [
+    {
+     "id": "far_from_supermarket",
+     "why": "Low-income"
+    },
+    {
+     "id": "food_insecurity",
+     "why": "Living far from a supermarket on a low income can make it harder to get enough food."
+    }
+   ]
+  },
+  "food_insecurity": {
+   "group": "Health",
+   "links": [
+    {
+     "id": "pct_poverty",
+     "why": "Not being able to afford enough food tracks low income."
+    },
+    {
+     "id": "food_desert_residents",
+     "why": "Living far from a supermarket on a low income can make it harder to get enough food."
+    }
+   ]
+  },
+  "heart_disease": {
+   "group": "Health",
+   "links": []
+  },
+  "high_blood_pressure": {
+   "group": "Health",
+   "links": []
+  },
+  "high_cholesterol": {
+   "group": "Health",
+   "links": []
+  },
+  "housing_insecurity": {
+   "group": "Health",
+   "links": []
+  },
+  "lack_emotional_support": {
+   "group": "Health",
+   "links": []
+  },
+  "lack_transportation": {
+   "group": "Health",
+   "links": [
+    {
+     "id": "pct_zero_vehicle_households",
+     "why": "Two views of not having a way to get around."
+    }
+   ]
+  },
+  "loneliness": {
+   "group": "Health",
+   "links": [
+    {
+     "id": "pct_seniors_living_alone",
+     "why": "Living alone is one driver of loneliness."
+    }
+   ]
+  },
+  "mammogram": {
+   "group": "Health",
+   "links": []
+  },
+  "mental_distress": {
+   "group": "Health",
+   "links": [
+    {
+     "id": "overdose_deaths",
+     "why": "Overdose and mental distress often go together."
+    }
+   ]
+  },
+  "no_car_far_from_supermarket": {
+   "group": "Health",
+   "links": [
+    {
+     "id": "food_access_no_car_tracts",
+     "why": "The share of households and the tracts behind it."
+    },
+    {
+     "id": "pct_zero_vehicle_households",
+     "why": "Living far from a supermarket is harder without a car."
+    }
+   ]
+  },
+  "obesity": {
+   "group": "Health",
+   "links": []
+  },
+  "overdose_deaths": {
+   "group": "Health",
+   "links": [
+    {
+     "id": "mental_distress",
+     "why": "Overdose and mental distress often go together."
+    }
+   ]
+  },
+  "pct_disability": {
+   "group": "Health",
+   "counts": {
+    "of": "people with a disability",
+    "per": "people not in the military or an institution"
+   },
+   "links": [
+    {
+     "id": "disability_any",
+     "why": "The same question from the Census survey and CDC's model."
+    }
+   ]
+  },
+  "pct_uninsured": {
+   "group": "Health",
+   "counts": {
+    "of": "people without health insurance",
+    "per": "people not in the military or an institution"
+   },
+   "links": [
+    {
+     "id": "pct_poverty",
+     "why": "People with low incomes are less often insured."
+    },
+    {
+     "id": "routine_checkup",
+     "why": "People without insurance see a doctor less often."
+    }
+   ]
+  },
+  "physical_distress": {
+   "group": "Health",
+   "links": []
+  },
+  "physical_inactivity": {
+   "group": "Health",
+   "links": []
+  },
+  "routine_checkup": {
+   "group": "Health",
+   "links": [
+    {
+     "id": "pct_uninsured",
+     "why": "People without insurance see a doctor less often."
+    }
+   ]
+  },
+  "short_sleep": {
+   "group": "Health",
+   "links": []
+  },
+  "smoking": {
+   "group": "Health",
+   "links": []
+  },
+  "stroke": {
+   "group": "Health",
+   "links": []
+  },
+  "utility_shutoff_threat": {
+   "group": "Health",
+   "links": []
+  },
+  "census2020_housing_density": {
+   "group": "Housing",
+   "counts": {
+    "of": "homes (housing units)"
+   },
+   "links": [
+    {
+     "id": "census2020_pop_density",
+     "why": "Homes and residents per square mile from the same count."
+    }
+   ]
+  },
+  "census2020_pct_vacant": {
+   "group": "Housing",
+   "counts": {
+    "of": "vacant homes",
+    "per": "homes"
+   },
+   "links": []
+  },
+  "median_gross_rent": {
+   "group": "Housing",
+   "links": [
+    {
+     "id": "median_household_income",
+     "why": "Rent is paid out of household income."
+    },
+    {
+     "id": "pct_rent_burdened",
+     "why": "Higher rents push more renters past 30% of income."
+    },
+    {
+     "id": "pct_overcrowded",
+     "why": "Crowding often follows high rents."
+    }
+   ]
+  },
+  "median_home_value": {
+   "group": "Housing",
+   "links": [
+    {
+     "id": "median_household_income",
+     "why": "How far home prices run ahead of incomes."
+    }
+   ]
+  },
+  "median_owner_costs_mortgage": {
+   "group": "Housing",
+   "links": [
+    {
+     "id": "pct_owner_cost_burdened",
+     "why": "Higher monthly costs push more owners past 30% of income."
+    }
+   ]
+  },
+  "pct_homes_built_before_1960": {
+   "group": "Housing",
+   "counts": {
+    "of": "homes built before 1960",
+    "per": "homes"
+   },
+   "links": [
+    {
+     "id": "home_energy_cost",
+     "why": "Older homes are often harder to heat and cool."
+    }
+   ]
+  },
+  "pct_mobile_homes": {
+   "group": "Housing",
+   "counts": {
+    "of": "mobile homes",
+    "per": "homes"
+   },
+   "links": [
+    {
+     "id": "nri_tornado_loss",
+     "why": "Mobile homes are the most exposed to tornadoes."
+    }
+   ]
+  },
+  "pct_overcrowded": {
+   "group": "Housing",
+   "counts": {
+    "of": "overcrowded homes",
+    "per": "occupied homes"
+   },
+   "links": [
+    {
+     "id": "median_gross_rent",
+     "why": "Crowding often follows high rents."
+    }
+   ]
+  },
+  "pct_owner_cost_burdened": {
+   "group": "Housing",
+   "counts": {
+    "of": "homeowners paying 30% or more of income on housing",
+    "per": "homeowners (where cost burden is known)"
+   },
+   "links": [
+    {
+     "id": "median_owner_costs_mortgage",
+     "why": "Higher monthly costs push more owners past 30% of income."
+    }
+   ]
+  },
+  "pct_rent_burdened": {
+   "group": "Housing",
+   "counts": {
+    "of": "renter households paying 30% or more of income on rent",
+    "per": "renter households (where rent burden is known)"
+   },
+   "links": [
+    {
+     "id": "median_gross_rent",
+     "why": "Higher rents push more renters past 30% of income."
+    },
+    {
+     "id": "pct_renter_households",
+     "why": "Rent burden is a share of renter households only."
+    },
+    {
+     "id": "median_household_income",
+     "why": "Rent burden compares rent with income."
+    }
+   ]
+  },
+  "pct_renter_households": {
+   "group": "Housing",
+   "counts": {
+    "of": "renter households",
+    "per": "households"
+   },
+   "links": [
+    {
+     "id": "pct_rent_burdened",
+     "why": "Rent burden is a share of renter households only."
+    }
+   ]
+  },
+  "ice_287g_agreements": {
+   "group": "People",
+   "counts": {
+    "of": "active 287(g) agreements"
+   },
+   "links": [
+    {
+     "id": "pct_foreign_born",
+     "why": "Where immigrants live and where local police work with ICE."
+    }
+   ]
+  },
+  "gini_index": {
+   "group": "Economy",
+   "links": []
+  },
+  "median_household_income": {
+   "group": "Economy",
+   "links": [
+    {
+     "id": "median_gross_rent",
+     "why": "Rent is paid out of household income."
+    },
+    {
+     "id": "pct_rent_burdened",
+     "why": "Rent burden compares rent with income."
+    },
+    {
+     "id": "median_home_value",
+     "why": "How far home prices run ahead of incomes."
+    },
+    {
+     "id": "pct_poverty",
+     "why": "Two views of the same income distribution."
+    },
+    {
+     "id": "pct_bachelors_plus",
+     "why": "Education and earnings go together."
+    },
+    {
+     "id": "energy_burden",
+     "why": "The same bill is a bigger share of a smaller income."
+    }
+   ]
+  },
+  "pct_child_poverty": {
+   "group": "Economy",
+   "counts": {
+    "of": "children in poverty",
+    "per": "children whose poverty status is known"
+   },
+   "links": [
+    {
+     "id": "pct_poverty",
+     "why": "Child poverty is poverty among children only."
+    },
+    {
+     "id": "pct_single_parent_families",
+     "why": "Children of single parents are more often poor."
+    }
+   ]
+  },
+  "pct_poverty": {
+   "group": "Economy",
+   "counts": {
+    "of": "people below the poverty line",
+    "per": "people whose poverty status is known"
+   },
+   "links": [
+    {
+     "id": "median_household_income",
+     "why": "Two views of the same income distribution."
+    },
+    {
+     "id": "pct_child_poverty",
+     "why": "Child poverty is poverty among children only."
+    },
+    {
+     "id": "pct_snap_households",
+     "why": "SNAP eligibility is set by income relative to the poverty line."
+    },
+    {
+     "id": "pct_public_assistance",
+     "why": "Cash assistance goes to households with very low incomes."
+    },
+    {
+     "id": "food_insecurity",
+     "why": "Not being able to afford enough food tracks low income."
+    },
+    {
+     "id": "pct_uninsured",
+     "why": "People with low incomes are less often insured."
+    },
+    {
+     "id": "nri_social_vulnerability",
+     "why": "Poverty is one of the inputs to FEMA's social vulnerability score."
+    },
+    {
+     "id": "pct_no_hs_diploma",
+     "why": "Adults without a diploma earn less on average."
+    }
+   ]
+  },
+  "pct_public_assistance": {
+   "group": "Economy",
+   "counts": {
+    "of": "households on cash public assistance",
+    "per": "households"
+   },
+   "links": [
+    {
+     "id": "pct_poverty",
+     "why": "Cash assistance goes to households with very low incomes."
+    }
+   ]
+  },
+  "pct_snap_households": {
+   "group": "Economy",
+   "counts": {
+    "of": "households getting SNAP (food stamps)",
+    "per": "households"
+   },
+   "links": [
+    {
+     "id": "pct_poverty",
+     "why": "SNAP eligibility is set by income relative to the poverty line."
+    }
+   ]
+  },
+  "per_capita_income": {
+   "group": "Economy",
+   "links": []
+  },
+  "pct_broadband": {
+   "group": "Economy",
+   "counts": {
+    "of": "households with broadband",
+    "per": "households"
+   },
+   "links": [
+    {
+     "id": "pct_no_internet",
+     "why": "Two sides of home internet access."
+    }
+   ]
+  },
+  "pct_no_computer": {
+   "group": "Economy",
+   "counts": {
+    "of": "households without a computer",
+    "per": "households"
+   },
+   "links": [
+    {
+     "id": "pct_no_internet",
+     "why": "Households without a computer often have no internet either."
+    }
+   ]
+  },
+  "pct_no_internet": {
+   "group": "Economy",
+   "counts": {
+    "of": "households without internet",
+    "per": "households"
+   },
+   "links": [
+    {
+     "id": "pct_broadband",
+     "why": "Two sides of home internet access."
+    },
+    {
+     "id": "pct_no_computer",
+     "why": "Households without a computer often have no internet either."
+    }
+   ]
+  },
+  "job_density": {
+   "group": "Economy",
+   "counts": {
+    "of": "jobs"
+   },
+   "links": [
+    {
+     "id": "population_density",
+     "why": "Where jobs are compared with where people live."
+    }
+   ]
+  },
+  "labor_force_participation": {
+   "group": "Economy",
+   "counts": {
+    "of": "people working or looking for work",
+    "per": "people 16 and older"
+   },
+   "links": [
+    {
+     "id": "unemployment_rate",
+     "why": "Unemployment is counted only among people in the labor force."
+    }
+   ]
+  },
+  "unemployment_rate": {
+   "group": "Economy",
+   "counts": {
+    "of": "unemployed people",
+    "per": "people in the labor force"
+   },
+   "links": [
+    {
+     "id": "labor_force_participation",
+     "why": "Unemployment is counted only among people in the labor force."
+    }
+   ]
+  },
+  "census2020_pop_density": {
+   "group": "People",
+   "counts": {
+    "of": "residents"
+   },
+   "links": [
+    {
+     "id": "population_density",
+     "why": "The same measure from the survey and from the 2020 count."
+    },
+    {
+     "id": "census2020_housing_density",
+     "why": "Homes and residents per square mile from the same count."
+    }
+   ]
+  },
+  "median_age": {
+   "group": "People",
+   "links": []
+  },
+  "pct_age_65_plus": {
+   "group": "People",
+   "counts": {
+    "of": "people 65 and older",
+    "per": "residents"
+   },
+   "links": [
+    {
+     "id": "pct_seniors_living_alone",
+     "why": "More older residents"
+    }
+   ]
+  },
+  "pct_foreign_born": {
+   "group": "People",
+   "counts": {
+    "of": "residents born outside the U.S.",
+    "per": "residents"
+   },
+   "links": [
+    {
+     "id": "pct_limited_english",
+     "why": "Many households with limited English are immigrant households."
+    },
+    {
+     "id": "ice_287g_agreements",
+     "why": "Where immigrants live and where local police work with ICE."
+    }
+   ]
+  },
+  "pct_limited_english": {
+   "group": "People",
+   "counts": {
+    "of": "households with limited English",
+    "per": "households"
+   },
+   "links": [
+    {
+     "id": "pct_foreign_born",
+     "why": "Many households with limited English are immigrant households."
+    }
+   ]
+  },
+  "pct_moved_last_year": {
+   "group": "People",
+   "counts": {
+    "of": "people who moved in the past year",
+    "per": "people 1 year and older"
+   },
+   "links": []
+  },
+  "pct_seniors_living_alone": {
+   "group": "People",
+   "counts": {
+    "of": "seniors living alone",
+    "per": "households"
+   },
+   "links": [
+    {
+     "id": "pct_age_65_plus",
+     "why": "More older residents"
+    },
+    {
+     "id": "loneliness",
+     "why": "Living alone is one driver of loneliness."
+    }
+   ]
+  },
+  "pct_single_parent_families": {
+   "group": "People",
+   "counts": {
+    "of": "single-parent families",
+    "per": "families with children under 18"
+   },
+   "links": [
+    {
+     "id": "pct_child_poverty",
+     "why": "Children of single parents are more often poor."
+    }
+   ]
+  },
+  "pct_under_18": {
+   "group": "People",
+   "counts": {
+    "of": "children under 18",
+    "per": "residents"
+   },
+   "links": []
+  },
+  "pct_veterans": {
+   "group": "People",
+   "counts": {
+    "of": "veterans",
+    "per": "civilians 18 and older"
+   },
+   "links": []
+  },
+  "population_density": {
+   "group": "People",
+   "counts": {
+    "of": "residents"
+   },
+   "links": [
+    {
+     "id": "job_density",
+     "why": "Where jobs are compared with where people live."
+    },
+    {
+     "id": "census2020_pop_density",
+     "why": "The same measure from the survey and from the 2020 count."
+    }
+   ]
+  },
+  "pct_aian_nh": {
+   "group": "People",
+   "counts": {
+    "of": "American Indian and Alaska Native (non-Hispanic) residents",
+    "per": "residents"
+   },
+   "links": [],
+   "parts": "race_ethnicity"
+  },
+  "pct_asian_nh": {
+   "group": "People",
+   "counts": {
+    "of": "Asian (non-Hispanic) residents",
+    "per": "residents"
+   },
+   "links": [],
+   "parts": "race_ethnicity"
+  },
+  "pct_black_nh": {
+   "group": "People",
+   "counts": {
+    "of": "Black (non-Hispanic) residents",
+    "per": "residents"
+   },
+   "links": [],
+   "parts": "race_ethnicity"
+  },
+  "pct_hispanic_latino": {
+   "group": "People",
+   "counts": {
+    "of": "Hispanic or Latino residents",
+    "per": "residents"
+   },
+   "links": [],
+   "parts": "race_ethnicity"
+  },
+  "pct_multiracial_nh": {
+   "group": "People",
+   "counts": {
+    "of": "residents of two or more races (non-Hispanic)",
+    "per": "residents"
+   },
+   "links": [],
+   "parts": "race_ethnicity"
+  },
+  "pct_nhpi_nh": {
+   "group": "People",
+   "counts": {
+    "of": "Native Hawaiian and Pacific Islander (non-Hispanic) residents",
+    "per": "residents"
+   },
+   "links": [],
+   "parts": "race_ethnicity"
+  },
+  "pct_people_of_color": {
+   "group": "People",
+   "counts": {
+    "of": "people of color",
+    "per": "residents"
+   },
+   "links": [
+    {
+     "id": "svi_minority",
+     "why": "CDC's minority-status theme ranks the share of people of color."
+    }
+   ]
+  },
+  "pct_white_nh": {
+   "group": "People",
+   "counts": {
+    "of": "White (non-Hispanic) residents",
+    "per": "residents"
+   },
+   "links": [],
+   "parts": "race_ethnicity"
+  },
+  "aadt": {
+   "group": "Transportation",
+   "links": [
+    {
+     "id": "vmt_per_capita",
+     "why": "Road traffic counts are what driving totals are built from."
+    }
+   ]
+  },
+  "bridges_poor_condition": {
+   "group": "Transportation",
+   "links": []
+  },
+  "traffic_fatalities": {
+   "group": "Transportation",
+   "counts": {
+    "of": "traffic deaths a year (average)",
+    "per": "residents"
+   },
+   "links": [
+    {
+     "id": "vmt_per_capita",
+     "why": "More driving per person means more exposure to crashes."
+    }
+   ]
+  },
+  "vmt_per_capita": {
+   "group": "Transportation",
+   "links": [
+    {
+     "id": "traffic_fatalities",
+     "why": "More driving per person means more exposure to crashes."
+    },
+    {
+     "id": "aadt",
+     "why": "Road traffic counts are what driving totals are built from."
+    }
+   ]
+  },
+  "pct_zero_vehicle_households": {
+   "group": "Transportation",
+   "counts": {
+    "of": "households with no vehicle",
+    "per": "households"
+   },
+   "links": [
+    {
+     "id": "pct_transit_commute",
+     "why": "Households without a car rely on transit."
+    },
+    {
+     "id": "lack_transportation",
+     "why": "Two views of not having a way to get around."
+    },
+    {
+     "id": "no_car_far_from_supermarket",
+     "why": "Living far from a supermarket is harder without a car."
+    }
+   ]
+  }
+ }
+}
