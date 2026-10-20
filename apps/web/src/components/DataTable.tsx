@@ -126,7 +126,7 @@ export const DataTable = memo(function DataTable({ top = 12, level, within, x, x
       <header className="flex items-start justify-between gap-2">
         <div>
           <h2 className="text-sm font-semibold">{x.title}{y ? ` × ${y.title}` : ""}</h2>
-          <p className="text-xs text-muted-foreground">By {level}{period ? ` · ${period}` : ""} · {rows.length.toLocaleString()} {rows.length === 1 ? "row" : "rows"} · select a place to go there</p>
+          <p className="text-xs text-muted-foreground">By {level.replace("_", " ")}{period ? ` · ${period}` : ""} · {rows.length.toLocaleString()} {rows.length === 1 ? "row" : "rows"} · select a place to go there</p>
         </div>
         <button ref={closeRef} type="button" onClick={onClose} aria-label="Close table" className="rounded p-1 text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring">
           <X className="size-4" />
