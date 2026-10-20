@@ -5,13 +5,13 @@ import { SiteFooter } from "@/components/SiteNav";
 import { SiteHeader } from "@/components/SiteHeader";
 import { renderMarkdown } from "@/lib/specials";
 
-export const metadata: Metadata = { title: "Design system · Mapwich" };
+export const metadata: Metadata = { title: "How Mapwich draws its maps · Mapwich" };
 
-// Renders docs/design-system.md (generated from packages/design) at build time, so the page never drifts
-// from the tokens. Its relative SVG images are inlined as data URIs.
+// Visitor copy in content/design-system.md (the developer version stays in docs/design-system.md). Its SVG
+// images are the ones generated from packages/design into docs/design-system/, inlined as data URIs at build.
 // shortcut: reads ../../docs from the repo checkout (build runs there); move to prepare.mts if the app is ever built alone.
 const docs = join(process.cwd(), "../../docs");
-const html = renderMarkdown(readFileSync(join(docs, "design-system.md"), "utf8")).replace(
+const html = renderMarkdown(readFileSync(join(process.cwd(), "content/design-system.md"), "utf8")).replace(
   /src="(design-system\/[^"]+\.svg)"/g,
   (_, f) => `src="data:image/svg+xml;base64,${readFileSync(join(docs, f)).toString("base64")}"`,
 );
