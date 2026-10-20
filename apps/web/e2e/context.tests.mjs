@@ -25,8 +25,9 @@ export default function contextTests({ test, expect, wait }) {
     const pad = await page.evaluate(() => window.__wgMap.getPadding());
     expect(pad.right > 300, `map not shifted clear of the panel: padding ${JSON.stringify(pad)}`);
     await page.keyboard.press("Escape");
-    await wait(1200);
+    await panel.waitFor({ state: "detached", timeout: 8000 }).catch(() => {});
     expect((await panel.count()) === 0, "Esc didn't close the panel");
+    await page.waitForFunction(() => window.__wgMap.getPadding().right === 0, null, { timeout: 8000 }).catch(() => {});
     const after = await page.evaluate(() => window.__wgMap.getPadding());
     expect(after.right === 0, `padding not reset: ${JSON.stringify(after)}`);
   });
@@ -38,7 +39,7 @@ export default function contextTests({ test, expect, wait }) {
     await page.waitForURL(/d=vmt_per_capita/, { timeout: 10000 });
     expect((await page.locator(PANEL).count()) === 0, "panel still open after switching maps");
     expect((await page.locator("[data-context-link]").count()) === 0, "a map without context shows the link");
-    await wait(1200);
+    await page.waitForFunction(() => window.__wgMap.getPadding().right === 0, null, { timeout: 8000 }).catch(() => {});
     const pad = await page.evaluate(() => window.__wgMap.getPadding());
     expect(pad.right === 0, `padding not reset after switching maps: ${JSON.stringify(pad)}`);
   });
