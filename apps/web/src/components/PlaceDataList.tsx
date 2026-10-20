@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { formatEstimate, isGradable, type GeoLevel } from "@webgis/design";
 import { StatusState } from "@webgis/design/components";
 import { DatasetFilter, useDatasetFilter } from "./DatasetFilter";
+import { Benchmarks } from "./Benchmarks";
 import { loadValues, type Values } from "@/lib/values";
 import { rankText } from "@/lib/place";
 import { noDataReason, reliabilityNote } from "@/lib/reliability";
@@ -69,6 +70,7 @@ export function PlaceDataList({ geoid, level, detail, mapHref, onMapIt, compact 
                   <div className="min-w-0">
                     <p className="text-sm font-medium">{d.title}</p>
                     <p className="text-xs text-muted-foreground">{ranks[d.id] ? `${ranks[d.id]} · ` : ""}{d.vintage}</p>
+                    {r.value != null && <Benchmarks dataset={d} geoid={geoid} />}
                     {note && <p className="text-xs font-medium text-foreground" data-value-note="">{note}</p>}
                   </div>
                   <div className="shrink-0 text-right">
