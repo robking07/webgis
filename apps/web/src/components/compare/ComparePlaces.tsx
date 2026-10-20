@@ -8,6 +8,7 @@
 // Part 2b: the head counts behind a rate, each place's share of the places above it, and
 // parts-of-a-whole bars (lib/counts.ts, D-257 files).
 import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { formatEstimate, formatValue, isGradable, rampColors, SECOND_OUTLINE_DASH, type GeoLevel } from "@webgis/design";
 import { StatusState } from "@webgis/design/components";
 import { bothHave, compareValues, rowVerdictText, shortName, stripRange, stripX, verdictText, type Verdict } from "@/lib/compare";
@@ -19,17 +20,25 @@ import { CATEGORIES, DATASET_BY_ID, DATASETS, type Dataset } from "@/lib/registr
 import { loadValues, type Values } from "@/lib/values";
 import { serializeUrlState } from "@/lib/url-state";
 import { ShareButton } from "../ShareButton";
+import { DatasetHeading, DatasetMenu, DatasetSheet } from "../DatasetMenus";
 import { useMedia } from "../BottomSheet";
 import { SpecialMap } from "../specials/SpecialMap";
 import type { Bbox } from "../map/MapView";
 
-interface Props { a: string; b: string; nameA: string; nameB: string; datasetId: string; parentNames: Record<string, string> }
+interface Props { a: string; b: string; nameA: string; nameB: string; datasetId: string; parentNames: Record<string, string>; unknownD?: boolean }
 /** Counts already loaded, keyed `<map id>:<geoid>` (null = the file or row isn't there). */
 type CountsBy = Record<string, Counts | null>;
 
 const LEVEL_WORD: Partial<Record<GeoLevel, string>> = { state: "states", county: "counties", tract: "Census tracts" };
 
-export function ComparePlaces({ a, b, nameA, nameB, datasetId, parentNames }: Props) {
+export function ComparePlaces({ a, b, nameA, nameB, datasetId, parentNames, unknownD }: Props) {
+  const router = useRouter();
+  const [menu, setMenu] = useState(false);
+  // The map pushes a Back step per dataset change (useUrlState), so this does too. The place pair and the
+  // rest of the query stay; the page re-renders on the server with the new dataset.
+  const pick = (id: string) => { setMenu(false); router.push(`/compare/${a}/${b}?d=${id}`, { scroll: false }); };
+  // An unknown ?d= shows the landing map's dataset; rewrite the URL to what is shown, like the map (#306).
+  useEffect(() => { if (unknownD) router.replace(`/compare/${a}/${b}?d=${datasetId}`, { scroll: false }); }, [unknownD, a, b, datasetId, router]);
   const level = levelOfGeoid(a)!;
   const ds = DATASET_BY_ID.get(datasetId)!;
   const [data, setData] = useState<{ a: Detail; b: Detail; back: string } | null>(null);
@@ -106,6 +115,15 @@ export function ComparePlaces({ a, b, nameA, nameB, datasetId, parentNames }: Pr
         </h1>
       </header>
 
+      <div className="mb-4">
+        {/* The map's own dataset menu (one menu, D-326): a drop-down on laptops, a bottom sheet on phones. */}
+        <DatasetHeading primary={ds} secondary={null} open={menu} onToggle={() => setMenu((o) => !o)}>
+          {menu && wide && <DatasetMenu slot="a" primary={ds} secondary={null} onSlot={() => {}} onPick={pick} onClose={() => setMenu(false)} />}
+        </DatasetHeading>
+        {menu && !wide && <DatasetSheet slot="a" primary={ds} secondary={null} onSlot={() => {}} onPick={pick} onClose={() => setMenu(false)} />}
+        {unknownD && <p role="status" className="mt-2 text-sm text-muted-foreground" data-compare-fallback="">That map isn&apos;t available, so this is {ds.title}.</p>}
+      </div>
+
       {err ? <StatusState status="error" message="This comparison couldn't be loaded." />
         : !data || !groups ? <StatusState status="loading" message="Loading both places…" />
         : (
@@ -133,7 +151,7 @@ export function ComparePlaces({ a, b, nameA, nameB, datasetId, parentNames }: Pr
                   </summary>
                   <div className="mt-2 flex flex-col gap-3">
                     {PARTS.filter((p) => DATASET_BY_ID.get(p.members[0])?.category === cat).map((p) => <PartsBars key={p.label} set={p} data={data} names={names} />)}
-                    <Rows list={list} data={data} names={names} counts={wide ? counts : {}} geoids={{ a, b }} />
+                    <Rows list={list} data={data} names={names} counts={wide ? counts : {}} geoids={{ a, b }} onPick={pick} />
                   </div>
                 </details>
               ))}
@@ -341,7 +359,7 @@ function PartsBars({ set, data, names }: { set: (typeof PARTS)[number]; data: { 
   );
 }
 
-function Rows({ list, data, names, counts, geoids }: { list: Dataset[]; data: { a: Detail; b: Detail }; names: { a: string; b: string }; counts: CountsBy; geoids: { a: string; b: string } }) {
+function Rows({ list, data, names, counts, geoids, onPick }: { list: Dataset[]; data: { a: Detail; b: Detail }; names: { a: string; b: string }; counts: CountsBy; geoids: { a: string; b: string }; onPick: (id: string) => void }) {
   return (
     <ul className="divide-y rounded-xl border bg-card">
       <li aria-hidden className="grid grid-cols-2 gap-3 px-4 py-2 text-xs font-medium text-muted-foreground">
@@ -354,7 +372,8 @@ function Rows({ list, data, names, counts, geoids }: { list: Dataset[]; data: { 
         return (
           <li key={d.id} className="px-4 py-3" data-compare-row={d.id}>
             <div className="flex items-baseline justify-between gap-3">
-              <p className="min-w-0 text-sm font-medium">{d.title}</p>
+              <button type="button" onClick={() => onPick(d.id)} aria-label={`Map ${d.title}`}
+                className="min-w-0 rounded text-left text-sm font-medium hover:underline focus-visible:outline-2 focus-visible:outline-ring">{d.title}</button>
               <p className="shrink-0 text-xs text-muted-foreground">{rowVerdictText(v, names)}</p>
             </div>
             <div className="mt-0.5 grid grid-cols-2 gap-3 text-sm tabular-nums">
