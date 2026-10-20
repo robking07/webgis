@@ -1086,6 +1086,12 @@ test("laptop map fixes (#187): canvas label follows the map, tiles banner only f
 (await import("./getting-around.tests.mjs")).default({ test, expect, mapIdle });
 (await import("./table.tests.mjs")).default({ test, expect, wait });
 
+test("old /specials/pairings?topic=Health redirects to /specials/combinations?topic=Health", async (o) => {
+  const { page } = await o("laptop", "/specials/pairings?topic=Health", { ready: false });
+  const u = new URL(page.url());
+  expect(u.pathname === "/specials/combinations" && u.searchParams.get("topic") === "Health", `landed on ${page.url()}`);
+});
+
 // ── Run ────────────────────────────────────────────────────────────────────────
 // Round-robin keeps the slow tests spread across shards.
 const mine = shard ? queue.filter((_, i) => i % +shard[2] === +shard[1] - 1) : queue;
