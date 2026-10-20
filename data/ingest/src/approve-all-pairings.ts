@@ -1,4 +1,4 @@
-// One-off (issue #274, D-<n> pairings-browse): approve every current Odd Pairings candidate on
+// One-off (issue #274, D-377): approve every current Odd Pairings candidate on
 // Robbie's behalf, exactly as the review page writes a verdict (PairingReview.tsx). Idempotent:
 // upserts one row per pair with today's fingerprint; existing notes are kept.
 //   node data/ingest/src/approve-all-pairings.ts          dry run: shows what it would do
