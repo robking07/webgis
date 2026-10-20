@@ -85,7 +85,7 @@ async function open(vp, path, { scheme = "light", ready = true } = {}) {
     // Vercel Web Analytics only exists on Vercel; locally its script 404s.
     if ((m.location()?.url ?? "").includes("/_vercel/")) return;
     // A brief CDN blip (net::ERR_*, no HTTP status) on the tile host is not our bug; 4xx/5xx still fail (#275).
-    if (/net::ERR_/.test(m.text()) && /tiles\.mapwich\.org/.test(m.location()?.url ?? "")) return;
+    if (/net::ERR_/.test(m.text()) && /tiles\.mapwich\.org/.test(`${m.text()} ${m.location()?.url ?? ""}`)) return;
     page.errors.push(`console: ${m.text()} ${m.location()?.url ?? ""}`);
   });
   page.isPhone = (typeof vp === "string" ? VP[vp] : vp).isMobile === true;
