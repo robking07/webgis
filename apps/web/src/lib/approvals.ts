@@ -1,4 +1,4 @@
-// Which Odd Pairings a reviewer approved (D-116). Server-only: read through the public
+// Which Combinations a reviewer approved (D-116). Server-only: read through the public
 // approvals grant (pair id + fingerprint, never notes), cached and tagged so the review
 // page can refresh /specials right after a verdict. Pages stay cached between refreshes,
 // so viewing doesn't depend on the database being awake (D-02).
