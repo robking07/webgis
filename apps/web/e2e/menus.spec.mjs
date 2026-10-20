@@ -741,6 +741,32 @@ for (const vp of ["phone", "laptop"]) {
   });
 }
 
+// Issue #193 (D-364): a zero with a huge margin reads as unreliable; a missing value says why.
+for (const vp of ["phone", "laptop"]) {
+  test(`${vp} shaky zeros: Loving County's 0% ±57.7 bike commuting is unreliable; no-data rows say why`, async (o) => {
+    const row = (page, title) => page.locator("main li").filter({ has: page.getByText(title, { exact: true }) });
+    const { page } = await o(vp, "/place/48301", { ready: false });
+    await page.locator("main h1").waitFor({ timeout: 20000 });
+    expect((await row(page, "Bike to work").locator("[data-value-note]").innerText()) === "Unreliable estimate", "Loving bike row note");
+    expect((await row(page, "Mean travel time to work").locator("[data-value-note]").innerText()) === "The Census Bureau doesn't publish this figure for this area.", "Loving mean commute reason");
+    const { page: cook } = await o(vp, "/place/17031", { ready: false });
+    await cook.locator("main h1").waitFor({ timeout: 20000 });
+    expect((await row(cook, "Bike to work").locator("[data-value-note]").count()) === 0, "Cook County's solid bike share flagged");
+    const { page: cmp } = await o(vp, "/compare/48301/17031?d=pct_bike_commute", { ready: false });
+    const head = cmp.locator("[data-compare-headline]");
+    await head.waitFor({ timeout: 20000 });
+    const notes = await head.locator("[data-value-note]").allInnerTexts();
+    expect(notes.length === 1 && notes[0] === "Unreliable estimate", `compare headline notes: ${notes}`);
+    const { page: map } = await o(vp, "/map?d=pct_bike_commute&lv=county&at=-103.58,31.84,8");
+    await immerse(map);
+    await tapLonLat(map, -103.58, 31.84);
+    const det = map.locator('section[aria-label^="Details for Loving County"]');
+    await det.waitFor();
+    await det.locator("[data-reliability]").first().waitFor({ timeout: 15000 });
+    expect(/Unreliable estimate\. The margin of error is large for an estimate of zero/.test(await det.locator("[data-reliability]").first().innerText()), "details note");
+  });
+}
+
 for (const vp of ["phone", "laptop", "monitor"]) {
   test(`${vp} zoom levels: block groups never draw at the national view, even pinned`, async (o) => {
     const { page } = await o(vp, "/map?d=median_household_income&lv=block_group");
@@ -765,6 +791,30 @@ test("phone: a long dataset title stops short of the back button (issue #243)", 
   const h = await page.locator("[data-dataset-heading]").boundingBox();
   const b = await back.boundingBox();
   expect(h.x + h.width <= b.x, `heading ends at ${Math.round(h.x + h.width)}px, back button starts at ${Math.round(b.x)}px`);
+});
+
+test("phone: zoomed in, search sits above the legend and opens full screen (issue #246)", async (o) => {
+  const { page } = await o("phone", "/map?d=median_household_income&lv=county&at=-93.4752,45.0061,7.2");
+  const btn = page.locator('button[aria-label="Search places or data"]');
+  await immerse(page);
+  expect(!(await btn.count()), "search button shows before any zoom");
+  await tapLonLat(page, ...HENNEPIN);
+  await page.locator('section[aria-label^="Details for"]').waitFor();
+  await page.locator('button[aria-label="Close details"]').click();
+  await btn.waitFor();
+  const b = await btn.boundingBox(), l = await page.locator("button[data-legend]").boundingBox();
+  expect(b.y + b.height <= l.y && b.x < l.x + 20, `search ${JSON.stringify(b)} not just above the legend strip ${JSON.stringify(l)}`);
+  await btn.click();
+  const input = page.getByPlaceholder("Search places or data...");
+  await input.waitFor();
+  const vh = page.viewportSize().height, r = await input.boundingBox();
+  expect(Math.abs(r.y + r.height / 2 - vh / 2) < 60, `field not mid-screen (center ${Math.round(r.y + r.height / 2)} of ${vh})`);
+  await page.keyboard.type("D");
+  await wait(500);
+  expect(!(await page.locator('[role="option"]').count()), "results after one character");
+  await page.keyboard.type("u");
+  await page.locator('[role="option"]').first().waitFor();
+  expect((await input.boundingBox()).y < 40, "field didn't move to the top once typing started");
 });
 
 /** Phone chrome over the map: every text, icon and edge against its own backing. */
@@ -1031,6 +1081,8 @@ test("laptop map fixes (#187): canvas label follows the map, tiles banner only f
 (await import("./drilldown.tests.mjs")).default({ test, expect, immerse, mapIdle, tapLonLat, HENNEPIN });
 (await import("./compare-mode.tests.mjs")).default({ test, expect, immerse });
 (await import("./splash.tests.mjs")).default({ test, expect, wait });
+(await import("./getting-around.tests.mjs")).default({ test, expect, mapIdle });
+(await import("./table.tests.mjs")).default({ test, expect, wait });
 
 // ── Run ────────────────────────────────────────────────────────────────────────
 // Round-robin keeps the slow tests spread across shards.
