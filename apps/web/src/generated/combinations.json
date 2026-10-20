@@ -13,7 +13,7 @@
   "urbanRuralGain": 0.01,
   "distanceClasses": 10
  },
- "generatedAt": "2026-10-20T05:18:13.643Z",
+ "generatedAt": "2026-10-20T05:20:34.930Z",
  "combinations": [
   {
    "id": "pct_renter_households__pct_moved_last_year__svi_overall__job_density__pct_veterans",
@@ -132,8 +132,8 @@
    "regions": 4,
    "urbanRural": false,
    "sensitive": true,
-   "caption": "Counties with higher job density, higher minority status ranks and lower asthma rates tend to have higher born outside the U.S. Together they line up with born outside the U.S much more closely than any one alone.",
-   "fingerprint": "c2a5c618c0e19b8b"
+   "caption": "Counties with higher job density, higher minority status ranks and lower asthma rates tend to have higher born outside the U.S. Together they line up with born outside the U.S. much more closely than any one alone.",
+   "fingerprint": "c169c30928a162c6"
   },
   {
    "id": "pct_hispanic_latino__svi_minority__asthma__svi_household",
@@ -501,8 +501,8 @@
    "regions": 4,
    "urbanRural": false,
    "sensitive": true,
-   "caption": "Counties with higher households getting SNAP (food stamps) and lower born outside the U.S tend to have higher asthma rates. Together they line up with asthma rates much more closely than any one alone.",
-   "fingerprint": "81a6d434c3667b3b"
+   "caption": "Counties with higher households getting SNAP (food stamps) and lower born outside the U.S. tend to have higher asthma rates. Together they line up with asthma rates much more closely than any one alone.",
+   "fingerprint": "a25cfa33bf9dca57"
   },
   {
    "id": "nri_risk_score__median_gross_rent__pct_renter_households__pct_asian_nh",

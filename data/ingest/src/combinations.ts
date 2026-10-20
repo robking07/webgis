@@ -13,7 +13,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { loadRegistry } from "@webgis/registry/load";
 import type { DatasetEntry } from "@webgis/registry";
-import { phrase, ranks, withinStateRho } from "./insights.ts";
+import { pearson, phrase, ranks, withinStateRho } from "./insights.ts";
 import { readGazetteer } from "./geographies.ts";
 import { log, ROOT, TILES } from "./util.ts";
 
@@ -249,15 +249,13 @@ export function confirm(c: Ctx, f: string, comps: string[], h: number, signs?: n
 
 /** Census regions where the full-data weights still beat the best member alone. */
 function regions(c: Ctx, all: ReturnType<typeof confirm>) {
-  const pc = (a: number[], b: number[]) => { const n = a.length, ma = a.reduce((s, v) => s + v, 0) / n, mb = b.reduce((s, v) => s + v, 0) / n;
-    let ab = 0, aa = 0, bb = 0; for (let i = 0; i < n; i++) { ab += (a[i] - ma) * (b[i] - mb); aa += (a[i] - ma) ** 2; bb += (b[i] - mb) ** 2; } return ab / Math.sqrt(aa * bb); };
   const score = all.idx.map((_, i) => all.beta.reduce((s, b, j) => s + b * all.cols[j + 1][i], 0));
   let passed = 0;
   for (let g = 0; g < 4; g++) {
     const at = all.idx.map((ci, i) => (c.region[ci] === g ? i : -1)).filter((i) => i >= 0), pick = (v: number[]) => at.map((i) => v[i]);
     if (at.length < 30) continue;
-    const y = pick(all.cols[0]), bestOne = Math.max(...all.cols.slice(1).map((x) => pc(pick(x), y) ** 2));
-    if (pc(pick(score), y) ** 2 - bestOne > 0) passed++;
+    const y = pick(all.cols[0]), bestOne = Math.max(...all.cols.slice(1).map((x) => pearson(pick(x), y) ** 2));
+    if (pearson(pick(score), y) ** 2 - bestOne > 0) passed++;
   }
   return passed;
 }
@@ -275,10 +273,10 @@ function urbanRural(c: Ctx, f: string, comps: string[]) {
 function caption(c: Ctx, f: string, comps: string[], beta: number[]) {
   const flip = beta.filter((b) => b < 0).length > beta.filter((b) => b > 0).length;
   const dir = (b: number) => ((b > 0) !== flip ? "higher" : "lower");
-  const ph = (id: string) => phrase(c.byId.get(id)!).replace(/\.$/, ""); // titles like "Born outside the U.S."
+  const ph = (id: string) => phrase(c.byId.get(id)!);
   const parts = comps.map((id, j) => `${dir(beta[j])} ${ph(id)}`);
   const list = `${parts.slice(0, -1).join(", ")} and ${parts.at(-1)}`, y = ph(f);
-  return `Counties with ${list} tend to have ${flip ? "lower" : "higher"} ${y}. Together they line up with ${y} much more closely than any one alone.`;
+  return `Counties with ${list} tend to have ${flip ? "lower" : "higher"} ${y.replace(/\.$/, "")}. Together they line up with ${y} much more closely than any one alone.`;
 }
 
 /** The whole method at one gain threshold. */
