@@ -20,15 +20,29 @@ export function unreliableIn(values: Record<string, number>, moes: Record<string
   return out;
 }
 
-/** The details panel's plain-words note for a graded estimate; null when there's nothing to say. */
-export function reliabilityNote(grade: Reliability | null): { title: string; body: string } | null {
+/** The plain-words note for an estimate's grade; null when there's nothing to say. */
+export function reliabilityNote(value: number | null | undefined, moe: number | null | undefined): { title: string; body: string } | null {
+  const grade: Reliability | null = gradeEstimate(value, moe);
   if (grade === "caution") return {
     title: "Use with caution",
     body: "The margin of error is fairly large compared with this estimate, so small differences from nearby areas may not be real.",
   };
   if (grade === "unreliable") return {
     title: "Unreliable estimate",
-    body: "The margin of error is large compared with this estimate (about half of it or more), so the true value could be quite different.",
+    body: value === 0
+      ? "The margin of error is large for an estimate of zero, so the true value could be well above zero."
+      : "The margin of error is large compared with this estimate (about half of it or more), so the true value could be quite different.",
   };
   return null;
+}
+
+/** Why a place has no value (issue #193): from the registry's coverage note and the place's code
+ *  where that's knowable, else a plain line. */
+export function noDataReason(ds: { measure: { kind: string }; coverageNote?: string }, geoid: string): string {
+  const census = ds.measure.kind === "acs5" || ds.measure.kind === "census2020";
+  if (geoid.startsWith("72") && /Puerto Rico/.test(ds.coverageNote ?? "")) return "This source has no data for Puerto Rico.";
+  // Connecticut's nine planning regions (091xx) replaced its counties in 2022; Census data uses them, older sources don't.
+  if (/^091\d\d$/.test(geoid) && !census) return "This source still uses Connecticut's old counties (before 2022).";
+  if (census) return "The Census Bureau doesn't publish this figure for this area.";
+  return "The source has no value for this area.";
 }
