@@ -219,4 +219,13 @@ export default function compareTests({ test, expect, wait, immerse, tapLonLat, l
     await wait(1500);
     expect((await page.locator("[data-compare-strip]").count()) === 0, "a strip on a tract comparison");
   });
+
+  // Issue #299: the place page's "Back to the map" returns to the dataset you came from.
+  test("laptop place page: Back to the map keeps the dataset from ?d=, else the landing one", async (o) => {
+    const back = (page) => page.getByRole("link", { name: "← Back to the map" }).getAttribute("href", { timeout: 20000 });
+    const { page } = await o("laptop", "/place/27053?d=pct_poverty", { ready: false });
+    expect(/[?&]d=pct_poverty(&|$)/.test(await back(page)), "dataset not carried");
+    const { page: cold } = await o("laptop", "/place/27053", { ready: false });
+    expect(/[?&]d=median_household_income(&|$)/.test(await back(cold)), "landing dataset missing");
+  });
 }
