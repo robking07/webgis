@@ -2,7 +2,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { X } from "lucide-react";
 import { StatusState } from "@webgis/design/components";
 import { CHANGE_CLASSES, formatEstimate, formatValue, GEO_LEVELS, isGradable, STATIC_ONLY_LEVELS, TILE_VALUE_LEVELS } from "@webgis/design";
-import { noDataReason, reliabilityNote } from "@/lib/reliability";
+import { moeRangeLine, noDataReason, reliabilityNote } from "@/lib/reliability";
 import { changeSummary, differenceMoe, formatChange, withinMoe } from "@/lib/change";
 import type { ClassedLevel } from "./useViewerData";
 import type { HoverInfo } from "../map/MapView";
@@ -101,9 +101,11 @@ function ReliabilityNote({ dataset, geoid, value, moe }: { dataset: Dataset; geo
   if (value == null) return <p className="mt-1 text-xs text-muted-foreground" data-no-data-reason="">{noDataReason(dataset, geoid)}</p>;
   const note = isGradable(dataset.measure.kind) ? reliabilityNote(value, moe) : null;
   if (!note) return null;
+  const range = moeRangeLine(value, moe, dataset.unit);
   return (
     <p className="mt-1 text-xs text-muted-foreground" data-reliability="">
       <span className="font-semibold text-foreground">{note.title}.</span> {note.body}
+      {range && <span data-moe-range=""> {range}</span>}
     </p>
   );
 }

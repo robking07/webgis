@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { noDataReason, reliabilityNote, unreliableIn, unreliableTracts } from "./reliability";
+import { moeRangeLine, noDataReason, reliabilityNote, unreliableIn, unreliableTracts } from "./reliability";
 
 describe("unreliableTracts", () => {
   const shard = {
@@ -56,5 +56,20 @@ describe("noDataReason", () => {
   });
   it("says Census doesn't publish it for a survey gap (Loving County mean commute)", () => {
     expect(noDataReason(acs, "48301")).toBe("The Census Bureau doesn't publish this figure for this area.");
+  });
+});
+
+describe("moeRangeLine", () => {
+  it("gives estimate ± margin for a wide margin, floored at 0", () => {
+    expect(moeRangeLine(5, 4, "count")).toBe("Few households were surveyed here, so this is a range: likely between 1 and 9.");
+    expect(moeRangeLine(5, 8, "count")).toContain("between 0 and 13");
+  });
+  it("caps percent shares at 100", () => {
+    expect(moeRangeLine(90, 60, "percent")).toContain("and 100%");
+  });
+  it("says nothing for ordinary margins or missing data", () => {
+    expect(moeRangeLine(10, 2, "percent")).toBeNull();
+    expect(moeRangeLine(10, 4, "percent")).toBeNull(); // caution, not wide
+    expect(moeRangeLine(null, 4, "percent")).toBeNull();
   });
 });
