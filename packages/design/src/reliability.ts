@@ -16,7 +16,7 @@ export const RELIABILITY = {
   /** CV above this (percent) is unreliable. */
   unreliableCv: 30,
   /** A zero estimate (no CV) with a margin above this, in the value's own units (percentage points
-   *  for the percentages nearly all zeros are), is unreliable (D-<n>, issue #193). */
+   *  for the percentages nearly all zeros are), is unreliable (D-364, issue #193). */
   zeroMoe: 5,
 } as const;
 
