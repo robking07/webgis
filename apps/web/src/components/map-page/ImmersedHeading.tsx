@@ -9,7 +9,7 @@ import { FilterButton } from "./FiltersPanel";
 /** Immersed: menu button and wordmark, then the category above the dataset name (both open the
  *  dataset menu, issue #225), then the filter button with a caption (the level shown, or what's filtered).
  *  Phones drop the wordmark and put the heading beside the menu button, on one row (issue #34). */
-export function ImmersedHeading({ primary, secondary, immersed, hasFilters, filtersOpen, filterCount, caption, captionHint, phone, motion, onShowNav, onOpenFilters, onOpenLevel, levelPill, menuOpen, menu, onBrowse, onExit, place }: {
+export function ImmersedHeading({ primary, secondary, immersed, hasFilters, filtersOpen, filterCount, caption, captionHint, phone, motion, onShowNav, onOpenFilters, onOpenLevel, levelPill, menuOpen, menu, onBrowse, onExit, place, backShown }: {
   primary: Dataset;
   secondary: Dataset | null;
   immersed: boolean;
@@ -39,10 +39,12 @@ export function ImmersedHeading({ primary, secondary, immersed, hasFilters, filt
   onExit: () => void;
   /** Drill-down (issue #203): the focused place's name, larger, with a control that leaves it. */
   place?: { name: string; onClear: () => void } | null;
+  /** The map's back button is showing (top right on phones): keep the heading clear of it. */
+  backShown?: boolean;
 }) {
   const motionClass = motion === "hide" ? "wg-step-aside" : motion === "dim" ? "wg-dim" : "";
   const heading = (
-    <DatasetHeading primary={primary} secondary={secondary} compact={phone} open={menuOpen} onToggle={onBrowse}>{menu}</DatasetHeading>
+    <DatasetHeading primary={primary} secondary={secondary} compact={phone} clearBack={backShown} open={menuOpen} onToggle={onBrowse}>{menu}</DatasetHeading>
   );
   return (
     // An open menu sits above every other map panel (legend, controls, details), never under one.

@@ -147,8 +147,8 @@ export function classifyChangeCached(from: Values, to: Values, unit: Unit, toMoe
  *  `steady`: the change is within its margin of error. `boundaryNote`: why an area missing
  *  from the earlier period has no change (its boundaries changed), if that's the reason. */
 export function changeSummary(change: number | null | undefined, from: number | null | undefined, to: number | null | undefined,
-  m: ChangeMeasure, unit: Unit, steady: boolean, boundaryNote?: string | null): { headline: string; values: string } {
-  const values = `${formatValue(from, unit)} → ${formatValue(to, unit)}`;
+  m: ChangeMeasure, unit: Unit, steady: boolean, boundaryNote?: string | null): { headline: string; values: [string, string] } {
+  const values: [string, string] = [formatValue(from, unit), formatValue(to, unit)];
   if (change == null || !Number.isFinite(change)) {
     const why = from == null && to != null ? boundaryNote : from === 0 && m === "percent" ? "no earlier amount" : null;
     return { headline: why ? `No data: ${why}` : "No data", values };
