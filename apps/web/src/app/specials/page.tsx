@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { approvedInsights } from "@/lib/approvals";
+import { pickInteresting } from "@/lib/insights";
 import { LANDING } from "@/lib/landing";
 import { SPECIALS, formatDate } from "@/lib/specials";
 import { SiteFooter } from "@/components/SiteNav";
@@ -77,7 +78,7 @@ export default async function SpecialsPage() {
             </div>
             <Link href="/specials/pairings" className="hidden whitespace-nowrap text-sm font-semibold text-primary hover:underline md:inline">All {published.length} pairings →</Link>
           </div>
-          <PairingsList pairs={published.slice(0, 6)} />
+          <PairingsList pairs={pickInteresting(published)} />
           <Link href="/specials/pairings" className="flex h-12 items-center justify-center text-[15px] font-semibold text-primary hover:underline md:hidden">All {published.length} pairings →</Link>
         </section>
 
