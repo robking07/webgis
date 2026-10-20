@@ -13,6 +13,7 @@ import { fetchDetail } from "@/lib/details";
 import { loadMoes, type Values } from "@/lib/values";
 import { BottomSheet, useIsPhone } from "../BottomSheet";
 import { PlaceDataList, type Detail } from "../PlaceDataList";
+import { Benchmarks } from "../Benchmarks";
 import { LearnMore } from "./LearnMore";
 import { loadPlaceIndex, placeByGeoid, type PlaceHit } from "@/lib/search";
 import { CompareWith } from "../compare/CompareWith";
@@ -219,8 +220,9 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
                     {est.value}
                     {est.moe && <span className="ml-1 text-xs font-normal text-muted-foreground">±{est.moe}</span>}
                   </p>
+                  {r?.value != null && <Benchmarks dataset={d} geoid={info.geoid} />}
                   {i === 0 && phone && legendKey && <SheetKey {...legendKey} />}
-                  {rank && <p className="mt-1 text-xs text-muted-foreground">{rank}</p>}
+                  {rank &&<p className="mt-1 text-xs text-muted-foreground">{rank}</p>}
                   <ReliabilityNote dataset={d} geoid={info.geoid} value={r?.value} moe={r?.moe} />
                 </div>
               );
