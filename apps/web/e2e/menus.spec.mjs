@@ -793,6 +793,30 @@ test("phone: a long dataset title stops short of the back button (issue #243)", 
   expect(h.x + h.width <= b.x, `heading ends at ${Math.round(h.x + h.width)}px, back button starts at ${Math.round(b.x)}px`);
 });
 
+test("phone: zoomed in, search sits above the legend and opens full screen (issue #246)", async (o) => {
+  const { page } = await o("phone", "/map?d=median_household_income&lv=county&at=-93.4752,45.0061,7.2");
+  const btn = page.locator('button[aria-label="Search places or data"]');
+  await immerse(page);
+  expect(!(await btn.count()), "search button shows before any zoom");
+  await tapLonLat(page, ...HENNEPIN);
+  await page.locator('section[aria-label^="Details for"]').waitFor();
+  await page.locator('button[aria-label="Close details"]').click();
+  await btn.waitFor();
+  const b = await btn.boundingBox(), l = await page.locator("button[data-legend]").boundingBox();
+  expect(b.y + b.height <= l.y && b.x < l.x + 20, `search ${JSON.stringify(b)} not just above the legend strip ${JSON.stringify(l)}`);
+  await btn.click();
+  const input = page.getByPlaceholder("Search places or data...");
+  await input.waitFor();
+  const vh = page.viewportSize().height, r = await input.boundingBox();
+  expect(Math.abs(r.y + r.height / 2 - vh / 2) < 60, `field not mid-screen (center ${Math.round(r.y + r.height / 2)} of ${vh})`);
+  await page.keyboard.type("D");
+  await wait(500);
+  expect(!(await page.locator('[role="option"]').count()), "results after one character");
+  await page.keyboard.type("u");
+  await page.locator('[role="option"]').first().waitFor();
+  expect((await input.boundingBox()).y < 40, "field didn't move to the top once typing started");
+});
+
 /** Phone chrome over the map: every text, icon and edge against its own backing. */
 const PHONE_ON_MAP = ["[data-dataset-heading]", "[data-filter-button]:not([inert] *)", "[data-filter-note]:not([inert] *)", "button[data-legend]",
   'button[aria-label="Show navigation"]', 'button[aria-label="Back to the previous view"]', ".wg-credits", 'section[aria-label="Mapped dataset"]'];

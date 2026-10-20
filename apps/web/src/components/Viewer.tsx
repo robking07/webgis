@@ -383,7 +383,9 @@ export function Viewer({ search }: { search: string }) {
         stop={stop} stopId={stopId} since={since}
         hatchToggle={hatchable ? { on: hatchOn, onChange: setHatchOn, loading: hatchOn && !hatch?.[level] } : null}
         desktopStrip={desktopStrip} mark={selected && selected.level === level ? selClass : null}
-        covered={phone && (placeOpen || tableOpen || listOpen || stepAside || ctxOpen)} tableReady={tableReady} onTable={() => setTableOpen(true)} />
+        covered={phone && (placeOpen || tableOpen || listOpen || stepAside || ctxOpen)} tableReady={tableReady} onTable={() => setTableOpen(true)}
+        // Phones, once a tap or pick has zoomed in (the header and its search are gone): search above the legend (issue #246).
+        onSearch={phone && immersed && (canGoBack || !!focus) ? () => setSearchOpen(true) : null} />
 
       <MapCredits datasets={[primary, secondary].filter((d): d is Dataset => !!d)} />
 
@@ -394,7 +396,7 @@ export function Viewer({ search }: { search: string }) {
 
       {listOpen && slot && primary && <DatasetSheet key={slot} slot={slot} primary={primary} secondary={secondary} onSlot={setBrowse} onPick={onMenuPick} onClose={() => setBrowse(null)} />}
 
-      {searchOpen && <SearchOverlay current={state.d} onClose={() => setSearchOpen(false)} onPlace={onSearchPlace} onDataset={onSearchDataset} />}
+      {searchOpen && <SearchOverlay full={phone} current={state.d} onClose={() => setSearchOpen(false)} onPlace={onSearchPlace} onDataset={onSearchDataset} />}
 
       {tableOpen && primary && tableLevel && (
         <DataTable top={panelTop} level={tableLevel} x={primary} xv={x.values[tableLevel]} y={secondary} yv={y.values[tableLevel]} period={stopId ? stop!.label : undefined} selected={selected?.geoid ?? null}
