@@ -134,7 +134,7 @@ export default async function DatasetProfilePage({ params }: PageProps<"/data/[i
             {d.coverageNote && <li>{d.coverageNote}</li>}
             {modelInputs.length > 0 && (
               <li>
-                Built using {modelInputs.map((m, i) => <span key={m!.id}>{i > 0 && ", "}<a href={datasetHref(m!.id)} className="text-primary underline-offset-2 hover:underline">{m!.title.toLowerCase()}</a></span>)}, so the Combinations page leaves it out next to {modelInputs.length > 1 ? "those" : "that"}: they’d match partly by construction.
+                Built using {modelInputs.map((m, i) => <span key={m!.id}>{i > 0 && ", "}<a href={datasetHref(m!.id)} className="text-primary underline-offset-2 hover:underline">{m!.title.toLowerCase()}</a></span>)}, so Combinations never pairs it with {modelInputs.length > 1 ? "those" : "that"}: they’d line up partly by design.
               </li>
             )}
           </ul>
