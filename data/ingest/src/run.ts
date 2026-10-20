@@ -1,5 +1,5 @@
 // npm run ingest -- <step> [dataset or level ids…]
-// Steps: geographies | label-mask | timeline | acs | acs-bg | census2020 | lodes | places | climdiv | nbi | fars | overdose | airquality | features | vmt | cejst | ddp287g | nri | svi | lead | food-access | tiles | publish-tiles | publish-values | publish-geo | publish-data | counts | publish-counts | details | publish-details | tract-geo | export | insights | tracts-out | docs | mn-catalog | all
+// Steps: geographies | label-mask | mpo | timeline | acs | acs-bg | census2020 | lodes | places | climdiv | nbi | fars | overdose | airquality | features | vmt | cejst | ddp287g | nri | svi | lead | food-access | tiles | publish-tiles | publish-values | publish-geo | publish-data | counts | publish-counts | details | publish-details | tract-geo | export | insights | tracts-out | docs | mn-catalog | all
 import { ingestGeographies, tractGeography } from "./geographies.ts";
 import { ingestAcs, ingestAcsTimeline } from "./acs.ts";
 import { ingestCensus2020 } from "./census2020.ts";
@@ -27,6 +27,7 @@ import { ingestFoodAccess } from "./foodaccess.ts";
 import { ingestNri } from "./nri.ts";
 import { ingestSvi } from "./svi.ts";
 import { buildLabelMask } from "./label-mask.ts";
+import { buildMpo } from "./mpo.ts";
 import { tractsOut } from "./tracts.ts";
 const [step, ...rest] = process.argv.slice(2);
 const only = rest.length ? rest : undefined;
@@ -52,6 +53,7 @@ const steps: Record<string, () => Promise<void> | void> = {
   svi: () => ingestSvi(only),
   tiles: () => buildTiles(only),
   "label-mask": buildLabelMask,
+  mpo: buildMpo,
   // Year control (D-36): earlier periods, written to the web export only. ACS first (FARS
   // uses its 2015–2019 population).
   timeline: async () => { await ingestAcsTimeline(only); await ingestFarsTimeline(only); await ingestClimdivTimeline(only);
