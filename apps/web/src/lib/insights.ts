@@ -52,7 +52,7 @@ export function pickInteresting(pairs: Insight[], n = 6): Insight[] {
 
 export type PairSort = "strongest" | "within" | "az";
 export interface PairQuery { topic?: string; strength?: Strength; q?: string; sort?: PairSort }
-/** The /specials/pairings filters: topic = either dataset's category; every word of q in the pair's titles. */
+/** The /specials/combinations filters: topic = either dataset's category; every word of q in the pair's titles. */
 export function browsePairings(pairs: Insight[], { topic, strength, q, sort = "strongest" }: PairQuery): Insight[] {
   const words = (q ?? "").toLowerCase().split(/\s+/).filter(Boolean);
   const hit = pairs.filter((i) =>

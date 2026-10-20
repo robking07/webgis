@@ -114,7 +114,7 @@ const refs = (raw: unknown, fail: Fail, what: string, min = 1) => {
   return raw.map((r, i) => ref(r, fail, `${what}[${i + 1}]`));
 };
 
-// ── Statistics (same method as the Odd Pairings in data/ingest/src/insights.ts) ─────────────
+// ── Statistics (same method as the Combinations in data/ingest/src/insights.ts) ─────────────
 function pearson(a: number[], b: number[]) {
   const n = a.length, ma = a.reduce((s, v) => s + v, 0) / n, mb = b.reduce((s, v) => s + v, 0) / n;
   let sab = 0, saa = 0, sbb = 0;

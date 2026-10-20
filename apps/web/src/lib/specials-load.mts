@@ -1,6 +1,6 @@
 // Specials loader (D-115, D-122). Node-only: runs in scripts/prepare.mts before every dev and build,
 // reads content/specials/*.md, checks the frontmatter and inline blocks against the registry and the
-// Odd Pairings, computes the charts and tables from the exported values, and writes
+// Combinations, computes the charts and tables from the exported values, and writes
 // src/generated/specials.json. Any mistake fails the build with a message naming the file.
 // Doing this before the build (not inside a page) means a page re-rendered on the server later
 // never needs content/ or the value files on disk.
@@ -26,7 +26,7 @@ export interface Special {
   author: string;
   /** One dataset (a choropleth) or two (a bivariate map), all mapped by county. */
   datasets: [string] | [string, string];
-  /** The Odd Pairing this started from, if any. */
+  /** The Combination this started from, if any. */
   pairing: string | null;
   /** Map position for the piece's map and "Open this map"; null = the national view. */
   at: { lon: number; lat: number; zoom: number } | null;
@@ -107,7 +107,7 @@ function parseFile(appDir: string, byId: Map<string, DatasetEntry>, pairings: Pa
   }
 
   const pairing = str("pairing", false);
-  if (pairing && !pairings.some((i) => i.id === pairing && i.status === "published")) fail(file, `"pairing" ${pairing} is not a published Odd Pairing`);
+  if (pairing && !pairings.some((i) => i.id === pairing && i.status === "published")) fail(file, `"pairing" ${pairing} is not a published Combination`);
 
   let at: Special["at"] = null;
   if (fm.at != null) {
@@ -144,9 +144,9 @@ export function loadSpecials(appDir: string, registry: DatasetEntry[], pairings:
   let files: string[];
   try { files = readdirSync(join(appDir, "content/specials")).filter((f) => f.endsWith(".md") && f !== "README.md" && f !== "BRIEF.md"); } catch { return []; }
   const all = files.map((f) => parseFile(appDir, byId, pairings, f));
-  // Pieces and Odd Pairings share /specials/<id>; a clash would hide one of them.
-  // "pairings" is the Odd Pairings list page; "review" is the review page.
-  const taken = new Set([...pairings.map((i) => i.id), "pairings", "review"]);
-  for (const s of all) if (taken.has(s.slug)) fail(`${s.slug}.md`, "file name matches an Odd Pairing id or a Specials page; rename it");
+  // Pieces and Combinations share /specials/<id>; a clash would hide one of them.
+  // "combinations" is the Combinations list page (the old "pairings" URL redirects to it); "review" is the review page.
+  const taken = new Set([...pairings.map((i) => i.id), "pairings", "combinations", "review"]);
+  for (const s of all) if (taken.has(s.slug)) fail(`${s.slug}.md`, "file name matches a Combination id or a Specials page; rename it");
   return all.sort((a, b) => b.date.localeCompare(a.date) || a.slug.localeCompare(b.slug));
 }
