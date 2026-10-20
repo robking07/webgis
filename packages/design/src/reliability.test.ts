@@ -28,9 +28,15 @@ describe("gradeEstimate", () => {
   it("treats a zero margin as reliable", () => {
     expect(gradeEstimate(12, 0)).toBe("reliable");
   });
-  it("doesn't grade zero values or missing margins", () => {
+  it("doesn't grade missing margins, or zeros with a small margin", () => {
     expect(gradeEstimate(0, 3)).toBeNull();
+    expect(gradeEstimate(0, 5)).toBeNull();
+    expect(gradeEstimate(0, null)).toBeNull();
     expect(gradeEstimate(4, null)).toBeNull();
+  });
+  it("grades a zero with a margin over 5 unreliable (Loving County, TX bike commuting: 0% ± 57.7)", () => {
+    expect(gradeEstimate(0, 57.69)).toBe("unreliable");
+    expect(gradeEstimate(0, 5.01)).toBe("unreliable");
   });
   it("matches a real Hennepin tract (median income 64,450 ± 10,100: CV 9.5%)", () => {
     expect(gradeEstimate(64_450, 10_100)).toBe("reliable");
