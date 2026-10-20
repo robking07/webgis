@@ -1,0 +1,2013 @@
+{
+ "rules": {
+  "gain": 0.02,
+  "maxCompanions": 4,
+  "candidates": 30,
+  "maxInterRho": 0.7,
+  "maxPerCategory": 2,
+  "maxPlaces": 1,
+  "maxComposites": 1,
+  "minN": 1000,
+  "minRegions": 3,
+  "fdrQ": 0.05,
+  "merge": 0.6,
+  "urbanRuralGain": 0.01,
+  "distanceClasses": 200,
+  "muchCloser": 0.1
+ },
+ "generatedAt": "2026-10-20T09:34:15.784Z",
+ "combinations": [
+  {
+   "id": "pct_renter_households__pct_moved_last_year__svi_overall__pct_veterans__job_density",
+   "focus": "pct_renter_households",
+   "companions": [
+    "pct_moved_last_year",
+    "svi_overall",
+    "pct_veterans",
+    "job_density"
+   ],
+   "size": 5,
+   "n": 1183,
+   "r2Best": 0.436,
+   "r2Set": 0.747,
+   "weights": [
+    0.36,
+    0.453,
+    -0.118,
+    0.294
+   ],
+   "heldOut": "A",
+   "gain": 0.294,
+   "nEff": 305,
+   "p": 2.810112256468517e-50,
+   "regions": 4,
+   "stable": true,
+   "urbanRural": false,
+   "sensitive": false,
+   "caption": "Counties with higher shares of recent movers, higher social vulnerability ranks, lower shares of veterans and higher job density tend to have higher shares of renters. Together they line up with shares of renters much more closely than any one alone.",
+   "fingerprint": "6b3e016cfffb1165"
+  },
+  {
+   "id": "median_age__census2020_pct_vacant__pct_renter_households__pct_disability__svi_housing_transport",
+   "focus": "median_age",
+   "companions": [
+    "census2020_pct_vacant",
+    "pct_renter_households",
+    "pct_disability",
+    "svi_housing_transport"
+   ],
+   "size": 5,
+   "n": 3144,
+   "r2Best": 0.356,
+   "r2Set": 0.612,
+   "weights": [
+    0.355,
+    -0.3,
+    0.291,
+    -0.231
+   ],
+   "heldOut": "B",
+   "gain": 0.275,
+   "nEff": 1107,
+   "p": 1.0292441349735586e-127,
+   "regions": 4,
+   "stable": true,
+   "urbanRural": false,
+   "sensitive": true,
+   "caption": "Counties with higher shares of vacant homes, lower shares of renters, higher disability rates and lower housing and transportation vulnerability ranks tend to have higher median ages. Together they line up with median ages much more closely than any one alone.",
+   "fingerprint": "06a2c4adc14658fe"
+  },
+  {
+   "id": "pct_foreign_born__job_density__svi_minority__asthma",
+   "focus": "pct_foreign_born",
+   "companions": [
+    "job_density",
+    "svi_minority",
+    "asthma"
+   ],
+   "size": 4,
+   "n": 2926,
+   "r2Best": 0.286,
+   "r2Set": 0.537,
+   "weights": [
+    0.295,
+    0.424,
+    -0.389
+   ],
+   "heldOut": "B",
+   "gain": 0.262,
+   "nEff": 658,
+   "p": 1.0016353792888313e-63,
+   "regions": 3,
+   "stable": true,
+   "urbanRural": false,
+   "sensitive": true,
+   "caption": "Counties with higher job density, higher minority status ranks and lower asthma rates tend to have higher shares of residents born outside the U.S. Together they line up with shares of residents born outside the U.S. much more closely than any one alone.",
+   "fingerprint": "4f8adf24af5aa900"
+  },
+  {
+   "id": "pct_poverty__median_home_value__svi_housing_transport__pct_single_parent_families",
+   "focus": "pct_poverty",
+   "companions": [
+    "median_home_value",
+    "svi_housing_transport",
+    "pct_single_parent_families"
+   ],
+   "size": 4,
+   "n": 3139,
+   "r2Best": 0.337,
+   "r2Set": 0.561,
+   "weights": [
+    -0.421,
+    0.324,
+    0.277
+   ],
+   "heldOut": "A",
+   "gain": 0.236,
+   "nEff": 911,
+   "p": 9.12951385848625e-85,
+   "regions": 4,
+   "stable": true,
+   "urbanRural": false,
+   "sensitive": false,
+   "caption": "Counties with lower median home values, higher housing and transportation vulnerability ranks and higher shares of single-parent families tend to have higher poverty rates. Together they line up with poverty rates much more closely than any one alone.",
+   "fingerprint": "2010b942d6fbef95"
+  },
+  {
+   "id": "fair_poor_health__per_capita_income__svi_socioeconomic__pct_graduate_degree__pct_white_nh",
+   "focus": "fair_poor_health",
+   "companions": [
+    "per_capita_income",
+    "svi_socioeconomic",
+    "pct_graduate_degree",
+    "pct_white_nh"
+   ],
+   "size": 5,
+   "n": 2956,
+   "r2Best": 0.684,
+   "r2Set": 0.854,
+   "weights": [
+    -0.373,
+    0.42,
+    -0.25,
+    -0.151
+   ],
+   "heldOut": "A",
+   "gain": 0.177,
+   "nEff": 809,
+   "p": 2.864246879675134e-129,
+   "regions": 4,
+   "stable": true,
+   "urbanRural": false,
+   "sensitive": true,
+   "caption": "Counties with higher incomes per person, lower socioeconomic vulnerability ranks, higher shares of graduate degrees and higher shares of non-Hispanic white residents tend to have lower rates of fair or poor health. Together they line up with rates of fair or poor health much more closely than any one alone.",
+   "fingerprint": "227fc23f188cc03b"
+  },
+  {
+   "id": "lack_emotional_support__svi_overall__pct_bachelors_plus",
+   "focus": "lack_emotional_support",
+   "companions": [
+    "svi_overall",
+    "pct_bachelors_plus"
+   ],
+   "size": 3,
+   "n": 2299,
+   "r2Best": 0.452,
+   "r2Set": 0.581,
+   "weights": [
+    0.529,
+    -0.387
+   ],
+   "heldOut": "A",
+   "gain": 0.155,
+   "nEff": 804,
+   "p": 1.96159491445862e-57,
+   "regions": 3,
+   "stable": true,
+   "urbanRural": false,
+   "sensitive": false,
+   "caption": "Counties with higher social vulnerability ranks and lower shares of adults with a bachelor's degree or more tend to have higher rates of missing social support. Together they line up with rates of missing social support much more closely than any one alone.",
+   "fingerprint": "094d4aa78ca1f31c"
+  },
+  {
+   "id": "median_gross_rent__population_density__median_household_income",
+   "focus": "median_gross_rent",
+   "companions": [
+    "population_density",
+    "median_household_income"
+   ],
+   "size": 3,
+   "n": 3136,
+   "r2Best": 0.481,
+   "r2Set": 0.635,
+   "weights": [
+    0.468,
+    0.453
+   ],
+   "heldOut": "B",
+   "gain": 0.149,
+   "nEff": 402,
+   "p": 1.1832901831883904e-32,
+   "regions": 4,
+   "stable": true,
+   "urbanRural": true,
+   "sensitive": false,
+   "caption": "Counties with higher population density and higher household incomes tend to have higher median rents. Together they line up with median rents much more closely than any one alone.",
+   "fingerprint": "d4a4d7218a299995"
+  },
+  {
+   "id": "census2020_housing_density__pct_asian_nh__pct_no_computer__pct_graduate_degree",
+   "focus": "census2020_housing_density",
+   "companions": [
+    "pct_asian_nh",
+    "pct_no_computer",
+    "pct_graduate_degree"
+   ],
+   "size": 4,
+   "n": 3144,
+   "r2Best": 0.387,
+   "r2Set": 0.524,
+   "weights": [
+    0.371,
+    -0.248,
+    0.253
+   ],
+   "heldOut": "B",
+   "gain": 0.14,
+   "nEff": 806,
+   "p": 1.2877462578811792e-45,
+   "regions": 4,
+   "stable": true,
+   "urbanRural": true,
+   "sensitive": true,
+   "caption": "Counties with higher shares of non-Hispanic Asian residents, lower shares of households without a computer and higher shares of graduate degrees tend to have higher homes per square mile. Together they line up with homes per square mile much more closely than any one alone.",
+   "fingerprint": "723f8eff918da89e"
+  },
+  {
+   "id": "pct_seniors_living_alone__labor_force_participation__pct_homes_built_before_1960__census2020_pct_vacant",
+   "focus": "pct_seniors_living_alone",
+   "companions": [
+    "labor_force_participation",
+    "pct_homes_built_before_1960",
+    "census2020_pct_vacant"
+   ],
+   "size": 4,
+   "n": 3144,
+   "r2Best": 0.353,
+   "r2Set": 0.473,
+   "weights": [
+    -0.383,
+    0.261,
+    0.262
+   ],
+   "heldOut": "B",
+   "gain": 0.128,
+   "nEff": 784,
+   "p": 5.47395407182994e-39,
+   "regions": 4,
+   "stable": true,
+   "urbanRural": false,
+   "sensitive": false,
+   "caption": "Counties with lower labor force participation rates, higher shares of older homes and higher shares of vacant homes tend to have higher shares of seniors living alone. Together they line up with shares of seniors living alone much more closely than any one alone.",
+   "fingerprint": "66e0a78b96f60097"
+  },
+  {
+   "id": "pct_under_18__census2020_pct_vacant__pct_overcrowded__labor_force_participation",
+   "focus": "pct_under_18",
+   "companions": [
+    "census2020_pct_vacant",
+    "pct_overcrowded",
+    "labor_force_participation"
+   ],
+   "size": 4,
+   "n": 3144,
+   "r2Best": 0.198,
+   "r2Set": 0.312,
+   "weights": [
+    -0.269,
+    0.291,
+    0.221
+   ],
+   "heldOut": "B",
+   "gain": 0.115,
+   "nEff": 996,
+   "p": 3.925511497850311e-34,
+   "regions": 4,
+   "stable": true,
+   "urbanRural": false,
+   "sensitive": false,
+   "caption": "Counties with lower shares of vacant homes, higher overcrowding rates and higher labor force participation rates tend to have higher shares of children. Together they line up with shares of children much more closely than any one alone.",
+   "fingerprint": "3cdbbf886e68a79a"
+  },
+  {
+   "id": "svi_housing_transport__pct_renter_households__stroke__pct_moved_last_year",
+   "focus": "svi_housing_transport",
+   "companions": [
+    "pct_renter_households",
+    "stroke",
+    "pct_moved_last_year"
+   ],
+   "size": 4,
+   "n": 1114,
+   "r2Best": 0.495,
+   "r2Set": 0.606,
+   "weights": [
+    0.519,
+    0.361,
+    0.128
+   ],
+   "heldOut": "A",
+   "gain": 0.114,
+   "nEff": 310,
+   "p": 1.1960641465410874e-18,
+   "regions": 3,
+   "stable": true,
+   "urbanRural": false,
+   "sensitive": false,
+   "caption": "Counties with higher shares of renters, higher stroke rates and higher shares of recent movers tend to have higher housing and transportation vulnerability ranks. Together they line up with housing and transportation vulnerability ranks much more closely than any one alone.",
+   "fingerprint": "7a1f37568473752f"
+  },
+  {
+   "id": "pct_mobile_homes__pct_bachelors_plus__labor_force_participation__nri_community_resilience",
+   "focus": "pct_mobile_homes",
+   "companions": [
+    "pct_bachelors_plus",
+    "labor_force_participation",
+    "nri_community_resilience"
+   ],
+   "size": 4,
+   "n": 3144,
+   "r2Best": 0.372,
+   "r2Set": 0.481,
+   "weights": [
+    -0.317,
+    -0.286,
+    -0.235
+   ],
+   "heldOut": "B",
+   "gain": 0.112,
+   "nEff": 550,
+   "p": 4.497150548795561e-25,
+   "regions": 3,
+   "stable": true,
+   "urbanRural": false,
+   "sensitive": false,
+   "caption": "Counties with higher shares of adults with a bachelor's degree or more, higher labor force participation rates and higher community resilience scores tend to have lower shares of mobile homes. Together they line up with shares of mobile homes much more closely than any one alone.",
+   "fingerprint": "1ceb9efd85f9ac21"
+  },
+  {
+   "id": "asthma__pct_snap_households__pct_foreign_born",
+   "focus": "asthma",
+   "companions": [
+    "pct_snap_households",
+    "pct_foreign_born"
+   ],
+   "size": 3,
+   "n": 2956,
+   "r2Best": 0.37,
+   "r2Set": 0.476,
+   "weights": [
+    0.533,
+    -0.334
+   ],
+   "heldOut": "B",
+   "gain": 0.107,
+   "nEff": 453,
+   "p": 2.7149200926195374e-19,
+   "regions": 4,
+   "stable": true,
+   "urbanRural": false,
+   "sensitive": true,
+   "caption": "Counties with higher shares of households getting SNAP and lower shares of residents born outside the U.S. tend to have higher asthma rates. Together they line up with asthma rates much more closely than any one alone.",
+   "fingerprint": "72aba4f026190183"
+  },
+  {
+   "id": "nri_community_resilience__cholesterol_screening__pct_mobile_homes__pct_no_hs_diploma",
+   "focus": "nri_community_resilience",
+   "companions": [
+    "cholesterol_screening",
+    "pct_mobile_homes",
+    "pct_no_hs_diploma"
+   ],
+   "size": 4,
+   "n": 2956,
+   "r2Best": 0.349,
+   "r2Set": 0.442,
+   "weights": [
+    0.27,
+    -0.273,
+    -0.257
+   ],
+   "heldOut": "B",
+   "gain": 0.097,
+   "nEff": 583,
+   "p": 2.845778414844386e-21,
+   "regions": 3,
+   "stable": true,
+   "urbanRural": false,
+   "sensitive": false,
+   "caption": "Counties with lower cholesterol screening rates, higher shares of mobile homes and higher shares of adults without a high school diploma tend to have lower community resilience scores. Together they line up with community resilience scores more closely than any one alone.",
+   "fingerprint": "0b4cea6153dbb5b3"
+  },
+  {
+   "id": "nri_social_vulnerability__disability_independent_living__labor_force_participation",
+   "focus": "nri_social_vulnerability",
+   "companions": [
+    "disability_independent_living",
+    "labor_force_participation"
+   ],
+   "size": 3,
+   "n": 2956,
+   "r2Best": 0.467,
+   "r2Set": 0.551,
+   "weights": [
+    0.479,
+    -0.354
+   ],
+   "heldOut": "B",
+   "gain": 0.088,
+   "nEff": 637,
+   "p": 9.612764172086823e-27,
+   "regions": 4,
+   "stable": true,
+   "urbanRural": false,
+   "sensitive": true,
+   "caption": "Counties with higher rates of independent-living disability and lower labor force participation rates tend to have higher social vulnerability scores. Together they line up with social vulnerability scores more closely than any one alone.",
+   "fingerprint": "ce575c61c1011b51"
+  },
+  {
+   "id": "loneliness__pct_snap_households__pct_no_hs_diploma",
+   "focus": "loneliness",
+   "companions": [
+    "pct_snap_households",
+    "pct_no_hs_diploma"
+   ],
+   "size": 3,
+   "n": 2299,
+   "r2Best": 0.356,
+   "r2Set": 0.431,
+   "weights": [
+    0.417,
+    0.328
+   ],
+   "heldOut": "B",
+   "gain": 0.083,
+   "nEff": 527,
+   "p": 3.3218228123612734e-18,
+   "regions": 4,
+   "stable": true,
+   "urbanRural": false,
+   "sensitive": false,
+   "caption": "Counties with higher shares of households getting SNAP and higher shares of adults without a high school diploma tend to have higher loneliness rates. Together they line up with loneliness rates more closely than any one alone.",
+   "fingerprint": "d8b945f3fb6b5b1d"
+  },
+  {
+   "id": "pct_broadband__smoking__median_gross_rent",
+   "focus": "pct_broadband",
+   "companions": [
+    "smoking",
+    "median_gross_rent"
+   ],
+   "size": 3,
+   "n": 2950,
+   "r2Best": 0.469,
+   "r2Set": 0.543,
+   "weights": [
+    -0.444,
+    0.363
+   ],
+   "heldOut": "B",
+   "gain": 0.08,
+   "nEff": 489,
+   "p": 1.2579491992468779e-18,
+   "regions": 4,
+   "stable": true,
+   "urbanRural": false,
+   "sensitive": false,
+   "caption": "Counties with lower smoking rates and higher median rents tend to have higher broadband rates. Together they line up with broadband rates more closely than any one alone.",
+   "fingerprint": "dab590415a1c922c"
+  },
+  {
+   "id": "census2020_pop_density__median_gross_rent__pct_mobile_homes",
+   "focus": "census2020_pop_density",
+   "companions": [
+    "median_gross_rent",
+    "pct_mobile_homes"
+   ],
+   "size": 3,
+   "n": 3137,
+   "r2Best": 0.477,
+   "r2Set": 0.537,
+   "weights": [
+    0.553,
+    -0.281
+   ],
+   "heldOut": "B",
+   "gain": 0.071,
+   "nEff": 581,
+   "p": 2.4344096694852487e-19,
+   "regions": 4,
+   "stable": true,
+   "urbanRural": true,
+   "sensitive": false,
+   "caption": "Counties with higher median rents and lower shares of mobile homes tend to have higher residents per square mile. Together they line up with residents per square mile more closely than any one alone.",
+   "fingerprint": "46f66bfcc4fe1e0d"
+  },
+  {
+   "id": "cancer__svi_minority__pct_no_hs_diploma",
+   "focus": "cancer",
+   "companions": [
+    "svi_minority",
+    "pct_no_hs_diploma"
+   ],
+   "size": 3,
+   "n": 2956,
+   "r2Best": 0.692,
+   "r2Set": 0.754,
+   "weights": [
+    -0.756,
+    -0.261
+   ],
+   "heldOut": "A",
+   "gain": 0.071,
+   "nEff": 688,
+   "p": 3.147508793170144e-34,
+   "regions": 4,
+   "stable": true,
+   "urbanRural": false,
+   "sensitive": true,
+   "caption": "Counties with higher minority status ranks and higher shares of adults without a high school diploma tend to have lower cancer rates. Together they line up with cancer rates more closely than any one alone.",
+   "fingerprint": "81125c97b435c2ea"
+  },
+  {
+   "id": "pct_uninsured__pct_no_hs_diploma__pct_overcrowded",
+   "focus": "pct_uninsured",
+   "companions": [
+    "pct_no_hs_diploma",
+    "pct_overcrowded"
+   ],
+   "size": 3,
+   "n": 3144,
+   "r2Best": 0.234,
+   "r2Set": 0.296,
+   "weights": [
+    0.409,
+    0.26
+   ],
+   "heldOut": "A",
+   "gain": 0.065,
+   "nEff": 1075,
+   "p": 3.293439234565711e-23,
+   "regions": 4,
+   "stable": true,
+   "urbanRural": false,
+   "sensitive": false,
+   "caption": "Counties with higher shares of adults without a high school diploma and higher overcrowding rates tend to have higher uninsured rates. Together they line up with uninsured rates more closely than any one alone.",
+   "fingerprint": "d0b2d8a782ea43b9"
+  },
+  {
+   "id": "nri_wildfire_loss__census2020_pct_vacant__pct_black_nh",
+   "focus": "nri_wildfire_loss",
+   "companions": [
+    "census2020_pct_vacant",
+    "pct_black_nh"
+   ],
+   "size": 3,
+   "n": 3144,
+   "r2Best": 0.158,
+   "r2Set": 0.2,
+   "weights": [
+    0.328,
+    -0.217
+   ],
+   "heldOut": "B",
+   "gain": 0.057,
+   "nEff": 378,
+   "p": 2.1125994743096276e-7,
+   "regions": 4,
+   "stable": true,
+   "urbanRural": false,
+   "sensitive": true,
+   "caption": "Counties with higher shares of vacant homes and lower shares of non-Hispanic Black residents tend to have higher expected wildfire losses per resident. Together they line up with expected wildfire losses per resident more closely than any one alone.",
+   "fingerprint": "02638930f7d8f6d4"
+  },
+  {
+   "id": "cejst_pct_pop_disadvantaged__per_capita_income__gini_index",
+   "focus": "cejst_pct_pop_disadvantaged",
+   "companions": [
+    "per_capita_income",
+    "gini_index"
+   ],
+   "size": 3,
+   "n": 3131,
+   "r2Best": 0.377,
+   "r2Set": 0.432,
+   "weights": [
+    -0.623,
+    0.234
+   ],
+   "heldOut": "B",
+   "gain": 0.055,
+   "nEff": 571,
+   "p": 6.3139320843331e-14,
+   "regions": 4,
+   "stable": true,
+   "urbanRural": false,
+   "sensitive": false,
+   "caption": "Counties with lower incomes per person and higher income inequality tend to have higher shares of residents in disadvantaged communities. Together they line up with shares of residents in disadvantaged communities more closely than any one alone.",
+   "fingerprint": "745a8ef6af195f7d"
+  },
+  {
+   "id": "colorectal_screening__per_capita_income__nri_community_resilience",
+   "focus": "colorectal_screening",
+   "companions": [
+    "per_capita_income",
+    "nri_community_resilience"
+   ],
+   "size": 3,
+   "n": 3143,
+   "r2Best": 0.441,
+   "r2Set": 0.492,
+   "weights": [
+    0.518,
+    0.27
+   ],
+   "heldOut": "B",
+   "gain": 0.052,
+   "nEff": 562,
+   "p": 4.4781895596515386e-14,
+   "regions": 3,
+   "stable": true,
+   "urbanRural": false,
+   "sensitive": false,
+   "caption": "Counties with higher incomes per person and higher community resilience scores tend to have higher colorectal screening rates. Together they line up with colorectal screening rates more closely than any one alone.",
+   "fingerprint": "028d11ba06b33e30"
+  },
+  {
+   "id": "mean_commute_minutes__pct_moved_last_year__pct_homes_built_before_1960",
+   "focus": "mean_commute_minutes",
+   "companions": [
+    "pct_moved_last_year",
+    "pct_homes_built_before_1960"
+   ],
+   "size": 3,
+   "n": 1186,
+   "r2Best": 0.238,
+   "r2Set": 0.294,
+   "weights": [
+    -0.481,
+    -0.237
+   ],
+   "heldOut": "A",
+   "gain": 0.05,
+   "nEff": 444,
+   "p": 4.6813548603423684e-8,
+   "regions": 3,
+   "stable": true,
+   "urbanRural": false,
+   "sensitive": false,
+   "caption": "Counties with higher shares of recent movers and higher shares of older homes tend to have lower commute times. Together they line up with commute times more closely than any one alone.",
+   "fingerprint": "0d25e2c70d815355"
+  },
+  {
+   "id": "obesity__per_capita_income__pct_snap_households",
+   "focus": "obesity",
+   "companions": [
+    "per_capita_income",
+    "pct_snap_households"
+   ],
+   "size": 3,
+   "n": 2956,
+   "r2Best": 0.385,
+   "r2Set": 0.432,
+   "weights": [
+    -0.407,
+    0.304
+   ],
+   "heldOut": "A",
+   "gain": 0.048,
+   "nEff": 880,
+   "p": 1.4170991449473065e-16,
+   "regions": 3,
+   "stable": true,
+   "urbanRural": false,
+   "sensitive": false,
+   "caption": "Counties with lower incomes per person and higher shares of households getting SNAP tend to have higher obesity rates. Together they line up with obesity rates more closely than any one alone.",
+   "fingerprint": "3673fcedbe9f2877"
+  },
+  {
+   "id": "pct_owner_cost_burdened__svi_minority__pct_work_from_home",
+   "focus": "pct_owner_cost_burdened",
+   "companions": [
+    "svi_minority",
+    "pct_work_from_home"
+   ],
+   "size": 3,
+   "n": 3143,
+   "r2Best": 0.037,
+   "r2Set": 0.067,
+   "weights": [
+    0.194,
+    0.174
+   ],
+   "heldOut": "A",
+   "gain": 0.034,
+   "nEff": 792,
+   "p": 8.383260363824075e-8,
+   "regions": 3,
+   "stable": true,
+   "urbanRural": false,
+   "sensitive": true,
+   "caption": "Counties with higher minority status ranks and higher work-from-home rates tend to have higher homeowner cost-burden rates. Together they line up with homeowner cost-burden rates more closely than any one alone.",
+   "fingerprint": "cb551e923a1372b0"
+  },
+  {
+   "id": "vmt_per_capita__nri_risk_score__census2020_pct_vacant",
+   "focus": "vmt_per_capita",
+   "companions": [
+    "nri_risk_score",
+    "census2020_pct_vacant"
+   ],
+   "size": 3,
+   "n": 3130,
+   "r2Best": 0.101,
+   "r2Set": 0.122,
+   "weights": [
+    -0.24,
+    0.167
+   ],
+   "heldOut": "A",
+   "gain": 0.023,
+   "nEff": 1084,
+   "p": 1.175706888538375e-7,
+   "regions": 3,
+   "stable": true,
+   "urbanRural": true,
+   "sensitive": false,
+   "caption": "Counties with lower natural hazard risk scores and higher shares of vacant homes tend to have higher driving per resident. Together they line up with driving per resident more closely than any one alone.",
+   "fingerprint": "a2d11658ad583e02"
+  },
+  {
+   "id": "pct_hispanic_latino__asthma__svi_household__pct_renter_households__pct_overcrowded",
+   "focus": "pct_hispanic_latino",
+   "companions": [
+    "asthma",
+    "svi_household",
+    "pct_renter_households",
+    "pct_overcrowded"
+   ],
+   "size": 5,
+   "n": 2956,
+   "r2Best": 0.178,
+   "r2Set": 0.431,
+   "weights": [
+    -0.562,
+    0.32,
+    0.3,
+    0.123
+   ],
+   "heldOut": "B",
+   "gain": 0.272,
+   "nEff": 731,
+   "p": 6.0343086026572065e-64,
+   "regions": 4,
+   "stable": false,
+   "urbanRural": false,
+   "sensitive": true,
+   "caption": "Counties with lower asthma rates, higher household vulnerability ranks, higher shares of renters and higher overcrowding rates tend to have higher shares of Hispanic or Latino residents. Together they line up with shares of Hispanic or Latino residents much more closely than any one alone.",
+   "fingerprint": "11f028baf67e4d04"
+  },
+  {
+   "id": "job_density__median_home_value__pct_renter_households__home_energy_cost__pct_foreign_born",
+   "focus": "job_density",
+   "companions": [
+    "median_home_value",
+    "pct_renter_households",
+    "home_energy_cost",
+    "pct_foreign_born"
+   ],
+   "size": 5,
+   "n": 3109,
+   "r2Best": 0.371,
+   "r2Set": 0.613,
+   "weights": [
+    0.49,
+    0.317,
+    -0.195,
+    0.154
+   ],
+   "heldOut": "B",
+   "gain": 0.242,
+   "nEff": 771,
+   "p": 4.3095257818602664e-78,
+   "regions": 4,
+   "stable": false,
+   "urbanRural": true,
+   "sensitive": true,
+   "caption": "Counties with higher median home values, higher shares of renters, lower home energy bills and higher shares of residents born outside the U.S. tend to have higher job density. Together they line up with job density much more closely than any one alone.",
+   "fingerprint": "fff68b21685c2737"
+  },
+  {
+   "id": "pct_white_nh__depression__pct_renter_households__svi_household__nri_inland_flood_loss",
+   "focus": "pct_white_nh",
+   "companions": [
+    "depression",
+    "pct_renter_households",
+    "svi_household",
+    "nri_inland_flood_loss"
+   ],
+   "size": 5,
+   "n": 2956,
+   "r2Best": 0.317,
+   "r2Set": 0.582,
+   "weights": [
+    0.485,
+    -0.356,
+    -0.24,
+    0.158
+   ],
+   "heldOut": "A",
+   "gain": 0.222,
+   "nEff": 620,
+   "p": 1.5892099330684757e-49,
+   "regions": 4,
+   "stable": false,
+   "urbanRural": false,
+   "sensitive": true,
+   "caption": "Counties with higher depression rates, lower shares of renters, lower household vulnerability ranks and higher expected inland flood losses per resident tend to have higher shares of non-Hispanic white residents. Together they line up with shares of non-Hispanic white residents much more closely than any one alone.",
+   "fingerprint": "5e44c6ac653394d2"
+  },
+  {
+   "id": "labor_force_participation__pct_disability__census2020_pct_vacant__smoking__pct_age_65_plus",
+   "focus": "labor_force_participation",
+   "companions": [
+    "pct_disability",
+    "census2020_pct_vacant",
+    "smoking",
+    "pct_age_65_plus"
+   ],
+   "size": 5,
+   "n": 2956,
+   "r2Best": 0.453,
+   "r2Set": 0.658,
+   "weights": [
+    -0.228,
+    -0.173,
+    -0.38,
+    -0.263
+   ],
+   "heldOut": "A",
+   "gain": 0.216,
+   "nEff": 593,
+   "p": 1.3917522260319933e-65,
+   "regions": 4,
+   "stable": false,
+   "urbanRural": false,
+   "sensitive": true,
+   "caption": "Counties with higher disability rates, higher shares of vacant homes, higher smoking rates and higher shares of people 65 and older tend to have lower labor force participation rates. Together they line up with labor force participation rates much more closely than any one alone.",
+   "fingerprint": "b3d672adf47c937f"
+  },
+  {
+   "id": "diabetes__svi_socioeconomic__pct_white_nh__pct_bachelors_plus__median_home_value",
+   "focus": "diabetes",
+   "companions": [
+    "svi_socioeconomic",
+    "pct_white_nh",
+    "pct_bachelors_plus",
+    "median_home_value"
+   ],
+   "size": 5,
+   "n": 2952,
+   "r2Best": 0.64,
+   "r2Set": 0.83,
+   "weights": [
+    0.443,
+    -0.359,
+    -0.245,
+    -0.239
+   ],
+   "heldOut": "A",
+   "gain": 0.178,
+   "nEff": 843,
+   "p": 1.1626282765574055e-111,
+   "regions": 4,
+   "stable": false,
+   "urbanRural": false,
+   "sensitive": true,
+   "caption": "Counties with lower socioeconomic vulnerability ranks, higher shares of non-Hispanic white residents, higher shares of adults with a bachelor's degree or more and higher median home values tend to have lower diabetes rates. Together they line up with diabetes rates much more closely than any one alone.",
+   "fingerprint": "4be3d4a3a4168cbc"
+  },
+  {
+   "id": "median_household_income__median_home_value__svi_socioeconomic__pct_seniors_living_alone",
+   "focus": "median_household_income",
+   "companions": [
+    "median_home_value",
+    "svi_socioeconomic",
+    "pct_seniors_living_alone"
+   ],
+   "size": 4,
+   "n": 3138,
+   "r2Best": 0.606,
+   "r2Set": 0.772,
+   "weights": [
+    0.502,
+    -0.412,
+    -0.217
+   ],
+   "heldOut": "A",
+   "gain": 0.16,
+   "nEff": 700,
+   "p": 1.1817815669757803e-75,
+   "regions": 4,
+   "stable": false,
+   "urbanRural": false,
+   "sensitive": false,
+   "caption": "Counties with lower median home values, higher socioeconomic vulnerability ranks and higher shares of seniors living alone tend to have lower household incomes. Together they line up with household incomes much more closely than any one alone.",
+   "fingerprint": "096f962bf640d47a"
+  },
+  {
+   "id": "pct_black_nh__pct_renter_households__cancer__energy_burden__july_low",
+   "focus": "pct_black_nh",
+   "companions": [
+    "pct_renter_households",
+    "cancer",
+    "energy_burden",
+    "july_low"
+   ],
+   "size": 5,
+   "n": 2945,
+   "r2Best": 0.233,
+   "r2Set": 0.384,
+   "weights": [
+    0.235,
+    -0.341,
+    -0.187,
+    0.219
+   ],
+   "heldOut": "B",
+   "gain": 0.152,
+   "nEff": 220,
+   "p": 1.5296623564597276e-10,
+   "regions": 4,
+   "stable": false,
+   "urbanRural": false,
+   "sensitive": true,
+   "caption": "Counties with higher shares of renters, lower cancer rates, lower home energy burdens and higher July overnight lows tend to have higher shares of non-Hispanic Black residents. Together they line up with shares of non-Hispanic Black residents much more closely than any one alone.",
+   "fingerprint": "f6adecf84d347b60"
+  },
+  {
+   "id": "stroke__per_capita_income__svi_socioeconomic__pct_no_internet",
+   "focus": "stroke",
+   "companions": [
+    "per_capita_income",
+    "svi_socioeconomic",
+    "pct_no_internet"
+   ],
+   "size": 4,
+   "n": 2956,
+   "r2Best": 0.672,
+   "r2Set": 0.814,
+   "weights": [
+    -0.4,
+    0.467,
+    0.186
+   ],
+   "heldOut": "B",
+   "gain": 0.15,
+   "nEff": 538,
+   "p": 9.560515689978907e-70,
+   "regions": 4,
+   "stable": false,
+   "urbanRural": false,
+   "sensitive": false,
+   "caption": "Counties with lower incomes per person, higher socioeconomic vulnerability ranks and higher shares of households offline tend to have higher stroke rates. Together they line up with stroke rates much more closely than any one alone.",
+   "fingerprint": "debbb3bb79faed01"
+  },
+  {
+   "id": "pct_no_computer__median_gross_rent__disability_cognition__energy_burden",
+   "focus": "pct_no_computer",
+   "companions": [
+    "median_gross_rent",
+    "disability_cognition",
+    "energy_burden"
+   ],
+   "size": 4,
+   "n": 2950,
+   "r2Best": 0.464,
+   "r2Set": 0.589,
+   "weights": [
+    -0.331,
+    0.332,
+    0.211
+   ],
+   "heldOut": "A",
+   "gain": 0.137,
+   "nEff": 750,
+   "p": 8.210603772302668e-48,
+   "regions": 3,
+   "stable": false,
+   "urbanRural": false,
+   "sensitive": true,
+   "caption": "Counties with lower median rents, higher rates of cognitive disability and higher home energy burdens tend to have higher shares of households without a computer. Together they line up with shares of households without a computer much more closely than any one alone.",
+   "fingerprint": "f315f3e6b28982b7"
+  },
+  {
+   "id": "binge_drinking__svi_minority__per_capita_income",
+   "focus": "binge_drinking",
+   "companions": [
+    "svi_minority",
+    "per_capita_income"
+   ],
+   "size": 3,
+   "n": 2956,
+   "r2Best": 0.368,
+   "r2Set": 0.503,
+   "weights": [
+    -0.555,
+    0.371
+   ],
+   "heldOut": "B",
+   "gain": 0.135,
+   "nEff": 476,
+   "p": 1.0462462201451336e-25,
+   "regions": 3,
+   "stable": false,
+   "urbanRural": false,
+   "sensitive": true,
+   "caption": "Counties with lower minority status ranks and higher incomes per person tend to have higher binge drinking rates. Together they line up with binge drinking rates much more closely than any one alone.",
+   "fingerprint": "1975eaaa30649c1b"
+  },
+  {
+   "id": "mental_distress__per_capita_income__pct_snap_households__pct_foreign_born",
+   "focus": "mental_distress",
+   "companions": [
+    "per_capita_income",
+    "pct_snap_households",
+    "pct_foreign_born"
+   ],
+   "size": 4,
+   "n": 2956,
+   "r2Best": 0.531,
+   "r2Set": 0.661,
+   "weights": [
+    -0.436,
+    0.29,
+    -0.303
+   ],
+   "heldOut": "B",
+   "gain": 0.134,
+   "nEff": 446,
+   "p": 1.5097304136904934e-30,
+   "regions": 4,
+   "stable": false,
+   "urbanRural": false,
+   "sensitive": true,
+   "caption": "Counties with higher incomes per person, lower shares of households getting SNAP and higher shares of residents born outside the U.S. tend to have lower rates of frequent mental distress. Together they line up with rates of frequent mental distress much more closely than any one alone.",
+   "fingerprint": "a4418a991e00594b"
+  },
+  {
+   "id": "arthritis__per_capita_income__labor_force_participation__pct_single_parent_families__pct_foreign_born",
+   "focus": "arthritis",
+   "companions": [
+    "per_capita_income",
+    "labor_force_participation",
+    "pct_single_parent_families",
+    "pct_foreign_born"
+   ],
+   "size": 5,
+   "n": 2955,
+   "r2Best": 0.439,
+   "r2Set": 0.564,
+   "weights": [
+    -0.422,
+    -0.16,
+    0.177,
+    -0.255
+   ],
+   "heldOut": "B",
+   "gain": 0.131,
+   "nEff": 419,
+   "p": 1.420996201155898e-23,
+   "regions": 4,
+   "stable": false,
+   "urbanRural": false,
+   "sensitive": true,
+   "caption": "Counties with higher incomes per person, higher labor force participation rates, lower shares of single-parent families and higher shares of residents born outside the U.S. tend to have lower arthritis rates. Together they line up with arthritis rates much more closely than any one alone.",
+   "fingerprint": "1da24ff2b6c40e88"
+  },
+  {
+   "id": "pct_no_internet__median_gross_rent__disability_cognition__census2020_pct_vacant",
+   "focus": "pct_no_internet",
+   "companions": [
+    "median_gross_rent",
+    "disability_cognition",
+    "census2020_pct_vacant"
+   ],
+   "size": 4,
+   "n": 2950,
+   "r2Best": 0.47,
+   "r2Set": 0.595,
+   "weights": [
+    -0.328,
+    0.425,
+    0.169
+   ],
+   "heldOut": "A",
+   "gain": 0.125,
+   "nEff": 752,
+   "p": 2.895404726126573e-44,
+   "regions": 3,
+   "stable": false,
+   "urbanRural": false,
+   "sensitive": true,
+   "caption": "Counties with lower median rents, higher rates of cognitive disability and higher shares of vacant homes tend to have higher shares of households offline. Together they line up with shares of households offline much more closely than any one alone.",
+   "fingerprint": "f9bdc2f4c3f482dd"
+  },
+  {
+   "id": "nri_risk_score__pct_asian_nh__median_gross_rent__pct_renter_households__vmt_per_capita",
+   "focus": "nri_risk_score",
+   "companions": [
+    "pct_asian_nh",
+    "median_gross_rent",
+    "pct_renter_households",
+    "vmt_per_capita"
+   ],
+   "size": 5,
+   "n": 3123,
+   "r2Best": 0.287,
+   "r2Set": 0.435,
+   "weights": [
+    0.208,
+    0.344,
+    0.24,
+    -0.142
+   ],
+   "heldOut": "A",
+   "gain": 0.119,
+   "nEff": 778,
+   "p": 2.62907216088243e-32,
+   "regions": 4,
+   "stable": false,
+   "urbanRural": true,
+   "sensitive": true,
+   "caption": "Counties with higher shares of non-Hispanic Asian residents, higher median rents, higher shares of renters and lower driving per resident tend to have higher natural hazard risk scores. Together they line up with natural hazard risk scores much more closely than any one alone.",
+   "fingerprint": "5ab7320f71233cfe"
+  },
+  {
+   "id": "energy_burden_low_income__census2020_pct_vacant__pct_foreign_born__pct_homes_built_before_1960__pct_moved_last_year",
+   "focus": "energy_burden_low_income",
+   "companions": [
+    "census2020_pct_vacant",
+    "pct_foreign_born",
+    "pct_homes_built_before_1960",
+    "pct_moved_last_year"
+   ],
+   "size": 5,
+   "n": 1186,
+   "r2Best": 0.267,
+   "r2Set": 0.346,
+   "weights": [
+    0.228,
+    -0.303,
+    0.125,
+    -0.165
+   ],
+   "heldOut": "A",
+   "gain": 0.115,
+   "nEff": 357,
+   "p": 8.874247225224224e-14,
+   "regions": 4,
+   "stable": false,
+   "urbanRural": false,
+   "sensitive": true,
+   "caption": "Counties with higher shares of vacant homes, lower shares of residents born outside the U.S., higher shares of older homes and lower shares of recent movers tend to have higher home energy burdens for lower-income households. Together they line up with home energy burdens for lower-income households much more closely than any one alone.",
+   "fingerprint": "34b4c14798fb6120"
+  },
+  {
+   "id": "smoking__pct_bachelors_plus__svi_socioeconomic__median_owner_costs_mortgage",
+   "focus": "smoking",
+   "companions": [
+    "pct_bachelors_plus",
+    "svi_socioeconomic",
+    "median_owner_costs_mortgage"
+   ],
+   "size": 4,
+   "n": 2950,
+   "r2Best": 0.66,
+   "r2Set": 0.783,
+   "weights": [
+    -0.487,
+    0.304,
+    -0.272
+   ],
+   "heldOut": "A",
+   "gain": 0.113,
+   "nEff": 788,
+   "p": 1.7938157857213656e-73,
+   "regions": 3,
+   "stable": false,
+   "urbanRural": false,
+   "sensitive": false,
+   "caption": "Counties with higher shares of adults with a bachelor's degree or more, lower socioeconomic vulnerability ranks and higher homeowner costs tend to have lower smoking rates. Together they line up with smoking rates much more closely than any one alone.",
+   "fingerprint": "241e1c5fdd39120c"
+  },
+  {
+   "id": "median_home_value__median_household_income__pct_graduate_degree__population_density",
+   "focus": "median_home_value",
+   "companions": [
+    "median_household_income",
+    "pct_graduate_degree",
+    "population_density"
+   ],
+   "size": 4,
+   "n": 3138,
+   "r2Best": 0.606,
+   "r2Set": 0.717,
+   "weights": [
+    0.542,
+    0.255,
+    0.206
+   ],
+   "heldOut": "B",
+   "gain": 0.112,
+   "nEff": 320,
+   "p": 2.7517887840841266e-24,
+   "regions": 4,
+   "stable": false,
+   "urbanRural": false,
+   "sensitive": false,
+   "caption": "Counties with higher household incomes, higher shares of graduate degrees and higher population density tend to have higher median home values. Together they line up with median home values much more closely than any one alone.",
+   "fingerprint": "8ce0627dcb94e5f7"
+  },
+  {
+   "id": "no_car_far_from_supermarket__pct_snap_households__svi_housing_transport__median_household_income",
+   "focus": "no_car_far_from_supermarket",
+   "companions": [
+    "pct_snap_households",
+    "svi_housing_transport",
+    "median_household_income"
+   ],
+   "size": 4,
+   "n": 3132,
+   "r2Best": 0.322,
+   "r2Set": 0.41,
+   "weights": [
+    0.273,
+    0.259,
+    -0.25
+   ],
+   "heldOut": "A",
+   "gain": 0.102,
+   "nEff": 1005,
+   "p": 2.147075126240635e-34,
+   "regions": 4,
+   "stable": false,
+   "urbanRural": false,
+   "sensitive": false,
+   "caption": "Counties with higher shares of households getting SNAP, higher housing and transportation vulnerability ranks and lower household incomes tend to have higher shares of households without a car far from a supermarket. Together they line up with shares of households without a car far from a supermarket much more closely than any one alone.",
+   "fingerprint": "4a6d195c850bcf35"
+  },
+  {
+   "id": "census2020_pct_vacant__pct_age_65_plus__heart_disease__nri_expected_loss_per_person",
+   "focus": "census2020_pct_vacant",
+   "companions": [
+    "pct_age_65_plus",
+    "heart_disease",
+    "nri_expected_loss_per_person"
+   ],
+   "size": 4,
+   "n": 2956,
+   "r2Best": 0.436,
+   "r2Set": 0.57,
+   "weights": [
+    0.515,
+    0.26,
+    0.247
+   ],
+   "heldOut": "A",
+   "gain": 0.1,
+   "nEff": 578,
+   "p": 7.812626686544052e-26,
+   "regions": 4,
+   "stable": false,
+   "urbanRural": false,
+   "sensitive": false,
+   "caption": "Counties with higher shares of people 65 and older, higher heart disease rates and higher expected natural-hazard losses per resident tend to have higher shares of vacant homes. Together they line up with shares of vacant homes much more closely than any one alone.",
+   "fingerprint": "d0bd45f38d3151c7"
+  },
+  {
+   "id": "high_blood_pressure__per_capita_income__pct_snap_households__svi_minority",
+   "focus": "high_blood_pressure",
+   "companions": [
+    "per_capita_income",
+    "pct_snap_households",
+    "svi_minority"
+   ],
+   "size": 4,
+   "n": 2956,
+   "r2Best": 0.525,
+   "r2Set": 0.64,
+   "weights": [
+    -0.449,
+    0.361,
+    0.162
+   ],
+   "heldOut": "B",
+   "gain": 0.099,
+   "nEff": 437,
+   "p": 3.368042644759139e-24,
+   "regions": 3,
+   "stable": false,
+   "urbanRural": false,
+   "sensitive": true,
+   "caption": "Counties with lower incomes per person, higher shares of households getting SNAP and higher minority status ranks tend to have higher high blood pressure rates. Together they line up with high blood pressure rates more closely than any one alone.",
+   "fingerprint": "d18d6a70a7824403"
+  },
+  {
+   "id": "copd__per_capita_income__median_gross_rent__svi_socioeconomic__pct_foreign_born",
+   "focus": "copd",
+   "companions": [
+    "per_capita_income",
+    "median_gross_rent",
+    "svi_socioeconomic",
+    "pct_foreign_born"
+   ],
+   "size": 5,
+   "n": 2950,
+   "r2Best": 0.648,
+   "r2Set": 0.772,
+   "weights": [
+    -0.381,
+    -0.23,
+    0.356,
+    -0.183
+   ],
+   "heldOut": "A",
+   "gain": 0.099,
+   "nEff": 731,
+   "p": 2.1580867373496486e-59,
+   "regions": 3,
+   "stable": false,
+   "urbanRural": false,
+   "sensitive": true,
+   "caption": "Counties with higher incomes per person, higher median rents, lower socioeconomic vulnerability ranks and higher shares of residents born outside the U.S. tend to have lower COPD rates. Together they line up with COPD rates more closely than any one alone.",
+   "fingerprint": "78f1e2aae66b91d1"
+  },
+  {
+   "id": "energy_burden__median_home_value__pct_no_internet__labor_force_participation",
+   "focus": "energy_burden",
+   "companions": [
+    "median_home_value",
+    "pct_no_internet",
+    "labor_force_participation"
+   ],
+   "size": 4,
+   "n": 3139,
+   "r2Best": 0.522,
+   "r2Set": 0.605,
+   "weights": [
+    -0.448,
+    0.244,
+    -0.198
+   ],
+   "heldOut": "A",
+   "gain": 0.089,
+   "nEff": 715,
+   "p": 1.2885360238794314e-28,
+   "regions": 4,
+   "stable": false,
+   "urbanRural": false,
+   "sensitive": false,
+   "caption": "Counties with higher median home values, lower shares of households offline and higher labor force participation rates tend to have lower home energy burdens. Together they line up with home energy burdens more closely than any one alone.",
+   "fingerprint": "98da776456d21000"
+  },
+  {
+   "id": "housing_insecurity__svi_overall__pct_bachelors_plus__pct_child_poverty",
+   "focus": "housing_insecurity",
+   "companions": [
+    "svi_overall",
+    "pct_bachelors_plus",
+    "pct_child_poverty"
+   ],
+   "size": 4,
+   "n": 2298,
+   "r2Best": 0.668,
+   "r2Set": 0.781,
+   "weights": [
+    0.595,
+    -0.291,
+    0.178
+   ],
+   "heldOut": "B",
+   "gain": 0.086,
+   "nEff": 376,
+   "p": 9.066786983539892e-28,
+   "regions": 4,
+   "stable": false,
+   "urbanRural": false,
+   "sensitive": false,
+   "caption": "Counties with higher social vulnerability ranks, lower shares of adults with a bachelor's degree or more and higher child poverty rates tend to have higher housing insecurity rates. Together they line up with housing insecurity rates more closely than any one alone.",
+   "fingerprint": "5684f652fb4c91f9"
+  },
+  {
+   "id": "disability_hearing__per_capita_income__nri_community_resilience__pct_child_poverty__pct_graduate_degree",
+   "focus": "disability_hearing",
+   "companions": [
+    "per_capita_income",
+    "nri_community_resilience",
+    "pct_child_poverty",
+    "pct_graduate_degree"
+   ],
+   "size": 5,
+   "n": 2955,
+   "r2Best": 0.558,
+   "r2Set": 0.646,
+   "weights": [
+    -0.4,
+    -0.181,
+    0.184,
+    -0.223
+   ],
+   "heldOut": "B",
+   "gain": 0.084,
+   "nEff": 414,
+   "p": 3.89021265862264e-19,
+   "regions": 3,
+   "stable": false,
+   "urbanRural": false,
+   "sensitive": true,
+   "caption": "Counties with higher incomes per person, higher community resilience scores, lower child poverty rates and higher shares of graduate degrees tend to have lower rates of hearing disability. Together they line up with rates of hearing disability more closely than any one alone.",
+   "fingerprint": "dd4494cb36077db8"
+  },
+  {
+   "id": "pct_leave_before_7am__pct_bachelors_plus__pct_moved_last_year__pct_no_internet",
+   "focus": "pct_leave_before_7am",
+   "companions": [
+    "pct_bachelors_plus",
+    "pct_moved_last_year",
+    "pct_no_internet"
+   ],
+   "size": 4,
+   "n": 1186,
+   "r2Best": 0.431,
+   "r2Set": 0.494,
+   "weights": [
+    -0.797,
+    -0.213,
+    -0.297
+   ],
+   "heldOut": "A",
+   "gain": 0.083,
+   "nEff": 378,
+   "p": 2.58342435364964e-13,
+   "regions": 4,
+   "stable": false,
+   "urbanRural": false,
+   "sensitive": false,
+   "caption": "Counties with higher shares of adults with a bachelor's degree or more, higher shares of recent movers and higher shares of households offline tend to have lower shares of workers leaving before 7 a.m. Together they line up with shares of workers leaving before 7 a.m. more closely than any one alone.",
+   "fingerprint": "f867faeec461369d"
+  },
+  {
+   "id": "disability_cognition__per_capita_income__pct_snap_households__pct_graduate_degree",
+   "focus": "disability_cognition",
+   "companions": [
+    "per_capita_income",
+    "pct_snap_households",
+    "pct_graduate_degree"
+   ],
+   "size": 4,
+   "n": 2956,
+   "r2Best": 0.715,
+   "r2Set": 0.8,
+   "weights": [
+    -0.466,
+    0.308,
+    -0.252
+   ],
+   "heldOut": "B",
+   "gain": 0.082,
+   "nEff": 449,
+   "p": 1.892453833147956e-32,
+   "regions": 4,
+   "stable": false,
+   "urbanRural": false,
+   "sensitive": true,
+   "caption": "Counties with higher incomes per person, lower shares of households getting SNAP and higher shares of graduate degrees tend to have lower rates of cognitive disability. Together they line up with rates of cognitive disability more closely than any one alone.",
+   "fingerprint": "12475f583259dbc1"
+  },
+  {
+   "id": "pct_disability__labor_force_participation__pct_snap_households__median_age",
+   "focus": "pct_disability",
+   "companions": [
+    "labor_force_participation",
+    "pct_snap_households",
+    "median_age"
+   ],
+   "size": 4,
+   "n": 3144,
+   "r2Best": 0.457,
+   "r2Set": 0.584,
+   "weights": [
+    -0.31,
+    0.405,
+    0.338
+   ],
+   "heldOut": "A",
+   "gain": 0.081,
+   "nEff": 645,
+   "p": 1.0265500876153482e-23,
+   "regions": 3,
+   "stable": false,
+   "urbanRural": false,
+   "sensitive": true,
+   "caption": "Counties with lower labor force participation rates, higher shares of households getting SNAP and higher median ages tend to have higher disability rates. Together they line up with disability rates more closely than any one alone.",
+   "fingerprint": "87f434183b46900f"
+  },
+  {
+   "id": "pct_homes_built_before_1960__energy_burden__mean_commute_minutes__pct_seniors_living_alone",
+   "focus": "pct_homes_built_before_1960",
+   "companions": [
+    "energy_burden",
+    "mean_commute_minutes",
+    "pct_seniors_living_alone"
+   ],
+   "size": 4,
+   "n": 3143,
+   "r2Best": 0.162,
+   "r2Set": 0.28,
+   "weights": [
+    0.291,
+    -0.267,
+    0.223
+   ],
+   "heldOut": "A",
+   "gain": 0.079,
+   "nEff": 694,
+   "p": 1.2718859782491359e-14,
+   "regions": 3,
+   "stable": false,
+   "urbanRural": false,
+   "sensitive": false,
+   "caption": "Counties with higher home energy burdens, lower commute times and higher shares of seniors living alone tend to have higher shares of older homes. Together they line up with shares of older homes more closely than any one alone.",
+   "fingerprint": "60326da66b2810cb"
+  },
+  {
+   "id": "svi_minority__cancer__pct_foreign_born__pct_renter_households",
+   "focus": "svi_minority",
+   "companions": [
+    "cancer",
+    "pct_foreign_born",
+    "pct_renter_households"
+   ],
+   "size": 4,
+   "n": 2956,
+   "r2Best": 0.692,
+   "r2Set": 0.77,
+   "weights": [
+    -0.707,
+    0.214,
+    0.157
+   ],
+   "heldOut": "B",
+   "gain": 0.078,
+   "nEff": 235,
+   "p": 3.1982541420610053e-18,
+   "regions": 4,
+   "stable": false,
+   "urbanRural": false,
+   "sensitive": true,
+   "caption": "Counties with lower cancer rates, higher shares of residents born outside the U.S. and higher shares of renters tend to have higher minority status ranks. Together they line up with minority status ranks more closely than any one alone.",
+   "fingerprint": "e6476667b229a6cb"
+  },
+  {
+   "id": "median_owner_costs_mortgage__median_household_income__pct_bachelors_plus",
+   "focus": "median_owner_costs_mortgage",
+   "companions": [
+    "median_household_income",
+    "pct_bachelors_plus"
+   ],
+   "size": 3,
+   "n": 3136,
+   "r2Best": 0.577,
+   "r2Set": 0.643,
+   "weights": [
+    0.554,
+    0.329
+   ],
+   "heldOut": "A",
+   "gain": 0.075,
+   "nEff": 678,
+   "p": 1.1348063068825107e-28,
+   "regions": 4,
+   "stable": false,
+   "urbanRural": false,
+   "sensitive": false,
+   "caption": "Counties with higher household incomes and higher shares of adults with a bachelor's degree or more tend to have higher homeowner costs. Together they line up with homeowner costs more closely than any one alone.",
+   "fingerprint": "3e6e572dfc08471b"
+  },
+  {
+   "id": "pct_graduate_degree__cholesterol_screening__median_home_value__pct_mobile_homes",
+   "focus": "pct_graduate_degree",
+   "companions": [
+    "cholesterol_screening",
+    "median_home_value",
+    "pct_mobile_homes"
+   ],
+   "size": 4,
+   "n": 2952,
+   "r2Best": 0.518,
+   "r2Set": 0.585,
+   "weights": [
+    0.424,
+    0.285,
+    -0.174
+   ],
+   "heldOut": "A",
+   "gain": 0.068,
+   "nEff": 869,
+   "p": 5.332008266708687e-28,
+   "regions": 3,
+   "stable": false,
+   "urbanRural": false,
+   "sensitive": false,
+   "caption": "Counties with higher cholesterol screening rates, higher median home values and lower shares of mobile homes tend to have higher shares of graduate degrees. Together they line up with shares of graduate degrees more closely than any one alone.",
+   "fingerprint": "1c8c143958683004"
+  },
+  {
+   "id": "pct_asian_nh__census2020_housing_density__pct_renter_households__mental_distress",
+   "focus": "pct_asian_nh",
+   "companions": [
+    "census2020_housing_density",
+    "pct_renter_households",
+    "mental_distress"
+   ],
+   "size": 4,
+   "n": 2956,
+   "r2Best": 0.385,
+   "r2Set": 0.45,
+   "weights": [
+    0.444,
+    0.212,
+    -0.228
+   ],
+   "heldOut": "B",
+   "gain": 0.063,
+   "nEff": 928,
+   "p": 1.5508550305104244e-22,
+   "regions": 3,
+   "stable": false,
+   "urbanRural": false,
+   "sensitive": true,
+   "caption": "Counties with higher homes per square mile, higher shares of renters and lower rates of frequent mental distress tend to have higher shares of non-Hispanic Asian residents. Together they line up with shares of non-Hispanic Asian residents more closely than any one alone.",
+   "fingerprint": "2777a2a5355fffe5"
+  },
+  {
+   "id": "cholesterol_screening__pct_bachelors_plus__nri_community_resilience__median_home_value",
+   "focus": "cholesterol_screening",
+   "companions": [
+    "pct_bachelors_plus",
+    "nri_community_resilience",
+    "median_home_value"
+   ],
+   "size": 4,
+   "n": 2952,
+   "r2Best": 0.647,
+   "r2Set": 0.704,
+   "weights": [
+    0.535,
+    0.187,
+    0.234
+   ],
+   "heldOut": "B",
+   "gain": 0.06,
+   "nEff": 451,
+   "p": 1.3384330216772325e-19,
+   "regions": 4,
+   "stable": false,
+   "urbanRural": false,
+   "sensitive": false,
+   "caption": "Counties with higher shares of adults with a bachelor's degree or more, higher community resilience scores and higher median home values tend to have higher cholesterol screening rates. Together they line up with cholesterol screening rates more closely than any one alone.",
+   "fingerprint": "cf74ce6e3310b4a7"
+  },
+  {
+   "id": "nri_inland_flood_loss__median_age__pct_black_nh",
+   "focus": "nri_inland_flood_loss",
+   "companions": [
+    "median_age",
+    "pct_black_nh"
+   ],
+   "size": 3,
+   "n": 3144,
+   "r2Best": 0.172,
+   "r2Set": 0.216,
+   "weights": [
+    0.334,
+    -0.223
+   ],
+   "heldOut": "B",
+   "gain": 0.059,
+   "nEff": 624,
+   "p": 1.8806371389584675e-11,
+   "regions": 4,
+   "stable": false,
+   "urbanRural": false,
+   "sensitive": true,
+   "caption": "Counties with higher median ages and lower shares of non-Hispanic Black residents tend to have higher expected inland flood losses per resident. Together they line up with expected inland flood losses per resident more closely than any one alone.",
+   "fingerprint": "f04e2ece3294abef"
+  },
+  {
+   "id": "pct_bachelors_plus__disability_cognition__pct_mobile_homes__median_home_value",
+   "focus": "pct_bachelors_plus",
+   "companions": [
+    "disability_cognition",
+    "pct_mobile_homes",
+    "median_home_value"
+   ],
+   "size": 4,
+   "n": 2952,
+   "r2Best": 0.66,
+   "r2Set": 0.717,
+   "weights": [
+    -0.532,
+    -0.203,
+    0.231
+   ],
+   "heldOut": "A",
+   "gain": 0.057,
+   "nEff": 792,
+   "p": 1.739079206368812e-30,
+   "regions": 4,
+   "stable": false,
+   "urbanRural": false,
+   "sensitive": true,
+   "caption": "Counties with higher rates of cognitive disability, higher shares of mobile homes and lower median home values tend to have lower shares of adults with a bachelor's degree or more. Together they line up with shares of adults with a bachelor's degree or more more closely than any one alone.",
+   "fingerprint": "b0258f10100d0329"
+  },
+  {
+   "id": "traffic_fatalities__median_gross_rent__nri_risk_score__housing_insecurity",
+   "focus": "traffic_fatalities",
+   "companions": [
+    "median_gross_rent",
+    "nri_risk_score",
+    "housing_insecurity"
+   ],
+   "size": 4,
+   "n": 2288,
+   "r2Best": 0.189,
+   "r2Set": 0.247,
+   "weights": [
+    -0.246,
+    -0.23,
+    0.194
+   ],
+   "heldOut": "A",
+   "gain": 0.056,
+   "nEff": 779,
+   "p": 1.140960935651397e-12,
+   "regions": 3,
+   "stable": false,
+   "urbanRural": true,
+   "sensitive": false,
+   "caption": "Counties with higher median rents, higher natural hazard risk scores and lower housing insecurity rates tend to have lower traffic death rates. Together they line up with traffic death rates more closely than any one alone.",
+   "fingerprint": "56e63a5af465b8e8"
+  },
+  {
+   "id": "pct_moved_last_year__pct_renter_households__pct_drive_alone__mean_commute_minutes",
+   "focus": "pct_moved_last_year",
+   "companions": [
+    "pct_renter_households",
+    "pct_drive_alone",
+    "mean_commute_minutes"
+   ],
+   "size": 4,
+   "n": 1186,
+   "r2Best": 0.437,
+   "r2Set": 0.493,
+   "weights": [
+    0.475,
+    -0.225,
+    -0.2
+   ],
+   "heldOut": "A",
+   "gain": 0.049,
+   "nEff": 353,
+   "p": 6.598792070134236e-8,
+   "regions": 3,
+   "stable": false,
+   "urbanRural": false,
+   "sensitive": false,
+   "caption": "Counties with lower shares of renters, higher drive-alone rates and higher commute times tend to have lower shares of recent movers. Together they line up with shares of recent movers more closely than any one alone.",
+   "fingerprint": "e9919300b7265edb"
+  },
+  {
+   "id": "short_sleep__pct_snap_households__per_capita_income__pct_single_parent_families",
+   "focus": "short_sleep",
+   "companions": [
+    "pct_snap_households",
+    "per_capita_income",
+    "pct_single_parent_families"
+   ],
+   "size": 4,
+   "n": 3142,
+   "r2Best": 0.348,
+   "r2Set": 0.398,
+   "weights": [
+    0.311,
+    -0.261,
+    0.161
+   ],
+   "heldOut": "B",
+   "gain": 0.047,
+   "nEff": 623,
+   "p": 1.8488828553242416e-10,
+   "regions": 3,
+   "stable": false,
+   "urbanRural": false,
+   "sensitive": false,
+   "caption": "Counties with higher shares of households getting SNAP, lower incomes per person and higher shares of single-parent families tend to have higher rates of short sleep. Together they line up with rates of short sleep more closely than any one alone.",
+   "fingerprint": "75aeffa9b9986502"
+  },
+  {
+   "id": "mammogram__pct_bachelors_plus__svi_socioeconomic",
+   "focus": "mammogram",
+   "companions": [
+    "pct_bachelors_plus",
+    "svi_socioeconomic"
+   ],
+   "size": 3,
+   "n": 3143,
+   "r2Best": 0.223,
+   "r2Set": 0.27,
+   "weights": [
+    0.357,
+    -0.244
+   ],
+   "heldOut": "B",
+   "gain": 0.045,
+   "nEff": 811,
+   "p": 2.5057214993083546e-12,
+   "regions": 3,
+   "stable": false,
+   "urbanRural": false,
+   "sensitive": false,
+   "caption": "Counties with higher shares of adults with a bachelor's degree or more and lower socioeconomic vulnerability ranks tend to have higher mammogram rates. Together they line up with mammogram rates more closely than any one alone.",
+   "fingerprint": "aba8bef029df6c41"
+  },
+  {
+   "id": "pct_snap_households__disability_mobility__pct_single_parent_families",
+   "focus": "pct_snap_households",
+   "companions": [
+    "disability_mobility",
+    "pct_single_parent_families"
+   ],
+   "size": 3,
+   "n": 2955,
+   "r2Best": 0.631,
+   "r2Set": 0.667,
+   "weights": [
+    0.665,
+    0.23
+   ],
+   "heldOut": "B",
+   "gain": 0.042,
+   "nEff": 504,
+   "p": 1.0813660665967099e-14,
+   "regions": 4,
+   "stable": false,
+   "urbanRural": false,
+   "sensitive": true,
+   "caption": "Counties with higher rates of mobility disability and higher shares of single-parent families tend to have higher shares of households getting SNAP. Together they line up with shares of households getting SNAP more closely than any one alone.",
+   "fingerprint": "f5ffb75c1fd5626b"
+  },
+  {
+   "id": "pct_child_poverty__disability_selfcare__pct_single_parent_families",
+   "focus": "pct_child_poverty",
+   "companions": [
+    "disability_selfcare",
+    "pct_single_parent_families"
+   ],
+   "size": 3,
+   "n": 2955,
+   "r2Best": 0.53,
+   "r2Set": 0.569,
+   "weights": [
+    0.592,
+    0.24
+   ],
+   "heldOut": "B",
+   "gain": 0.04,
+   "nEff": 768,
+   "p": 3.1932476953638e-16,
+   "regions": 4,
+   "stable": false,
+   "urbanRural": false,
+   "sensitive": true,
+   "caption": "Counties with higher rates of self-care disability and higher shares of single-parent families tend to have higher child poverty rates. Together they line up with child poverty rates more closely than any one alone.",
+   "fingerprint": "c0182def182ee836"
+  },
+  {
+   "id": "unemployment_rate__disability_vision__pct_single_parent_families",
+   "focus": "unemployment_rate",
+   "companions": [
+    "disability_vision",
+    "pct_single_parent_families"
+   ],
+   "size": 3,
+   "n": 2955,
+   "r2Best": 0.164,
+   "r2Set": 0.199,
+   "weights": [
+    0.276,
+    0.226
+   ],
+   "heldOut": "B",
+   "gain": 0.032,
+   "nEff": 1230,
+   "p": 2.2238198318807996e-11,
+   "regions": 3,
+   "stable": false,
+   "urbanRural": false,
+   "sensitive": true,
+   "caption": "Counties with higher rates of vision disability and higher shares of single-parent families tend to have higher unemployment rates. Together they line up with unemployment rates more closely than any one alone.",
+   "fingerprint": "94f6fc901ce0ea89"
+  },
+  {
+   "id": "per_capita_income__disability_cognition__median_home_value",
+   "focus": "per_capita_income",
+   "companions": [
+    "disability_cognition",
+    "median_home_value"
+   ],
+   "size": 3,
+   "n": 2952,
+   "r2Best": 0.715,
+   "r2Set": 0.74,
+   "weights": [
+    -0.674,
+    0.234
+   ],
+   "heldOut": "B",
+   "gain": 0.03,
+   "nEff": 418,
+   "p": 2.6617919788410872e-11,
+   "regions": 3,
+   "stable": false,
+   "urbanRural": false,
+   "sensitive": true,
+   "caption": "Counties with lower rates of cognitive disability and higher median home values tend to have higher incomes per person. Together they line up with incomes per person more closely than any one alone.",
+   "fingerprint": "aac6b5b03f861f40"
+  },
+  {
+   "id": "pct_rent_burdened__nri_risk_score__gini_index",
+   "focus": "pct_rent_burdened",
+   "companions": [
+    "nri_risk_score",
+    "gini_index"
+   ],
+   "size": 3,
+   "n": 3144,
+   "r2Best": 0.115,
+   "r2Set": 0.147,
+   "weights": [
+    0.312,
+    0.18
+   ],
+   "heldOut": "B",
+   "gain": 0.028,
+   "nEff": 1332,
+   "p": 5.0795273041845594e-11,
+   "regions": 4,
+   "stable": false,
+   "urbanRural": false,
+   "sensitive": false,
+   "caption": "Counties with higher natural hazard risk scores and higher income inequality tend to have higher shares of rent-burdened renters. Together they line up with shares of rent-burdened renters more closely than any one alone.",
+   "fingerprint": "69a459fc3152bdfd"
+  },
+  {
+   "id": "pct_work_from_home__pct_bachelors_plus__median_home_value",
+   "focus": "pct_work_from_home",
+   "companions": [
+    "pct_bachelors_plus",
+    "median_home_value"
+   ],
+   "size": 3,
+   "n": 3139,
+   "r2Best": 0.338,
+   "r2Set": 0.367,
+   "weights": [
+    0.411,
+    0.241
+   ],
+   "heldOut": "A",
+   "gain": 0.021,
+   "nEff": 916,
+   "p": 8.728813949051471e-8,
+   "regions": 3,
+   "stable": false,
+   "urbanRural": false,
+   "sensitive": false,
+   "caption": "Counties with higher shares of adults with a bachelor's degree or more and higher median home values tend to have higher work-from-home rates. Together they line up with work-from-home rates more closely than any one alone.",
+   "fingerprint": "a61328c1cb24a3fc"
+  }
+ ]
+}

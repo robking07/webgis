@@ -19,6 +19,7 @@ import { useIsCompact, useIsNarrow, useIsPhone } from "./BottomSheet";
 import { DatasetMenu, DatasetSheet, type BrowseSlot } from "./DatasetMenus";
 import { parseUrlState, useUrlState, type UrlState } from "@/lib/url-state";
 import { areaChangeNote, stopsFor } from "@/lib/periods";
+import { tableScope } from "@/lib/table-scope";
 import { useViewerData } from "./map-page/useViewerData";
 import { useFraming } from "./map-page/useFraming";
 import { HEADER_GAP } from "./map-page/layout";
@@ -120,8 +121,8 @@ export function Viewer({ search }: { search: string }) {
   // A year off the default is colored with the default's breaks (xBase): its failure is an error, not a spinner.
   const error = x.error ?? y.error ?? xFrom.error ?? xBase.error;
   const available = !!primary && !isFeature && availableLevels.includes(level);
-  // The table lists states or counties (finer areas have no names to search); below counties it shows counties.
-  const tableLevel: GeoLevel | null = level === "state" || level === "county" ? level : availableLevels.includes("county") ? "county" : null;
+  // The table follows the map's level; tracts and block groups only inside a focused area (issue #293).
+  const { level: tableLevel, within: tableWithin } = tableScope(level, availableLevels, focus?.geoid ?? null);
   // Clear selections and filters when the dataset changes.
   const [seenDataset, setSeenDataset] = useState(state.d);
   if (seenDataset !== state.d) { setSeenDataset(state.d); setSelected(null); setFeatureSelected(null); setFeatureHover(null); setHidden({}); setCtxOpen(false); }
@@ -428,7 +429,7 @@ export function Viewer({ search }: { search: string }) {
         stop={stop} stopId={stopId} since={since}
         hatchToggle={hatchable ? { on: hatchOn, onChange: setHatchOn, loading: hatchOn && !hatch?.[level] } : null}
         desktopStrip={desktopStrip} mark={selected && selected.level === level ? selClass : null}
-        covered={phone && (placeOpen || tableOpen || listOpen || stepAside || ctxOpen)} tableReady={tableReady} onTable={() => setTableOpen(true)}
+        covered={phone && (placeOpen || tableOpen || listOpen || stepAside || ctxOpen)} tableReady={tableReady} tableLevel={tableLevel} onTable={() => setTableOpen(true)}
         // Phones, once a tap or pick has zoomed in (the header and its search are gone): search above the legend (issue #246).
         onSearch={phone && immersed && (canGoBack || !!focus) ? () => setSearchOpen(true) : null} />
 
@@ -444,7 +445,7 @@ export function Viewer({ search }: { search: string }) {
       {searchOpen && <SearchOverlay full={phone} current={state.d} onClose={() => setSearchOpen(false)} onPlace={onSearchPlace} onDataset={onSearchDataset} />}
 
       {tableOpen && primary && tableLevel && (
-        <DataTable top={panelTop} level={tableLevel} x={primary} xv={x.values[tableLevel]} y={secondary} yv={y.values[tableLevel]} period={stopId ? stop!.label : undefined} selected={selected?.geoid ?? null}
+        <DataTable top={panelTop} level={tableLevel} within={tableWithin} x={primary} xv={x.values[tableLevel]} y={secondary} yv={y.values[tableLevel]} period={stopId ? stop!.label : undefined} selected={selected?.geoid ?? null}
           onClose={onTableClose} onPick={onTablePick} />
       )}
 

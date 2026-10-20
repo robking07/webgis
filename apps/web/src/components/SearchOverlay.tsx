@@ -4,7 +4,7 @@
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { MapPin, Layers, Search, X } from "lucide-react";
 import { searchDatasets, type Dataset } from "@/lib/registry";
-import { loadPlaceIndex, searchPlaces, type PlaceHit, type PlaceRow } from "@/lib/search";
+import { countyForZip, loadPlaceIndex, placeByGeoid, searchPlaces, type PlaceHit, type PlaceRow } from "@/lib/search";
 
 interface Props {
   onClose: () => void;
@@ -37,7 +37,14 @@ export function SearchOverlay({ onClose, onPlace, onDataset, current, full }: Pr
 
   const typing = q.length > 0;
   const showResults = !full || q.trim().length >= 2;
-  const places = useMemo(() => (rows ? searchPlaces(rows, q) : []), [rows, q]);
+  const [zipGeoid, setZipGeoid] = useState<{ zip: string; geoid: string | null } | null>(null);
+  const zip = /^\d{5}$/.test(q.trim()) ? q.trim() : null;
+  useEffect(() => { if (zip) countyForZip(zip).then((geoid) => setZipGeoid({ zip, geoid }), () => {}); }, [zip]);
+  const places = useMemo(() => {
+    if (!rows) return [];
+    const z = zip && zipGeoid?.zip === zip && zipGeoid.geoid ? placeByGeoid(rows, zipGeoid.geoid) : null;
+    return z ? [z] : searchPlaces(rows, q);
+  }, [rows, q, zip, zipGeoid]);
   const datasets = useMemo(() => (q.trim() ? searchDatasets(q, null).slice(0, 6) : []), [q]);
   const items: Item[] = !showResults ? [] : [...places.map((p) => ({ kind: "place" as const, p })), ...datasets.map((d) => ({ kind: "dataset" as const, d }))];
 
