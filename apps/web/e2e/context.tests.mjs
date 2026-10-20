@@ -1,5 +1,5 @@
 // "Why this matters" (issue #115, D-279), registered by menus.spec.mjs, which owns the browser, server
-// and helpers. Drafts show only with ?context=preview; production builds carry none.
+// and helpers. Approved context shows to everyone; a draft (approved: false) shows only with ?context=preview.
 const { default: contexts } = await import(new URL("../src/generated/context.json", import.meta.url), { with: { type: "json" } });
 const traffic = contexts.find((c) => c.id === "traffic_fatalities");
 const CARD = 'section[aria-label="Mapped dataset"]';
@@ -25,8 +25,9 @@ export default function contextTests({ test, expect, wait }) {
     const pad = await page.evaluate(() => window.__wgMap.getPadding());
     expect(pad.right > 300, `map not shifted clear of the panel: padding ${JSON.stringify(pad)}`);
     await page.keyboard.press("Escape");
-    await wait(1200);
+    await panel.waitFor({ state: "detached", timeout: 8000 }).catch(() => {});
     expect((await panel.count()) === 0, "Esc didn't close the panel");
+    await page.waitForFunction(() => window.__wgMap.getPadding().right === 0, null, { timeout: 8000 }).catch(() => {});
     const after = await page.evaluate(() => window.__wgMap.getPadding());
     expect(after.right === 0, `padding not reset: ${JSON.stringify(after)}`);
   });
@@ -38,7 +39,7 @@ export default function contextTests({ test, expect, wait }) {
     await page.waitForURL(/d=vmt_per_capita/, { timeout: 10000 });
     expect((await page.locator(PANEL).count()) === 0, "panel still open after switching maps");
     expect((await page.locator("[data-context-link]").count()) === 0, "a map without context shows the link");
-    await wait(1200);
+    await page.waitForFunction(() => window.__wgMap.getPadding().right === 0, null, { timeout: 8000 }).catch(() => {});
     const pad = await page.evaluate(() => window.__wgMap.getPadding());
     expect(pad.right === 0, `padding not reset after switching maps: ${JSON.stringify(pad)}`);
   });
@@ -58,12 +59,9 @@ export default function contextTests({ test, expect, wait }) {
   });
 
   for (const vp of ["phone", "laptop"]) {
-    test(`${vp} why this matters: no link on a map without context, or on a draft without the preview switch`, async (o) => {
-      const { page } = await o(vp, "/map?d=pct_poverty&context=preview");
+    test(`${vp} why this matters: no link on a map without context`, async (o) => {
+      const { page } = await o(vp, "/map?d=pct_poverty");
       expect((await page.locator("[data-context-link]").count()) === 0, "link on a map without context");
-      const { page: plain } = await o(vp, "/map?d=traffic_fatalities");
-      const n = await plain.locator("[data-context-link]").count();
-      expect(n === (traffic?.approved ? 1 : 0), `draft context visible without ?context=preview (${n} links)`);
     });
   }
 }

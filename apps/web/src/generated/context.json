@@ -1,7 +1,7 @@
 [
  {
   "id": "smoking",
-  "approved": false,
+  "approved": true,
   "framing": "risk-factor",
   "heading": "What it's linked to",
   "reviewed": "2026-10-12",
@@ -13,8 +13,7 @@
   "points": [
    "Lung cancer: in the United States, smoking is linked to about 80 percent of lung cancer deaths.[2]",
    "People who smoke are 15 to 30 times more likely to get lung cancer or die from it than people who don't.[2]",
-   "Other diseases: smoking also causes other cancers, heart disease and stroke, lung diseases such as COPD, and type 2 diabetes.[1]",
-   "Quitting lowers the risk of lung cancer, heart disease, other cancers and COPD.[1][2]"
+   "Other diseases: smoking also causes other cancers, heart disease and stroke, lung diseases such as COPD, and type 2 diabetes.[1]"
   ],
   "linked": [
    {
@@ -44,8 +43,7 @@
      "Cancer",
      "Heart disease and stroke",
      "Lung diseases such as chronic obstructive pulmonary disease (COPD)",
-     "Type 2 Diabetes",
-     "Quitting also reduces the risk for smoking-related diseases, including heart disease, cancer, and COPD."
+     "Type 2 Diabetes"
     ]
    },
    {
@@ -53,15 +51,14 @@
     "url": "https://www.cdc.gov/lung-cancer/risk-factors/index.html",
     "quotes": [
      "In the United States, cigarette smoking is linked to about 80% of lung cancer deaths.",
-     "People who smoke cigarettes are 15 to 30 times more likely to get lung cancer or die from lung cancer than people who do not smoke.",
-     "A person's risk of getting lung cancer goes down after they quit smoking."
+     "People who smoke cigarettes are 15 to 30 times more likely to get lung cancer or die from lung cancer than people who do not smoke."
     ]
    }
   ]
  },
  {
   "id": "traffic_fatalities",
-  "approved": false,
+  "approved": true,
   "framing": "preventable-harm",
   "heading": "What's behind it",
   "reviewed": "2026-10-12",
