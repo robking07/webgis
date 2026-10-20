@@ -924,6 +924,7 @@ for (const vp of ["phone", "laptop"]) {
     await panel.waitFor();
     await wait(400);
     const slider = panel.locator("input[type=range]");
+    await slider.scrollIntoViewIfNeeded(); // the card's Why link makes the panel shorter, so the slider can sit below its fold
     const notches = await panel.locator("[data-notch]").count();
     expect(notches === 10, `expected 10 notches (2015-2024), got ${notches}`);
     const bg = await slider.evaluate((el) => getComputedStyle(el, "::-webkit-slider-runnable-track").backgroundImage);

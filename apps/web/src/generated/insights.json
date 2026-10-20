@@ -5251,8 +5251,10 @@
    "r": 0.733,
    "rho": 0.781,
    "withinState": 0.75,
-   "status": "published",
-   "flags": [],
+   "status": "flagged",
+   "flags": [
+    "by construction: Social vulnerability: income and jobs (CDC index) is modeled using Population below poverty"
+   ],
    "headline": "Counties with higher poverty rates tend to have higher socioeconomic vulnerability ranks",
    "caption": "A strong link across 3,144 counties (Spearman ρ = 0.78). It holds within states too (ρ = 0.75). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template",
@@ -14840,8 +14842,10 @@
    "r": 0.595,
    "rho": 0.614,
    "withinState": 0.592,
-   "status": "published",
-   "flags": [],
+   "status": "flagged",
+   "flags": [
+    "by construction: Social vulnerability to natural hazards is modeled using Households without internet"
+   ],
    "headline": "Counties with higher social vulnerability scores tend to have higher shares of households offline",
    "caption": "A strong link across 3,144 counties (Spearman ρ = 0.61). It holds within states too (ρ = 0.59). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template",
@@ -14954,8 +14958,10 @@
    "r": 0.578,
    "rho": 0.612,
    "withinState": 0.552,
-   "status": "published",
-   "flags": [],
+   "status": "flagged",
+   "flags": [
+    "by construction: Social vulnerability to natural hazards is modeled using People with a disability"
+   ],
    "headline": "Counties with higher social vulnerability scores tend to have higher disability rates",
    "caption": "A strong link across 3,144 counties (Spearman ρ = 0.61). It holds within states too (ρ = 0.55). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template",
@@ -15084,8 +15090,10 @@
    "r": 0.554,
    "rho": 0.611,
    "withinState": 0.49,
-   "status": "published",
-   "flags": [],
+   "status": "flagged",
+   "flags": [
+    "by construction: Social vulnerability to natural hazards is modeled using No high school diploma"
+   ],
    "headline": "Counties with higher social vulnerability scores tend to have higher no high school diploma",
    "caption": "A strong link across 3,144 counties (Spearman ρ = 0.61). It holds within states too (ρ = 0.49). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template",
@@ -15291,8 +15299,10 @@
    "r": 0.548,
    "rho": 0.608,
    "withinState": 0.53,
-   "status": "published",
-   "flags": [],
+   "status": "flagged",
+   "flags": [
+    "by construction: Social vulnerability: racial and ethnic minority status (CDC index) is modeled using Hispanic or Latino residents"
+   ],
    "headline": "Counties with higher hispanic or Latino residents tend to have higher minority status ranks",
    "caption": "A strong link across 3,144 counties (Spearman ρ = 0.61). It holds within states too (ρ = 0.53). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template",
@@ -15658,8 +15668,10 @@
    "r": -0.588,
    "rho": -0.603,
    "withinState": -0.592,
-   "status": "published",
-   "flags": [],
+   "status": "flagged",
+   "flags": [
+    "by construction: Social vulnerability to natural hazards is modeled using Households with broadband"
+   ],
    "headline": "Counties with higher social vulnerability scores tend to have lower broadband rates",
    "caption": "A strong link across 3,144 counties (Spearman ρ = −0.60). It holds within states too (ρ = −0.59). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template",
@@ -16518,8 +16530,10 @@
    "r": 0.57,
    "rho": 0.594,
    "withinState": 0.601,
-   "status": "published",
-   "flags": [],
+   "status": "flagged",
+   "flags": [
+    "by construction: Social vulnerability: racial and ethnic minority status (CDC index) is modeled using Black (non-Hispanic) residents"
+   ],
    "headline": "Counties with higher black (non-Hispanic) residents tend to have higher minority status ranks",
    "caption": "A moderate link across 3,144 counties (Spearman ρ = 0.59). It holds within states too (ρ = 0.60). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template",
@@ -51802,8 +51816,10 @@
    "r": 0.297,
    "rho": 0.33,
    "withinState": 0.334,
-   "status": "published",
-   "flags": [],
+   "status": "flagged",
+   "flags": [
+    "by construction: Social vulnerability: racial and ethnic minority status (CDC index) is modeled using Asian (non-Hispanic) residents"
+   ],
    "headline": "Counties with higher asian (non-Hispanic) residents tend to have higher minority status ranks",
    "caption": "A modest link across 3,144 counties (Spearman ρ = 0.33). It holds within states too (ρ = 0.33). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template",
@@ -56273,8 +56289,10 @@
    "r": 0.3,
    "rho": 0.311,
    "withinState": 0.197,
-   "status": "published",
-   "flags": [],
+   "status": "flagged",
+   "flags": [
+    "by construction: Social vulnerability: income and jobs (CDC index) is modeled using Renters paying 30%+ of income on rent"
+   ],
    "headline": "Counties with higher renters paying 30%+ of income on rent tend to have higher socioeconomic vulnerability ranks",
    "caption": "A modest link across 3,144 counties (Spearman ρ = 0.31). It holds within states too (ρ = 0.20). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template",
