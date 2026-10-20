@@ -696,6 +696,23 @@ test("laptop dataset menu: the card title opens it tall, with search, the data l
   await page.waitForFunction(() => new URL(location.href).searchParams.get("d") === "pct_work_from_home");
 });
 
+// #308: the explainer grows the card down; the legend must step aside, not cover the Compare and Table buttons.
+for (const [w, h] of [[1440, 900], [1280, 800], [1024, 768]]) {
+  test(`laptop ${w}×${h}: the legend never covers the dataset card with the explainer open`, async (o) => {
+    const { page } = await o({ viewport: { width: w, height: h } }, "/map?d=median_household_income");
+    const card = page.locator('section[aria-label="Mapped dataset"]');
+    await card.getByRole("button", { name: "What do these numbers mean?" }).click();
+    await wait(400);
+    const [c, legends] = await page.evaluate(() => [
+      document.querySelector('section[aria-label="Mapped dataset"]').getBoundingClientRect().toJSON(),
+      [...document.querySelectorAll("[data-legend]")].filter((el) => el.offsetParent).map((el) => el.getBoundingClientRect().toJSON()),
+    ]);
+    expect(legends.length > 0, "no legend showing");
+    expect(legends.every((l) => l.left >= c.right || c.left >= l.right || l.top >= c.bottom || c.top >= l.bottom), "the legend overlaps the dataset card");
+    expect(c.bottom <= h, "the card runs off the screen");
+  });
+}
+
 test("laptop hidden card: the heading's title opens the same menu", async (o) => {
   const { page } = await o("laptop", "/map?d=median_household_income&at=-93.27,44.97,9");
   await immerse(page);
