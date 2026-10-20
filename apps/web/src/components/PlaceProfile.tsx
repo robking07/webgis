@@ -34,7 +34,7 @@ export function PlaceProfile({ geoid }: { geoid: string }) {
           {Object.keys(detail).length} datasets · {geo.aland_sqmi.toLocaleString(undefined, { maximumFractionDigits: 1 })} sq mi of land
         </p>
       </header>
-      <PlaceDataList level={level} detail={detail} mapHref={mapHref} />
+      <PlaceDataList geoid={geoid} level={level} detail={detail} mapHref={mapHref} />
     </main>
   );
 }
