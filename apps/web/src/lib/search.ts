@@ -17,7 +17,7 @@ let cache: Promise<PlaceRow[]> | null = null;
 export const loadPlaceIndex = () => (cache ??= Promise.all([json(staticUrl("geo/search.json")), json("/mpo/index.json").catch(() => [])])
   .then(([places, mpos]: PlaceRow[][]) => [...places, ...mpos]).catch((e) => { cache = null; throw e; }));
 
-const toHit = (r: PlaceRow): PlaceHit => r[1] === "MPO" ? {
+export const toHit = (r: PlaceRow): PlaceHit => r[1] === "MPO" ? {
   name: r[0], kind: r[1], geoid: null, level: null, lon: r[3], lat: r[4], sqmi: r[5], mpo: { id: r[2], states: r[6]!, bbox: r[7]! },
 } : {
   name: r[0], kind: r[1], geoid: r[2] || null,
