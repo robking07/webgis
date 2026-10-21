@@ -66,7 +66,9 @@ interface Props {
   paint: Partial<Record<GeoLevel, LevelPaint>>;
   onViewChange: (v: ViewState) => void;
   onHover: (h: HoverInfo | null) => void;
-  onSelect: (h: HoverInfo | null) => void;
+  /** A click picked a place (or nothing). `fit` is the second click of a double click on the same
+   *  spot, with the first click's place (issue #317). Without it a double click zooms in one step. */
+  onSelect?: (h: HoverInfo | null, fit?: boolean) => void;
   /** Our own tiles (boundaries or a feature layer) failed to load; null once they load again. */
   onTilesError?: (msg: string | null) => void;
   ariaLabel: string;
@@ -75,7 +77,7 @@ interface Props {
   /** A lines/points layer drawn from its own geometry, instead of a choropleth. */
   featureLayer?: FeatureLayerSpec | null;
   onFeatureHover?: (h: FeatureHit | null) => void;
-  onFeatureSelect?: (h: FeatureHit | null) => void;
+  onFeatureSelect?: (h: FeatureHit | null, fit?: boolean) => void;
   /** First user-initiated pan/zoom/scroll on the map (not programmatic moves). */
   onUserMove?: () => void;
   /** Feature-layer filter: field → values to SHOW (absent field = no filter). */
@@ -116,9 +118,12 @@ export interface MapApi {
   flyTo: (lon: number, lat: number, zoom: number, padding?: Padding) => void;
   /** Mark one geography as selected (outline), or clear with null. */
   select: (level: GeoLevel, geoid: string | null) => void;
-  /** Frame one geography (its extent from the loaded tiles); false if it isn't loaded. */
-  fitGeography: (level: GeoLevel, geoid: string, padding?: Padding) => boolean;
+  /** Frame one geography (its extent from the loaded tiles), or only center it at the current zoom
+   *  (`keepZoom`); false if it isn't loaded. */
+  fitGeography: (level: GeoLevel, geoid: string, padding?: Padding, keepZoom?: boolean) => boolean;
   fitBbox: (bbox: Bbox, padding?: Padding, maxZoom?: number) => void;
+  /** Ease a bbox's middle to the middle of the padded area, at the current zoom. */
+  centerBbox: (bbox: Bbox, padding?: Padding) => void;
   getCamera: () => Camera;
   setCamera: (c: Camera) => void;
   /** A gesture or camera animation is in progress (a finger held down mid-drag counts). */
@@ -128,6 +133,8 @@ export interface MapApi {
 }
 
 const LEVELS = Object.keys(GEO_LEVELS) as GeoLevel[];
+/** Two clicks this close in time are a double click (MapLibre's double-tap window). */
+const DOUBLE_MS = 500;
 let protocolReady = false;
 
 /** A PMTiles archive on the tiles base (made absolute: the pmtiles protocol needs a full URL). */
@@ -189,19 +196,23 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
     m.addControl(scale.current, "bottom-right");
     const fly = reduceMotion ? 0 : MOTION.fly;
     const fitBbox = (b: Bbox, padding?: Padding, maxZoom = 13) => m.fitBounds(b, { padding: safePadding(m, padding), maxZoom, duration: fly, essential: true });
+    const centerBbox = (b: Bbox, padding?: Padding) => m.easeTo({ center: [(b[0] + b[2]) / 2, (b[1] + b[3]) / 2], padding: safePadding(m, padding), duration: fly, essential: true });
     onApi?.({
       zoomIn: () => m.zoomIn({ duration: reduceMotion ? 0 : 250 }),
       zoomOut: () => m.zoomOut({ duration: reduceMotion ? 0 : 250 }),
       flyTo: (lon, lat, zoom, padding) => m.flyTo({ center: [lon, lat], zoom, padding: safePadding(m, padding), duration: fly, essential: true }),
       select: (level, geoid) => setFlag(m, selected, geoid ? { level, id: geoid } : null, "selected"),
-      fitGeography: (level, geoid, padding) => {
+      fitGeography: (level, geoid, padding, keepZoom) => {
+        // shortcut: the extent comes from loaded tiles, so a place running far off screen centers on its loaded part; fine while clicks pick places on screen.
         const b = geographyBbox(m, level, geoid);
-        if (b) fitBbox(b, padding);
+        if (b) (keepZoom ? centerBbox : fitBbox)(b, padding);
         return !!b;
       },
       fitBbox,
+      centerBbox,
       getCamera: () => ({ center: m.getCenter().toArray() as [number, number], zoom: m.getZoom() }),
-      setCamera: (c) => m.flyTo({ ...c, padding: 0, duration: fly, essential: true }),
+      // A plain 0 is ignored, which kept a panel's shift after Back (#180).
+      setCamera: (c) => m.flyTo({ ...c, padding: { top: 0, right: 0, bottom: 0, left: 0 }, duration: fly, essential: true }),
       isMoving: () => m.isMoving(),
       showArea: (shape) => { area.current = shape; if (ready.current) applyArea(m, shape, latest.current.theme); },
     });
@@ -319,13 +330,33 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
       latest.current.onHover(f ? infoOf(f, e.point.x, e.point.y) : null);
     });
     m.on("mouseout", () => { setFlag(m, hovered, null, "hover"); latest.current.onHover(null); latest.current.onFeatureHover?.(null); });
+    // Issue #317: one click selects at once; a second click close by within DOUBLE_MS repeats the first
+    // click's pick with `fit` (the place under it may have changed: a drill-down draws its parts).
+    let last: { t: number; x: number; y: number; fit: () => void } | null = null;
+    let doubled = false;
+    const isDouble = (t: number, p: { x: number; y: number }) => !!last && t - last.t < DOUBLE_MS && Math.hypot(p.x - last.x, p.y - last.y) < 24;
     m.on("click", (e) => {
       if (compare) return;
-      if (latest.current.featureLayer) { latest.current.onFeatureSelect?.(featureAt(e.point)); return; }
+      const t = e.originalEvent.timeStamp, { x, y } = e.point;
+      doubled = isDouble(t, e.point);
+      if (doubled) { last!.fit(); last = null; return; }
+      last = null;
+      if (latest.current.featureLayer) {
+        const hit = featureAt(e.point);
+        latest.current.onFeatureSelect?.(hit);
+        if (hit && latest.current.onFeatureSelect) last = { t, x, y, fit: () => latest.current.onFeatureSelect?.(hit, true) };
+        return;
+      }
       const f = placeAt(e.point);
       setFlag(m, selected, f ? { level: f.sourceLayer as GeoLevel, id: String(f.properties.geoid) } : null, "selected");
-      latest.current.onSelect(f ? { ...infoOf(f, e.point.x, e.point.y), lon: e.lngLat.lng, lat: e.lngLat.lat } : null);
+      const info = f ? { ...infoOf(f, x, y), lon: e.lngLat.lng, lat: e.lngLat.lat } : null;
+      latest.current.onSelect?.(info);
+      if (info && latest.current.onSelect) last = { t, x, y, fit: () => latest.current.onSelect?.(info, true) };
     });
+    // The double click fitted a place: skip MapLibre's zoom-in step (kept on empty map).
+    m.on("dblclick", (e) => { if (doubled) e.preventDefault(); doubled = false; });
+    // Double tap: MapLibre zooms on the second touchend, before its click; cancel that at its touchstart.
+    m.on("touchstart", (e) => { if (e.points.length === 1 && isDouble(e.originalEvent.timeStamp, e.point)) e.preventDefault(); });
 
     return () => { m.remove(); map.current = null; };
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -263,7 +263,7 @@ export function Viewer({ search }: { search: string }) {
   /** Desktop: while the panel is open, the map shifts left by its width so it doesn't cover the data
    *  (review lead, #104); it shifts back however the panel closes (Esc, ×, the link, switching maps, the
    *  table). A place opening keeps the shift: its details panel takes the same spot. Phones: the sheet
-   *  peeks low, under the data. Explicit zero padding: MapApi.setCamera's `padding: 0` leaves it as is. */
+   *  peeks low, under the data. Explicit zero padding, as MapApi.setCamera passes (#180). */
   const padded = useRef(false);
   useEffect(() => {
     const api = mapApi.current;
