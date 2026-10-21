@@ -39,13 +39,14 @@ export function searchPlaces(rows: PlaceRow[], q: string, limit = 6): PlaceHit[]
   const raw = q.trim().toLowerCase();
   if (raw.length < 2) return [];
   const t = ALIASES[raw] ?? normalizeName(raw);
-  const rank = (r: PlaceRow) => (r[1] === "State" ? 0 : r[1] === "County" ? 1 : r[1] === "City" ? 2 : r[1] === "MPO" ? 3 : 4);
+  const kindWord = /^mpo\b/.test(raw); // "MPO" lists the MPOs first, ahead of Emporia and Lompoc
+  const rank = (r: PlaceRow) => (kindWord && r[1] === "MPO" ? -1 : r[1] === "State" ? 0 : r[1] === "County" ? 1 : r[1] === "City" ? 2 : r[1] === "MPO" ? 3 : 4);
   const prefix: PlaceRow[] = [], word: PlaceRow[] = [];
   for (const r of rows) {
     // An MPO also matches its kind, so "MPO" lists them.
     const full = r[1] === "MPO" ? r[0] + " mpo" : r[0];
     const n = normalizeName(full + ","), o = full.toLowerCase();
-    if (n.startsWith(t) || o.startsWith(raw)) prefix.push(r);
+    if (n.startsWith(t) || o.startsWith(raw) || (kindWord && r[1] === "MPO")) prefix.push(r);
     else if (n.includes(t) || o.includes(raw)) word.push(r);
   }
   const order = (a: PlaceRow, b: PlaceRow) => rank(a) - rank(b) || b[5] - a[5];
