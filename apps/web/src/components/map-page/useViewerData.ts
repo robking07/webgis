@@ -79,7 +79,8 @@ export function useViewerData(state: UrlState, tractCounties: readonly string[] 
     const out: Partial<Record<GeoLevel, ClassedLevel>> = {};
     if (!primary) return out;
     // Tracts and block groups are both neighbourhood scale: block groups take the tract breaks (issue #325).
-    const tractBreaks = primary.geographyLevels.includes("tract");
+    // shortcut: if the tract file fails to load, block groups stay uncolored; fall back to their own breaks if that is ever seen.
+    const tractBreaks = (stopId ? primary.geographyLevels : stop?.levels ?? primary.geographyLevels).includes("tract");
     for (const l of LEVELS) {
       const xv = x.values[l];
       if (!xv) continue;
@@ -97,7 +98,7 @@ export function useViewerData(state: UrlState, tractCounties: readonly string[] 
     const bg = out.block_group;
     if (blockField && !secondary && bg?.breaks) out.block = blockPaintFrom(bg as Classed, blockField);
     return out;
-  }, [primary, secondary, x.values, y.values, stopId, xBase.values, blockField, since, xFrom.values, tractMoes]);
+  }, [primary, secondary, x.values, y.values, stopId, stop, xBase.values, blockField, since, xFrom.values, tractMoes]);
 
   return { primary, secondary, isFeature, featureSpec, stops, stop, stopId, since, xBase, xFrom, testMoes, availableLevels, pinnedLevel, focus, bands, x, y, level, classed, blockField };
 }
