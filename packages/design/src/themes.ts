@@ -30,8 +30,12 @@ export interface Theme {
     splashTagline: string;
   };
   map: {
+    /** Land outside the U.S. (drawn as the style background): pale land in light, a soft gray in
+     *  dark, neutral so it reads as a map but the colored U.S. data stands out (issue #201). */
     background: string;
     land: string;
+    /** Oceans, lakes and rivers everywhere: soft aqua in light, a muted blue-gray in dark. Kept ΔE ≥ 10
+     *  from every sequential class (check:design), which rules out a plain blue next to the Blues ramp. */
     water: string;
     waterLine: string;
     park: string;
@@ -62,8 +66,12 @@ export interface Theme {
     interstateCasing: string;
     river: string;
     riverCasing: string;
+    /** Route number on a highway shield. */
     shieldText: string;
-    /** U.S. land, a step lighter than other countries so the lower 48 reads at a glance. */
+    /** Fill of the Interstate and U.S. route shields in the OpenFreeMap sprite (white in both themes).
+     *  Fixed by the sprite, not by the style; listed so the check can test the number on it. */
+    shieldFill: string;
+    /** U.S. land: lighter than other countries in light mode, darker in dark mode, so the lower 48 reads at a glance. */
     focusLand: string;
     /** Drill-down (issue #203): the wash over everything outside the focused place, at FOCUS_DIM.opacity. */
     focusDim: string;
@@ -103,10 +111,10 @@ export const THEMES: Record<ThemeName, Theme> = {
       splashTagline: "#a3a6ad",
     },
     map: {
-      background: "#e6e3dc",
-      land: "#e6e3dc",
-      water: "#b9cee0",
-      waterLine: "#a9bfd2",
+      background: "#e5e2d6",
+      land: "#e5e2d6",
+      water: "#c0e7e8",
+      waterLine: "#a6d6d8",
       park: "#e4e8dc",
       road: "#ffffff",
       roadMajor: "#e6dfd2",
@@ -126,7 +134,8 @@ export const THEMES: Record<ThemeName, Theme> = {
       interstateCasing: "#ffffff",
       river: "#5b8fbf",
       riverCasing: "#eef4f9",
-      shieldText: "#ffffff",
+      shieldText: "#1b1c1e",
+      shieldFill: "#ffffff",
       focusLand: "#f6f4ef",
       focusDim: "#f6f4ef",
       coastline: "#7f9fba",
@@ -158,13 +167,13 @@ export const THEMES: Record<ThemeName, Theme> = {
       splashTagline: "#a3a6ad",
     },
     map: {
-      background: "#141619",
-      land: "#141619",
-      water: "#0a1824",
-      waterLine: "#1e3346",
-      park: "#1d2420",
-      road: "#2b2e34",
-      roadMajor: "#383c43",
+      background: "#3a3e45",
+      land: "#3a3e45",
+      water: "#182b38",
+      waterLine: "#274456",
+      park: "#39443d",
+      road: "#42464e",
+      roadMajor: "#4c5058",
       boundary: "#4a4e56",
       boundaryMajor: "#6b707a",
       label: "#d4d6da",
@@ -181,12 +190,13 @@ export const THEMES: Record<ThemeName, Theme> = {
       interstateCasing: "#16181b",
       river: "#6fa8dc",
       riverCasing: "#0f1a24",
-      shieldText: "#16181b",
+      shieldText: "#1b1c1e",
+      shieldFill: "#ffffff",
       focusLand: "#22252b",
       focusDim: "#141619",
-      coastline: "#2f5878",
+      coastline: "#3d6a8e",
       countryLine: "#8b919c",
-      countryHalo: "#0a1824",
+      countryHalo: "#182b38",
       stateLine: "#41454d",
       hatchDark: "#0b0c0e",
       hatchLight: "#f2f3f5",
@@ -229,8 +239,10 @@ export const CONTRAST_RULES: Array<[keyof Theme["ui"] | `map.${keyof Theme["map"
   ["map.featureLineCasing", "map.focusLand", 3, "data-line casing vs U.S. land (non-text; keeps the quietest class visible)"],
   ["map.interstate", "map.interstateCasing", 4.5, "interstate line vs its casing (non-text, reads over any fill)"],
   ["map.river", "map.riverCasing", 3, "river line vs its casing (non-text)"],
-  ["map.shieldText", "map.interstate", 4.5, "interstate route number text"],
+  ["map.shieldText", "map.shieldFill", 4.5, "route number on its highway shield"],
   ["map.countryLine", "map.focusLand", 3, "national boundary vs U.S. land (non-text)"],
+  ["map.countryLine", "map.land", 3, "national boundary vs land outside the U.S. (non-text)"],
+  ["map.coastline", "map.land", 1.5, "shoreline vs land outside the U.S. (decorative)"],
   ["map.coastline", "map.water", 1.5, "shoreline vs water (decorative)"],
 ];
 
