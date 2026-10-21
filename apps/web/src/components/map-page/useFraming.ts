@@ -38,7 +38,7 @@ export function useFraming({ mapApi, setSelected, setFeatureSelected, isFeature,
   childOf: (level: GeoLevel) => GeoLevel | null;
 }) {
   const root = useRef<HTMLDivElement>(null);
-  /** Views to return to: pushed only when a click on the map zooms to a feature (D-35). */
+  /** Views to return to: pushed when a click on the map moves to a feature (D-35). */
   const history = useRef<Camera[]>([]);
   const [canGoBack, setCanGoBack] = useState(false);
   /** The places clicked into, outermost first; the last is the focused one. */
@@ -103,10 +103,10 @@ export function useFraming({ mapApi, setSelected, setFeatureSelected, isFeature,
     if (c) mapApi.current?.setCamera(c);
     setCanGoBack(history.current.length > 0);
   };
-  /** A click on the map: select it. A place with a finer level is focused (framed whole, its parts
-   *  drawn inside it); at the finest level a click inside a focused place only selects; otherwise it
-   *  zooms to the place's extent, with a way back. */
-  const onMapSelect = useCallback((h: HoverInfo | null) => {
+  /** A click on the map: select it and center it at the same zoom; a double click (`fit`) frames it
+   *  whole (issue #317). A place with a finer level is focused (its parts drawn inside it); outside a
+   *  focused place the move gets a way back. */
+  const onMapSelect = useCallback((h: HoverInfo | null, fit = false) => {
     // Picking a place to compare: only select it (CompareWith opens the comparison); a drill would
     // write the URL and cancel that navigation.
     const picking = comparePickOpen();
@@ -114,23 +114,27 @@ export function useFraming({ mapApi, setSelected, setFeatureSelected, isFeature,
     const api = mapApi.current;
     if (!h || !api || picking) return;
     const before = api.getCamera();
-    if (childOf(h.level)) {
+    const move = () => api.fitGeography(h.level, h.geoid, clearArea(true), !fit);
+    // The double click's first click already focused it (the trail holds the view before).
+    if (childOf(h.level) && trail.current.at(-1)?.geoid !== h.geoid) {
       trail.current.push({ geoid: h.geoid, name: tidyPlaceName(h.name), before });
-      api.fitGeography(h.level, h.geoid, clearArea(true));
+      move();
       showTrail();
       setFocus(h.geoid);
       return;
     }
-    if (focus) return;
-    if (api.fitGeography(h.level, h.geoid, clearArea(true))) { history.current.push(before); setCanGoBack(true); }
+    // A double click's first click already saved the way back.
+    if (fit || focus) { move(); return; }
+    if (move()) { history.current.push(before); setCanGoBack(true); }
   }, [clearArea, mapApi, setSelected, childOf, focus, setFocus, showTrail]);
-  const onFeatureSelect = useCallback((hit: FeatureHit | null) => {
+  const onFeatureSelect = useCallback((hit: FeatureHit | null, fit = false) => {
     setFeatureSelected(hit);
     const api = mapApi.current;
     if (!hit?.bbox || !api) return;
+    if (fit) { api.fitBbox(hit.bbox, clearArea(true), 14); return; }
     history.current.push(api.getCamera());
     setCanGoBack(true);
-    api.fitBbox(hit.bbox, clearArea(true), 14);
+    api.centerBbox(hit.bbox, clearArea(true));
   }, [clearArea, mapApi, setFeatureSelected]);
 
   /** Fly to a place from the table, search or the details' trail, framed clear of open panels, and

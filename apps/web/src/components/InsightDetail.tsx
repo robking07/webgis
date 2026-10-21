@@ -53,7 +53,7 @@ export function InsightDetail({ insight }: { insight: Insight }) {
         <div className="grid gap-6 lg:grid-cols-[3fr_2fr]">
           <section aria-label="Map" className="relative h-[420px] overflow-hidden rounded-xl border">
             <MapView theme={theme} initialView={{ ...DEFAULT_VIEW, zoom: 3.2 }} paint={{ county: biv }} levelZooms={{ county: { minzoom: 0, maxzoom: 24 } }}
-              onViewChange={() => {}} onHover={() => {}} onSelect={() => {}}
+              onViewChange={() => {}} onHover={() => {}}
               ariaLabel={`Bivariate map of ${x.title} and ${y.title} by county`} />
             <div className="absolute left-3 top-3 z-10 rounded-lg border bg-card/95 p-2 shadow-sm">
               <BivariateLegend xTitle={x.title} yTitle={y.title} colors={biv.colors} />

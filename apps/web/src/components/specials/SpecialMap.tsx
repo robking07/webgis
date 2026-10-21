@@ -80,7 +80,7 @@ export function SpecialMap({ datasets, at, level = "county", legendBelow = false
           <>
             <MapView theme={theme} initialView={view} paint={{ [level]: paint }}
               levelZooms={{ [level]: { minzoom: 0, maxzoom: 24 } }} cooperative compare={compare && { level, ...compare }}
-              onViewChange={() => {}} onHover={() => {}} onSelect={() => {}} ariaLabel={label} />
+              onViewChange={() => {}} onHover={() => {}} ariaLabel={label} />
             {!legendBelow && legend && <div className="pointer-events-none absolute bottom-3 left-3 z-10 hidden rounded-lg border bg-card/95 p-2 text-xs shadow-sm md:block">{legend}</div>}
           </>
         )}
