@@ -7162,12 +7162,13 @@
  },
  {
   "id": "pct_transit_commute",
-  "title": "Commute by public transit",
+  "title": "Take transit to work",
   "phrase": "transit commuting rates",
   "description": "Share of workers 16 and over who usually commute by public transportation (excluding taxicab).",
   "category": "Transportation",
   "subcategory": "Commuting",
   "tags": [
+   "commute by public transit",
    "transit",
    "bus",
    "rail",

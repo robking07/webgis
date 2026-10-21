@@ -13,7 +13,7 @@ describe("dataset search (issue #252)", () => {
     expect(titles("poverty").slice(0, 2)).toEqual(["Children in poverty", "Population below poverty"]);
     expect(titles("commute")).toContain("Commute 90 minutes or more");
     expect(titles("90-minute-plus")).toContain("Commute 90 minutes or more"); // old title still finds it
-    expect(titles("commute")).toContain("Commute by public transit");
+    expect(titles("commute")).toContain("Take transit to work");
     expect(titles("rent")[0]).toBe("Median rent");
     expect(titles("rent")).not.toContain("Cigarette smoking"); // "current smokers"
     expect(titles("bike")[0]).toBe("Bike to work");
