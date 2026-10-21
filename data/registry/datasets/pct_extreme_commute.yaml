@@ -1,10 +1,10 @@
 id: pct_extreme_commute
-title: "90-minute-plus commutes"
+title: Commute 90 minutes or more
 phrase: shares of 90-minute-plus commutes
 description: "Share of commuters (workers 16 and over who don't work from home), not of all workers, whose one-way trip to work takes 90 minutes or more."
 category: Transportation
 subcategory: Commuting
-tags: [commute time, super commuters, travel time, transportation]
+tags: [90-minute-plus commutes, commute time, super commuters, travel time, transportation]
 source:
   name: U.S. Census Bureau, American Community Survey 5-Year Estimates
   shortName: Census Bureau

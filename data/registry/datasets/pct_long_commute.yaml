@@ -1,10 +1,10 @@
 id: pct_long_commute
-title: Hour-plus commutes
+title: Commute an hour or more
 phrase: shares of hour-plus commutes
 description: "Share of commuters (workers 16 and over who don't work from home), not of all workers, whose one-way trip to work takes 60 minutes or more."
 category: Transportation
 subcategory: Commuting
-tags: [long commute, super commuters, travel time, congestion]
+tags: [hour-plus commutes, long commute, super commuters, travel time, congestion]
 source:
   name: U.S. Census Bureau, American Community Survey 5-Year Estimates
   shortName: Census Bureau
