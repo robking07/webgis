@@ -21,8 +21,10 @@ Lead calls:
 
 How: `MapView` treats a second click within 500 ms and 24 px of a click that picked something as a
 double click, and repeats the first click's pick with `fit` (after a drill-down the place under the
-pointer is one of its parts). It cancels MapLibre's double-click zoom on the `dblclick` event and its
-double-tap zoom at the second `touchstart`.
+pointer is one of its parts). It turns MapLibre's double-click zoom off for that double click (not
+`preventDefault` on `dblclick`, which stops the fit just started) and cancels its double-tap zoom at
+the second `touchstart`. `fitBbox` now passes `fitBounds` only the difference from the map's own
+padding: `fitBounds` adds the two, and gave up silently on phones once a click had left padding.
 
 Worker defaults (the lead may change them):
 
