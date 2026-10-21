@@ -45,7 +45,7 @@ export function classify(values: number[], opts: ClassifyOptions): number[] {
 }
 
 /** Breaks rounded to the fewest significant figures (at least 2) that keep them in order, distinct
- *  and inside (lo, hi], so no class goes empty: $69,820 → $70,000, 9.31% → 9.3% (D-<PR>). The map
+ *  and inside (lo, hi], so no class goes empty: $69,820 → $70,000, 9.31% → 9.3% (D-429). The map
  *  paints with these same breaks, so every place still matches the legend row its value falls in. */
 export function niceBreaks(breaks: number[], lo: number, hi: number): number[] {
   for (let s = 2; s <= 15; s++) {
