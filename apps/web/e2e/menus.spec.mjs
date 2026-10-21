@@ -458,7 +458,8 @@ test("phone dataset sheet: chips, pick switches the map, sheet and details close
   // The sheet covers the lower part of the screen: tap the map just above it, inside Hennepin (the
   // focused place since the first tap: issue #203).
   const top = await sheet.evaluate((el) => el.getBoundingClientRect().top);
-  await page.evaluate(([c, dy]) => window.__wgMap.easeTo({ center: c, offset: [0, dy], duration: 0 }), [HENNEPIN, top - 40 - page.viewportSize().height / 2]);
+  // Zero padding: the offset is from the padded center, and the first tap's centering left the drawer's padding.
+  await page.evaluate(([c, dy]) => window.__wgMap.easeTo({ center: c, offset: [0, dy], padding: { top: 0, right: 0, bottom: 0, left: 0 }, duration: 0 }), [HENNEPIN, top - 40 - page.viewportSize().height / 2]);
   await mapIdle(page);
   await tapAt(page, page.viewportSize().width / 2, top - 40);
   await page.locator('section[aria-label^="Details for"]').waitFor();

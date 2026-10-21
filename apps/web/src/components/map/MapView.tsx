@@ -195,7 +195,12 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
     scale.current = new ScaleControl({ unit: scaleUnit });
     m.addControl(scale.current, "bottom-right");
     const fly = reduceMotion ? 0 : MOTION.fly;
-    const fitBbox = (b: Bbox, padding?: Padding, maxZoom = 13) => m.fitBounds(b, { padding: safePadding(m, padding), maxZoom, duration: fly, essential: true });
+    // fitBounds adds the map's own padding (a click's ease leaves the panel's) to this one, and gives
+    // up silently when the two leave no room: pass only the difference.
+    const fitBbox = (b: Bbox, padding?: Padding, maxZoom = 13) => {
+      const p = safePadding(m, padding), now = m.getPadding() as Padding;
+      m.fitBounds(b, { padding: p && { top: p.top - now.top, right: p.right - now.right, bottom: p.bottom - now.bottom, left: p.left - now.left }, maxZoom, duration: fly, essential: true });
+    };
     const centerBbox = (b: Bbox, padding?: Padding) => m.easeTo({ center: [(b[0] + b[2]) / 2, (b[1] + b[3]) / 2], padding: safePadding(m, padding), duration: fly, essential: true });
     onApi?.({
       zoomIn: () => m.zoomIn({ duration: reduceMotion ? 0 : 250 }),
@@ -333,13 +338,17 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
     // Issue #317: one click selects at once; a second click close by within DOUBLE_MS repeats the first
     // click's pick with `fit` (the place under it may have changed: a drill-down draws its parts).
     let last: { t: number; x: number; y: number; fit: () => void } | null = null;
-    let doubled = false;
     const isDouble = (t: number, p: { x: number; y: number }) => !!last && t - last.t < DOUBLE_MS && Math.hypot(p.x - last.x, p.y - last.y) < 24;
     m.on("click", (e) => {
       if (compare) return;
       const t = e.originalEvent.timeStamp, { x, y } = e.point;
-      doubled = isDouble(t, e.point);
-      if (doubled) { last!.fit(); last = null; return; }
+      if (isDouble(t, e.point)) {
+        // Skip MapLibre's zoom-in step for this double click (kept on empty map). Not preventDefault on
+        // its dblclick: that marks a gesture active, which stops the fit just started.
+        m.doubleClickZoom.disable();
+        window.setTimeout(() => m.doubleClickZoom.enable(), DOUBLE_MS);
+        last!.fit(); last = null; return;
+      }
       last = null;
       if (latest.current.featureLayer) {
         const hit = featureAt(e.point);
@@ -353,8 +362,6 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
       latest.current.onSelect?.(info);
       if (info && latest.current.onSelect) last = { t, x, y, fit: () => latest.current.onSelect?.(info, true) };
     });
-    // The double click fitted a place: skip MapLibre's zoom-in step (kept on empty map).
-    m.on("dblclick", (e) => { if (doubled) e.preventDefault(); doubled = false; });
     // Double tap: MapLibre zooms on the second touchend, before its click; cancel that at its touchstart.
     m.on("touchstart", (e) => { if (e.points.length === 1 && isDouble(e.originalEvent.timeStamp, e.point)) e.preventDefault(); });
 
