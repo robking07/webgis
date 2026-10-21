@@ -63,6 +63,11 @@ describe("MPOs in place search (issue #276)", () => {
     expect(searchPlaces(rows, "metropolitan council")[0]).toMatchObject({ kind: "MPO", geoid: null, level: null, mpo: { id: "27197300", states: "MN", bbox: mpo[7] } });
     expect(searchPlaces(rows, "MPO").map((h) => h.name)).toEqual(["Metropolitan Council"]);
   });
+  it("lists MPOs ahead of names that merely contain 'mpo' (Emporia, Lompoc)", () => {
+    const more: PlaceRow[] = [["Emporia, VA", "City", "", -77.5, 36.7, 7], ["Lompoc, CA", "City", "", -120.4, 34.6, 12], ...rows];
+    expect(searchPlaces(more, "mpo")[0]).toMatchObject({ kind: "MPO" });
+    expect(searchPlaces(more, "mpo", 6).map((h) => h.name)).toContain("Emporia, VA");
+  });
   it("never answers a geoid lookup", () => {
     expect(placeByGeoid(rows, "27197300")).toBeNull();
     expect(mpoById(rows, "27197300")?.name).toBe("Metropolitan Council");

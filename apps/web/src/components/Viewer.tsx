@@ -17,7 +17,7 @@ import { DATASET_BY_ID, DATASETS, type Dataset } from "@/lib/registry";
 import { loadMpoShape, loadPlaceIndex, mpoById, placeByGeoid, type PlaceHit } from "@/lib/search";
 import { useIsCompact, useIsNarrow, useIsPhone } from "./BottomSheet";
 import { DatasetMenu, DatasetSheet, type BrowseSlot } from "./DatasetMenus";
-import { parseUrlState, useUrlState, type UrlState } from "@/lib/url-state";
+import { historyKey, parseUrlState, useUrlState, type UrlState } from "@/lib/url-state";
 import { areaChangeNote, stopsFor } from "@/lib/periods";
 import { tableScope } from "@/lib/table-scope";
 import { useViewerData } from "./map-page/useViewerData";
@@ -52,6 +52,14 @@ export function Viewer({ search }: { search: string }) {
     return { ...s, d, b, at: new URLSearchParams(search).has("at") ? s.at : LANDING.at ?? s.at };
   });
   const [state, update] = useUrlState(initial);
+  // A ?d= or ?b= that names no dataset: say so once instead of silently showing something else.
+  const [unavailable, setUnavailable] = useState(() => {
+    const q = new URLSearchParams(search);
+    return [q.get("d"), q.get("b")].some((id) => id && !DATASET_BY_ID.has(id));
+  });
+  const [seenKey, setSeenKey] = useState(historyKey(state));
+  if (seenKey !== historyKey(state)) { setSeenKey(historyKey(state)); setUnavailable(false); }
+  useEffect(() => { if (unavailable) { const t = setTimeout(() => setUnavailable(false), 8000); return () => clearTimeout(t); } }, [unavailable]);
   const theme = useResolvedTheme(state.theme);
   const [scaleUnit, setScaleUnit] = useScaleUnit();
   const [hover, setHover] = useState<HoverInfo | null>(null);
@@ -448,6 +456,12 @@ export function Viewer({ search }: { search: string }) {
       {tableOpen && primary && tableLevel && (
         <DataTable top={panelTop} level={tableLevel} within={tableWithin} x={primary} xv={x.values[tableLevel]} y={secondary} yv={y.values[tableLevel]} period={stopId ? stop!.label : undefined} selected={selected?.geoid ?? null}
           onClose={onTableClose} onPick={onTablePick} />
+      )}
+
+      {unavailable && primary && (
+        <div className="absolute left-1/2 top-16 z-30 max-w-[90vw] -translate-x-1/2 rounded-lg border bg-card p-1 shadow-sm">
+          <StatusState status="empty" message={`That map isn't available, so this is ${primary.title}.`} />
+        </div>
       )}
 
       {tilesError && (
