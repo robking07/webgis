@@ -7,7 +7,8 @@ export function levelOfGeoid(geoid: string): GeoLevel | null {
 export const LEVEL_PLURAL: Record<GeoLevel, string> = { state: "states", county: "counties", tract: "tracts", block_group: "block groups", block: "blocks" };
 /** Map zoom to open a place at, per level. */
 export const PLACE_ZOOM: Record<GeoLevel, number> = { state: 5.5, county: 8, tract: 12, block_group: 13.5, block: 15 };
-export const placeHref = (geoid: string) => `/place/${geoid}`;
+/** `d`: the map's dataset, carried so the profile's "Back to the map" returns to the map you came from. */
+export const placeHref = (geoid: string, d?: string | null) => `/place/${geoid}${d ? `?d=${encodeURIComponent(d)}` : ""}`;
 
 /**
  * "Ranks higher than 39 of 52 states" — count of places at this level with a lower value.
