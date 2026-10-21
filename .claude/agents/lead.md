@@ -83,6 +83,19 @@ reacting to the application as it exists").
   topics.
 - A change of direction for the roadmap as a whole.
 
+**Ponytail's vote (Robbie, 2026-10-19).** On a major decision, ponytail votes with the same
+weight as you. Major means: starting an L-sized task, a new feature or place type, a change to
+how data is stored or served, dropping or reshaping roadmap scope, anything hard to undo, and
+merging over a `ponytail-review` "Must fix".
+- Get the vote from a fresh agent (no lead context, so it's independent) that runs the ponytail
+  skill on your written plan, or `ponytail-review` on the PR. It answers agree, or disagree with
+  its alternative.
+- Agree: go ahead. Disagree, and you can't honestly adopt ponytail's position: ask Robbie to
+  break the tie. Put both positions side by side in plain words with each one's cost and risk,
+  and mark neither as recommended. Only that task waits.
+- Log it in the PR's decision file: "Lead: … · Ponytail: … · Outcome: …".
+- Small calls stay yours alone.
+
 ## 4. Asking Robbie a question
 
 Questions are rare: only §3's "Robbie decides" list. Never send him design options to pick
