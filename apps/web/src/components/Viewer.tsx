@@ -17,7 +17,7 @@ import { DATASET_BY_ID, DATASETS, type Dataset } from "@/lib/registry";
 import { loadMpoShape, loadPlaceIndex, mpoById, placeByGeoid, type PlaceHit } from "@/lib/search";
 import { useIsCompact, useIsNarrow, useIsPhone } from "./BottomSheet";
 import { DatasetMenu, DatasetSheet, type BrowseSlot } from "./DatasetMenus";
-import { parseUrlState, useUrlState, type UrlState } from "@/lib/url-state";
+import { historyKey, parseUrlState, useUrlState, type UrlState } from "@/lib/url-state";
 import { areaChangeNote, stopsFor } from "@/lib/periods";
 import { tableScope } from "@/lib/table-scope";
 import { useViewerData } from "./map-page/useViewerData";
@@ -52,6 +52,14 @@ export function Viewer({ search }: { search: string }) {
     return { ...s, d, b, at: new URLSearchParams(search).has("at") ? s.at : LANDING.at ?? s.at };
   });
   const [state, update] = useUrlState(initial);
+  // A ?d= or ?b= that names no dataset: say so once instead of silently showing something else.
+  const [unavailable, setUnavailable] = useState(() => {
+    const q = new URLSearchParams(search);
+    return [q.get("d"), q.get("b")].some((id) => id && !DATASET_BY_ID.has(id));
+  });
+  const [seenKey, setSeenKey] = useState(historyKey(state));
+  if (seenKey !== historyKey(state)) { setSeenKey(historyKey(state)); setUnavailable(false); }
+  useEffect(() => { if (unavailable) { const t = setTimeout(() => setUnavailable(false), 8000); return () => clearTimeout(t); } }, [unavailable]);
   const theme = useResolvedTheme(state.theme);
   const [scaleUnit, setScaleUnit] = useScaleUnit();
   const [hover, setHover] = useState<HoverInfo | null>(null);
@@ -74,6 +82,7 @@ export function Viewer({ search }: { search: string }) {
   /** Feature-layer facet filters: field → values HIDDEN by the user. */
   const [hidden, setHidden] = useState<Record<string, Set<string>>>({});
   const [peek, setPeek] = useState(false);
+  const [explainOpen, setExplainOpen] = useState(false);
   /** "Why this matters" is open (issue #115). `?context=preview` also shows unapproved drafts; production
    *  builds don't contain any (scripts/prepare.mts), so the switch does nothing on mapwich.org. */
   const [ctxOpen, setCtxOpen] = useState(false);
@@ -125,7 +134,7 @@ export function Viewer({ search }: { search: string }) {
   const { level: tableLevel, within: tableWithin } = tableScope(level, availableLevels, focus?.geoid ?? null);
   // Clear selections and filters when the dataset changes.
   const [seenDataset, setSeenDataset] = useState(state.d);
-  if (seenDataset !== state.d) { setSeenDataset(state.d); setSelected(null); setFeatureSelected(null); setFeatureHover(null); setHidden({}); setCtxOpen(false); }
+  if (seenDataset !== state.d) { setSeenDataset(state.d); setSelected(null); setFeatureSelected(null); setFeatureHover(null); setHidden({}); setCtxOpen(false); setExplainOpen(false); }
   useEffect(() => { mapApi.current?.select("county", null); }, [state.d]);
   const featureFilter = useMemo(() => {
     if (!primary) return undefined;
@@ -295,8 +304,8 @@ export function Viewer({ search }: { search: string }) {
   // Popups sit under the header while it's showing and move back up when it falls away.
   const panelTop = chromeShown ? HEADER_GAP : 12;
   // Legend: desktop shows it in full; it shrinks to its strip while the filters sidebar or the
-  // dataset menu needs the room.
-  const desktopStrip = (!!filters || menuOpen) && !phone;
+  // dataset menu needs the room (and the card's explainer, which grows the card down into it, #308).
+  const desktopStrip = (!!filters || menuOpen || (explainOpen && !immersed)) && !phone;
   const hasFilters = !!primary && (availableLevels.length > 1 || primary.facets.length > 0 || stops.length > 0);
   const featureNoun = featureSpec?.geometry === "polygon" ? "Census tracts (2010)" : "Road segments";
   const periodLabel = primary ? (since ? `${since.label} → ${stop!.label}` : stopId ? stop!.label : primary.vintage) : "";
@@ -389,7 +398,7 @@ export function Viewer({ search }: { search: string }) {
       </header>
 
       {primary && (
-        <DatasetCard cardRef={card} primary={primary} secondary={secondary} meta={meta} immersed={immersed} isFeature={isFeature}
+        <DatasetCard cardRef={card} explainOpen={explainOpen} setExplainOpen={setExplainOpen} primary={primary} secondary={secondary} meta={meta} immersed={immersed} isFeature={isFeature}
           tableReady={tableReady} hasFilters={hasFilters} filtersOpen={!!filters} filterCount={nFilters} onOpenFilters={toggleFilters}
           onBrowse={changeDataset} menuOpen={menuOpen && !immersed} menu={immersed ? null : datasetMenu}
           onCompare={() => openMenu("b")} onSwap={swapMaps} onExit={exitCompare} onTable={() => setTableOpen(true)} phone={phone}
@@ -447,6 +456,12 @@ export function Viewer({ search }: { search: string }) {
       {tableOpen && primary && tableLevel && (
         <DataTable top={panelTop} level={tableLevel} within={tableWithin} x={primary} xv={x.values[tableLevel]} y={secondary} yv={y.values[tableLevel]} period={stopId ? stop!.label : undefined} selected={selected?.geoid ?? null}
           onClose={onTableClose} onPick={onTablePick} />
+      )}
+
+      {unavailable && primary && (
+        <div className="absolute left-1/2 top-16 z-30 max-w-[90vw] -translate-x-1/2 rounded-lg border bg-card p-1 shadow-sm">
+          <StatusState status="empty" message={`That map isn't available, so this is ${primary.title}.`} />
+        </div>
       )}
 
       {tilesError && (

@@ -219,6 +219,21 @@ export default function compareTests({ test, expect, wait, immerse, tapLonLat, l
     await wait(1500);
     expect((await page.locator("[data-compare-strip]").count()) === 0, "a strip on a tract comparison");
   });
+  // Changing the dataset on the compare page (#305) and the unknown-?d= note (#306).
+  test("laptop compare places: a row click and the dataset menu change the dataset; ?d=nope falls back with a note", async (o) => {
+    const { page } = await o("laptop", "/compare/27053/27123?d=nope", { ready: false });
+    await page.locator("[data-compare-verdict]").waitFor({ timeout: 20000 });
+    expect(/^That map isn't available, so this is .+\.$/.test((await page.locator("[data-compare-fallback]").innerText()).trim()), "fallback note");
+    await page.waitForURL(/\/compare\/27053\/27123\?d=(?!nope)\w+/, { timeout: 10000 });
+    const before = new URL(page.url()).searchParams.get("d");
+    const row = page.locator("[data-compare-row]").first();
+    const id = await row.getAttribute("data-compare-row");
+    await row.getByRole("button").click();
+    await page.waitForURL((u) => u.searchParams.get("d") === id, { timeout: 10000 });
+    expect(id !== before, "row click kept the same dataset");
+    await page.getByRole("button", { name: /other .* datasets/ }).click();
+    await page.getByRole("dialog", { name: "Datasets" }).waitFor();
+  });
 
   // Issue #299: the place page's "Back to the map" returns to the dataset you came from.
   test("laptop place page: Back to the map keeps the dataset from ?d=, else the landing one", async (o) => {
