@@ -12,6 +12,24 @@
     AADT is the standard way traffic engineers describe how busy a road is. States count traffic with sensors for a few days or continuously, then adjust for season and day of week to estimate a typical day across the whole year. A city street might carry a few thousand vehicles a day; a downtown interstate can carry over 150,000.
   source: https://www.fhwa.dot.gov/policyinformation/tmguide/
 
+- id: transit-mode
+  term: >-
+    Kind of transit service (mode)
+  short: >-
+    How a transit route runs: bus, light rail or streetcar, subway, commuter rail, ferry and so on.
+  long: >-
+    Transit agencies publish their schedules in a shared format (GTFS) that labels every route with its kind of vehicle. Rail in its own right of way, like a subway, is fast and carries many people; light rail and streetcars share some streets; commuter rail runs longer distances, usually toward a downtown; buses cover the most ground. The label is the agency's own, so the same kind of service can be listed differently in different cities.
+  source: https://gtfs.org/schedule/reference/#routestxt
+
+- id: ntd
+  term: >-
+    National Transit Database (NTD)
+  short: >-
+    The Federal Transit Administration's yearly report of how much service each U.S. transit agency runs, how many people ride, and what it costs.
+  long: >-
+    Every transit agency that receives federal money reports to the NTD each year. Rides are counted as boardings ("unlinked passenger trips"): someone who transfers once counts as two. Service is counted in vehicle revenue hours, the time vehicles spend carrying passengers. The numbers describe a whole agency, across all its routes and modes, not a single route.
+  source: https://www.transit.dot.gov/ntd
+
 - id: functional-class
   term: >-
     Functional classification

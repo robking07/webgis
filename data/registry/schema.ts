@@ -3,7 +3,7 @@
 import { z } from "zod";
 import { CATEGORIES } from "./categories.ts";
 
-const Ramp = z.enum(["blues", "ylgnbu", "oranges", "purples", "viridis", "cividis", "rdbu", "puor", "brbg"]);
+const Ramp = z.enum(["blues", "ylgnbu", "oranges", "purples", "viridis", "cividis", "rdbu", "puor", "brbg", "okabeIto"]);
 const Unit = z.enum(["dollars", "percent", "minutes", "count", "per_sq_mi", "ratio", "years", "deg_f", "inches", "per_100k", "vehicles_per_day", "miles_per_day", "categories", "agreements", "percentile", "ug_m3", "ppm", "degree_days"]);
 export const GeoLevel = z.enum(["state", "county", "tract", "block_group", "block"]);
 
@@ -219,8 +219,9 @@ const FeaturesMeasure = z.object({
     /** Regex matching the GDAL layer(s) to read; HPMS ships one layer per state. */
     layerPattern: z.string(),
   }),
-  /** A table to join in `select` as the layer `join` (e.g. a CSV of tract values for tract shapes). */
-  join: z.object({ url: z.url(), file: z.string(), path: z.string() }).optional(),
+  /** A table to join in `select` as the layer `join` (e.g. a CSV of tract values for tract shapes).
+   *  `path`: the file inside the downloaded zip; omit when the download is the table itself (a CSV). */
+  join: z.object({ url: z.url(), file: z.string(), path: z.string().optional() }).optional(),
   /** OGR SQL WHERE clause applied while extracting (e.g. "AADT > 0"). Ignored when `select` is set. */
   where: z.string().optional(),
   /** SQLite-dialect SELECT run per source layer, for derived readable fields (e.g. route labels).
