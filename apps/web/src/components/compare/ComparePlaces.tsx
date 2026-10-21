@@ -34,9 +34,11 @@ const LEVEL_WORD: Partial<Record<GeoLevel, string>> = { state: "states", county:
 export function ComparePlaces({ a, b, nameA, nameB, datasetId, parentNames, unknownD }: Props) {
   const router = useRouter();
   const [menu, setMenu] = useState(false);
+  // Kept in state: the replace below makes the prop false, but the note should stay until the visitor picks something.
+  const [fell, setFell] = useState(unknownD);
   // The map pushes a Back step per dataset change (useUrlState), so this does too. The place pair and the
   // rest of the query stay; the page re-renders on the server with the new dataset.
-  const pick = (id: string) => { setMenu(false); router.push(`/compare/${a}/${b}?d=${id}`, { scroll: false }); };
+  const pick = (id: string) => { setMenu(false); setFell(false); router.push(`/compare/${a}/${b}?d=${id}`, { scroll: false }); };
   // An unknown ?d= shows the landing map's dataset; rewrite the URL to what is shown, like the map (#306).
   useEffect(() => { if (unknownD) router.replace(`/compare/${a}/${b}?d=${datasetId}`, { scroll: false }); }, [unknownD, a, b, datasetId, router]);
   const level = levelOfGeoid(a)!;
@@ -122,7 +124,7 @@ export function ComparePlaces({ a, b, nameA, nameB, datasetId, parentNames, unkn
           {menu && wide && <DatasetMenu slot="a" primary={ds} secondary={null} onSlot={() => {}} onPick={pick} onClose={() => setMenu(false)} />}
         </DatasetHeading>
         {menu && !wide && <DatasetSheet slot="a" primary={ds} secondary={null} onSlot={() => {}} onPick={pick} onClose={() => setMenu(false)} />}
-        {unknownD && <p role="status" className="mt-2 text-sm text-muted-foreground" data-compare-fallback="">That map isn&apos;t available, so this is {ds.title}.</p>}
+        {fell && <p role="status" className="mt-2 text-sm text-muted-foreground" data-compare-fallback="">That map isn&apos;t available, so this is {ds.title}.</p>}
       </div>
 
       {err ? <StatusState status="error" message="This comparison couldn't be loaded." />
