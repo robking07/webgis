@@ -113,6 +113,19 @@ const OverdoseMeasure = z.object({
   perPopulation: z.number().default(100000),
 });
 
+/** HUD Picture of Subsidized Households (public, no key): one column of the "Summary of All HUD
+ *  Programs" rows in HUD's county and tract workbooks. HUD's -1/-4/-5 codes are no data. Ingest: hud.ts. */
+const HudPictureMeasure = z.object({
+  kind: z.literal("hud_picture"),
+  /** Picture year (files COUNTY_<year>_2020census.xlsx, TRACT_*_<year>_2020census.xlsx). */
+  year: z.number().int(),
+  /** Workbook column: occupied subsidized units (= assisted households), average household income,
+   *  or the % of assisted households below 30% of area median income. */
+  field: z.enum(["total_occupied", "hh_income", "pct_lt30_median"]),
+  /** Divide by ACS renter households × 100 (a share of renter households). */
+  perRenterHouseholds: z.boolean().default(false),
+});
+
 /** Deportation Data Project 287(g) agreements (CC0): active agreements counted by the
  *  agencies' county and state FIPS. */
 const Ddp287gMeasure = z.object({
@@ -305,7 +318,7 @@ export const DatasetEntry = z.object({
   unit: Unit,
   /** For insights: the population the value describes. Pairs that share one are flagged. */
   universe: z.string(),
-  measure: z.discriminatedUnion("kind", [AcsMeasure, Census2020Measure, LodesMeasure, PlacesMeasure, ClimdivMeasure, NbiMeasure, FarsMeasure, FeaturesMeasure, HpmsVmtMeasure, CejstMeasure, Ddp287gMeasure, LeadMeasure, FoodAccessMeasure, FemaNriMeasure, SviMeasure, AirQualityMeasure, OverdoseMeasure, TriMeasure]),
+  measure: z.discriminatedUnion("kind", [AcsMeasure, Census2020Measure, LodesMeasure, PlacesMeasure, ClimdivMeasure, NbiMeasure, FarsMeasure, FeaturesMeasure, HpmsVmtMeasure, CejstMeasure, Ddp287gMeasure, LeadMeasure, FoodAccessMeasure, FemaNriMeasure, SviMeasure, AirQualityMeasure, OverdoseMeasure, TriMeasure, HudPictureMeasure]),
   /** Other registry datasets used as inputs to this dataset's model (e.g. PLACES uses county poverty).
    *  Insight pairs with these are flagged: they correlate partly by construction. */
   modelInputs: z.array(z.string()).default([]),

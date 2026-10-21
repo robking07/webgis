@@ -1,0 +1,23 @@
+id: hud_assisted_household_income
+title: Average income of HUD-assisted households
+phrase: incomes of HUD-assisted households
+description: "Average yearly income of households living in HUD-assisted rental homes (public housing, Housing Choice Vouchers and privately owned subsidized apartments), December 2025."
+category: Housing
+subcategory: Costs
+tags: [HUD, subsidized housing, public housing, Section 8, housing choice vouchers, rental assistance, income]
+source:
+  name: "U.S. Department of Housing and Urban Development, A Picture of Subsidized Households 2025"
+  shortName: HUD
+  url: https://www.huduser.gov/portal/datasets/assthsg.html
+  citation: "U.S. Department of Housing and Urban Development, Office of Policy Development and Research. A Picture of Subsidized Households: 2025 (2020 Census geography), county and census tract files, Summary of All HUD Programs, field hh_income. https://www.huduser.gov/portal/datasets/assthsg.html (revised February 17, 2026). Accessed October 21, 2026."
+license: "Public domain (U.S. Government work, 17 U.S.C. § 105). HUD states no license for the 2025 files; its only reuse wording, on the same page for the 1998 edition, says the data are \"neither private nor copyrighted and may be copied\" and asks users to cite the title and date."
+updateCadence: annual
+vintage: "December 2025"
+geographyLevels: [county, tract]
+unit: dollars
+universe: HUD-assisted households
+terms: [hud-assisted-housing, quantile-classes]
+coverageNote: "An average (mean), not a median, of the incomes households reported to HUD. A blank place is not a zero: HUD hides places with fewer than 11 reporting households, leaves out places where under half of households reported, and has no row for places without HUD-assisted homes."
+excludeFromInsights: true
+measure: { kind: hud_picture, year: 2025, field: hh_income }
+symbology: { ramp: ylgnbu, classification: quantile, classes: 5 }
