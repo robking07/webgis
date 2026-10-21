@@ -121,6 +121,8 @@ Light and dark come from the same token structure; the basemap and the UI chrome
 | light | on-map secondary text on its panel: category, 'closer in' hint | `textMuted` on `surface` | 6.58 | 4.5 |
 | light | on-map icons on their panel: menu, Back, zoom, carets (non-text) | `text` on `surface` | 17.05 | 3 |
 | light | filter count badge | `accentText` on `accent` | 6.44 | 4.5 |
+| light | compare strip text (issue #198) | `text` on `compareTint` | 14.27 | 7 |
+| light | compare strip buttons' accent text (issue #198) | `accent` on `compareTint` | 5.39 | 4.5 |
 | light | on-map control edge vs its own panel (non-text, phones) | `controlEdge` on `surface` | 3.88 | 3 |
 | light | on-map control edge vs U.S. land (non-text, phones) | `controlEdge` on `map.focusLand` | 3.53 | 3 |
 | light | on-map control edge vs land outside the U.S. (non-text, phones) | `controlEdge` on `map.land` | 2.99 | 2 |
@@ -136,7 +138,7 @@ Light and dark come from the same token structure; the basemap and the UI chrome
 | light | national boundary vs U.S. land (non-text) | `map.countryLine` on `map.focusLand` | 5.65 | 3 |
 | light | national boundary vs land outside the U.S. (non-text) | `map.countryLine` on `map.land` | 4.79 | 3 |
 | light | shoreline vs land outside the U.S. (decorative) | `map.coastline` on `map.land` | 2.14 | 1.5 |
-| light | shoreline vs water (decorative) | `map.coastline` on `map.water` | 1.61 | 1.5 |
+| light | shoreline vs water (decorative) | `map.coastline` on `map.water` | 2.09 | 1.5 |
 | dark | body text | `text` on `bg` | 15.75 | 7 |
 | dark | panel text | `text` on `surface` | 14.30 | 7 |
 | dark | secondary text | `textMuted` on `surface` | 6.92 | 4.5 |
@@ -154,6 +156,8 @@ Light and dark come from the same token structure; the basemap and the UI chrome
 | dark | on-map secondary text on its panel: category, 'closer in' hint | `textMuted` on `surface` | 6.92 | 4.5 |
 | dark | on-map icons on their panel: menu, Back, zoom, carets (non-text) | `text` on `surface` | 14.30 | 3 |
 | dark | filter count badge | `accentText` on `accent` | 7.85 | 4.5 |
+| dark | compare strip text (issue #198) | `text` on `compareTint` | 11.35 | 7 |
+| dark | compare strip buttons' accent text (issue #198) | `accent` on `compareTint` | 6.04 | 4.5 |
 | dark | on-map control edge vs its own panel (non-text, phones) | `controlEdge` on `surface` | 3.92 | 3 |
 | dark | on-map control edge vs U.S. land (non-text, phones) | `controlEdge` on `map.focusLand` | 3.57 | 3 |
 | dark | on-map control edge vs land outside the U.S. (non-text, phones) | `controlEdge` on `map.land` | 2.50 | 2 |
@@ -169,7 +173,7 @@ Light and dark come from the same token structure; the basemap and the UI chrome
 | dark | national boundary vs U.S. land (non-text) | `map.countryLine` on `map.focusLand` | 4.85 | 3 |
 | dark | national boundary vs land outside the U.S. (non-text) | `map.countryLine` on `map.land` | 3.39 | 3 |
 | dark | shoreline vs land outside the U.S. (decorative) | `map.coastline` on `map.land` | 1.87 | 1.5 |
-| dark | shoreline vs water (decorative) | `map.coastline` on `map.water` | 2.28 | 1.5 |
+| dark | shoreline vs water (decorative) | `map.coastline` on `map.water` | 2.53 | 1.5 |
 
 ## Classification and legends
 

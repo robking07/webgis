@@ -34,7 +34,8 @@ export interface Theme {
      *  dark, neutral so it reads as a map but the colored U.S. data stands out (issue #201). */
     background: string;
     land: string;
-    /** Oceans, lakes and rivers everywhere: soft blue in light, a muted blue-gray in dark. */
+    /** Oceans, lakes and rivers everywhere: soft aqua in light, a muted blue-gray in dark. Kept ΔE ≥ 10
+     *  from every sequential class (check:design), which rules out a plain blue next to the Blues ramp. */
     water: string;
     waterLine: string;
     park: string;
@@ -112,8 +113,8 @@ export const THEMES: Record<ThemeName, Theme> = {
     map: {
       background: "#e5e2d6",
       land: "#e5e2d6",
-      water: "#abc9e3",
-      waterLine: "#9dbcd8",
+      water: "#c0e7e8",
+      waterLine: "#a6d6d8",
       park: "#e4e8dc",
       road: "#ffffff",
       roadMajor: "#e6dfd2",
@@ -168,8 +169,8 @@ export const THEMES: Record<ThemeName, Theme> = {
     map: {
       background: "#3a3e45",
       land: "#3a3e45",
-      water: "#1d3248",
-      waterLine: "#2c4a66",
+      water: "#182b38",
+      waterLine: "#274456",
       park: "#39443d",
       road: "#42464e",
       roadMajor: "#4c5058",
@@ -195,7 +196,7 @@ export const THEMES: Record<ThemeName, Theme> = {
       focusDim: "#141619",
       coastline: "#3d6a8e",
       countryLine: "#8b919c",
-      countryHalo: "#1d3248",
+      countryHalo: "#182b38",
       stateLine: "#41454d",
       hatchDark: "#0b0c0e",
       hatchLight: "#f2f3f5",

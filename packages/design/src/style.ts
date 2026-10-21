@@ -134,7 +134,8 @@ export function basemapStyle(themeName: ThemeName): StyleSpecification {
     // `{network}_{ref_length}` images (1–3 digit refs). Before z7 Interstates get plain "I-25" text.
     {
       id: "label-interstate", type: "symbol", source: "omt", "source-layer": "transportation_name", minzoom: 6, maxzoom: 7,
-      filter: ["all", ["==", ["get", "network"], "us-interstate"], ["has", "ref"]],
+      // A plain number only: ways tagged with an Interstate relation can carry refs like "US 90 BUS".
+      filter: ["all", ["==", ["get", "network"], "us-interstate"], ["has", "ref"], ["!", ["in", " ", ["get", "ref"]]]],
       layout: {
         "symbol-placement": "line",
         "symbol-spacing": LABEL.symbolSpacing,

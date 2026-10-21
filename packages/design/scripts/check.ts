@@ -95,8 +95,8 @@ for (const theme of Object.values(THEMES)) {
   }
 }
 
-// Area fills: every class of every sequential ramp stays clear of focus land, of land outside the
-// U.S. (where the data meets the border) and of the no-data fill, in both themes (a pale first
+// Area fills: every class of every sequential ramp stays clear of focus land, of land and water
+// outside the U.S. (where the data meets the border and the coast) and of the no-data fill, in both themes (a pale first
 // class used to read as "no data"). Diverging ramps are exempt:
 // their neutral middle is near-white by design; give a diverging map a distinct no-data treatment.
 let landCases = 0;
@@ -105,7 +105,7 @@ for (const [id, r] of Object.entries(RAMPS) as Array<[RampId, RampDef]>) {
   for (let n = r.minClasses; n <= r.maxClasses; n++) for (const theme of Object.values(THEMES)) {
     for (const [i, c] of rampColors(id, n).entries()) {
       landCases++;
-      for (const [what, bg] of [["land", theme.map.focusLand], ["outside land", theme.map.land], ["no-data", theme.map.noData]] as const) {
+      for (const [what, bg] of [["land", theme.map.focusLand], ["outside land", theme.map.land], ["water", theme.map.water], ["no-data", theme.map.noData]] as const) {
         const d = de(c, bg);
         if (d < MIN_FROM_LAND) failures.push(`${id} n=${n} class ${i + 1} theme ${theme.name}: ΔE ${d.toFixed(1)} from ${what} < ${MIN_FROM_LAND}`);
       }
