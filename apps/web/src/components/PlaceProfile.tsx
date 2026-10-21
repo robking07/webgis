@@ -21,6 +21,7 @@ export function PlaceProfile({ geoid }: { geoid: string }) {
     Promise.all([fetchGeography(geoid), fetchDetail(geoid)]).then(([g, d]) => { setGeo(g); setDetail(d); }, () => setErr(true));
   }, [geoid]);
 
+  // shortcut: opens on the place, not with it selected (the map takes no selection from the URL); add one if that is missed.
   const mapHref = (id: string) => geo ? `/map${serializeUrlState({ d: id, b: null, at: { lon: geo.lon, lat: geo.lat, zoom: PLACE_ZOOM[level] }, theme: null, lv: null })}` : "/map";
 
   if (err) return <main className="mx-auto max-w-3xl p-6"><StatusState status="error" message="This place couldn't be loaded." /></main>;
@@ -29,7 +30,7 @@ export function PlaceProfile({ geoid }: { geoid: string }) {
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-6 md:px-8 md:py-8">
-      <nav className="mb-4 text-sm"><a href={mapHref(LANDING.d)} className="text-primary underline-offset-2 hover:underline">← Back to the map</a></nav>
+      <nav className="mb-4 text-sm"><a href={mapHref(new URLSearchParams(window.location.search).get("d") ?? LANDING.d)} className="text-primary underline-offset-2 hover:underline">← Back to the map</a></nav>
       <header className="mb-5">
         <p className="text-xs uppercase tracking-wide text-muted-foreground">{level === "tract" ? "Census tract" : level === "county" ? "County" : "State"} profile</p>
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
