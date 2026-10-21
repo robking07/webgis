@@ -133,16 +133,17 @@ async function immerse(page) {
   await wait(1500);
   await mapIdle(page);
 }
-/** Put a point at the middle of the screen (clear of every panel) and tap or click it. */
-async function tapLonLat(page, lon, lat) {
+/** Put a point at the middle of the screen (clear of every panel) and tap or click it (twice: `double`). */
+async function tapLonLat(page, lon, lat, double = false) {
   await page.evaluate(([lon, lat]) => window.__wgMap.jumpTo({ center: [lon, lat] }), [lon, lat]);
   await mapIdle(page);
   const [x, y] = await page.evaluate(([lon, lat]) => { const p = window.__wgMap.project([lon, lat]); return [p.x, p.y]; }, [lon, lat]);
-  await tapAt(page, x, y);
+  await tapAt(page, x, y, double);
 }
 const HENNEPIN = [-93.4752, 45.0061];
-async function tapAt(page, x, y) {
-  if (page.isPhone) await page.touchscreen.tap(x, y); else await page.mouse.click(x, y);
+async function tapAt(page, x, y, double = false) {
+  if (!page.isPhone) await page.mouse.click(x, y, { clickCount: double ? 2 : 1 });
+  else for (let i = double ? 2 : 1; i > 0; i--) await page.touchscreen.tap(x, y);
 }
 
 // ── Measuring ──────────────────────────────────────────────────────────────────
@@ -1112,6 +1113,7 @@ test("laptop map fixes (#187): canvas label follows the map, tiles banner only f
 (await import("./table.tests.mjs")).default({ test, expect, wait });
 (await import("./popups.tests.mjs")).default({ test, expect, wait, mapIdle, pointerAt, hoverCard, HENNEPIN, NEBRASKA });
 (await import("./mpo.tests.mjs")).default({ test, expect, mapIdle, tapLonLat, HENNEPIN });
+(await import("./click.tests.mjs")).default({ test, expect, immerse, mapIdle, tapAt, HENNEPIN });
 
 test("old /specials/pairings?topic=Health redirects to /specials/combinations?topic=Health", async (o) => {
   const { page } = await o("laptop", "/specials/pairings?topic=Health", { ready: false });
