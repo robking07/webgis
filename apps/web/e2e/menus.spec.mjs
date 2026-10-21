@@ -738,6 +738,13 @@ for (const vp of ["phone", "laptop"]) {
       expect((await page.locator("main h1").innerText()) === name, `place ${geoid}: heading "${await page.locator("main h1").innerText()}"`);
       const meta = await page.locator("main header p").last().innerText();
       expect(/^[1-9]\d* datasets · [\d,.]+ sq mi of land$/.test(meta), `place ${geoid}: "${meta}"`);
+      // Handout (issue #290): CSV button, and a print view with the chrome gone and sources shown.
+      expect((await page.getByRole("button", { name: "Download CSV" }).count()) === 1 && (await page.getByRole("button", { name: "Print / save as PDF" }).count()) === 1, `place ${geoid}: handout buttons`);
+      await page.emulateMedia({ media: "print" });
+      expect(!(await page.locator("main header button").first().isVisible()) && !(await page.locator("header.sticky").isVisible()), `place ${geoid}: chrome visible in print`);
+      expect(await page.locator("[data-print-source]").first().isVisible(), `place ${geoid}: no source line in print`);
+      await page.emulateMedia({ media: "screen" });
+      expect(!(await page.locator("[data-print-source]").first().isVisible()), `place ${geoid}: source line on screen`);
       expect(!dbCalls(page).length, `database calls: ${dbCalls(page).join(", ")}`);
     }
   });

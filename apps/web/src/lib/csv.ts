@@ -56,3 +56,20 @@ export async function buildCsv(d: Dataset, level: GeoLevel, load = loadValues, n
   ].map((l) => `"${l.replace(/"/g, '""')}"\r\n`).join(""));
   return { blob: new Blob(parts, { type: "text/csv;charset=utf-8" }), rows: ids.length };
 }
+
+/** A place's rows as a CSV: value, margin of error, unit, period and source per dataset (issue #290). */
+export function placeCsv(geoid: string, name: string, rows: Array<{ d: Dataset; value: number | null; moe: number | null }>): Blob {
+  const head = ["dataset", "value", "moe", "unit", "period", "source", "citation"].join(",") + "\r\n";
+  const body = rows.map(({ d, value, moe }) =>
+    [d.title, value ?? "", moe ?? "", d.unit, d.vintage, d.source.name, d.source.citation].map(csvField).join(",") + "\r\n").join("");
+  const notes = [`# Place: ${name}`, `# Downloaded from Mapwich: https://mapwich.org/place/${geoid}`].map((l) => `"${l.replace(/"/g, '""')}"\r\n`).join("");
+  return new Blob(["\uFEFF", head, body, "\r\n", notes], { type: "text/csv;charset=utf-8" });
+}
+
+export function saveBlob(blob: Blob, fileName: string): void {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = fileName;
+  document.body.append(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 10000);
+}
