@@ -2,7 +2,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { X } from "lucide-react";
 import { StatusState } from "@webgis/design/components";
 import { CHANGE_CLASSES, formatEstimate, formatValue, GEO_LEVELS, isGradable, STATIC_ONLY_LEVELS, TILE_VALUE_LEVELS } from "@webgis/design";
-import { noDataReason, reliabilityNote } from "@/lib/reliability";
+import { moeRangeLine, noDataReason, reliabilityNote } from "@/lib/reliability";
 import { changeSummary, differenceMoe, formatChange, withinMoe } from "@/lib/change";
 import type { ClassedLevel } from "./useViewerData";
 import type { HoverInfo } from "../map/MapView";
@@ -13,6 +13,7 @@ import { fetchDetail } from "@/lib/details";
 import { loadMoes, type Values } from "@/lib/values";
 import { BottomSheet, useIsPhone } from "../BottomSheet";
 import { PlaceDataList, type Detail } from "../PlaceDataList";
+import { Benchmarks } from "../Benchmarks";
 import { LearnMore } from "./LearnMore";
 import { loadPlaceIndex, placeByGeoid, type PlaceHit } from "@/lib/search";
 import { CompareWith } from "../compare/CompareWith";
@@ -101,9 +102,11 @@ function ReliabilityNote({ dataset, geoid, value, moe }: { dataset: Dataset; geo
   if (value == null) return <p className="mt-1 text-xs text-muted-foreground" data-no-data-reason="">{noDataReason(dataset, geoid)}</p>;
   const note = isGradable(dataset.measure.kind) ? reliabilityNote(value, moe) : null;
   if (!note) return null;
+  const range = moeRangeLine(value, moe, dataset.unit);
   return (
     <p className="mt-1 text-xs text-muted-foreground" data-reliability="">
       <span className="font-semibold text-foreground">{note.title}.</span> {note.body}
+      {range && <span data-moe-range=""> {range}</span>}
     </p>
   );
 }
@@ -217,8 +220,9 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
                     {est.value}
                     {est.moe && <span className="ml-1 text-xs font-normal text-muted-foreground">±{est.moe}</span>}
                   </p>
+                  {r?.value != null && <Benchmarks dataset={d} geoid={info.geoid} />}
                   {i === 0 && phone && legendKey && <SheetKey {...legendKey} />}
-                  {rank && <p className="mt-1 text-xs text-muted-foreground">{rank}</p>}
+                  {rank &&<p className="mt-1 text-xs text-muted-foreground">{rank}</p>}
                   <ReliabilityNote dataset={d} geoid={info.geoid} value={r?.value} moe={r?.moe} />
                 </div>
               );
@@ -238,7 +242,7 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
         {rows && !staticOnly && (
           <>
             <PlaceDataList geoid={info.geoid} level={info.level} detail={rows} onMapIt={onMapIt} compact />
-            <a href={placeHref(info.geoid)} className="mt-4 block text-sm font-medium text-primary underline-offset-2 hover:underline">Open the full place profile →</a>
+            <a href={placeHref(info.geoid, primary.id)} className="mt-4 block text-sm font-medium text-primary underline-offset-2 hover:underline">Open the full place profile →</a>
           </>
         )}
       </BottomSheet>
@@ -250,7 +254,7 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
       style={{ top, maxHeight: `calc(100% - ${top + 12}px)` }}>
       {summary}
       {rows && !staticOnly && (
-        <a href={placeHref(info.geoid)}
+        <a href={placeHref(info.geoid, primary.id)}
           className="mt-3 flex items-center justify-between rounded text-xs font-medium text-primary underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-ring">
           Full place profile: all datasets for {info.name.split(",")[0]} <span aria-hidden>→</span>
         </a>

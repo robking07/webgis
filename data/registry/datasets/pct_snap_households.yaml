@@ -1,5 +1,6 @@
 id: pct_snap_households
 title: "Households getting SNAP (food stamps)"
+phrase: shares of households getting SNAP
 description: "Share of households that received SNAP food assistance at some point in the past 12 months."
 category: Economy
 subcategory: Income and poverty

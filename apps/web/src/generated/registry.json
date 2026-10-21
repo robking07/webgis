@@ -977,6 +977,7 @@
  {
   "id": "census2020_housing_density",
   "title": "Homes per square mile (2020 Census)",
+  "phrase": "homes per square mile",
   "description": "Every housing unit (occupied or vacant) counted in the 2020 Census, per square mile of land. Shows built form, including places where few people live.",
   "category": "Housing",
   "subcategory": "Homes",
@@ -1030,6 +1031,7 @@
  {
   "id": "census2020_pct_vacant",
   "title": "Share of homes vacant (2020 Census)",
+  "phrase": "shares of vacant homes",
   "description": "Vacant housing units as a share of all housing units on April 1, 2020. Includes seasonal and vacation homes, so resort and cabin areas run high.",
   "category": "Housing",
   "subcategory": "Homes",
@@ -1083,6 +1085,7 @@
  {
   "id": "census2020_pop_density",
   "title": "Residents per square mile (2020 Census)",
+  "phrase": "residents per square mile",
   "description": "Everyone counted in the 2020 Census, per square mile of land. Down to single blocks.",
   "category": "People",
   "subcategory": "Population and age",
@@ -2542,6 +2545,7 @@
  {
   "id": "gini_index",
   "title": "Income inequality (Gini index)",
+  "phrase": "income inequality",
   "description": "How unevenly household income is spread, from 0 (every household earns the same) to 1 (one household earns everything).",
   "category": "Economy",
   "subcategory": "Income and poverty",
@@ -3236,6 +3240,7 @@
  {
   "id": "labor_force_participation",
   "title": "People working or looking for work",
+  "phrase": "labor force participation rates",
   "description": "Share of people 16 and over who have a job or are looking for one (the labor force participation rate).",
   "category": "Economy",
   "subcategory": "Jobs",
@@ -3642,6 +3647,7 @@
  {
   "id": "median_age",
   "title": "Median age",
+  "phrase": "median ages",
   "description": "The age that splits residents into two equal halves: half are younger, half are older.",
   "category": "People",
   "subcategory": "Population and age",
@@ -3700,6 +3706,7 @@
  {
   "id": "median_gross_rent",
   "title": "Median rent",
+  "phrase": "median rents",
   "description": "Middle monthly rent paid by renter households, including utilities, in 2024 dollars.",
   "category": "Housing",
   "subcategory": "Costs",
@@ -3761,6 +3768,7 @@
  {
   "id": "median_home_value",
   "title": "Median home value",
+  "phrase": "median home values",
   "description": "Middle value of owner-occupied homes, as estimated by their owners, in 2024 dollars.",
   "category": "Housing",
   "subcategory": "Costs",
@@ -4506,7 +4514,12 @@
    "pct_uninsured",
    "pct_age_65_plus",
    "pct_zero_vehicle_households",
-   "pct_limited_english"
+   "pct_limited_english",
+   "pct_no_hs_diploma",
+   "pct_overcrowded",
+   "pct_disability",
+   "pct_broadband",
+   "pct_no_internet"
   ],
   "coverageNote": "A relative rank (0–100) among counties, or among tracts. Version 1.20 uses the Census Bureau's Community Resilience Estimates; version 1.19 used CDC's Social Vulnerability Index, so the two aren't comparable. Puerto Rico and the island territories show no data.",
   "facets": [],
@@ -4877,6 +4890,7 @@
  {
   "id": "pct_aian_nh",
   "title": "American Indian and Alaska Native (non-Hispanic) residents",
+  "phrase": "shares of non-Hispanic American Indian and Alaska Native residents",
   "description": "Share of residents who are American Indian or Alaska Native alone and not Hispanic or Latino.",
   "category": "People",
   "subcategory": "Race and ethnicity",
@@ -4943,6 +4957,7 @@
  {
   "id": "pct_asian_nh",
   "title": "Asian (non-Hispanic) residents",
+  "phrase": "shares of non-Hispanic Asian residents",
   "description": "Share of residents who are Asian alone and not Hispanic or Latino.",
   "category": "People",
   "subcategory": "Race and ethnicity",
@@ -5005,6 +5020,7 @@
  {
   "id": "pct_bachelors_plus",
   "title": "Bachelor's degree or higher",
+  "phrase": "shares of adults with a bachelor's degree or more",
   "description": "Share of adults 25 and over with at least a bachelor's degree.",
   "category": "People",
   "subcategory": "Education",
@@ -5131,6 +5147,7 @@
  {
   "id": "pct_black_nh",
   "title": "Black (non-Hispanic) residents",
+  "phrase": "shares of non-Hispanic Black residents",
   "description": "Share of residents who are Black or African American alone and not Hispanic or Latino.",
   "category": "People",
   "subcategory": "Race and ethnicity",
@@ -5572,6 +5589,7 @@
  {
   "id": "pct_foreign_born",
   "title": "Born outside the U.S.",
+  "phrase": "shares of residents born outside the U.S.",
   "description": "Share of residents who were not U.S. citizens at birth (immigrants), whatever their citizenship today.",
   "category": "People",
   "subcategory": "Immigration and language",
@@ -5698,6 +5716,7 @@
  {
   "id": "pct_hispanic_latino",
   "title": "Hispanic or Latino residents",
+  "phrase": "shares of Hispanic or Latino residents",
   "description": "Share of residents who are Hispanic or Latino, of any race.",
   "category": "People",
   "subcategory": "Race and ethnicity",
@@ -5820,6 +5839,7 @@
  {
   "id": "pct_leave_before_7am",
   "title": "Leave for work before 7 a.m.",
+  "phrase": "shares of workers leaving before 7 a.m.",
   "description": "Share of commuters (workers 16 and over who don't work from home), not of all workers, who usually leave for work before 7:00 a.m.",
   "category": "Transportation",
   "subcategory": "Commuting",
@@ -5885,6 +5905,7 @@
  {
   "id": "pct_limited_english",
   "title": "Households with limited English",
+  "phrase": "shares of households with limited English",
   "description": "Share of households where no one 14 or older speaks English only or speaks it very well.",
   "category": "People",
   "subcategory": "Immigration and language",
@@ -6138,6 +6159,7 @@
  {
   "id": "pct_multiracial_nh",
   "title": "Two or more races (non-Hispanic)",
+  "phrase": "shares of non-Hispanic multiracial residents",
   "description": "Share of residents who report two or more races and are not Hispanic or Latino.",
   "category": "People",
   "subcategory": "Race and ethnicity",
@@ -6201,6 +6223,7 @@
  {
   "id": "pct_nhpi_nh",
   "title": "Native Hawaiian and Pacific Islander (non-Hispanic) residents",
+  "phrase": "shares of non-Hispanic Native Hawaiian and Pacific Islander residents",
   "description": "Share of residents who are Native Hawaiian or Other Pacific Islander alone and not Hispanic or Latino.",
   "category": "People",
   "subcategory": "Race and ethnicity",
@@ -6322,6 +6345,7 @@
  {
   "id": "pct_no_hs_diploma",
   "title": "No high school diploma",
+  "phrase": "shares of adults without a high school diploma",
   "description": "Share of adults 25 and over who finished neither high school nor an equivalent such as the GED.",
   "category": "People",
   "subcategory": "Education",
@@ -6608,6 +6632,7 @@
  {
   "id": "pct_people_of_color",
   "title": "People of color",
+  "phrase": "shares of people of color",
   "description": "Share of residents who are Hispanic or Latino, or of any race other than white alone (everyone except non-Hispanic white residents).",
   "category": "People",
   "subcategory": "Race and ethnicity",
@@ -6810,6 +6835,7 @@
  {
   "id": "pct_rent_burdened",
   "title": "Renters paying 30%+ of income on rent",
+  "phrase": "shares of rent-burdened renters",
   "description": "Share of renter households that spend 30 percent or more of their income on rent and utilities.",
   "category": "Housing",
   "subcategory": "Costs",
@@ -7071,6 +7097,7 @@
  {
   "id": "pct_snap_households",
   "title": "Households getting SNAP (food stamps)",
+  "phrase": "shares of households getting SNAP",
   "description": "Share of households that received SNAP food assistance at some point in the past 12 months.",
   "category": "Economy",
   "subcategory": "Income and poverty",
@@ -7264,6 +7291,7 @@
  {
   "id": "pct_uninsured",
   "title": "No health insurance",
+  "phrase": "uninsured rates",
   "description": "Share of residents with no health insurance coverage of any kind.",
   "category": "Health",
   "subcategory": "Care and coverage",
@@ -7450,6 +7478,7 @@
  {
   "id": "pct_white_nh",
   "title": "White (non-Hispanic) residents",
+  "phrase": "shares of non-Hispanic white residents",
   "description": "Share of residents who are white alone and not Hispanic or Latino.",
   "category": "People",
   "subcategory": "Race and ethnicity",
@@ -7708,6 +7737,7 @@
  {
   "id": "per_capita_income",
   "title": "Income per person",
+  "phrase": "incomes per person",
   "description": "Total income of all residents divided by the number of residents, in 2024 dollars.",
   "category": "Economy",
   "subcategory": "Income and poverty",
@@ -8354,7 +8384,14 @@
    "field": "RPL_THEME3"
   },
   "modelInputs": [
-   "pct_people_of_color"
+   "pct_people_of_color",
+   "pct_white_nh",
+   "pct_hispanic_latino",
+   "pct_black_nh",
+   "pct_asian_nh",
+   "pct_aian_nh",
+   "pct_nhpi_nh",
+   "pct_multiracial_nh"
   ],
   "coverageNote": "A rank from 0 to 100 among all U.S. counties, or among all U.S. tracts (not within each state): the 90th percentile means more vulnerable on this theme than 90% of counties (or tracts). Tracts with no residents, and some where CDC couldn't estimate an input, show no data. Puerto Rico isn't included in CDC's U.S. files. Not comparable with earlier SVI years.",
   "facets": [],
@@ -8472,7 +8509,10 @@
   "modelInputs": [
    "unemployment_rate",
    "pct_no_hs_diploma",
-   "pct_uninsured"
+   "pct_uninsured",
+   "pct_poverty",
+   "pct_rent_burdened",
+   "pct_owner_cost_burdened"
   ],
   "coverageNote": "A rank from 0 to 100 among all U.S. counties, or among all U.S. tracts (not within each state): the 90th percentile means more vulnerable on this theme than 90% of counties (or tracts). Tracts with no residents, and some where CDC couldn't estimate an input, show no data. Puerto Rico isn't included in CDC's U.S. files. Not comparable with earlier SVI years.",
   "facets": [],
@@ -8605,6 +8645,7 @@
  {
   "id": "unemployment_rate",
   "title": "Unemployment rate",
+  "phrase": "unemployment rates",
   "description": "Share of people in the civilian labor force (working or looking for work) who had no job and were looking for one.",
   "category": "Economy",
   "subcategory": "Jobs",

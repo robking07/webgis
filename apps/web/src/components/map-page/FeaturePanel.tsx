@@ -12,7 +12,7 @@ import { LearnMore } from "./LearnMore";
 /** Readable title: the signed route ("I-35", "US 52"), else the street name, else the road class. */
 export function featureTitle(h: FeatureHit, spec?: FeatureLayerSpec): string {
   const p = h.properties;
-  if (p.tract && p.place) return `Tract ${Number(String(p.tract).slice(5)) / 100}, ${p.place}`;
+  if (p.tract && p.place) return `Census tract ${Number(String(p.tract).slice(5)) / 100}, ${p.place}`;
   if (p.route) return String(p.route);
   if (p.street) return titleCase(String(p.street));
   const fs = Number(p.f_system);

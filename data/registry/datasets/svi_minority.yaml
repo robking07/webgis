@@ -16,7 +16,7 @@ vintage: "2022 (from the 2018–2022 ACS)"
 geographyLevels: [county, tract]
 unit: percentile
 universe: "counties or census tracts (national rank among the same level)"
-modelInputs: [pct_people_of_color]
+modelInputs: [pct_people_of_color, pct_white_nh, pct_hispanic_latino, pct_black_nh, pct_asian_nh, pct_aian_nh, pct_nhpi_nh, pct_multiracial_nh]  # SVI 2022 theme 3: everyone except non-Hispanic white
 coverageNote: "A rank from 0 to 100 among all U.S. counties, or among all U.S. tracts (not within each state): the 90th percentile means more vulnerable on this theme than 90% of counties (or tracts). Tracts with no residents, and some where CDC couldn't estimate an input, show no data. Puerto Rico isn't included in CDC's U.S. files. Not comparable with earlier SVI years."
 terms: [cdc-svi, percentile-rank, acs-5-year]
 measure: { kind: svi, year: 2022, field: RPL_THEME3 }

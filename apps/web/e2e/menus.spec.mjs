@@ -696,6 +696,23 @@ test("laptop dataset menu: the card title opens it tall, with search, the data l
   await page.waitForFunction(() => new URL(location.href).searchParams.get("d") === "pct_work_from_home");
 });
 
+// #308: the explainer grows the card down; the legend must step aside, not cover the Compare and Table buttons.
+for (const [w, h] of [[1440, 900], [1280, 800], [1024, 768]]) {
+  test(`laptop ${w}×${h}: the legend never covers the dataset card with the explainer open`, async (o) => {
+    const { page } = await o({ viewport: { width: w, height: h } }, "/map?d=median_household_income");
+    const card = page.locator('section[aria-label="Mapped dataset"]');
+    await card.getByRole("button", { name: "What do these numbers mean?" }).click();
+    await wait(400);
+    const [c, legends] = await page.evaluate(() => [
+      document.querySelector('section[aria-label="Mapped dataset"]').getBoundingClientRect().toJSON(),
+      [...document.querySelectorAll("[data-legend]")].filter((el) => el.offsetParent).map((el) => el.getBoundingClientRect().toJSON()),
+    ]);
+    expect(legends.length > 0, "no legend showing");
+    expect(legends.every((l) => l.left >= c.right || c.left >= l.right || l.top >= c.bottom || c.top >= l.bottom), "the legend overlaps the dataset card");
+    expect(c.bottom <= h, "the card runs off the screen");
+  });
+}
+
 test("laptop hidden card: the heading's title opens the same menu", async (o) => {
   const { page } = await o("laptop", "/map?d=median_household_income&at=-93.27,44.97,9");
   await immerse(page);
@@ -738,6 +755,13 @@ for (const vp of ["phone", "laptop"]) {
       expect((await page.locator("main h1").innerText()) === name, `place ${geoid}: heading "${await page.locator("main h1").innerText()}"`);
       const meta = await page.locator("main header p").last().innerText();
       expect(/^[1-9]\d* datasets · [\d,.]+ sq mi of land$/.test(meta), `place ${geoid}: "${meta}"`);
+      // Handout (issue #290): CSV button, and a print view with the chrome gone and sources shown.
+      expect((await page.getByRole("button", { name: "Download CSV" }).count()) === 1 && (await page.getByRole("button", { name: "Print / save as PDF" }).count()) === 1, `place ${geoid}: handout buttons`);
+      await page.emulateMedia({ media: "print" });
+      expect(!(await page.locator("main header button").first().isVisible()) && !(await page.locator("header.sticky").isVisible()), `place ${geoid}: chrome visible in print`);
+      expect(await page.locator("[data-print-source]").first().isVisible(), `place ${geoid}: no source line in print`);
+      await page.emulateMedia({ media: "screen" });
+      expect(!(await page.locator("[data-print-source]").first().isVisible()), `place ${geoid}: source line on screen`);
       expect(!dbCalls(page).length, `database calls: ${dbCalls(page).join(", ")}`);
     }
   });
@@ -924,6 +948,7 @@ for (const vp of ["phone", "laptop"]) {
     await panel.waitFor();
     await wait(400);
     const slider = panel.locator("input[type=range]");
+    await slider.scrollIntoViewIfNeeded(); // the card's Why link makes the panel shorter, so the slider can sit below its fold
     const notches = await panel.locator("[data-notch]").count();
     expect(notches === 10, `expected 10 notches (2015-2024), got ${notches}`);
     const bg = await slider.evaluate((el) => getComputedStyle(el, "::-webkit-slider-runnable-track").backgroundImage);
@@ -1085,12 +1110,20 @@ test("laptop map fixes (#187): canvas label follows the map, tiles banner only f
 (await import("./splash.tests.mjs")).default({ test, expect, wait });
 (await import("./getting-around.tests.mjs")).default({ test, expect, mapIdle });
 (await import("./table.tests.mjs")).default({ test, expect, wait });
+(await import("./popups.tests.mjs")).default({ test, expect, wait, mapIdle, pointerAt, hoverCard, HENNEPIN, NEBRASKA });
 (await import("./mpo.tests.mjs")).default({ test, expect, mapIdle, tapLonLat, HENNEPIN });
 
 test("old /specials/pairings?topic=Health redirects to /specials/combinations?topic=Health", async (o) => {
   const { page } = await o("laptop", "/specials/pairings?topic=Health", { ready: false });
   const u = new URL(page.url());
   expect(u.pathname === "/specials/combinations" && u.searchParams.get("topic") === "Health", `landed on ${page.url()}`);
+});
+
+test("/specials: the lead piece's Combination origin links to the map, not a Combination page", async (o) => {
+  const { page } = await o("laptop", "/specials", { ready: false });
+  const hrefs = await page.$$eval("a", (as) => as.map((a) => a.getAttribute("href")));
+  expect(!hrefs.includes("/specials/pct_work_from_home__physical_inactivity"), "link to a Combination id as if a Special");
+  expect(hrefs.some((h) => h?.startsWith("/map?d=pct_work_from_home&b=physical_inactivity")), "origin link goes to the map with both datasets");
 });
 
 // ── Run ────────────────────────────────────────────────────────────────────────

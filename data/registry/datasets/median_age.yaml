@@ -1,5 +1,6 @@
 id: median_age
 title: "Median age"
+phrase: median ages
 description: "The age that splits residents into two equal halves: half are younger, half are older."
 category: People
 subcategory: Population and age

@@ -6,6 +6,7 @@ import type { Dataset } from "@/lib/registry";
 import type { FeatureLayerSpec } from "@/lib/layers";
 import { changeNote, stopNote, type Stop } from "@/lib/periods";
 import { changeUnitWords } from "@/lib/change";
+import { LEVEL_PLURAL } from "@/lib/place";
 import type { ClassedLevel } from "./useViewerData";
 
 /** "< 2.5K vehicles/day" → "< 2.5K": the legend strip keeps the comparison and number, drops unit words. */
@@ -14,7 +15,7 @@ const stripEnd = (s: string) => s.replace(/^([<≥]\s*\S+).*$/, "$1");
 /** Legend: full card on desktop; a strip on phones (tap to expand). Both carry `data-legend`, so
  *  the dock above can stop before it reaches them.
  *  The year control (D-36) lives in the filters panel (issue #34). */
-export function MapLegend({ theme, primary, secondary, isFeature, featureSpec, current, error, available, loading, level, periodLabel, stop, stopId, since, desktopStrip, mark, covered, tableReady, onTable, hatchToggle, onSearch }: {
+export function MapLegend({ theme, primary, secondary, isFeature, featureSpec, current, error, available, loading, level, periodLabel, stop, stopId, since, desktopStrip, mark, covered, tableReady, tableLevel, onTable, hatchToggle, onSearch }: {
   theme: ThemeName;
   primary: Dataset | null;
   secondary: Dataset | null;
@@ -39,6 +40,8 @@ export function MapLegend({ theme, primary, secondary, isFeature, featureSpec, c
    *  strip instead of peeking out above the sheet. */
   covered?: boolean;
   tableReady: boolean;
+  /** The level the table lists; named on the button when it differs from the map's. */
+  tableLevel: GeoLevel | null;
   onTable: () => void;
   /** Reliability hatching (D-222): the toggle, only where the shown map can be graded. */
   hatchToggle?: { on: boolean; onChange: (on: boolean) => void; loading: boolean } | null;
@@ -118,7 +121,7 @@ export function MapLegend({ theme, primary, secondary, isFeature, featureSpec, c
         {tableReady && (
           <button type="button" onClick={onTable}
             className="mt-2 rounded text-xs text-primary underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-ring">
-            View as table{level !== "state" && level !== "county" ? " (counties)" : ""}
+            View as table{tableLevel && tableLevel !== level ? ` (${LEVEL_PLURAL[tableLevel]})` : ""}
           </button>
         )}
       </section>
