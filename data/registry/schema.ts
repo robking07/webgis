@@ -204,6 +204,16 @@ const FoodAccessMeasure = z.object({
   per: z.string(),
 });
 
+/** EPA Toxics Release Inventory (public domain): on-site releases (pounds) summed by each facility's
+ *  county (FIPS from Envirofacts `tri_facility`) and state, ÷ land area. Ingest: data/ingest/src/tri.ts. */
+const TriMeasure = z.object({
+  kind: z.literal("tri"),
+  year: z.number().int(),
+  /** TRI Basic Data File (CSV) for the year, U.S. and territories. */
+  url: z.url(),
+  file: z.string(),
+});
+
 /** A layer drawn from its own geometry (road segments, stops, bridges…) instead of a
  *  choropleth on Census geography. Values live in the tiles; breaks are computed at ingest. */
 const FeaturesMeasure = z.object({
@@ -295,7 +305,7 @@ export const DatasetEntry = z.object({
   unit: Unit,
   /** For insights: the population the value describes. Pairs that share one are flagged. */
   universe: z.string(),
-  measure: z.discriminatedUnion("kind", [AcsMeasure, Census2020Measure, LodesMeasure, PlacesMeasure, ClimdivMeasure, NbiMeasure, FarsMeasure, FeaturesMeasure, HpmsVmtMeasure, CejstMeasure, Ddp287gMeasure, LeadMeasure, FoodAccessMeasure, FemaNriMeasure, SviMeasure, AirQualityMeasure, OverdoseMeasure]),
+  measure: z.discriminatedUnion("kind", [AcsMeasure, Census2020Measure, LodesMeasure, PlacesMeasure, ClimdivMeasure, NbiMeasure, FarsMeasure, FeaturesMeasure, HpmsVmtMeasure, CejstMeasure, Ddp287gMeasure, LeadMeasure, FoodAccessMeasure, FemaNriMeasure, SviMeasure, AirQualityMeasure, OverdoseMeasure, TriMeasure]),
   /** Other registry datasets used as inputs to this dataset's model (e.g. PLACES uses county poverty).
    *  Insight pairs with these are flagged: they correlate partly by construction. */
   modelInputs: z.array(z.string()).default([]),

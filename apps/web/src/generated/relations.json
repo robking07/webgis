@@ -347,6 +347,13 @@
     }
    ]
   },
+  "tri_onsite_releases": {
+   "group": "Environment and climate",
+   "counts": {
+    "of": "pounds released on site"
+   },
+   "links": []
+  },
   "cejst_disadvantaged_tracts": {
    "group": "Health",
    "links": [

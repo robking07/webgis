@@ -47,7 +47,7 @@ export function countsSpec(e: DatasetEntry): { denominator: boolean } | null {
     case "acs5": return m.denominator ? { denominator: true } : m.perSqMi ? { denominator: false } : null;
     case "census2020": return { denominator: m.value === "pct_vacant" };
     case "fars": return { denominator: true };
-    case "lodes": case "ddp_287g": return { denominator: false };
+    case "lodes": case "ddp_287g": case "tri": return { denominator: false };
     default: return null;
   }
 }
