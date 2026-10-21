@@ -361,7 +361,7 @@ export function Viewer({ search }: { search: string }) {
         <MapView
           theme={theme}
           initialView={initial.at}
-          fitLeft={phone ? 16 : CARD_LEFT}
+          fitLeft={window.innerWidth < 768 ? 16 : CARD_LEFT} /* useIsPhone is still false on the first render, when the map is made */
           paint={classed}
           boundaries={stopId ? stop!.boundaries ?? null : null}
           onViewChange={(at) => update({ at })}
