@@ -1,7 +1,6 @@
 "use client";
 // Header settings (D-35): theme and map units, out of the main navigation.
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import { Settings } from "lucide-react";
 import type { ThemeName } from "@webgis/design";
 
@@ -41,7 +40,6 @@ export function SettingsMenu({ theme, onTheme, unit, onUnit }: Props) {
             <Choice label="Distances" value={unit} onChange={(v) => onUnit(v as ScaleUnit)}
               options={[["imperial", "Miles"], ["metric", "Kilometers"]]} />
           )}
-          <Link href="/support" className="block border-t pt-3 text-xs text-muted-foreground hover:text-foreground">Support Mapwich</Link>
         </div>
       )}
     </div>

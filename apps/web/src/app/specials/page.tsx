@@ -23,6 +23,7 @@ export default async function SpecialsPage() {
       <main className="mx-auto flex max-w-[1200px] flex-col gap-10 px-4 pt-6 pb-12 md:gap-14 md:px-8 md:pt-8 md:pb-16">
         <section aria-label={lead ? "Latest Special" : undefined} className="flex flex-col gap-4 md:gap-7">
           <h1 className="wg-wordmark text-[44px] leading-none font-extrabold tracking-[-0.02em] md:text-[64px]">Specials</h1>
+          <a href="https://buymeacoffee.com/mapwich" target="_blank" rel="noopener" className="w-fit text-sm text-muted-foreground hover:text-foreground">Buy me a coffee</a>
           {lead && (
             <>
               <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_320px] md:items-start md:gap-12">
