@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import type { Dataset } from "@/lib/registry";
 import type { Values } from "@/lib/values";
 import { staticUrl } from "@/lib/static-files";
-import { csvFile, csvFileName, marginsFor, placeLabel } from "@/lib/csv";
+import { csvFile, csvFileName, marginsFor, placeLabel, saveBlob } from "@/lib/csv";
 import { useIsNarrow } from "./BottomSheet";
 
 /** geoid → [name, lon, lat] for states and counties (exported by ingest). */
@@ -108,11 +108,7 @@ export const DataTable = memo(function DataTable({ top = 12, level, within, x, x
       // shortcut: margins are the default period's, so a timeline stop gets none; upgrade when stops' margins are wired in.
       const moes = period ? {} : await marginsFor(x, level);
       const { blob } = await csvFile(x, rows.map((r) => r.g), xv, moes, nm);
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url; a.download = csvFileName(x, level);
-      document.body.append(a); a.click(); a.remove();
-      setTimeout(() => URL.revokeObjectURL(url), 10000);
+      saveBlob(blob, csvFileName(x, level));
     } finally { setSaving(false); }
   }
 

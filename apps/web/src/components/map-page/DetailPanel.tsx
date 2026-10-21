@@ -242,7 +242,7 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
         {rows && !staticOnly && (
           <>
             <PlaceDataList geoid={info.geoid} level={info.level} detail={rows} onMapIt={onMapIt} compact />
-            <a href={placeHref(info.geoid)} className="mt-4 block text-sm font-medium text-primary underline-offset-2 hover:underline">Open the full place profile →</a>
+            <a href={placeHref(info.geoid, primary.id)} className="mt-4 block text-sm font-medium text-primary underline-offset-2 hover:underline">Open the full place profile →</a>
           </>
         )}
       </BottomSheet>
@@ -254,7 +254,7 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
       style={{ top, maxHeight: `calc(100% - ${top + 12}px)` }}>
       {summary}
       {rows && !staticOnly && (
-        <a href={placeHref(info.geoid)}
+        <a href={placeHref(info.geoid, primary.id)}
           className="mt-3 flex items-center justify-between rounded text-xs font-medium text-primary underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-ring">
           Full place profile: all datasets for {info.name.split(",")[0]} <span aria-hidden>→</span>
         </a>

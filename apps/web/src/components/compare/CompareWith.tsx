@@ -69,8 +69,8 @@ export function CompareWith({ geoid, level, name, dataset, aValue, otherPeriod, 
   );
 }
 
-/** `onMap`: a tap on the map picks too (phones), so the keyboard waits until the search is tapped. */
-function Picker({ a, level, name, datasetId, onMap, onCancel }: { a: string; level: GeoLevel; name: string; datasetId: string; onMap: boolean; onCancel: () => void }) {
+/** `onMap`: a tap on the map picks too (phones), so the keyboard waits until the search is tapped. The place page uses it too, with no dataset or map (the compare page then leads with the landing map's). */
+export function Picker({ a, level, name, datasetId, onMap = false, onCancel }: { a: string; level: GeoLevel; name: string; datasetId: string | null; onMap?: boolean; onCancel: () => void }) {
   const [rows, setRows] = useState<PlaceRow[] | null>(null);
   const [err, setErr] = useState(false);
   const [q, setQ] = useState("");
