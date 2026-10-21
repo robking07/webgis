@@ -1,5 +1,5 @@
 "use client";
-// Hand vetting of Odd Pairings (D-116). A reviewer signs in with an emailed link, then
+// Hand vetting of Combinations (D-116). A reviewer signs in with an emailed link, then
 // approves or rejects each pair that passed the automatic checks. Only approved pairs
 // whose numbers and wording are unchanged (fingerprint) appear on /specials.
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -72,7 +72,7 @@ function SignIn() {
   if (state === "sent") return <p className="max-w-md">Check your email for a sign-in link. Open it on this device; it brings you back here.</p>;
   return (
     <form onSubmit={send} className="flex max-w-md flex-col gap-3">
-      <p className="text-muted-foreground">Sign in to vet Odd Pairings. You&apos;ll get a one-time link by email.</p>
+      <p className="text-muted-foreground">Sign in to vet Combinations. You&apos;ll get a one-time link by email.</p>
       <Input type="email" required autoComplete="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} aria-label="Email" />
       <Button type="submit" disabled={state === "sending"}>{state === "sending" ? "Sending…" : "Email me a sign-in link"}</Button>
       {state !== "idle" && state !== "sending" && <p className="text-sm text-destructive">{state}</p>}

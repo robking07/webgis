@@ -402,6 +402,21 @@ export function focusDimLayer(source: string, level: GeoLevel, geoid: string, th
   };
 }
 
+// The selection outline and its halo (cased, so it reads on the darkest and lightest classes).
+const OUTLINE_WIDTH = zoomInterp(SIZE.highlightOutline) as never;
+const HALO_WIDTH = zoomInterp(SIZE.highlightOutline.map(([z, w]) => [z, w + 3] as const)) as never;
+
+/** A searched area with no tiles of its own (an MPO, issue #276): a GeoJSON source drawn with the
+ *  selection outline, always on (nothing to hover or click). */
+export const AREA_SOURCE = "area";
+export function areaHighlightLayers(theme: ThemeName): LayerSpecification[] {
+  const m = THEMES[theme].map;
+  return [
+    { id: "area-highlight-halo", type: "line", source: AREA_SOURCE, paint: { "line-color": m.highlightHalo, "line-width": HALO_WIDTH } },
+    { id: "area-highlight", type: "line", source: AREA_SOURCE, paint: { "line-color": m.highlight, "line-width": OUTLINE_WIDTH } },
+  ];
+}
+
 /** Fill, outline and hover/selection outline for one geography level. */
 export function thematicLayers(o: ThematicLayerOptions): LayerSpecification[] {
   const m = THEMES[o.theme].map;
@@ -432,17 +447,17 @@ export function thematicLayers(o: ThematicLayerOptions): LayerSpecification[] {
     // Cased selection: a contrasting halo under the outline, so it reads on the darkest and lightest classes.
     {
       id: `${o.level}-highlight-halo`, type: "line", ...base,
-      paint: { "line-color": m.highlightHalo, "line-width": zoomInterp(SIZE.highlightOutline.map(([z, w]) => [z, w + 3] as const)) as never,
+      paint: { "line-color": m.highlightHalo, "line-width": HALO_WIDTH,
         "line-opacity": ["case", ["any", flag("hover"), flag("selected"), flag("second")], 1, 0] as never },
     },
     {
       id: `${o.level}-highlight`, type: "line", ...base,
-      paint: { "line-color": m.highlight, "line-width": zoomInterp(SIZE.highlightOutline) as never, "line-opacity": shown as never },
+      paint: { "line-color": m.highlight, "line-width": OUTLINE_WIDTH, "line-opacity": shown as never },
     },
     // The second place on a compare map (D-258): the same outline, dashed, over the same halo.
     {
       id: `${o.level}-highlight-second`, type: "line", ...base,
-      paint: { "line-color": m.highlight, "line-width": zoomInterp(SIZE.highlightOutline) as never,
+      paint: { "line-color": m.highlight, "line-width": OUTLINE_WIDTH,
         "line-dasharray": [...SECOND_OUTLINE_DASH], "line-opacity": ["case", flag("second"), 1, 0] as never },
     },
   ];

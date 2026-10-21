@@ -8,33 +8,45 @@
 // Part 2b: the head counts behind a rate, each place's share of the places above it, and
 // parts-of-a-whole bars (lib/counts.ts, D-257 files).
 import { useEffect, useMemo, useState } from "react";
-import { formatEstimate, formatValue, gradeEstimate, isGradable, rampColors, SECOND_OUTLINE_DASH, type GeoLevel } from "@webgis/design";
+import { useRouter } from "next/navigation";
+import { formatEstimate, formatValue, isGradable, rampColors, SECOND_OUTLINE_DASH, type GeoLevel } from "@webgis/design";
 import { StatusState } from "@webgis/design/components";
-import { bothHave, compareValues, rowVerdictText, shortName, verdictText, type Verdict } from "@/lib/compare";
+import { bothHave, compareValues, rowVerdictText, shortName, stripRange, stripX, verdictText, type Verdict } from "@/lib/compare";
 import { countsLabels, PARTS, parentsOf, partsOf, placeCounts, shareOf, type Counts } from "@/lib/counts";
 import { reliabilityNote } from "@/lib/reliability";
 import { fetchDetail, fetchGeography, type Detail, type Geography } from "@/lib/details";
 import { levelOfGeoid, PLACE_ZOOM, placeHref, rankText } from "@/lib/place";
 import { CATEGORIES, DATASET_BY_ID, DATASETS, type Dataset } from "@/lib/registry";
-import { loadValues } from "@/lib/values";
+import { loadValues, type Values } from "@/lib/values";
 import { serializeUrlState } from "@/lib/url-state";
 import { ShareButton } from "../ShareButton";
+import { DatasetHeading, DatasetMenu, DatasetSheet } from "../DatasetMenus";
 import { useMedia } from "../BottomSheet";
 import { SpecialMap } from "../specials/SpecialMap";
 import type { Bbox } from "../map/MapView";
 
-interface Props { a: string; b: string; nameA: string; nameB: string; datasetId: string; parentNames: Record<string, string> }
+interface Props { a: string; b: string; nameA: string; nameB: string; datasetId: string; parentNames: Record<string, string>; unknownD?: boolean }
 /** Counts already loaded, keyed `<map id>:<geoid>` (null = the file or row isn't there). */
 type CountsBy = Record<string, Counts | null>;
 
 const LEVEL_WORD: Partial<Record<GeoLevel, string>> = { state: "states", county: "counties", tract: "Census tracts" };
 
-export function ComparePlaces({ a, b, nameA, nameB, datasetId, parentNames }: Props) {
+export function ComparePlaces({ a, b, nameA, nameB, datasetId, parentNames, unknownD }: Props) {
+  const router = useRouter();
+  const [menu, setMenu] = useState(false);
+  // Kept in state: the replace below makes the prop false, but the note should stay until the visitor picks something.
+  const [fell, setFell] = useState(unknownD);
+  // The map pushes a Back step per dataset change (useUrlState), so this does too. The place pair and the
+  // rest of the query stay; the page re-renders on the server with the new dataset.
+  const pick = (id: string) => { setMenu(false); setFell(false); router.push(`/compare/${a}/${b}?d=${id}`, { scroll: false }); };
+  // An unknown ?d= shows the landing map's dataset; rewrite the URL to what is shown, like the map (#306).
+  useEffect(() => { if (unknownD) router.replace(`/compare/${a}/${b}?d=${datasetId}`, { scroll: false }); }, [unknownD, a, b, datasetId, router]);
   const level = levelOfGeoid(a)!;
   const ds = DATASET_BY_ID.get(datasetId)!;
   const [data, setData] = useState<{ a: Detail; b: Detail; back: string } | null>(null);
   const [err, setErr] = useState(false);
-  const [ranks, setRanks] = useState<{ a: string | null; b: string | null } | null>(null);
+  const [valsFor, setVals] = useState<{ id: string; v: Values } | null>(null);
+  const vals = valsFor?.id === ds.id ? valsFor.v : null; // the previous dataset's values must not rank the new one
   // Side-by-side maps on laptops and monitors (lg, D-135), tabs below that.
   const wide = useMedia("(min-width: 1024px)");
   const mapped = ds.geographyLevels.includes(level);
@@ -54,11 +66,9 @@ export function ComparePlaces({ a, b, nameA, nameB, datasetId, parentNames }: Pr
       const back = `/map${serializeUrlState({ d: ds.id, b: null, theme: null, lv: null,
         at: geo ? { lon: geo.lon, lat: geo.lat, zoom: PLACE_ZOOM[level] } : { lon: -96.5, lat: 38.5, zoom: 3.6, fit: true } })}`;
       setData({ a: da, b: db, back });
-      // Ranks for the lead metric only (one values file, ~15 KB gzipped for counties).
-      // shortcut: no tract ranks; the national tract file is too big for a phone. Upgrade if a per-state tract export appears.
-      if (level !== "tract" && ds.geographyLevels.includes(level)) {
-        loadValues(ds.id, level).then((vals) => live && setRanks({ a: rankText(vals, da[ds.id]?.value, level), b: rankText(vals, db[ds.id]?.value, level) }), () => {});
-      }
+      // Ranks and the strip of every place, for the lead metric only (one values file, ~15 KB gzipped for counties).
+      // shortcut: no tract ranks or strip; the national tract file is too big for a phone. Upgrade if a per-state tract export appears.
+      if (level !== "tract" && ds.geographyLevels.includes(level)) loadValues(ds.id, level).then((v) => live && setVals({ id: ds.id, v }), () => {});
     }, () => live && setErr(true));
     return () => { live = false; };
   }, [a, b, ds, level]);
@@ -108,11 +118,20 @@ export function ComparePlaces({ a, b, nameA, nameB, datasetId, parentNames }: Pr
         </h1>
       </header>
 
+      <div className="mb-4">
+        {/* The map's own dataset menu (one menu, D-326): a drop-down on laptops, a bottom sheet on phones. */}
+        <DatasetHeading primary={ds} secondary={null} open={menu} onToggle={() => setMenu((o) => !o)}>
+          {menu && wide && <DatasetMenu slot="a" primary={ds} secondary={null} onSlot={() => {}} onPick={pick} onClose={() => setMenu(false)} />}
+        </DatasetHeading>
+        {menu && !wide && <DatasetSheet slot="a" primary={ds} secondary={null} onSlot={() => {}} onPick={pick} onClose={() => setMenu(false)} />}
+        {fell && <p role="status" className="mt-2 text-sm text-muted-foreground" data-compare-fallback="">That map isn&apos;t available, so this is {ds.title}.</p>}
+      </div>
+
       {err ? <StatusState status="error" message="This comparison couldn't be loaded." />
         : !data || !groups ? <StatusState status="loading" message="Loading both places…" />
         : (
           <>
-            <Headline ds={ds} a={data.a[ds.id]} b={data.b[ds.id]} names={names} ranks={ranks} counts={counts} geoids={{ a, b }} parentNames={parentNames} />
+            <Headline ds={ds} a={data.a[ds.id]} b={data.b[ds.id]} names={names} vals={vals} level={level} counts={counts} geoids={{ a, b }} parentNames={parentNames} />
             {mapped && !wide && (
               <section aria-label="Maps of both places" className="mt-6" data-compare-map="">
                 <div role="tablist" aria-label="Map of which place" className="mb-2 flex gap-1.5">
@@ -135,7 +154,7 @@ export function ComparePlaces({ a, b, nameA, nameB, datasetId, parentNames }: Pr
                   </summary>
                   <div className="mt-2 flex flex-col gap-3">
                     {PARTS.filter((p) => DATASET_BY_ID.get(p.members[0])?.category === cat).map((p) => <PartsBars key={p.label} set={p} data={data} names={names} />)}
-                    <Rows list={list} data={data} names={names} counts={wide ? counts : {}} geoids={{ a, b }} />
+                    <Rows list={list} data={data} names={names} counts={wide ? counts : {}} geoids={{ a, b }} onPick={pick} />
                   </div>
                 </details>
               ))}
@@ -190,9 +209,10 @@ function useCounts(keys: string[]): CountsBy {
   return got;
 }
 
-/** "142,031 ±4,100" (± only when there's a margin), plus the D-222 grade's title when it's shaky. */
+/** "142,031 ±4,100" (± only when there's a margin), plus the D-222 grade's title when it's shaky. A zero
+ *  count isn't graded: D-364's zero rule is in percentage points, and every zero count's margin is 10+. */
 function countText(n: number, moe: number | null, gradable: boolean): string {
-  const note = gradable ? reliabilityNote(gradeEstimate(n, moe)) : null;
+  const note = gradable && n !== 0 ? reliabilityNote(n, moe) : null;
   const est = formatEstimate(n, moe, "count");
   return `${est.value}${est.moe ? ` ±${est.moe}` : ""}${note ? ` · ${note.title}` : ""}`;
 }
@@ -214,11 +234,12 @@ function CountsBlock({ ds, c, parents, counts, parentNames }: { ds: Dataset; c: 
   );
 }
 
-function Headline({ ds, a, b, names, ranks, counts, geoids, parentNames }: {
-  ds: Dataset; a?: Detail[string]; b?: Detail[string]; names: { a: string; b: string }; ranks: { a: string | null; b: string | null } | null;
+function Headline({ ds, a, b, names, vals, level, counts, geoids, parentNames }: {
+  ds: Dataset; a?: Detail[string]; b?: Detail[string]; names: { a: string; b: string }; vals: Values | null; level: GeoLevel;
   counts: CountsBy; geoids: { a: string; b: string }; parentNames: Record<string, string>;
 }) {
   const ea = a ?? { value: null, moe: null }, eb = b ?? { value: null, moe: null };
+  const ranks = vals && { a: rankText(vals, ea.value, level), b: rankText(vals, eb.value, level) };
   const v = compareValues(ds.measure.kind, ea, eb);
   const survey = isGradable(ds.measure.kind);
   const note = v.kind === "about_same" ? "The gap is within the margins of error (90% confidence), so it may not be real."
@@ -239,15 +260,60 @@ function Headline({ ds, a, b, names, ranks, counts, geoids, parentNames }: {
               <p className="truncate text-sm font-medium">{names[k]}</p>
               <p className={`text-2xl tabular-nums md:text-3xl ${higherIs(v, k) ? "font-bold" : "font-semibold"}`}>{est.value}</p>
               {est.moe && <p className="text-xs tabular-nums text-muted-foreground">±{est.moe}</p>}
+              {survey && <GradeTitle e={e} />}
               {rank && <p className="mt-1 text-xs text-muted-foreground">{rank}</p>}
               <CountsBlock ds={ds} c={counts[`${ds.id}:${geoids[k]}`]} parents={parentsOf(geoids[k])} counts={counts} parentNames={parentNames} />
             </div>
           );
         })}
       </div>
+      {vals && ranks?.a && ranks.b && ea.value != null && eb.value != null && (
+        <Strip vals={vals} unit={ds.unit} at={{ a: ea.value, b: eb.value }} names={names}
+          label={`${LEVEL_WORD[level]}, lowest to highest. ${names.a}: ${ranks.a}. ${names.b}: ${ranks.b}.`} />
+      )}
       {note && <p className="mt-3 text-xs text-muted-foreground">{note}</p>}
     </section>
   );
+}
+
+/** Every place's value as a faint tick, the two places marked and named (A solid, B dashed, as on
+ *  their maps), so a gap reads against the usual spread (issue #231). */
+function Strip({ vals, unit, at, names, label }: { vals: Values; unit: Dataset["unit"]; at: { a: number; b: number }; names: { a: string; b: string }; label: string }) {
+  const all = useMemo(() => Object.values(vals), [vals]);
+  const r = useMemo(() => stripRange(all), [all]);
+  if (!r) return null;
+  return (
+    <figure className="mt-4" data-compare-strip="">
+      <div role="img" aria-label={`All ${all.length.toLocaleString()} ${label}`} className="relative h-14">
+        <svg viewBox="0 0 1000 10" preserveAspectRatio="none" aria-hidden className="absolute inset-x-0 top-4 h-6 w-full text-muted-foreground">
+          {/* One line per place (not one path) so overlapping ticks darken; fainter with more places, so 3,000 counties shade the pack instead of filling it. */}
+          <g stroke="currentColor" strokeOpacity={Math.min(0.35, 150 / all.length)}>
+            {all.map((v, i) => { const x = (stripX(v, r) * 1000).toFixed(1); return <line key={i} x1={x} x2={x} y1={0} y2={10} vectorEffect="non-scaling-stroke" />; })}
+          </g>
+        </svg>
+        {(["a", "b"] as const).map((k) => {
+          const x = stripX(at[k], r) * 100;
+          return (
+            <div key={k} aria-hidden style={{ left: `${x}%` }} data-compare-strip-mark={k}
+              className={`absolute flex ${k === "a" ? "top-0 flex-col" : "bottom-0 flex-col-reverse"} ${x > 50 ? "-translate-x-full items-end" : "items-start"}`}>
+              <span className="max-w-40 truncate text-xs font-medium leading-4">{names[k]}</span>
+              <span className={`h-6 border-l-2 border-foreground ${k === "b" ? "border-dashed" : ""}`} />
+            </div>
+          );
+        })}
+      </div>
+      <figcaption aria-hidden className="mt-0.5 flex justify-between gap-2 text-xs tabular-nums text-muted-foreground">
+        <span>{r.clippedLo ? "≤ " : ""}{formatValue(r.lo, unit)}</span>
+        <span>{r.clippedHi ? "≥ " : ""}{formatValue(r.hi, unit)}</span>
+      </figcaption>
+    </figure>
+  );
+}
+
+/** The D-222 grade's title ("Use with caution", "Unreliable estimate") under a survey value; D-364 zeros too. */
+function GradeTitle({ e }: { e: Detail[string] }) {
+  const t = reliabilityNote(e.value, e.moe)?.title;
+  return t ? <span className="block text-xs font-medium text-foreground" data-value-note="">{t}</span> : null;
 }
 
 const higherIs = (v: Verdict, k: "a" | "b") => v.kind === "higher" && v.higher === k;
@@ -296,7 +362,7 @@ function PartsBars({ set, data, names }: { set: (typeof PARTS)[number]; data: { 
   );
 }
 
-function Rows({ list, data, names, counts, geoids }: { list: Dataset[]; data: { a: Detail; b: Detail }; names: { a: string; b: string }; counts: CountsBy; geoids: { a: string; b: string } }) {
+function Rows({ list, data, names, counts, geoids, onPick }: { list: Dataset[]; data: { a: Detail; b: Detail }; names: { a: string; b: string }; counts: CountsBy; geoids: { a: string; b: string }; onPick: (id: string) => void }) {
   return (
     <ul className="divide-y rounded-xl border bg-card">
       <li aria-hidden className="grid grid-cols-2 gap-3 px-4 py-2 text-xs font-medium text-muted-foreground">
@@ -309,7 +375,8 @@ function Rows({ list, data, names, counts, geoids }: { list: Dataset[]; data: { 
         return (
           <li key={d.id} className="px-4 py-3" data-compare-row={d.id}>
             <div className="flex items-baseline justify-between gap-3">
-              <p className="min-w-0 text-sm font-medium">{d.title}</p>
+              <button type="button" onClick={() => onPick(d.id)} aria-label={`Map ${d.title}`}
+                className="min-w-0 rounded text-left text-sm font-medium hover:underline focus-visible:outline-2 focus-visible:outline-ring">{d.title}</button>
               <p className="shrink-0 text-xs text-muted-foreground">{rowVerdictText(v, names)}</p>
             </div>
             <div className="mt-0.5 grid grid-cols-2 gap-3 text-sm tabular-nums">
@@ -318,6 +385,7 @@ function Rows({ list, data, names, counts, geoids }: { list: Dataset[]; data: { 
                   <span className="sr-only">{i === 0 ? names.a : names.b}: </span>
                   {est.value}
                   {est.moe && <span className="ml-1 text-xs font-normal text-muted-foreground">±{est.moe}</span>}
+                  {isGradable(d.measure.kind) && <GradeTitle e={e} />}
                 </p>
               ); })}
             </div>

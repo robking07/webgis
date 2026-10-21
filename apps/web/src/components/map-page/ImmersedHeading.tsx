@@ -65,7 +65,7 @@ export function ImmersedHeading({ primary, secondary, immersed, hasFilters, filt
       </div>
       {!phone && <div className="mt-1.5">{heading}</div>}
       {place && (
-        <div className={`pointer-events-auto mt-1 flex ${phone ? "pl-[52px]" : ""}`}>
+        <div className={`pointer-events-auto mt-1 flex max-w-[calc(100vw-1.5rem)] ${phone ? "pl-[52px]" : ""}`}>
           <p data-focus-name="" className={`wg-panel inline-flex min-w-0 items-center gap-1 rounded-xl py-0.5 pl-3 pr-1 font-bold text-foreground ${phone ? "text-lg" : "text-2xl"}`}>
             <span className="truncate">{place.name}</span>
             <button type="button" onClick={place.onClear} aria-label={`Leave ${place.name}: show the whole map`} title="Show the whole map"

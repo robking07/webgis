@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import type { GeoLevel } from "@webgis/design";
-import { buildCsv, csvFileName, CSV_LEVEL_LABEL } from "@/lib/csv";
+import { buildCsv, csvFileName, CSV_LEVEL_LABEL, saveBlob } from "@/lib/csv";
 import type { Dataset } from "@/lib/registry";
 
 /** One quiet button per geography level; the file is built only when tapped. */
@@ -13,11 +13,7 @@ export function CsvDownload({ dataset, levels }: { dataset: Dataset; levels: Geo
     setBusy(level); setError(null);
     try {
       const { blob } = await buildCsv(dataset, level);
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url; a.download = csvFileName(dataset, level);
-      document.body.append(a); a.click(); a.remove();
-      setTimeout(() => URL.revokeObjectURL(url), 10000);
+      saveBlob(blob, csvFileName(dataset, level));
     } catch {
       setError(`Couldn’t prepare the ${CSV_LEVEL_LABEL[level].toLowerCase()} file. Try again.`);
     } finally { setBusy(null); }

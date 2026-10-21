@@ -4,12 +4,13 @@
 import { useEffect, useLayoutEffect, useRef } from "react";
 import { AttributionControl, LngLatBounds, Map as MlMap, ScaleControl, addProtocol, setWorkerUrl, type LayerSpecification, type MapGeoJSONFeature } from "maplibre-gl";
 import { Protocol } from "pmtiles";
-import { basemapStyle, choroplethFill, hatchImage, hatchLayerId, HATCH_IMAGE, HATCH_LEVELS, membershipFilter, NO_FEATURES, choroplethFillsByState, DATA_BEFORE_ID, STATIC_ONLY_LEVELS, TILE_VALUE_LEVELS, THEMES, featureLineLayers, featurePolygonLayers, fillLayerIds, focusDimLayer, FOCUS_DIM_LAYER, focusFilters, focusLandLayer, FOCUS_LAND_BEFORE_ID, GEO_LEVELS, MOTION, PER_STATE_LEVELS, thematicLayers, type GeoLevel, type NoDataFill, type PackedClasses, type ThemeName } from "@webgis/design";
+import { areaHighlightLayers, AREA_SOURCE, basemapStyle, choroplethFill, hatchImage, hatchLayerId, HATCH_IMAGE, HATCH_LEVELS, membershipFilter, NO_FEATURES, choroplethFillsByState, DATA_BEFORE_ID, STATIC_ONLY_LEVELS, TILE_VALUE_LEVELS, THEMES, featureLineLayers, featurePolygonLayers, fillLayerIds, focusDimLayer, FOCUS_DIM_LAYER, focusFilters, focusLandLayer, FOCUS_LAND_BEFORE_ID, GEO_LEVELS, MOTION, PER_STATE_LEVELS, thematicLayers, type GeoLevel, type NoDataFill, type PackedClasses, type ThemeName } from "@webgis/design";
 import { comparePickOpen } from "@/lib/compare";
 import type { FeatureLayerSpec } from "@/lib/layers";
 import type { ViewState } from "@/lib/url-state";
 import type { Geometry } from "geojson";
 import { boundaryFile } from "@webgis/registry/timeline";
+import { CONUS } from "@/lib/us-view";
 import { TILES_BASE } from "@/lib/static-files";
 
 export interface LevelPaint {
@@ -65,7 +66,9 @@ interface Props {
   paint: Partial<Record<GeoLevel, LevelPaint>>;
   onViewChange: (v: ViewState) => void;
   onHover: (h: HoverInfo | null) => void;
-  onSelect: (h: HoverInfo | null) => void;
+  /** A click picked a place (or nothing). `fit` is the second click of a double click on the same
+   *  spot, with the first click's place (issue #317). Without it a double click zooms in one step. */
+  onSelect?: (h: HoverInfo | null, fit?: boolean) => void;
   /** Our own tiles (boundaries or a feature layer) failed to load; null once they load again. */
   onTilesError?: (msg: string | null) => void;
   ariaLabel: string;
@@ -74,7 +77,7 @@ interface Props {
   /** A lines/points layer drawn from its own geometry, instead of a choropleth. */
   featureLayer?: FeatureLayerSpec | null;
   onFeatureHover?: (h: FeatureHit | null) => void;
-  onFeatureSelect?: (h: FeatureHit | null) => void;
+  onFeatureSelect?: (h: FeatureHit | null, fit?: boolean) => void;
   /** First user-initiated pan/zoom/scroll on the map (not programmatic moves). */
   onUserMove?: () => void;
   /** Feature-layer filter: field → values to SHOW (absent field = no filter). */
@@ -84,7 +87,7 @@ interface Props {
   /** Scale bar units (Settings). */
   scaleUnit?: "imperial" | "metric";
   /** MapLibre's attribution control. The main map turns it off and shows its own credits
-   *  footnote (MapCredits); smaller maps (Odd Pairings) keep it. */
+   *  footnote (MapCredits); smaller maps (Combinations) keep it. */
   attribution?: boolean;
   /** County and tract boundary vintage for a timeline stop (D-36): "2019" = 2010 tracts and
    *  pre-2022 Connecticut counties; null = the current tiles. */
@@ -115,16 +118,23 @@ export interface MapApi {
   flyTo: (lon: number, lat: number, zoom: number, padding?: Padding) => void;
   /** Mark one geography as selected (outline), or clear with null. */
   select: (level: GeoLevel, geoid: string | null) => void;
-  /** Frame one geography (its extent from the loaded tiles); false if it isn't loaded. */
-  fitGeography: (level: GeoLevel, geoid: string, padding?: Padding) => boolean;
+  /** Frame one geography (its extent from the loaded tiles), or only center it at the current zoom
+   *  (`keepZoom`); false if it isn't loaded. */
+  fitGeography: (level: GeoLevel, geoid: string, padding?: Padding, keepZoom?: boolean) => boolean;
   fitBbox: (bbox: Bbox, padding?: Padding, maxZoom?: number) => void;
+  /** Ease a bbox's middle to the middle of the padded area, at the current zoom. */
+  centerBbox: (bbox: Bbox, padding?: Padding) => void;
   getCamera: () => Camera;
   setCamera: (c: Camera) => void;
   /** A gesture or camera animation is in progress (a finger held down mid-drag counts). */
   isMoving: () => boolean;
+  /** Outline an area that has no tiles (a searched MPO, issue #276), or clear with null. Never clickable. */
+  showArea: (shape: Geometry | null) => void;
 }
 
 const LEVELS = Object.keys(GEO_LEVELS) as GeoLevel[];
+/** Two clicks this close in time are a double click (MapLibre's double-tap window). */
+const DOUBLE_MS = 500;
 let protocolReady = false;
 
 /** A PMTiles archive on the tiles base (made absolute: the pmtiles protocol needs a full URL). */
@@ -153,6 +163,7 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
   const hovered = useRef<{ level: GeoLevel; id: string } | null>(null);
   const selected = useRef<Flag>(compare ? { level: compare.level, id: compare.a } : null);
   const second = useRef<Flag>(compare ? { level: compare.level, id: compare.b } : null);
+  const area = useRef<Geometry | null>(null);
   const scale = useRef<ScaleControl | null>(null);
 
   // Create the map once.
@@ -184,21 +195,31 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
     scale.current = new ScaleControl({ unit: scaleUnit });
     m.addControl(scale.current, "bottom-right");
     const fly = reduceMotion ? 0 : MOTION.fly;
-    const fitBbox = (b: Bbox, padding?: Padding, maxZoom = 13) => m.fitBounds(b, { padding: safePadding(m, padding), maxZoom, duration: fly, essential: true });
+    // fitBounds adds the map's own padding (a click's ease leaves the panel's) to this one, and gives
+    // up silently when the two leave no room: pass only the difference.
+    const fitBbox = (b: Bbox, padding?: Padding, maxZoom = 13) => {
+      const p = safePadding(m, padding), now = m.getPadding() as Padding;
+      m.fitBounds(b, { padding: p && { top: p.top - now.top, right: p.right - now.right, bottom: p.bottom - now.bottom, left: p.left - now.left }, maxZoom, duration: fly, essential: true });
+    };
+    const centerBbox = (b: Bbox, padding?: Padding) => m.easeTo({ center: [(b[0] + b[2]) / 2, (b[1] + b[3]) / 2], padding: safePadding(m, padding), duration: fly, essential: true });
     onApi?.({
       zoomIn: () => m.zoomIn({ duration: reduceMotion ? 0 : 250 }),
       zoomOut: () => m.zoomOut({ duration: reduceMotion ? 0 : 250 }),
       flyTo: (lon, lat, zoom, padding) => m.flyTo({ center: [lon, lat], zoom, padding: safePadding(m, padding), duration: fly, essential: true }),
       select: (level, geoid) => setFlag(m, selected, geoid ? { level, id: geoid } : null, "selected"),
-      fitGeography: (level, geoid, padding) => {
+      fitGeography: (level, geoid, padding, keepZoom) => {
+        // shortcut: the extent comes from loaded tiles, so a place running far off screen centers on its loaded part; fine while clicks pick places on screen.
         const b = geographyBbox(m, level, geoid);
-        if (b) fitBbox(b, padding);
+        if (b) (keepZoom ? centerBbox : fitBbox)(b, padding);
         return !!b;
       },
       fitBbox,
+      centerBbox,
       getCamera: () => ({ center: m.getCenter().toArray() as [number, number], zoom: m.getZoom() }),
-      setCamera: (c) => m.flyTo({ ...c, padding: 0, duration: fly, essential: true }),
+      // A plain 0 is ignored, which kept a panel's shift after Back (#180).
+      setCamera: (c) => m.flyTo({ ...c, padding: { top: 0, right: 0, bottom: 0, left: 0 }, duration: fly, essential: true }),
       isMoving: () => m.isMoving(),
+      showArea: (shape) => { area.current = shape; if (ready.current) applyArea(m, shape, latest.current.theme); },
     });
     // User gestures only (programmatic flyTo etc. must not immerse): wheel/trackpad scroll,
     // drag-pan (mouse or touch), pinch and double-click zoom.
@@ -209,7 +230,7 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
     if (attribution) {
       m.addControl(new AttributionControl({ compact: true, customAttribution: "Boundaries: U.S. Census Bureau TIGER/Line cartographic boundaries" }), "bottom-right");
       // Compact attribution starts expanded; start it collapsed to its ⓘ button on any map too narrow
-      // for the one-line credit (phones, and the small maps on Odd Pairing pages).
+      // for the one-line credit (phones, and the small maps on Combination pages).
       if (container.current.clientWidth < 900) {
         m.once("load", () => container.current?.querySelector(".maplibregl-ctrl-attrib")?.classList.remove("maplibregl-compact-show"));
       }
@@ -229,6 +250,7 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
       appliedHatch.current = {};
       syncHatch(m, latest.current.hatch, appliedHatch.current, latest.current.levelZooms);
       applyFocus(m, latest.current.focus, latest.current.theme);
+      applyArea(m, area.current, latest.current.theme);
     });
     // The opening bbox is an estimate from the place's center and area; frame it exactly once its tiles are in.
     if (compare) m.once("idle", () => {
@@ -313,13 +335,35 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
       latest.current.onHover(f ? infoOf(f, e.point.x, e.point.y) : null);
     });
     m.on("mouseout", () => { setFlag(m, hovered, null, "hover"); latest.current.onHover(null); latest.current.onFeatureHover?.(null); });
+    // Issue #317: one click selects at once; a second click close by within DOUBLE_MS repeats the first
+    // click's pick with `fit` (the place under it may have changed: a drill-down draws its parts).
+    let last: { t: number; x: number; y: number; fit: () => void } | null = null;
+    const isDouble = (t: number, p: { x: number; y: number }) => !!last && t - last.t < DOUBLE_MS && Math.hypot(p.x - last.x, p.y - last.y) < 24;
     m.on("click", (e) => {
       if (compare) return;
-      if (latest.current.featureLayer) { latest.current.onFeatureSelect?.(featureAt(e.point)); return; }
+      const t = e.originalEvent.timeStamp, { x, y } = e.point;
+      if (isDouble(t, e.point)) {
+        // Skip MapLibre's zoom-in step for this double click (kept on empty map). Not preventDefault on
+        // its dblclick: that marks a gesture active, which stops the fit just started.
+        m.doubleClickZoom.disable();
+        window.setTimeout(() => m.doubleClickZoom.enable(), DOUBLE_MS);
+        last!.fit(); last = null; return;
+      }
+      last = null;
+      if (latest.current.featureLayer) {
+        const hit = featureAt(e.point);
+        latest.current.onFeatureSelect?.(hit);
+        if (hit && latest.current.onFeatureSelect) last = { t, x, y, fit: () => latest.current.onFeatureSelect?.(hit, true) };
+        return;
+      }
       const f = placeAt(e.point);
       setFlag(m, selected, f ? { level: f.sourceLayer as GeoLevel, id: String(f.properties.geoid) } : null, "selected");
-      latest.current.onSelect(f ? { ...infoOf(f, e.point.x, e.point.y), lon: e.lngLat.lng, lat: e.lngLat.lat } : null);
+      const info = f ? { ...infoOf(f, x, y), lon: e.lngLat.lng, lat: e.lngLat.lat } : null;
+      latest.current.onSelect?.(info);
+      if (info && latest.current.onSelect) last = { t, x, y, fit: () => latest.current.onSelect?.(info, true) };
     });
+    // Double tap: MapLibre zooms on the second touchend, before its click; cancel that at its touchstart.
+    m.on("touchstart", (e) => { if (e.points.length === 1 && isDouble(e.originalEvent.timeStamp, e.point)) e.preventDefault(); });
 
     return () => { m.remove(); map.current = null; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -465,9 +509,6 @@ function reportTractCounties(m: MlMap, on: boolean, cb: Props["onTractCounties"]
   cb(key.split(","));
 }
 
-/** The lower 48 (search and first load frame it; Alaska, Hawaii and PR are a pan away). */
-const CONUS: Bbox = [-124.8, 24.4, -66.9, 49.4];
-
 /** Panel padding can't leave the map less than ~120 px of room, or fitBounds gives up. */
 function safePadding(m: MlMap, p?: Padding): Padding | undefined {
   if (!p) return undefined;
@@ -517,6 +558,16 @@ function addThematic(m: MlMap, theme: ThemeName, boundaries: string | null) {
   for (const level of LEVELS) for (const id of [`${level}-highlight-halo`, `${level}-highlight`, `${level}-highlight-second`]) {
     if (m.getLayer(id)) m.moveLayer(id, m.getLayer(DATA_BEFORE_ID) ? DATA_BEFORE_ID : undefined);
   }
+}
+
+/** The searched area's outline: a GeoJSON source with the selection outline, above every fill. */
+function applyArea(m: MlMap, shape: Geometry | null, theme: ThemeName) {
+  const layers = areaHighlightLayers(theme);
+  for (const l of layers) if (m.getLayer(l.id)) m.removeLayer(l.id);
+  if (m.getSource(AREA_SOURCE)) m.removeSource(AREA_SOURCE);
+  if (!shape) return;
+  m.addSource(AREA_SOURCE, { type: "geojson", data: shape });
+  for (const l of layers) m.addLayer(l, m.getLayer(DATA_BEFORE_ID) ? DATA_BEFORE_ID : undefined);
 }
 
 /** Point the county and tract sources at another boundary vintage. A source's URL can't be

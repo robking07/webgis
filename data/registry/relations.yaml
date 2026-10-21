@@ -178,6 +178,9 @@ maps:
     group: "Environment and climate"
   pm25_annual:
     group: "Environment and climate"
+  tri_onsite_releases:
+    group: "Environment and climate"
+    counts: { of: "pounds released on site" }
   # Health: Environmental justice; Environment and climate: Energy burden
   cejst_disadvantaged_tracts:
     group: "Health"

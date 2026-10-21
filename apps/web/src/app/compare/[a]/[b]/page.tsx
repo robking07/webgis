@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ComparePlaces } from "@/components/compare/ComparePlaces";
 import { SiteHeader } from "@/components/SiteHeader";
+import { SiteFooter } from "@/components/SiteNav";
 import { parseCompare, shortName } from "@/lib/compare";
 import { parentsOf } from "@/lib/counts";
 import { placeName } from "@/lib/place-name";
@@ -23,7 +24,9 @@ async function load({ params, searchParams }: Props) {
   const dataset = DATASET_BY_ID.get(state.d ?? "") ?? DATASET_BY_ID.get(LANDING.d)!;
   // Names of the places each one's share is taken of (county, state, U.S.), for the counts (2b).
   const parentNames = Object.fromEntries([...parentsOf(state.a), ...parentsOf(state.b)].map((g) => [g, g === "us" ? "U.S." : shortName(placeName(g) ?? g)]));
-  return { ...state, nameA, nameB, dataset, parentNames };
+  // A named but unknown metric (#306): the page says it fell back and rewrites the URL.
+  const unknownD = typeof sp.d === "string" && sp.d !== "" && !DATASET_BY_ID.has(sp.d);
+  return { ...state, nameA, nameB, dataset, parentNames, unknownD };
 }
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
@@ -42,7 +45,8 @@ export default async function ComparePage(props: Props) {
   return (
     <>
       <SiteHeader />
-      <ComparePlaces a={c.a} b={c.b} nameA={c.nameA} nameB={c.nameB} datasetId={c.dataset.id} parentNames={c.parentNames} />
+      <ComparePlaces a={c.a} b={c.b} nameA={c.nameA} nameB={c.nameB} datasetId={c.dataset.id} parentNames={c.parentNames} unknownD={c.unknownD} />
+      <div className="mx-auto max-w-3xl px-4 pb-8 md:px-8"><SiteFooter /></div>
     </>
   );
 }

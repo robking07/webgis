@@ -134,7 +134,7 @@ export default async function DatasetProfilePage({ params }: PageProps<"/data/[i
             {d.coverageNote && <li>{d.coverageNote}</li>}
             {modelInputs.length > 0 && (
               <li>
-                Built using {modelInputs.map((m, i) => <span key={m!.id}>{i > 0 && ", "}<a href={datasetHref(m!.id)} className="text-primary underline-offset-2 hover:underline">{m!.title.toLowerCase()}</a></span>)}, so Odd Pairings doesn’t pair it with {modelInputs.length > 1 ? "those" : "that"}: they’d match partly by construction.
+                Built using {modelInputs.map((m, i) => <span key={m!.id}>{i > 0 && ", "}<a href={datasetHref(m!.id)} className="text-primary underline-offset-2 hover:underline">{m!.title.toLowerCase()}</a></span>)}, so Combinations never pairs it with {modelInputs.length > 1 ? "those" : "that"}: they’d line up partly by design.
               </li>
             )}
           </ul>
@@ -150,12 +150,12 @@ export default async function DatasetProfilePage({ params }: PageProps<"/data/[i
             {d.symbology.breaks ? ` (${d.symbology.breaks.map((b) => b.toLocaleString()).join(" / ")})` : ""}
           </span>
         </div>
-        <p className="mt-2 text-xs text-muted-foreground">Colors pass the site’s color-blind and contrast checks. See the <a href="https://github.com/robking07/webgis/blob/main/docs/design-system.md" className="underline">design system</a>.</p>
+        <p className="mt-2 text-xs text-muted-foreground">Colors pass the site’s color-blind and contrast checks. See the <a href="/design-system" className="underline">design system</a>.</p>
       </section>
 
       {insights.length > 0 && (
         <section aria-labelledby="insights" className="mb-8">
-          <h2 id="insights" className="mb-2 text-base font-semibold">In Odd Pairings</h2>
+          <h2 id="insights" className="mb-2 text-base font-semibold">In Combinations</h2>
           <ul className="divide-y rounded-xl border bg-card">
             {insights.map((i) => {
               const other = DATASET_BY_ID.get(i.x === d.id ? i.y : i.x)!;

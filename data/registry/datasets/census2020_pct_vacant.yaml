@@ -1,5 +1,6 @@
 id: census2020_pct_vacant
 title: Share of homes vacant (2020 Census)
+phrase: shares of vacant homes
 description: Vacant housing units as a share of all housing units on April 1, 2020. Includes seasonal and vacation homes, so resort and cabin areas run high.
 category: Housing
 subcategory: Homes

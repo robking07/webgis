@@ -204,6 +204,16 @@ const FoodAccessMeasure = z.object({
   per: z.string(),
 });
 
+/** EPA Toxics Release Inventory (public domain): on-site releases (pounds) summed by each facility's
+ *  county (FIPS from Envirofacts `tri_facility`) and state, ÷ land area. Ingest: data/ingest/src/tri.ts. */
+const TriMeasure = z.object({
+  kind: z.literal("tri"),
+  year: z.number().int(),
+  /** TRI Basic Data File (CSV) for the year, U.S. and territories. */
+  url: z.url(),
+  file: z.string(),
+});
+
 /** A layer drawn from its own geometry (road segments, stops, bridges…) instead of a
  *  choropleth on Census geography. Values live in the tiles; breaks are computed at ingest. */
 const FeaturesMeasure = z.object({
@@ -269,7 +279,7 @@ export const DatasetEntry = z.object({
   id: z.string().regex(/^[a-z0-9_]+$/),
   title: z.string(),
   /**
-   * Plain noun phrase that reads after "higher" / "lower" in Odd Pairings captions,
+   * Plain noun phrase that reads after "higher" / "lower" in Combinations captions,
    * e.g. "work-from-home rates", "household incomes". Falls back to the title.
    */
   phrase: z.string().optional(),
@@ -295,7 +305,7 @@ export const DatasetEntry = z.object({
   unit: Unit,
   /** For insights: the population the value describes. Pairs that share one are flagged. */
   universe: z.string(),
-  measure: z.discriminatedUnion("kind", [AcsMeasure, Census2020Measure, LodesMeasure, PlacesMeasure, ClimdivMeasure, NbiMeasure, FarsMeasure, FeaturesMeasure, HpmsVmtMeasure, CejstMeasure, Ddp287gMeasure, LeadMeasure, FoodAccessMeasure, FemaNriMeasure, SviMeasure, AirQualityMeasure, OverdoseMeasure]),
+  measure: z.discriminatedUnion("kind", [AcsMeasure, Census2020Measure, LodesMeasure, PlacesMeasure, ClimdivMeasure, NbiMeasure, FarsMeasure, FeaturesMeasure, HpmsVmtMeasure, CejstMeasure, Ddp287gMeasure, LeadMeasure, FoodAccessMeasure, FemaNriMeasure, SviMeasure, AirQualityMeasure, OverdoseMeasure, TriMeasure]),
   /** Other registry datasets used as inputs to this dataset's model (e.g. PLACES uses county poverty).
    *  Insight pairs with these are flagged: they correlate partly by construction. */
   modelInputs: z.array(z.string()).default([]),
@@ -303,10 +313,10 @@ export const DatasetEntry = z.object({
   coverageNote: z.string().optional(),
   /** Filterable categorical fields (feature layers), each with an explainer. */
   facets: z.array(Facet).default([]),
-  /** Keep out of Odd Pairings (Specials)' playful pairings (sensitive subjects, e.g. enforcement). */
+  /** Keep out of Combinations (Specials)' playful pairings (sensitive subjects, e.g. enforcement). */
   excludeFromInsights: z.boolean().default(false),
   /** Earlier (or later) moments the map can step through (D-36), `from`…`to` by `step`. The
-   *  headline `vintage` stays the default and is what comparisons and Odd Pairings use.
+   *  headline `vintage` stays the default and is what comparisons and Combinations use.
    *  acs5: 5-year periods named by their last year (2014 = 2010–2014; use step 5 so periods
    *  don't overlap). fars, climdiv, nbi, lodes: single calendar years. overdose: 12-month periods ending in `endMonth` of each year. Stops: registry/timeline.ts. */
   timeline: z.object({ from: z.number().int(), to: z.number().int(), step: z.number().int().min(1).default(1) })

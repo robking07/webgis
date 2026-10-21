@@ -14,7 +14,10 @@ export function ShareButton(props: Pick<ComponentProps<typeof Button>, "classNam
   }, [copied]);
 
   async function share() {
-    const url = location.href;
+    // Theme is a personal preference, not part of the view (D-266).
+    const u = new URL(location.href);
+    u.searchParams.delete("theme");
+    const url = u.href;
     // Touch screens get the native share sheet; laptops whose browser also has one (Chrome, Safari) just copy.
     if (navigator.share && matchMedia("(pointer: coarse)").matches) {
       try { await navigator.share({ title: document.title, url }); return; }

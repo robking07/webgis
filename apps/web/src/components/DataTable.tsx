@@ -2,15 +2,17 @@
 // Text alternative to the map: every geography at the current level with its value(s),
 // sortable, searchable, and clickable (a row flies the map there and opens its details).
 // Rows are windowed (only the visible ones render), so 3,000+ counties scroll smoothly.
-// Tract level is too large and has no name lookup, so the table offers state and county.
+// Tracts and block groups list a focused area only (`within`), named through their county.
 import { memo, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
-import { X } from "lucide-react";
+import { Download, X } from "lucide-react";
 import { formatValue, type GeoLevel } from "@webgis/design";
 import { StatusState } from "@webgis/design/components";
 import { Input } from "@/components/ui/input";
 import type { Dataset } from "@/lib/registry";
 import type { Values } from "@/lib/values";
 import { staticUrl } from "@/lib/static-files";
+import { csvFile, csvFileName, marginsFor, placeLabel, saveBlob } from "@/lib/csv";
+import { useIsNarrow } from "./BottomSheet";
 
 /** geoid → [name, lon, lat] for states and counties (exported by ingest). */
 export type Places = Record<string, [string, number, number]>;
@@ -22,6 +24,8 @@ const OVERSCAN = 8;
 
 interface Props {
   level: GeoLevel;
+  /** Only rows whose GEOID starts with this (the focused area). */
+  within?: string | null;
   x: Dataset; xv?: Values;
   y?: Dataset | null; yv?: Values;
   /** Timeline stop shown (D-36), e.g. "2015–2019"; omitted = the default period. */
@@ -36,7 +40,7 @@ interface Props {
 }
 
 /** Memoized: the map page re-renders on every hover; the table must not. */
-export const DataTable = memo(function DataTable({ top = 12, level, x, xv, y, yv, period, selected, onClose, onPick }: Props) {
+export const DataTable = memo(function DataTable({ top = 12, level, within, x, xv, y, yv, period, selected, onClose, onPick }: Props) {
   const [places, setPlaces] = useState<Places | null>(null);
   const [q, setQ] = useState("");
   const [sort, setSort] = useState<{ col: "name" | "x" | "y"; desc: boolean }>({ col: "x", desc: true });
@@ -44,6 +48,27 @@ export const DataTable = memo(function DataTable({ top = 12, level, x, xv, y, yv
   const [viewH, setViewH] = useState(400);
   const scroller = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
+  // Phones and tablets (issue #239): swipe up on the handle or header for full screen, down to go back
+  // (from the docked height, down closes it, like the details drawer).
+  const narrow = useIsNarrow();
+  const [full, setFull] = useState(false);
+  const swipeY = useRef<number | null>(null);
+  /** A mouse swipe also fires a click on release; this swallows it. */
+  const swiped = useRef(false);
+  const swipe = narrow ? {
+    onPointerDown: (e: React.PointerEvent) => { swipeY.current = e.clientY; swiped.current = false; },
+    onPointerMove: (e: React.PointerEvent) => {
+      if (swipeY.current != null && Math.abs(e.clientY - swipeY.current) > 6) e.currentTarget.setPointerCapture(e.pointerId);
+    },
+    onPointerUp: (e: React.PointerEvent) => {
+      const dy = swipeY.current == null ? 0 : e.clientY - swipeY.current;
+      swiped.current = Math.abs(dy) > 6;
+      swipeY.current = null;
+      if (dy < -40) setFull(true);
+      else if (dy > 40) { if (full) setFull(false); else onClose(); }
+    },
+    onPointerCancel: () => { swipeY.current = null; },
+  } : {};
 
   useEffect(() => { loadPlaces().then(setPlaces, () => setPlaces({})); closeRef.current?.focus(); }, []);
   useEffect(() => {
@@ -62,16 +87,30 @@ export const DataTable = memo(function DataTable({ top = 12, level, x, xv, y, yv
   // Sort once per input change; filtering is a cheap pass over the sorted list.
   const sorted = useMemo(() => {
     if (!xv || !places) return [];
-    const r = Object.keys(xv).map((g) => ({ g, name: places[g]?.[0] ?? g, x: xv[g], y: yv?.[g] }));
+    const r = Object.keys(xv).filter((g) => !within || g.startsWith(within)).map((g) => ({ g, name: places[g]?.[0] ?? placeLabel(g, { [g.slice(0, 5)]: places[g.slice(0, 5)]?.[0] ?? "" }), x: xv[g], y: yv?.[g] }));
     const dir = sort.desc ? -1 : 1;
     r.sort((a, b) => sort.col === "name" ? dir * a.name.localeCompare(b.name) : dir * ((a[sort.col] ?? -Infinity) - (b[sort.col] ?? -Infinity)));
     return r;
-  }, [xv, yv, places, sort]);
+  }, [xv, yv, places, sort, within]);
   const rows = useMemo(() => {
     const term = q.trim().toLowerCase();
     return term ? sorted.filter((r) => r.name.toLowerCase().includes(term)) : sorted;
   }, [sorted, q]);
   useEffect(() => { scroller.current?.scrollTo({ top: 0 }); setScrollTop(0); }, [q, sort]);
+
+  // Downloads exactly the listed rows (level, focused area, filter, sort) of the first map.
+  const [saving, setSaving] = useState(false);
+  async function download() {
+    if (!places || !xv) return;
+    setSaving(true);
+    try {
+      const nm = Object.fromEntries(Object.entries(places).map(([g, p]) => [g, p[0]]));
+      // shortcut: margins are the default period's, so a timeline stop gets none; upgrade when stops' margins are wired in.
+      const moes = period ? {} : await marginsFor(x, level);
+      const { blob } = await csvFile(x, rows.map((r) => r.g), xv, moes, nm);
+      saveBlob(blob, csvFileName(x, level));
+    } finally { setSaving(false); }
+  }
 
   const first = Math.max(0, Math.floor(scrollTop / ROW_H) - OVERSCAN);
   const last = Math.min(rows.length, Math.ceil((scrollTop + viewH) / ROW_H) + OVERSCAN);
@@ -89,24 +128,33 @@ export const DataTable = memo(function DataTable({ top = 12, level, x, xv, y, yv
 
   return (
     // Phones and tablets: docked to the bottom 42% so a picked place stays visible above it (D-35).
-    <section role="dialog" aria-modal="false" aria-label={`Table of ${x.title}`} data-obstructs=""
+    <section role="dialog" aria-modal="false" aria-label={`Table of ${x.title}`} data-obstructs="" data-full={full || undefined}
       style={{ "--table-top": `${top}px` } as CSSProperties}
-      className="absolute inset-x-0 bottom-0 z-40 flex h-[42%] flex-col gap-2 rounded-t-2xl border bg-card p-3 shadow-lg lg:bottom-3 lg:left-3 lg:right-auto lg:top-[var(--table-top)] lg:h-auto lg:w-[28rem] lg:rounded-lg">
+      className={`absolute inset-x-0 bottom-0 z-40 flex ${full ? "h-full" : "h-[42%]"} flex-col gap-2 rounded-t-2xl border bg-card p-3 pt-0 shadow-lg motion-safe:transition-[height] motion-safe:duration-200 lg:bottom-3 lg:left-3 lg:right-auto lg:top-[var(--table-top)] lg:h-auto lg:w-[28rem] lg:rounded-lg lg:pt-3`}>
+      <div className="touch-none lg:touch-auto" {...swipe}>
+      <button type="button" aria-expanded={full} aria-label={full ? "Show the map above the table" : "Expand the table to full screen"}
+        onClick={() => { if (swiped.current) { swiped.current = false; return; } setFull((f) => !f); }}
+        className="flex w-full justify-center pb-1 pt-2.5 focus-visible:outline-2 focus-visible:outline-ring lg:hidden">
+        <span className="h-1.5 w-10 rounded-full bg-border" aria-hidden />
+      </button>
       <header className="flex items-start justify-between gap-2">
         <div>
           <h2 className="text-sm font-semibold">{x.title}{y ? ` × ${y.title}` : ""}</h2>
-          <p className="text-xs text-muted-foreground">By {level}{period ? ` · ${period}` : ""} · {rows.length.toLocaleString()} {rows.length === 1 ? "row" : "rows"} · select a place to go there</p>
+          <p className="text-xs text-muted-foreground">By {level.replace("_", " ")}{period ? ` · ${period}` : ""} · {rows.length.toLocaleString()} {rows.length === 1 ? "row" : "rows"} · select a place to go there</p>
         </div>
         <button ref={closeRef} type="button" onClick={onClose} aria-label="Close table" className="rounded p-1 text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring">
           <X className="size-4" />
         </button>
       </header>
-      {level === "tract" ? (
-        <StatusState status="empty" message="The table covers states and counties. Zoom out to county level to use it." />
-      ) : !xv || !places ? <StatusState status="loading" /> : (
+      </div>
+      {!xv || !places ? <StatusState status="loading" /> : (
         <>
           <label className="sr-only" htmlFor="table-filter">Filter by name</label>
           <Input id="table-filter" type="search" placeholder="Filter by name…" value={q} onChange={(e) => setQ(e.target.value)} />
+          <button type="button" onClick={download} disabled={saving || !rows.length} aria-busy={saving}
+            className="inline-flex min-h-8 items-center justify-center gap-1.5 self-start rounded-md border px-2.5 text-xs hover:bg-muted disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">
+            <Download className="size-3.5" aria-hidden />{saving ? "Preparing…" : "Download CSV"}
+          </button>
           <div ref={scroller} className="min-h-0 flex-1 overflow-auto rounded border" onScroll={(e) => setScrollTop(e.currentTarget.scrollTop)}>
             <table className="w-full table-fixed text-xs tabular-nums" aria-rowcount={rows.length + 1}>
               <caption className="sr-only">{x.title}{y ? ` and ${y.title}` : ""} by {level}. Select a place to show it on the map.</caption>
@@ -120,7 +168,7 @@ export const DataTable = memo(function DataTable({ top = 12, level, x, xv, y, yv
                     <tr key={r.g} className={`border-t hover:bg-muted ${r.g === selected ? "bg-muted font-semibold" : ""}`} aria-selected={r.g === selected || undefined} style={{ height: ROW_H }} aria-rowindex={first + i + 2}>
                       <th scope="row" className="truncate px-2 text-left font-normal">
                         {p ? (
-                          <button type="button" onClick={() => onPick(r.g, r.name, p[1], p[2])}
+                          <button type="button" onClick={() => { setFull(false); onPick(r.g, r.name, p[1], p[2]); }}
                             className="w-full truncate rounded text-left text-primary hover:underline focus-visible:outline-2 focus-visible:outline-ring">{r.name}</button>
                         ) : r.name}
                       </th>

@@ -16,7 +16,7 @@ vintage: "2022 (from the 2018–2022 ACS)"
 geographyLevels: [county, tract]
 unit: percentile
 universe: "counties or census tracts (national rank among the same level)"
-modelInputs: [unemployment_rate, pct_no_hs_diploma, pct_uninsured]
+modelInputs: [unemployment_rate, pct_no_hs_diploma, pct_uninsured, pct_poverty, pct_rent_burdened, pct_owner_cost_burdened]  # SVI 2022 theme 1: below 150% poverty, unemployment, housing cost burden, no diploma, uninsured
 coverageNote: "A rank from 0 to 100 among all U.S. counties, or among all U.S. tracts (not within each state): the 90th percentile means more vulnerable on this theme than 90% of counties (or tracts). Tracts with no residents, and some where CDC couldn't estimate an input, show no data. Puerto Rico isn't included in CDC's U.S. files. Not comparable with earlier SVI years."
 terms: [cdc-svi, percentile-rank, acs-5-year]
 measure: { kind: svi, year: 2022, field: RPL_THEME1 }

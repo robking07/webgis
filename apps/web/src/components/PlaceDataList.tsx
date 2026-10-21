@@ -2,11 +2,13 @@
 // All datasets for one place, filterable with the shared dataset filter. Used by the
 // place profile page and by the map's bottom drawer when it's swiped open.
 import { useEffect, useMemo, useState } from "react";
-import { formatEstimate, type GeoLevel } from "@webgis/design";
+import { formatEstimate, isGradable, type GeoLevel } from "@webgis/design";
 import { StatusState } from "@webgis/design/components";
 import { DatasetFilter, useDatasetFilter } from "./DatasetFilter";
+import { Benchmarks } from "./Benchmarks";
 import { loadValues, type Values } from "@/lib/values";
 import { rankText } from "@/lib/place";
+import { noDataReason, reliabilityNote } from "@/lib/reliability";
 import { CATEGORIES, DATASET_BY_ID, type Dataset } from "@/lib/registry";
 
 export type Detail = Record<string, { value: number | null; moe: number | null }>;
@@ -15,6 +17,7 @@ export type Detail = Record<string, { value: number | null; moe: number | null }
 const MAP_IT = "text-xs text-primary underline-offset-2 hover:underline [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-focus-within:opacity-100 focus-visible:opacity-100";
 
 interface Props {
+  geoid: string;
   level: GeoLevel;
   detail: Detail;
   /** Either a link per dataset… */
@@ -24,7 +27,7 @@ interface Props {
   compact?: boolean;
 }
 
-export function PlaceDataList({ level, detail, mapHref, onMapIt, compact }: Props) {
+export function PlaceDataList({ geoid, level, detail, mapHref, onMapIt, compact }: Props) {
   const { q, setQ, cat, setCat, results } = useDatasetFilter();
   const [ranks, setRanks] = useState<Record<string, string>>({});
 
@@ -52,7 +55,7 @@ export function PlaceDataList({ level, detail, mapHref, onMapIt, compact }: Prop
 
   return (
     <div className="flex flex-col gap-3">
-      <DatasetFilter q={q} setQ={setQ} cat={cat} setCat={setCat} placeholder="Filter this place's data…" />
+      <div className="flex flex-col gap-3 print:hidden"><DatasetFilter q={q} setQ={setQ} cat={cat} setCat={setCat} placeholder="Filter this place's data…" /></div>
       {grouped.length === 0 ? <StatusState status="empty" message="No datasets match." /> : grouped.map(([category, ds]) => (
         <section key={category} aria-label={category}>
           <h3 className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{category}</h3>
@@ -60,13 +63,18 @@ export function PlaceDataList({ level, detail, mapHref, onMapIt, compact }: Prop
             {ds.map((d) => {
               const r = detail[d.id];
               const est = formatEstimate(r.value, r.moe, d.unit);
+              // Why there's no value, or the D-222 grade's title for a shaky survey estimate.
+              const note = r.value == null ? noDataReason(d, geoid) : isGradable(d.measure.kind) ? reliabilityNote(r.value, r.moe)?.title : null;
               return (
                 <li key={d.id} className={`group flex items-center justify-between gap-3 ${compact ? "px-3 py-2" : "px-4 py-3"}`}>
                   <div className="min-w-0">
-                    <p className="text-sm font-medium">{d.title}</p>
+                    <p className="text-sm font-medium"><a href={`/data/${d.id}`} className="rounded underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-ring">{d.title}</a></p>
                     <p className="text-xs text-muted-foreground">{ranks[d.id] ? `${ranks[d.id]} · ` : ""}{d.vintage}</p>
+                    {r.value != null && <Benchmarks dataset={d} geoid={geoid} />}
+                    {note && <p className="text-xs font-medium text-foreground" data-value-note="">{note}</p>}
+                    <p className="hidden text-xs text-muted-foreground print:block" data-print-source="">Source: {d.source.name}</p>
                   </div>
-                  <div className="shrink-0 text-right">
+                  <div className="shrink-0 text-right print:[&_a]:hidden print:[&_button]:hidden">
                     <p className="text-sm font-semibold tabular-nums">
                       {est.value}
                       {est.moe && <span className="ml-1 text-xs font-normal text-muted-foreground">±{est.moe}</span>}

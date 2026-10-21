@@ -84,6 +84,8 @@ async function open(vp, path, { scheme = "light", ready = true } = {}) {
     if (/\.counts\.json$|\/values\/counts\//.test(m.location()?.url ?? "") && /404/.test(m.text())) return;
     // Vercel Web Analytics only exists on Vercel; locally its script 404s.
     if ((m.location()?.url ?? "").includes("/_vercel/")) return;
+    // A brief CDN blip (net::ERR_*, no HTTP status) on the tile host is not our bug; 4xx/5xx still fail (#275).
+    if (/net::ERR_/.test(m.text()) && /tiles\.mapwich\.org/.test(`${m.text()} ${m.location()?.url ?? ""}`)) return;
     page.errors.push(`console: ${m.text()} ${m.location()?.url ?? ""}`);
   });
   page.isPhone = (typeof vp === "string" ? VP[vp] : vp).isMobile === true;
@@ -131,16 +133,17 @@ async function immerse(page) {
   await wait(1500);
   await mapIdle(page);
 }
-/** Put a point at the middle of the screen (clear of every panel) and tap or click it. */
-async function tapLonLat(page, lon, lat) {
+/** Put a point at the middle of the screen (clear of every panel) and tap or click it (twice: `double`). */
+async function tapLonLat(page, lon, lat, double = false) {
   await page.evaluate(([lon, lat]) => window.__wgMap.jumpTo({ center: [lon, lat] }), [lon, lat]);
   await mapIdle(page);
   const [x, y] = await page.evaluate(([lon, lat]) => { const p = window.__wgMap.project([lon, lat]); return [p.x, p.y]; }, [lon, lat]);
-  await tapAt(page, x, y);
+  await tapAt(page, x, y, double);
 }
 const HENNEPIN = [-93.4752, 45.0061];
-async function tapAt(page, x, y) {
-  if (page.isPhone) await page.touchscreen.tap(x, y); else await page.mouse.click(x, y);
+async function tapAt(page, x, y, double = false) {
+  if (!page.isPhone) await page.mouse.click(x, y, { clickCount: double ? 2 : 1 });
+  else for (let i = double ? 2 : 1; i > 0; i--) await page.touchscreen.tap(x, y);
 }
 
 // ── Measuring ──────────────────────────────────────────────────────────────────
@@ -455,7 +458,8 @@ test("phone dataset sheet: chips, pick switches the map, sheet and details close
   // The sheet covers the lower part of the screen: tap the map just above it, inside Hennepin (the
   // focused place since the first tap: issue #203).
   const top = await sheet.evaluate((el) => el.getBoundingClientRect().top);
-  await page.evaluate(([c, dy]) => window.__wgMap.easeTo({ center: c, offset: [0, dy], duration: 0 }), [HENNEPIN, top - 40 - page.viewportSize().height / 2]);
+  // Zero padding: the offset is from the padded center, and the first tap's centering left the drawer's padding.
+  await page.evaluate(([c, dy]) => window.__wgMap.easeTo({ center: c, offset: [0, dy], padding: { top: 0, right: 0, bottom: 0, left: 0 }, duration: 0 }), [HENNEPIN, top - 40 - page.viewportSize().height / 2]);
   await mapIdle(page);
   await tapAt(page, page.viewportSize().width / 2, top - 40);
   await page.locator('section[aria-label^="Details for"]').waitFor();
@@ -694,6 +698,23 @@ test("laptop dataset menu: the card title opens it tall, with search, the data l
   await page.waitForFunction(() => new URL(location.href).searchParams.get("d") === "pct_work_from_home");
 });
 
+// #308: the explainer grows the card down; the legend must step aside, not cover the Compare and Table buttons.
+for (const [w, h] of [[1440, 900], [1280, 800], [1024, 768]]) {
+  test(`laptop ${w}×${h}: the legend never covers the dataset card with the explainer open`, async (o) => {
+    const { page } = await o({ viewport: { width: w, height: h } }, "/map?d=median_household_income");
+    const card = page.locator('section[aria-label="Mapped dataset"]');
+    await card.getByRole("button", { name: "What do these numbers mean?" }).click();
+    await wait(400);
+    const [c, legends] = await page.evaluate(() => [
+      document.querySelector('section[aria-label="Mapped dataset"]').getBoundingClientRect().toJSON(),
+      [...document.querySelectorAll("[data-legend]")].filter((el) => el.offsetParent).map((el) => el.getBoundingClientRect().toJSON()),
+    ]);
+    expect(legends.length > 0, "no legend showing");
+    expect(legends.every((l) => l.left >= c.right || c.left >= l.right || l.top >= c.bottom || c.top >= l.bottom), "the legend overlaps the dataset card");
+    expect(c.bottom <= h, "the card runs off the screen");
+  });
+}
+
 test("laptop hidden card: the heading's title opens the same menu", async (o) => {
   const { page } = await o("laptop", "/map?d=median_household_income&at=-93.27,44.97,9");
   await immerse(page);
@@ -736,8 +757,41 @@ for (const vp of ["phone", "laptop"]) {
       expect((await page.locator("main h1").innerText()) === name, `place ${geoid}: heading "${await page.locator("main h1").innerText()}"`);
       const meta = await page.locator("main header p").last().innerText();
       expect(/^[1-9]\d* datasets · [\d,.]+ sq mi of land$/.test(meta), `place ${geoid}: "${meta}"`);
+      // Handout (issue #290): CSV button, and a print view with the chrome gone and sources shown.
+      expect((await page.getByRole("button", { name: "Download CSV" }).count()) === 1 && (await page.getByRole("button", { name: "Print / save as PDF" }).count()) === 1, `place ${geoid}: handout buttons`);
+      await page.emulateMedia({ media: "print" });
+      expect(!(await page.locator("main header button").first().isVisible()) && !(await page.locator("header.sticky").isVisible()), `place ${geoid}: chrome visible in print`);
+      expect(await page.locator("[data-print-source]").first().isVisible(), `place ${geoid}: no source line in print`);
+      await page.emulateMedia({ media: "screen" });
+      expect(!(await page.locator("[data-print-source]").first().isVisible()), `place ${geoid}: source line on screen`);
       expect(!dbCalls(page).length, `database calls: ${dbCalls(page).join(", ")}`);
     }
+  });
+}
+
+// Issue #193 (D-364): a zero with a huge margin reads as unreliable; a missing value says why.
+for (const vp of ["phone", "laptop"]) {
+  test(`${vp} shaky zeros: Loving County's 0% ±57.7 bike commuting is unreliable; no-data rows say why`, async (o) => {
+    const row = (page, title) => page.locator("main li").filter({ has: page.getByText(title, { exact: true }) });
+    const { page } = await o(vp, "/place/48301", { ready: false });
+    await page.locator("main h1").waitFor({ timeout: 20000 });
+    expect((await row(page, "Bike to work").locator("[data-value-note]").innerText()) === "Unreliable estimate", "Loving bike row note");
+    expect((await row(page, "Mean travel time to work").locator("[data-value-note]").innerText()) === "The Census Bureau doesn't publish this figure for this area.", "Loving mean commute reason");
+    const { page: cook } = await o(vp, "/place/17031", { ready: false });
+    await cook.locator("main h1").waitFor({ timeout: 20000 });
+    expect((await row(cook, "Bike to work").locator("[data-value-note]").count()) === 0, "Cook County's solid bike share flagged");
+    const { page: cmp } = await o(vp, "/compare/48301/17031?d=pct_bike_commute", { ready: false });
+    const head = cmp.locator("[data-compare-headline]");
+    await head.waitFor({ timeout: 20000 });
+    const notes = await head.locator("[data-value-note]").allInnerTexts();
+    expect(notes.length === 1 && notes[0] === "Unreliable estimate", `compare headline notes: ${notes}`);
+    const { page: map } = await o(vp, "/map?d=pct_bike_commute&lv=county&at=-103.58,31.84,8");
+    await immerse(map);
+    await tapLonLat(map, -103.58, 31.84);
+    const det = map.locator('section[aria-label^="Details for Loving County"]');
+    await det.waitFor();
+    await det.locator("[data-reliability]").first().waitFor({ timeout: 15000 });
+    expect(/Unreliable estimate\. The margin of error is large for an estimate of zero/.test(await det.locator("[data-reliability]").first().innerText()), "details note");
   });
 }
 
@@ -765,6 +819,30 @@ test("phone: a long dataset title stops short of the back button (issue #243)", 
   const h = await page.locator("[data-dataset-heading]").boundingBox();
   const b = await back.boundingBox();
   expect(h.x + h.width <= b.x, `heading ends at ${Math.round(h.x + h.width)}px, back button starts at ${Math.round(b.x)}px`);
+});
+
+test("phone: zoomed in, search sits above the legend and opens full screen (issue #246)", async (o) => {
+  const { page } = await o("phone", "/map?d=median_household_income&lv=county&at=-93.4752,45.0061,7.2");
+  const btn = page.locator('button[aria-label="Search places or data"]');
+  await immerse(page);
+  expect(!(await btn.count()), "search button shows before any zoom");
+  await tapLonLat(page, ...HENNEPIN);
+  await page.locator('section[aria-label^="Details for"]').waitFor();
+  await page.locator('button[aria-label="Close details"]').click();
+  await btn.waitFor();
+  const b = await btn.boundingBox(), l = await page.locator("button[data-legend]").boundingBox();
+  expect(b.y + b.height <= l.y && b.x < l.x + 20, `search ${JSON.stringify(b)} not just above the legend strip ${JSON.stringify(l)}`);
+  await btn.click();
+  const input = page.getByPlaceholder("Search places or data...");
+  await input.waitFor();
+  const vh = page.viewportSize().height, r = await input.boundingBox();
+  expect(Math.abs(r.y + r.height / 2 - vh / 2) < 60, `field not mid-screen (center ${Math.round(r.y + r.height / 2)} of ${vh})`);
+  await page.keyboard.type("D");
+  await wait(500);
+  expect(!(await page.locator('[role="option"]').count()), "results after one character");
+  await page.keyboard.type("u");
+  await page.locator('[role="option"]').first().waitFor();
+  expect((await input.boundingBox()).y < 40, "field didn't move to the top once typing started");
 });
 
 /** Phone chrome over the map: every text, icon and edge against its own backing. */
@@ -872,6 +950,7 @@ for (const vp of ["phone", "laptop"]) {
     await panel.waitFor();
     await wait(400);
     const slider = panel.locator("input[type=range]");
+    await slider.scrollIntoViewIfNeeded(); // the card's Why link makes the panel shorter, so the slider can sit below its fold
     const notches = await panel.locator("[data-notch]").count();
     expect(notches === 10, `expected 10 notches (2015-2024), got ${notches}`);
     const bg = await slider.evaluate((el) => getComputedStyle(el, "::-webkit-slider-runnable-track").backgroundImage);
@@ -1019,7 +1098,7 @@ test("laptop map fixes (#187): canvas label follows the map, tiles banner only f
   // The default year's file fails while an earlier year shows: a message, not an endless spinner.
   await page.route(/\/values\/pct_poverty\/(state|county)\.json/, (r) => r.fulfill({ status: 404, body: "" }));
   await page.goto(`${BASE}/map?d=pct_poverty&t=2019&theme=light`);
-  await page.getByText(/No (state|county) data for pct_poverty/).first().waitFor({ timeout: 15000 });
+  await page.getByText("This map didn't load. Try again in a minute.").first().waitFor({ timeout: 15000 });
   page.errors = page.errors.filter((e) => !/404/.test(e));
 });
 
@@ -1031,6 +1110,25 @@ test("laptop map fixes (#187): canvas label follows the map, tiles banner only f
 (await import("./drilldown.tests.mjs")).default({ test, expect, immerse, mapIdle, tapLonLat, HENNEPIN });
 (await import("./compare-mode.tests.mjs")).default({ test, expect, immerse });
 (await import("./splash.tests.mjs")).default({ test, expect, wait });
+(await import("./getting-around.tests.mjs")).default({ test, expect, mapIdle });
+(await import("./table.tests.mjs")).default({ test, expect, wait });
+(await import("./popups.tests.mjs")).default({ test, expect, wait, mapIdle, pointerAt, hoverCard, HENNEPIN, NEBRASKA });
+(await import("./mpo.tests.mjs")).default({ test, expect, mapIdle, tapLonLat, HENNEPIN });
+(await import("./click.tests.mjs")).default({ test, expect, immerse, mapIdle, tapAt, HENNEPIN });
+
+test("old /specials/pairings?topic=Health redirects to /specials/combinations?topic=Health", async (o) => {
+  const { page } = await o("laptop", "/specials/pairings?topic=Health", { ready: false });
+  const u = new URL(page.url());
+  expect(u.pathname === "/specials/combinations" && u.searchParams.get("topic") === "Health", `landed on ${page.url()}`);
+});
+
+// Pinned to the work-from-home piece (it has a pairing); the newest piece on /specials may have none.
+test("/specials: a piece's Combination origin links to the map, not a Combination page", async (o) => {
+  const { page } = await o("laptop", "/specials/work-from-home-and-exercise", { ready: false });
+  const hrefs = await page.$$eval("a", (as) => as.map((a) => a.getAttribute("href")));
+  expect(!hrefs.includes("/specials/pct_work_from_home__physical_inactivity"), "link to a Combination id as if a Special");
+  expect(hrefs.some((h) => h?.startsWith("/map?d=pct_work_from_home&b=physical_inactivity")), "origin link goes to the map with both datasets");
+});
 
 // ── Run ────────────────────────────────────────────────────────────────────────
 // Round-robin keeps the slow tests spread across shards.

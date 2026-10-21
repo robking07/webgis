@@ -60,7 +60,7 @@
   short: >-
     A value predicted from survey data and local characteristics rather than counted directly in that place.
   long: >-
-    CDC's PLACES project has health survey responses for states, not for every county. It uses a statistical model that combines those responses with each county's demographics (such as age, race and poverty) to estimate local rates. The estimates are useful for comparison, but they partly reflect the model's inputs, which is why Odd Pairings won't pair them with those inputs.
+    CDC's PLACES project has health survey responses for states, not for every county. It uses a statistical model that combines those responses with each county's demographics (such as age, race and poverty) to estimate local rates. The estimates are useful for comparison, but they partly reflect the model's inputs, which is why Combinations won't pair them with those inputs.
   source: https://www.cdc.gov/places/methodology/
 
 - id: climate-normal
@@ -306,3 +306,12 @@
     The federal legal limit for an air pollutant. Design values above it mean the county does not meet the standard.
   long: >-
     Under the Clean Air Act, EPA sets a limit for each common pollutant. The annual fine-particle (PM2.5) standard is 9.0 micrograms per cubic meter, tightened from 12.0 in 2024. The 8-hour ozone standard is 0.070 parts per million. A county whose design value is above the limit is violating the standard, which can lead to a formal "nonattainment" designation and cleanup requirements. The tables are informational and are not themselves a regulatory determination.
+
+- id: toxics-release-inventory
+  term: >-
+    Toxics Release Inventory (TRI)
+  short: >-
+    EPA's yearly count of the pounds of listed toxic chemicals that larger industrial sites report releasing. Pounds released are not people's exposure or health risk.
+  long: >-
+    Larger facilities in covered industries report each year what they released at their own site: into the air or water, underground, or onto land. The amounts are mostly their own estimates, and small sites and many industries don't report, so zero means no reporting facility, not no pollution. Pounds don't show how toxic a chemical is, where it goes or who breathes or drinks it; EPA says the amount alone is not a measure of exposure. Metal mines, which put waste rock on land, make up nearly half of all pounds.
+  source: https://www.epa.gov/toxics-release-inventory-tri-program/what-toxics-release-inventory

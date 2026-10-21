@@ -3,6 +3,7 @@
 //   &lv=<level>&t=<timeline stop, e.g. 2019; omitted = the default period>
 //   &since=<earlier stop: map the change from it to the shown stop (issue #127)>
 //   &in=<geoid: the place clicked into, drawn with the next level inside it (issue #203)>
+//   &mpo=<MPO id: a Metropolitan Planning Organization picked in search, outlined (issue #276)>
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -25,6 +26,8 @@ export interface UrlState {
   since?: string | null;
   /** Drill-down: the GEOID of the focused place; null = the whole map. */
   in?: string | null;
+  /** A searched MPO (outlined, not a geography level); null = none. */
+  mpo?: string | null;
 }
 
 export const DEFAULT_VIEW: ViewState = { lon: -96.5, lat: 38.5, zoom: 3.6, fit: true };
@@ -42,6 +45,7 @@ export function parseUrlState(search: string): UrlState {
     t: p.get("t")?.match(/^[a-z0-9]{1,12}$/)?.[0] ?? null,
     since: p.get("since")?.match(/^[a-z0-9]{1,12}$/)?.[0] ?? null,
     in: p.get("in")?.match(/^\d{2,15}$/)?.[0] ?? null,
+    mpo: p.get("mpo")?.match(/^\w{1,10}$/)?.[0] ?? null,
   };
 }
 
@@ -55,11 +59,12 @@ export function serializeUrlState(s: UrlState): string {
   if (s.t) p.set("t", s.t);
   if (s.since) p.set("since", s.since);
   if (s.in) p.set("in", s.in);
+  if (s.mpo) p.set("mpo", s.mpo);
   return `?${p.toString().replaceAll("%2C", ",")}`;
 }
 
 /** The deliberate choices; changing one adds a Back step (each drill-down step too). Panning, zooming and theme don't. */
-export const historyKey = (s: UrlState) => [s.d, s.b, s.lv, s.t, s.since, s.in].join("|");
+export const historyKey = (s: UrlState) => [s.d, s.b, s.lv, s.t, s.since, s.in, s.mpo].join("|");
 
 /** URL-backed state. Pan/zoom write with replaceState (debounced); a change to the dataset, second
  *  dataset, level, period or focused place pushes a history entry, and Back/Forward re-read the URL. */
@@ -81,7 +86,7 @@ export function useUrlState(initial: UrlState) {
     const onPop = () => {
       const p = parseUrlState(window.location.search);
       setState((s) => {
-        const next = { ...s, d: p.d ?? initial.d, b: p.b, lv: p.lv, t: p.t, since: p.since, in: p.in };
+        const next = { ...s, d: p.d ?? initial.d, b: p.b, lv: p.lv, t: p.t, since: p.since, in: p.in, mpo: p.mpo };
         lastKey.current = historyKey(next); // the URL already holds it: don't push it again
         return next;
       });

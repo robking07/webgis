@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { searchPlaces, type PlaceRow } from "./search";
+import { mpoById, normalizeName, placeByGeoid, searchPlaces, type PlaceRow } from "./search";
 
 // Rows from the live geo/search.json (issue #258): every county starting "Du" or "Cook", and the places tested.
 const ROWS: PlaceRow[] = [
@@ -54,4 +54,41 @@ describe("searchPlaces", () => {
   it("lets counties fill the list when few places match", () => {
     expect(searchPlaces(ROWS.filter((r) => r[1] === "County"), "Du")).toHaveLength(6);
   });
+});
+
+describe("MPOs in place search (issue #276)", () => {
+  const mpo: PlaceRow = ["Metropolitan Council", "MPO", "27197300", -93.3, 44.97, 3040, "MN", [-94.01, 44.47, -92.73, 45.41]];
+  const rows: PlaceRow[] = [...ROWS, mpo];
+  it("finds one by name or by its kind, with its id, states and bbox", () => {
+    expect(searchPlaces(rows, "metropolitan council")[0]).toMatchObject({ kind: "MPO", geoid: null, level: null, mpo: { id: "27197300", states: "MN", bbox: mpo[7] } });
+    expect(searchPlaces(rows, "MPO").map((h) => h.name)).toEqual(["Metropolitan Council"]);
+  });
+  it("lists MPOs ahead of names that merely contain 'mpo' (Emporia, Lompoc)", () => {
+    const more: PlaceRow[] = [["Emporia, VA", "City", "", -77.5, 36.7, 7], ["Lompoc, CA", "City", "", -120.4, 34.6, 12], ...rows];
+    expect(searchPlaces(more, "mpo")[0]).toMatchObject({ kind: "MPO" });
+    expect(searchPlaces(more, "mpo", 6).map((h) => h.name)).toContain("Emporia, VA");
+  });
+  it("never answers a geoid lookup", () => {
+    expect(placeByGeoid(rows, "27197300")).toBeNull();
+    expect(mpoById(rows, "27197300")?.name).toBe("Metropolitan Council");
+  });
+});
+
+describe("Saint/St., Twin Cities (issue #289)", () => {
+  const more: PlaceRow[] = [
+    ["St. Paul, MN", "City", "", -93.1, 44.95, 52], ["Stillwater, MN", "City", "", -92.8, 45.05, 7],
+    ["Sault Ste. Marie, MI", "City", "", -84.3, 46.5, 15], ["Twin Cities Area Transportation Study (TwinCATS)", "MPO", "26001", -85, 42, 10, "MI", [0, 0, 1, 1]],
+    ["Metropolitan Council", "MPO", "27197300", -93.37, 44.94, 3040, "MN", [0, 0, 1, 1]],
+  ];
+  const f = (q: string) => searchPlaces(more, q).map((h) => h.name);
+  it("normalizes abbreviations", () => {
+    expect(normalizeName("St. Paul, MN")).toBe("saint paul, mn");
+    expect(normalizeName("Sault Ste. Marie, MI")).toBe("sault sainte marie, mi");
+    expect(normalizeName("Mt. Vernon, Ft Worth,")).toBe("mount vernon, fort worth,");
+  });
+  it("finds St. Paul however it is spelled", () => {
+    for (const q of ["saint paul", "st paul", "St. Paul"]) expect(f(q)[0]).toBe("St. Paul, MN");
+  });
+  it("a half-typed st still finds Stillwater", () => expect(f("st")).toContain("Stillwater, MN"));
+  it("twin cities finds the Metropolitan Council first", () => expect(f("Twin Cities")[0]).toBe("Metropolitan Council"));
 });

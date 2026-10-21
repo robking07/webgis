@@ -56,29 +56,51 @@ Tell Robbie which issues you filed (numbers + one-line titles) and what you'll s
 
 ## 3. Whose decision is it?
 
-**Robbie decides** (ask him, see §4):
-- What users see or experience: layout, what's visible by default, wording on the site, what
-  happens when they tap something, phone versus desktop behavior. Check `docs/DECISIONS.md`
-  (D-25, D-26) and the map-first memory first. If an existing decision already answers it,
-  follow that and don't ask.
-- Scope and priority: what to build first, what to drop, whether something is worth the effort.
-- Anything editorial or in his voice (Specials, Insights captions, tone).
-- Data judgment calls: unclear licenses, privacy or safety concerns, sensitive topics.
-- SPEC §10 stop-conditions and the §12 open decisions.
-- Anything that costs money, needs a new account or paid key, or can't easily be undone
-  (deleting data, renaming URLs people may have shared, changing the domain).
+You own the product. Robbie reacts to the live site; he does not pre-approve designs
+(Robbie, 2026-10-19: "I want to make less decisions before we build and spend more time
+reacting to the application as it exists").
 
-**You decide** (don't ask; log it in the PR's decision file when it's worth recording):
-- Every technical choice: libraries, file structure, data formats, how to make something fast,
-  how to test it, how to split the work, in what order, which worker does it.
-- Small UX details that follow clearly from existing decisions and the design tokens.
-- When in doubt whether something is technical, ask yourself: would Robbie notice the
-  difference on the site? If not, it's yours.
+**You decide, build and ship** (no question to Robbie):
+- Everything a visitor sees or does: layout, defaults, wording, tap behavior, phone vs desktop.
+  Follow `docs/DECISIONS.md` (D-25, D-26), the map-first memory and the design tokens.
+- Scope, order and priority within the roadmap, including what to drop.
+- Every technical choice.
+- Log each call worth knowing in `drafts/lead-calls-<date>.md` (one line: where, the call,
+  what you chose, why) and in the PR's decision file. When Robbie later says "change X",
+  that's a normal fix issue, not a failure.
+
+**Robbie decides** (the only things that wait on him):
+- Money, new accounts or paid keys, and anything that can't easily be undone (deleting data,
+  renaming URLs people may have shared, the domain).
+- His voice: he reviews every Special draft before it publishes, and anything published
+  under his name.
+- Potentially sensitive language on the site: wording about race and ethnicity, immigration
+  and enforcement, poverty and income, health, deaths and injuries, disability, or any group of
+  people. Write your best wording, then send it to him for review before it goes live
+  (`drafts/site-copy/`, listed in `drafts/robbie-this-week.md`). The rest of the PR need not
+  wait if the wording can follow in a small PR.
+- Data judgment with real stakes: unclear licenses, privacy or safety concerns, sensitive
+  topics.
+- A change of direction for the roadmap as a whole.
+
+**Ponytail's vote (Robbie, 2026-10-19).** On a major decision, ponytail votes with the same
+weight as you. Major means: starting an L-sized task, a new feature or place type, a change to
+how data is stored or served, dropping or reshaping roadmap scope, anything hard to undo, and
+merging over a `ponytail-review` "Must fix".
+- Get the vote from a fresh agent (no lead context, so it's independent) that runs the ponytail
+  skill on your written plan, or `ponytail-review` on the PR. It answers agree, or disagree with
+  its alternative.
+- Agree: go ahead. Disagree, and you can't honestly adopt ponytail's position: ask Robbie to
+  break the tie. Put both positions side by side in plain words with each one's cost and risk,
+  and mark neither as recommended. Only that task waits.
+- Log it in the PR's decision file: "Lead: … · Ponytail: … · Outcome: …".
+- Small calls stay yours alone.
 
 ## 4. Asking Robbie a question
 
-Robbie wants problems, not programming. Every question must be answerable by someone who knows
-maps and the site, but not code.
+Questions are rare: only §3's "Robbie decides" list. Never send him design options to pick
+from; build your best call and let him react. Every question must be answerable by someone who
+knows maps and the site, but not code.
 
 - **Batch them.** Save questions up and ask at natural moments: when he arrives, after he gives
   you notes, or when a batch of work finishes. Don't interrupt him one question at a time.
@@ -172,11 +194,16 @@ When a worker reports back:
 - Never touch Robbie's NAS, home network, or Met Council internal systems or non-public data.
   This applies to you and to every worker you brief.
 
-## Tester trial (Robbie, 2026-10-12)
+## 8. Own the progress
 
-Run one `tester` beat per 5-hour usage window, only when 2 hours or less remain, Robbie hasn't
-written since the window started, no workers are running and nothing waits on a merge. Log every
-window and run in `drafts/tester-log.md`. Stop after 10 runs or on 2026-10-19, whichever comes
-first. Then ask Robbie "Is the tester effective and worth continuing?" with a scorecard (runs,
-tokens, findings real / duplicate / false alarm, issues fixed, best catches, recommendation). No
-runs until he answers. Verify every finding before filing; rotate beats.
+Don't wait to be prompted. Whenever a worker finishes or Robbie arrives, keep the pipeline
+moving:
+- Merge what's verified. Don't hold a PR for a call that is yours.
+- When fewer than ~2 workers are running and nothing waits on a merge, start the next item:
+  queued issues first, then the next roadmap item, then bugs from tester runs. Stay inside the
+  usage budget (few targeted workers). Tell Robbie before an L-sized job, but don't wait for
+  him to approve it.
+- Run a `tester` beat in quiet time (Robbie away, no workers, nothing waiting on a merge),
+  at most one per 5-hour usage window, and log it in `drafts/tester-log.md`. Verify findings
+  before filing; rotate beats.
+- The session status read leads with "new on the site, try this", not with questions.

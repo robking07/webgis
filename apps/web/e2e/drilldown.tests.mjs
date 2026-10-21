@@ -1,5 +1,5 @@
-// Drill-down (issue #203), registered by menus.spec.mjs: a click focuses a place, fits it, dims the
-// rest and draws only its parts inside it; browser Back steps out one level at a time.
+// Drill-down (issue #203), registered by menus.spec.mjs: a click focuses a place (a double click also
+// fits it, #317), dims the rest and draws only its parts inside it; browser Back steps out one level at a time.
 export default function drilldownTests({ test, expect, immerse, mapIdle, tapLonLat, HENNEPIN }) {
   const inParam = (page) => new URL(page.url()).searchParams.get("in");
   const waitIn = (page, v) => page.waitForFunction((v) => new URL(location.href).searchParams.get("in") === v, v, { timeout: 15000 });
@@ -19,7 +19,7 @@ export default function drilldownTests({ test, expect, immerse, mapIdle, tapLonL
   const step = async (page, lonlat, level, want) => {
     const close = page.locator('button[aria-label="Close details"]');
     if (await close.count()) await close.click();
-    await tapLonLat(page, ...lonlat);
+    await tapLonLat(page, ...lonlat, true);
     await page.waitForFunction((n) => (new URL(location.href).searchParams.get("in") ?? "").length === n, want, { timeout: 15000 });
     await mapIdle(page);
     const g = inParam(page);
