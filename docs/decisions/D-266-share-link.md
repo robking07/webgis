@@ -33,3 +33,5 @@ zoom pill), and a new floating button there would be the heaviest option.
 
 `components/ShareButton.tsx`, `map-page/DatasetCard.tsx`, `compare/ComparePlaces.tsx`;
 tests `e2e/share.tests.mjs`.
+
+2026-10-20, lead (#306): the shared link leaves out theme=; each visitor keeps their own.
