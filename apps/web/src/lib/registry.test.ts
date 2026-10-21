@@ -11,7 +11,8 @@ describe("dataset search (issue #252)", () => {
   });
   it("finds the right maps first", () => {
     expect(titles("poverty").slice(0, 2)).toEqual(["Children in poverty", "Population below poverty"]);
-    expect(titles("commute")[0]).toBe("90-minute-plus commutes");
+    expect(titles("commute")).toContain("Commute 90 minutes or more");
+    expect(titles("90-minute-plus")).toContain("Commute 90 minutes or more"); // old title still finds it
     expect(titles("commute")).toContain("Commute by public transit");
     expect(titles("rent")[0]).toBe("Median rent");
     expect(titles("rent")).not.toContain("Cigarette smoking"); // "current smokers"

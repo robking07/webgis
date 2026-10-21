@@ -1,10 +1,10 @@
 id: pct_work_outside_county
-title: "Work outside their home county"
+title: Work outside their county
 phrase: rates of working outside the home county
 description: "Share of workers 16 and over whose job is outside the county they live in, including in another state."
 category: Transportation
 subcategory: Commuting
-tags: [commute flows, regional travel, place of work, transportation]
+tags: [work outside their home county, commute flows, regional travel, place of work, transportation]
 source:
   name: U.S. Census Bureau, American Community Survey 5-Year Estimates
   shortName: Census Bureau
