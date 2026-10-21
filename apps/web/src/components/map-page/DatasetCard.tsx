@@ -1,4 +1,4 @@
-import { useState, type ReactNode, type RefObject } from "react";
+import { type ReactNode, type RefObject } from "react";
 import { ArrowLeftRight, ChevronDown, Info, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { Dataset } from "@/lib/registry";
@@ -21,7 +21,10 @@ function CompareStrip({ onSwap, onExit, className }: { onSwap: () => void; onExi
 /** At rest: the factual dataset card (category, title, filter button, meta line, explainer, actions).
  *  The title and its caret open the dataset menu; there is no separate Change dataset button
  *  (Robbie, 2026-10-14, issue #225). */
-export function DatasetCard({ cardRef, primary, secondary, meta, immersed, isFeature, tableReady, hasFilters, filtersOpen, filterCount, onOpenFilters, onBrowse, menuOpen, menu, onTable, phone, contextLink, onCompare, onSwap, onExit }: {
+export function DatasetCard({ cardRef, primary, secondary, meta, immersed, isFeature, tableReady, hasFilters, filtersOpen, filterCount, onOpenFilters, onBrowse, menuOpen, menu, onTable, phone, contextLink, onCompare, onSwap, onExit, explainOpen, setExplainOpen }: {
+  /** The "What do these numbers mean?" panel is open; the page owns it so the legend can step aside. */
+  explainOpen: boolean;
+  setExplainOpen: (f: (o: boolean) => boolean) => void;
   cardRef: RefObject<HTMLElement | null>;
   primary: Dataset;
   secondary: Dataset | null;
@@ -51,7 +54,6 @@ export function DatasetCard({ cardRef, primary, secondary, meta, immersed, isFea
   onSwap: () => void;
   onExit: () => void;
 }) {
-  const [explainOpen, setExplainOpen] = useState(false);
   const explain = explainOpen && (
     <dl className="mt-2 space-y-1.5 rounded-md bg-muted p-2.5 text-[11.5px] leading-snug">
       {primary.terms.map((id) => TERM_BY_ID.get(id)).filter((t) => !!t).map((t) => (
