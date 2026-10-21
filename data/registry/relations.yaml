@@ -33,6 +33,7 @@ links:
   - { maps: [median_home_value, median_household_income], why: How far home prices run ahead of incomes. }
   - { maps: [pct_owner_cost_burdened, median_owner_costs_mortgage], why: Higher monthly costs push more owners past 30% of income. }
   - { maps: [pct_overcrowded, median_gross_rent], why: Crowding often follows high rents. }
+  - { maps: [pct_renters_hud_assisted, pct_rent_burdened], why: HUD rental assistance holds rent near 30% of income for the renters who get it. }
   # Poverty and help
   - { maps: [pct_poverty, median_household_income], why: Two views of the same income distribution. }
   - { maps: [pct_poverty, pct_child_poverty], why: Child poverty is poverty among children only. }
@@ -326,6 +327,12 @@ maps:
   pct_rent_burdened:
     group: "Housing"
     counts: { of: "renter households paying 30% or more of income on rent", per: "renter households (where rent burden is known)" }
+  pct_renters_hud_assisted:
+    group: "Housing"
+  hud_assisted_household_income:
+    group: "Housing"
+  hud_assisted_extremely_low_income:
+    group: "Housing"
   pct_renter_households:
     group: "Housing"
     counts: { of: "renter households", per: "households" }

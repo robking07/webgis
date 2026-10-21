@@ -315,3 +315,21 @@
   long: >-
     Larger facilities in covered industries report each year what they released at their own site: into the air or water, underground, or onto land. The amounts are mostly their own estimates, and small sites and many industries don't report, so zero means no reporting facility, not no pollution. Pounds don't show how toxic a chemical is, where it goes or who breathes or drinks it; EPA says the amount alone is not a measure of exposure. Metal mines, which put waste rock on land, make up nearly half of all pounds.
   source: https://www.epa.gov/toxics-release-inventory-tri-program/what-toxics-release-inventory
+
+- id: hud-assisted-housing
+  term: >-
+    HUD-assisted housing
+  short: >-
+    Rental homes where the U.S. Department of Housing and Urban Development (HUD) pays part of the rent: public housing, Housing Choice Vouchers (Section 8) and privately owned subsidized apartments.
+  long: >-
+    Households in these programs usually pay about 30% of their income toward rent and utilities, and HUD covers the rest. Public housing is owned by local housing agencies. A Housing Choice Voucher goes with the household to a private landlord it chooses. Project-based programs such as Section 8, Section 202 (for older adults) and Section 811 (for people with disabilities) tie the help to specific buildings. HUD counts the homes from the tenant reports that housing agencies and owners send in. Homes built with Low-Income Housing Tax Credits but without HUD rent help, and USDA rural rental aid, are not counted.
+  source: https://www.huduser.gov/portal/datasets/assthsg.html
+
+- id: area-median-income
+  term: >-
+    Area median income (AMI)
+  short: >-
+    The middle family income in a metro area or county, set each year by HUD and adjusted for household size. "Extremely low income" means below 30% of it.
+  long: >-
+    HUD sets income limits for its programs as shares of the local median family income: below 80% is "low income", below 50% "very low income" and below 30% "extremely low income". Because the median is local, the same dollar income can count as extremely low in an expensive metro and only as low in a cheaper rural county.
+  source: https://www.huduser.gov/portal/datasets/il.html

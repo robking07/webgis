@@ -1,0 +1,22 @@
+id: pct_renters_hud_assisted
+title: Renters with HUD rental assistance
+phrase: shares of renters with HUD rental assistance
+description: "Households living in HUD-assisted rental homes (public housing, Housing Choice Vouchers and privately owned subsidized apartments) as a share of all renter households, December 2025."
+category: Housing
+subcategory: Costs
+tags: [HUD, subsidized housing, public housing, Section 8, housing choice vouchers, rental assistance, affordable housing, renters]
+source:
+  name: "U.S. Department of Housing and Urban Development, A Picture of Subsidized Households 2025"
+  shortName: HUD
+  url: https://www.huduser.gov/portal/datasets/assthsg.html
+  citation: "U.S. Department of Housing and Urban Development, Office of Policy Development and Research. A Picture of Subsidized Households: 2025 (2020 Census geography), county and census tract files, Summary of All HUD Programs, field total_occupied. https://www.huduser.gov/portal/datasets/assthsg.html (revised February 17, 2026). Renter households: U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, B25003. Accessed October 21, 2026."
+license: "Public domain (U.S. Government work, 17 U.S.C. § 105). HUD states no license for the 2025 files; its only reuse wording, on the same page for the 1998 edition, says the data are \"neither private nor copyrighted and may be copied\" and asks users to cite the title and date."
+updateCadence: annual
+vintage: "December 2025"
+geographyLevels: [county, tract]
+unit: percent
+universe: renter households
+terms: [hud-assisted-housing, acs-5-year, census-geography, quantile-classes]
+coverageNote: "A blank place is not a zero: HUD hides places with fewer than 11 reporting households, leaves out places where under half of households reported, and has no row for places without HUD-assisted homes. Only HUD's own programs count; homes funded only by tax credits (LIHTC) or USDA rural rental aid are not included. Renter households come from the 2020–2024 survey, so a few tracts with newer subsidized buildings top 100%."
+measure: { kind: hud_picture, year: 2025, field: total_occupied, perRenterHouseholds: true }
+symbology: { ramp: blues, classification: quantile, classes: 5 }
