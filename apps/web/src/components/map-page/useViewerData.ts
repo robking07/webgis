@@ -57,7 +57,9 @@ export function useViewerData(state: UrlState, tractCounties: readonly string[] 
   // Start loading tract / block-group values a little before they appear. Blocks are colored
   // with the block-group classes, so block groups load when blocks are near too.
   const nearBlocks = !!bands.block && state.at.zoom >= bands.block.minzoom - 1;
-  const want = LEVELS.filter((l) => LAZY_LEVELS.has(l) && ((!!bands[l] && state.at.zoom >= bands[l]!.minzoom - 1) || (l === "block_group" && nearBlocks)));
+  const nearBg = !!bands.block_group && state.at.zoom >= bands.block_group.minzoom - 1;
+  // Block groups are colored with the tract breaks (issue #325), so tracts load whenever they do.
+  const want = LEVELS.filter((l) => LAZY_LEVELS.has(l) && ((!!bands[l] && state.at.zoom >= bands[l]!.minzoom - 1) || (l === "block_group" && nearBlocks) || (l === "tract" && (nearBg || nearBlocks))));
   // Blocks carry their values as a tile property (2020 Census only; D-124).
   const blockField = primary?.measure.kind === "census2020" ? primary.measure.value : null;
   const x = useDatasetValues(primary, want, stopId, stop?.levels);
@@ -76,6 +78,8 @@ export function useViewerData(state: UrlState, tractCounties: readonly string[] 
   const classed = useMemo(() => {
     const out: Partial<Record<GeoLevel, ClassedLevel>> = {};
     if (!primary) return out;
+    // Tracts and block groups are both neighbourhood scale: block groups take the tract breaks (issue #325).
+    const tractBreaks = primary.geographyLevels.includes("tract");
     for (const l of LEVELS) {
       const xv = x.values[l];
       if (!xv) continue;
@@ -85,10 +89,9 @@ export function useViewerData(state: UrlState, tractCounties: readonly string[] 
       } else if (secondary) {
         const yv = y.values[l];
         if (yv) out[l] = classifyBivariateCached(xv, yv);
-      } else if (stopId) {
-        if (xBase.values[l]) out[l] = classifyUnivariateCached(primary, xv, xBase.values[l]);
       } else {
-        out[l] = classifyUnivariateCached(primary, xv);
+        const base = (stopId ? xBase.values : x.values)[l === "block_group" && tractBreaks ? "tract" : l];
+        if (base) out[l] = classifyUnivariateCached(primary, xv, base === xv ? undefined : base);
       }
     }
     const bg = out.block_group;
