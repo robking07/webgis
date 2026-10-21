@@ -22,7 +22,7 @@ import { areaChangeNote, stopsFor } from "@/lib/periods";
 import { tableScope } from "@/lib/table-scope";
 import { useViewerData } from "./map-page/useViewerData";
 import { useFraming } from "./map-page/useFraming";
-import { HEADER_GAP } from "./map-page/layout";
+import { HEADER_GAP, CARD_LEFT } from "./map-page/layout";
 import { DatasetCard } from "./map-page/DatasetCard";
 import { ImmersedHeading } from "./map-page/ImmersedHeading";
 import { filterCount, FiltersSheet, FiltersSidebar, pluralLabel, type FilterValue } from "./map-page/FiltersPanel";
@@ -215,7 +215,7 @@ export function Viewer({ search }: { search: string }) {
   /** "Go to" a region and "Back to the US" (issue #202): leave any focused place, frame the region. */
   const goToRegion = (b: Bbox) => {
     if (focus) leaveFocus();
-    mapApi.current?.fitBbox(b, { top: 16, right: 16, bottom: 16, left: 16 });
+    mapApi.current?.fitBbox(b, { top: 16, right: 16, bottom: 16, left: phone ? 16 : CARD_LEFT });
   };
   // Zoomed out to two worlds, or panned off every U.S. region (Viewer renders on the client only).
   // shortcut: judged on the last settled view, at the window's size; fine while the map is full-window.
@@ -361,6 +361,7 @@ export function Viewer({ search }: { search: string }) {
         <MapView
           theme={theme}
           initialView={initial.at}
+          fitLeft={phone ? 16 : CARD_LEFT}
           paint={classed}
           boundaries={stopId ? stop!.boundaries ?? null : null}
           onViewChange={(at) => update({ at })}
