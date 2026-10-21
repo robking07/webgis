@@ -1,0 +1,27 @@
+id: tri_onsite_releases
+title: Toxic chemical releases (pounds per square mile)
+phrase: toxic chemical releases per square mile
+description: "Pounds of toxic chemicals that industrial facilities reported releasing at their own sites in 2024 (into the air, water, underground or onto land), per square mile of land. Pounds released are not the same as people's exposure or health risk."
+category: Environment and climate
+subcategory: Toxic releases
+tags: [TRI, toxics, pollution, chemicals, industry, mining, EPA, environmental justice]
+source:
+  name: U.S. EPA, Toxics Release Inventory (TRI) Program
+  shortName: EPA TRI
+  url: https://www.epa.gov/toxics-release-inventory-tri-program/tri-data-and-tools
+  citation: "U.S. Environmental Protection Agency, Toxics Release Inventory Basic Data File, reporting year 2024 (updated Nov. 12, 2025), with county codes from Envirofacts tri_facility"
+license: Public domain (U.S. Government work, 17 U.S.C. § 105; EPA permits free non-commercial and educational use)
+updateCadence: annual
+vintage: "2024 data"
+geographyLevels: [state, county]
+unit: per_sq_mi
+universe: pounds of TRI chemicals released on site by reporting facilities, per square mile of land (not people or exposure)
+coverageNote: "Only larger facilities in covered industries report (generally 10 or more employees and above set chemical amounts), so a county shown at zero has no reporting facility, not no pollution. Amounts are the facilities' own estimates. Metal mines account for nearly half of all pounds, mostly waste rock placed on land at the mine. Pounds say nothing about how toxic a chemical is or whether anyone is exposed to it. Connecticut counties show no data (facility records use its pre-2022 counties)."
+terms: [toxics-release-inventory, quantile-classes]
+excludeFromInsights: true
+measure:
+  kind: tri
+  year: 2024
+  url: https://data.epa.gov/efservice/downloads/tri/mv_tri_basic_download/2024_US/csv
+  file: tri-2024-us.csv
+symbology: { ramp: oranges, classification: quantile, classes: 5 }
