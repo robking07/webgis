@@ -4,14 +4,14 @@
 // Rows are windowed (only the visible ones render), so 3,000+ counties scroll smoothly.
 // Tracts and block groups list a focused area only (`within`), named through their county.
 import { memo, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
-import { X } from "lucide-react";
+import { Download, X } from "lucide-react";
 import { formatValue, type GeoLevel } from "@webgis/design";
 import { StatusState } from "@webgis/design/components";
 import { Input } from "@/components/ui/input";
 import type { Dataset } from "@/lib/registry";
 import type { Values } from "@/lib/values";
 import { staticUrl } from "@/lib/static-files";
-import { placeLabel } from "@/lib/csv";
+import { csvFile, csvFileName, marginsFor, placeLabel, saveBlob } from "@/lib/csv";
 import { useIsNarrow } from "./BottomSheet";
 
 /** geoid → [name, lon, lat] for states and counties (exported by ingest). */
@@ -98,6 +98,20 @@ export const DataTable = memo(function DataTable({ top = 12, level, within, x, x
   }, [sorted, q]);
   useEffect(() => { scroller.current?.scrollTo({ top: 0 }); setScrollTop(0); }, [q, sort]);
 
+  // Downloads exactly the listed rows (level, focused area, filter, sort) of the first map.
+  const [saving, setSaving] = useState(false);
+  async function download() {
+    if (!places || !xv) return;
+    setSaving(true);
+    try {
+      const nm = Object.fromEntries(Object.entries(places).map(([g, p]) => [g, p[0]]));
+      // shortcut: margins are the default period's, so a timeline stop gets none; upgrade when stops' margins are wired in.
+      const moes = period ? {} : await marginsFor(x, level);
+      const { blob } = await csvFile(x, rows.map((r) => r.g), xv, moes, nm);
+      saveBlob(blob, csvFileName(x, level));
+    } finally { setSaving(false); }
+  }
+
   const first = Math.max(0, Math.floor(scrollTop / ROW_H) - OVERSCAN);
   const last = Math.min(rows.length, Math.ceil((scrollTop + viewH) / ROW_H) + OVERSCAN);
   const visible = rows.slice(first, last);
@@ -137,6 +151,10 @@ export const DataTable = memo(function DataTable({ top = 12, level, within, x, x
         <>
           <label className="sr-only" htmlFor="table-filter">Filter by name</label>
           <Input id="table-filter" type="search" placeholder="Filter by name…" value={q} onChange={(e) => setQ(e.target.value)} />
+          <button type="button" onClick={download} disabled={saving || !rows.length} aria-busy={saving}
+            className="inline-flex min-h-8 items-center justify-center gap-1.5 self-start rounded-md border px-2.5 text-xs hover:bg-muted disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">
+            <Download className="size-3.5" aria-hidden />{saving ? "Preparing…" : "Download CSV"}
+          </button>
           <div ref={scroller} className="min-h-0 flex-1 overflow-auto rounded border" onScroll={(e) => setScrollTop(e.currentTarget.scrollTop)}>
             <table className="w-full table-fixed text-xs tabular-nums" aria-rowcount={rows.length + 1}>
               <caption className="sr-only">{x.title}{y ? ` and ${y.title}` : ""} by {level}. Select a place to show it on the map.</caption>
