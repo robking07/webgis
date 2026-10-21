@@ -1102,6 +1102,13 @@ test("old /specials/pairings?topic=Health redirects to /specials/combinations?to
   expect(u.pathname === "/specials/combinations" && u.searchParams.get("topic") === "Health", `landed on ${page.url()}`);
 });
 
+test("/specials: the lead piece's Combination origin links to the map, not a Combination page", async (o) => {
+  const { page } = await o("laptop", "/specials", { ready: false });
+  const hrefs = await page.$$eval("a", (as) => as.map((a) => a.getAttribute("href")));
+  expect(!hrefs.includes("/specials/pct_work_from_home__physical_inactivity"), "link to a Combination id as if a Special");
+  expect(hrefs.some((h) => h?.startsWith("/map?d=pct_work_from_home&b=physical_inactivity")), "origin link goes to the map with both datasets");
+});
+
 // ── Run ────────────────────────────────────────────────────────────────────────
 // Round-robin keeps the slow tests spread across shards.
 const mine = shard ? queue.filter((_, i) => i % +shard[2] === +shard[1] - 1) : queue;

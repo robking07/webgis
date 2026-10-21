@@ -169,6 +169,31 @@ export default function compareTests({ test, expect, wait, immerse, tapLonLat, l
     expect((await det.getByRole("button", { name: "Compare with…" }).count()) === 0, "Compare with… offered for another year");
   });
 
+  // Issue #197: the place page starts a comparison and links each row to its dataset page.
+  for (const vp of ["phone", "laptop"]) {
+    test(`${vp} compare places: place page → Compare with… (Escape returns focus) → Ramsey; dataset names link to /data`, async (o) => {
+      const { page } = await o(vp, "/place/27053", { ready: false });
+      const btn = page.getByRole("button", { name: "Compare with…" });
+      await btn.waitFor({ timeout: 20000 });
+      const row = page.getByRole("link", { name: "Population below poverty", exact: true });
+      expect((await row.getAttribute("href")) === "/data/pct_poverty", `dataset link: ${await row.getAttribute("href")}`);
+      await btn.click();
+      const input = page.getByLabel(/Compare Hennepin County with another county/);
+      await input.press("Escape");
+      expect(await btn.evaluate((b) => b === document.activeElement), "focus not back on Compare with… after Escape");
+      await btn.click();
+      await input.fill("Ramsey");
+      await page.getByRole("link", { name: "Ramsey County, MN" }).click();
+      await page.waitForURL(/\/compare\/27053\/27123$/, { timeout: 20000 });
+      await page.locator("[data-compare-verdict]").waitFor({ timeout: 20000 });
+    });
+  }
+  test("laptop compare places: no Compare with… on a tract's place page", async (o) => {
+    const { page } = await o("laptop", "/place/27053100200", { ready: false });
+    await page.locator("main h1").waitFor({ timeout: 20000 });
+    expect((await page.getByRole("button", { name: "Compare with…" }).count()) === 0, "Compare with… on a tract page");
+  });
+
   // The strip of every place under the headline (issue #231): every county or state a tick, both places marked and named.
   for (const [vp, path, n, names] of [
     ["phone", "/compare/27053/31031?d=pct_poverty", 3000, ["Hennepin County", "Cherry County"]],
@@ -193,5 +218,14 @@ export default function compareTests({ test, expect, wait, immerse, tapLonLat, l
     await page.locator("[data-compare-verdict]").waitFor({ timeout: 20000 });
     await wait(1500);
     expect((await page.locator("[data-compare-strip]").count()) === 0, "a strip on a tract comparison");
+  });
+
+  // Issue #299: the place page's "Back to the map" returns to the dataset you came from.
+  test("laptop place page: Back to the map keeps the dataset from ?d=, else the landing one", async (o) => {
+    const back = (page) => page.getByRole("link", { name: "← Back to the map" }).getAttribute("href", { timeout: 20000 });
+    const { page } = await o("laptop", "/place/27053?d=pct_poverty", { ready: false });
+    expect(/[?&]d=pct_poverty(&|$)/.test(await back(page)), "dataset not carried");
+    const { page: cold } = await o("laptop", "/place/27053", { ready: false });
+    expect(/[?&]d=median_household_income(&|$)/.test(await back(cold)), "landing dataset missing");
   });
 }
