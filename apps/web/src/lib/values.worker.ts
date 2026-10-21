@@ -6,7 +6,7 @@ import type { WorkerReply, WorkerRequest } from "./values";
 
 const post = (m: WorkerReply, transfer: Transferable[] = []) => self.postMessage(m, { transfer });
 
-self.onmessage = async ({ data: { id, url, symbology } }: MessageEvent<WorkerRequest>) => {
+self.onmessage = async ({ data: { id, url, symbology, breaks } }: MessageEvent<WorkerRequest>) => {
   try {
     const r = await fetch(url);
     if (!r.ok) return post({ id, status: r.status });
@@ -14,7 +14,7 @@ self.onmessage = async ({ data: { id, url, symbology } }: MessageEvent<WorkerReq
     const keys = Object.keys(values).filter((k) => typeof values[k] === "number");
     const vals = Float64Array.from(keys, (k) => values[k] as number);
     if (!symbology) return post({ id, keys: keys.join(","), vals }, [vals.buffer]);
-    const c = classifyValues(symbology, vals);
+    const c = classifyValues(symbology, vals, undefined, breaks);
     const packed = packByState(keys.map((k, i) => [k, c.cls[i]] as const), c.colors.length);
     post({ id, keys: keys.join(","), vals, classed: { ...c, packed } }, [vals.buffer, c.cls.buffer]);
   } catch (e) {
