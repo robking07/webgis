@@ -50,7 +50,7 @@ ${[...bySource].map(([src, es]) => `## ${src}
 ${coverage(es)}
 | Dataset | Levels (non-null / rows) | Unit | Vintage | Method |
 |---|---|---|---|---|
-${es.map((e) => `| **${e.title}** (\`${e.id}\`) | ${e.measure.kind === "features" ? "road segments (feature layer)" : ""}${e.geographyLevels.map((l) => `${l}: ${counts.get(`${e.id}/${l}`) ?? "not loaded"}`).join("<br>")} | ${e.unit} | ${e.vintage} | ${method(e)}${e.modelInputs.length ? ` Modeled using: ${e.modelInputs.join(", ")} (insight pairs with those are flagged).` : ""} |`).join("\n")}
+${es.map((e) => `| **${e.title}** (\`${e.id}\`) | ${e.measure.kind === "features" ? `${e.measure.geometry} features (feature layer)` : ""}${e.geographyLevels.map((l) => `${l}: ${counts.get(`${e.id}/${l}`) ?? "not loaded"}`).join("<br>")} | ${e.unit} | ${e.vintage} | ${method(e)}${e.modelInputs.length ? ` Modeled using: ${e.modelInputs.join(", ")} (insight pairs with those are flagged).` : ""} |`).join("\n")}
 `).join("\n")}
 ## Known gaps and caveats
 

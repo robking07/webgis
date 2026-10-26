@@ -20,6 +20,7 @@ Run with the `dataset-display-review` skill (`.claude/skills/dataset-display-rev
 | Dataset | Readable values | Explainers | Facets | Opportunities (not built) |
 |---|---|---|---|---|
 | Traffic volume (AADT) | ✓ route labels | AADT, functional class, road type | road type, functional class | NHS / truck-route facet; trucks share as a value toggle; peak-hour later |
+| Transit routes (BTS National Transit Map + NTD 2025) (#176) | ✓ route title "12 · Barbur/Sandy Blvd"; GTFS route_type codes mapped to six plain kinds; agency "dba" names trimmed; NTD trips and hours labeled as agency-wide | kind of transit service, NTD | kind of service | **overlay on the transit-commute choropleth** (needs UI); legend labels by kind instead of numeric ends (needs UI); rail stations as points; per-route trips per weekday from GTFS (#176 PR3) |
 | Vehicle miles per resident | ✓ | VMT, AADT, classes | – (choropleth) | drill-down to the AADT segments in the county |
 | Traffic deaths | ✓ | rate per 100k, classes | – | **FARS crash points** underneath (facets: year, person type, light/weather, road type) |
 | Bridge deck area in poor condition | ✓ | bridge condition, classes | – | **NBI bridge points** underneath (facets: condition, owner, year built, carries interstate?) |

@@ -318,5 +318,39 @@
   },
   "rankField": null,
   "featureCount": 72531
+ },
+ "transit_routes": {
+  "tiles": "transit_routes.pmtiles",
+  "sourceLayer": "transit_routes",
+  "geometry": "line",
+  "valueField": "mode",
+  "fields": {
+   "route": {
+    "label": "Route"
+   },
+   "mode": {
+    "label": "Kind of service"
+   },
+   "agency": {
+    "label": "Agency"
+   },
+   "urban_area": {
+    "label": "Agency's main urban area"
+   },
+   "agency_trips": {
+    "label": "Agency's yearly rides (2025)",
+    "unit": "count",
+    "explainer": "Boardings on all of the agency's routes in 2025, counting each time someone gets on a vehicle (a trip with a transfer counts twice). From the National Transit Database.",
+    "url": "https://www.transit.dot.gov/ntd/national-transit-database-ntd-glossary"
+   },
+   "agency_hours": {
+    "label": "Agency's yearly service hours (2025)",
+    "unit": "count",
+    "explainer": "Hours the agency's vehicles spent carrying passengers in 2025, across all its routes: a measure of how much service it runs.",
+    "url": "https://www.transit.dot.gov/ntd/national-transit-database-ntd-glossary"
+   }
+  },
+  "rankField": "mode",
+  "featureCount": 76699
  }
 }

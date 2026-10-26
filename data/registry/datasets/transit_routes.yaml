@@ -34,7 +34,7 @@ measure:
   source:
     url: https://geodata.bts.gov/api/download/v1/items/985bf490e9fa462f80b1cb8ad5f6e139/filegdb?layers=0
     file: ntm-routes-2026-09.gdb.zip
-    path: TBD
+    path: routes.gdb
     layerPattern: "Routes"
   # Agency names and yearly service from the NTD, joined on the 5-digit NTD id every route carries.
   join:
@@ -42,6 +42,8 @@ measure:
     file: ntd-2025-service-by-agency.csv
   # GTFS route_type: 0 tram/light rail, 1 subway, 2 rail, 3 bus, 4 ferry, 5 cable tram, 6 aerial,
   # 7 funicular, 11 trolleybus, 12 monorail. `mode` is also the rank: rail draws wider and first.
+  # BTS ships one row per GTFS shape (76.7k for 16.5k routes); merging each route's variants
+  # into one line drops the overlapping copies.
   select: >-
     SELECT
     CASE r.route_type WHEN '1' THEN 1 WHEN '12' THEN 1 WHEN '0' THEN 2 WHEN '5' THEN 2 WHEN '2' THEN 3
@@ -51,7 +53,8 @@ measure:
     a.max_primary_uza_name AS urban_area,
     CAST(a.sum_unlinked_passenger_trips_upt AS INTEGER) AS agency_trips,
     CAST(a.sum_actual_vehicles_passenger_car_revenue_hours AS INTEGER) AS agency_hours,
-    r.geom FROM {layer} r LEFT JOIN "join" a ON a._5_digit_ntd_id = r.ntd_id
+    ST_Union(r.SHAPE) AS SHAPE FROM {layer} r LEFT JOIN "join" a ON a._5_digit_ntd_id = r.ntd_id
+    GROUP BY r.feed_id, r.route_id
   valueField: mode
   fields:
     route: Route
