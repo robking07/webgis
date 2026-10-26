@@ -5,6 +5,7 @@ rows into one summary line. Roadmap: `docs/roadmap.md`. Rules: `docs/handbook.md
 
 ## Now
 
+- **Resting (Robbie, 2026-10-26):** "get this project to a place where it is 'resting' and then can be taken in a new direction once I have time to review everything that ultimately needs my attention." No new work until he names a direction. Every open issue is `needs-robbie` (listed in his `drafts/robbie-this-week.md`) or `parked` (plan written, resumes as is). Onboarding for human testers is scoped only (#245, `drafts/proposals/onboarding-scope.md`).
 - **Phase 1 (2026-10-12):** shipped 1.1 part 1 + 2a (compare places, laptop map), 1.2 (change maps with From → To, Map options panel), 1.3, 1.4, 1.5, 1.8, S1, S2. Left: 1.1 part 2b (counts and share of parent; counts are uploaded and live since 2026-10-12, D-257), 1.7 map polish (waits on Robbie's phone check), 1.6 disclosures (**on hold** by Robbie, 2026-10-09; nobody rewrites the copy). Then the Phase 1 gate: Robbie uses compare and change maps in a real conversation.
 - **Robbie's list:** `~/webgis/drafts/robbie-this-week.md` (gitignored) holds every open ask for him, newest under "New items". Add to it rather than asking one question at a time.
 - **Specials:** two drafts await Robbie in `drafts/specials/` (#105 traffic deaths, #141 Holmes County bikes), with numbers scripts beside them. On "publish <name>": copy verbatim, strip `<!-- -->` comments (the loader counts them as words), move the script to `apps/web/scripts/specials-numbers/`, then run `check:special` and the build.
@@ -69,6 +70,13 @@ rows into one summary line. Roadmap: `docs/roadmap.md`. Rules: `docs/handbook.md
 | Big counts with margins in full | #214 | #218 | S / ~100k | ~65k | 0.65x | Sonnet / medium | 2026-10-14 |
 | "Block groups" labels on /data; commuting wording | #192, #194 | #219, #221 | S / ~100k | ~73k | 0.73x | Sonnet / medium | 2026-10-14 |
 | Back button steps through map changes | #212 | #220 | S / ~100k | ~82k | 0.82x | Sonnet / medium | 2026-10-14 |
+| National view frames the US; scale bar when zoomed in | #327 | #328 | S | — | — | Opus / medium | 2026-10-26 |
+| Legend: round breaks, no-data swatch, key-change cue | #325 | #329 | M | — | — | Opus / medium | 2026-10-26 |
+| Compare page lists only maps that fit | #314 | #320 | S | — | — | Sonnet / medium | 2026-10-26 |
+| Commuting titles in one style | #270 | #322 | S | — | — | Sonnet / medium | 2026-10-26 |
+| Downloads fail loudly on a bot check | #331 | #340 | S / ~100k | ~40k | 0.4x | Sonnet / medium | 2026-10-26 |
+| Change mode: level pill switches level | #249 | #342 | S / ~100k | ~55k | 0.55x | Opus / medium | 2026-10-26 |
+| Phone tap: no hover card repeating details | #321 | #341 | S / ~100k | ~55k | 0.55x | Opus / medium | 2026-10-26 |
 
 ## Lessons
 
@@ -123,6 +131,7 @@ One line per task. These feed the project kit (#53).
 - **#162:** a private repo's free Actions minutes ran out mid-session; the failure looked like a 3 s "click-through" fail with an empty log. Read the job's annotations (`gh api …/check-runs/<id>/annotations`) before debugging tests.
 - **#170:** test IDs copied from unit fixtures may not exist in live data; pick e2e places from the live geo files.
 - **#167:** native range inputs lose the pointer when a mouse drags off them; commit-on-release needs `setPointerCapture`.
+- **This machine's `gh` is old:** no `gh pr checks --json` and no `gh pr update-branch`. Use `gh api -X PUT repos/robking07/webgis/pulls/<n>/update-branch`, and parse `gh pr checks` text (tab-separated). `gh run rerun` refuses a run that's still in progress or was superseded; update the branch instead to start a fresh run.
 - **Specials drafts:** run `check:special` on a `git archive` of `origin/main` (node_modules symlinked) to check a draft without a branch.
 
 ## How to update
