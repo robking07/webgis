@@ -67,6 +67,7 @@
 .maplibregl-ctrl.maplibregl-ctrl-attrib, .maplibregl-ctrl.maplibregl-ctrl-attrib.maplibregl-compact { background-color: color-mix(in srgb, var(--ui-surface) 88%, transparent); color: var(--ui-text-muted); }
 .maplibregl-ctrl.maplibregl-ctrl-attrib a { color: var(--ui-text-muted); }
 .maplibregl-ctrl.maplibregl-ctrl-attrib a:hover { color: var(--ui-text); }
+.wg-national .maplibregl-ctrl-scale { display: none; }
 .maplibregl-ctrl.maplibregl-ctrl-scale { background: color-mix(in srgb, var(--ui-surface) 80%, transparent); color: var(--ui-text); border-color: var(--ui-text-muted); }
 /* The ⓘ button is a black SVG background; invert it on dark (same two selectors as theme.css). */
 :root[data-theme="dark"] .maplibregl-ctrl-attrib-button { filter: invert(1); }
