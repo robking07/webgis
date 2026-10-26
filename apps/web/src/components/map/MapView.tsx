@@ -86,6 +86,8 @@ interface Props {
   onApi?: (api: MapApi) => void;
   /** Scale bar units (Settings). */
   scaleUnit?: "imperial" | "metric";
+  /** Left padding of the first lower-48 fit: the dataset card, on laptops. */
+  fitLeft?: number;
   /** MapLibre's attribution control. The main map turns it off and shows its own credits
    *  footnote (MapCredits); smaller maps (Combinations) keep it. */
   attribution?: boolean;
@@ -144,7 +146,7 @@ function pmtilesUrl(path: string) {
 }
 const tilesUrl = (level: GeoLevel, boundaries?: string | null) => pmtilesUrl(`${boundaryFile(level, boundaries)}.pmtiles`);
 
-export function MapView({ theme, initialView, paint, onViewChange, onHover, onSelect, onTilesError, ariaLabel, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, onApi, featureFilter, scaleUnit = "imperial", attribution = true, boundaries = null, cooperative = false, hatch = null, onTractCounties, watchCounties = false, compare, focus = null }: Props) {
+export function MapView({ theme, initialView, paint, onViewChange, onHover, onSelect, onTilesError, ariaLabel, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, onApi, featureFilter, scaleUnit = "imperial", fitLeft = 16, attribution = true, boundaries = null, cooperative = false, hatch = null, onTractCounties, watchCounties = false, compare, focus = null }: Props) {
   const container = useRef<HTMLDivElement>(null);
   const map = useRef<MlMap | null>(null);
   const applied = useRef<Partial<Record<GeoLevel, LevelPaint>>>({});
@@ -180,7 +182,7 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
       style: basemapStyle(latest.current.theme),
       // No `at` in the URL: frame the lower 48 to the screen, so phones see the whole country too.
       ...(compare ? { bounds: compare.bbox, fitBoundsOptions: { padding: 40 } }
-        : initialView.fit ? { bounds: CONUS, fitBoundsOptions: { padding: 16 } } : { center: [initialView.lon, initialView.lat] as [number, number], zoom: initialView.zoom }),
+        : initialView.fit ? { bounds: CONUS, fitBoundsOptions: { padding: { top: 16, right: 16, bottom: 16, left: fitLeft } } } : { center: [initialView.lon, initialView.lat] as [number, number], zoom: initialView.zoom }),
       attributionControl: false,
       fadeDuration: reduceMotion ? 0 : MOTION.fade,
       dragRotate: false,
@@ -194,6 +196,10 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
     // Zoom buttons are the page's own (frosted, design-token styled); see onApi.
     scale.current = new ScaleControl({ unit: scaleUnit });
     m.addControl(scale.current, "bottom-right");
+    // A bar at continental scale is wrong almost everywhere in Mercator: hidden below state zoom (see design.css).
+    const nationalView = () => m.getContainer().classList.toggle("wg-national", m.getZoom() < 5);
+    m.on("zoom", nationalView);
+    nationalView();
     const fly = reduceMotion ? 0 : MOTION.fly;
     // fitBounds adds the map's own padding (a click's ease leaves the panel's) to this one, and gives
     // up silently when the two leave no room: pass only the difference.
