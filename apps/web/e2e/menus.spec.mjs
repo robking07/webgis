@@ -489,6 +489,30 @@ for (const vp of ["phone", "laptop"]) {
   });
 }
 
+// Issue #249: in change mode the level pill still offers every level; one without change data
+// shows its values with a note, and a one-level map says so.
+test("laptop change mode: level pill switches level, a level without change shows values with a note", async (o) => {
+  const { page } = await o("laptop", "/map?d=median_household_income&lv=county&at=-93.27,44.97,9.5&since=2019");
+  await immerse(page);
+  await page.locator("[data-level-pill]:not([inert] *)").click();
+  const group = page.locator('[role="radiogroup"][aria-label="Geography level"]');
+  await group.waitFor({ timeout: 5000 });
+  await group.getByRole("radio", { name: "Census tracts" }).check();
+  await wait(500);
+  let url = new URL(page.url());
+  expect(url.searchParams.get("lv") === "tract" && url.searchParams.get("since") === "2019", `tracts left change mode: ${url.search}`);
+  await group.getByRole("radio", { name: "Block groups" }).check();
+  await wait(500);
+  url = new URL(page.url());
+  expect(url.searchParams.get("lv") === "block_group" && !url.searchParams.get("since"), `block groups: ${url.search}`);
+  await page.getByText("Change over time isn't available for block groups.").waitFor({ timeout: 5000 });
+  await page.goto(new URL("/map?d=mean_temperature&since=1991", page.url()).href);
+  await mapIdle(page);
+  await immerse(page);
+  await page.locator("[data-level-pill]:not([inert] *)").click();
+  await page.locator("[data-one-level]").waitFor({ timeout: 5000 });
+});
+
 // Issue #100: the level pill is a real button; it opens Map options at the geography level and never reaches the map.
 for (const vp of ["laptop", "phone"]) {
   test(`${vp} level pill opens Map options at the geography level without touching the map`, async (o) => {
@@ -778,7 +802,7 @@ for (const vp of ["phone", "laptop"]) {
     const { page } = await o(vp, "/place/48301", { ready: false });
     await page.locator("main h1").waitFor({ timeout: 20000 });
     expect((await row(page, "Bike to work").locator("[data-value-note]").innerText()) === "Unreliable estimate", "Loving bike row note");
-    expect((await row(page, "Mean travel time to work").locator("[data-value-note]").innerText()) === "The Census Bureau doesn't publish this figure for this area.", "Loving mean commute reason");
+    expect((await row(page, "Average commute time").locator("[data-value-note]").innerText()) === "The Census Bureau doesn't publish this figure for this area.", "Loving mean commute reason");
     const { page: cook } = await o(vp, "/place/17031", { ready: false });
     await cook.locator("main h1").waitFor({ timeout: 20000 });
     expect((await row(cook, "Bike to work").locator("[data-value-note]").count()) === 0, "Cook County's solid bike share flagged");
