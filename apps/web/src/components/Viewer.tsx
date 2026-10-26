@@ -125,7 +125,7 @@ export function Viewer({ search }: { search: string }) {
 
   /** Counties whose tracts are on screen, while hatching or a change map's margin test needs them. */
   const [tractCounties, setTractCounties] = useState<string[]>([]);
-  const { primary, secondary, isFeature, featureSpec, stops, stop, stopId, since, xBase, xFrom, testMoes, availableLevels, pinnedLevel, focus, bands, x, y, level, classed, blockField } = useViewerData(state, tractCounties);
+  const { primary, secondary, isFeature, featureSpec, stops, stop, stopId, since, xBase, xFrom, testMoes, valueLevels, availableLevels, pinnedLevel, focus, bands, x, y, level, classed, blockField } = useViewerData(state, tractCounties);
   const current = classed[level];
   // A year off the default is colored with the default's breaks (xBase): its failure is an error, not a spinner.
   const error = x.error ?? y.error ?? xFrom.error ?? xBase.error;
@@ -179,8 +179,12 @@ export function Viewer({ search }: { search: string }) {
     // Two frames: the panel mounts, then lays out.
     requestAnimationFrame(() => requestAnimationFrame(() => document.querySelector('[role="radiogroup"][aria-label="Geography level"]')?.scrollIntoView({ block: "nearest" })));
   };
+  // Issue #249: a level picked in change mode that has no change data shows its values, with a note.
+  const [noChange, setNoChange] = useState<GeoLevel | null>(null);
+  useEffect(() => { if (noChange) { const t = setTimeout(() => setNoChange(null), 8000); return () => clearTimeout(t); } }, [noChange]);
   const applyFilters = (v: FilterValue) => {
     setHidden(v.hidden);
+    setNoChange(since && !v.since && v.pinned && !availableLevels.includes(v.pinned) ? v.pinned : null);
     if (v.pinned !== pinnedLevel || v.stop !== stopId || v.since !== (since?.id ?? null)) update({ lv: v.pinned, t: v.stop, since: v.since });
   };
   /** A searched MPO (issue #276; the URL's `mpo`): outlined and named, never a geography level, so
@@ -417,11 +421,11 @@ export function Viewer({ search }: { search: string }) {
       )}
 
       {filters && primary && !phone && (
-        <FiltersSidebar top={sidebarTop} bottom={84} levels={availableLevels} shown={level} facets={primary.facets} stops={stops}
+        <FiltersSidebar top={sidebarTop} bottom={84} levels={valueLevels} changeLevels={availableLevels} shown={level} facets={primary.facets} stops={stops}
           value={filterValue} onChange={applyFilters} onClose={() => setFilters(null)} hiddenWhileMoving={stepAside || menuOpen} />
       )}
       {filters && primary && phone && (
-        <FiltersSheet anchor={filters.anchor} title={primary.title} levels={availableLevels} shown={level} facets={primary.facets} stops={stops}
+        <FiltersSheet anchor={filters.anchor} title={primary.title} levels={valueLevels} changeLevels={availableLevels} shown={level} facets={primary.facets} stops={stops}
           value={filterValue} onApply={applyFilters} onClose={() => setFilters(null)} />
       )}
 
@@ -462,6 +466,12 @@ export function Viewer({ search }: { search: string }) {
       {unavailable && primary && (
         <div className="absolute left-1/2 top-16 z-30 max-w-[90vw] -translate-x-1/2 rounded-lg border bg-card p-1 shadow-sm">
           <StatusState status="empty" message={`That map isn't available, so this is ${primary.title}.`} />
+        </div>
+      )}
+
+      {noChange && noChange === pinnedLevel && !since && (
+        <div className="absolute left-1/2 top-16 z-30 max-w-[90vw] -translate-x-1/2 rounded-lg border bg-card p-1 shadow-sm">
+          <StatusState status="empty" message={`Change over time isn't available for ${GEO_LEVELS[noChange].plural.toLowerCase()}.`} />
         </div>
       )}
 
