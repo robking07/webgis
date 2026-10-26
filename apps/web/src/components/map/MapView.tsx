@@ -327,8 +327,12 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
       const ll = m.unproject([pt.x, pt.y]);
       return { layerId: fl.id, properties: f.properties, x: pt.x, y: pt.y, lon: ll.lng, lat: ll.lat, bbox: geometryBbox(f.geometry) };
     };
+    // Issue #321: a tap also fires a mousemove after its touchend; that is no hover, and its popup
+    // would repeat the details the tap opens (and stay, as touch never sends mouseout).
+    let touchEnd = -Infinity;
+    m.on("touchend", (e) => { touchEnd = e.originalEvent.timeStamp; });
     m.on("mousemove", (e) => {
-      if (compare) return;
+      if (compare || e.originalEvent.timeStamp - touchEnd < 1000) return;
       if (latest.current.featureLayer) {
         const hit = featureAt(e.point);
         m.getCanvas().style.cursor = hit ? "pointer" : "";
