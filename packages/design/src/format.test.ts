@@ -45,6 +45,10 @@ describe("classLabels", () => {
   it("labels a bottom class that holds only the minimum", () => {
     expect(classLabels([0.5, 2, 5], "percent", { min: 0, minIsClass: true })).toEqual(["0%", "> 0% – 2%", "2% – 5%", "≥ 5%"]);
   });
+  it("writes dollars from $10K up compactly, unless two breaks would read the same", () => {
+    expect(classLabels([70000, 75000, 95000], "dollars")).toEqual(["< $70K", "$70K – $75K", "$75K – $95K", "≥ $95K"]);
+    expect(classLabels([75100, 75140], "dollars")).toEqual(["< $75,100", "$75,100 – $75,140", "≥ $75,140"]);
+  });
   it("has one label when there are no breaks", () => {
     expect(classLabels([], "dollars")).toEqual(["All values"]);
   });
