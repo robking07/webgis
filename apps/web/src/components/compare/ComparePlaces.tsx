@@ -7,11 +7,11 @@
 // (details/<state>.json, values/tracts/<county>.json; lib/details.ts), so no database call.
 // Part 2b: the head counts behind a rate, each place's share of the places above it, and
 // parts-of-a-whole bars (lib/counts.ts, D-257 files).
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { formatEstimate, formatValue, isGradable, rampColors, SECOND_OUTLINE_DASH, type GeoLevel } from "@webgis/design";
 import { StatusState } from "@webgis/design/components";
-import { bothHave, compareValues, rowVerdictText, shortName, stripRange, stripX, verdictText, type Verdict } from "@/lib/compare";
+import { bothHave, canCompare, compareValues, rowVerdictText, shortName, stripRange, stripX, verdictText, type Verdict } from "@/lib/compare";
 import { countsLabels, PARTS, parentsOf, partsOf, placeCounts, shareOf, type Counts } from "@/lib/counts";
 import { reliabilityNote } from "@/lib/reliability";
 import { fetchDetail, fetchGeography, type Detail, type Geography } from "@/lib/details";
@@ -49,6 +49,9 @@ export function ComparePlaces({ a, b, nameA, nameB, datasetId, parentNames, unkn
   const vals = valsFor?.id === ds.id ? valsFor.v : null; // the previous dataset's values must not rank the new one
   // Side-by-side maps on laptops and monitors (lg, D-135), tabs below that.
   const wide = useMedia("(min-width: 1024px)");
+  // The menu lists maps that can have a value for both places at this level.
+  // shortcut: filters by supported levels (and not point layers), not by checking each map's values for these two places; upgrade if a per-place availability index appears.
+  const fits = useCallback((d: Dataset) => canCompare(d, level), [level]);
   const mapped = ds.geographyLevels.includes(level);
   const [bbox, setBbox] = useState<{ a: Bbox; b: Bbox } | null>(null);
   const [tab, setTab] = useState<"a" | "b">("a");
@@ -121,9 +124,9 @@ export function ComparePlaces({ a, b, nameA, nameB, datasetId, parentNames, unkn
       <div className="mb-4">
         {/* The map's own dataset menu (one menu, D-326): a drop-down on laptops, a bottom sheet on phones. */}
         <DatasetHeading primary={ds} secondary={null} open={menu} onToggle={() => setMenu((o) => !o)}>
-          {menu && wide && <DatasetMenu slot="a" primary={ds} secondary={null} onSlot={() => {}} onPick={pick} onClose={() => setMenu(false)} />}
+          {menu && wide && <DatasetMenu slot="a" primary={ds} secondary={null} onSlot={() => {}} onPick={pick} onClose={() => setMenu(false)} fits={fits} />}
         </DatasetHeading>
-        {menu && !wide && <DatasetSheet slot="a" primary={ds} secondary={null} onSlot={() => {}} onPick={pick} onClose={() => setMenu(false)} />}
+        {menu && !wide && <DatasetSheet slot="a" primary={ds} secondary={null} onSlot={() => {}} onPick={pick} onClose={() => setMenu(false)} fits={fits} />}
         {fell && <p role="status" className="mt-2 text-sm text-muted-foreground" data-compare-fallback="">That map isn&apos;t available, so this is {ds.title}.</p>}
       </div>
 

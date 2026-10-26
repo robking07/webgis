@@ -1,5 +1,5 @@
 // Shared ingest helpers: paths, cached downloads, database access.
-import { createWriteStream, existsSync, mkdirSync } from "node:fs";
+import { createWriteStream, existsSync, mkdirSync, rmSync, statSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { pipeline } from "node:stream/promises";
@@ -20,9 +20,17 @@ export async function cached(url: string, name = url.split("/").pop()!): Promise
   if (existsSync(path)) return path;
   mkdirSync(CACHE, { recursive: true });
   const res = await fetch(url);
-  if (!res.ok || !res.body) throw new Error(`GET ${url} → ${res.status}`);
+  // Only a plain 200 counts: a bot challenge (HUD: 202, x-amzn-waf-action) is "ok" but has no file.
+  if (res.status !== 200 || !res.body) {
+    const waf = res.headers.get("x-amzn-waf-action") ? " (bot challenge)" : "";
+    throw new Error(`GET ${url} → ${res.status}${waf}, expected 200 with a file`);
+  }
   const tmp = `${path}.part`;
   await pipeline(Readable.fromWeb(res.body as never), createWriteStream(tmp));
+  if (statSync(tmp).size === 0) {
+    rmSync(tmp);
+    throw new Error(`GET ${url} → 200 but the body was empty; nothing cached`);
+  }
   const { renameSync } = await import("node:fs");
   renameSync(tmp, path);
   return path;

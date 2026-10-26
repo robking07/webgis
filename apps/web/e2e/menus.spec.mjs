@@ -800,7 +800,7 @@ for (const vp of ["phone", "laptop"]) {
     const { page } = await o(vp, "/place/48301", { ready: false });
     await page.locator("main h1").waitFor({ timeout: 20000 });
     expect((await row(page, "Bike to work").locator("[data-value-note]").innerText()) === "Unreliable estimate", "Loving bike row note");
-    expect((await row(page, "Mean travel time to work").locator("[data-value-note]").innerText()) === "The Census Bureau doesn't publish this figure for this area.", "Loving mean commute reason");
+    expect((await row(page, "Average commute time").locator("[data-value-note]").innerText()) === "The Census Bureau doesn't publish this figure for this area.", "Loving mean commute reason");
     const { page: cook } = await o(vp, "/place/17031", { ready: false });
     await cook.locator("main h1").waitFor({ timeout: 20000 });
     expect((await row(cook, "Bike to work").locator("[data-value-note]").count()) === 0, "Cook County's solid bike share flagged");

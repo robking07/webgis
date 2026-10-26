@@ -3515,12 +3515,13 @@
  },
  {
   "id": "mean_commute_minutes",
-  "title": "Mean travel time to work",
+  "title": "Average commute time",
   "phrase": "commute times",
   "description": "Average one-way travel time to work for commuters (workers 16 and over who do not work from home), not for all workers.",
   "category": "Transportation",
   "subcategory": "Commuting",
   "tags": [
+   "mean travel time to work",
    "commute",
    "travel time",
    "congestion",
@@ -5526,12 +5527,13 @@
  },
  {
   "id": "pct_extreme_commute",
-  "title": "90-minute-plus commutes",
+  "title": "Commute 90 minutes or more",
   "phrase": "shares of 90-minute-plus commutes",
   "description": "Share of commuters (workers 16 and over who don't work from home), not of all workers, whose one-way trip to work takes 90 minutes or more.",
   "category": "Transportation",
   "subcategory": "Commuting",
   "tags": [
+   "90-minute-plus commutes",
    "commute time",
    "super commuters",
    "travel time",
@@ -5971,12 +5973,13 @@
  },
  {
   "id": "pct_long_commute",
-  "title": "Hour-plus commutes",
+  "title": "Commute an hour or more",
   "phrase": "shares of hour-plus commutes",
   "description": "Share of commuters (workers 16 and over who don't work from home), not of all workers, whose one-way trip to work takes 60 minutes or more.",
   "category": "Transportation",
   "subcategory": "Commuting",
   "tags": [
+   "hour-plus commutes",
    "long commute",
    "super commuters",
    "travel time",
@@ -7159,12 +7162,13 @@
  },
  {
   "id": "pct_transit_commute",
-  "title": "Commute by public transit",
+  "title": "Take transit to work",
   "phrase": "transit commuting rates",
   "description": "Share of workers 16 and over who usually commute by public transportation (excluding taxicab).",
   "category": "Transportation",
   "subcategory": "Commuting",
   "tags": [
+   "commute by public transit",
    "transit",
    "bus",
    "rail",
@@ -7602,12 +7606,13 @@
  },
  {
   "id": "pct_work_outside_county",
-  "title": "Work outside their home county",
+  "title": "Work outside their county",
   "phrase": "rates of working outside the home county",
   "description": "Share of workers 16 and over whose job is outside the county they live in, including in another state.",
   "category": "Transportation",
   "subcategory": "Commuting",
   "tags": [
+   "work outside their home county",
    "commute flows",
    "regional travel",
    "place of work",
