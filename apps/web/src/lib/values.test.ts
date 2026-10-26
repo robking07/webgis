@@ -7,7 +7,9 @@ const workerSelf: { onmessage?: (e: { data: unknown }) => void; postMessage?: (m
 // Keyed by the URL the worker is asked for, whatever NEXT_PUBLIC_TILES_BASE_URL is (CI sets it).
 const url = (path: string) => new URL(staticUrl(path), "http://localhost/map").href;
 const bg: Values = { "270531001001": 30, "270531001002": 40, "270531001003": 50, "060750101001": 35, "060750101002": 45 };
+const tracts: Values = { "27053100100": 20, "27053100200": 33, "27053100300": 38, "27053100400": 47, "06075010100": 60 };
 const files: Record<string, Values> = {
+  [url("values/median_age/tract.json")]: tracts,
   [url("values/empty/tract.json")]: {},
   [url("values/median_age/block_group.json")]: bg,
 };
@@ -26,15 +28,18 @@ beforeAll(async () => {
 afterAll(() => vi.unstubAllGlobals());
 
 describe("loadValues through the worker", () => {
-  it("returns the values, with the same classification the main thread would make, pre-packed", async () => {
+  it("returns the values, classed with the tract breaks the main thread would use, pre-packed", async () => {
     const { loadValues, classifyUnivariate, classifyUnivariateCached } = await import("./values");
     const { DATASET_BY_ID } = await import("./registry");
     const v = await loadValues("median_age", "block_group");
     expect(v).toEqual(bg);
     const ds = DATASET_BY_ID.get("median_age")!;
-    const seeded = classifyUnivariateCached(ds, v);
+    const t = await loadValues("median_age", "tract");
+    // Block groups take the tract breaks (issue #325), cached under the tract values the map passes.
+    const seeded = classifyUnivariateCached(ds, v, t);
     expect(seeded.packed?.size).toBe(2);
-    const fresh = classifyUnivariate(ds, v);
+    expect(seeded.breaks).toEqual(classifyUnivariateCached(ds, t).breaks);
+    const fresh = classifyUnivariate(ds, v, t);
     expect([...seeded.classes]).toEqual([...fresh.classes]);
     expect(seeded.breaks).toEqual(fresh.breaks);
     expect(seeded.colors).toEqual(fresh.colors);

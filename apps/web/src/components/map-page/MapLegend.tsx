@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ChevronDown, Search } from "lucide-react";
 import { BivariateLegend, Legend, StatusState } from "@webgis/design/components";
-import { featureLineColors, formatValue, GEO_LEVELS, type GeoLevel, type ThemeName } from "@webgis/design";
+import { featureLineColors, formatValue, GEO_LEVELS, legendFormat, type GeoLevel, type ThemeName } from "@webgis/design";
 import type { Dataset } from "@/lib/registry";
 import type { FeatureLayerSpec } from "@/lib/layers";
 import { changeNote, stopNote, type Stop } from "@/lib/periods";
@@ -51,12 +51,21 @@ export function MapLegend({ theme, primary, secondary, isFeature, featureSpec, c
 }) {
   const [openPicked, setLegendOpen] = useState(false);
   const legendOpen = openPicked && !covered;
+  // Each level has its own breaks, so when a zoom swaps the level and the key changes with it, the
+  // legend flashes once (issue #325). Tracts and block groups share breaks, so that switch doesn't.
+  const keyShown = current?.breaks ? `${level}|${current.breaks.join()}` : null;
+  const [shown, setShown] = useState({ key: keyShown, cue: 0 });
+  if (keyShown && keyShown !== shown.key) {
+    const [was, wasBreaks] = shown.key?.split("|") ?? [];
+    setShown({ key: keyShown, cue: shown.cue + (was && was !== level && wasBreaks !== current!.breaks!.join() ? 1 : 0) });
+  }
+  const cueClass = shown.cue ? "wg-legend-cue" : "";
   // Line layers reverse their ramp on dark land (see featureLineColors); the legend follows the map.
   const featureColors = featureSpec && (featureSpec.geometry === "line" ? featureLineColors(featureSpec.colors, theme) : featureSpec.colors);
   const legendStrip = primary && (featureColors || current?.colors);
   const legendEnds = current?.ends ?? (featureSpec
     ? [`< ${formatValue(featureSpec.breaks[0], primary!.unit)}`, `≥ ${formatValue(featureSpec.breaks[featureSpec.breaks.length - 1], primary!.unit)}`]
-    : current?.breaks?.length ? [`< ${formatValue(current.breaks[0], primary!.unit)}`, `≥ ${formatValue(current.breaks[current.breaks.length - 1], primary!.unit)}`] : null);
+    : current?.breaks?.length ? ((f) => [`< ${f(current.breaks![0])}`, `≥ ${f(current.breaks!.at(-1)!)}`])(legendFormat(current.breaks, primary!.unit)) : null);
   const changeCaption = primary && since && stop && current?.measure && [
     `Change, ${since.label} → ${stop.label}, ${changeUnitWords(current.measure, primary.unit)} · ${GEO_LEVELS[level].label}`,
     current.tested && "No clear change: within the margin of error",
@@ -65,7 +74,7 @@ export function MapLegend({ theme, primary, secondary, isFeature, featureSpec, c
     primary.coverageNote,
   ].filter(Boolean).join(". ");
   const legendBody = (
-    <>
+    <div key={shown.cue} className={cueClass}>
       {primary && isFeature ? (featureSpec ? (
           <Legend title={primary.title} unit={primary.unit} colors={featureColors!} breaks={featureSpec.breaks} showNoData={false} swatch={featureSpec.geometry === "line" ? "line" : "area"}
             caption={`${primary.vintage} · ${featureSpec.featureCount.toLocaleString()} ${featureSpec.geometry === "line" ? "segments · wider lines = higher road class" : "areas"}${primary.coverageNote ? `. ${primary.coverageNote}` : ""}`} />
@@ -85,14 +94,14 @@ export function MapLegend({ theme, primary, secondary, isFeature, featureSpec, c
       {hatchToggle && current?.breaks && !secondary && (
         <HatchToggle {...hatchToggle} fill={current.colors[Math.floor(current.colors.length / 2)]} />
       )}
-    </>
+    </div>
   );
 
   return (
     <>
       {legendStrip && legendEnds && !legendOpen && (
-        <button type="button" data-legend="" onClick={() => setLegendOpen(true)} aria-expanded={false} aria-label={`Show legend for ${primary!.title}`}
-          className={`wg-panel absolute bottom-6 left-3 z-20 max-w-[calc(100%-9rem)] items-center gap-2 whitespace-nowrap rounded-full px-3 py-2 text-xs tabular-nums text-foreground focus-visible:outline-2 focus-visible:outline-ring md:left-4 md:max-w-none ${desktopStrip ? "flex" : "flex md:hidden"}`}>
+        <button key={shown.cue} type="button" data-legend="" onClick={() => setLegendOpen(true)} aria-expanded={false} aria-label={`Show legend for ${primary!.title}`}
+          className={`wg-panel absolute bottom-6 left-3 z-20 max-w-[calc(100%-9rem)] items-center gap-2 whitespace-nowrap rounded-full px-3 py-2 text-xs tabular-nums text-foreground focus-visible:outline-2 focus-visible:outline-ring md:left-4 md:max-w-none ${desktopStrip ? "flex" : "flex md:hidden"} ${cueClass}`}>
           {/* The strip is a compact key: numbers only ("< 2.5K", "≥ 75K"); the unit is in the full legend. */}
           {since ? <span className="font-semibold">Change</span> : stopId && <span className="font-semibold">{stop!.label}</span>}
           <span>{stripEnd(legendEnds[0])}</span>
