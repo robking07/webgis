@@ -81,10 +81,19 @@ export const LEGEND = {
   alwaysShowNoData: true,
 };
 
+const compactDollars = nf({ style: "currency", currency: "USD", notation: "compact", maximumSignificantDigits: 3 }).format;
+
+/** How a legend writes its numbers: ratios at 2 decimals, dollars from $10K up as "$70K" (unless
+ *  that would make two breaks read the same). */
+export function legendFormat(breaks: number[], unit: Unit): (v: number) => string {
+  const compact = unit === "dollars" && new Set(breaks.map(compactDollars)).size === breaks.length;
+  return (v) => (compact && Math.abs(v) >= 1e4 ? compactDollars(v) : formatValue(v, unit, { plain: true, decimals: unit === "ratio" ? 2 : undefined }));
+}
+
 /** Human-readable class labels: "< a", "a – b", …, "≥ z". */
 export function classLabels(breaks: number[], unit: Unit, opts?: { min?: number; minIsClass?: boolean }): string[] {
   if (breaks.length === 0) return ["All values"];
-  const f = (v: number) => formatValue(v, unit, { plain: true, decimals: unit === "ratio" ? 2 : undefined }); // legends keep ratios at 2 decimals
+  const f = legendFormat(breaks, unit);
   /** "10.9 – 15.9 per 100k", not "10.9 per 100k – 15.9 per 100k": drop a multi-character
    *  unit suffix from the lower bound when the upper bound carries it. */
   const range = (a: number, b: number) => {

@@ -24,21 +24,25 @@ interface PickerProps {
   onSlot: (slot: "a" | "b") => void;
   onPick: (id: string) => void;
   onClose: () => void;
+  /** Lists only the maps this passes (the compare page: maps that work for the places). */
+  fits?: (d: Dataset) => boolean;
 }
 
 /** What the drop-down and the sheet share: the search, the category shown, and the compare states. */
-function usePicker({ slot, primary, secondary }: PickerProps) {
+function usePicker({ slot, primary, secondary, fits }: PickerProps) {
   /** The map in the slot being filled (marked current). */
   const shown = slot === "b" ? secondary : primary;
   const [q, setQ] = useState("");
-  const [category, setCategory] = useState<string>((shown ?? primary).category);
+  // Categories with nothing to list are left out (compare page).
+  const categories = useMemo(() => CATEGORIES.filter((c) => !fits || DATASETS.some((d) => d.category === c && fits(d))), [fits]);
+  const [category, setCategory] = useState<string>(() => { const c = (shown ?? primary).category; return categories.includes(c) ? c : categories[0] ?? c; });
   const searching = !!q.trim();
-  const datasets = useMemo(() => (searching ? searchDatasets(q, null) : DATASETS.filter((d) => d.category === category)), [searching, q, category]);
+  const datasets = useMemo(() => (searching ? searchDatasets(q, null) : DATASETS.filter((d) => d.category === category)).filter((d) => !fits || fits(d)), [searching, q, category, fits]);
   // Filling one slot of a comparison: the pick must pair with the map in the other slot.
   const pairWith = slot === "b" ? primary : slot === "a" ? secondary : null;
   const title = slot === "ask" ? "Replace which map?" : slot === "b" && !secondary ? "Choose a second map"
     : secondary ? `Replace ${shown!.title}` : null;
-  return { q, setQ, category, searching, datasets, pairWith, title, current: shown?.id ?? null, currentCategory: shown?.category,
+  return { q, setQ, category, categories, searching, datasets, pairWith, title, current: shown?.id ?? null, currentCategory: shown?.category,
     pickCategory: (c: string) => { setCategory(c); setQ(""); } };
 }
 type Picker = ReturnType<typeof usePicker>;
@@ -103,7 +107,7 @@ export function DatasetMenu(props: PickerProps) {
         <div className="flex min-h-0 flex-1">
           <div role="menu" aria-label="Categories" className="w-44 shrink-0 overflow-y-auto border-r p-1.5">
             <p className="px-2.5 pb-1 pt-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Categories</p>
-            {CATEGORIES.map((c) => (
+            {p.categories.map((c) => (
               <button key={c} type="button" role="menuitemradio" aria-checked={!p.searching && c === p.category} onClick={() => p.pickCategory(c)}
                 className={`flex w-full items-center gap-2 rounded-md px-2.5 py-1.5 text-left text-sm focus-visible:outline-2 focus-visible:outline-ring ${!p.searching && c === p.category ? "bg-muted font-semibold" : "hover:bg-muted"}`}>
                 <span className="flex-1">{c}</span>
@@ -212,7 +216,7 @@ export function DatasetSheet(props: PickerProps) {
           {p.pairWith && <PairNote pairWith={p.pairWith} />}
           <div ref={row} role="radiogroup" aria-label="Categories" onPointerDown={stop}
             className="-mx-4 flex touch-pan-x gap-1.5 overflow-x-auto px-4 pb-1 [scrollbar-width:none]">
-            {CATEGORIES.map((c) => (
+            {p.categories.map((c) => (
               <button key={c} type="button" role="radio" aria-checked={!p.searching && c === p.category} onClick={() => p.pickCategory(c)}
                 className={`shrink-0 rounded-full border px-3 py-1 text-[13px] whitespace-nowrap focus-visible:outline-2 focus-visible:outline-ring ${!p.searching && c === p.category ? "border-primary bg-primary text-primary-foreground" : "text-foreground"}`}>
                 {c}
