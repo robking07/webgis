@@ -54,6 +54,8 @@ interface ControlsProps {
   levels: GeoLevel[];
   /** The level drawn now (switching with zoom). */
   shown: GeoLevel;
+  /** Levels with change data (issue #249): picking another one in change mode shows its values. */
+  changeLevels: GeoLevel[];
   facets: Facet[];
   stops: Stop[];
   value: FilterValue;
@@ -74,7 +76,7 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 
 /** The panel's sections: geography level, time (values for one period, or the change since an
  *  earlier one), then each facet as a checkbox list. */
-function FilterControls({ levels, shown, facets, stops, value, onChange }: ControlsProps) {
+function FilterControls({ levels, shown, changeLevels, facets, stops, value, onChange }: ControlsProps) {
   const plural = (l: GeoLevel) => GEO_LEVELS[l].plural.toLowerCase();
   const defaultStop = stops.find((s) => s.isDefault)?.id;
   // Values / Change (Robbie, 2026-10-10): Change swaps the year picker for two, From and To, with
@@ -95,6 +97,12 @@ function FilterControls({ levels, shown, facets, stops, value, onChange }: Contr
   const chip = (on: boolean) => `rounded-md px-2 py-1 text-xs font-medium focus-visible:outline-2 focus-visible:outline-ring ${on ? "bg-primary text-primary-foreground" : "border hover:bg-muted"}`;
   return (
     <div className="space-y-5">
+      {/* Issue #249: the level pill opens this panel, so a one-level map says why there's no choice. */}
+      {levels.length === 1 && (
+        <Section title="Geography">
+          <p className="px-1.5 text-sm text-muted-foreground" data-one-level="">This map is only available by {GEO_LEVELS[levels[0]].label.toLowerCase()}.</p>
+        </Section>
+      )}
       {levels.length > 1 && (
         <Section title="Geography">
           <div role="radiogroup" aria-label="Geography level" className="space-y-0.5">
@@ -102,7 +110,7 @@ function FilterControls({ levels, shown, facets, stops, value, onChange }: Contr
               const on = value.pinned === l;
               return (
                 <label key={l ?? "auto"} className="flex cursor-pointer items-center gap-2.5 rounded-md px-1.5 py-1.5 text-sm hover:bg-muted/60">
-                  <input type="radio" name="geo-level" checked={on} onChange={() => onChange({ ...value, pinned: l })} className="size-4 accent-[var(--ui-accent)]" />
+                  <input type="radio" name="geo-level" checked={on} onChange={() => onChange({ ...value, pinned: l, since: l && !changeLevels.includes(l) ? null : value.since })} className="size-4 accent-[var(--ui-accent)]" />
                   <span className="flex-1">{l ? GEO_LEVELS[l].plural : "Automatic (changes as you zoom)"}</span>
                   {l === null && <span className="text-xs text-muted-foreground">{plural(shown)} now</span>}
                   {l && l === shown && value.pinned === null && <span className="text-xs text-muted-foreground">shown now</span>}

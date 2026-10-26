@@ -40,9 +40,10 @@ export function useViewerData(state: UrlState, tractCounties: readonly string[] 
   const stopId = stop && !stop.isDefault ? stop.id : null;
   // Levels both datasets have (and the shown stop has). Blocks (values in the tiles) can't be
   // compared: no bivariate join.
-  const availableLevels = useMemo(() => isFeature ? [] : LEVELS.filter((l) => (!primary || primary.geographyLevels.includes(l)) && (!secondary || (secondary.geographyLevels.includes(l) && !TILE_VALUE_LEVELS.has(l))) && (!stopId || stop!.levels.includes(l))
-    // A change needs values at both stops; blocks have no earlier values.
-    && (!since || (since.levels.includes(l) && !TILE_VALUE_LEVELS.has(l)))), [primary, secondary, isFeature, stopId, stop, since]);
+  const valueLevels = useMemo(() => isFeature ? [] : LEVELS.filter((l) => (!primary || primary.geographyLevels.includes(l)) && (!secondary || (secondary.geographyLevels.includes(l) && !TILE_VALUE_LEVELS.has(l))) && (!stopId || stop!.levels.includes(l))), [primary, secondary, isFeature, stopId, stop]);
+  // A change needs values at both stops; blocks have no earlier values. `valueLevels` stay
+  // pickable in change mode: picking one without change shows its values (issue #249).
+  const availableLevels = useMemo(() => valueLevels.filter((l) => !since || (since.levels.includes(l) && !TILE_VALUE_LEVELS.has(l))), [valueLevels, since]);
   // Switch with zoom is the default for every dataset (Robbie, 2026-10-02; replaces D-35's
   // "finest level at every zoom"). lv=<level> pins one; lv=auto is the old spelling of the default.
   // A pinned block group or block never draws at national or multi-state zoom (pinFloor).
@@ -96,7 +97,7 @@ export function useViewerData(state: UrlState, tractCounties: readonly string[] 
     return out;
   }, [primary, secondary, x.values, y.values, stopId, xBase.values, blockField, since, xFrom.values, tractMoes]);
 
-  return { primary, secondary, isFeature, featureSpec, stops, stop, stopId, since, xBase, xFrom, testMoes, availableLevels, pinnedLevel, focus, bands, x, y, level, classed, blockField };
+  return { primary, secondary, isFeature, featureSpec, stops, stop, stopId, since, xBase, xFrom, testMoes, valueLevels, availableLevels, pinnedLevel, focus, bands, x, y, level, classed, blockField };
 }
 
 const onResize = (cb: () => void) => { window.addEventListener("resize", cb); return () => window.removeEventListener("resize", cb); };
