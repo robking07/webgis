@@ -18,7 +18,22 @@ import type { Level, Value } from "./values.ts";
 export type Counts = [number | null, number | null, number | null, number | null];
 /** An estimate and its margin of error (90%, as the Census Bureau publishes them). */
 export interface Est { e: number | null; m: number | null }
-export type Row = Map<string, number | null>; // ACS variable with E/M suffix → number
+/** An ACS row: variable with E/M suffix → number (a Map works too, as in the tests). */
+export type Row = { get(v: string): number | null | undefined };
+/** Rows from one fetch share `index` and keep their numbers in one Float64Array (NaN = missing).
+ *  As Maps, the national block-group table (~240k rows × ~310 variables) took over 4 GB, past
+ *  Node's default heap, and stopped `ingest counts` before the other sources ran (#233). */
+export class PackedRow {
+  private index: Map<string, number>;
+  private a: Float64Array;
+  // No parameter properties: `node src/run.ts` only strips types.
+  constructor(index: Map<string, number>) { this.index = index; this.a = new Float64Array(index.size).fill(NaN); }
+  set(v: string, x: number | null) { this.a[this.index.get(v)!] = x ?? NaN; }
+  get(v: string) {
+    const i = this.index.get(v);
+    return i === undefined ? undefined : Number.isNaN(this.a[i]) ? null : this.a[i];
+  }
+}
 /** Puerto Rico: not part of the Census Bureau's U.S. totals (ACS `us`, 2020 Census, FARS, LODES). */
 const PR = "72";
 

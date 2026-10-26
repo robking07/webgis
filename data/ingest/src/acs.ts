@@ -10,7 +10,7 @@ import { areas2019, blockGroupLandArea } from "./geographies.ts";
 import { landArea, registerDataset, writeStatic, writeStopValues, writeValues, type Level, type Value } from "./values.ts";
 import { countsSpec, type Relations } from "@webgis/registry/relations";
 import { loadRelations } from "@webgis/registry/load";
-import { countsRow, remainderRow, sumVars as sum, usArea, writeCounts, writeMoes, writeUs, type Counts, type Row } from "./counts.ts";
+import { countsRow, remainderRow, sumVars as sum, usArea, writeCounts, writeMoes, writeUs, PackedRow, type Counts, type Row } from "./counts.ts";
 
 const YEAR = ACS_HEADLINE_YEAR;
 const API = (year: number) => `https://api.census.gov/data/${year}/acs/acs5`;
@@ -33,7 +33,8 @@ function clean(raw: string | null, isMoe: boolean): number | null {
 async function fetchTable(vars: string[], geo: string, year = YEAR): Promise<Map<string, Row>> {
   const key = process.env.CENSUS_API_KEY;
   if (!key) throw new Error("CENSUS_API_KEY is not set in .env.local (free: https://api.census.gov/data/key_signup.html)");
-  const out = new Map<string, Row>();
+  const out = new Map<string, PackedRow>();
+  const index = new Map(vars.map((v, i) => [v, i]));
   for (let i = 0; i < vars.length; i += MAX_VARS) {
     const chunk = vars.slice(i, i + MAX_VARS);
     const url = `${API(year)}?get=${chunk.join(",")}&${geo}&key=${key}`;
@@ -49,7 +50,7 @@ async function fetchTable(vars: string[], geo: string, year = YEAR): Promise<Map
     for (const r of rows) {
       const rec = Object.fromEntries(head.map((h, j) => [h, r[j]]));
       const geoid = geoCols.map((g) => rec[g]).join("");
-      const row = out.get(geoid) ?? new Map();
+      const row = out.get(geoid) ?? new PackedRow(index);
       for (const v of chunk) row.set(v, clean(rec[v], v.endsWith("M")));
       out.set(geoid, row);
     }
