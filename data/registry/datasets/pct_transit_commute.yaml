@@ -1,10 +1,10 @@
 id: pct_transit_commute
-title: Commute by public transit
+title: Take transit to work
 phrase: transit commuting rates
 description: Share of workers 16 and over who usually commute by public transportation (excluding taxicab).
 category: Transportation
 subcategory: Commuting
-tags: [transit, bus, rail, mode share, transportation]
+tags: [commute by public transit, transit, bus, rail, mode share, transportation]
 source:
   name: U.S. Census Bureau, American Community Survey 5-Year Estimates
   shortName: Census Bureau
