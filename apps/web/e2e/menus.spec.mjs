@@ -535,6 +535,8 @@ for (const vp of ["laptop", "phone"]) {
     await card.waitFor({ timeout: 8000 });
     let txt = await card.innerText();
     expect(/Nebraska/.test(txt) && /State/.test(txt) && !/County/.test(txt), `national zoom reported: ${txt.replace(/\n/g, " | ")}`);
+    // Issue #321: a tap opens the details only, with no hover card repeating them.
+    if (page.isPhone) { await wait(500); expect(await hoverCard(page).count() === 0, "a tap also showed the hover card"); }
     // Zoom in until counties draw: the same pointer now reports a county.
     await page.evaluate(([lon, lat]) => window.__wgMap.jumpTo({ center: [lon, lat], zoom: 6.5 }), NEBRASKA);
     await mapIdle(page);
