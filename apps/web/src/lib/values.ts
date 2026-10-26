@@ -22,7 +22,7 @@ export function loadValues(id: string, level: GeoLevel, stop?: string | null): P
     const onMain = () => fetch(url).then((r) => (r.ok ? r.json() : r.status));
     // A worker that fails (its script missing after a deploy, a network error) falls back to the main thread.
     const loaded = LAZY_LEVELS.has(level) && typeof Worker !== "undefined"
-      ? loadInWorker(url, stop ? undefined : DATASET_BY_ID.get(id)).catch(onMain)
+      ? loadInWorker(url, stop ? undefined : DATASET_BY_ID.get(id), level).catch(onMain)
       : onMain();
     cache.set(key, loaded.then((v) => {
       if (typeof v === "number") throw new Error(`No ${level} data for ${id} (${v})`);
@@ -37,7 +37,11 @@ let nextId = 0;
 const pending = new Map<number, (m: WorkerReply) => void>();
 
 /** Resolves to the values (with the default classification cached for `ds`), or the HTTP status. */
-async function loadInWorker(url: string, ds?: Dataset): Promise<Values | number> {
+async function loadInWorker(url: string, ds: Dataset | undefined, level: GeoLevel): Promise<Values | number> {
+  // Block groups are classed with the tract breaks (issue #325): the same values object the map
+  // classifies tracts from, so the classification seeded below is the one the map asks for.
+  const tracts = ds && level === "block_group" && ds.geographyLevels.includes("tract") ? await loadValues(ds.id, "tract") : undefined;
+  const breaks = tracts && classifyUnivariateCached(ds!, tracts).breaks;
   if (!worker) {
     worker = new Worker(new URL("./values.worker.ts", import.meta.url));
     worker.onmessage = (e: MessageEvent<WorkerReply>) => { pending.get(e.data.id)?.(e.data); pending.delete(e.data.id); };
@@ -51,7 +55,7 @@ async function loadInWorker(url: string, ds?: Dataset): Promise<Values | number>
   const id = nextId++;
   const reply = await new Promise<WorkerReply>((resolve) => {
     pending.set(id, resolve);
-    worker!.postMessage({ id, url: new URL(url, location.href).href, symbology: ds?.symbology } satisfies WorkerRequest);
+    worker!.postMessage({ id, url: new URL(url, location.href).href, symbology: ds?.symbology, breaks } satisfies WorkerRequest);
   });
   if ("error" in reply) throw new Error(reply.error);
   if ("status" in reply) return reply.status;
@@ -65,11 +69,11 @@ async function loadInWorker(url: string, ds?: Dataset): Promise<Values | number>
     if (i % 20000 === 19999) await new Promise((r) => setTimeout(r));
   }
   const c = reply.classed;
-  if (ds && c) seedClassified(ds, values, { colors: c.colors, breaks: c.breaks, minClass: c.minClass, packed: c.packed, classes });
+  if (ds && c) seedClassified(ds, values, { colors: c.colors, breaks: c.breaks, minClass: c.minClass, packed: c.packed, classes }, tracts);
   return values;
 }
 
-export type WorkerRequest = { id: number; url: string; symbology?: Dataset["symbology"] };
+export type WorkerRequest = { id: number; url: string; symbology?: Dataset["symbology"]; breaks?: number[] };
 export type WorkerReply = { id: number } & (
   | { error: string }
   | { status: number }
@@ -167,9 +171,10 @@ export function classifyUnivariateCached(ds: Dataset, values: Values, breaksFrom
   return c;
 }
 
-/** Caches a classification the values worker already made (default view, no `breaksFrom`). */
-function seedClassified(ds: Dataset, values: Values, c: Classed) {
-  uniCache.set(values, new Map([[ds.id, new WeakMap([[values, c]])]]));
+/** Caches a classification the values worker already made (default view; `breaksFrom` = the tracts
+ *  for block groups). */
+function seedClassified(ds: Dataset, values: Values, c: Classed, breaksFrom?: Values) {
+  uniCache.set(values, new Map([[ds.id, new WeakMap([[breaksFrom ?? values, c]])]]));
 }
 
 export function classifyBivariateCached(x: Values, y: Values): BivariateClassed {

@@ -10,10 +10,15 @@
 .wg-swatch { display: inline-block; border-radius: 3px; box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.12); flex: none; }
 /* Line samples carry the same casing as the map's data lines (featureLineCasing). */
 .wg-swatch-line { box-shadow: 0 0 0 1px var(--map-feature-line-casing); }
-.wg-swatch-nodata { background: repeating-linear-gradient(45deg, var(--map-no-data) 0 3px, var(--ui-surface) 3px 6px); }
+/* Flat, like the map's no-data fill (noData / noDataChange); stripes in a legend mean reliability hatching. */
+.wg-swatch-nodata { background: var(--map-no-data); }
+/* The key changed with the zoom level (issue #325): the level name and classes flash once, so a
+   color that now means a different value isn't missed. */
+.wg-legend-cue :is(.wg-legend-caption, .wg-legend-list), button.wg-legend-cue { animation: wg-legend-cue 1.2s ease-out; }
+@keyframes wg-legend-cue { from { background-color: color-mix(in srgb, var(--ui-accent) 22%, transparent); } }
 /* Reliability hatching (D-222), drawn like the map's pattern (hatchImage): a dark and a light stripe
    at HATCH.width (1.25px), repeating every HATCH.spacing / √2 (≈4.95px), at HATCH.opacity (60%),
-   over a class color set inline. Runs the other way from the no-data swatch. Keep in step with HATCH. */
+   over a class color set inline. Keep in step with HATCH. */
 .wg-swatch-hatch { background-image: repeating-linear-gradient(-45deg,
   color-mix(in srgb, var(--map-hatch-dark) 60%, transparent) 0 1.25px,
   color-mix(in srgb, var(--map-hatch-light) 60%, transparent) 1.25px 2.5px,
@@ -37,7 +42,7 @@
 .wg-button { margin-left: auto; padding: 0.25rem 0.625rem; border-radius: 6px; border: 1px solid var(--ui-border); background: var(--ui-surface-raised); color: var(--ui-text); cursor: pointer; }
 .wg-button:focus-visible { outline: 2px solid var(--ui-focus); outline-offset: 2px; }
 @keyframes wg-spin { to { transform: rotate(360deg); } }
-@media (prefers-reduced-motion: reduce) { .wg-spinner { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .wg-spinner, .wg-legend-cue :is(.wg-legend-caption, .wg-legend-list), button.wg-legend-cue { animation: none; } }
 .wg-popup-group + .wg-popup-group { margin-top: 0.625rem; }
 .wg-popup-group-title { margin: 0 0 0.25rem; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ui-text-muted); }
 .wg-popup-footnote { margin: 0.625rem 0 0; font-size: 0.6875rem; color: var(--ui-text-muted); }
@@ -62,6 +67,7 @@
 .maplibregl-ctrl.maplibregl-ctrl-attrib, .maplibregl-ctrl.maplibregl-ctrl-attrib.maplibregl-compact { background-color: color-mix(in srgb, var(--ui-surface) 88%, transparent); color: var(--ui-text-muted); }
 .maplibregl-ctrl.maplibregl-ctrl-attrib a { color: var(--ui-text-muted); }
 .maplibregl-ctrl.maplibregl-ctrl-attrib a:hover { color: var(--ui-text); }
+.wg-national .maplibregl-ctrl-scale { display: none; }
 .maplibregl-ctrl.maplibregl-ctrl-scale { background: color-mix(in srgb, var(--ui-surface) 80%, transparent); color: var(--ui-text); border-color: var(--ui-text-muted); }
 /* The ⓘ button is a black SVG background; invert it on dark (same two selectors as theme.css). */
 :root[data-theme="dark"] .maplibregl-ctrl-attrib-button { filter: invert(1); }
