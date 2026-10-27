@@ -886,18 +886,6 @@
     }
    ]
   },
-  "ice_287g_agreements": {
-   "group": "People",
-   "counts": {
-    "of": "active 287(g) agreements"
-   },
-   "links": [
-    {
-     "id": "pct_foreign_born",
-     "why": "Where immigrants live and where local police work with ICE."
-    }
-   ]
-  },
   "gini_index": {
    "group": "Economy",
    "links": []
@@ -1143,10 +1131,6 @@
     {
      "id": "pct_limited_english",
      "why": "Many households with limited English are immigrant households."
-    },
-    {
-     "id": "ice_287g_agreements",
-     "why": "Where immigrants live and where local police work with ICE."
     }
    ]
   },

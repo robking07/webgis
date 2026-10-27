@@ -64,7 +64,6 @@ links:
   - { maps: [pct_age_65_plus, pct_seniors_living_alone], why: More older residents, more seniors living alone. }
   - { maps: [pct_seniors_living_alone, loneliness], why: Living alone is one driver of loneliness. }
   - { maps: [pct_foreign_born, pct_limited_english], why: Many households with limited English are immigrant households. }
-  - { maps: [pct_foreign_born, ice_287g_agreements], why: Where immigrants live and where local police work with ICE. }
   - { maps: [pct_disability, disability_any], why: The same question from the Census survey and CDC's model. }
   # Internet
   - { maps: [pct_no_internet, pct_broadband], why: Two sides of home internet access. }
@@ -330,9 +329,6 @@ maps:
     group: "Housing"
     counts: { of: "renter households", per: "households" }
   # People: Immigration and language
-  ice_287g_agreements:
-    group: "People"
-    counts: { of: "active 287(g) agreements" }
   # Economy: Income and poverty
   gini_index:
     group: "Economy"
