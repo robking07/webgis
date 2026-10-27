@@ -32398,24 +32398,6 @@
    "fingerprint": "b7b93bb4b31da912"
   },
   {
-   "id": "ice_287g_agreements__mean_temperature",
-   "x": "ice_287g_agreements",
-   "y": "mean_temperature",
-   "level": "county",
-   "n": 3133,
-   "r": 0.409,
-   "rho": 0.457,
-   "withinState": 0.052,
-   "status": "flagged",
-   "flags": [
-    "regional only: within states ρ=0.05"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "fcb2d0d3d7a6efb2"
-  },
-  {
    "id": "asthma__disability_independent_living",
    "x": "asthma",
    "y": "disability_independent_living",
@@ -32432,24 +32414,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "d609325e80d0aace"
-  },
-  {
-   "id": "cooling_degree_days__ice_287g_agreements",
-   "x": "cooling_degree_days",
-   "y": "ice_287g_agreements",
-   "level": "county",
-   "n": 3098,
-   "r": 0.456,
-   "rho": 0.457,
-   "withinState": 0.021,
-   "status": "flagged",
-   "flags": [
-    "regional only: within states ρ=0.02"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "5b1fc7f9d0bf0e33"
   },
   {
    "id": "pct_leave_before_7am__pct_work_outside_county",
@@ -33282,24 +33246,6 @@
    "fingerprint": "a5a5c3a6cb381f78"
   },
   {
-   "id": "ice_287g_agreements__july_low",
-   "x": "ice_287g_agreements",
-   "y": "july_low",
-   "level": "county",
-   "n": 3133,
-   "r": 0.355,
-   "rho": 0.449,
-   "withinState": 0.026,
-   "status": "flagged",
-   "flags": [
-    "regional only: within states ρ=0.03"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "33221065daea74bc"
-  },
-  {
    "id": "asthma__utility_shutoff_threat",
    "x": "asthma",
    "y": "utility_shutoff_threat",
@@ -33334,24 +33280,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "9727b684b5f849e3"
-  },
-  {
-   "id": "heating_degree_days__ice_287g_agreements",
-   "x": "heating_degree_days",
-   "y": "ice_287g_agreements",
-   "level": "county",
-   "n": 3098,
-   "r": -0.387,
-   "rho": -0.448,
-   "withinState": -0.062,
-   "status": "flagged",
-   "flags": [
-    "regional only: within states ρ=-0.06"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "c17f5db2ab7d7079"
   },
   {
    "id": "pct_renter_households__pct_zero_vehicle_households",
@@ -37764,24 +37692,6 @@
    "fingerprint": "29f8c6469f696aba"
   },
   {
-   "id": "ice_287g_agreements__july_high",
-   "x": "ice_287g_agreements",
-   "y": "july_high",
-   "level": "county",
-   "n": 3133,
-   "r": 0.297,
-   "rho": 0.414,
-   "withinState": -0.008,
-   "status": "flagged",
-   "flags": [
-    "regional only: within states ρ=-0.01"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "f5651216819e8aa4"
-  },
-  {
    "id": "pct_bachelors_plus__pct_foreign_born",
    "x": "pct_bachelors_plus",
    "y": "pct_foreign_born",
@@ -38519,24 +38429,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "4b4d60fa2a996957"
-  },
-  {
-   "id": "ice_287g_agreements__january_low",
-   "x": "ice_287g_agreements",
-   "y": "january_low",
-   "level": "county",
-   "n": 3133,
-   "r": 0.387,
-   "rho": 0.41,
-   "withinState": 0.086,
-   "status": "flagged",
-   "flags": [
-    "regional only: within states ρ=0.09"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "754be60f9df2373b"
   },
   {
    "id": "pct_no_internet__short_sleep",
@@ -45743,24 +45635,6 @@
    "fingerprint": "3cb06e5251255383"
   },
   {
-   "id": "high_cholesterol__ice_287g_agreements",
-   "x": "high_cholesterol",
-   "y": "ice_287g_agreements",
-   "level": "county",
-   "n": 2956,
-   "r": 0.26,
-   "rho": 0.366,
-   "withinState": 0.025,
-   "status": "flagged",
-   "flags": [
-    "regional only: within states ρ=0.03"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "d981ba1a7c650bfe"
-  },
-  {
    "id": "july_low__pct_drive_alone",
    "x": "july_low",
    "y": "pct_drive_alone",
@@ -46040,24 +45914,6 @@
    "caption": "A modest link across 2,956 counties (Spearman ρ = 0.36). It holds within states too (ρ = 0.26). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template",
    "fingerprint": "f1617a36cf197b9b"
-  },
-  {
-   "id": "ice_287g_agreements__pct_uninsured",
-   "x": "ice_287g_agreements",
-   "y": "pct_uninsured",
-   "level": "county",
-   "n": 3222,
-   "r": 0.234,
-   "rho": 0.363,
-   "withinState": 0.028,
-   "status": "flagged",
-   "flags": [
-    "regional only: within states ρ=0.03"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "622925eead73b85c"
   },
   {
    "id": "disability_any__food_desert_residents",
@@ -50906,24 +50762,6 @@
    "fingerprint": "93b09679f32880bd"
   },
   {
-   "id": "dentist_visit__ice_287g_agreements",
-   "x": "dentist_visit",
-   "y": "ice_287g_agreements",
-   "level": "county",
-   "n": 3143,
-   "r": -0.151,
-   "rho": -0.334,
-   "withinState": 0.056,
-   "status": "flagged",
-   "flags": [
-    "regional only: within states ρ=0.06"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "234d2b5cce7c1092"
-  },
-  {
    "id": "home_energy_cost__svi_minority",
    "x": "home_energy_cost",
    "y": "svi_minority",
@@ -54417,24 +54255,6 @@
    "fingerprint": "1433ea30eba4c616"
   },
   {
-   "id": "disability_any__ice_287g_agreements",
-   "x": "disability_any",
-   "y": "ice_287g_agreements",
-   "level": "county",
-   "n": 2956,
-   "r": 0.19,
-   "rho": 0.318,
-   "withinState": -0.044,
-   "status": "flagged",
-   "flags": [
-    "regional only: within states ρ=-0.04"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "0e83b60cc7988314"
-  },
-  {
    "id": "high_blood_pressure__nri_heat_wave_loss",
    "x": "high_blood_pressure",
    "y": "nri_heat_wave_loss",
@@ -54601,24 +54421,6 @@
    "caption": "A modest link across 3,222 counties (Spearman ρ = 0.32). It holds within states too (ρ = 0.24). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template",
    "fingerprint": "2c1567f3b49ebc02"
-  },
-  {
-   "id": "ice_287g_agreements__short_sleep",
-   "x": "ice_287g_agreements",
-   "y": "short_sleep",
-   "level": "county",
-   "n": 3143,
-   "r": 0.223,
-   "rho": 0.317,
-   "withinState": -0.029,
-   "status": "flagged",
-   "flags": [
-    "regional only: within states ρ=-0.03"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "901f576851a33e68"
   },
   {
    "id": "pct_hispanic_latino__svi_household",
@@ -55905,24 +55707,6 @@
    "fingerprint": "2e47ba0cc0522caf"
   },
   {
-   "id": "high_blood_pressure__ice_287g_agreements",
-   "x": "high_blood_pressure",
-   "y": "ice_287g_agreements",
-   "level": "county",
-   "n": 2956,
-   "r": 0.165,
-   "rho": 0.312,
-   "withinState": -0.038,
-   "status": "flagged",
-   "flags": [
-    "regional only: within states ρ=-0.04"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "f17b7a66e494f916"
-  },
-  {
    "id": "mean_commute_minutes__short_sleep",
    "x": "mean_commute_minutes",
    "y": "short_sleep",
@@ -56056,24 +55840,6 @@
    "caption": "A modest link across 3,222 counties (Spearman ρ = 0.31). It holds within states too (ρ = 0.31). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template",
    "fingerprint": "f1de1c6fa7395212"
-  },
-  {
-   "id": "disability_mobility__ice_287g_agreements",
-   "x": "disability_mobility",
-   "y": "ice_287g_agreements",
-   "level": "county",
-   "n": 2956,
-   "r": 0.174,
-   "rho": 0.312,
-   "withinState": -0.055,
-   "status": "flagged",
-   "flags": [
-    "regional only: within states ρ=-0.05"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "4e0fd61f67445600"
   },
   {
    "id": "copd__pct_limited_english",
@@ -56918,24 +56684,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "cbb3fa45f0637a76"
-  },
-  {
-   "id": "ice_287g_agreements__physical_inactivity",
-   "x": "ice_287g_agreements",
-   "y": "physical_inactivity",
-   "level": "county",
-   "n": 2956,
-   "r": 0.185,
-   "rho": 0.307,
-   "withinState": -0.044,
-   "status": "flagged",
-   "flags": [
-    "regional only: within states ρ=-0.04"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "3983032bad5ef3f0"
   },
   {
    "id": "cejst_pct_pop_disadvantaged__july_low",
@@ -58379,24 +58127,6 @@
    "fingerprint": "3c2b9b4124ed4688"
   },
   {
-   "id": "diabetes__ice_287g_agreements",
-   "x": "diabetes",
-   "y": "ice_287g_agreements",
-   "level": "county",
-   "n": 2956,
-   "r": 0.162,
-   "rho": 0.3,
-   "withinState": -0.057,
-   "status": "flagged",
-   "flags": [
-    "regional only: within states ρ=-0.06"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "15f0ce84ef14b80f"
-  },
-  {
    "id": "heating_degree_days__traffic_fatalities",
    "x": "heating_degree_days",
    "y": "traffic_fatalities",
@@ -59374,24 +59104,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "84cc723626509e60"
-  },
-  {
-   "id": "fair_poor_health__ice_287g_agreements",
-   "x": "fair_poor_health",
-   "y": "ice_287g_agreements",
-   "level": "county",
-   "n": 2956,
-   "r": 0.176,
-   "rho": 0.296,
-   "withinState": -0.056,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "fe8a3fe4d3ae4ca3"
   },
   {
    "id": "pct_limited_english__svi_household",
@@ -61025,24 +60737,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "097e14efe8d83ae1"
-  },
-  {
-   "id": "disability_cognition__ice_287g_agreements",
-   "x": "disability_cognition",
-   "y": "ice_287g_agreements",
-   "level": "county",
-   "n": 2956,
-   "r": 0.164,
-   "rho": 0.289,
-   "withinState": -0.045,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "41367898d40fa514"
   },
   {
    "id": "nri_coastal_flood_loss__pct_rent_burdened",
@@ -63962,24 +63656,6 @@
    "fingerprint": "9b37a6d80a32bc56"
   },
   {
-   "id": "disability_vision__ice_287g_agreements",
-   "x": "disability_vision",
-   "y": "ice_287g_agreements",
-   "level": "county",
-   "n": 2956,
-   "r": 0.151,
-   "rho": 0.277,
-   "withinState": -0.063,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "669adf81e3255254"
-  },
-  {
    "id": "pct_extreme_commute__pct_moved_last_year",
    "x": "pct_extreme_commute",
    "y": "pct_moved_last_year",
@@ -64892,24 +64568,6 @@
    "fingerprint": "96138a72db699e15"
   },
   {
-   "id": "ice_287g_agreements__pct_homes_built_before_1960",
-   "x": "ice_287g_agreements",
-   "y": "pct_homes_built_before_1960",
-   "level": "county",
-   "n": 3222,
-   "r": -0.226,
-   "rho": -0.273,
-   "withinState": -0.112,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "a888635f60d999e9"
-  },
-  {
    "id": "pct_foreign_born__pct_leave_before_7am",
    "x": "pct_foreign_born",
    "y": "pct_leave_before_7am",
@@ -64981,24 +64639,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "e898d1b22283c26d"
-  },
-  {
-   "id": "ice_287g_agreements__pct_walk_commute",
-   "x": "ice_287g_agreements",
-   "y": "pct_walk_commute",
-   "level": "county",
-   "n": 3222,
-   "r": -0.153,
-   "rho": -0.272,
-   "withinState": -0.079,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "9075b5eb6b25d8c0"
   },
   {
    "id": "cholesterol_screening__nri_inland_flood_loss",
@@ -68088,24 +67728,6 @@
    "fingerprint": "2d3bf481119f8af7"
   },
   {
-   "id": "ice_287g_agreements__nri_hurricane_loss",
-   "x": "ice_287g_agreements",
-   "y": "nri_hurricane_loss",
-   "level": "county",
-   "n": 3222,
-   "r": 0.105,
-   "rho": 0.261,
-   "withinState": 0.027,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "f8f5a76b57507f9e"
-  },
-  {
    "id": "gini_index__home_energy_cost",
    "x": "gini_index",
    "y": "home_energy_cost",
@@ -68539,24 +68161,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "a110d12a0c3e73ba"
-  },
-  {
-   "id": "home_energy_cost__ice_287g_agreements",
-   "x": "home_energy_cost",
-   "y": "ice_287g_agreements",
-   "level": "county",
-   "n": 3222,
-   "r": -0.16,
-   "rho": -0.259,
-   "withinState": -0.089,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "b8d600d6cfaa8a34"
   },
   {
    "id": "short_sleep__traffic_fatalities",
@@ -69864,24 +69468,6 @@
    "fingerprint": "ec8b5fe0577adecf"
   },
   {
-   "id": "annual_precipitation__ice_287g_agreements",
-   "x": "annual_precipitation",
-   "y": "ice_287g_agreements",
-   "level": "county",
-   "n": 3133,
-   "r": 0.173,
-   "rho": 0.254,
-   "withinState": 0.087,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "3ffa74b1d0a9241f"
-  },
-  {
    "id": "job_density__physical_distress",
    "x": "job_density",
    "y": "physical_distress",
@@ -69898,24 +69484,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "31d2ec46d9aae5a2"
-  },
-  {
-   "id": "ice_287g_agreements__physical_distress",
-   "x": "ice_287g_agreements",
-   "y": "physical_distress",
-   "level": "county",
-   "n": 2956,
-   "r": 0.148,
-   "rho": 0.254,
-   "withinState": -0.048,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "2e180df41e32ad8d"
   },
   {
    "id": "energy_burden__svi_minority",
@@ -70153,24 +69721,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "627578e60f479dbe"
-  },
-  {
-   "id": "ice_287g_agreements__pct_mobile_homes",
-   "x": "ice_287g_agreements",
-   "y": "pct_mobile_homes",
-   "level": "county",
-   "n": 3222,
-   "r": 0.132,
-   "rho": 0.253,
-   "withinState": -0.02,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "fd9f8c38fbbdf669"
   },
   {
    "id": "lack_emotional_support__median_owner_costs_mortgage",
@@ -70942,24 +70492,6 @@
    "fingerprint": "2707c60cb4e6f593"
   },
   {
-   "id": "disability_independent_living__ice_287g_agreements",
-   "x": "disability_independent_living",
-   "y": "ice_287g_agreements",
-   "level": "county",
-   "n": 2956,
-   "r": 0.122,
-   "rho": 0.251,
-   "withinState": -0.054,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "be2f7575a9382d6a"
-  },
-  {
    "id": "labor_force_participation__mean_commute_minutes",
    "x": "labor_force_participation",
    "y": "mean_commute_minutes",
@@ -71693,24 +71225,6 @@
    "fingerprint": "d51bcc27a96e4db0"
   },
   {
-   "id": "disability_selfcare__ice_287g_agreements",
-   "x": "disability_selfcare",
-   "y": "ice_287g_agreements",
-   "level": "county",
-   "n": 2956,
-   "r": 0.119,
-   "rho": 0.247,
-   "withinState": -0.063,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "bdf7127cec28448e"
-  },
-  {
    "id": "cancer__pct_bachelors_plus",
    "x": "cancer",
    "y": "pct_bachelors_plus",
@@ -71980,24 +71494,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "7f95ccafbe40c738"
-  },
-  {
-   "id": "ice_287g_agreements__svi_socioeconomic",
-   "x": "ice_287g_agreements",
-   "y": "svi_socioeconomic",
-   "level": "county",
-   "n": 3144,
-   "r": 0.193,
-   "rho": 0.246,
-   "withinState": -0.016,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "79124e0756600a83"
   },
   {
    "id": "median_gross_rent__pct_people_of_color",
@@ -73888,24 +73384,6 @@
    "fingerprint": "d44432488bf2d97d"
   },
   {
-   "id": "binge_drinking__ice_287g_agreements",
-   "x": "binge_drinking",
-   "y": "ice_287g_agreements",
-   "level": "county",
-   "n": 2956,
-   "r": -0.166,
-   "rho": -0.238,
-   "withinState": 0.049,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "5bcfa1c500a60fdb"
-  },
-  {
    "id": "census2020_housing_density__median_household_income",
    "x": "census2020_housing_density",
    "y": "median_household_income",
@@ -74796,24 +74274,6 @@
    "fingerprint": "5e3f5966d8446dd6"
   },
   {
-   "id": "ice_287g_agreements__svi_overall",
-   "x": "ice_287g_agreements",
-   "y": "svi_overall",
-   "level": "county",
-   "n": 3144,
-   "r": 0.199,
-   "rho": 0.233,
-   "withinState": 0.004,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "83b11678a6b83a47"
-  },
-  {
    "id": "high_cholesterol__nri_heat_wave_loss",
    "x": "high_cholesterol",
    "y": "nri_heat_wave_loss",
@@ -74884,24 +74344,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "011a5efa42f88d0a"
-  },
-  {
-   "id": "energy_burden_low_income__ice_287g_agreements",
-   "x": "energy_burden_low_income",
-   "y": "ice_287g_agreements",
-   "level": "county",
-   "n": 3222,
-   "r": -0.163,
-   "rho": -0.233,
-   "withinState": -0.109,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "71d8c0c7c468b984"
   },
   {
    "id": "pct_carpool__per_capita_income",
@@ -77032,24 +76474,6 @@
    "fingerprint": "bcab09ffed990b62"
   },
   {
-   "id": "ice_287g_agreements__stroke",
-   "x": "ice_287g_agreements",
-   "y": "stroke",
-   "level": "county",
-   "n": 2956,
-   "r": 0.092,
-   "rho": 0.225,
-   "withinState": -0.06,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "502713d52a890edf"
-  },
-  {
    "id": "loneliness__pct_extreme_commute",
    "x": "loneliness",
    "y": "pct_extreme_commute",
@@ -77230,24 +76654,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "f7b8b02f8044ecc8"
-  },
-  {
-   "id": "heart_disease__ice_287g_agreements",
-   "x": "heart_disease",
-   "y": "ice_287g_agreements",
-   "level": "county",
-   "n": 2956,
-   "r": 0.118,
-   "rho": 0.225,
-   "withinState": -0.051,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "664e171b8374ab2d"
   },
   {
    "id": "cholesterol_screening__pct_walk_commute",
@@ -77754,25 +77160,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "943c8cd6bc9e94e8"
-  },
-  {
-   "id": "ice_287g_agreements__pct_black_nh",
-   "x": "ice_287g_agreements",
-   "y": "pct_black_nh",
-   "level": "county",
-   "n": 3222,
-   "r": 0.068,
-   "rho": 0.223,
-   "withinState": 0.041,
-   "status": "flagged",
-   "flags": [
-    "same category (People): expected, not weird",
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "34d14f500791c27a"
   },
   {
    "id": "pct_broadband__vmt_per_capita",
@@ -78644,24 +78031,6 @@
    "fingerprint": "69b94ef6d7b1b535"
   },
   {
-   "id": "blood_pressure_medication__ice_287g_agreements",
-   "x": "blood_pressure_medication",
-   "y": "ice_287g_agreements",
-   "level": "county",
-   "n": 2956,
-   "r": 0.15,
-   "rho": 0.219,
-   "withinState": -0.02,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "0951b7cf159f42e0"
-  },
-  {
    "id": "nri_social_vulnerability__population_density",
    "x": "nri_social_vulnerability",
    "y": "population_density",
@@ -78787,24 +78156,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "c6e407528cd7831b"
-  },
-  {
-   "id": "ice_287g_agreements__mental_distress",
-   "x": "ice_287g_agreements",
-   "y": "mental_distress",
-   "level": "county",
-   "n": 2956,
-   "r": 0.128,
-   "rho": 0.219,
-   "withinState": -0.028,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "c3af6219656ac961"
   },
   {
    "id": "mammogram__pct_no_computer",
@@ -78950,24 +78301,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "58e393286fd935e2"
-  },
-  {
-   "id": "ice_287g_agreements__svi_household",
-   "x": "ice_287g_agreements",
-   "y": "svi_household",
-   "level": "county",
-   "n": 3144,
-   "r": 0.173,
-   "rho": 0.219,
-   "withinState": 0.026,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "10b261e25e2fba7e"
   },
   {
    "id": "pct_hispanic_latino__pct_nhpi_nh",
@@ -79297,24 +78630,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "c9f66a39e3816031"
-  },
-  {
-   "id": "ice_287g_agreements__utility_shutoff_threat",
-   "x": "ice_287g_agreements",
-   "y": "utility_shutoff_threat",
-   "level": "county",
-   "n": 2299,
-   "r": 0.155,
-   "rho": 0.217,
-   "withinState": -0.087,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "9ff61ebb216a31fe"
   },
   {
    "id": "nri_hurricane_loss__pct_broadband",
@@ -80583,25 +79898,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "9e2cb3a3f69492f2"
-  },
-  {
-   "id": "ice_287g_agreements__pct_no_hs_diploma",
-   "x": "ice_287g_agreements",
-   "y": "pct_no_hs_diploma",
-   "level": "county",
-   "n": 3222,
-   "r": 0.101,
-   "rho": 0.213,
-   "withinState": -0.029,
-   "status": "flagged",
-   "flags": [
-    "same category (People): expected, not weird",
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "24ea1da1112cf7ee"
   },
   {
    "id": "census2020_pop_density__disability_cognition",
@@ -82949,24 +82245,6 @@
    "fingerprint": "6de65ae97ef93e91"
   },
   {
-   "id": "copd__ice_287g_agreements",
-   "x": "copd",
-   "y": "ice_287g_agreements",
-   "level": "county",
-   "n": 2956,
-   "r": 0.101,
-   "rho": 0.206,
-   "withinState": -0.041,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "dd2c7670680a56bf"
-  },
-  {
    "id": "food_insecurity__pct_extreme_commute",
    "x": "food_insecurity",
    "y": "pct_extreme_commute",
@@ -83383,24 +82661,6 @@
    "fingerprint": "6b6ad166bf897a60"
   },
   {
-   "id": "ice_287g_agreements__nri_tornado_loss",
-   "x": "ice_287g_agreements",
-   "y": "nri_tornado_loss",
-   "level": "county",
-   "n": 3222,
-   "r": 0.058,
-   "rho": 0.204,
-   "withinState": -0.01,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "280885a2f4057cc9"
-  },
-  {
    "id": "depression__median_age",
    "x": "depression",
    "y": "median_age",
@@ -83435,24 +82695,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "89e42d23d4aa2c4d"
-  },
-  {
-   "id": "disability_hearing__ice_287g_agreements",
-   "x": "disability_hearing",
-   "y": "ice_287g_agreements",
-   "level": "county",
-   "n": 2956,
-   "r": 0.085,
-   "rho": 0.204,
-   "withinState": -0.015,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "965a1b99c0b9b9e8"
   },
   {
    "id": "pct_bike_commute__population_density",
@@ -84468,24 +83710,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "143b91126909fdb6"
-  },
-  {
-   "id": "ice_287g_agreements__nri_community_resilience",
-   "x": "ice_287g_agreements",
-   "y": "nri_community_resilience",
-   "level": "county",
-   "n": 3144,
-   "r": -0.134,
-   "rho": -0.201,
-   "withinState": 0.049,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "b80c8f96c9e78247"
   },
   {
    "id": "all_teeth_lost__pm25_annual",
@@ -87188,24 +86412,6 @@
    "fingerprint": "03fa59909733bcfe"
   },
   {
-   "id": "all_teeth_lost__ice_287g_agreements",
-   "x": "all_teeth_lost",
-   "y": "ice_287g_agreements",
-   "level": "county",
-   "n": 3143,
-   "r": 0.083,
-   "rho": 0.191,
-   "withinState": -0.048,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "33af3fbd701b99a0"
-  },
-  {
    "id": "nri_coastal_flood_loss__pct_hispanic_latino",
    "x": "nri_coastal_flood_loss",
    "y": "pct_hispanic_latino",
@@ -88282,24 +87488,6 @@
    "fingerprint": "1e84c62f6b453456"
   },
   {
-   "id": "bridges_poor_condition__ice_287g_agreements",
-   "x": "bridges_poor_condition",
-   "y": "ice_287g_agreements",
-   "level": "county",
-   "n": 3152,
-   "r": -0.126,
-   "rho": -0.187,
-   "withinState": -0.008,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "8f21fa99b9feb1e0"
-  },
-  {
    "id": "nri_heat_wave_loss__svi_minority",
    "x": "nri_heat_wave_loss",
    "y": "svi_minority",
@@ -88785,24 +87973,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "8d9fa7761b4a538d"
-  },
-  {
-   "id": "food_insecurity__ice_287g_agreements",
-   "x": "food_insecurity",
-   "y": "ice_287g_agreements",
-   "level": "county",
-   "n": 2299,
-   "r": 0.137,
-   "rho": 0.186,
-   "withinState": -0.07,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "6d7a0e663944839e"
   },
   {
    "id": "copd__pct_nhpi_nh",
@@ -89963,24 +89133,6 @@
    "fingerprint": "827646e0567424da"
   },
   {
-   "id": "ice_287g_agreements__nri_heat_wave_loss",
-   "x": "ice_287g_agreements",
-   "y": "nri_heat_wave_loss",
-   "level": "county",
-   "n": 3192,
-   "r": 0.045,
-   "rho": 0.182,
-   "withinState": -0.01,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "0b2e8d7eb0fc94dd"
-  },
-  {
    "id": "depression__per_capita_income",
    "x": "depression",
    "y": "per_capita_income",
@@ -90051,24 +89203,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "4038d348122aaedf"
-  },
-  {
-   "id": "housing_insecurity__ice_287g_agreements",
-   "x": "housing_insecurity",
-   "y": "ice_287g_agreements",
-   "level": "county",
-   "n": 2299,
-   "r": 0.124,
-   "rho": 0.181,
-   "withinState": -0.075,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "f7720f743a10f48f"
   },
   {
    "id": "disability_cognition__pct_seniors_living_alone",
@@ -90702,24 +89836,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "e544217dac6f92fb"
-  },
-  {
-   "id": "ice_287g_agreements__lack_transportation",
-   "x": "ice_287g_agreements",
-   "y": "lack_transportation",
-   "level": "county",
-   "n": 2299,
-   "r": 0.121,
-   "rho": 0.179,
-   "withinState": -0.077,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "be72d390de1390c6"
   },
   {
    "id": "diabetes__pct_work_outside_county",
@@ -91652,24 +90768,6 @@
    "fingerprint": "f868fd8164cb15e8"
   },
   {
-   "id": "ice_287g_agreements__nri_social_vulnerability",
-   "x": "ice_287g_agreements",
-   "y": "nri_social_vulnerability",
-   "level": "county",
-   "n": 3144,
-   "r": 0.124,
-   "rho": 0.176,
-   "withinState": -0.051,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "17a92860d402f6f8"
-  },
-  {
    "id": "asthma__physical_inactivity",
    "x": "asthma",
    "y": "physical_inactivity",
@@ -92147,24 +91245,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "b51a92e03947e7d2"
-  },
-  {
-   "id": "ice_287g_agreements__nri_risk_score",
-   "x": "ice_287g_agreements",
-   "y": "nri_risk_score",
-   "level": "county",
-   "n": 3144,
-   "r": 0.228,
-   "rho": 0.175,
-   "withinState": 0.175,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "dcd726a8349cb2a3"
   },
   {
    "id": "pct_long_commute__pct_owner_cost_burdened",
@@ -94950,24 +94030,6 @@
    "fingerprint": "50fad06032f8bdb9"
   },
   {
-   "id": "ice_287g_agreements__mammogram",
-   "x": "ice_287g_agreements",
-   "y": "mammogram",
-   "level": "county",
-   "n": 3143,
-   "r": -0.09,
-   "rho": -0.167,
-   "withinState": -0.011,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "1525403943b52618"
-  },
-  {
    "id": "disability_selfcare__population_density",
    "x": "disability_selfcare",
    "y": "population_density",
@@ -95440,24 +94502,6 @@
    "fingerprint": "1927ee3b38f9f7e2"
   },
   {
-   "id": "ice_287g_agreements__traffic_fatalities",
-   "x": "ice_287g_agreements",
-   "y": "traffic_fatalities",
-   "level": "county",
-   "n": 3135,
-   "r": -0.007,
-   "rho": 0.166,
-   "withinState": -0.056,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "6decce81e2525bd6"
-  },
-  {
    "id": "pct_child_poverty__pct_long_commute",
    "x": "pct_child_poverty",
    "y": "pct_long_commute",
@@ -95566,24 +94610,6 @@
    "fingerprint": "45caed581e16d8a4"
   },
   {
-   "id": "energy_burden__ice_287g_agreements",
-   "x": "energy_burden",
-   "y": "ice_287g_agreements",
-   "level": "county",
-   "n": 3222,
-   "r": -0.146,
-   "rho": -0.166,
-   "withinState": -0.115,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "5fafd243e503dee8"
-  },
-  {
    "id": "depression__pct_renter_households",
    "x": "depression",
    "y": "pct_renter_households",
@@ -95618,24 +94644,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "27690efc0e38c94f"
-  },
-  {
-   "id": "ice_287g_agreements__pct_public_assistance",
-   "x": "ice_287g_agreements",
-   "y": "pct_public_assistance",
-   "level": "county",
-   "n": 3222,
-   "r": -0.093,
-   "rho": -0.166,
-   "withinState": -0.02,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "a91f4c20149b1811"
   },
   {
    "id": "no_car_far_from_supermarket__pm25_annual",
@@ -96635,42 +95643,6 @@
    "fingerprint": "2965d497fec9bf84"
   },
   {
-   "id": "cejst_pct_pop_disadvantaged__ice_287g_agreements",
-   "x": "cejst_pct_pop_disadvantaged",
-   "y": "ice_287g_agreements",
-   "level": "county",
-   "n": 3209,
-   "r": 0.088,
-   "rho": 0.162,
-   "withinState": -0.027,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "e2d2948f5ff9e080"
-  },
-  {
-   "id": "cancer__ice_287g_agreements",
-   "x": "cancer",
-   "y": "ice_287g_agreements",
-   "level": "county",
-   "n": 2956,
-   "r": -0.1,
-   "rho": -0.162,
-   "withinState": 0.059,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "084a4b3e56cf03bc"
-  },
-  {
    "id": "pct_foreign_born__routine_checkup",
    "x": "pct_foreign_born",
    "y": "routine_checkup",
@@ -96998,24 +95970,6 @@
    "fingerprint": "fcd655827b24400c"
   },
   {
-   "id": "colorectal_screening__ice_287g_agreements",
-   "x": "colorectal_screening",
-   "y": "ice_287g_agreements",
-   "level": "county",
-   "n": 3143,
-   "r": -0.081,
-   "rho": -0.161,
-   "withinState": 0.037,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "5e5de4a5760c2f12"
-  },
-  {
    "id": "pct_seniors_living_alone__pct_zero_vehicle_households",
    "x": "pct_seniors_living_alone",
    "y": "pct_zero_vehicle_households",
@@ -97160,24 +96114,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "56ad562b7042939a"
-  },
-  {
-   "id": "ice_287g_agreements__smoking",
-   "x": "ice_287g_agreements",
-   "y": "smoking",
-   "level": "county",
-   "n": 2956,
-   "r": 0.052,
-   "rho": 0.161,
-   "withinState": -0.042,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "850c77f5a56c6c30"
   },
   {
    "id": "pct_leave_before_7am__svi_household",
@@ -97854,24 +96790,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "f0fd1e0c830ff6a7"
-  },
-  {
-   "id": "ice_287g_agreements__nri_inland_flood_loss",
-   "x": "ice_287g_agreements",
-   "y": "nri_inland_flood_loss",
-   "level": "county",
-   "n": 3222,
-   "r": -0.099,
-   "rho": -0.159,
-   "withinState": -0.067,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "f38242b0178c846c"
   },
   {
    "id": "pct_veterans__population_density",
@@ -98617,24 +97535,6 @@
    "fingerprint": "5ab281b054db010b"
   },
   {
-   "id": "ice_287g_agreements__mean_commute_minutes",
-   "x": "ice_287g_agreements",
-   "y": "mean_commute_minutes",
-   "level": "county",
-   "n": 3221,
-   "r": 0.119,
-   "rho": 0.156,
-   "withinState": 0.054,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "2a2d3ad0af238cfd"
-  },
-  {
    "id": "ozone_8hr__pct_work_from_home",
    "x": "ozone_8hr",
    "y": "pct_work_from_home",
@@ -98742,24 +97642,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "b9633b1b3069fdbd"
-  },
-  {
-   "id": "ice_287g_agreements__per_capita_income",
-   "x": "ice_287g_agreements",
-   "y": "per_capita_income",
-   "level": "county",
-   "n": 3222,
-   "r": -0.056,
-   "rho": -0.155,
-   "withinState": 0.056,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "bca8a9a0e7ecc0af"
   },
   {
    "id": "blood_pressure_medication__disability_hearing",
@@ -100411,25 +99293,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "9d6b5e3f30ba04d0"
-  },
-  {
-   "id": "ice_287g_agreements__pct_bachelors_plus",
-   "x": "ice_287g_agreements",
-   "y": "pct_bachelors_plus",
-   "level": "county",
-   "n": 3222,
-   "r": -0.065,
-   "rho": -0.15,
-   "withinState": 0.042,
-   "status": "flagged",
-   "flags": [
-    "same category (People): expected, not weird",
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "2fc5dda641df191a"
   },
   {
    "id": "nri_tornado_loss__pct_work_outside_county",
@@ -103991,24 +102854,6 @@
    "fingerprint": "8d206d4da4b09e35"
   },
   {
-   "id": "ice_287g_agreements__pct_disability",
-   "x": "ice_287g_agreements",
-   "y": "pct_disability",
-   "level": "county",
-   "n": 3222,
-   "r": 0.057,
-   "rho": 0.141,
-   "withinState": -0.004,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "3860cb784e9d5c66"
-  },
-  {
    "id": "pct_overcrowded__pct_veterans",
    "x": "pct_overcrowded",
    "y": "pct_veterans",
@@ -104316,24 +103161,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "fde8c08a294c2bef"
-  },
-  {
-   "id": "ice_287g_agreements__svi_minority",
-   "x": "ice_287g_agreements",
-   "y": "svi_minority",
-   "level": "county",
-   "n": 3144,
-   "r": 0.142,
-   "rho": 0.14,
-   "withinState": -0.028,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "0888395fc548c899"
   },
   {
    "id": "median_household_income__pct_long_commute",
@@ -105530,24 +104357,6 @@
    "fingerprint": "eae650ae2b4afef8"
   },
   {
-   "id": "ice_287g_agreements__pct_overcrowded",
-   "x": "ice_287g_agreements",
-   "y": "pct_overcrowded",
-   "level": "county",
-   "n": 3222,
-   "r": 0.045,
-   "rho": 0.136,
-   "withinState": 0.013,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "c47bc3c7d14d9f6d"
-  },
-  {
    "id": "far_from_supermarket__pct_mobile_homes",
    "x": "far_from_supermarket",
    "y": "pct_mobile_homes",
@@ -106117,24 +104926,6 @@
    "fingerprint": "bfddb871d196700a"
   },
   {
-   "id": "ice_287g_agreements__pct_leave_before_7am",
-   "x": "ice_287g_agreements",
-   "y": "pct_leave_before_7am",
-   "level": "county",
-   "n": 3222,
-   "r": 0.073,
-   "rho": 0.135,
-   "withinState": 0.052,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "6f91f6e8208a8476"
-  },
-  {
    "id": "bridges_poor_condition__pct_public_assistance",
    "x": "bridges_poor_condition",
    "y": "pct_public_assistance",
@@ -106701,24 +105492,6 @@
    "fingerprint": "c684a1e81c96299c"
   },
   {
-   "id": "asthma__ice_287g_agreements",
-   "x": "asthma",
-   "y": "ice_287g_agreements",
-   "level": "county",
-   "n": 2956,
-   "r": -0.15,
-   "rho": -0.133,
-   "withinState": -0.065,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "a5d33c0c95860426"
-  },
-  {
    "id": "job_density__loneliness",
    "x": "job_density",
    "y": "loneliness",
@@ -106951,24 +105724,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "78f897985b84e55c"
-  },
-  {
-   "id": "ice_287g_agreements__obesity",
-   "x": "ice_287g_agreements",
-   "y": "obesity",
-   "level": "county",
-   "n": 2956,
-   "r": 0.053,
-   "rho": 0.133,
-   "withinState": -0.027,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "bec98766dc946eb5"
   },
   {
    "id": "food_insecurity__pct_under_18",
@@ -107459,24 +106214,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "d05bb490fb7011a9"
-  },
-  {
-   "id": "arthritis__ice_287g_agreements",
-   "x": "arthritis",
-   "y": "ice_287g_agreements",
-   "level": "county",
-   "n": 2956,
-   "r": 0.043,
-   "rho": 0.132,
-   "withinState": -0.022,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "b54e869cf737b9b4"
   },
   {
    "id": "blood_pressure_medication__pct_asian_nh",
@@ -108071,24 +106808,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "25783d0e66ccbb6c"
-  },
-  {
-   "id": "ice_287g_agreements__pct_drive_alone",
-   "x": "ice_287g_agreements",
-   "y": "pct_drive_alone",
-   "level": "county",
-   "n": 3222,
-   "r": 0.081,
-   "rho": 0.13,
-   "withinState": 0,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "b14340f38e7789b8"
   },
   {
    "id": "disability_mobility__pct_seniors_living_alone",
@@ -109017,24 +107736,6 @@
    "fingerprint": "0eb4c58b5e8d0f20"
   },
   {
-   "id": "ice_287g_agreements__pct_carpool",
-   "x": "ice_287g_agreements",
-   "y": "pct_carpool",
-   "level": "county",
-   "n": 3222,
-   "r": 0.076,
-   "rho": 0.127,
-   "withinState": 0.005,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "cffdf5c25a4dd39e"
-  },
-  {
    "id": "pct_aian_nh__pct_overcrowded",
    "x": "pct_aian_nh",
    "y": "pct_overcrowded",
@@ -109512,24 +108213,6 @@
    "fingerprint": "02c48330741581a0"
   },
   {
-   "id": "ice_287g_agreements__pct_child_poverty",
-   "x": "ice_287g_agreements",
-   "y": "pct_child_poverty",
-   "level": "county",
-   "n": 3220,
-   "r": 0.016,
-   "rho": 0.125,
-   "withinState": -0.031,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "c02e19d619e63c7c"
-  },
-  {
    "id": "nri_community_resilience__ozone_8hr",
    "x": "nri_community_resilience",
    "y": "ozone_8hr",
@@ -109946,25 +108629,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "357ae9071b41ca96"
-  },
-  {
-   "id": "ice_287g_agreements__pct_age_65_plus",
-   "x": "ice_287g_agreements",
-   "y": "pct_age_65_plus",
-   "level": "county",
-   "n": 3222,
-   "r": -0.07,
-   "rho": -0.123,
-   "withinState": -0.059,
-   "status": "flagged",
-   "flags": [
-    "same category (People): expected, not weird",
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "55dbecaf658d944f"
   },
   {
    "id": "disability_selfcare__mean_commute_minutes",
@@ -110548,25 +109212,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "bb549dfe4a0b95db"
-  },
-  {
-   "id": "ice_287g_agreements__pct_under_18",
-   "x": "ice_287g_agreements",
-   "y": "pct_under_18",
-   "level": "county",
-   "n": 3222,
-   "r": 0.049,
-   "rho": 0.122,
-   "withinState": 0.058,
-   "status": "flagged",
-   "flags": [
-    "same category (People): expected, not weird",
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "96739b306de5af77"
   },
   {
    "id": "cancer__pct_long_commute",
@@ -111716,24 +110361,6 @@
    "fingerprint": "217ef21784b86a65"
   },
   {
-   "id": "ice_287g_agreements__pct_long_commute",
-   "x": "ice_287g_agreements",
-   "y": "pct_long_commute",
-   "level": "county",
-   "n": 3222,
-   "r": 0.05,
-   "rho": 0.118,
-   "withinState": 0.008,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "8c1c7cf588f9b42c"
-  },
-  {
    "id": "nri_wildfire_loss__pct_homes_built_before_1960",
    "x": "nri_wildfire_loss",
    "y": "pct_homes_built_before_1960",
@@ -112861,24 +111488,6 @@
    "fingerprint": "9a8eef7710e86abb"
   },
   {
-   "id": "ice_287g_agreements__pct_poverty",
-   "x": "ice_287g_agreements",
-   "y": "pct_poverty",
-   "level": "county",
-   "n": 3222,
-   "r": -0.002,
-   "rho": 0.115,
-   "withinState": -0.045,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "2977244ebaac9d2e"
-  },
-  {
    "id": "pct_extreme_commute__pct_uninsured",
    "x": "pct_extreme_commute",
    "y": "pct_uninsured",
@@ -113022,24 +111631,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "20744b79e5db0229"
-  },
-  {
-   "id": "ice_287g_agreements__pct_bike_commute",
-   "x": "ice_287g_agreements",
-   "y": "pct_bike_commute",
-   "level": "county",
-   "n": 3222,
-   "r": -0.062,
-   "rho": -0.114,
-   "withinState": 0.038,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "65701360d3beba8e"
   },
   {
    "id": "disability_vision__nri_wildfire_loss",
@@ -114601,24 +113192,6 @@
    "fingerprint": "b18a57dd52a7e7e5"
   },
   {
-   "id": "ice_287g_agreements__labor_force_participation",
-   "x": "ice_287g_agreements",
-   "y": "labor_force_participation",
-   "level": "county",
-   "n": 3222,
-   "r": -0.049,
-   "rho": -0.11,
-   "withinState": 0.064,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "1fd12540dd99784a"
-  },
-  {
    "id": "food_desert_residents__pct_public_assistance",
    "x": "food_desert_residents",
    "y": "pct_public_assistance",
@@ -114726,24 +113299,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "7f86e386911f025b"
-  },
-  {
-   "id": "ice_287g_agreements__pct_work_from_home",
-   "x": "ice_287g_agreements",
-   "y": "pct_work_from_home",
-   "level": "county",
-   "n": 3222,
-   "r": -0.036,
-   "rho": -0.11,
-   "withinState": 0.043,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "dad977f854025cf9"
   },
   {
    "id": "annual_precipitation__food_desert_residents",
@@ -115050,24 +113605,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "aae963f9948db2fb"
-  },
-  {
-   "id": "ice_287g_agreements__pct_transit_commute",
-   "x": "ice_287g_agreements",
-   "y": "pct_transit_commute",
-   "level": "county",
-   "n": 3222,
-   "r": -0.065,
-   "rho": -0.109,
-   "withinState": 0.038,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "49c5bf9f0fe0b602"
   },
   {
    "id": "no_car_far_from_supermarket__pct_long_commute",
@@ -116609,24 +115146,6 @@
    "fingerprint": "97ff8ac85c5928ae"
   },
   {
-   "id": "ice_287g_agreements__loneliness",
-   "x": "ice_287g_agreements",
-   "y": "loneliness",
-   "level": "county",
-   "n": 2299,
-   "r": 0.11,
-   "rho": 0.105,
-   "withinState": -0.069,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "c988e79a10490a4d"
-  },
-  {
    "id": "cancer__pct_no_computer",
    "x": "cancer",
    "y": "pct_no_computer",
@@ -117159,25 +115678,6 @@
    "fingerprint": "236405d9bab29e6c"
   },
   {
-   "id": "ice_287g_agreements__pct_seniors_living_alone",
-   "x": "ice_287g_agreements",
-   "y": "pct_seniors_living_alone",
-   "level": "county",
-   "n": 3222,
-   "r": -0.075,
-   "rho": -0.104,
-   "withinState": -0.079,
-   "status": "flagged",
-   "flags": [
-    "same category (People): expected, not weird",
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "3f854d2a8b12a268"
-  },
-  {
    "id": "nri_coastal_flood_loss__pct_long_commute",
    "x": "nri_coastal_flood_loss",
    "y": "pct_long_commute",
@@ -117212,24 +115712,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "3425ebe0844c13fd"
-  },
-  {
-   "id": "ice_287g_agreements__median_household_income",
-   "x": "ice_287g_agreements",
-   "y": "median_household_income",
-   "level": "county",
-   "n": 3221,
-   "r": -0.032,
-   "rho": -0.104,
-   "withinState": 0.078,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "c4642008d10447c9"
   },
   {
    "id": "gini_index__pct_public_assistance",
@@ -117756,44 +116238,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "27b48cb4533f3eff"
-  },
-  {
-   "id": "ice_287g_agreements__pct_people_of_color",
-   "x": "ice_287g_agreements",
-   "y": "pct_people_of_color",
-   "level": "county",
-   "n": 3222,
-   "r": 0.056,
-   "rho": 0.102,
-   "withinState": -0.018,
-   "status": "flagged",
-   "flags": [
-    "same category (People): expected, not weird",
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "9a8113cc351395c6"
-  },
-  {
-   "id": "ice_287g_agreements__pct_white_nh",
-   "x": "ice_287g_agreements",
-   "y": "pct_white_nh",
-   "level": "county",
-   "n": 3222,
-   "r": -0.056,
-   "rho": -0.102,
-   "withinState": 0.018,
-   "status": "flagged",
-   "flags": [
-    "same category (People): expected, not weird",
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "9a24fbd38d44ac61"
   },
   {
    "id": "disability_cognition__pct_nhpi_nh",
@@ -118373,25 +116817,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "35db5796494bc41b"
-  },
-  {
-   "id": "ice_287g_agreements__median_age",
-   "x": "ice_287g_agreements",
-   "y": "median_age",
-   "level": "county",
-   "n": 3222,
-   "r": -0.054,
-   "rho": -0.101,
-   "withinState": -0.04,
-   "status": "flagged",
-   "flags": [
-    "same category (People): expected, not weird",
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "f49e5c27bd0057fe"
   },
   {
    "id": "nri_coastal_flood_loss__pct_carpool",
@@ -120656,24 +119081,6 @@
    "fingerprint": "237a5274a3e7d38f"
   },
   {
-   "id": "ice_287g_agreements__lack_emotional_support",
-   "x": "ice_287g_agreements",
-   "y": "lack_emotional_support",
-   "level": "county",
-   "n": 2299,
-   "r": 0.116,
-   "rho": 0.094,
-   "withinState": -0.067,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "3c5da5f60fb8f5df"
-  },
-  {
    "id": "copd__nri_wildfire_loss",
    "x": "copd",
    "y": "nri_wildfire_loss",
@@ -120782,24 +119189,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "a207ace78cf34449"
-  },
-  {
-   "id": "food_desert_residents__ice_287g_agreements",
-   "x": "food_desert_residents",
-   "y": "ice_287g_agreements",
-   "level": "county",
-   "n": 3133,
-   "r": 0.019,
-   "rho": 0.094,
-   "withinState": 0.017,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "72bfc91eb762c346"
   },
   {
    "id": "pct_rent_burdened__stroke",
@@ -122561,24 +120950,6 @@
    "fingerprint": "fbab30b259e9711f"
   },
   {
-   "id": "ice_287g_agreements__nri_wildfire_loss",
-   "x": "ice_287g_agreements",
-   "y": "nri_wildfire_loss",
-   "level": "county",
-   "n": 3144,
-   "r": -0.08,
-   "rho": 0.089,
-   "withinState": 0.013,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "37e8c287da010f86"
-  },
-  {
    "id": "binge_drinking__depression",
    "x": "binge_drinking",
    "y": "depression",
@@ -123086,24 +121457,6 @@
    "fingerprint": "54f5a296b9e8b6ac"
   },
   {
-   "id": "ice_287g_agreements__pct_extreme_commute",
-   "x": "ice_287g_agreements",
-   "y": "pct_extreme_commute",
-   "level": "county",
-   "n": 3222,
-   "r": 0.021,
-   "rho": 0.087,
-   "withinState": 0.008,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "b05ade580800a372"
-  },
-  {
    "id": "median_owner_costs_mortgage__pct_uninsured",
    "x": "median_owner_costs_mortgage",
    "y": "pct_uninsured",
@@ -123211,25 +121564,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "27ce3689ac070444"
-  },
-  {
-   "id": "ice_287g_agreements__pct_graduate_degree",
-   "x": "ice_287g_agreements",
-   "y": "pct_graduate_degree",
-   "level": "county",
-   "n": 3222,
-   "r": -0.05,
-   "rho": -0.087,
-   "withinState": 0.058,
-   "status": "flagged",
-   "flags": [
-    "same category (People): expected, not weird",
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "810242e36430ef6b"
   },
   {
    "id": "disability_mobility__pct_public_assistance",
@@ -123540,43 +121874,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "a6a4ae0b45fcd19b"
-  },
-  {
-   "id": "ice_287g_agreements__pct_veterans",
-   "x": "ice_287g_agreements",
-   "y": "pct_veterans",
-   "level": "county",
-   "n": 3222,
-   "r": 0.071,
-   "rho": 0.086,
-   "withinState": 0.08,
-   "status": "flagged",
-   "flags": [
-    "same category (People): expected, not weird",
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "7ba2e38726a029bf"
-  },
-  {
-   "id": "ice_287g_agreements__svi_housing_transport",
-   "x": "ice_287g_agreements",
-   "y": "svi_housing_transport",
-   "level": "county",
-   "n": 3144,
-   "r": 0.1,
-   "rho": 0.086,
-   "withinState": 0.01,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "9529842a0a7615b6"
   },
   {
    "id": "energy_burden_low_income__heart_disease",
@@ -124379,25 +122676,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "49f5599962775ee9"
-  },
-  {
-   "id": "ice_287g_agreements__pct_hispanic_latino",
-   "x": "ice_287g_agreements",
-   "y": "pct_hispanic_latino",
-   "level": "county",
-   "n": 3222,
-   "r": 0.038,
-   "rho": 0.083,
-   "withinState": 0.051,
-   "status": "flagged",
-   "flags": [
-    "same category (People): expected, not weird",
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "ec3b0e24bd776071"
   },
   {
    "id": "pct_owner_cost_burdened__pct_snap_households",
@@ -126436,25 +124714,6 @@
    "fingerprint": "1ffacf823ff826d3"
   },
   {
-   "id": "ice_287g_agreements__pct_foreign_born",
-   "x": "ice_287g_agreements",
-   "y": "pct_foreign_born",
-   "level": "county",
-   "n": 3222,
-   "r": 0.095,
-   "rho": 0.078,
-   "withinState": 0.059,
-   "status": "flagged",
-   "flags": [
-    "same category (People): expected, not weird",
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "06a2427df05d1595"
-  },
-  {
    "id": "nri_inland_flood_loss__pct_work_from_home",
    "x": "nri_inland_flood_loss",
    "y": "pct_work_from_home",
@@ -126907,24 +125166,6 @@
    "fingerprint": "bcc023dd128b3da7"
   },
   {
-   "id": "ice_287g_agreements__ozone_8hr",
-   "x": "ice_287g_agreements",
-   "y": "ozone_8hr",
-   "level": "county",
-   "n": 680,
-   "r": -0.07,
-   "rho": -0.077,
-   "withinState": -0.002,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "e0c45e23ed656890"
-  },
-  {
    "id": "nri_social_vulnerability__pct_renter_households",
    "x": "nri_social_vulnerability",
    "y": "pct_renter_households",
@@ -127234,25 +125475,6 @@
    "fingerprint": "3c6281100ccf1348"
   },
   {
-   "id": "ice_287g_agreements__population_density",
-   "x": "ice_287g_agreements",
-   "y": "population_density",
-   "level": "county",
-   "n": 3222,
-   "r": -0.021,
-   "rho": 0.076,
-   "withinState": 0.158,
-   "status": "flagged",
-   "flags": [
-    "same category (People): expected, not weird",
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "69380b6a2712ae26"
-  },
-  {
    "id": "median_household_income__pct_veterans",
    "x": "median_household_income",
    "y": "pct_veterans",
@@ -127547,24 +125769,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "729b2289f495d4a9"
-  },
-  {
-   "id": "ice_287g_agreements__job_density",
-   "x": "ice_287g_agreements",
-   "y": "job_density",
-   "level": "county",
-   "n": 3114,
-   "r": -0.015,
-   "rho": 0.075,
-   "withinState": 0.154,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "def7d049046925e5"
   },
   {
    "id": "disability_mobility__vmt_per_capita",
@@ -128202,25 +126406,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "a0f58fe0252cfc0c"
-  },
-  {
-   "id": "census2020_pop_density__ice_287g_agreements",
-   "x": "census2020_pop_density",
-   "y": "ice_287g_agreements",
-   "level": "county",
-   "n": 3222,
-   "r": -0.022,
-   "rho": 0.073,
-   "withinState": 0.157,
-   "status": "flagged",
-   "flags": [
-    "same category (People): expected, not weird",
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "9cc07c0da8717b82"
   },
   {
    "id": "gini_index__traffic_fatalities",
@@ -129111,24 +127296,6 @@
    "fingerprint": "92f236958edaf4e6"
   },
   {
-   "id": "ice_287g_agreements__nri_expected_loss_per_person",
-   "x": "ice_287g_agreements",
-   "y": "nri_expected_loss_per_person",
-   "level": "county",
-   "n": 3222,
-   "r": -0.083,
-   "rho": -0.071,
-   "withinState": -0.087,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "b6181afd41aee6fe"
-  },
-  {
    "id": "cholesterol_screening__pct_veterans",
    "x": "cholesterol_screening",
    "y": "pct_veterans",
@@ -129145,24 +127312,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "62b9835251570601"
-  },
-  {
-   "id": "ice_287g_agreements__pm25_annual",
-   "x": "ice_287g_agreements",
-   "y": "pm25_annual",
-   "level": "county",
-   "n": 544,
-   "r": 0.006,
-   "rho": 0.071,
-   "withinState": -0.052,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "a44e188ef864d04b"
   },
   {
    "id": "pct_aian_nh__pct_rent_burdened",
@@ -131873,24 +130022,6 @@
    "fingerprint": "107a3337b70ad36b"
   },
   {
-   "id": "ice_287g_agreements__pct_zero_vehicle_households",
-   "x": "ice_287g_agreements",
-   "y": "pct_zero_vehicle_households",
-   "level": "county",
-   "n": 3222,
-   "r": -0.052,
-   "rho": -0.065,
-   "withinState": -0.038,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "be02d707b2d823d6"
-  },
-  {
    "id": "pct_work_from_home__svi_minority",
    "x": "pct_work_from_home",
    "y": "svi_minority",
@@ -131907,24 +130038,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "df5400161beb78af"
-  },
-  {
-   "id": "census2020_housing_density__ice_287g_agreements",
-   "x": "census2020_housing_density",
-   "y": "ice_287g_agreements",
-   "level": "county",
-   "n": 3222,
-   "r": -0.02,
-   "rho": 0.065,
-   "withinState": 0.155,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "dc9bcc8e9e5c5155"
   },
   {
    "id": "census2020_pct_vacant__depression",
@@ -132634,24 +130747,6 @@
    "fingerprint": "8458902ba08bcc77"
   },
   {
-   "id": "ice_287g_agreements__pct_no_internet",
-   "x": "ice_287g_agreements",
-   "y": "pct_no_internet",
-   "level": "county",
-   "n": 3222,
-   "r": -0.015,
-   "rho": 0.062,
-   "withinState": -0.083,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "59db04450680c487"
-  },
-  {
    "id": "nri_risk_score__stroke",
    "x": "nri_risk_score",
    "y": "stroke",
@@ -132886,24 +130981,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "5dcebfdc4efcc191"
-  },
-  {
-   "id": "depression__ice_287g_agreements",
-   "x": "depression",
-   "y": "ice_287g_agreements",
-   "level": "county",
-   "n": 2956,
-   "r": -0.009,
-   "rho": 0.062,
-   "withinState": 0.05,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "d4fbb01ed18dd991"
   },
   {
    "id": "cholesterol_screening__pct_hispanic_latino",
@@ -133613,24 +131690,6 @@
    "fingerprint": "6d1fc25039272338"
   },
   {
-   "id": "ice_287g_agreements__no_car_far_from_supermarket",
-   "x": "ice_287g_agreements",
-   "y": "no_car_far_from_supermarket",
-   "level": "county",
-   "n": 3133,
-   "r": -0.015,
-   "rho": 0.06,
-   "withinState": -0.033,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "b5cdf6cb7765627d"
-  },
-  {
    "id": "cholesterol_screening__median_age",
    "x": "cholesterol_screening",
    "y": "median_age",
@@ -134108,24 +132167,6 @@
    "fingerprint": "49cc412aff826005"
   },
   {
-   "id": "ice_287g_agreements__pct_owner_cost_burdened",
-   "x": "ice_287g_agreements",
-   "y": "pct_owner_cost_burdened",
-   "level": "county",
-   "n": 3221,
-   "r": 0.017,
-   "rho": -0.058,
-   "withinState": -0.009,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "329b6c9afc2ad9eb"
-  },
-  {
    "id": "pct_multiracial_nh__svi_overall",
    "x": "pct_multiracial_nh",
    "y": "svi_overall",
@@ -134395,24 +132436,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "ef229d4fc0221418"
-  },
-  {
-   "id": "ice_287g_agreements__unemployment_rate",
-   "x": "ice_287g_agreements",
-   "y": "unemployment_rate",
-   "level": "county",
-   "n": 3222,
-   "r": 0.014,
-   "rho": 0.057,
-   "withinState": 0.003,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "f31ece2a90a37a32"
   },
   {
    "id": "far_from_supermarket__nri_heat_wave_loss",
@@ -135776,24 +133799,6 @@
    "fingerprint": "1eaf736e7abb4b53"
   },
   {
-   "id": "ice_287g_agreements__nri_coastal_flood_loss",
-   "x": "ice_287g_agreements",
-   "y": "nri_coastal_flood_loss",
-   "level": "county",
-   "n": 3222,
-   "r": 0,
-   "rho": -0.053,
-   "withinState": 0,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "3751e5562b335dd0"
-  },
-  {
    "id": "median_home_value__pct_extreme_commute",
    "x": "median_home_value",
    "y": "pct_extreme_commute",
@@ -136484,42 +134489,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "65e4578d55d7d98c"
-  },
-  {
-   "id": "ice_287g_agreements__pct_work_outside_county",
-   "x": "ice_287g_agreements",
-   "y": "pct_work_outside_county",
-   "level": "county",
-   "n": 3222,
-   "r": -0.003,
-   "rho": 0.051,
-   "withinState": -0.002,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "64e2e4fc60ae0650"
-  },
-  {
-   "id": "gini_index__ice_287g_agreements",
-   "x": "gini_index",
-   "y": "ice_287g_agreements",
-   "level": "county",
-   "n": 3222,
-   "r": 0.045,
-   "rho": 0.051,
-   "withinState": -0.037,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "c9a8065d6a6dde0b"
   },
   {
    "id": "energy_burden__nri_hurricane_loss",
@@ -137247,24 +135216,6 @@
    "fingerprint": "72d9145898d76ec9"
   },
   {
-   "id": "ice_287g_agreements__median_home_value",
-   "x": "ice_287g_agreements",
-   "y": "median_home_value",
-   "level": "county",
-   "n": 3217,
-   "r": -0.038,
-   "rho": -0.05,
-   "withinState": 0.106,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "946c98689f7e84fd"
-  },
-  {
    "id": "cholesterol_screening__pct_long_commute",
    "x": "cholesterol_screening",
    "y": "pct_long_commute",
@@ -137754,24 +135705,6 @@
    "fingerprint": "ca52e11c21c129d2"
   },
   {
-   "id": "ice_287g_agreements__routine_checkup",
-   "x": "ice_287g_agreements",
-   "y": "routine_checkup",
-   "level": "county",
-   "n": 2956,
-   "r": 0.065,
-   "rho": 0.048,
-   "withinState": -0.023,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "086d65d5eb0ed435"
-  },
-  {
    "id": "obesity__pct_renter_households",
    "x": "obesity",
    "y": "pct_renter_households",
@@ -137898,24 +135831,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "7683349d8f9fa872"
-  },
-  {
-   "id": "ice_287g_agreements__pct_rent_burdened",
-   "x": "ice_287g_agreements",
-   "y": "pct_rent_burdened",
-   "level": "county",
-   "n": 3222,
-   "r": 0.114,
-   "rho": 0.048,
-   "withinState": 0.014,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "28ab3acc8654a4ef"
   },
   {
    "id": "cejst_pct_pop_disadvantaged__nri_coastal_flood_loss",
@@ -138594,25 +136509,6 @@
    "fingerprint": "48412859f4edfc8f"
   },
   {
-   "id": "ice_287g_agreements__pct_moved_last_year",
-   "x": "ice_287g_agreements",
-   "y": "pct_moved_last_year",
-   "level": "county",
-   "n": 1186,
-   "r": 0.041,
-   "rho": 0.046,
-   "withinState": -0.032,
-   "status": "flagged",
-   "flags": [
-    "same category (People): expected, not weird",
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "01d4c77fc8f41d2d"
-  },
-  {
    "id": "energy_burden_low_income__nri_community_resilience",
    "x": "energy_burden_low_income",
    "y": "nri_community_resilience",
@@ -138812,24 +136708,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "cf24e60c02c07df2"
-  },
-  {
-   "id": "ice_287g_agreements__pct_snap_households",
-   "x": "ice_287g_agreements",
-   "y": "pct_snap_households",
-   "level": "county",
-   "n": 3222,
-   "r": -0.029,
-   "rho": 0.045,
-   "withinState": -0.021,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "19d2e1433d727643"
   },
   {
    "id": "ozone_8hr__pct_work_outside_county",
@@ -139195,24 +137073,6 @@
    "fingerprint": "67f316f2060aae11"
   },
   {
-   "id": "ice_287g_agreements__median_gross_rent",
-   "x": "ice_287g_agreements",
-   "y": "median_gross_rent",
-   "level": "county",
-   "n": 3215,
-   "r": 0.084,
-   "rho": 0.044,
-   "withinState": 0.118,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "3b339961267ffbaf"
-  },
-  {
    "id": "labor_force_participation__nri_inland_flood_loss",
    "x": "labor_force_participation",
    "y": "nri_inland_flood_loss",
@@ -139395,25 +137255,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "778d8be08a086f4f"
-  },
-  {
-   "id": "ice_287g_agreements__pct_limited_english",
-   "x": "ice_287g_agreements",
-   "y": "pct_limited_english",
-   "level": "county",
-   "n": 3222,
-   "r": -0.057,
-   "rho": 0.044,
-   "withinState": 0.037,
-   "status": "flagged",
-   "flags": [
-    "same category (People): expected, not weird",
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "1092c668467f2b10"
   },
   {
    "id": "home_energy_cost__pct_owner_cost_burdened",
@@ -139758,24 +137599,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "79d44a67a54fc932"
-  },
-  {
-   "id": "ice_287g_agreements__pct_broadband",
-   "x": "ice_287g_agreements",
-   "y": "pct_broadband",
-   "level": "county",
-   "n": 3222,
-   "r": 0.027,
-   "rho": -0.043,
-   "withinState": 0.096,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "371fd84b44b8094a"
   },
   {
    "id": "pm25_annual__traffic_fatalities",
@@ -140899,25 +138722,6 @@
    "fingerprint": "8a3cd234404ccaae"
   },
   {
-   "id": "ice_287g_agreements__pct_nhpi_nh",
-   "x": "ice_287g_agreements",
-   "y": "pct_nhpi_nh",
-   "level": "county",
-   "n": 3222,
-   "r": -0.024,
-   "rho": 0.039,
-   "withinState": 0.067,
-   "status": "flagged",
-   "flags": [
-    "same category (People): expected, not weird",
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "52a98ffb86e4dd67"
-  },
-  {
    "id": "heating_degree_days__pct_asian_nh",
    "x": "heating_degree_days",
    "y": "pct_asian_nh",
@@ -141497,24 +139301,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "f25c3b7bea05ae48"
-  },
-  {
-   "id": "ice_287g_agreements__vmt_per_capita",
-   "x": "ice_287g_agreements",
-   "y": "vmt_per_capita",
-   "level": "county",
-   "n": 3130,
-   "r": -0.016,
-   "rho": 0.038,
-   "withinState": -0.033,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "76739294684c9945"
   },
   {
    "id": "annual_precipitation__pct_renter_households",
@@ -142262,24 +140048,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "6b17ecdbf67d3612"
-  },
-  {
-   "id": "ice_287g_agreements__median_owner_costs_mortgage",
-   "x": "ice_287g_agreements",
-   "y": "median_owner_costs_mortgage",
-   "level": "county",
-   "n": 3215,
-   "r": 0.002,
-   "rho": -0.036,
-   "withinState": 0.069,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "59a3e7041e731ec0"
   },
   {
    "id": "disability_mobility__nri_risk_score",
@@ -143095,24 +140863,6 @@
    "fingerprint": "5bd1b4a540de4e83"
   },
   {
-   "id": "far_from_supermarket__ice_287g_agreements",
-   "x": "far_from_supermarket",
-   "y": "ice_287g_agreements",
-   "level": "county",
-   "n": 3133,
-   "r": -0.005,
-   "rho": 0.033,
-   "withinState": 0.012,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "6b2e551735ffc015"
-  },
-  {
    "id": "median_age__pct_child_poverty",
    "x": "median_age",
    "y": "pct_child_poverty",
@@ -143402,25 +141152,6 @@
    "fingerprint": "098a8b5e5da82dc4"
   },
   {
-   "id": "ice_287g_agreements__pct_aian_nh",
-   "x": "ice_287g_agreements",
-   "y": "pct_aian_nh",
-   "level": "county",
-   "n": 3222,
-   "r": -0.05,
-   "rho": -0.032,
-   "withinState": 0.026,
-   "status": "flagged",
-   "flags": [
-    "same category (People): expected, not weird",
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "c1dde2862b7e5eb8"
-  },
-  {
    "id": "diabetes__vmt_per_capita",
    "x": "diabetes",
    "y": "vmt_per_capita",
@@ -143690,25 +141421,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "1b33f4c0cc60c6cc"
-  },
-  {
-   "id": "ice_287g_agreements__pct_multiracial_nh",
-   "x": "ice_287g_agreements",
-   "y": "pct_multiracial_nh",
-   "level": "county",
-   "n": 3222,
-   "r": 0.033,
-   "rho": 0.031,
-   "withinState": 0.063,
-   "status": "flagged",
-   "flags": [
-    "same category (People): expected, not weird",
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "85457735924402e9"
   },
   {
    "id": "nri_tornado_loss__pct_carpool",
@@ -148899,25 +146611,6 @@
    "fingerprint": "0591ae9a49d98b0e"
   },
   {
-   "id": "ice_287g_agreements__pct_single_parent_families",
-   "x": "ice_287g_agreements",
-   "y": "pct_single_parent_families",
-   "level": "county",
-   "n": 3220,
-   "r": 0.001,
-   "rho": 0.019,
-   "withinState": -0.025,
-   "status": "flagged",
-   "flags": [
-    "same category (People): expected, not weird",
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "724f98459ec7d784"
-  },
-  {
    "id": "loneliness__ozone_8hr",
    "x": "loneliness",
    "y": "ozone_8hr",
@@ -151961,24 +149654,6 @@
    "fingerprint": "4147ffde3bb88fdf"
   },
   {
-   "id": "cholesterol_screening__ice_287g_agreements",
-   "x": "cholesterol_screening",
-   "y": "ice_287g_agreements",
-   "level": "county",
-   "n": 2956,
-   "r": 0.019,
-   "rho": -0.01,
-   "withinState": 0.046,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "f347096ff25b722f"
-  },
-  {
    "id": "pct_single_parent_families__pct_work_outside_county",
    "x": "pct_single_parent_families",
    "y": "pct_work_outside_county",
@@ -152086,24 +149761,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "d2a2b95df709ab91"
-  },
-  {
-   "id": "census2020_pct_vacant__ice_287g_agreements",
-   "x": "census2020_pct_vacant",
-   "y": "ice_287g_agreements",
-   "level": "county",
-   "n": 3222,
-   "r": -0.047,
-   "rho": 0.009,
-   "withinState": -0.094,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "23096095c35fc845"
   },
   {
    "id": "disability_cognition__pct_veterans",
@@ -153321,24 +150978,6 @@
    "fingerprint": "f8d6d85202daacda"
   },
   {
-   "id": "ice_287g_agreements__pct_renter_households",
-   "x": "ice_287g_agreements",
-   "y": "pct_renter_households",
-   "level": "county",
-   "n": 3222,
-   "r": 0.011,
-   "rho": 0.006,
-   "withinState": 0.02,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "6f3e399f366ef003"
-  },
-  {
    "id": "nri_expected_loss_per_person__pct_under_18",
    "x": "nri_expected_loss_per_person",
    "y": "pct_under_18",
@@ -154334,25 +151973,6 @@
    "fingerprint": "01e5fce1b5fc6634"
   },
   {
-   "id": "ice_287g_agreements__pct_asian_nh",
-   "x": "ice_287g_agreements",
-   "y": "pct_asian_nh",
-   "level": "county",
-   "n": 3222,
-   "r": -0.035,
-   "rho": 0.003,
-   "withinState": 0.084,
-   "status": "flagged",
-   "flags": [
-    "same category (People): expected, not weird",
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "b03b9860a7904f5b"
-  },
-  {
    "id": "gini_index__pct_long_commute",
    "x": "gini_index",
    "y": "pct_long_commute",
@@ -155222,24 +152842,6 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "58dfc3718f051011"
-  },
-  {
-   "id": "ice_287g_agreements__pct_no_computer",
-   "x": "ice_287g_agreements",
-   "y": "pct_no_computer",
-   "level": "county",
-   "n": 3222,
-   "r": -0.059,
-   "rho": -0.001,
-   "withinState": -0.065,
-   "status": "flagged",
-   "flags": [
-    "weak (|ρ|<0.3)"
-   ],
-   "headline": null,
-   "caption": null,
-   "captionBy": null,
-   "fingerprint": "e2980505fe5f35ab"
   },
   {
    "id": "gini_index__median_age",

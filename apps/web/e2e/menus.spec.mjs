@@ -80,7 +80,7 @@ async function open(vp, path, { scheme = "light", ready = true } = {}) {
   page.on("pageerror", (e) => page.errors.push(`pageerror: ${e.message}`));
   page.on("console", (m) => {
     if (m.type() !== "error") return;
-    // shortcut: LODES, Census 2020, FARS and 287(g) counts files are not on R2 yet, so they 404; remove when Robbie uploads them.
+    // shortcut: LODES, Census 2020 and FARS counts files are not on R2 yet, so they 404; remove when Robbie uploads them.
     if (/\.counts\.json$|\/values\/counts\//.test(m.location()?.url ?? "") && /404/.test(m.text())) return;
     // Vercel Web Analytics only exists on Vercel; locally its script 404s.
     if ((m.location()?.url ?? "").includes("/_vercel/")) return;
@@ -275,7 +275,7 @@ async function cardLines(page) {
 }
 test("phone card: meta and actions never wrap at 360, 390 and 430 px, long names included", async (o) => {
   // The longest titles and the longest meta lines in the registry.
-  const ids = ["median_household_income", "pct_nhpi_nh", "pct_aian_nh", "cejst_disadvantaged_tracts", "census2020_pop_density", "ice_287g_agreements", "aadt", "bridges_poor_condition", "traffic_fatalities", "annual_precipitation", "obesity", "job_density"];
+  const ids = ["median_household_income", "pct_nhpi_nh", "pct_aian_nh", "cejst_disadvantaged_tracts", "census2020_pop_density", "aadt", "bridges_poor_condition", "traffic_fatalities", "annual_precipitation", "obesity", "job_density"];
   const bad = [];
   for (const w of [360, 390, 430]) for (const id of ids) {
     const { page, ctx } = await o(phoneAt(w), `/map?d=${id}`, { ready: false });
