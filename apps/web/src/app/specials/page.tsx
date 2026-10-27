@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { approvedInsights } from "@/lib/approvals";
-import { pickInteresting } from "@/lib/insights";
+import { CANDIDATES, pickInteresting } from "@/lib/insights";
 import { LANDING } from "@/lib/landing";
 import { SPECIALS, formatDate } from "@/lib/specials";
 import { SiteFooter } from "@/components/SiteNav";
@@ -14,8 +13,7 @@ export const metadata: Metadata = { title: "Specials · Mapwich" };
 // The Specials front page, direction A (D-115): the latest piece over its map, earlier pieces, then
 // the Combinations index. With no piece published yet it opens on Combinations.
 export default async function SpecialsPage() {
-  // Only cards Robbie approved (D-116).
-  const published = await approvedInsights();
+  const published = CANDIDATES;
   const [lead, ...earlier] = SPECIALS;
   return (
     <>
@@ -73,7 +71,7 @@ export default async function SpecialsPage() {
             <div className="flex flex-col gap-1.5">
               <h2 id="pairings" className="text-[19px] font-bold md:text-xl">Combinations</h2>
               <p className="max-w-[640px] text-[13px] leading-normal text-muted-foreground md:text-sm">
-                Datasets that line up across U.S. counties. Correlation is not causation; each pair passed automatic checks, then was read and approved by hand.
+                Datasets that line up across U.S. counties. Correlation is not causation; each pair passed automatic checks.
               </p>
               <PairingsKey />
             </div>

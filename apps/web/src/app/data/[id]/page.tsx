@@ -8,10 +8,10 @@ import { SiteFooter } from "@/components/SiteNav";
 import { SiteHeader } from "@/components/SiteHeader";
 import { DATASETS, DATASET_BY_ID } from "@/lib/registry";
 import { sourceOf, datasetHref } from "@/lib/sources";
-import { approvedInsights } from "@/lib/approvals";
 import { shareMeta } from "@/lib/share-meta";
 import { CsvDownload } from "@/components/CsvDownload";
 import { CSV_LEVELS } from "@/lib/csv";
+import { CANDIDATES } from "@/lib/insights";
 import layersManifest from "@/generated/layers.json";
 
 export function generateStaticParams() {
@@ -37,7 +37,7 @@ export default async function DatasetProfilePage({ params }: PageProps<"/data/[i
   const ramp = RAMPS[d.symbology.ramp as RampId];
   const n = Math.min(Math.max(d.symbology.classes, ramp.minClasses), ramp.maxClasses);
   const colors = rampColors(d.symbology.ramp as RampId, n);
-  const insights = (await approvedInsights()).filter((i) => i.x === d.id || i.y === d.id);
+  const insights = CANDIDATES.filter((i) => i.x === d.id || i.y === d.id);
   const siblings = source.datasets.filter((s) => s.id !== d.id);
   const featureCount = (layersManifest as Record<string, { featureCount?: number }>)[d.id]?.featureCount;
   const modelInputs = d.modelInputs.map((m) => DATASET_BY_ID.get(m)).filter((x) => !!x);

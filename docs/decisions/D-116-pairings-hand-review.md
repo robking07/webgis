@@ -56,3 +56,7 @@ file on GitHub.
 cards and SPEC §10 says never publish them). Captions stay template captions; AI captions
 remain optional (D-30), and any caption change re-queues the card. The 287(g) exclusion
 from D-29 is lifted because every card is now vetted.
+
+## Amendments
+
+- 2026-10-27 (Robbie): hand review dropped; every card that passes the automatic checks is published. See D-447.
