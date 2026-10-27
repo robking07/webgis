@@ -5,6 +5,8 @@ Claude Doc "Mapwich Roadmap": https://claude.ai/code/artifact/c2211bac-8fd8-47a3
 (tab *Roadmap* = what and why; tab *Build plan* = tasks, sizes, order, practices). This file is
 a compact mirror for agents. If they disagree, the doc wins.
 
+**Status (2026-10-26): resting.** Robbie paused new work until he picks a new direction. Parked work keeps its plan on GitHub (label `parked`); see `docs/progress.md` → Now.
+
 ## Why
 
 A free, non-commercial, map-first viewer of U.S. public data for **planners first, the public
