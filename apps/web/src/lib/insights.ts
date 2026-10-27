@@ -3,10 +3,10 @@ import { DATASET_BY_ID } from "./registry";
 
 export interface Insight {
   id: string; x: string; y: string; level: string; n: number; r: number; rho: number; withinState: number;
-  /** "published" = passed the automatic checks; it still needs a reviewer's approval (D-116). */
+  /** "published" = passed the automatic checks, so it shows on the site. */
   status: "published" | "flagged"; flags: string[];
   headline: string | null; caption: string | null; captionBy: string | null;
-  /** Hash of the card's numbers and wording; an approval holds only while it matches. */
+  /** Hash of the card's numbers and wording. */
   fingerprint: string;
 }
 export const INSIGHTS = (data as unknown as { insights: Insight[] }).insights;

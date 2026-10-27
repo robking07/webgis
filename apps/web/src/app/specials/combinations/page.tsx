@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { browsePairings, FLAGGED, RULES, STRENGTH_WORD, type PairSort, type Strength } from "@/lib/insights";
-import { approvedInsights } from "@/lib/approvals";
+import { browsePairings, CANDIDATES, FLAGGED, RULES, STRENGTH_WORD, type PairSort, type Strength } from "@/lib/insights";
 import { CATEGORIES, DATASET_BY_ID } from "@/lib/registry";
 import { InsightCard } from "@/components/InsightCard";
 import { SiteFooter } from "@/components/SiteNav";
@@ -20,7 +19,7 @@ const chip = "inline-flex min-h-8 items-center rounded-full border px-3 text-xs 
 type Params = { topic?: string; strength?: string; q?: string; sort?: string; n?: string };
 const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v);
 
-// Every approved Combination (issue #274): filter by topic, strength and dataset name, sorted, 30 at a
+// Every published Combination (issue #274): filter by topic, strength and dataset name, sorted, 30 at a
 // time. Filters live in the URL so a view can be shared; the pairs held back sit at the bottom (D-115).
 export default async function PairingsPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const sp = await searchParams;
@@ -29,8 +28,7 @@ export default async function PairingsPage({ searchParams }: { searchParams: Pro
   const strength = STRENGTHS.find(([, w]) => w === p.strength)?.[0];
   const sort = SORTS.find(([s]) => s === p.sort)?.[0] ?? "strongest";
   const shown = Math.max(STEP, Math.floor(Number(p.n)) || STEP);
-  // Only cards Robbie approved (D-116).
-  const published = await approvedInsights();
+  const published = CANDIDATES;
   const hits = browsePairings(published, { topic, strength, q: p.q, sort });
   const filtered = !!(topic || strength || p.q);
 
@@ -53,12 +51,12 @@ export default async function PairingsPage({ searchParams }: { searchParams: Pro
           <p className="text-muted-foreground">
             Pairs of datasets that line up across U.S. counties. <strong className="text-foreground">Correlation is not causation:</strong>{" "}
             two things that rise together often both follow a third, like how urban a place is. Each pair passed automatic checks for
-            tiny samples, shared denominators, outlier-driven results and purely regional patterns, then was read and approved by hand.
+            tiny samples, shared denominators, outlier-driven results and purely regional patterns.
           </p>
           <PairingsKey />
         </header>
         {published.length === 0 ? (
-          <p className="text-muted-foreground">No pairs have been approved yet.</p>
+          <p className="text-muted-foreground">No pairs yet.</p>
         ) : (
           <>
             <div className="mb-5 flex flex-col gap-3">
