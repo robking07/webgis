@@ -583,8 +583,11 @@ test("no Census Reporter link for any ACS dataset (registry)", async (o) => {
 
 test("splash at /, old map links forward to /map (D-193)", async (o) => {
   const { page: splash } = await o("phone", "/", { ready: false });
-  expect((await splash.locator("main").innerText()).trim() === "which map?", "splash shows only 'which map?'");
-  expect((await splash.locator("a, nav, header, footer").count()) === 0, "splash has no links, nav, header or footer");
+  // Questions are approved (2026-10-27): each one is a link into a map; still no nav, header or footer.
+  const q = splash.locator("main a[data-splash-question]");
+  await q.first().waitFor();
+  expect(/^\/(map|compare)\b/.test(await q.first().getAttribute("href")), "splash question links into a map");
+  expect((await splash.locator("nav, header, footer").count()) === 0, "splash has no nav, header or footer");
   const { page } = await o("laptop", "/?d=median_household_income");
   const u = new URL(page.url());
   expect(u.pathname === "/map" && u.searchParams.get("d") === "median_household_income", `old link ended at ${u.pathname}${u.search}`);
