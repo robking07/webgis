@@ -9,7 +9,7 @@ import { SpecialPiece } from "@/components/specials/SpecialPiece";
 
 // /specials/<id> is a piece (content/specials/<id>.md) or a Combination (its pair id). The loader
 // fails the build if a piece's name matches a pairing, so the two never collide (D-115).
-// Every pairing that passed the automatic checks gets a page (D-446: no hand review).
+// Every pairing that passed the automatic checks gets a page (D-447: no hand review).
 export function generateStaticParams() {
   return [...SPECIALS.map((s) => ({ id: s.slug })), ...CANDIDATES.map((i) => ({ id: i.id }))];
 }
