@@ -1,5 +1,5 @@
 // Splash questions (issue #224), registered by menus.spec.mjs, which owns the browser, server and
-// helpers. Unapproved questions show only at /?splash=preview; bare / stays "which map?" (D-193 test).
+// helpers. Approved 2026-10-27, so bare / shows them too (D-193 test); ?splash=preview still works.
 const { default: splash } = await import(new URL("../src/generated/splash.json", import.meta.url), { with: { type: "json" } });
 
 const Q = "[data-splash-question]";

@@ -7,7 +7,7 @@
 #   link:   /map?d=<map>               one map (add &lv=county to show county values)
 #           /map?d=<map>&b=<second>    two maps compared on one map (they must be pairable)
 #           /compare/<A>/<B>?d=<map>   two places side by side (state or county codes, same level)
-approved: false
+approved: true
 questions:
   # People
   - text: "Where do the most people over 65 live?"
