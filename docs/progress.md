@@ -5,17 +5,37 @@ rows into one summary line. Roadmap: `docs/roadmap.md`. Rules: `docs/handbook.md
 
 ## Now
 
-- **Resting (Robbie, 2026-10-26):** "get this project to a place where it is 'resting' and then can be taken in a new direction once I have time to review everything that ultimately needs my attention." No new work until he names a direction. Every open issue is `needs-robbie` (listed in his `drafts/robbie-this-week.md`) or `parked` (plan written, resumes as is). Onboarding for human testers is scoped only (#245, `drafts/proposals/onboarding-scope.md`).
-- **Phase 1 (2026-10-12):** shipped 1.1 part 1 + 2a (compare places, laptop map), 1.2 (change maps with From → To, Map options panel), 1.3, 1.4, 1.5, 1.8, S1, S2. Left: 1.1 part 2b (counts and share of parent; counts are uploaded and live since 2026-10-12, D-257), 1.7 map polish (waits on Robbie's phone check), 1.6 disclosures (**on hold** by Robbie, 2026-10-09; nobody rewrites the copy). Then the Phase 1 gate: Robbie uses compare and change maps in a real conversation.
-- **Robbie's list:** `~/webgis/drafts/robbie-this-week.md` (gitignored) holds every open ask for him, newest under "New items". Add to it rather than asking one question at a time.
-- **Specials:** two drafts await Robbie in `drafts/specials/` (#105 traffic deaths, #141 Holmes County bikes), with numbers scripts beside them. On "publish <name>": copy verbatim, strip `<!-- -->` comments (the loader counts them as words), move the script to `apps/web/scripts/specials-numbers/`, then run `check:special` and the build.
-- **Phase 2 started early (Robbie: "keep building"):** #115 "Why this matters" PR 1 (content gated by `approved`). Transit (2.4) review verdict CHANGE → #176, which waits on Robbie's four calls.
-- **Repo is public (2026-10-10)** after GitHub Actions minutes ran out (#162). gitleaks was clean across the history; secret scanning and push protection are on. License is MIT (PR #190, D-290); #44 only needs branch protection (Robbie).
-- **Ponytail (#151, PR #163):** coding workers self-review with `ponytail-review`; the lead runs it again before merging.
-- **CI quirks:** a cancelled draft-stage run leaves a red `click-through ${{ matrix.shard }}/4`; `merge-pr.sh` ignores it. "The job was not started… spending limit" annotations mean billing, not code (#162). Occasional 502s from `tiles.mapwich.org` fail a shard; re-run failed jobs once before digging.
-- **Tester agent trial** runs through 2026-10-19 (D-291).
-- **Worker environment:** Chromium can't run in the agent sandbox, so e2e and screenshots happen only in CI on a *ready* PR.
-- **Progress rows:** the lead adds Finished rows and Lessons at merge time from the worker's report.
+**Base camp (2026-10-27).** Robbie: "a summit where we can base camp to plan for our next ascent."
+No new work until he names a direction; he will shape it with planning skills. His one task file
+is `~/webgis/drafts/robbie.md` (gitignored).
+
+- **Shipped:** all of Phase 0. Phase 1: compare places (1.1, all parts), change maps with From → To
+  (1.2), reliability warnings (1.3), CSV download (1.4), link previews (1.5), Specials pipeline (1.8),
+  static click details (S1), data files on R2 (S2). 138 datasets. Four Specials live (traffic deaths,
+  Holmes County bikes, work from home and exercise, the ACS explainer). Every Combination that passes
+  the automatic checks is live with no hand review (D-447). Splash questions approved and live.
+  Repo public since 2026-10-10, MIT license.
+- **Not shipped from Phase 1:** map polish 1.7 (#187, now holds the map-audit fixes too) and
+  disclosures 1.6 (on hold by Robbie; nobody rewrites the copy). The Phase 1 gate (Robbie uses
+  compare and change maps in a real conversation) hasn't run.
+- **Parked, each with its plan on GitHub (label `parked`):** cities and metros #332, focused-area
+  totals #292, US figures #296, real margins on change maps #188, similar places #291 (Robbie: build),
+  hover vs details numbers #343, 3–5-dataset Combinations #280, visitor suggestions #207, table into
+  About #244, "Why this matters" #115, drive times #205, transit #176 (branch `data/transit-routes`
+  kept, PR #261 closed), how datasets relate #118, tester onboarding #245 (mockups first), go public
+  #44 (branch protection). New data: FEMA #169 (PR #235) and HUD #172 (PR #330) are built and wait;
+  the data backlog and the data.gov sweep live in #133. 287(g) is held in `data/registry/held/`.
+- **Known risks:** the 2021–2025 ACS 5-year tables drop health insurance, so the uninsured map can't
+  refresh on the usual cycle (#133). The CI click-through times out when the Ubuntu apt mirror is
+  slow; re-run failed jobs (`gh run rerun <id> --failed`). The Census API needs a key; Census Reporter's
+  API works without one for the latest release.
+- **Next steps:** Robbie picks the direction; the lead turns it into a plan, then issues. Turning a
+  parked issue back on needs no re-planning.
+- **Working rules that still hold:** Specials publish verbatim from `drafts/specials/` ("publish
+  <name>": strip `<!-- -->` comments, move the numbers script to `apps/web/scripts/specials-numbers/`,
+  run `check:special` and the build). Workers self-review with `ponytail-review`; the lead runs it
+  again before merging. Chromium can't run in the agent sandbox, so e2e runs only in CI on a *ready*
+  PR. The lead adds Finished rows and Lessons at merge time.
 
 ## Finished
 

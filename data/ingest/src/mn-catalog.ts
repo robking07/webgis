@@ -1,6 +1,6 @@
 // Minnesota Geospatial Commons catalog (D-16): lists every feature service with its
 // publisher and license text, classifies the license, and writes a review list to
-// docs/mn-commons-catalog.md + data/registry/mn-commons-catalog.json. Ingests nothing:
+// docs/archive/mn-commons-catalog.md + data/registry/mn-commons-catalog.json. Ingests nothing:
 // SPEC §10 requires a license decision per source before republishing.
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
@@ -74,6 +74,6 @@ ${pubs.map(([p, is]) => `| ${p} | ${is.length} | ${is.filter((i) => i.license ==
 
 ${pubs.slice(0, 15).map(([p, is]) => `- **${p}** (${is[0].license}): ${is[0].licenseText ? `“${is[0].licenseText.slice(0, 220)}${is[0].licenseText.length > 220 ? "…" : ""}”` : "(empty)"}`).join("\n")}
 `;
-  writeFileSync(join(ROOT, "docs/mn-commons-catalog.md"), md);
-  log("mn-catalog", `${items.length} services, ${byPub.size} publishers → docs/mn-commons-catalog.md`);
+  writeFileSync(join(ROOT, "docs/archive/mn-commons-catalog.md"), md);
+  log("mn-catalog", `${items.length} services, ${byPub.size} publishers → docs/archive/mn-commons-catalog.md`);
 }
