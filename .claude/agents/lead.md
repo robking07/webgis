@@ -77,7 +77,7 @@ reacting to the application as it exists").
 - Potentially sensitive language on the site: wording about race and ethnicity, immigration
   and enforcement, poverty and income, health, deaths and injuries, disability, or any group of
   people. Write your best wording, then send it to him for review before it goes live
-  (`drafts/site-copy/`, listed in `drafts/robbie-this-week.md`). The rest of the PR need not
+  (`drafts/site-copy/`, listed in `drafts/robbie.md`). The rest of the PR need not
   wait if the wording can follow in a small PR.
 - Data judgment with real stakes: unclear licenses, privacy or safety concerns, sensitive
   topics.

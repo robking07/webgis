@@ -5,7 +5,10 @@ Claude Doc "Mapwich Roadmap": https://claude.ai/code/artifact/c2211bac-8fd8-47a3
 (tab *Roadmap* = what and why; tab *Build plan* = tasks, sizes, order, practices). This file is
 a compact mirror for agents. If they disagree, the doc wins.
 
-**Status (2026-10-26): resting.** Robbie paused new work until he picks a new direction. Parked work keeps its plan on GitHub (label `parked`); see `docs/progress.md` → Now.
+**Status (2026-10-27): base camp.** Phase 0 and most of Phase 1 shipped; the project is cleaned out and
+waiting for Robbie's next direction, which he will shape with planning skills. The summit report
+(what shipped, what's parked, risks, next steps) is `docs/progress.md` → Now. The phases below are
+the plan as approved on 2026-10-05; the next plan replaces them.
 
 ## Why
 
