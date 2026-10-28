@@ -176,6 +176,8 @@ A dataset refresh can run on GitHub instead of Robbie's machine: `.github/workfl
 The run copies the live tract shards from `https://tiles.mapwich.org` (`ingest pull-tracts`), runs
 the steps, `export <ids>` and `details`, then uploads `publish-values <ids> tracts` and
 `publish-details`. If an upload would drop a live dataset from a tract shard, it stops (#143).
+Don't run a local `publish-data` while a data run is going: the run would put back the tract values
+it copied at its start. Two GitHub runs never overlap (the second one waits).
 
 **Not on GitHub yet:** anything needing GDAL or tippecanoe (geographies, tiles, features,
 census2020, ddp287g, vmt, counts, label-mask, mpo); `timeline` for `fars` (it needs
