@@ -27,7 +27,8 @@
    micro search rows). About 20,660 files, 27 MB before gzip. `publish-areas` uploads only `areas/`.
 5. **Search.** Metro rows read "Minneapolis-St. Paul-Bloomington, MN-WI · Metro area". "Minneapolis
    metro" (or "… micro area") lists metros first; en and em dashes match hyphens. City rows in
-   `geo/search.json` carry their code once `ingest search` re-runs (Gazetteer FUNCSTAT not "S").
+   `geo/search.json` carry their code once `ingest search` re-runs (Gazetteer FUNCSTAT not "S");
+   `publish-search` uploads only `geo/search.json` and `geo/zips.json`.
 6. **On screen.** Picking one frames it (as any searched place), outlines it with the MPO highlight
    (one GeoJSON source, design tokens), names it under the heading with ×, and shows a small panel:
    the map's title and period, value ±margin, benchmarks (a city: its state and the U.S.; a metro: the

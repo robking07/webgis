@@ -120,6 +120,9 @@ async function publishJson(prefix: string, hint: string, dirs?: string[], keep: 
 export const publishValues = (only?: string[]) => publishJson("values", "export", only);
 /** Names, map points, the place search index and tract geography (geo/), gzip-encoded. */
 export const publishGeo = () => publishJson("geo", "export` and `ingest tract-geo");
+/** Only the place search index and ZIP lookup (geo/search.json, geo/zips.json, from `ingest search`), so a
+ *  partial or stale geo/ folder never overwrites live names or tract geography (#332). */
+export const publishSearch = () => publishJson("geo", "search", undefined, (f) => f === "search.json" || f === "zips.json");
 /** The state/county click details (details/, from `ingest details`), gzip-encoded. */
 export const publishDetails = () => publishJson("details", "details");
 /** City and metro area files (areas/, from `ingest areas`, #332), gzip-encoded. */
