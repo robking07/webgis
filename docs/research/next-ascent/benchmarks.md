@@ -1,7 +1,7 @@
 # Benchmarks: the sites planners already use (research R3)
 
-Status: sections 1–3 done (2026-10-27).
-Next: section 4, where Mapwich is ahead.
+Status: done (2026-10-27).
+Next: none; optional follow-up is hands-on phone checks of the top three benchmarks (tester).
 
 Research notes for the next-phase plan. Not for merge; the lead harvests it.
 Sizes: S ≈ 100k tokens, M ≈ 275k, L ≈ 500k, XL = several L.
@@ -379,4 +379,78 @@ assume static files on R2/Vercel free tiers unless stated.
 
 ## 4. Where Mapwich is already ahead
 
+| Strength | Who it beats | Evidence today |
+|---|---|---|
+| Map first, fast, chrome falls away | data.census.gov, PolicyMap, Hub portals | D-25/D-26 map-first rules; static files on R2 (S2) |
+| Works on a phone | every benchmark (none is phone-first) | phone drawer, phone tap fixes (#341), useIsPhone work |
+| Change maps, From → To, free | Social Explorer and PolicyMap charge for this | 1.2 + year slider (#167) |
+| Reliability warnings on the map itself | Census Reporter does it only in tables; others not at all | 1.3 |
+| Health + environment + transport + people in one viewer, free | PolicyMap (paid), CHR&R/PLACES (health only), EJ tools (env only) | 138 datasets across 6 categories |
+| Keeps data others dropped | EJScreen/ETC removed, CHR&R freezing | CEJST, NRI, SVI, PLACES live on Mapwich |
+| Editorial Specials checked against the numbers | Data USA auto-text, USAFacts explainers (no maps), nobody local | 1.8 pipeline, `check:special`, 4 Specials live |
+| Combinations that pass automatic checks | nobody | D-447 |
+| Open source, process in public (token budgets, decisions) | every benchmark is closed or opaque | MIT repo, `docs/decisions/`, disclosures plan |
+
+### How to show it off (portfolio)
+
+Each is cheap; pick two or three.
+
+1. **"Thirty-second answer" side by side (S, ~75k).** Same question on a phone ("share of
+   households with no car in this tract, and is it reliable?"): screen recordings of Mapwich vs
+   data.census.gov vs Census Reporter, with tap count and seconds. Real screenshots at true scale
+   (mockup standard). A short page or a section of About. Respectful tone: name the tools, praise
+   what they do well. **Flag:** naming other products is public wording; the lead may want Robbie's
+   eye.
+2. **"Free here, paid there" table (S, ~30k).** Change maps, compare, CSV, swipe (if C5), area
+   totals (if C2): what each costs at Social Explorer/PolicyMap/Felt (prices from section 1, dated
+   and sourced). Fits the disclosures/About work; on hold with disclosures copy (Robbie).
+3. **"Still here" note on kept datasets (S, ~40k).** On CEJST, NRI, SVI and any C8 maps: a one-line
+   provenance badge ("EPA removed EJScreen in 2025; this copy is from …"). Shows care with data,
+   and it is useful.
+4. **Lighthouse and speed numbers on the About page (S).** Mobile performance and accessibility
+   scores beside the same scores for two benchmarks, measured on the same day. Re-run quarterly.
+5. **Case study write-up (Robbie's voice, editor drafts).** "How a planner built a national data
+   viewer with AI agents for $X and N tokens": the budget table in `docs/progress.md` is the
+   evidence. No benchmark can tell this story.
+
 ## 5. Top 10
+
+Ranked for Robbie's weekly use first (tie-break rule), then gap size, then cost.
+
+| # | Idea | Size / tokens | Monthly cost | Fork? | Builds on |
+|---|---|---|---|---|---|
+| 1 | **Your-area totals** (MPO, county group, corridor buffer; drawn shapes later) with Census-style margins (C2) | L ~500k | $0 | **Yes**: saved study areas, branded batch reports | #292, compare math, tract files on R2 |
+| 2 | **Place snapshot**: one-page printable profile for any place, then any area (C1) | M ~250k | $0 | No (area version rides on #1's fork) | place pages, D-395 |
+| 3 | **Auto-sentences** with reliability-aware wording on place pages and the details panel (C3) | S–M ~150k | $0 | No | 1.3, 1.2, D-395, #115 |
+| 4 | **Commute flows**, OnTheMap-lite, county-to-county first (C6) | L ~500k | ~$0 (R2 free tier) | No | LODES ingest, roadmap 2.5 |
+| 5 | **Peers**: "places most like this one" plus a peer benchmark (C4) | M ~200k | $0 | No | #291, compare |
+| 6 | **Data-break warnings** for the 2025 ACS question changes (C11) | S ~75k | $0 | No | 1.3, registry |
+| 7 | **One national map of state DOT basics**, starting with HPMS sections (C7) | M to start; XL for crashes by state | $0–$1 | No | aadt, NBI, FARS, VMT |
+| 8 | **Orphaned-data shelf** in the Library tier: CHR&R and ETC/EJScreen public inputs with provenance (C8) | M ~250k per family | $0 | No | registry, D-04 pattern; **license + sensitive wording to Robbie** |
+| 9 | **Embed + cite** (C9) | S ~100k | $0 | No | share, link previews |
+| 10 | **Show-off pack**: 30-second answer comparison, "still here" badges, speed scores (section 4, items 1, 3, 4) | S ~150k total | $0 | No | About page, Specials |
+
+Near misses: swipe view (C5, M), "near me" (C10, S; cheap and could slot into #187 map polish),
+release watch (C12, S–M).
+
+**Rough total for the top 10 as a phase:** ~2.4–2.6M tokens (two L, four M, four S), well beyond
+one phase at Robbie's 2–4 hours/week. A plausible next phase: #6, #3, #2, #9 (≈ 575k) plus #1
+scoped to MPO and county-group totals (≈ 350k).
+
+## Questions for the lead
+
+1. C2's paid fork (saved study areas, branded reports): worth noting in the Vision as a Fork
+   candidate, or out of scope until Mapwich has users?
+2. C8: is recreating EJ/ETC inputs (not their labels) inside the D-04 precedent, or a new Robbie
+   decision? CHR&R's terms say "All rights reserved"; ingest from the underlying federal sources
+   instead?
+3. Section 4 item 1 names other products on a public page. Robbie's call on tone?
+
+## Sources
+
+PolicyMap pricing page (custom quotes) · Social Explorer prices via Capterra/G2 listings · Felt
+pricing page · CHR&R blog posts (2026 refresh, funding) · Esri Community Analyst deprecation notice ·
+Harvard EELP Federal EJ tracker (EJScreen, ETC Explorer) · screening-tools.com (PEDP) · CDC PLACES
+data notes · Census Reporter homepage · Data USA homepage · Census LEHD release notes (Dec 2025) ·
+Esri ACS Living Atlas blog (Feb 2026) · CMAP Community Data Snapshots PDFs · StreetLight costs from
+C/CAG MOUs and Des Moines MPO deck · Opportunity Atlas data tables (Census, July 2025).
