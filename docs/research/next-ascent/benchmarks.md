@@ -1,7 +1,7 @@
 # Benchmarks: the sites planners already use (research R3)
 
-Status: section 1 done (2026-10-27).
-Next: section 2, gap map.
+Status: sections 1–2 done (2026-10-27).
+Next: section 3, features worth copying.
 
 Research notes for the next-phase plan. Not for merge; the lead harvests it.
 Sizes: S ≈ 100k tokens, M ≈ 275k, L ≈ 500k, XL = several L.
@@ -181,6 +181,49 @@ Format per tool: **Who uses it · Loved for · Paywall · Weak spots (phones esp
   (see retirement above).
 
 ## 2. Gap map
+
+What each tool does well (●), partly (◐) or not at all (○), judged from section 1. Mapwich column
+is today's live site (place pages, compare, change maps, reliability warnings, CSV, Specials).
+
+| Job a planner needs done | PolicyMap | Social Expl. | data.census | Census Rep. | Data USA | CHR&R / PLACES | EJ tools | Hub / Living Atlas | Felt | **Mapwich** |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Answer "what's the number here?" in under 30 s on a phone | ○ | ○ | ○ | ◐ | ◐ | ◐ | ○ | ○ | ◐ | **●** |
+| Is it high or low? (state, U.S., peers) | ◐ | ◐ | ○ | ● | ◐ | ● | ● (percentiles) | ○ | ○ | ◐ (state + U.S., D-395; no peers yet) |
+| Is it reliable? (margins shown, warned) | ◐ | ● | ● (raw MOE) | ● | ○ | ◐ | ○ | ◐ | ○ | **●** (warnings on the map) |
+| How has it changed? (maps, not tables) | ◐ paid | ● paid | ○ | ○ | ◐ charts | ◐ (trends now frozen) | ○ | ○ | ○ | **●** (From → To) |
+| Compare two places side by side | ◐ | ◐ | ◐ | ● | ◐ | ● | ○ | ○ | ○ | **●** |
+| Totals for my own area (MPO, corridor, drawn) | ● paid | ◐ paid | ◐ (pick tracts) | ○ | ○ | ○ | ● (drawn area) | ◐ (needs ArcGIS) | ◐ | ○ (#292 parked) |
+| Commute flows (where workers live/work) | ◐ | ○ | ◐ (tables) | ○ | ○ | ○ | ○ | ○ | ○ | ○ (job density only) |
+| Transportation network data across states (AADT, crashes, bridges) | ○ | ○ | ○ | ○ | ○ | ○ | ○ | ◐ (one state at a time) | ○ | ◐ (AADT, FARS, NBI) |
+| Health + social + environment + transport in one map | ● paid | ◐ | ○ | ○ | ◐ | ◐ health only | ◐ env only | ◐ scattered | ○ | **●** (138 maps) |
+| A one-page summary I can paste into a staff report | ● paid | ● paid | ○ | ◐ | ◐ | ● | ● | ○ | ◐ | ○ |
+| Plain-language story about what the data means | ○ | ◐ blog | ○ | ○ | ◐ auto text | ◐ | ○ | ◐ StoryMaps | ○ | **●** (Specials) |
+| Survives federal takedowns / funding ends | ◐ | ◐ | n/a | ◐ volunteers | ◐ | ○ (CHR&R ending) | ○ (removed) | ◐ | ● | ◐ (CEJST/NRI/SVI kept; ends depend on Robbie) |
+| Free, with no account | ◐ | ○ | ● | ● | ● | ● | ● | ◐ | ◐ | **●** |
+
+### Gaps nobody fills well (where Mapwich could own the ground)
+
+1. **The phone answer.** No benchmark answers a quick place question well on a phone. Census
+   Reporter is the closest and is long-scroll tables. Mapwich already leads; the gap to own is
+   "stand in a meeting, tap where you are, get the number with its context and reliability."
+2. **Change over time, free and on a map.** Only paid tools (Social Explorer, PolicyMap) map change;
+   CHR&R just lost its trend graphs. Mapwich's From → To maps are unusual for a free tool.
+3. **Your-area totals without a license.** The "draw an area, get a report" job was what Community
+   Analyst (retired March 2026), PolicyMap (paid) and EJScreen (removed) did. Planners still need it
+   for MPO areas, corridors, study areas and grant applications. Nobody free does it with honest
+   margins.
+4. **Cross-state transportation basics.** State DOT portals each publish AADT, crashes and bridges
+   their own way; nobody puts them on one national map with one legend. Mapwich already has AADT,
+   FARS and NBI; "same map in every state" is planner-native and nobody else bothers.
+5. **Continuity for orphaned data.** CHR&R measures (frozen after 2026), EJScreen and ETC Explorer
+   indicators (removed), CEJST (PEDP-only). A neutral, labeled home for the public inputs (not the
+   federal indices' branding or judgments) is open, and fits "Library maps."
+6. **Saying what a number means.** Data USA's auto-sentences and USAFacts' explainers show demand;
+   no one does it with margins and planner context. Specials do it for a few topics; nothing does it
+   for every place.
+7. **The 2025 ACS question changes.** Health insurance, education and labor-force questions changed
+   in the 2025 ACS. Every tool will show misleading "changes" across the break in 2026–2027.
+   Mapwich's reliability warnings are the natural place to flag it first.
 
 ## 3. Features worth copying
 
