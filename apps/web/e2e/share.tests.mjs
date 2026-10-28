@@ -1,6 +1,10 @@
 // Share button (issue #164), registered by menus.spec.mjs, which owns the browser, server and helpers.
 // The clipboard and the share sheet are stubbed: headless Chromium has neither.
 const SHARE = { name: "Share a link to this view" };
+// On the map, Share opens a menu (issue #361): the link, a citation, an image.
+const MAP_SHARE = { name: "Share this view" };
+const card = (page) => page.locator('section[aria-label="Mapped dataset"]');
+const shareItem = (page, name) => card(page).getByRole("group", { name: "Share" }).getByRole("button", { name });
 // The shared link leaves out theme= (D-266, #306): the page URL minus it.
 const noTheme = (u) => { const x = new URL(u); x.searchParams.delete("theme"); return x.href; };
 const stubClipboard = (page) => page.evaluate(() => {
@@ -11,8 +15,9 @@ export default function shareTests({ test, expect, wait, mapIdle }) {
   test("laptop share: change map copies its link, says so, and the link restores the view", async (o) => {
     const { page } = await o("laptop", "/map?d=pct_poverty&since=2019&at=-93.27,44.97,9");
     await stubClipboard(page);
-    const btn = page.locator('section[aria-label="Mapped dataset"]').getByRole("button", SHARE);
+    const btn = card(page).getByRole("button", MAP_SHARE);
     await btn.click();
+    await shareItem(page, "Copy link").click();
     await wait(100);
     const copied = await page.evaluate(() => window.__copied);
     expect(copied === noTheme(page.url()), `copied ${copied}, page is ${page.url()}`);
@@ -33,10 +38,33 @@ export default function shareTests({ test, expect, wait, mapIdle }) {
   test("phone share: opens the share sheet with the page link", async (o) => {
     const { page } = await o("phone", "/map?d=pct_poverty");
     await page.evaluate(() => { navigator.share = async (d) => { window.__shared = d; }; });
-    await page.locator('section[aria-label="Mapped dataset"]').getByRole("button", SHARE).click();
+    await card(page).getByRole("button", MAP_SHARE).click();
+    await shareItem(page, "Share link").click();
     await wait(100);
     const shared = await page.evaluate(() => window.__shared);
     expect(shared?.url === noTheme(page.url()), `shared ${JSON.stringify(shared)}, page is ${page.url()}`);
+  });
+
+  test("laptop share: copy for my memo puts a one-line citation on the clipboard", async (o) => {
+    const { page } = await o("laptop", "/map?d=median_household_income&at=-93.27,44.97,9");
+    await stubClipboard(page);
+    await card(page).getByRole("button", MAP_SHARE).click();
+    await shareItem(page, "Copy for my memo").click();
+    await wait(100);
+    const copied = await page.evaluate(() => window.__copied);
+    expect(copied?.startsWith("Median household income, 2020–2024") && copied.includes("Source: U.S. Census Bureau") && copied.includes(noTheme(page.url())) && !copied.includes("\n"),
+      `citation: ${copied}`);
+    expect((await card(page).getByRole("button", MAP_SHARE).innerText()).trim() === "Citation copied", "no copied state");
+  });
+
+  test("laptop share: save image downloads a PNG of the map", async (o) => {
+    const { page } = await o("laptop", "/map?d=median_household_income");
+    await card(page).getByRole("button", MAP_SHARE).click();
+    const [download] = await Promise.all([page.waitForEvent("download"), shareItem(page, "Save image").click()]);
+    expect(download.suggestedFilename() === "mapwich-median_household_income.png", `file ${download.suggestedFilename()}`);
+    const png = await (await download.createReadStream()).toArray();
+    const buf = Buffer.concat(png);
+    expect(buf.subarray(1, 4).toString() === "PNG" && buf.length > 20000, `not a map PNG (${buf.length} bytes)`);
   });
 
   test("laptop share: compare page copies its link", async (o) => {
