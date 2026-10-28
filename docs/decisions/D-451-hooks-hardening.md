@@ -11,3 +11,10 @@ denied. `merge-pr.sh` refuses a code PR without `Ponytail verdict: Ship` in its 
 exempt). The guardrail hook blocks browser user agents, writes outside `~/webgis`, any NAS or
 network-share path, and edits to the main checkout outside `drafts/` and `data/cache/`.
 Items 7–8 (label drift report, stale-memory dates) wait.
+
+## Amendments
+
+- 2026-10-27 (Robbie: "do items 7 and 8 now"): `scripts/brief.mjs` flags label drift (an open,
+  unparked issue without exactly one of idea / needs-robbie / queued / approved / building, or
+  `building` with no open PR) and memory files past their `stale_after:` date. Facts that once
+  cost hours start their description with `TRAP:`.

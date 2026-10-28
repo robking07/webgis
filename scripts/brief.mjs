@@ -6,10 +6,13 @@
 //   node scripts/brief.mjs        # the brief
 //   node scripts/brief.mjs 127    # the brief's task view for one issue: body, comments, PRs
 //
-// Nothing here is hand-kept, so nothing goes stale. GitHub sections are skipped (with a note)
+// Nothing here is hand-kept, so nothing goes stale. It also flags label drift and memory
+// files past their `stale_after:` date. GitHub sections are skipped (with a note)
 // when `gh` is missing, offline or not signed in. Keep the output under ~3k tokens.
 import { execFile } from "node:child_process";
 import { readFileSync, readdirSync } from "node:fs";
+import { homedir } from "node:os";
+import { dirname, join } from "node:path";
 import { promisify } from "node:util";
 
 const run = promisify(execFile);
@@ -42,12 +45,13 @@ if (issueArg) {
 }
 
 async function brief() {
-  const [head, wt, churn, issues, prs] = await Promise.all([
+  const [head, wt, churn, issues, prs, gitCommon] = await Promise.all([
     sh("git", ["log", "-1", "--format=%h %cs %s"]),
     sh("git", ["worktree", "list", "--porcelain"]),
     sh("git", ["log", "--since=21.days", "--name-only", "--format="]),
     ghJson(["issue", "list", "--state", "open", "--limit", "100", "--json", "number,title,labels"]),
-    ghJson(["pr", "list", "--state", "open", "--json", "number,title,isDraft,headRefName,statusCheckRollup,mergeStateStatus"]),
+    ghJson(["pr", "list", "--state", "open", "--json", "number,title,isDraft,headRefName,statusCheckRollup,mergeStateStatus,body"]),
+    sh("git", ["rev-parse", "--path-format=absolute", "--git-common-dir"]),
   ]);
 
   const out = [];
@@ -77,6 +81,19 @@ async function brief() {
     const shown = new Set(["needs-robbie", "building", "queued", "approved"]);
     const rest = issues.filter((i) => !i.labels.some((x) => shown.has(x.name)));
     if (rest.length) out.push(`- **Other open (${rest.length}):** ${rest.map((i) => `#${i.number}`).join(" ")}`);
+
+    // Label drift: each open, unparked issue has exactly one state label (.claude/agents/lead.md).
+    const STATES = ["idea", "needs-robbie", "queued", "approved", "building"];
+    const drift = [];
+    for (const i of issues) {
+      const names = i.labels.map((x) => x.name);
+      if (names.includes("parked")) continue;
+      const states = names.filter((n) => STATES.includes(n));
+      if (states.length !== 1) drift.push(`#${i.number} has ${states.length ? states.join(" + ") : "no state label"}`);
+      else if (states[0] === "building" && prs && !prs.some((p) => new RegExp(`#${i.number}\\b`).test(p.body ?? "")))
+        drift.push(`#${i.number} is building with no open PR`);
+    }
+    if (drift.length) out.push(`- **Fix labels:** ${drift.join("; ")}`);
   }
   if (prs) {
     const checks = (p) => {
@@ -89,6 +106,19 @@ async function brief() {
     for (const p of prs)
       out.push(`  - #${p.number} ${clip(p.title, 70)} [${p.headRefName}] ${p.isDraft ? "draft" : "ready"}, ${checks(p)}${p.mergeStateStatus === "BEHIND" ? ", behind main" : ""}`);
   }
+
+  // Memory facts past their `stale_after: YYYY-MM-DD` (frontmatter); re-check or update them.
+  const root = gitCommon ? dirname(gitCommon.trim()) : process.cwd();
+  const memDir = join(homedir(), ".claude", "projects", root.replace(/[^A-Za-z0-9]/g, "-"), "memory");
+  const today = new Date().toISOString().slice(0, 10);
+  let memFiles = [];
+  try {
+    memFiles = readdirSync(memDir).filter((f) => f.endsWith(".md"));
+  } catch {}
+  const stale = memFiles
+    .map((f) => [f, read(join(memDir, f)).match(/^\s*stale_after:\s*["']?(\d{4}-\d{2}-\d{2})/m)?.[1]])
+    .filter(([, d]) => d && d < today);
+  if (stale.length) out.push("", "## Stale memory (past stale_after; verify, then update the fact and date)", stale.map(([f, d]) => `- ${f} (stale since ${d})`).join("\n"));
 
   // 3. Worktrees (each task has one; stale ones need Robbie's OK to delete).
   const trees = (wt ?? "").split("\n\n").map((b) => ({
