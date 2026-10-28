@@ -38,6 +38,9 @@ import { FeaturePanel } from "./map-page/FeaturePanel";
 import { ContextLink, ContextPanel, CONTEXT_PANEL_RIGHT } from "./map-page/ContextPanel";
 import { contextFor } from "@/lib/context";
 import { CONUS, usInView } from "@/lib/us-view";
+import { citeSources, citeTitle, memoCitation } from "@/lib/cite";
+import { imageLegend, mapImage } from "@/lib/map-image";
+import { shareUrl, type ShareExtras } from "./ShareButton";
 import type { Bbox } from "./map/MapView";
 
 export function Viewer({ search }: { search: string }) {
@@ -352,6 +355,20 @@ export function Viewer({ search }: { search: string }) {
     : selClassed?.breaks?.length && primary && !secondary
     ? { colors: selClassed.colors, cls: selClass, ends: [`< ${strip(selClassed.breaks[0])}`, `≥ ${strip(selClassed.breaks[selClassed.breaks.length - 1])}`] as [string, string] }
     : null;
+  // Share's citation and image (issue #361): the shown maps, period and place.
+  const cited = [primary, secondary].filter((d): d is Dataset => !!d);
+  const placeLabel = selected?.name ?? (mpo ? mpo.name : focus ? focusName : null);
+  const share: ShareExtras | null = primary && {
+    memo: () => memoCitation({ datasets: cited, place: placeLabel, period: periodLabel, url: shareUrl(), date: new Date() }),
+    image: async () => {
+      const map = await mapApi.current?.snapshot();
+      if (!map) return null;
+      const found = imageLegend({ theme, unit: primary.unit, current, feature: featureSpec, biv: secondary && { x: primary.title, y: secondary.title } });
+      const legend = found && { ...found, caption: isFeature ? featureNoun : GEO_LEVELS[level].label };
+      const blob = await mapImage({ map, theme, title: citeTitle({ datasets: cited, place: placeLabel, period: periodLabel }), legend, sources: citeSources(cited), date: new Date() });
+      return blob && { blob, name: `mapwich-${cited.map((d) => d.id).join("-")}.png` };
+    },
+  };
   // Narrow screens dock the table at the bottom; the details panel waits until it closes.
   const detailHidden = tableOpen && narrow;
 
@@ -403,7 +420,7 @@ export function Viewer({ search }: { search: string }) {
       </header>
 
       {primary && (
-        <DatasetCard cardRef={card} explainOpen={explainOpen} setExplainOpen={setExplainOpen} primary={primary} secondary={secondary} meta={meta} immersed={immersed} isFeature={isFeature}
+        <DatasetCard share={share!} cardRef={card} explainOpen={explainOpen} setExplainOpen={setExplainOpen} primary={primary} secondary={secondary} meta={meta} immersed={immersed} isFeature={isFeature}
           tableReady={tableReady} hasFilters={hasFilters} filtersOpen={!!filters} filterCount={nFilters} onOpenFilters={toggleFilters}
           onBrowse={changeDataset} menuOpen={menuOpen && !immersed} menu={immersed ? null : datasetMenu}
           onCompare={() => openMenu("b")} onSwap={swapMaps} onExit={exitCompare} onTable={() => setTableOpen(true)} phone={phone}
