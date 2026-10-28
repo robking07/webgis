@@ -1,13 +1,14 @@
 // Upload data/tiles/*.pmtiles to Cloudflare R2 (D-01) and set the bucket CORS rule
 // the browser needs for PMTiles range requests.
-import { createReadStream, existsSync, readdirSync, readFileSync, statSync } from "node:fs";
+import { createReadStream, existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { gunzipSync, gzipSync } from "node:zlib";
 import { createHash } from "node:crypto";
 import { join } from "node:path";
 import { GetObjectCommand, ListObjectsV2Command, S3Client, PutBucketCorsCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { Upload } from "@aws-sdk/lib-storage";
-import { log, TILES } from "./util.ts";
+import { log, NAMES_JSON, TILES } from "./util.ts";
 import { DETAILS_DIR } from "./details.ts";
+import { TRACT_DETAIL_DIR } from "./values.ts";
 
 function r2() {
   const { R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_BUCKET } = process.env;
@@ -78,6 +79,37 @@ async function guardTractShard(s3: S3Client, bucket: string, key: string, body: 
   if (dropped.length) throw new Error(`${key}: upload would drop ${dropped.length} live dataset(s) (${dropped.slice(0, 5).join(", ")}${dropped.length > 5 ? ", …" : ""}). `
     + "This checkout's data/tiles/values/tracts (or values/counts) is incomplete: copy the full folder in (or rebuild it with `ingest tracts-out` plus the loads) first. "
     + "Set ALLOW_TRACT_DROP=1 only when removing a dataset on purpose.");
+}
+
+/** `ingest pull-tracts`: copy every live tract shard (values/tracts/<county>.json) from the public
+ *  tiles host into data/tiles, overwriting local copies. A fresh checkout (a GitHub runner, #369)
+ *  then merges a reload into the published shards instead of writing ones that hold only what it
+ *  just loaded. Any failure other than a 404 (no tracts loaded for that county) stops the run. */
+export async function pullTracts(base = "https://tiles.mapwich.org", dir = TRACT_DETAIL_DIR,
+  counties = Object.keys(JSON.parse(readFileSync(NAMES_JSON, "utf8"))).filter((g) => g.length === 5)) {
+  mkdirSync(dir, { recursive: true });
+  let got = 0, missing = 0, next = 0;
+  const get = async (url: string) => {
+    for (let attempt = 1; ; attempt++) {
+      const r = await fetch(url).catch((e: Error) => e);
+      if (r instanceof Response && (r.ok || r.status === 404)) return r;
+      if (attempt === 3) throw new Error(`GET ${url} → ${r instanceof Response ? r.status : r.message}`);
+      await new Promise((res) => setTimeout(res, 1000 * attempt));
+    }
+  };
+  const worker = async () => {
+    for (let i = next++; i < counties.length; i = next++) {
+      // The query string skips any edge cache, so the copy is what R2 holds now.
+      const r = await get(`${base}/values/tracts/${counties[i]}.json?t=${Date.now()}`);
+      if (r.status === 404) { missing++; continue; }
+      const text = await r.text();
+      JSON.parse(text); // a truncated body stops the run here, not in a later merge
+      writeFileSync(join(dir, `${counties[i]}.json`), text);
+      got++;
+    }
+  };
+  await Promise.all(Array.from({ length: 16 }, worker));
+  log("pull", `values/tracts: ${got} shards copied from ${base}, ${missing} counties have none`);
 }
 
 function walk(dir: string, rel = ""): string[] {
