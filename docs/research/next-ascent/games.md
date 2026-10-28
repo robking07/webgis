@@ -2,8 +2,8 @@
 
 Research agent R8, 2026-10-27. Research only; not for merge. The lead harvests it.
 
-Status: sections 1–2 done.
-Next: 3. Pitfalls, 4. Audience.
+Status: sections 1–4 done.
+Next: 5. Recommendation and top 10.
 
 ## 1. The landscape
 
@@ -223,7 +223,113 @@ Script: rerunnable, in the session scratchpad; the lead can ask for it to be com
 
 ## 3. Pitfalls
 
+### Sensitive topics: a games list Robbie approves once (needs Robbie)
+
+A guessing game turns a number into a punchline. "Guess the county with the most diabetes" or "the
+poorest county" invites stereotypes about the people who live there, often rural, Black, Native or Latino
+communities. The registry already has `excludeFromInsights` for subjects kept out of playful pairings;
+games need a stricter, explicit list. **Proposed default (for Robbie to edit once, then the generator
+enforces it):**
+
+| Tier | Rule | Datasets (draft) |
+|---|---|---|
+| **Play** | Any question, any framing. | Commuting (mode shares, commute time, leave before 7am, work from home, zero-vehicle households), housing costs and stock (rent, home value, owner costs, homes built before 1960, mobile homes, renters, vacancy, density), climate (temperatures, degree days, precipitation), age (median age, 65+, under 18), broadband and computers, job density, VMT per capita, bridges in poor condition, moved last year, veterans, FEMA expected losses by hazard. |
+| **Clue only** | May appear as one clue among several or in a neutral "higher or lower"; never as the theme ("the poorest…", "the sickest…"), never as "worst". | Income and earnings, unemployment, labor force, education levels, rent and cost burden, overcrowding, uninsured, energy burden, Gini, air quality, TRI releases, foreign born, limited English, CDC PLACES preventive care (checkups, screenings, dentist). |
+| **Never in games** | Kept out of every game. | Race and ethnicity shares (all `pct_*_nh`, `pct_hispanic_latino`, `pct_people_of_color`, `svi_minority`), poverty, child poverty, SNAP, public assistance, deaths (overdose, traffic fatalities), CDC PLACES health conditions and behaviors (obesity, diabetes, depression, mental distress, smoking, binge drinking, loneliness, food and housing insecurity, disability), SVI and CEJST disadvantage scores, single-parent families, 287(g). |
+
+Also: no game ever names a place as "worst", and every answer card shows the number in context (rank, US
+figure, margin) with a link to the full map, so the game ends in the data, not a joke. Flag for Robbie:
+the tier names and the line between "clue only" and "never" are wording and judgment calls about people.
+
+### Answer ambiguity
+
+- **Duplicate names:** there are 30 Washington Counties. The guess box must always carry the state
+  ("Washington County, MN"), which the existing search already does.
+- **County equivalents:** Mapwich uses Connecticut's nine planning regions (geoids 09110–09190, not the old
+  eight counties), Virginia's 38 independent cities, Alaska's 30 boroughs and census areas, Louisiana
+  parishes, and Puerto Rico's municipios. Players will guess "Fairfield County, CT" and find it doesn't exist.
+  Default: the answer pool is the 50 states and DC, minus Connecticut and Alaska for answers (still allowed
+  as guesses); Puerto Rico in a later "hard" track. Explain in the help text.
+- **Ties and rounding:** two values that look the same once rounded ("$1,200 vs $1,200") are never asked.
+- **Statistical ties:** pairs whose margins overlap are skipped (about a quarter of random pairs, section 2);
+  a deliberate "it's a statistical tie" round can teach margins instead.
+- **Distance:** measured center to center; neighbors of a huge county can feel "close but far". Show
+  "neighbor!" when the guess shares a border (adjacency is a build-time computation, PostGIS skill).
+
+### Data vintage
+
+- Every clue says its period ("2020–2024 survey estimate", "2023 climate normals"), like the map legend.
+- Puzzles store their own numbers; a data refresh doesn't rewrite yesterday's puzzle or a shared result.
+- The dive-deeper link opens today's map, which may show a newer number than the puzzle did. The end card
+  says "Puzzle numbers: 2020–2024. The map may show newer data."
+
+### Accessibility
+
+- **Color is never the only signal.** Hot/cold uses words and distance numbers as well as color; the share
+  grid uses shapes (⬛🟧🟨🟩📍 plus arrows) and has a plain-text version. Colors come from `packages/design`
+  tokens, checked for color-blind safety, with a high-contrast option like Wordle's.
+- **Screen readers:** emoji grids read as "green square, green square…". Offer "Copy as text" with a
+  sentence ("Mapwich County 42: solved in 4 guesses"). Announce each hint in an `aria-live` region.
+- **The map is a hint, not a requirement.** Every game is playable with the keyboard and without seeing
+  the map; Concept C (painting a map) offers a list-of-states mode.
+- **Reduced motion** respected for reveals.
+
+### Phone first
+
+- One thumb, portrait, 375 px wide; no hover; big tap targets; the guess box above the keyboard.
+- Known trap: `useMedia` / `useIsPhone` are false on the first render even on a phone, so the game's layout
+  must not depend on them for its first paint.
+- The share button uses the phone's share sheet (Web Share API) with copy-to-clipboard as fallback.
+
+### No accounts
+
+- Streaks, today's progress and stats in `localStorage`, wrapped in try/catch, as Wordle did. Clearing the
+  browser loses them; say so in the help text. No login, no email, nothing stored about the player.
+- Optional later: anonymous totals ("38% solved it in 3") via one Supabase table with a row per finished
+  game and no identifier. Free tier is ample; skip it in the first version.
+- The answer sits in the page's JSON, so a determined player can peek. Wordle shipped the same way; fine.
+
+### Other risks
+
+- **Daily games die quietly.** Most Wordle clones get little traffic. A game is a reach experiment, not a
+  guarantee; measure it (section 4) and be willing to park it.
+- **Editorial voice.** Game copy (clue wording, end-card text) is site copy. Robbie's rule on copy for a
+  cold visitor applies, and the sensitive-topic wording goes to him.
+- **Scope creep.** Archives, leaderboards, accounts and multiplayer each double the size. Start without them.
+
 ## 4. Who plays, and how a game pulls people into the real maps
+
+**Honest fit with the North Star.** Robbie's weekly use is the tie-break, and a game does little for it:
+he won't need a quiz to find a number. Games serve the **public (second audience)** and the **portfolio**:
+they bring new visitors who wouldn't open a data viewer, and they show a hiring manager something few GIS
+portfolios have (content generated from 138 datasets, with statistical checks and an ethics list). Rank
+them after planner features, as a reach bet.
+
+**Who plays.**
+
+| Group | Which games | Why |
+|---|---|---|
+| Daily-puzzle players (Wordle, Worldle crowd) | A, B, D | A new daily habit; the share grid spreads it. A county-level "Wordle for maps" seems not to exist (search found state and country versions only). |
+| Geography and map fans (r/MapPorn, r/geography, GIS Twitter/LinkedIn) | A, C | The map is the hint and the reward. |
+| Teachers and students (AP Human Geography, civics, statistics) | B, F, G, H | Free, no accounts, US data, teaches margins of error and "correlation isn't cause". |
+| **Planners** | F, H, C, B | Public open houses and engagement events ("how well do you know your county?" on a tablet, then the real numbers); a meeting icebreaker; staff onboarding at an MPO or county; mental-mapping exercises (C). |
+| Robbie | I, F | Specials get a "guess first" hook; a quick way to show Mapwich in a talk. |
+
+**The funnel into the real maps.**
+
+1. A shared grid or a link (`mapwich.org/play`) brings a visitor.
+2. The game itself shows a little map and real numbers with their periods and margins.
+3. The end card always has **one obvious next step**: the exact map, place or comparison behind the
+   puzzle (`/place`, `/compare`, `/map?d=…&in=…`). Secondary: "tomorrow's puzzle", streak.
+4. The map page opens in the state the puzzle implies (dataset, level, place in focus), so the visitor
+   lands on something meaningful, not the default map.
+5. The home page or splash gets a small "Today's puzzle" entry; the game page links back to the map.
+
+**What to measure.** Plays per day, completion rate, and **click-through from the end card to a map page**
+(the number that says games feed Mapwich rather than distract from it). Vercel Web Analytics pageviews
+with a `from=play` URL parameter on dive-deeper links would show this without new tools (the URL parser
+ignores unknown parameters; check before relying on it). A gate: if after two months fewer than ~10% of
+finished games click through to a map, park new games and keep only what's cheap to run.
 
 ## 5. Recommendation and top 10
 
