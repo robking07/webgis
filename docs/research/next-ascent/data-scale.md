@@ -1,7 +1,7 @@
 # Data at scale: Library maps (research notes, R4)
 
-Status: §1 sources done.
-Next: §2, how the Library tier works on today's foundation and what breaks at 1,000 / 10,000.
+Status: §1 sources, §2 Library tier done.
+Next: §3 finding things among thousands of maps.
 
 Planning research for the next phase. Not a plan; the lead harvests it. Sizes: S ≈ 100k tokens,
 M ≈ 275k, L ≈ 500k, XL = several L.
@@ -127,6 +127,113 @@ region). Build: **M** for the generic "public-domain ArcGIS/Socrata layer" path.
 feature-layer tile sizes; most are small. Fork: no.
 
 ## 2. How the Library tier could work on today's foundation
+
+**Bottom line.** Today one hand-written YAML file = one map, and the hand work (title, phrase,
+explainer, ramp, coverage note, relations entry) is the bottleneck, not the pipeline. The Library
+tier swaps the hand work for a **recipe per source** plus an **automatic shaper** and an
+**automatic gate**, writing Library entries the site already knows how to draw. Four things in the
+foundation break before 1,000 maps: the database (≈650 maps), the per-county tract bundle and the
+per-state click-detail files (≈300–500 maps), the registry bundled into every page (≈1,000), and
+the all-pairs Combinations job (≈1,000). None needs new paid services.
+
+### How a Library map gets made (proposed)
+
+1. **Recipe** (one small YAML per source batch, written once by an agent, reviewed like code):
+   which tables or measures to take, the denominator rule, the topic each one goes under. Example:
+   "every percent variable of DP04, under Housing; skip totals and complements".
+2. **Shaper** (a script, no agent at run time):
+   - *Title* from the source's own label, made readable by fixed rules
+     ("Percent!!HOUSE HEATING FUEL!!Occupied housing units!!Wood" → "Homes heated with wood"),
+     with a one-time language-model pass over the whole batch for the labels the rules can't
+     clean. The result is cached in the entry, so it runs once per map, not per visit.
+   - *Unit* from the variable type (PE → percent, median dollars → dollars, rates → per 100k).
+     Library maps use only units `format.ts` already has; anything else is skipped, not invented.
+   - *Colors* from `packages/design` tokens by rule: sequential ramp chosen by topic (the same
+     ramp the topic's Featured maps use), quantile, 5 classes; diverging only for signed change.
+     No new ramps, so the contrast gate (`check:design`) still holds (hard rule: symbology from tokens).
+   - *Explainer*: one templated sentence ("Share of {universe} who {label}, {source}, {period}.")
+     plus the source's label verbatim and a link to the table's documentation. No generated prose
+     about people (see §4, sensitive topics).
+   - *Coverage note* written from the gate's own results ("No data for 2 states: …").
+3. **Gate** (automatic checks; a map that fails any stays out and the reason is logged):
+
+   | Check | Pass means |
+   |---|---|
+   | Licence | Source is on an allow-list of licences (PD, CC0, CC BY, non-commercial per D-30), set per source in the recipe, never per map |
+   | Coverage | ≥ 90% of counties (or of the level's areas) have a value; otherwise the level is dropped |
+   | Variation | Values aren't near-constant (at least 5 distinct quantile classes) |
+   | Range | Percent 0–100, counts ≥ 0, no sentinel codes (-666666666 etc.) leaking through |
+   | Outliers | Areas beyond a robust z of 6 are listed in the log and checked against the source |
+   | Reliability | Median coefficient of variation per level (D-222's rule); a level where most areas are unreliable is dropped (block groups first) |
+   | National total | The U.S. figure matches the source's published U.S. value within 1% (ACS gives `us` directly) |
+   | Duplicate | Not |r| > 0.98 with a map already live; otherwise it becomes an alias, not a new map |
+   | Sensitive topic | Matches the sensitive list (race, citizenship, disability, crime, deaths, religion, sexual orientation…) → published with the source's wording only, kept out of automatic findings, listed for Robbie (§4) |
+
+4. **Label.** Every Library map carries "Added automatically" on its card, legend caption and
+   `/data/<id>` page, with a one-line "how this was made" link to the recipe and the gate results.
+5. **Promote to Featured.** Same id (so links keep working), entry moves from the Library folder
+   to `data/registry/datasets/`, gets the hand work (phrase, explainer, "Why this matters"), and the
+   badge drops. A promotion is an S task or less; it's also the natural way Robbie's weekly use
+   feeds back ("I keep opening this one").
+
+### What has to change in the foundation
+
+| Piece | Today | Change for Library | Size |
+|---|---|---|---|
+| Registry schema | 18 measure kinds, every field hand-written | `tier: featured \| library`, `recipe`, `checks` (results), optional `phrase`; generic kinds `acs_profile`, `acs_table`, `socrata_measure`, `csv_column` | S |
+| Registry files | `datasets/*.yaml`, one per map | `library/<source>/*.yaml` generated by the shaper (or one JSON per recipe; thousands of YAML files slow `registry:validate` and review) | S |
+| `relations.yaml` | validate fails if a map is missing (D-257) | Library maps get relations from the recipe (group = topic; counts from the ACS numerator/denominator), no hand entry | S |
+| Ingest working store | Supabase `dataset_values` for state and county (~190 bytes/row, ≈0.6 MB per map; D-113 hit 305 of 500 MB) | Library writes static files directly; a local DuckDB or Parquet file is the working store; Supabase keeps Featured only | M |
+| Tract click details | `values/tracts/<county>.json` holds **every** tract dataset (LA County is 4.1 MB raw today for ~72 tract maps) | Featured stay in the bundle; Library tract values load per topic (`values/tracts/<topic>/<county>.json`) only when the visitor opens that topic | M |
+| State/county click details | `details/<state>.json` holds every map (Texas 1.4 MB raw for 138) | Same split: Featured bundle + per-topic Library files | S (with the above) |
+| Registry in the browser | `generated/registry.json` (276 KB for 138 maps, ~2 KB each) bundled into the map page | Bundle Featured only; Library index (id, title, topic, levels, unit; ~150 bytes each) as one file on R2 read by search; full entry fetched on open | M |
+| Dataset pages | `/data/[id]` and `/og/data/[id]` prerendered for every map | Library pages render on first visit and are cached (no build-time list) | S |
+| Combinations | all county pairs every run (138 maps → 8,646 pairs, 1,759 published; `insights.json` 3.8 MB in the bundle) | §4: compare each new map against Featured + its own topic, not all pairs; output to R2 | M |
+| e2e click-through | walks the menus | Samples Library maps (e.g. 20 random per run) instead of all | S |
+
+### What breaks, by scale
+
+| Scale (total maps) | What breaks first | Fix |
+|---|---|---|
+| ~300–500 | Tract click details: the per-county bundle grows ~55 KB per tract map in LA County, so ~25 MB per click at 500 maps | per-topic tract files |
+| ~650 | Supabase 500 MB (≈0.6 MB per map at state + county, plus geographies and insights) | Library bypasses the database |
+| ~1,000 | Registry in the page bundle (~2 MB raw); Combinations (~500k pairs, and the caption step); the map menu (a list of 1,000 is unusable) | Library index on R2; scoped Combinations; Library lives in search and browse, not the menu (§3) |
+| ~10,000 | Build of dataset pages (20,000 prerendered pages); first upload (~80k files at 16 at a time ≈ 1–2 h); `registry:validate` and review of thousands of files | pages on demand; recipe-level review; upload only changed files (already does) |
+
+### Monthly running cost at each scale
+
+Assumptions: R2 gzipped size per map ≈ 1 MB tract-only (a Data Profile map) to 3.5 MB with
+block groups (`pct_poverty` today: 13 MB raw over all levels and margins); R2 free tier 10 GB,
+then $0.015/GB-month, egress free, 1M writes and 10M reads free per month. Today's R2 is about
+4.3 GB, most of it boundary and feature PMTiles (block tiles 2.8 GB, AADT 0.5 GB).
+
+| Scale | R2 storage | R2 operations | Vercel | Supabase | One-time language-model use | Monthly total |
+|---|---|---|---|---|---|---|
+| Today, 138 | ~4.3 GB, free | free | Hobby, free | free (not measured here; D-113 recorded 305 MB before tract values moved out) | — | ~$0 |
+| +500 Library (~650) | ~5–6 GB, free | free | free | free (Library bypasses it) | titles for ~500 labels: well under 1M tokens | ~$0 |
+| 1,000 | ~6–8 GB, free | free | free with on-demand pages | free | ~1M tokens | ~$0 |
+| 10,000 | ~20–40 GB → **$0.15–0.45** | a full refresh is ~80k writes, free | free if pages are on demand; Pro ($20) only if traffic or build limits bite | free | ~10M tokens for titles; per-pair captions must stay templated | **≈ $1, up to ~$21** |
+
+The money question is not hosting; it's agent tokens to build it (§6) and any language-model
+captions at scale (§4). Both are priced and wait for Robbie when they exceed the $50/month line.
+
+### Ideas from this section
+
+**2a. The Library pipeline (recipe → shaper → gate → label).** Visitors see thousands of extra
+maps, each honestly marked "Added automatically". Robbie gets breadth without paying for hand work
+on maps nobody opens; his use tells the lead which to promote. Build: **L (~500k)** for schema,
+shaper, gate, labels and the first recipe (ACS profiles). Cost ~$0. Fork candidate: **yes** (an
+"auto-shaped public data library" is a product others would pay for; the pipeline is MIT code,
+the data PD). Builds on the registry, `acs.ts`, D-222 reliability, D-447's "publish what passes".
+
+**2b. Static-first ingest (Library skips Supabase).** Nothing visible; it removes the 500 MB
+ceiling for good. Build: **M**. Cost: avoids Supabase Pro ($25/month). Fork: no.
+
+**2c. Split click details and the tract bundle by topic.** Faster clicks on phones even before
+Library grows. Build: **M**. Cost ~$0. Fork: no.
+
+**2d. Promote-to-Featured flow.** A one-click (one-command) promotion and a "most opened Library
+maps" list for the lead from page-view analytics (Vercel Web Analytics, if on). Build: **S**. Fork: no.
 
 ## 3. Finding things among thousands of maps
 
