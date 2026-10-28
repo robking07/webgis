@@ -1,7 +1,7 @@
 # Next ascent research: what the foundation can already do (R1)
 
-Status: sections 1–2 done.
-Next: write section 3 (parked issues).
+Status: sections 1–3 done.
+Next: write section 4 (foundation limits).
 
 Research notes for the lead. Not for merge. Sizes: S ≈ 100k tokens, M ≈ 275k, L ≈ 500k, XL = several L.
 Read on 2026-10-27 at `origin/main` 5bd1f06. Every claim below points at a file or decision so it can be checked.
@@ -139,6 +139,31 @@ Left out on purpose: AI features (another researcher's topic), new data sources 
 researcher's), and anything that adds a server.
 
 ## 3. Parked issues: still fit? how big?
+
+Checked against the 2026-10-27 decisions (planners first and Robbie's weekly use wins; Featured +
+Library tiers; US only, deeper; ≤ $50/month; Robbie's 2–4 h/week; disclosures dropped).
+
+| Issue | Fits? | Size | One line |
+|---|---|---|---|
+| #332 Cities and metros (2.1) | **Yes, core.** "Deeper: cities, metros" is the decision's own wording. | L (~400k core) | The biggest foundation change on the list: a new place type (§4, limit 1). Do it as the general "new place types" fix, not a one-off. |
+| #292 Totals for an MPO or county area | **Yes, core.** | M | Counts exist (D-257); needs an MPO crosswalk. Unlock #6. |
+| #291 Similar places | **Yes**, Robbie said build. | S–M | Offline step + a list on place pages. Unlock #5. |
+| #296 U.S. figures for jobs, 2020 Census, traffic deaths | Yes | S (~40k) | Blocked on Robbie running `ingest counts` + `publish-counts`. Better: make that run need no Robbie (§4, limit 3). |
+| #188 Real margins on change maps | Yes (correctness) | M | Same block as #296: waits on the counts upload. Pairs with unlock #8. |
+| #343 Hover vs details numbers | Yes | S | A trust bug; bundle with #187. |
+| #187 Map audit fixes (with 1.7 polish) | Yes | S (fixes) / M (with polish) | Accessibility and error states; matters for "portfolio-ready". |
+| #280 3–5-dataset Combinations | **Yes, and half done.** | S–M (UI only) | The analysis shipped (D-381): `apps/web/src/generated/combinations.json` holds **72 confirmed sets**, but nothing in `apps/web` reads it. Showing them is UI-only work. Cheapest "insight" win on the board. |
+| #207 Visitor suggestions | Partly. The disclosures page it was to replace is dropped; the suggestion box itself still fits "public second". | S–M | Simplest version: a "Suggest a fix" link that opens a prefilled GitHub issue form (no server, no spam handling, no privacy store). Robbie decides where suggestions land. |
+| #244 Table into About + key facts | Yes, reshaped | S–M | Key facts on `/data/[id]` is unlock #12; the "data browser" half becomes the Library browse page (§4, limit 2). |
+| #115 "Why this matters" | Yes, but it costs Robbie time per map (he approves each). | M build is done (D-279, two maps live); content is S per batch | Keep for Featured maps only. Each batch needs Robbie's review, so it competes with Specials for his hours. |
+| #205 Drive times to ER, pharmacy, supermarket | Yes (deeper, planner-native, rare for free). | M–L | Offline routing over OSM on Robbie's machine or a free CI runner; output is ordinary tract maps. Heavy compute, zero running cost. |
+| #176 Transit (NTD, routes, GTFS) | Yes for a transportation planner; the review lead's split stands. | PR1 S, PR2a M (new place type: urban areas), PR2b S, PR3 M | PR2a is another instance of the "new place types" limit; do it after #332's general fix and it gets cheaper. |
+| #118 How datasets relate (scope) | Mostly done by D-257 (`relations.yaml`: groups, counts, parts, 51 links). | S (close or re-scope) | What is left is a phone comparison layout; fold into #7 peer table or close. |
+| #245 Tester onboarding + walkthroughs | Weak fit now. The tester trial (D-291) exists; guided walkthroughs serve the public, not Robbie's week. | M | Park longer; revisit before any public push. |
+| #44 Branch protection | Yes (housekeeping); the repo is already public. | S (~20k, settings) | Free on a public repo; turn it on. |
+| #169 FEMA disaster declarations | Yes; built (PR #235) and waiting. | S to land | Pairs with NRI maps; good Special material. |
+| #172 HUD subsidized households | Hold stands (no stated license, bot wall). | S once cleared | Robbie's call on the license question; not urgent. |
+| #133 Data backlog + data.gov sweep | Yes; becomes the Library pipeline's input list. | XL as a whole | Reframe: Featured additions stay hand-picked; the sweep feeds Library maps (§4, limit 2). |
 
 ## 4. Foundation limits big dreams will hit
 
