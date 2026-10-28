@@ -1,7 +1,7 @@
 # Next ascent research: what the foundation can already do (R1)
 
-Status: sections 1–4 done.
-Next: write section 5 (top 10), then report.
+Status: complete (2026-10-27).
+Next: nothing; the lead harvests it.
 
 Research notes for the lead. Not for merge. Sizes: S ≈ 100k tokens, M ≈ 275k, L ≈ 500k, XL = several L.
 Read on 2026-10-27 at `origin/main` 5bd1f06. Every claim below points at a file or decision so it can be checked.
@@ -252,3 +252,28 @@ What does **not** break soon: R2 storage and egress (≈ 5 MB per map with tract
 worth running before any public push).
 
 ## 5. Top 10
+
+Ranked by value to Robbie's weekly use ÷ cost, with the enablers placed where the big dreams need
+them. Running cost is $0/month for all ten unless noted.
+
+| # | Idea | What a visitor gets | Size | Fork? | Builds on |
+|---|---|---|---|---|---|
+| 1 | **My area home** | Mapwich opens on his area (Twin Cities / Met Council) with his pinned maps | S ~70k | No | URL state, MPO outlines, browser storage |
+| 2 | **Region data pack** | One CSV: every map for every county in a state, or every tract in a county | S ~90k | Weak | `details/`, tract shards, `csv.ts` |
+| 3 | **Similar places + peer table** (#291) | "Counties most like Hennepin", then my county against 3–10 peers in one table | S–M ~150k, then M ~200k | Possible | county values, compare, benchmarks |
+| 4 | **Show the 72 confirmed 3–5-map Combinations** (#280, UI half) | Sets like "these four maps line up across counties", with the plain reading and "not causation" | S–M ~120k | No | `generated/combinations.json` (already built, unused) |
+| 5 | **Address lookup → my tract** | Type an address, land on its tract and profile | S–M ~150k | No | search, tract tiles, place pages |
+| 6 | **Numbers for any area: MPOs, chosen counties, corridors** (#292 + block crosswalk) | "Met Council: 3.2M people, 11.4% in poverty ±0.3"; later, draw-your-own area | M ~275k + M ~250k | **Yes**: custom-area reports are what planners and consultants pay PolicyMap/Esri for | counts + margins (D-257), 2020 block populations, MPO shapes |
+| 7 | **Data runs without Robbie** (ingest in GitHub Actions + weekly release watcher) | Maps stay current; new releases show up on their own | L ~450k + S ~100k | No | ingest recipes, never-drop guard (#143); **needs Robbie's yes on GitHub secrets** |
+| 8 | **Place types done once; cities and metros first** (#332 + typed place IDs) | Search "Minneapolis" or "Minneapolis metro", see its official numbers with ± | L ~500k | No | search, benchmarks, reliability; then urban areas (#176), ZIP areas, districts at S each |
+| 9 | **Library maps** (tier field, browse page, per-dataset loading, slim registry, linear Combinations) | Thousands of maps labeled "added automatically", promotable to Featured | L–XL ~650k for the mechanism; generators extra (ACS-table generator S–M) | No | registry, `acs5`/`places`/`features` recipes, MN Commons catalog (110 public-domain layers), #7 |
+| 10 | **"What changed" on place pages + real margins** (unlock #8 + #188) | A "since 2019" column on each place row, honest about noise | M ~250k + M ~275k | No | timeline files, `change.ts`, margin files already written |
+
+Honorable mentions: embeddable map (S ~80k, good for Robbie's slides and portfolio), the trust
+bundle #343 + #187 + #296 (S ~100k), CDC PLACES health maps at tract and city level (S–M ~150k,
+ingest only), dataset key facts (S–M), turn on branch protection (#44, minutes).
+
+**A possible order, for the lead to weigh.** First wave, cheap and weekly: 1, 2, 4 and the trust
+bundle (~400k together). Second: 3 and 5. Then the two enablers that every big dream needs, 7
+and 8, before 6 and 9. #10 rides along once 7 makes reruns free. Rough total for all ten:
+~3.5M tokens (two to three phases at today's pace).
