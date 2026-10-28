@@ -1,7 +1,7 @@
 # Research notes: how planners work, and the MPO rabbit hole (R5)
 
-Status: sections 1–2 done (2026-10-27).
-Next: section 3, MPO rabbit-hole flow (survey done in notes: 10 MPO sites + link check, write it up).
+Status: sections 1–3 done (2026-10-27).
+Next: section 4, outputs planners need; then top 10 and sources.
 
 Not for merge. The lead harvests these notes for the Vision and the Next phase.
 
@@ -124,6 +124,150 @@ said out loud:
 - **Archived federal data says so**: CEJST and similar layers carry an "archived, no longer
   maintained by the federal government" label (already done for CEJST; keep it as a rule).
 ## 3. The MPO rabbit-hole flow
+
+Robbie (2026-10-03): "I work for an MPO, so this is crucial." Goal: a click on the map leads to the
+data, then into the plans. This section surveys where the plans live, drafts the flow in words,
+then describes how the links get found and kept fresh with little of Robbie's time.
+
+### 3a. Survey: where 11 MPOs keep their core documents (checked 2026-10-27)
+
+Sizes run from the largest (Chicago, Philadelphia, Dallas–Fort Worth) to small (Mankato, St. Cloud,
+Cheyenne, Flint Hills KS). Every one publishes all four core documents on its own site; the
+difference is how findable and how stable the links are.
+
+| MPO | Size | Platform | LRTP | TIP | UPWP | Competitive grants | Notes |
+|---|---|---|---|---|---|---|---|
+| Met Council (Twin Cities) | large | ASP.NET (Kentico-style `.aspx`) | Transportation Policy Plan page + imagine2050.metrocouncil.org | `/TIP.aspx` and a second long URL | `…/Unified-Planning-Work-Program.aspx` | Regional Solicitation page | `-NEW` and `(1)` URLs seen in nav already redirect to clean ones; no sitemap.xml (404). **TIP project GIS on MN Geospatial Commons, public domain** |
+| CMAP (Chicago) | large | WordPress | `/regional-plan/…` (2026 RTP adopted, replaces ON TO 2050) | `/funding-assistance/transportation-improvement-program/` | only a committee page found | CMAQ, STP, TAP, CRP, Call for Projects pages | Old `www.cmap.illinois.gov/programs/tip` now redirects to an unrelated **2016 PDF** (a "soft 404": status 200, wrong content) |
+| DVRPC (Philadelphia) | large | custom | `/our-work/long-range-plan` | `/our-work/transportation-improvement-program`, separate NJ and PA TIPs | FY2027 at `/about-us/work-program/fy2027`, FY2026 at a *different* path pattern | TCDI, CMAQ, TA set-aside (per state), trails, Complete Streets | **TIP GIS lines/points on catalog.dvrpc.org** |
+| NCTCOG (Dallas–Fort Worth) | large | custom (`/getmedia/` GUID assets) | `/trans/plan/mtp` | `/trans/funds/tip` | `/trans/study/unified-planning-work-program` | `/trans/funds/cfps` | clean, stable paths |
+| SANDAG (San Diego) | large | Sitecore | `/planning/regional-plan-landing/current-plan` | `/funding/…/regional-transportation-improvement-program` | "Overall Work Program", under budget pages | `/funding/grant-programs/…` | California names differ (RTIP, OWP) |
+| ARC (Atlanta) | large | WordPress, PDFs on `cdn.atlantaregional.org` | MTP / Mobility 2055 | TIP page + amendments | UPWP page | TIP solicitations, LCI | old `/transportation-mobility/…` paths return 403 to scripts |
+| Fargo–Moorhead Metro COG | mid | custom | — | `/TIP` (redirects, works) | — | — | listed on MnDOT's index |
+| Duluth–Superior MIC | small | WordPress | — | TIP page now redirects to a category listing | — | — | listed on MnDOT's index |
+| MAPO (Mankato) | small | WordPress.com | via "Planning documents" hub | `/tip/` (2027–2030) | via hub | none | ADA plan hosted on a consultant's domain |
+| St. Cloud APO | small | WordPress | `/current-plans/current-mtp/` | `/current-plans/current-tip/` | `/current-plans/current-upwp/` | grant page under TIP | **the ideal pattern**: stable "current-" URLs |
+| Cheyenne MPO (WY) | small | WordPress (Divi) | Connect 2050 | TIP page | "Work Program" page | none | |
+| Flint Hills MPO (KS) | small | **Wix** | `/connect2050` | `/tip` | `/upwp` | none | PDFs on opaque `_files/ugd/<hash>.pdf` URLs |
+
+Also checked: the **state DOT index** pattern. MnDOT's MPO pages list all 8 Minnesota MPOs' TIPs
+(and have sibling pages for UPWP and MTP). One of the 8 links is already dead (Grand Forks–East
+Grand Forks, a CivicPlus `portalId` URL → 404) and one points at a "2020 TIP" page that now
+redirects to a general plans page (Rochester). Even the state's own index rots.
+
+**Link check of 40 collected URLs (curl, honest user agent, 2026-10-27):**
+- Landing pages ("the TIP page"): all live; several had silently moved (redirect).
+- Direct PDF links (UPWPs found in search results, 13 of them): 2 dead (404), 1 timed out, 1
+  blocked to scripts (403). Roughly **1 in 5 PDF links from the last 1–3 years are already broken**.
+- 3 sites answered 403 to a script but work in a browser. A link checker must treat 403 as "can't
+  verify", not "dead". (The repo's guardrail forbids posing as a browser; that's right.)
+- 1 soft 404 (CMAP): a redirect that lands on the wrong document with a 200 status. A checker that
+  only reads status codes misses this.
+- Sitemaps: 5 of 6 sampled sites publish `sitemap.xml` (WordPress, Wix, DVRPC, CMAP); Met Council
+  doesn't.
+- The Wayback Machine already holds recent snapshots of these pages (e.g. Met Council TIP page,
+  2026-04-29), so a dead link can fall back to an archived copy for free.
+
+**Lessons for the design:**
+1. **Link to the landing page, not the PDF.** Landing pages survive yearly document turnover; PDFs
+   don't. Store the PDF too, as a secondary link, with its Wayback copy.
+2. **No national list of MPO websites exists** in the federal MPO boundary file (NTAD fields are
+   just ID, name, state, area). Seeds: state DOT MPO index pages, Wikidata "official website",
+   web search on the MPO name. One-time.
+3. **Names vary**: LRTP = MTP = RTP = Regional Plan = Transportation Policy Plan = "Connect 2050" /
+   "Mobility 2050"; UPWP = OWP = Work Program; TIP = RTIP = TIP/STIP. The finder needs a synonym list.
+4. **Spatial TIP data exists for some big MPOs** (Met Council, DVRPC, El Paso, MORPC, New Orleans
+   RPC, Madison per their portals). Those can become ordinary Mapwich feature datasets
+   (registry + ingest), with no new UI kind.
+
+### 3b. The flow, step by step (draft for Robbie to react to)
+
+The visitor is Robbie in a meeting, phone in hand, talking about Highway 14 near Mankato.
+
+1. **Tap the map** near Mankato (or search "Mankato"). The details panel shows the place's numbers
+   as today, plus one new line near the top: **"Planning region: Mankato/North Mankato APO ›"**.
+   Every county and tract that falls in an MPO gets this line (precomputed lookup from the MPO
+   shapes Mapwich already has, D-378). Places outside any MPO say "Rural: planned by MnDOT District 7"
+   later, if we add state DOT districts / RPOs.
+2. **Tap the MPO line.** The map outlines the MPO (shipped behavior) and the panel becomes the
+   **MPO profile**: name, states, a one-sentence explainer ("An MPO plans and funds roads, transit
+   and trails for a metro area of 50,000+ people"), and the region's headline totals (population,
+   jobs, zero-car households, traffic deaths; needs #292).
+3. **The "Plans" block** sits under the totals: four short rows, each with plain-language title,
+   period and freshness:
+   - Long-range plan · "2050 MTP, adopted 2025" ›
+   - Projects funded next 4 years (TIP) · "2027–2030" ›
+   - This year's work plan (UPWP) · "FY 2027" ›
+   - Grants this region awards · "Regional Solicitation, next round 2028" ›
+   Each row shows a small "link checked 3 days ago". The acronym is in parentheses, never first.
+4. **Tap "Projects funded next 4 years".** Two cases:
+   - *The MPO publishes TIP map data* (Met Council, DVRPC, …): the map draws the TIP projects as
+     lines and points, styled by project type (road, transit, bike/walk, safety) from design tokens.
+     The panel lists them, nearest first.
+   - *It doesn't*: the row opens the MPO's TIP page in a new tab, with a one-line note "Opens
+     mnmapo.org". No dead end: if the link is broken, it opens the archived copy and says so.
+5. **Tap a TIP project on the map.** The panel shows the project in plain words: what, where,
+   who's building it, cost, year, fund source, and a link to its row in the TIP. Below it,
+   "Around this project": the ten numbers for the tracts it touches (zero-car households, people
+   65+, traffic deaths nearby), with the usual reliability notes.
+6. **Back out one level** with the panel's back arrow (a breadcrumb: Mankato › MAPO › TIP ›
+   project). Nothing is lost; the URL carries each step, so the view can be shared or sent as a link
+   preview.
+7. **Tap "Compare with similar regions"** at the bottom of the MPO profile. Compare opens with 4–5
+   MPOs of similar size and density (#291 applied to MPOs), so "how does our region compare?" is
+   one tap.
+8. **Tap "Grants this region awards"** → the MPO's solicitation page; underneath, "Federal
+   programs" lists the current national discretionary programs that fit (SS4A, BUILD, …) with
+   status ("FY26 round closed May 2026") from a small, dated registry the lead updates.
+9. **"Carry it out"** from any level: Copy citation, Download CSV (shipped), Save map image (section 4).
+10. Later: **cities** get the same Plans block, with the capital improvement program (CIP) and
+    comprehensive plan, from the same registry, once cities are places (#332).
+
+### 3c. How the links get found and kept fresh (mostly automatic)
+
+**Registry.** One small file in the repo, e.g. `data/plans/mpo-documents.yaml`, one entry per
+MPO keyed by the NTAD `MPO_ID` already used in `mpo=`:
+`homepage`, then per document kind (`lrtp`, `tip`, `upwp`, `grants`, later `title6`, `cip`): the
+landing-page URL, an optional direct PDF, its Wayback copy, the plan name and period, how it was
+found (`state-index`, `sitemap`, `search`, `hand`), `first_seen`, `last_checked`, `status`, and
+`approved` (date). Plain text in git, so every change is a reviewable diff.
+
+**Find (one-time, then yearly).**
+1. *Seed homepages*: state DOT MPO index pages (MnDOT lists all 8 MN MPOs), Wikidata, then a web
+   search per MPO for the rest. Script first; agent only for leftovers.
+2. *Crawl*: read each site's `sitemap.xml` (most have one) or its homepage navigation; score links
+   by a synonym list (TIP/RTIP/Transportation Improvement Program; UPWP/OWP/Work Program;
+   MTP/LRTP/RTP/Regional Plan/Policy Plan/"20xx" plan names; Solicitation/Call for Projects/Grant).
+   Prefer landing pages that stay put ("current-tip").
+3. *Confirm*: a cheap model reads the top candidate page's title and first lines and answers
+   "is this the X for MPO Y, and which years?" Only for ambiguous cases.
+
+**Review (light, Robbie's 2–4 hours/week protected).** A generated review page per batch (one
+state at a time, Minnesota first): one row per MPO, four links, "looks right" checkboxes. A state
+of 8 MPOs is ~10 minutes. After the first approval, only *changes* come back for review. Robbie
+could delegate this to the lead entirely; links to public agency pages aren't sensitive.
+
+**Keep fresh (automatic).**
+- A weekly GitHub Action (free on a public repo) fetches each link with an honest user agent and
+  records: OK; moved (redirect, still the same kind of page) → auto-update the URL; blocked (403)
+  → "can't verify", keep; dead (404/410, timeout twice) → switch the visitor to the Wayback copy
+  and open one GitHub issue per week listing all breaks; soft-404 (the page title no longer
+  contains the plan's keywords) → treat as dead.
+- On every approved link, ask the Wayback Machine to save a copy (free Save Page Now API), so a
+  fallback always exists.
+- A yearly "rollover" pass (July–October, when most UPWPs and TIPs turn over) re-runs Find and
+  shows only the diffs.
+
+**Size and cost.** Registry + finder + checker + review page: **M (~275k)**. MPO profile panel with
+Plans block: **M (~275k)** (after #292). TIP projects as feature datasets: **S (~100k) each**
+for Met Council (first, public domain on MN Geospatial Commons) and DVRPC. Running cost: **$0**
+(GitHub Actions, Wayback, static JSON on R2/site). Fork candidate: no (but see "plan contents",
+below).
+
+**Fork candidate, flagged:** reading *inside* the plans (search "Highway 14" across every MPO's
+TIP PDF, extract project lists, compare plan goals) is the "comparing plan contents" item the
+roadmap lists under "Not now" as a possible paid product. It needs PDF storage, text extraction
+and LLM calls at scale; running cost likely above $50/month. **Fork candidate.**
 ## 4. Outputs planners need
 ## 5. Top 10
 ## Sources
