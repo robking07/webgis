@@ -39,7 +39,7 @@ one county stopped with "nothing uploaded".
   file once, minutes before the PUT; the remaining window is a local publish during a run.
 - **No dry-run switch.** "Upload off" still wrote the production database, so it wasn't a dry run.
   A true one would need a no-write mode in every ingest. The input check runs before anything is
-  written, and the first try is a small county-only dataset.
+  written, and the first try is a small county-only dataset (`places` + `stroke`).
 - **Values export only** (`export-values`, new): `export` also rebuilt names and search, which
   download Gazetteer files a run would throw away.
 - **Scope v1 to steps without GDAL or tippecanoe**: acs, acs-bg, lodes, places, climdiv, nbi, fars,

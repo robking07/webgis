@@ -196,7 +196,7 @@ tracts (a county a source no longer covers) also runs locally with `ALLOW_TRACT_
    `CENSUS_API_KEY` (same as `.env.local`), `R2_ACCOUNT_ID`, `R2_BUCKET` (same as `.env.local`),
    `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY` (the new token from step 1). Don't add
    `ANTHROPIC_API_KEY`.
-4. Try it on one small dataset you can check by eye, e.g. `places` + `asthma` (county only, no tract merge),
+4. Try it on one small dataset you can check by eye, e.g. `places` + `stroke` (county only, no tract merge),
    then curl one of its files (section 6, "Re-upload the data files").
 
 GitHub hides secret values in logs, but this repo is public, so run logs are too: don't paste a
