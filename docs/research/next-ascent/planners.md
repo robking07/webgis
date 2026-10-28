@@ -1,7 +1,7 @@
 # Research notes: how planners work, and the MPO rabbit hole (R5)
 
-Status: section 1 done (2026-10-27).
-Next: section 2, "in a conversation" moments.
+Status: sections 1–2 done (2026-10-27).
+Next: section 3, MPO rabbit-hole flow (survey done in notes: 10 MPO sites + link check, write it up).
 
 Not for merge. The lead harvests these notes for the Vision and the Next phase.
 
@@ -78,6 +78,51 @@ has nearly all of these at county and tract level. What's missing is the **area*
 in (their city, their corridor, their MPO as one number) and a **clean way to carry the numbers out**
 (citation, CSV, a map image).
 ## 2. "In a conversation" moments
+
+Robbie's use case is the meeting, the hallway, the phone call: someone says a place and a claim,
+and he wants the number before the conversation moves on. Typical prompts, written as they'd be
+said out loud:
+
+1. "How many people live in the Mankato MPO?" → one total for an MPO (needs #292).
+2. "Is Brooklyn Park poorer than Brooklyn Center?" → two **cities** side by side (needs #332).
+3. "What share of households in this corridor don't have a car?" → a drawn or picked area (later).
+4. "Has transit commuting in Ramsey County come back since 2019?" → change over time (shipped).
+5. "How many traffic deaths in Hennepin County last year, and is that high?" → value + benchmark
+   (state, US, peers) (partly shipped; benchmarks and peers #291).
+6. "Which counties are like ours?" → similar places (#291).
+7. "What's the MPO planning on this road?" → TIP projects near here (the rabbit hole, section 3).
+8. "Where's their long-range plan?" → the MPO's documents in one tap (section 3).
+9. "Can you send me that?" → a link that opens the same view, with a preview card (shipped).
+10. "Can I put that in my memo?" → a citation line and a clean image (section 4).
+
+### What makes a lookup fast on a phone
+
+- **Search is the front door.** Type a city, county, MPO, ZIP or address and land on it. Typing
+  "Mank" should offer "Mankato (city)", "Blue Earth County", "Mankato/North Mankato APO (MPO)".
+- **One tap from place to the ten numbers.** A place card that opens with the "ten numbers"
+  (section 1) already filled, each with its benchmark, before any dataset is chosen. Today the
+  visitor picks a dataset first, then a place; in a meeting the place comes first.
+- **Big number, one line of context, source.** "28.4% · higher than 81% of MN counties · ACS
+  2020–2024." Not a table.
+- **Thumb-reach controls** and no hover dependence (hover-only facts are invisible on a phone).
+- **Under 2 seconds** from tap to number on a mid-range phone on LTE. Precomputed summaries per
+  place beat live queries.
+- **Works offline-ish**: once a place has loaded, going back to it shouldn't refetch (service worker
+  cache of the per-place summary file). Meeting rooms have bad signal.
+
+### What makes it trustworthy
+
+- **Say what the number is**: the exact geography (city limits vs metro vs MPO), the period (ACS
+  5-year 2020–2024 is a five-year average, not "2024"), and the margin of error when it's wide.
+  Reliability warnings shipped; keep them visible on the place card.
+- **Name the source by its agency** and link to it ("U.S. Census Bureau, ACS table B08201").
+  Planners trust Census and USDOT names, not "Mapwich".
+- **Never borrow a number** from a different geography (a city must not show its county's value;
+  #332 already says this).
+- **Show the date the data was pulled** and the vintage, and say when a newer one exists.
+- **Peer and benchmark context** (state, US, similar places) so the number isn't naked.
+- **Archived federal data says so**: CEJST and similar layers carry an "archived, no longer
+  maintained by the federal government" label (already done for CEJST; keep it as a rule).
 ## 3. The MPO rabbit-hole flow
 ## 4. Outputs planners need
 ## 5. Top 10
