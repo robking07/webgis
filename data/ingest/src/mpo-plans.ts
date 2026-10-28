@@ -57,7 +57,8 @@ async function check(link: Link, mpo: string, name: string) {
     if (link.status !== "ok") { await res.body?.cancel(); return; }
     // shortcut: a 200 "soft 404" or parked-domain page counts as ok; the lead's hand check catches those until a content check is worth it.
     const type = (res.headers.get("content-type") ?? "").split(";")[0].trim();
-    const buf = Buffer.from(await res.arrayBuffer()); // the biggest plan is ~20 MB; fine in memory
+    // shortcut: whole file in memory (largest today 127 MB); stream to disk if a plan passes ~1 GB.
+    const buf = Buffer.from(await res.arrayBuffer());
     const sha256 = createHash("sha256").update(buf).digest("hex");
     const file = `${mpo}/${name}-${sha256.slice(0, 8)}.${extOf(type)}`;
     mkdirSync(join(ARCHIVE, mpo), { recursive: true });
@@ -127,11 +128,12 @@ export async function checkMpoPlans() {
 }
 
 /** `ingest publish-mpo-plans [--dry-run]`: upload the kept copies to R2 under plans/. A link that has
- *  since gone dead still uploads its last good copy. Web pages stay Wayback-only (serving another
- *  site's HTML from our domain would run its scripts there), as do links marked `"host": false`.
+ *  since gone dead still uploads its last good copy. Only documents (PDF, Word) go up: web pages and
+ *  other types stay Wayback-only (another site's HTML or SVG served from our domain would run its
+ *  scripts there), as do links marked `"host": false`.
  *  Keys carry the content hash, so keys already on R2 are skipped. */
 export async function publishMpoPlans(dryRun: boolean) {
-  const files = [...links(readCatalog())].map(([, , l]) => l).filter((l) => l.file && l.host !== false && !l.file.endsWith(".html"));
+  const files = [...links(readCatalog())].map(([, , l]) => l).filter((l) => l.file && l.host !== false && /\.(pdf|docx)$/.test(l.file));
   const missing = files.filter((l) => !existsSync(join(ARCHIVE, l.file!)));
   if (missing.length) throw new Error(`${missing.length} files not in data/cache/mpo-plans (first: ${missing[0].file}); run \`ingest mpo-plans\` first`);
   const mb = (n: number) => `${(n / 1e6).toFixed(1)} MB`;
