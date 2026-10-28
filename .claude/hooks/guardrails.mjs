@@ -259,6 +259,7 @@ function checkSegment(w, cwd, depth) {
 
 function checkCommand(cmd, cwd, depth = 0) {
   // Raw text, so a user agent inside a heredoc-written script is caught too.
+  // shortcut: also blocks a PR body or commit message that merely quotes one; reword it.
   if (BROWSER_UA.test(cmd)) block(MSG.ua);
   for (const w of segments(cmd)) checkSegment(w, cwd, depth);
 }

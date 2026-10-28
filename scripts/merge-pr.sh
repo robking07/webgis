@@ -32,7 +32,8 @@ if [ "$(status_of build)" = "pass" ]; then
     fi
   done
   # Code PRs need the ponytail-review verdict (docs/handbook.md §3) in the PR body.
-  if ! gh pr view "$pr" --json body --jq .body | grep -q '^Ponytail verdict: Ship'; then
+  body=$(gh pr view "$pr" --json body --jq .body)   # not piped: grep -q + pipefail can kill gh mid-write
+  if ! grep -q '^Ponytail verdict: Ship' <<<"$body"; then
     echo "Refused: PR #$pr has no 'Ponytail verdict: Ship' line. Run the ponytail-review skill and paste its verdict into the PR body." >&2
     exit 1
   fi
