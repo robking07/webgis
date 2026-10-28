@@ -1,7 +1,7 @@
 # Research notes: wildcard, dream big (R7)
 
-Status: sections 0–1 done.
-Next: write section 2 (best 8–12 developed).
+Status: sections 0–2 done.
+Next: write sections 3–4 (forks, top 10).
 
 Agent R7, 2026-10-27. Planning research for the next phase; the lead harvests it. Not for merge.
 Sizes: S ≈ 100k tokens, M ≈ 275k, L ≈ 500k, XL ≈ 1M+. Running cost is the extra monthly bill on
@@ -103,6 +103,164 @@ One line each. Grouped loosely; ★ = developed in section 2.
 43. **White-label viewer** for small MPOs and counties.
 
 ## 2. The best ideas, developed
+
+Eleven ideas. Fields: **Sees/does** · **Robbie's weekly use** · **Size** · **Running cost** ·
+**Fork?** · **Builds on**. Estimates assume the current static-files design holds.
+
+### 2.1 The federal data record (long-list #17)
+- **Sees/does:** a standing page, "What changed in federal data", with one dated entry per event:
+  delayed, coarsened, discontinued, removed or revised (ACS 2025 under DAO 216-26 is entry one; the
+  uninsured table drop from #133 is entry two). Where it matters, a before/after map: e.g. how many
+  tracts in a county lost a published value between the 2020–2024 and 2021–2025 releases, or how
+  much wider the ranges got. Neutral tone, facts and sources only.
+- **Weekly use:** high in the next 18 months. Robbie's own maps depend on these releases; this is
+  the page that tells him (and other planners) what he can still trust and why a map went blank.
+- **Size:** M (≈275k) for the page, the entry format and the first two before/after comparisons;
+  then S per event. The data-scout's release watch already does the noticing.
+- **Running cost:** $0 (static Markdown + values already on R2).
+- **Fork?** No. This is public-good work and portfolio gold.
+- **Builds on:** data-scout release watch, timeline stops, reliability warnings (D-222), the
+  Specials pipeline. **Sensitive:** federal policy; every entry's wording goes to Robbie.
+
+### 2.2 The data newsroom and release-day auto-briefs (#15, #18)
+- **Sees/does:** a public release calendar (ACS 1-year and 5-year, PLACES, FARS, LODES, NRI, CDC
+  WONDER) and, within a week of each release, a short "What's new" post: three maps that moved, the
+  biggest county movers, one surprise, with reliability checks. Over time, a recognizable rhythm.
+- **Weekly use:** high. It gives Robbie a standing reason to open Mapwich, and every release brief
+  is a seed for a Special (the 1–2/month target by March 2027).
+- **Size:** S (≈100k) for the calendar page; M (≈275k) for a reusable "movers" script that diffs
+  two timeline stops for any dataset and writes a draft fact sheet with numbers checked the
+  `check:special` way. Then ≈50–100k per release for the editor's draft, Robbie edits.
+- **Running cost:** $0.
+- **Fork?** No (the custom-alert version is; see section 3).
+- **Builds on:** change maps (1.2), `specials-numbers` scripts, data-scout release watch.
+- **Now-ish:** the 2025 ACS 1-year lands 2026-10-29. Mapwich doesn't carry 1-year data (65,000+
+  population only), so the first real test is the 2021–2025 5-year release, whenever it comes.
+
+### 2.3 Embeddable maps and slide images (#6, #8, #10)
+- **Sees/does:** a Share → "Embed" option gives an `<iframe>` code for the current view (no menus,
+  legend + source + "Open in Mapwich" link) and a "Download image" for a 16:9 slide PNG with title,
+  legend and source. A "Cite this map" line comes with both.
+- **Weekly use:** high. This is how a planner's map leaves the website and enters a staff report,
+  a deck or a council packet, which is where Robbie actually uses maps.
+- **Size:** M (≈275k): an `/embed` route reusing the map page with chrome off, and an image export
+  (canvas to PNG with a layout frame; the `/og` routes already compose images).
+- **Running cost:** $0–5. Embed traffic hits R2 and the basemap, not Vercel functions. Risk: a
+  viral news embed leans on OpenFreeMap's free service with no SLA; the self-hosted basemap (S4,
+  Protomaps PMTiles on R2) removes it for about $0–2/month.
+- **Fork?** Partly: branded, custom-styled embeds for newsrooms or consultants (section 3).
+- **Builds on:** ShareButton, link previews (1.5), `/og` image routes, URL state.
+
+### 2.4 Meeting exhibit generator (#7)
+- **Sees/does:** "Print exhibit" on any view: pick 11×17, 24×36 or letter; get a print-ready PDF
+  at 300 dpi with title, subtitle, legend, scale bar, north arrow, sources, date, reliability note
+  and an optional inset of the region. The board you pin up at a public meeting.
+- **Weekly use:** medium-high. Planners make these all the time in ArcGIS Pro; one click from a
+  phone or laptop is a genuine time saver and a striking demo.
+- **Size:** M–L (≈275–450k): high-resolution offscreen render with MapLibre, a fixed layout grid
+  from `packages/design` tokens, client-side PDF (no server).
+- **Running cost:** $0 (all in the browser).
+- **Fork?** Yes for a "consultant pack" (logos, custom layers, batch exhibits for 20 areas).
+- **Builds on:** design tokens, legend and classify code, the embed work (do 2.3 first).
+
+### 2.5 Open data API and bulk downloads (#11, #12, #13)
+- **Sees/does:** a "Use the data" page: stable, versioned URLs (`/v1/...`) for every dataset,
+  level and period, one zip or Parquet per dataset, a data dictionary, a Python and an R snippet on
+  each dataset page, and an optional in-browser SQL box (DuckDB-WASM over the Parquet files).
+- **Weekly use:** medium. Robbie himself pulls tract tables into ArcGIS/Excel; one clean link
+  beats the Census API for the 138 datasets. Big for profile: developers and researchers cite APIs.
+- **Size:** M (≈275k) for the contract, docs, Parquet export and snippets; +S for the SQL box.
+- **Running cost:** $0–5. R2 egress is free; reads are free to 10M/month, then $0.36 per million.
+- **Fork?** Only an SLA'd commercial API (section 3); the free one stays free.
+- **Builds on:** S2 (data files on R2), CSV download (1.4), `/data/[id]` profiles, registry.
+- **Caution:** once published, paths are a promise; version them from day one.
+
+### 2.6 Data changelog and "watch a place" (#16)
+- **Sees/does:** a public "What's new" page listing every dataset added, refreshed or corrected
+  (generated from the registry and git history), and a "Follow this place" button that gives an
+  RSS feed per county, MPO or dataset ("4 new numbers for Hennepin County, MN"). Email later.
+- **Weekly use:** medium. Robbie follows his own region; the feed is also the honest record of
+  what changed and when, which supports trust.
+- **Size:** S–M (≈100–200k) for changelog + static RSS feeds written at export. Email adds S plus
+  a provider.
+- **Running cost:** RSS $0. Email: free tiers (e.g. Resend ~3,000/month, Buttondown 100 subscribers)
+  cover early use; collecting addresses means a privacy note and unsubscribe handling, so start
+  with RSS.
+- **Fork?** The rich-alert version (thresholds, many places, real estate and site-selection use).
+- **Builds on:** registry, exportweb, timeline stops.
+
+### 2.7 Fifty years of a neighborhood (#1, #2, #3)
+- **Sees/does:** pick a tract, press play: population, race and ethnicity, homeownership, income,
+  education from 1970, 1980, 1990, 2000, 2010 and 2020, all on the same 2010 boundaries, animate
+  across the map. A "then/now" swipe, and a line chart for the clicked tract.
+- **Weekly use:** medium. Planners constantly need "how did this area change" for plan
+  background chapters; nobody free does it this smoothly. Very strong Special material (urban
+  renewal, highway building, suburbanization). Sensitive topics: redlining and displacement
+  wording needs Robbie.
+- **Size:** L (≈500k): new ingest for the Longitudinal Tract Database (Brown University, 1970–2020
+  harmonized to 2010 tracts), decade timeline stops, a play control and swipe on the map. The 2010
+  tract boundaries are already on R2 (the "2019" boundary set), which is the expensive part.
+- **Running cost:** $0–1 (a few hundred MB more on R2, inside the free 10 GB).
+- **Fork?** No.
+- **Builds on:** timeline stops, `boundaries: "2019"`, TimeControl, change maps.
+- **License check (D-16):** the LTDB download page shows no explicit license; ask Brown's S4 or use
+  only with written permission. Do **not** use IPUMS NHGIS as the source: its terms forbid
+  redistribution without permission ([NHGIS terms](https://www.nhgis.org/ipums-nhgis-terms-use)).
+
+### 2.8 The map that talks (#24, #25)
+- **Sees/does:** every map view gets a plain-language summary under the map ("Highest in the
+  Mississippi Delta and along the Texas border; lowest in suburban Washington, D.C. Your selection,
+  Hennepin County, ranks 412th of 3,222, middle fifth"), read by screen readers and handy for
+  everyone. A keyboard-only table mode. Stretch: "listen" to a trend (sonification).
+- **Weekly use:** medium. Robbie gets an instant read of a pattern before a meeting; the summary
+  doubles as alt text for embeds and exhibits. Leadership: none of PolicyMap, Social Explorer or
+  data.census.gov does this well. A talk-worthy accessibility story.
+- **Size:** M (≈275k): deterministic text from values (regions of the top and bottom fifth, rank,
+  state pattern), no AI needed; sonification +S.
+- **Running cost:** $0.
+- **Fork?** No.
+- **Builds on:** DataTable, classify, ranks in DetailPanel, accessibility fixes in #187.
+
+### 2.9 The insight machine: Library maps at scale (#32–#36)
+- **Sees/does:** for every dataset, automatic labeled findings ("Library"): outliers, statistically
+  real clusters (Getis-Ord / local Moran's I, gated by margins of error), biggest movers between
+  periods, "places like this", and a national neighborhood typology (each tract in one of ~10
+  named types). Robbie's hand-shaped Featured maps sit on top; Library pages are clearly labeled
+  "computed, not reviewed".
+- **Weekly use:** high once built: "what's unusual about this county" in one click.
+- **Size:** XL (≈1M+) across phases; first slice (outliers + movers for county level) M.
+- **Running cost:** $0 to run in the offline pipeline; static outputs.
+- **Fork?** No (the typology could later be a paid market-segmentation fork).
+- **Builds on:** Combinations (D-447 automatic checks), similar places #291, reliability warnings.
+- **Overlap:** the data-at-scale agent likely covers this; I list it because it's the spine of
+  Robbie's "overwhelming data plus insight" ask.
+
+### 2.10 Classroom kit (#28)
+- **Sees/does:** a "Teach with Mapwich" page: five 45-minute lessons (AP Human Geography,
+  civics, intro statistics, environmental science, intro planning) with a worksheet, a map link
+  per question and an answer key. The ACS explainer Special is already lesson-shaped.
+- **Weekly use:** low. Worth it anyway: it is the most direct proof of "free and educational", and
+  teachers share widely. Teacher feedback is also a cheap usability test.
+- **Size:** M (≈275k) for five lessons, mostly writing; Robbie reviews.
+- **Running cost:** $0.
+- **Fork?** No (an LMS-integrated version could be, but keep Mapwich free).
+- **Builds on:** Specials, share links, compare.
+
+### 2.11 The Mapwich method: case study, talk and kit (#37–#40)
+- **Sees/does:** an About → "How this was built" case study: a national data map run by one
+  planner with AI agents, 2–4 hours a week, under $50 a month, with the decision log, budgets vs
+  actuals and the mistakes. Turned into a conference talk (APA National Planning Conference, Esri
+  UC, FOSS4G NA, a state APA chapter) and a short paper on showing survey uncertainty on maps.
+- **Weekly use:** indirect. The single biggest lever for "raise Robbie's profile as a GIS leader".
+- **Size:** S–M (≈100–200k) to assemble from `docs/` and progress logs; Robbie writes the voice.
+- **Running cost:** $0 (conference travel is Robbie's call).
+- **Fork?** The packaged kit (F11) could become a paid "AI-run project kit" or workshop.
+- **Builds on:** docs/decisions, progress log, F11 project kit, usage log.
+
+**Honorable mentions, cheap:** terrain hillshade under hazard maps using free Mapterhorn terrain
+tiles (S, $0; [Protomaps blog](https://protomaps.com/blog/mapterhorn-terrain/)); animated GIF
+export of change maps (S); "Right now" live tab for air quality and weather alerts (M, $0–5, keep
+separate from survey maps); annual "State of US places" report (M per year, Specials pipeline).
 
 ## 3. Fork candidates and who would pay
 
