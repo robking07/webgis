@@ -1,7 +1,7 @@
 # Data at scale: Library maps (research notes, R4)
 
-Status: §1 sources, §2 Library tier done.
-Next: §3 finding things among thousands of maps.
+Status: §1–§4 done.
+Next: §5 risks, §6 phased path and top 10.
 
 Planning research for the next phase. Not a plan; the lead harvests it. Sizes: S ≈ 100k tokens,
 M ≈ 275k, L ≈ 500k, XL = several L.
@@ -237,7 +237,105 @@ maps" list for the lead from page-view analytics (Vercel Web Analytics, if on). 
 
 ## 3. Finding things among thousands of maps
 
+**Bottom line.** Keep the map menu for Featured maps only, so the map stays clean (map-first
+rule: options appear as the visitor digs in). The Library is reached three ways: **search** (one box
+for places and maps), **browse** (a Library page by topic and source), and **from a place**
+("everything we know here"). The per-place view is the strongest idea in this report for
+Robbie's weekly use, because it answers "what's going on in this county?" across every map at once.
+
+Today: `searchDatasets()` filters the bundled registry in the browser (title, topic, tags, source,
+whole words of the description; issue #252); place search loads `geo/search.json` from R2 on first
+use. Both patterns scale if the Library index is a separate file on R2.
+
+**3a. One search box for places and maps, Library included.** A visitor types "wood heat" or
+"Hennepin rent" and sees Featured maps first, then Library maps with their badge, then places.
+"Hennepin rent" opens Hennepin with the rent map on. Index: id, title, topic, source label words,
+glossary synonyms; ~150 bytes a map, ~300 KB gzipped at 10,000, loaded on the first keystroke.
+Build: **S–M (~150k)**. Cost ~$0. Fork: no. Builds on `searchDatasets`, `search.ts`, glossary.
+Meaning-based search ("where do people struggle to pay for heat?") is a later step and overlaps
+the visitor-AI research; a static embedding index built offline would keep it free to run.
+
+**3b. Library browse page.** `/data` grows a Library section: topic → source → table, with counts
+("Housing · 214 maps added automatically"), a filter for level (tract, county) and for "has
+change over time". Each Featured subcategory in the map menu ends with one quiet line, "More in the
+Library (37)". Build: **M**. Cost ~$0. Fork: no. Builds on `/data`, `bySubcategory()`.
+
+**3c. Related maps, mostly automatic.** Three sources of "related":
+- *Same table* (by construction): every share from one ACS table is a parts-of-a-whole set, so the
+  `parts` sets that `relations.yaml` holds by hand for race and commute modes can be generated for
+  every Library table (a stacked bar in the details panel for free).
+- *Similar pattern*: the 5 maps whose county pattern is most alike (rank correlation, §4), with
+  the "by construction" flag the Combinations checks already raise.
+- *Hand links* (`relations.yaml` `links`) stay for Featured.
+Build: **M**. Cost ~$0. Fork: no. Builds on D-257 relations, `insights.ts`.
+
+**3d. "Everything we know here" for a place.** The place page (and the click details) gets a
+"What stands out" list on top: the maps where this county ranks in the top or bottom 5% nationally
+or within its state, reliable estimates only, sensitive topics shown with the source's wording and
+never in the headline line. Below it, every map grouped by topic, collapsed. Data: one small file
+per county with every map's value and percentile (10,000 maps × ~10 bytes ≈ 100 KB raw per county);
+tracts per county per topic. Build: **M–L (~350k)**. Cost: +~0.5–1 GB R2 at 10,000 maps, ~$0.
+Fork candidate: **yes** (place briefs for consultants and site selectors are a paid niche; PD inputs).
+Builds on `PlaceDataList`, `/place/[geoid]`, D-198 details, D-222 reliability.
+
 ## 4. "Insights into all of it"
+
+**Bottom line.** "Insights into all of it" at 10,000 maps can't mean every pair (50 million pairs;
+at that count thousands pass any threshold by chance). It should mean four honest, cheap,
+automatic products: **what stands out in a place**, **rankings that respect margins of error**,
+**what changed** (with a real significance test), and **Combinations scoped to Featured maps**.
+Every automatic finding is labelled as such, shows its test, and skips sensitive topics unless
+Robbie has cleared the wording.
+
+Today: `insights.ts` computes Pearson r and Spearman ρ for every county pair (8,646 pairs at 138
+maps), runs the SPEC §10 checks (n ≥ 500, |r| ≤ 0.9, Pearson–Spearman gap, |ρ| ≥ 0.3, within-state
+ρ ≥ 0.15, shared variables, shared universe, model inputs), and publishes 1,759 (D-447). Captions
+come from Claude at build time when a key is present, else a template.
+
+**4a. What stands out here** (the engine behind 3d). Percentile of every map for every county,
+nationally and within the state; flag the top and bottom 5%; drop estimates whose coefficient of
+variation is over D-222's limit; show at most 8, spread across topics. Plain template wording:
+"Hennepin County: homes heated with electricity, 41% (top 10% of U.S. counties)." Build: included
+in 3d. Fork: see 3d.
+
+**4b. Rankings that respect error.** Top and bottom 10 counties per map, computed only among areas
+whose estimate is reliable, and grouped into "about the same" when margins overlap (the
+`compare.ts` difference test). Small counties stop owning every extreme, the usual flaw of
+automatic rankings. Build: **S–M**. Cost ~$0. Fork: no.
+
+**4c. What changed.** For maps with two non-overlapping ACS periods (2015–2019 vs 2020–2024) or
+annual series (BLS, BEA, PEP, CBP): biggest significant changes, using the Census Bureau's test
+(at 90% confidence: the difference is bigger than √(MOE₁² + MOE₂²)) and dollar adjustment already in `acs.ts`.
+Flags comparability breaks (Connecticut's 2022 counties, table changes between years, the
+insurance gap). Build: **M**. Cost ~$0. Fork: no. Builds on change maps (1.2), #188 real margins.
+
+**4d. Combinations at scale, scoped.** Each Library map is paired with the ~140 Featured maps
+only (10,000 × 140 = 1.4M pairs: minutes in a script), not with every other Library map. Raise
+the bar for Library pairs: a false-discovery-rate correction over the batch, one pair per table
+family (not 30 near-identical pairs from one ACS table), and the existing checks. Captions stay
+templated for Library pairs; Claude-written captions only for pairs Robbie or the lead promotes
+(caption cost scales with published pairs). Output moves from the page bundle
+(`insights.json`, 3.8 MB today) to R2. Build: **M**. Cost ~$0 with templates. Fork: no.
+
+**4e. A weekly "what's new in the data" digest for Robbie.** After each refresh (BLS monthly
+unemployment, PEP, a new ACS year), a short list of the biggest significant changes and new
+standouts, written to `drafts/` for him to skim, and the best ones as Special leads. Serves the
+North Star tie-break (weekly use) and the Specials pace. Build: **S** (a script plus a scheduled
+routine). Running cost: routine tokens per week (~50–100k), no hosting cost. Fork: no.
+
+**Keeping it honest.**
+- Label: every automatic finding says "Found automatically", names its test, and says a pattern
+  isn't a cause (the same rule Combinations follow today).
+- Reliability first: no finding uses an estimate D-222 marks unreliable.
+- Multiple testing: the false-discovery correction in 4d; for 4a, percentiles are descriptions,
+  not tests, so they say "ranks" and never "significantly".
+- By construction: recipe metadata (shared table, shared denominator, model inputs) feeds the
+  existing flags automatically, so "% renters vs % owners" never surfaces.
+- **Sensitive topics are routed to Robbie** (project rule: he reviews wording about people and
+  sensitive topics). A per-topic list (race and ethnicity, citizenship and immigration, disability,
+  deaths and overdoses, crime, religion, sexual orientation, enforcement) sets
+  `excludeFromInsights` on Library maps by default. The map itself can publish with the source's
+  wording; findings about it wait until Robbie clears a wording template for that topic, once.
 
 ## 5. Risks
 
