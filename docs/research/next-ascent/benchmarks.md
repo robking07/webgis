@@ -1,7 +1,7 @@
 # Benchmarks: the sites planners already use (research R3)
 
-Status: sections 1–2 done (2026-10-27).
-Next: section 3, features worth copying.
+Status: sections 1–3 done (2026-10-27).
+Next: section 4, where Mapwich is ahead.
 
 Research notes for the next-phase plan. Not for merge; the lead harvests it.
 Sizes: S ≈ 100k tokens, M ≈ 275k, L ≈ 500k, XL = several L.
@@ -226,6 +226,156 @@ is today's live site (place pages, compare, change maps, reliability warnings, C
    Mapwich's reliability warnings are the natural place to flag it first.
 
 ## 3. Features worth copying
+
+Each card: **What a visitor sees/does · Why it serves Robbie's weekly use · Size and tokens ·
+Monthly cost · Fork candidate? · Builds on.** Sizes assume today's foundation (place pages,
+`lib/benchmarks.ts`, compare, change maps, CSV, R2 static files, registry + ingest). Running costs
+assume static files on R2/Vercel free tiers unless stated.
+
+### C1. Place snapshot: a one-page printable profile (copy: CMAP Community Data Snapshots, Census Reporter, Community Analyst)
+- **Sees/does:** on any place page, "Snapshot" gives a clean one-page (letter-size) summary: 12–20
+  headline numbers grouped by topic, each with state + U.S. benchmark and a reliability mark, a
+  small locator map, source line and date. Prints or saves as PDF from the browser. Same page on a
+  phone is a tidy card stack.
+- **Robbie:** the thing he'd paste into an email or staff report after a quick lookup; replaces a
+  CMAP-style PDF for any place in the U.S., not just one region.
+- **Size:** M (~200–275k): curated topic list (registry field or one config), print CSS, locator map
+  as a static image or small MapLibre canvas. No server.
+- **Cost:** $0.
+- **Fork candidate:** no for places; yes for the custom-area version (C2).
+- **Builds on:** `/place/[geoid]`, D-395 benchmarks, CSV download, link previews (OG image code
+  can render the locator).
+
+### C2. Your-area totals: MPO, county group, corridor buffer, or drawn shape (copy: PolicyMap custom regions, EJScreen drawn-area report, Community Analyst)
+- **Sees/does:** pick an MPO or a set of counties, or draw a shape / buffer a road, and get totals
+  and rates for the area with margins of error computed the Census way (sum counts, root-sum-square
+  MOEs; rates from summed numerators/denominators), plus the snapshot (C1) for that area.
+- **Robbie:** the most planner-native job in this list (study areas, grant applications, Title VI
+  areas). It is issue #292 plus a drawing tool.
+- **Size:** L (~500k) for MPO/county-group + buffer; drawn polygons with tract/BG apportionment add
+  ~M. Area weighting is a known trap (see the `postgis-analysis` skill); start with whole
+  tracts by centroid and say so.
+- **Cost:** $0 if done in the browser from tract files already on R2; a server path would be
+  Supabase free tier.
+- **Fork candidate:** **yes.** Study-area reports with branded PDF output, saved areas and bulk
+  export are what consultants paid Esri for. Keep the free core on Mapwich (MPO and county totals);
+  the paid fork would be saved projects, branding, batch reports.
+- **Builds on:** #292, tract/BG files on R2, compare's count/share math (part 2b).
+
+### C3. Auto-sentences with reliability built in (copy: Data USA narratives, USAFacts tone)
+- **Sees/does:** at the top of each place page and in the details panel, two or three plain
+  sentences: "Hennepin County's poverty rate (11.2%) is higher than Minnesota's (9.6%) and fell 1.4
+  points since 2018. The change is reliable." Sentences use the data's own margins to choose words
+  ("about the same as", "clearly higher").
+- **Robbie:** faster to read than a table; reusable in Specials drafts; strong portfolio moment.
+- **Size:** S–M (~150k): templates, no AI; rules reuse 1.3 reliability tests and change-map math.
+- **Cost:** $0.
+- **Fork candidate:** no.
+- **Builds on:** reliability warnings (1.3), change maps (1.2), benchmarks (D-395), "Why this
+  matters" #115.
+
+### C4. Peers: "places most like this one" (copy: CHR&R peer counties, Census Reporter context)
+- **Sees/does:** a place page lists 5 similar places (size, density, income, region); benchmarks
+  gain a "peers" value; one tap compares.
+- **Robbie:** planners always ask "compared with places like us"; feeds compare.
+- **Size:** M (~200k); precomputed nearest neighbours per level into static JSON.
+- **Cost:** $0.
+- **Fork candidate:** no.
+- **Builds on:** #291 (Robbie said build), compare, benchmarks.
+
+### C5. Swipe and two-map views (copy: Social Explorer side-by-side swipe)
+- **Sees/does:** split the map: left 2015, right 2023 (or two datasets), drag the divider; phones
+  get a tap-to-flip toggle instead of a swipe.
+- **Robbie:** good for meetings and Specials; Social Explorer charges ~$135–195/month for this.
+- **Size:** M (~250k): second MapLibre instance with synced camera (or `maplibre-gl-compare`),
+  URL state, phone toggle.
+- **Cost:** $0 (more tile reads, still free on R2).
+- **Fork candidate:** no.
+- **Builds on:** change maps, year slider, Combinations.
+
+### C6. Commute flows, OnTheMap-lite (copy: LEHD OnTheMap)
+- **Sees/does:** tap a county or tract, see where its workers live (or where residents work) as
+  lines/shaded places, with top-10 list; inflow/outflow/stay counts.
+- **Robbie:** a weekly planner question; OnTheMap is desktop-only and dated.
+- **Size:** L (~500k); roadmap 2.5 already. LODES OD is large; tract-to-tract nationally must be
+  pre-aggregated and sharded (county-to-county first, tracts within a metro later).
+- **Cost:** storage on R2 a few GB at most, within free tier (10 GB) if county-level first;
+  tract-level national may push past it (~$0.015/GB-month after 10 GB, still pennies).
+- **Fork candidate:** no (LODES is public; the paid analogue is StreetLight/Replica, which is a
+  different data class).
+- **Builds on:** LODES ingest (job density), place pages.
+
+### C7. One national map of state DOT basics (copy: nobody; state Hub portals do it one state at a time)
+- **Sees/does:** AADT, crash/fatality, bridge condition and pavement (HPMS) on one national legend;
+  click a segment to see source state, year, and a link to the state's own portal.
+- **Robbie:** squarely his job; a portfolio piece other planners will recognize instantly.
+- **Size:** L–XL. AADT/FARS/NBI exist; adding HPMS pavement and harmonizing per-state crash files
+  is the XL part. Start: HPMS national sections (one federal file) at M.
+- **Cost:** R2 storage for line tiles, likely within free tier for one vintage.
+- **Fork candidate:** no.
+- **Builds on:** `aadt` features layer, NBI, FARS, VMT (HPMS) ingest.
+
+### C8. Orphaned-data shelf: CHR&R, EJScreen, ETC Explorer inputs as Library maps
+- **Sees/does:** a "Kept public" shelf (Library tier) carrying the raw public inputs these tools
+  used, each with a provenance note: "from CHR&R March 2026 refresh; CHR&R stopped annual releases".
+  Not the indices' scores or "disadvantaged" labels unless Robbie decides (D-04 precedent).
+- **Robbie:** preserves things planners cited in grants and plans; strong story.
+- **Size:** M per source family (~250k): CHR&R measures (most come from public federal sources,
+  which Mapwich can ingest directly; CHR&R's own terms say "All rights reserved", license not
+  confirmed: **license check needed**), ETC Explorer inputs (mostly ACS, CDC, EPA, FEMA; many
+  already in Mapwich).
+- **Cost:** $0.
+- **Fork candidate:** no.
+- **Builds on:** registry + ingest, D-04 archive pattern, Library tier.
+- **Flag for Robbie:** EJ/"disadvantaged" wording and recreating federal indices are sensitive
+  language and high-stakes data judgment.
+
+### C9. Embeds and "cite this" (copy: PolicyMap Embed & Share and Felt embeds, both paid)
+- **Sees/does:** "Embed" gives an iframe snippet of the current map view (legend + credits, no
+  chrome); "Cite" gives a one-line citation with dataset vintage and URL.
+- **Robbie:** drop live maps into staff reports, StoryMaps, Specials; spreads Mapwich.
+- **Size:** S (~100k): an `?embed=1` chrome-off mode and a copy box.
+- **Cost:** bandwidth; R2 egress is free; Vercel free tier is fine at hobby traffic. Watch Vercel
+  function use if embeds run server code (they shouldn't).
+- **Fork candidate:** no (white-label embeds for agencies could be one later).
+- **Builds on:** share button, link previews, map URL state.
+
+### C10. "Near me" one-tap lookup (copy: nobody does it well)
+- **Sees/does:** a locate button: the map zooms to your tract and shows its card with the current
+  dataset value and benchmarks.
+- **Robbie:** field visits and meetings; pure phone advantage.
+- **Size:** S (~75–100k): browser geolocation, point-in-polygon from loaded tiles.
+- **Cost:** $0.
+- **Fork candidate:** no.
+- **Builds on:** details panel, D-395.
+
+### C11. Data-break warnings (the 2025 ACS question changes)
+- **Sees/does:** change maps and timelines show "the question changed in 2025; this change may not
+  be real" on the affected datasets (health insurance, education, labor force), using Census's own
+  guidance.
+- **Robbie:** protects him from quoting a fake trend; shows careful data practice.
+- **Size:** S (~60–100k): a registry field (`breaks: [{year, note}]`) read by the existing
+  reliability warning UI.
+- **Cost:** $0.
+- **Fork candidate:** no.
+- **Builds on:** 1.3 reliability warnings, change maps, registry.
+
+### C12. Release watch: "new on Mapwich" and "what changed" (copy: CHR&R's state reports, Census release calendars)
+- **Sees/does:** a short dated list: "2024 ACS loaded; 412 counties' poverty rates changed
+  reliably; biggest moves". Optional RSS.
+- **Robbie:** a weekly reason to open the site; seeds Specials ideas.
+- **Size:** S–M (~150k): script compares old and new values, writes a static page.
+- **Cost:** $0.
+- **Fork candidate:** no.
+- **Builds on:** data-scout release watch, change-map math, Combinations checks.
+
+### Not worth copying
+- PolicyMap's 50k-indicator menu tree and Social Explorer's table catalog (opposite of map-first).
+- Rankings ("#1 healthiest county"): CHR&R moved away from them for good reasons.
+- Accounts, uploads and collaboration (Felt): high cost, off-mission; roadmap already says no.
+- Licensed private data (home sales, school ratings): money and license risk.
+- AI chatbots like PolicyMap's Pam and Felt AI: covered by the visitor-AI research agent; note
+  that both rivals gate them behind paid plans.
 
 ## 4. Where Mapwich is already ahead
 
