@@ -1,27 +1,20 @@
-# Data run (#369): reload named datasets and upload them to R2 from GitHub, not Robbie's machine.
-# Manual only (Actions tab, "Data run", "Run workflow"). Why it can't drop live data: the decision
-# file for #369 and docs/runbook.md section 8. Keys come from the "data" environment, which only
-# the main branch can use, so a pushed branch or a fork PR never sees them.
+# Data run (#369, D-478): reload named datasets and publish them from GitHub, not Robbie's machine.
+# Manual only (Actions tab, "Data run", "Run workflow"). Why it can't drop live data: D-478 and
+# docs/runbook.md section 8. Keys come from the "data" environment, which only the main branch can
+# use, so a pushed branch or a fork PR never sees them.
 name: Data run
 
 on:
   workflow_dispatch:
     inputs:
       steps:
-        # shortcut: steps that need GDAL or tippecanoe (geographies, tiles, features, census2020,
-        # ddp287g, vmt, counts, label-mask, mpo) aren't offered; install them here when one is needed.
-        # shortcut: `timeline` for fars reads population_density's 2019 stop, which the runner doesn't
-        # have, so it stops with "isn't exported yet"; pull that stop first when fars needs reloading here.
+        # The allowed steps and which datasets each loads: data/ingest/src/check-run.ts.
         description: "Ingest steps, run in order, space-separated: acs acs-bg lodes places climdiv nbi fars airquality overdose cejst tri lead food-access nri svi timeline"
         required: true
         default: acs
       datasets:
-        description: "Dataset ids, space-separated (existing registry entries)"
+        description: "Dataset ids, space-separated; every step must load every one"
         required: true
-      upload:
-        description: "Upload to R2 (off = build only, nothing reaches the site; the database is still written)"
-        type: boolean
-        default: false
 
 # One data run at a time; a second one waits instead of racing the first one's uploads.
 concurrency:
@@ -50,17 +43,10 @@ jobs:
           cache: npm
       - run: npm ci
 
-      # Inputs reach the shell only as env values, never pasted into the script.
+      # Inputs reach the shell only as env values, never pasted into a script; this rejects any step
+      # or id outside the registry before $STEPS and $DATASETS are used unquoted below.
       - name: Check the steps and dataset ids
-        run: |
-          allowed=" acs acs-bg lodes places climdiv nbi fars airquality overdose cejst tri lead food-access nri svi timeline "
-          for s in $STEPS; do
-            [[ "$allowed" == *" $s "* ]] || { echo "::error::step '$s' isn't allowed here (see the list in the input description)"; exit 1; }
-          done
-          [ -n "${DATASETS// /}" ] || { echo "::error::name at least one dataset id"; exit 1; }
-          for id in $DATASETS; do
-            [[ "$id" =~ ^[a-z0-9_]+$ && -f "data/registry/datasets/$id.yaml" ]] || { echo "::error::'$id' isn't a dataset id in data/registry/datasets"; exit 1; }
-          done
+        run: node data/ingest/src/check-run.ts
 
       # The database password is part of SUPABASE_DB_URL; mask it alone too, in case an error prints it.
       - name: Mask the database password
@@ -70,35 +56,29 @@ jobs:
           pw=$(node -e 'const u = new URL(process.env.SUPABASE_DB_URL); console.log(u.password); console.log(decodeURIComponent(u.password))')
           while read -r p; do [ -n "$p" ] && echo "::add-mask::$p"; done <<< "$pw"
 
-      # Every tract shard holds all datasets for one county; start from the live copies so a reload
-      # merges into them. The drop guard in publish-values re-checks each one against R2 before upload.
-      - name: Copy the live tract shards
-        run: npm run ingest -- pull-tracts
-
-      - name: Load, export, details
+      - name: Load and export
         env:
           SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
           CENSUS_API_KEY: ${{ secrets.CENSUS_API_KEY }}
         run: |
           for s in $STEPS; do npm run ingest -- "$s" $DATASETS; done
-          npm run ingest -- export $DATASETS
+          npm run ingest -- export-values $DATASETS
           npm run ingest -- details
 
-      # Uploads only files that changed. ALLOW_TRACT_DROP is never set here: a drop always stops the run.
-      - name: Upload to R2
-        if: inputs.upload
+      # publish-reload merges this run's tract and count files into the live ones on R2 and stops
+      # before the first upload if any county would lose data; ALLOW_TRACT_DROP is never set here.
+      # Click details go last, only once the values are up.
+      - name: Publish to R2
         env:
           R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
           R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
           R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
           R2_BUCKET: ${{ secrets.R2_BUCKET }}
         run: |
-          npm run ingest -- publish-values $DATASETS tracts
+          npm run ingest -- publish-reload
           npm run ingest -- publish-details
 
       - name: Summary
         if: always()
-        env:
-          UPLOAD: ${{ inputs.upload }}
         run: |
-          echo "Data run: steps \`$STEPS\`, datasets \`$DATASETS\`, upload $UPLOAD." >> "$GITHUB_STEP_SUMMARY"
+          echo "Data run: steps \`$STEPS\`, datasets \`$DATASETS\`." >> "$GITHUB_STEP_SUMMARY"

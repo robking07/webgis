@@ -169,20 +169,21 @@ A dataset refresh can run on GitHub instead of Robbie's machine: `.github/workfl
 
 - **steps**, run in order: e.g. `acs`, or `acs timeline`. Allowed: acs, acs-bg, lodes, places,
   climdiv, nbi, fars, airquality, overdose, cejst, tri, lead, food-access, nri, svi, timeline.
-- **datasets**: the ids, e.g. `pct_poverty median_household_income`.
-- **upload**: leave off for a first try (builds everything and writes the database, uploads nothing);
-  turn on to publish. Visitors see new values within an hour.
+- **datasets**: the ids, e.g. `pct_poverty median_household_income`. Every step must load every
+  id (`acs` with a FARS id is refused before anything runs; `data/ingest/src/check-run.ts`).
 
-The run copies the live tract shards from `https://tiles.mapwich.org` (`ingest pull-tracts`), runs
-the steps, `export <ids>` and `details`, then uploads `publish-values <ids> tracts` and
-`publish-details`. If an upload would drop a live dataset from a tract shard, it stops (#143).
-Don't run a local `publish-data` while a data run is going: the run would put back the tract values
-it copied at its start. Two GitHub runs never overlap (the second one waits).
+There is no dry-run switch: every run writes the database and publishes. Visitors see new values
+within an hour. The run loads, then `export-values <ids>` and `details` (from the database), then
+`publish-reload`: for each tract or count file it wrote, it fetches the live file from R2, swaps in
+only the reloaded datasets and keeps the rest. If any county would lose a reloaded dataset (a source
+that came back short), it stops **before the first upload**. Then it uploads the changed value files,
+and the click details last. A run that loads no tract or block-group values skips the merge.
 
 **Not on GitHub yet:** anything needing GDAL or tippecanoe (geographies, tiles, features,
 census2020, ddp287g, vmt, counts, label-mask, mpo); `timeline` for `fars` (it needs
 `population_density`'s 2019 stop on disk); and anything that changes committed files (a new
-dataset, level or timeline stop, insights). Those still run locally, through a PR.
+dataset, level or timeline stop, insights). Those still run locally, through a PR. A real loss of
+tracts (a county a source no longer covers) also runs locally with `ALLOW_TRACT_DROP=1`.
 
 **One-time setup (Robbie):**
 
@@ -195,7 +196,8 @@ dataset, level or timeline stop, insights). Those still run locally, through a P
    `CENSUS_API_KEY` (same as `.env.local`), `R2_ACCOUNT_ID`, `R2_BUCKET` (same as `.env.local`),
    `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY` (the new token from step 1). Don't add
    `ANTHROPIC_API_KEY`.
-4. Try it: run `acs` for one dataset with upload off, then again with upload on.
+4. Try it on one small dataset you can check by eye, e.g. `places` + `asthma` (county only, no tract merge),
+   then curl one of its files (section 6, "Re-upload the data files").
 
 GitHub hides secret values in logs, but this repo is public, so run logs are too: don't paste a
 secret into an input. If one ever shows in a log, rotate it (section 5).

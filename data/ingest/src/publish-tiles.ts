@@ -1,14 +1,13 @@
 // Upload data/tiles/*.pmtiles to Cloudflare R2 (D-01) and set the bucket CORS rule
 // the browser needs for PMTiles range requests.
-import { createReadStream, existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
+import { createReadStream, existsSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { gunzipSync, gzipSync } from "node:zlib";
 import { createHash } from "node:crypto";
 import { join } from "node:path";
 import { GetObjectCommand, ListObjectsV2Command, S3Client, PutBucketCorsCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { Upload } from "@aws-sdk/lib-storage";
-import { log, NAMES_JSON, TILES } from "./util.ts";
+import { log, TILES } from "./util.ts";
 import { DETAILS_DIR } from "./details.ts";
-import { TRACT_DETAIL_DIR } from "./values.ts";
 
 function r2() {
   const { R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_BUCKET } = process.env;
@@ -66,50 +65,81 @@ export const SHARD_PREFIXES = ["values/tracts/", "values/counts/"];
  *  ALLOW_TRACT_DROP=1 says the drop is intended (a dataset being removed). */
 async function guardTractShard(s3: S3Client, bucket: string, key: string, body: Buffer) {
   if (!SHARD_PREFIXES.some((p) => key.startsWith(p)) || process.env.ALLOW_TRACT_DROP === "1") return;
-  let live: Record<string, unknown>;
-  try {
-    const r = await s3.send(new GetObjectCommand({ Bucket: bucket, Key: key }));
-    const raw = Buffer.from(await r.Body!.transformToByteArray());
-    live = JSON.parse((r.ContentEncoding === "gzip" ? gunzipSync(raw) : raw).toString("utf8"));
-  } catch (e) {
-    if ((e as { name?: string }).name === "NoSuchKey") return;
-    throw e;
-  }
+  const live = await getLive(s3, bucket, key);
+  if (!live) return;
   const dropped = droppedDatasets(live, JSON.parse(gunzipSync(body).toString("utf8")));
   if (dropped.length) throw new Error(`${key}: upload would drop ${dropped.length} live dataset(s) (${dropped.slice(0, 5).join(", ")}${dropped.length > 5 ? ", …" : ""}). `
     + "This checkout's data/tiles/values/tracts (or values/counts) is incomplete: copy the full folder in (or rebuild it with `ingest tracts-out` plus the loads) first. "
     + "Set ALLOW_TRACT_DROP=1 only when removing a dataset on purpose.");
 }
 
-/** `ingest pull-tracts`: copy every live tract shard (values/tracts/<county>.json) from the public
- *  tiles host into data/tiles, overwriting local copies. A fresh checkout (a GitHub runner, #369)
- *  then merges a reload into the published shards instead of writing ones that hold only what it
- *  just loaded. Any failure other than a 404 (no tracts loaded for that county) stops the run. */
-export async function pullTracts(base = "https://tiles.mapwich.org", dir = TRACT_DETAIL_DIR,
-  counties = Object.keys(JSON.parse(readFileSync(NAMES_JSON, "utf8"))).filter((g) => g.length === 5)) {
-  mkdirSync(dir, { recursive: true });
-  let got = 0, missing = 0, next = 0;
-  const get = async (url: string) => {
-    for (let attempt = 1; ; attempt++) {
-      const r = await fetch(url).catch((e: Error) => e);
-      if (r instanceof Response && (r.ok || r.status === 404)) return r;
-      if (attempt === 3) throw new Error(`GET ${url} → ${r instanceof Response ? r.status : r.message}`);
-      await new Promise((res) => setTimeout(res, 1000 * attempt));
-    }
-  };
-  const worker = async () => {
-    for (let i = next++; i < counties.length; i = next++) {
-      // The query string skips any edge cache, so the copy is what R2 holds now.
-      const r = await get(`${base}/values/tracts/${counties[i]}.json?t=${Date.now()}`);
-      if (r.status === 404) { missing++; continue; }
-      const text = await r.text();
-      JSON.parse(text); // a truncated body stops the run here, not in a later merge
-      writeFileSync(join(dir, `${counties[i]}.json`), text);
-      got++;
-    }
-  };
-  await Promise.all(Array.from({ length: 16 }, worker));
-  log("pull", `values/tracts: ${got} shards copied from ${base}, ${missing} counties have none`);
+/** The object R2 holds now, parsed (null if there is none). */
+async function getLive(s3: S3Client, bucket: string, key: string): Promise<Record<string, unknown> | null> {
+  try {
+    const r = await s3.send(new GetObjectCommand({ Bucket: bucket, Key: key }));
+    const raw = Buffer.from(await r.Body!.transformToByteArray());
+    return JSON.parse((r.ContentEncoding === "gzip" ? gunzipSync(raw) : raw).toString("utf8"));
+  } catch (e) {
+    if ((e as { name?: string }).name === "NoSuchKey") return null;
+    throw e;
+  }
+}
+
+/** Every object key under `prefix/` with its ETag (quotes stripped). */
+async function liveEtags(s3: S3Client, bucket: string, prefix: string) {
+  const etags = new Map<string, string>();
+  let token: string | undefined;
+  do {
+    const r = await s3.send(new ListObjectsV2Command({ Bucket: bucket, Prefix: `${prefix}/`, ContinuationToken: token }));
+    for (const o of r.Contents ?? []) if (o.Key && o.ETag) etags.set(o.Key, o.ETag.replace(/"/g, ""));
+    token = r.NextContinuationToken;
+  } while (token);
+  return etags;
+}
+
+/** One county's shard after a partial reload: the live shard with the reloaded datasets (or count
+ *  series) replaced by this run's rows. `dropped` lists reloaded ones the county had and no longer has. */
+export function mergeShard(live: Record<string, unknown>, local: Record<string, unknown>, reloaded: Set<string>) {
+  const next = Object.fromEntries(Object.entries({ ...live, ...local })
+    .filter(([k]) => k in local || !reloaded.has(k))
+    .sort(([a], [b]) => a.localeCompare(b)));
+  return { next, dropped: droppedDatasets(live, next) };
+}
+
+/** Shard folders a fresh checkout's run may have written (tract values, tract and block-group counts). */
+const SHARD_DIRS = ["values/tracts", "values/counts/tract", "values/counts/block_group"];
+
+/** `ingest publish-reload`, for a checkout that holds only what this run loaded (a GitHub runner,
+ *  #369, D-478): rewrite each local shard as the live one from R2 with only the reloaded datasets
+ *  swapped in, and stop before any upload if a county would lose one. Then upload all of values/
+ *  (only changed files go up; the drop guard re-checks each shard). A run that wrote no tract or
+ *  block-group values has no shard folders, so this skips straight to the value files. */
+export async function publishReload() {
+  const { s3, bucket } = r2();
+  const dropped: string[] = [];
+  for (const prefix of SHARD_DIRS.filter((p) => existsSync(join(TILES, p)))) {
+    const dir = join(TILES, prefix);
+    const local = new Map(readdirSync(dir).filter((f) => f.endsWith(".json"))
+      .map((f) => [f, JSON.parse(readFileSync(join(dir, f), "utf8")) as Record<string, unknown>]));
+    if (!local.size) continue;
+    const reloaded = new Set([...local.values()].flatMap((s) => Object.keys(s)));
+    // Every live county too: a reloaded dataset may have left a county this run wrote no file for.
+    const files = new Set([...local.keys(), ...[...(await liveEtags(s3, bucket, prefix)).keys()]
+      .map((k) => k.slice(prefix.length + 1)).filter((f) => /^\d{5}\.json$/.test(f))]);
+    const queue = [...files];
+    const worker = async () => {
+      for (let f = queue.pop(); f; f = queue.pop()) {
+        const m = mergeShard((await getLive(s3, bucket, `${prefix}/${f}`)) ?? {}, local.get(f) ?? {}, reloaded);
+        if (m.dropped.length) dropped.push(`${prefix}/${f}: ${m.dropped.join(", ")}`);
+        writeFileSync(join(dir, f), JSON.stringify(m.next));
+      }
+    };
+    await Promise.all(Array.from({ length: 16 }, worker));
+    log("r2", `${prefix}: ${[...reloaded].join(", ")} merged into ${files.size} live files`);
+  }
+  if (dropped.length && process.env.ALLOW_TRACT_DROP !== "1") throw new Error(`nothing uploaded: ${dropped.length} file(s) would lose reloaded data, e.g. ${dropped.slice(0, 3).join("; ")}. `
+    + "Check the source for missing tracts; set ALLOW_TRACT_DROP=1 locally only if the loss is real.");
+  await publishValues();
 }
 
 function walk(dir: string, rel = ""): string[] {
@@ -125,13 +155,7 @@ async function publishJson(prefix: string, hint: string, dirs?: string[], keep: 
   const root = join(TILES, prefix);
   if (!existsSync(root)) throw new Error(`no data/tiles/${prefix}; run \`ingest ${hint}\` first`);
   const files = walk(root).filter((f) => (!dirs || dirs.includes(f.split("/")[0])) && keep(f));
-  const etags = new Map<string, string>();
-  let token: string | undefined;
-  do {
-    const r = await s3.send(new ListObjectsV2Command({ Bucket: bucket, Prefix: `${prefix}/`, ContinuationToken: token }));
-    for (const o of r.Contents ?? []) if (o.Key && o.ETag) etags.set(o.Key, o.ETag.replace(/"/g, ""));
-    token = r.NextContinuationToken;
-  } while (token);
+  const etags = await liveEtags(s3, bucket, prefix);
   let sent = 0, skipped = 0, bytes = 0, next = 0;
   const worker = async () => {
     for (let i = next++; i < files.length; i = next++) {

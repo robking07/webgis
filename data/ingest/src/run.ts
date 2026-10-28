@@ -1,5 +1,5 @@
 // npm run ingest -- <step> [dataset or level ids…]
-// Steps: geographies | label-mask | mpo | timeline | acs | acs-bg | census2020 | lodes | places | climdiv | nbi | fars | overdose | airquality | features | vmt | cejst | ddp287g | tri | nri | svi | lead | food-access | tiles | publish-tiles | pull-tracts | publish-values | publish-geo | publish-data | counts | publish-counts | details | publish-details | tract-geo | export | insights [--reflag] | combinations [--dry-run] | tracts-out | docs | mn-catalog | all
+// Steps: geographies | label-mask | mpo | timeline | acs | acs-bg | census2020 | lodes | places | climdiv | nbi | fars | overdose | airquality | features | vmt | cejst | ddp287g | tri | nri | svi | lead | food-access | tiles | publish-tiles | publish-reload | publish-values | publish-geo | publish-data | counts | publish-counts | details | publish-details | tract-geo | export | export-values | insights [--reflag] | combinations [--dry-run] | tracts-out | docs | mn-catalog | all
 import { ingestGeographies, tractGeography } from "./geographies.ts";
 import { ingestAcs, ingestAcsTimeline } from "./acs.ts";
 import { ingestCensus2020 } from "./census2020.ts";
@@ -10,7 +10,7 @@ import { computeInsights, reflagInsights } from "./insights.ts";
 import { computeCombinations } from "./combinations.ts";
 import { ingestPlaces } from "./places.ts";
 import { ingestClimdiv, ingestClimdivTimeline } from "./climdiv.ts";
-import { publishCounts, publishData, publishDetails, publishGeo, publishTiles, publishValues, pullTracts } from "./publish-tiles.ts";
+import { publishCounts, publishData, publishDetails, publishGeo, publishReload, publishTiles, publishValues } from "./publish-tiles.ts";
 import { setCountsOnly } from "./values.ts";
 import { detailsOut } from "./details.ts";
 import { writeDataSourcesDoc } from "./docs.ts";
@@ -67,8 +67,8 @@ const steps: Record<string, () => Promise<void> | void> = {
   "publish-values": () => publishValues(only),
   "publish-geo": publishGeo,
   "publish-data": () => publishData(only),
-  // #369: the live tract shards, so a checkout without them (a GitHub runner) can reload a tract dataset safely.
-  "pull-tracts": () => pullTracts(),
+  // #369, D-478: upload from a checkout holding only this run's loads (a GitHub runner), merging into the live shards.
+  "publish-reload": publishReload,
   // #156, #154: margins of error, the counts behind each map and U.S. rows, as new files only. Re-runs
   // the source downloads but writes nothing else (no database writes, no existing value files or
   // tiles); `publish-counts` then uploads just those files.
@@ -85,6 +85,7 @@ const steps: Record<string, () => Promise<void> | void> = {
   docs: writeDataSourcesDoc,
   "mn-catalog": mnCatalog,
   export: async () => { exportRegistry(); await exportNames(); await exportSearch(); await exportValues(only); },
+  "export-values": () => exportValues(only),
   search: exportSearch,
   // --reflag: re-apply the by-construction rules to the committed insights.json (no database; captions and fingerprints kept).
   insights: () => (rest.includes("--reflag") ? reflagInsights() : computeInsights()),
