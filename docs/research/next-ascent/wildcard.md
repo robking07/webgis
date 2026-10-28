@@ -1,7 +1,7 @@
 # Research notes: wildcard, dream big (R7)
 
-Status: sections 0–2 done.
-Next: write sections 3–4 (forks, top 10).
+Status: complete (all sections).
+Next: nothing; the lead harvests.
 
 Agent R7, 2026-10-27. Planning research for the next phase; the lead harvests it. Not for merge.
 Sizes: S ≈ 100k tokens, M ≈ 275k, L ≈ 500k, XL ≈ 1M+. Running cost is the extra monthly bill on
@@ -264,6 +264,81 @@ separate from survey maps); annual "State of US places" report (M per year, Spec
 
 ## 3. Fork candidates and who would pay
 
+Rule: a Fork is a separate paid product; Mapwich never gets a paywall. Price anchors (third-party
+listings, unconfirmed): Social Explorer individual plans about $135–195/month and library plans
+about $1,350–7,200/year; PolicyMap quotes on request, with older public figures of $5,500–8,000
+a year ([Capterra](https://www.capterra.com.au/software/1039593/social-explorer),
+[Library Journal](https://libraryjournal.com/story/social-explorer-reference-ereview),
+[PolicyMap pricing](https://www.policymap.com/pricing)).
+
+| Fork candidate | Who pays | Why they'd pay | Builds from |
+|---|---|---|---|
+| **Grant map packs** (#41) | Small cities, counties, tribes and the consultants writing SS4A, RAISE, CDBG and FTA applications | Every application needs the same equity, safety and demographic maps; done in an hour, not a week | Exhibit generator, CEJST/SVI, FARS |
+| **Consultant exhibit pack** (from 2.4) | Planning and engineering consultants | Branded, batch-printed meeting boards for many study areas | Exhibit generator |
+| **White-label viewer / open kit with support** (#39, #43) | Small MPOs, RPCs, county GIS shops | A modern public data viewer without an Esri Hub budget | The whole static pipeline |
+| **Plan-content comparison** (#42) | MPOs, state DOTs, advocacy groups, researchers | Compare goals, targets and projects across LRTPs and TIPs | MPO plans catalog (2.8) |
+| **Place alerts, pro** (from 2.6) | Real-estate analysts, site selectors, economic developers | Threshold alerts across hundreds of places when releases land | Changelog and watch |
+| **Commercial API with SLA** (from 2.5) | Proptech and civic-tech startups | Uptime promise and support on clean, harmonized tables | Open API |
+
+Strongest fork by fit and demand: **grant map packs**. It's planner work Robbie knows cold, the
+buyers have grant money earmarked for exactly this, and it reuses Mapwich features without
+changing them. Weakest: commercial API (low margin, support burden).
+
 ## 4. Top 10, ranked by remarkable ÷ cost
 
+Scoring: remarkable 1–5 (would a planner, a reporter or a hiring manager say "I've never seen
+that on a free site"?) divided by cost points (S = 1, M = 2, L = 3, XL = 5; running cost above
+$5/month would add a point, and none does). Ties broken by Robbie's weekly use.
+
+| Rank | Idea | Remarkable | Size (tokens) | Score | Weekly use |
+|---|---|---|---|---|---|
+| 1 | **The Mapwich method**: case study + talk + paper (2.11) | 4 | S–M (100–200k) | 2.7 | indirect |
+| 2 | **The federal data record**: what changed in federal data, with maps (2.1) | 5 | M (≈275k), then S per event | 2.5 | high |
+| 3 | **Data newsroom + release-day auto-briefs** (2.2) | 4 | S + M (≈375k), then 50–100k per release | 2.0 | high |
+| 4 | **Embeddable maps and slide images** (2.3) | 4 | M (≈275k) | 2.0 | high |
+| 5 | **The map that talks**: written summaries for every view (2.8) | 4 | M (≈275k) | 2.0 | medium |
+| 6 | **Data changelog + follow a place by RSS** (2.6) | 3 | S–M (100–200k) | 2.0 | medium |
+| 7 | **Open data API + bulk downloads** (2.5) | 4 | M (≈275k) | 2.0 | medium |
+| 8 | **Fifty years of a neighborhood** (2.7) | 5 | L (≈500k) | 1.7 | medium |
+| 9 | **Meeting exhibit generator** (2.4) | 4 | M–L (275–450k) | 1.6 | medium-high |
+| 10 | **The insight machine**: Library maps at scale (2.9) | 5 | XL (1M+); first slice M | 1.0 | high |
+
+Just outside: classroom kit (1.5), terrain hillshade (2.0 but remarkable only 2), animated GIF
+export (2.0, folds into 2.3).
+
+**Total for the whole top 10:** about 3.5–4M tokens, all at $0–10/month extra running cost.
+
 ## 5. Notes for the lead
+
+**A Next phase this list suggests: "Release season" (about 1–1.2M tokens, $0–5/month).** The
+2025 ACS 1-year lands 2026-10-29 and the 2021–2025 5-year is likely delayed under DAO 216-26.
+Build, in order: (1) data changelog + RSS (S–M), (2) newsroom calendar + movers script (M),
+(3) the federal data record page with its first two entries (M; Robbie approves wording),
+(4) embeds and slide images (M), so every release brief can travel into staff reports and news
+stories. Each step serves Robbie's weekly use, feeds 1–2 Specials a month, and is cheap to run.
+The Mapwich method case study runs alongside, written mostly by Robbie.
+
+**Vision items (1–2 years):** fifty years of a neighborhood (L), meeting exhibit generator
+(M–L), the map that talks (M), open API (M), insight machine (XL over phases), classroom kit (M),
+grant map packs as the first Fork (separate repo, priced, waits for Robbie).
+
+**Risks and dependencies**
+- ACS small-area numbers may get coarser or go missing under DAO 216-26; the change maps,
+  block-group maps and the reliability warnings all feel it. Worth a scenario check before the next
+  5-year refresh.
+- Embeds and viral traffic lean on OpenFreeMap; schedule the self-hosted basemap (S4) with embeds.
+- License checks: LTDB terms unknown (ask Brown); NHGIS is out (no redistribution).
+
+**Overlaps with other agents:** insight machine (data-at-scale), exhibit generator and grant
+packs (planner workflows), embeds (familiarity / competitors), talking summaries (visitor AI, but
+this version is deterministic, no AI).
+
+**Sensitive wording to route to Robbie:** the federal data record (federal policy), fifty years
+of a neighborhood (race, redlining, displacement), any classroom lesson on race or income.
+
+**Questions for the lead**
+1. Does the federal data record fit Mapwich's neutral, educational voice, or should it live only
+   as Specials? (Robbie's call: sensitive.)
+2. Is the 2021–2025 ACS 5-year release (date unknown) the right anchor for the next phase, or
+   should the phase not depend on a federal date?
+3. Grant map packs as the first Fork: worth asking Robbie now, or wait until March 2027?
