@@ -1,7 +1,7 @@
 # Next ascent research: what the foundation can already do (R1)
 
-Status: sections 1–3 done.
-Next: write section 4 (foundation limits).
+Status: sections 1–4 done.
+Next: write section 5 (top 10), then report.
 
 Research notes for the lead. Not for merge. Sizes: S ≈ 100k tokens, M ≈ 275k, L ≈ 500k, XL = several L.
 Read on 2026-10-27 at `origin/main` 5bd1f06. Every claim below points at a file or decision so it can be checked.
@@ -166,5 +166,89 @@ Library tiers; US only, deeper; ≤ $50/month; Robbie's 2–4 h/week; disclosure
 | #133 Data backlog + data.gov sweep | Yes; becomes the Library pipeline's input list. | XL as a whole | Reframe: Featured additions stay hand-picked; the sweep feeds Library maps (§4, limit 2). |
 
 ## 4. Foundation limits big dreams will hit
+
+Ordered by how soon a 1–2 year vision hits them. "Thousands of maps" means the Library tier
+Robbie asked for ("an overwhelming amount of data"); "new place types" means cities, metros,
+MPOs, ZIP areas, urban areas, school and congressional districts.
+
+**1. Places are identified by the length of their ID.** `levelOfGeoid` (`lib/place.ts`) reads 2 digits
+as a state, 5 as a county, 11 a tract, 12 a block group, 15 a block. Metro areas (CBSA) and ZIP
+areas (ZCTA) also have 5-digit codes, and cities and school districts both have 7, so they would be
+read as counties or collide with each other. `GeoLevel` is a fixed list of five; "tract" is written
+out 58 times across web, design and ingest; drill-down (D-329) assumes every place nests inside
+the one above. *Hits:* #332 cities/metros, #176 urban areas, MPO totals, ZIP lookups.
+*Fix:* typed place IDs (`cbsa:31080`, `place:2743000`) and a small "place types" table that says,
+per type, where its outlines, names, search rows and value files live and whether it nests. Then
+each new type is mostly config. L (~500k) for the general fix including cities and metros as the
+first two types (vs #332's ~400k for cities and metros alone); afterwards S per type.
+
+**2. Every map is a Featured map.** The registry has no tier, quality or "added automatically" field;
+`relations.yaml` fails validation for any map without a hand entry; six hand-ordered categories;
+the map menu lists all maps of a category. At 1,000+ maps the menu becomes a wall and the hand
+steps become the bottleneck. *Fix:* `tier: featured | library` and `addedBy` in the schema; Library
+maps exempt from hand relations, "Why this matters" and Combinations by default; a "Library"
+browse page with search and facets (source, topic, level, year) and a clear "added automatically"
+label; a "promote" checklist. M (~275k) for the mechanism and browse page; the generators that
+fill it are separate (an ACS-table generator is S–M, since the `acs5` recipe takes any variables).
+
+**3. Data only moves when Robbie's machine runs it.** Ingest needs GDAL, tippecanoe and the one
+complete `data/tiles` copy (the memory note "data/tiles incomplete" is a trap that once wiped live
+tract data). #296 and #188 have waited weeks on one command. With 2–4 hours a week this caps how
+much data Mapwich can ever hold. *Fix:* run ingest in GitHub Actions (free on a public repo:
+6-hour jobs, ~14 GB disk; GDAL via conda), reading the current files back from R2 before writing,
+and uploading only after the never-drop-a-dataset check passes. Needs R2 and database keys as
+GitHub secrets, which changes the "secrets only in `.env.local`" rule: **Robbie's call**. L (~450k)
+including a dry-run mode and a weekly schedule. *Running:* $0. This is the single biggest enabler
+of Library maps, the release watcher (unlock #4) and "no Robbie needed" data work.
+
+**4. Combined files grow with the catalog.** A click on a county loads `details/<state>.json` with
+every dataset for that state (Texas: 215 KB gzipped at 58 datasets, D-198; roughly 500 KB now);
+a tract click loads `values/tracts/<county>.json` with every tract dataset (Los Angeles: 2.1 MB raw
+at 40 datasets, D-113). At 1,000 maps a Texas click would be several MB. The same files are why one
+partial upload can erase other datasets. *Fix:* keep these combined files for Featured maps only;
+Library values load per dataset when the visitor opens one. M (~200k), and it removes the
+erase-on-partial-upload risk for Library data.
+
+**5. The whole registry ships to every visitor.** `generated/registry.json` (276 KB, 33 KB gzipped) is
+imported into the map's client code. At 1,000 maps that is ~250 KB gzipped on every map load, at
+5,000 over 1 MB. *Fix:* a slim index (id, title, category, levels, unit) in the bundle, the rest
+fetched per dataset from R2. S–M (~150k). Do it together with limit 2.
+
+**6. Pairs grow with the square of the catalog.** 138 maps → 8,646 county pairs screened, 1,759
+published, `insights.json` 3.7 MB (391 KB gzipped), and the build makes a share card for every
+published pair (`/og/special/[id]` `generateStaticParams`). 1,000 maps ≈ 500k pairs, and the
+build would try to render tens of thousands of cards. *Fix:* Library maps join Combinations only
+when promoted, or only against Featured maps (n × 138, linear); share cards and dataset pages
+render on first request and cache (Next's on-demand rendering) instead of all at build. S–M
+(~120k). The statistics in D-381 already correct for how many pairs were tried.
+
+**7. The database is a 500 MB working store.** State and county rows run about 0.6 MB per map
+(D-113's ~190 bytes a row); it was 305 MB before tracts moved out. A few hundred Library maps
+fill it. *Fix (preferred):* ingest writes static files directly and stops writing values to the
+database (it is already off the visitor path, D-198, D-210). M (~250k). *Alternative:* Supabase
+Pro, $25/month, which fits under the $50 ceiling but spends half of it.
+
+**8. Areas that don't follow county lines.** MPOs, cities, corridors, a "within 1 mile of this
+line" study area: today nothing can give them a number. *Already in hand:* the 2020 Census
+ingest builds from **blocks** (`census2020.ts`), so block populations exist; that is the standard
+way to apportion tract counts to any shape. *Fix:* a block-weighted crosswalk step that, for any
+outline, writes which tracts it covers and with what population share; totals (#292), MPO
+profiles, custom regions and transit-corridor numbers all reuse it. M (~250k). Estimates for
+apportioned areas need a plain "approximate" note.
+
+**9. Hosting terms for a Fork.** Vercel's free Hobby plan is for non-commercial use, which Mapwich
+is. A paid Fork would need Vercel Pro (about $20/month) or another host, plus its own R2 bucket.
+Not a Mapwich limit; a line item for any Fork estimate.
+
+**10. Specials and "Why this matters" are bound by Robbie's voice.** Both need his review
+(memory: Specials format; D-279). At 1–2 Specials a month that is most of his weekly hours.
+*Fix:* not a code fix. Make the editor's drafts start from material the site already computes
+(the 72 confirmed 3–5-map Combinations, change maps, new releases from the watcher) so his time
+goes on voice, not research. S per draft, already budgeted in the editor role.
+
+What does **not** break soon: R2 storage and egress (≈ 5 MB per map with tracts and block groups;
+1,000 maps ≈ 5 GB, inside the 10 GB free tier; 5,000 maps ≈ $0.25/month), MapLibre rendering
+(one map at a time), and visitor load (static files and a CDN; a 1,000-user test, S5, is still
+worth running before any public push).
 
 ## 5. Top 10
