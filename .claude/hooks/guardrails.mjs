@@ -6,9 +6,17 @@
 // Dependency-free (Node only). Test: npm run test:guardrails
 import { readFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
+import { homedir } from "node:os";
+import { dirname, resolve, sep } from "node:path";
+import { fileURLToPath } from "node:url";
 
 const MAIN = new Set(["main", "master"]);
 const ENV_FILE = /(^|[\\/=])\.env\.local$/;
+// A browser's user-agent string; a plain one like "Mapwich-ingest/1.0" is fine.
+const BROWSER_UA = /Mozilla\/\d|AppleWebKit\/|Chrome\/\d|Safari\/\d|Firefox\/\d/;
+const NETWORK = (t) => t.startsWith("/mnt/") || /^smb:\/\//i.test(t) || /^(\/\/|\\\\)[\w.-]+[\\/]/.test(t);
+// Main checkout edits are allowed only here (CLAUDE.md: work in worktrees).
+const MAIN_OK = ["drafts", "data/cache", ".claude/worktrees"];
 
 class Block extends Error {}
 const block = (msg) => {
@@ -33,6 +41,13 @@ const MSG = {
   envdump:
     "Blocked: dumping the environment can print secrets loaded from .env.local. Check one variable " +
     'by name instead, without printing its value (e.g. `[ -n "$NAME" ] && echo set`).',
+  ua:
+    "Blocked: don't disguise scripts as a browser. If a site blocks scripts, stop and write the " +
+    "manual-download steps for Robbie.",
+  fence: "Blocked: Mapwich work stays inside ~/webgis (and the session scratchpad). Never touch the NAS or network shares.",
+  mainCheckout:
+    "Blocked: editing the main checkout. Work in your own worktree under .claude/worktrees/ " +
+    "(docs/branching.md); only drafts/ and data/cache/ are edited in place.",
 };
 
 // ---- shell tokenizer: splits into segments of words, respecting quotes ----
@@ -120,6 +135,34 @@ function currentBranch(cwd) {
   } catch {
     return "";
   }
+}
+
+// The main checkout, also when the hook runs from a worktree.
+function projectRoot() {
+  if (process.env.GUARDRAILS_ROOT) return process.env.GUARDRAILS_ROOT;
+  try {
+    const common = execFileSync("git", ["rev-parse", "--path-format=absolute", "--git-common-dir"], {
+      cwd: dirname(fileURLToPath(import.meta.url)),
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+    }).trim();
+    return dirname(common);
+  } catch {
+    return "";
+  }
+}
+
+function checkPath(p, cwd, writing) {
+  if (ENV_FILE.test(p)) block(MSG.env);
+  if (NETWORK(p)) block(MSG.fence);
+  if (!writing) return;
+  const root = projectRoot();
+  if (!root) return;
+  const abs = resolve(cwd || process.cwd(), p);
+  const under = (dir) => abs === dir || abs.startsWith(dir + sep);
+  if (abs.startsWith("/tmp/claude-") || under(resolve(homedir(), ".claude", "projects"))) return;
+  if (!under(root)) block(MSG.fence);
+  if (!MAIN_OK.some((d) => under(resolve(root, d)))) block(MSG.mainCheckout);
 }
 
 function checkGit(args, cwd) {
@@ -211,9 +254,13 @@ function checkSegment(w, cwd, depth) {
   if (text.some((t) => ENV_FILE.test(t)) && !["ls", "test", "[", "[[", "stat", "git", "echo", "printf"].includes(cmd))
     block(MSG.env);
   for (let i = 0; i < text.length - 1; i++) if (text[i] === "<" && ENV_FILE.test(text[i + 1])) block(MSG.env);
+  if (text.some(NETWORK)) block(MSG.fence);
 }
 
 function checkCommand(cmd, cwd, depth = 0) {
+  // Raw text, so a user agent inside a heredoc-written script is caught too.
+  // shortcut: also blocks a PR body or commit message that merely quotes one; reword it.
+  if (BROWSER_UA.test(cmd)) block(MSG.ua);
   for (const w of segments(cmd)) checkSegment(w, cwd, depth);
 }
 
@@ -227,9 +274,14 @@ function main() {
   const ti = input.tool_input ?? {};
   try {
     if (input.tool_name === "Bash") checkCommand(String(ti.command ?? ""), input.cwd);
-    else
+    else {
+      const writing = ["Write", "Edit", "NotebookEdit"].includes(input.tool_name);
       for (const k of ["file_path", "notebook_path", "path"])
-        if (typeof ti[k] === "string" && ENV_FILE.test(ti[k])) block(MSG.env);
+        if (typeof ti[k] === "string") checkPath(ti[k], input.cwd, writing);
+      // Docs may describe the rule; code may not contain a browser user agent.
+      const body = [ti.content, ti.new_string, ti.new_source].filter((x) => typeof x === "string").join("\n");
+      if (writing && !/\.md$/.test(ti.file_path ?? "") && BROWSER_UA.test(body)) block(MSG.ua);
+    }
   } catch (e) {
     if (e instanceof Block) {
       process.stderr.write(e.message + "\n");
