@@ -1,0 +1,261 @@
+{
+ "about": "MPO plan catalog (#365, D-xxx). Hand-edited: name, website, and each document's title, url, date, parts, note, host. Written by `npm run ingest -- mpo-plans`: checked, status, http, bytes, sha256, file, wayback. Ids are the NTAD MPO_ID used by apps/web/public/mpo and the mpo= focus.",
+ "labels": {
+  "longRange": "Long-range plan",
+  "tip": "Transportation Improvement Program (TIP)",
+  "workPlan": "Work plan",
+  "grants": "Grants"
+ },
+ "mpos": [
+  {
+   "id": "27197300",
+   "name": "Metropolitan Council",
+   "website": "https://metrocouncil.org",
+   "docs": {
+    "longRange": {
+     "title": "Imagine 2050 Transportation Policy Plan",
+     "url": "https://imagine2050.metrocouncil.org/media/hs0p521t/imagine-2050-transportation-policy-plan-ada.pdf",
+     "date": "Adopted February 12, 2025",
+     "note": "Accessible (ADA) PDF, 16.9 MB. The print version on the downloads page is 455 MB and is not archived."
+    },
+    "tip": {
+     "title": "2026–2029 Transportation Improvement Program",
+     "url": "https://metrocouncil.org/Transportation/Planning-2/Key-Transportation-Planning-Documents/Transportation-Improvement-Program-(TIP)/Final-TIP-2026-2029.aspx",
+     "date": "2026–2029",
+     "note": "The draft 2027–2030 TIP is out for federal review (TIP page, October 2026)."
+    },
+    "workPlan": {
+     "title": "2026 Unified Planning Work Program",
+     "url": "https://metrocouncil.org/getattachment/Transportation/Planning-2/Key-Transportation-Planning-Documents/Unified-Planning-Work-Program/2026-Met-Council-Unified-Work-Program-Approved-(1).pdf.aspx?lang=en-US",
+     "date": "2026"
+    },
+    "grants": {
+     "title": "Regional Solicitation",
+     "url": "https://metrocouncil.org/Transportation/Planning-2/Transportation-Funding/Regional-Solicitation.aspx"
+    }
+   }
+  },
+  {
+   "id": "27197500",
+   "name": "Duluth-Superior Metropolitan Interstate Council",
+   "website": "https://dsmic.org",
+   "docs": {
+    "longRange": {
+     "title": "Sustainable Choices 2050",
+     "url": "https://dsmic.org/wp-content/uploads/2024/10/Sustainable-Choices-2050_Final.pdf",
+     "date": "Adopted October 16, 2024"
+    },
+    "tip": {
+     "title": "2027–2030 Duluth Area Transportation Improvement Program",
+     "url": "https://dsmic.org/wp-content/uploads/2026/09/2027-2030-Duluth-Area-TIP.pdf",
+     "date": "Approved by the MIC Policy Board, 2026",
+     "note": "The Superior (Wisconsin) side has its own TIP. Until MnDOT and FHWA approve this one, the earlier Duluth Area TIP stays in effect."
+    },
+    "workPlan": {
+     "title": "2026–2027 MIC Work Program and Budget",
+     "url": "https://dsmic.org/wp-content/uploads/2025/10/2026-27-MIC-Work-Program-Budget_Final.pdf",
+     "date": "Final, October 2025"
+    },
+    "grants": {
+     "title": null,
+     "url": null,
+     "note": "No grants page. Federal project selection (STBG, Carbon Reduction) is on the TIP page: https://dsmic.org/plans-projects/duluth2030/"
+    }
+   }
+  },
+  {
+   "id": "38197200",
+   "name": "Fargo-Moorhead Metropolitan Council of Governments",
+   "website": "https://fmmetrocog.org",
+   "docs": {
+    "longRange": {
+     "title": "Metro 2050 Metropolitan Transportation Plan",
+     "url": "https://fmmetrocog.org/download_file/view/2803/197",
+     "date": "Approved April 17, 2025",
+     "note": "Final plan with appendix."
+    },
+    "tip": {
+     "title": "2027–2030 Transportation Improvement Program",
+     "url": "https://fmmetrocog.org/download_file/view/d0d55665-6a7d-4222-b6e0-3e252aad9e5d/218",
+     "date": "Approved 2026"
+    },
+    "workPlan": {
+     "title": "2026–2027 Unified Planning Work Program",
+     "url": "https://fmmetrocog.org/download_file/view/3026/219",
+     "date": "Approved"
+    },
+    "grants": {
+     "title": "Solicitation (STBG and Transportation Alternatives)",
+     "url": "https://fmmetrocog.org/solicitation"
+    }
+   }
+  },
+  {
+   "id": "38198202",
+   "name": "Grand Forks-East Grand Forks MPO",
+   "website": "https://www.theforksmpo.org",
+   "docs": {
+    "longRange": {
+     "title": "2050 Metropolitan Transportation Plan",
+     "url": "https://www.theforksmpo.org/m_p_o_documents/m_t_p___metropolitan_transportation_plan_",
+     "date": "Adopted December 20, 2023",
+     "note": "Published in four parts. The old domain theforks.org is now a parked page.",
+     "parts": [
+      { "title": "Executive Summary", "url": "https://www.theforksmpo.org/UserFiles/Servers/Server_16222865/File/MPO%20Documents/MTP/Final_2050MTP_ExecutiveSummary.pdf" },
+      { "title": "Street and Highway Plan", "url": "https://www.theforksmpo.org/UserFiles/Servers/Server_16222865/File/MPO%20Documents/MTP/Final%20Street%20and%20Highway%20Plan%20For%202050%20MTP%20with%20Appendices.pdf" },
+      { "title": "Bicycle and Pedestrian Plan", "url": "https://www.theforksmpo.org/UserFiles/Servers/Server_16222865/File/MPO%20Documents/MTP/Final%20Bike%20and%20Ped%20Plan%20For%202050%20MTP%20with%20Appendices.pdf" },
+      { "title": "Transit Development Plan", "url": "https://www.theforksmpo.org/UserFiles/Servers/Server_16222865/File/MPO%20Documents/MTP/Final%20TDP%20For%202050%20MTP%20with%20Appendices.pdf" }
+     ]
+    },
+    "tip": {
+     "title": "2027–2030 Transportation Improvement Program",
+     "url": "https://www.theforksmpo.org/UserFiles/Servers/Server_16222865/File/MPO%20Documents/TIP/2027-2030%20TIP/Final_ForksMPO_FY2027-2030TIP.pdf",
+     "date": "2027–2030"
+    },
+    "workPlan": {
+     "title": "2026–2027 Unified Planning Work Program (Amendment 4)",
+     "url": "https://www.theforksmpo.org/UserFiles/Servers/Server_16222865/File/MPO%20Documents/UPWP/2026-2027%20UPWP_FINAL_Amendment4_SIGNED.pdf",
+     "date": "2026–2027"
+    },
+    "grants": {
+     "title": null,
+     "url": null,
+     "note": "No grants page on the MPO site."
+    }
+   }
+  },
+  {
+   "id": "55196700",
+   "name": "La Crosse Area Planning Committee",
+   "website": "https://www.lacrossecounty.org/metropolitan-planning-organization",
+   "docs": {
+    "longRange": {
+     "title": "Moving Ahead to 2055",
+     "url": "https://www.lacrossecounty.org/docs/default-source/metropolitan-planning-organization/2055-mtp-final-09-18-2025.pdf?sfvrsn=d12061e8_1",
+     "date": "Final, September 18, 2025",
+     "note": "The county's web pages block scripts (403); its PDFs download. Links were read from the Wayback copy of the plan page. The old domain lapc.org is now a parked page."
+    },
+    "tip": {
+     "title": "Transportation Improvement Program",
+     "url": "https://www.lacrossecounty.org/metropolitan-planning-organization/planning-and-programming/transportation-improvement-program",
+     "note": "Wisconsin and Minnesota project lists are separate files.",
+     "parts": [
+      { "title": "2025–2028 TIP document", "url": "https://www.lacrossecounty.org/docs/default-source/metropolitan-planning-organization/draft-2025-2028-lapc-tip-document.pdf?sfvrsn=f8be0d5_1" },
+      { "title": "2026–2029 Minnesota TIP project list (updated September 17, 2025)", "url": "https://www.lacrossecounty.org/docs/default-source/metropolitan-planning-organization/updated09-17-2025_2026-2029-mn-tip-list.pdf?sfvrsn=b88e66cf_1" }
+     ]
+    },
+    "workPlan": {
+     "title": "2026 Planning Work Program",
+     "url": "https://www.lacrossecounty.org/docs/default-source/metropolitan-planning-organization/2026-lapc-planning-work-program-revised-11-10-2025.pdf?sfvrsn=cccb846_1",
+     "date": "Revised November 10, 2025"
+    },
+    "grants": {
+     "title": "Funding programs (on the TIP page)",
+     "url": "https://www.lacrossecounty.org/metropolitan-planning-organization/planning-and-programming/transportation-improvement-program",
+     "note": "The TIP page lists federal funding programs (STP-Local, Carbon Reduction, RAISE and others)."
+    }
+   }
+  },
+  {
+   "id": "27197200",
+   "name": "Rochester-Olmsted Council of Governments",
+   "website": "https://www.olmstedcounty.gov/government/county-boards-commissions/rochester-olmsted-council-governments-rocog",
+   "docs": {
+    "longRange": {
+     "title": "Metropolitan Transportation Plan 2050",
+     "url": "https://www.olmstedcounty.gov/sites/default/files/2025-11/Full_MTP102225.pdf",
+     "date": "October 22, 2025",
+     "parts": [
+      { "title": "Appendices", "url": "https://www.olmstedcounty.gov/sites/default/files/2025-11/Appendices102225.pdf" }
+     ]
+    },
+    "tip": {
+     "title": "2027–2030 Transportation Improvement Program",
+     "url": "https://www.olmstedcounty.gov/sites/default/files/2026-10/Final_ROCOG%202027-2030%20TIP_2026-10-01.pdf",
+     "date": "Final, October 1, 2026"
+    },
+    "workPlan": {
+     "title": "2026–2027 Unified Planning Work Program",
+     "url": "https://www.olmstedcounty.gov/sites/default/files/2025-09/FINAL%20DRAFT%202026%20UPWP.pdf",
+     "date": "2026",
+     "note": "The 2027–2028 work program is also posted: https://www.olmstedcounty.gov/sites/default/files/2026-09/2027_UPWP_Final.pdf"
+    },
+    "grants": {
+     "title": null,
+     "url": null,
+     "note": "No grants page on the ROCOG pages."
+    }
+   }
+  },
+  {
+   "id": "27197000",
+   "name": "Saint Cloud Area Planning Organization",
+   "website": "https://stcloudapo.org",
+   "docs": {
+    "longRange": {
+     "title": "Looking Ahead 2050",
+     "url": "https://stcloudapo.org/current-plans/current-mtp/",
+     "date": "Resolution signed October 14, 2024",
+     "note": "Published as one file per chapter.",
+     "parts": [
+      { "title": "Cover, resolution and glossary", "url": "https://stcloudapo.org/wp-content/uploads/2024/10/1.-Document-Formalities-SIGNED-RESOLUTION-10142024.pdf" },
+      { "title": "Executive Summary", "url": "https://stcloudapo.org/wp-content/uploads/2024/10/2.-Executive-Summary-FINAL-10012024.pdf" },
+      { "title": "Chapter 1: Introduction", "url": "https://stcloudapo.org/wp-content/uploads/2024/09/3.-Chapter-1-Introduction-FINAL-09052024.pdf" },
+      { "title": "Chapter 2: Existing Conditions", "url": "https://stcloudapo.org/wp-content/uploads/2024/09/4.-Chapter-2-Existing-Conditions-FINAL-09052024.pdf" },
+      { "title": "Chapter 3: Environmental Conditions", "url": "https://stcloudapo.org/wp-content/uploads/2024/09/5.-Chapter-3-Environmental-Conditions-FINAL-09052024.pdf" },
+      { "title": "Chapter 4: 2050 Regional Vision", "url": "https://stcloudapo.org/wp-content/uploads/2024/09/6.-Chapter-4-2050-Regional-Vision-FINAL-09052024.pdf" },
+      { "title": "Chapter 5: Travel Demand Modeling", "url": "https://stcloudapo.org/wp-content/uploads/2024/09/7.-Chapter-5-Travel-Demand-Modeling-FINAL-09052024.pdf" },
+      { "title": "Chapter 6: Transportation Funding", "url": "https://stcloudapo.org/wp-content/uploads/2024/09/8.-Chapter-6-Transportation-Funding-FINAL-09052024.pdf" },
+      { "title": "Chapter 7: Transportation Infrastructure Investment", "url": "https://stcloudapo.org/wp-content/uploads/2024/10/9.-Chapter-7-Transportation-Infrastructure-Investments-FINAL-10012024.pdf" },
+      { "title": "Chapter 8: Urban Beltline Corridor", "url": "https://stcloudapo.org/wp-content/uploads/2024/09/10.-Chapter-8-Urban-Beltline-Corridor-FINAL-09052024.pdf" },
+      { "title": "Chapter 9: Transportation and Technology", "url": "https://stcloudapo.org/wp-content/uploads/2024/09/11.-Chapter-9-Transportation-Technology-FINAL-09052024.pdf" },
+      { "title": "Chapter 10: Implementation", "url": "https://stcloudapo.org/wp-content/uploads/2024/09/12.-Chapter-10-Implementation-FINAL-09052024.pdf" },
+      { "title": "Appendices A–R", "url": "https://stcloudapo.org/wp-content/uploads/2024/09/13.-Appendices-A-R-FINAL-09102024.pdf" }
+     ]
+    },
+    "tip": {
+     "title": "FY 2027–2030 Transportation Improvement Program",
+     "url": "https://stcloudapo.org/wp-content/uploads/2026/09/Saint-Cloud-FY-2027-2030-TIP-09142026.pdf",
+     "date": "September 14, 2026"
+    },
+    "workPlan": {
+     "title": "2026–2027 Unified Planning Work Program (Amendment 1)",
+     "url": "https://stcloudapo.org/wp-content/uploads/2025/11/2026-27-UPWP-AMEND-1-Combined.pdf",
+     "date": "Amended November 2025",
+     "note": "The 2027–2028 work program is also posted: https://stcloudapo.org/wp-content/uploads/2026/09/2027-28-UPWP-Final-updated-combined.pdf"
+    },
+    "grants": {
+     "title": "Grant Opportunities",
+     "url": "https://stcloudapo.org/current-plans/current-tip/status-update-for-for-next-tip/grant-opportunities/"
+    }
+   }
+  },
+  {
+   "id": "27201300",
+   "name": "Mankato/North Mankato Area Planning Organization",
+   "website": "https://mnmapo.org",
+   "docs": {
+    "longRange": {
+     "title": "Metropolitan Transportation Plan 2050 Update",
+     "url": "https://mnmapo.org/wp-content/uploads/2025/11/mapo-mtp-2050_november-6-2025-1.pdf",
+     "date": "November 6, 2025"
+    },
+    "tip": {
+     "title": "2027–2030 Transportation Improvement Program",
+     "url": "https://mnmapo.org/wp-content/uploads/2026/09/2027-2030-mapo-tip.pdf",
+     "date": "2027–2030"
+    },
+    "workPlan": {
+     "title": "2026 Unified Planning Work Program",
+     "url": "https://mnmapo.org/wp-content/uploads/2025/11/mapo-2026-2027-upwp-modified-11-4-2025.pdf",
+     "date": "Modified November 4, 2025",
+     "note": "The 2027 work program is also posted: https://mnmapo.org/wp-content/uploads/2026/10/mapo-2027-2028-upwp.pdf"
+    },
+    "grants": {
+     "title": "Carbon Reduction Program",
+     "url": "https://mnmapo.org/crp/"
+    }
+   }
+  }
+ ]
+}
