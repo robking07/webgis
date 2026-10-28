@@ -8688,13 +8688,13 @@
   ],
   "source": {
    "name": "U.S. Census Bureau, Small Area Health Insurance Estimates (SAHIE)",
-   "shortName": "Census SAHIE",
+   "shortName": "Census Bureau",
    "url": "https://www.census.gov/programs-surveys/sahie.html",
    "citation": "U.S. Census Bureau, Small Area Health Insurance Estimates (SAHIE), 2024 estimates (released August 2026)"
   },
   "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
   "updateCadence": "annual",
-  "vintage": "2024",
+  "vintage": "2024 data",
   "geographyLevels": [
    "state",
    "county"
@@ -8713,6 +8713,7 @@
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
+   "model-based-estimate",
    "margin-of-error",
    "quantile-classes"
   ],

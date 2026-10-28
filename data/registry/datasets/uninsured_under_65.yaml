@@ -7,17 +7,17 @@ subcategory: Care and coverage
 tags: [health insurance, uninsured, health care, SAHIE]
 source:
   name: U.S. Census Bureau, Small Area Health Insurance Estimates (SAHIE)
-  shortName: Census SAHIE
+  shortName: Census Bureau
   url: https://www.census.gov/programs-surveys/sahie.html
   citation: "U.S. Census Bureau, Small Area Health Insurance Estimates (SAHIE), 2024 estimates (released August 2026)"
 license: Public domain (U.S. Government work, 17 U.S.C. § 105)
 updateCadence: annual
-vintage: "2024"
+vintage: "2024 data"
 geographyLevels: [state, county]
 unit: percent
 universe: residents under 65 (model-based estimate)
 modelInputs: [pct_uninsured]  # SAHIE's model starts from the ACS uninsured estimates
 coverageNote: "States and counties only. Kalawao County, Hawaii, has no estimate, and Puerto Rico is not covered."
-terms: [margin-of-error, quantile-classes]
+terms: [model-based-estimate, margin-of-error, quantile-classes]
 measure: { kind: sahie, year: 2024 }
 symbology: { ramp: oranges, classification: quantile, classes: 5, higherIsBetter: false }
