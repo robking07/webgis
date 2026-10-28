@@ -9,7 +9,7 @@ import { Upload } from "@aws-sdk/lib-storage";
 import { log, TILES } from "./util.ts";
 import { DETAILS_DIR } from "./details.ts";
 
-function r2() {
+export function r2() {
   const { R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_BUCKET } = process.env;
   if (!R2_ACCOUNT_ID || !R2_ACCESS_KEY_ID || !R2_SECRET_ACCESS_KEY || !R2_BUCKET) throw new Error("R2_* settings missing in .env.local");
   const s3 = new S3Client({
