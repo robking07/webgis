@@ -1,7 +1,7 @@
 # Data at scale: Library maps (research notes, R4)
 
-Status: §1–§4 done.
-Next: §5 risks, §6 phased path and top 10.
+Status: complete (2026-10-27). All six sections written.
+Next: nothing; the lead harvests. Open questions are in the PR description.
 
 Planning research for the next phase. Not a plan; the lead harvests it. Sizes: S ≈ 100k tokens,
 M ≈ 275k, L ≈ 500k, XL = several L.
@@ -339,4 +339,76 @@ routine). Running cost: routine tokens per week (~50–100k), no hosting cost. F
 
 ## 5. Risks
 
+| Risk | What it means | Handling |
+|---|---|---|
+| **ACS 2021–2025 drops health insurance** | The Census Bureau leaves insurance out of the 2021–2025 5-year tables while it bridges a 2025 question change; it expects to publish it again with 2022–2026, plus four unofficial "demonstration" tables. `pct_uninsured` can't refresh this cycle. | Keep the 2020–2024 map with a note. Library fill-ins: **Census SAHIE** (county uninsured by age, sex, income; annual, PD) and **PLACES `ACCESS2`** (modelled uninsured adults 18–64, county and tract). Neither is the same measure; say so on the map. |
+| **New disclosure-avoidance order (Commerce DAO 216-26, June 2026)** | Bans noise infusion, leaving coarsening and suppression. The 2025 ACS 1-year release had no date as of the Aug 4 advisory; over 100 organizations wrote to Commerce on Sept 4. Small-area products (ACS 5-year, CBP, LEHD/QWI, decennial) may be coarsened or suppressed, with full transition by 2029 and a demonstration product in 2027. The 2021–2025 5-year release (usually December) may be late or mixed. | The biggest risk to a Census-heavy Library. Keep the source files of every vintage we ingest (`data/cache`), build the gate to *expect* suppressed cells (coverage check per level), and don't promise block-group or tract depth for future years. A release-watch item for the scout. |
+| **Federal data removed or moved** | EPA took EJScreen down in 2025; data.gov's CKAN API now 404s. | Recipe per source with a pinned URL and a checksum; keep raw downloads; note mirrors (Data Rescue Project, DataLumos) with provenance, as the scout does today. |
+| **Licences** | Federal data is PD, but County Health Rankings is non-commercial only; AHRF says no usage limits yet may carry AMA-derived physician counts; state and city portals vary item by item (ODbL share-alike, "no redistribution"). | Licence set **per source** in the recipe, with an allow-list; non-commercial sources are fine here (D-30) but marked so a **Fork** knows it can't use them. State portals go through the existing per-item licence classes (`mn-catalog`). |
+| **Sensitive data at scale** | ACS race iterations, citizenship, disability, group quarters (prisons, nursing homes), overdose deaths. An automatic title or finding can read badly. | Topic list → source wording only, out of automatic findings until Robbie clears the topic's template (§4). Group-quarters tables likely skipped in the first batches. |
+| **Quality** | Small-area estimates are noisy; modelled data (PLACES uses ACS inputs) correlates by construction; tract boundaries changed in 2020; Connecticut counties changed in 2022; ACS variable numbers shift between years (a Data Profile line can move), which breaks timelines silently. | Gate checks (§2), `modelInputs` from the recipe, match variables across years by label not by number, timelines only where the label match holds. |
+| **Trust in the Featured maps** | One wrong automatic map can make visitors doubt the hand-checked ones. | Clear "Added automatically" label, a "how this was made" link, and an easy "report a problem" path; Library maps never in the map menu, splash or Specials unless promoted. |
+| **Maintenance** | Thousands of maps × annual refreshes. Silent failure means maps vanish. | Refresh = re-run recipes; the gate log lists every map that dropped and why; the brief (`scripts/brief.mjs`) shows the counts. |
+| **Agent tokens** | Building is the real cost (≈ 6M tokens for all of §6). | Phase it; every recipe after the first is S-sized. |
+
 ## 6. Phased path and top 10
+
+### Phased path
+
+**Phase A — first ~500 Library maps (≈ 1.3–1.5M tokens).** Foundation plus the cheapest batches.
+1. Library pipeline: schema `tier`, recipe, shaper, gate, labels, promotion (2a, 2d): **L**.
+2. First recipe: ACS Data Profiles, ~350–400 maps (1a): inside the L above, plus **S** for the batch.
+3. PLACES at tract level + `ACCESS2`, `FOODSTAMP` at county (1b), and SAHIE (insurance gap): **S + S**.
+4. Static-first ingest (2b) and click details split by topic (2c): **M + M**.
+5. Search covering the Library (3a): **S–M**.
+Gate: Robbie finds and uses a Library map in a real week; R2 under 10 GB; database size unchanged.
+
+**Phase B — to ~1,500 (≈ 2–2.5M tokens).** Depth that planners notice.
+AHRF health resources (1c, **M**), USDA atlases + Census of Agriculture (1e, **M**), economy series
+(1d, **L**), "What stands out here" place view (3d + 4a, **M–L**), rankings with error (4b, **S–M**),
+Library browse page (3b, **M**), related maps (3c, **M**).
+
+**Phase C — thousands (≈ 2.5–3M tokens).** ACS detailed tables and race iterations (sensitive
+routing first), CBP by industry, EPA/HUD/FEMA/NCES recipes (each **S** once the pipeline exists),
+what-changed findings (4c, **M**), scoped Combinations at scale (4d, **M**), weekly digest (4e,
+**S**), Minnesota-deep shelf (1f, **M**), meaning-based search (**M**, shared with the visitor-AI
+research). School districts as a new geography level would be its own **M–L** (tiles + names).
+
+Running cost stays near $0/month through Phase B and about $1/month at 10,000 maps (§2 table);
+the only priced items are a move to Vercel Pro ($20) if build or traffic limits bite, and any
+language-model captions beyond templates.
+
+### Top 10 (ranked by Robbie's weekly use, then value per token)
+
+| # | Idea | What a visitor gets | Size / tokens | Monthly cost | Fork? |
+|---|---|---|---|---|---|
+| 1 | Library pipeline: recipe → shaper → gate → "Added automatically" label → promotion (2a, 2d) | Thousands of honest, labelled maps; Featured stays hand-made | L ~500k | ~$0 | Yes |
+| 2 | ACS Data Profiles batch (1a) | ~350–400 new tract-level maps on every common Census question | S ~100k (after #1) | ~$0 | No |
+| 3 | "What stands out here" place view (3d + 4a) | Open a county, see where it's unusual across every map | M–L ~350k | ~$0 | Yes |
+| 4 | One search for places and maps, Library included (3a) | Type a topic or "place + topic", land on the map | S–M ~150k | ~$0 | No |
+| 5 | PLACES tract level + SAHIE insurance (1b) | Neighborhood health; an uninsured map that keeps refreshing | S ~100k | ~$0 | No |
+| 6 | Static-first ingest + topic-split click details (2b, 2c) | Faster clicks; no 500 MB ceiling | M + M ~550k | ~$0 (avoids $25) | No |
+| 7 | Economy series: LAUS, QCEW, CBP, BEA, IRS SOI (1d) | Monthly unemployment, jobs by industry, county GDP, migration | L ~500k | ~$0 | Yes |
+| 8 | What changed + rankings with error (4b, 4c) | "Biggest real changes" and fair top-10 lists | M + S ~375k | ~$0 | No |
+| 9 | AHRF health resources (1c) | Doctors, hospitals, beds per resident by county | M ~275k | ~$0 | Maybe (AMA fields) |
+| 10 | Weekly "what's new in the data" digest for Robbie (4e) | Robbie gets story leads every week | S ~100k | routine tokens only | No |
+
+Close runners-up: Library browse page (3b), related maps (3c), USDA rural depth (1e), scoped
+Combinations (4d), Minnesota-deep shelf (1f).
+
+### Sources
+
+- Census API catalogs, fetched 2026-10-27: `api.census.gov/data/2024/acs/acs5/groups.json`,
+  `.../acs5/variables.json`, `.../acs5/profile/variables.json`, `.../acs5/subject/variables.json`.
+- CDC PLACES on data.cdc.gov (Socrata catalog and `swc5-untb`, `cwsq-ngmh`), queried 2026-10-27.
+- Health insurance exclusion: [Census, ACS health insurance](https://www.census.gov/data/tables/time-series/demo/health-insurance/acs-hi.html).
+- DAO and the 1-year delay: [Census media advisory, Aug 4 2026](https://www.census.gov/newsroom/press-releases/2026/iphi-acs-media-advisory.html),
+  [Census director's blog](https://www.census.gov/newsroom/blogs/director/2026/08/understanding-the-new-disclosure-avoidance-policy.html),
+  [Carolina Demography](https://carolinademography.cpc.unc.edu/2026/09/02/federal-policy-will-limit-the-public-data-available-to-nc-communities/),
+  [Census Project letter](https://thecensusproject.org/2026/09/04/over-100-incredibly-diverse-organizations-write-to-lutnick-critical-of-delay-in-acs-release/).
+- data.gov API: [GSA data.gov API docs](https://open.gsa.gov/api/datadotgov/); `catalog.data.gov/api/3` tested 2026-10-27 (404).
+- [County Health Rankings terms](https://www.countyhealthrankings.org/terms-use);
+  [HRSA AHRF](https://data.hrsa.gov/topics/health-workforce/ahrf).
+- Socrata Discovery API (`api.us.socrata.com/api/catalog/v1`), tested 2026-10-27.
+- Repo: `data/registry/schema.ts`, `data/ingest/src/insights.ts`, `apps/web/src/lib/registry.ts`,
+  D-113, D-124, D-210, D-222, D-257, D-447; sizes measured in `~/webgis/data/tiles` (read only).
