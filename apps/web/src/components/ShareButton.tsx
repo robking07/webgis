@@ -77,10 +77,12 @@ export function ShareButton({ extras, align = "right", ...props }: Pick<Componen
   }
   async function image() {
     setDone("Making image…");
-    const made = await extras!.image();
-    if (!made) { setDone(null); return; }
-    await saveFile(new File([made.blob], made.name, { type: "image/png" }));
-    setDone("Image saved");
+    try {
+      const made = await extras!.image();
+      if (!made) { setDone(null); return; }
+      await saveFile(new File([made.blob], made.name, { type: "image/png" }));
+      setDone("Image saved");
+    } catch { setDone("Image failed"); }
   }
   const pick = (f: () => Promise<void>) => () => { setOpen(false); void f(); };
 

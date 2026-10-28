@@ -45,7 +45,7 @@ function wrap(ctx: CanvasRenderingContext2D, text: string, w: number): string[] 
 }
 
 export function mapImage({ map, theme, title, legend, sources, date }: {
-  /** A copy of the map canvas, at the device pixel ratio. */
+  /** A copy of the map canvas; its style width is the on-screen width. */
   map: HTMLCanvasElement;
   theme: ThemeName;
   title: string;
@@ -54,8 +54,7 @@ export function mapImage({ map, theme, title, legend, sources, date }: {
   date: Date;
 }): Promise<Blob | null> {
   const { ui } = THEMES[theme];
-  const s = window.devicePixelRatio || 1;
-  const W = map.width / s, H = map.height / s;
+  const W = parseFloat(map.style.width) || map.width, s = map.width / W, H = map.height / s;
   const family = getComputedStyle(document.body).fontFamily;
   const font = (px: number, bold = false) => `${bold ? "600 " : ""}${px}px ${family}`;
   const out = document.createElement("canvas");

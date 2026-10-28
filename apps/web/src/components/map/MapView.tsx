@@ -233,6 +233,8 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
         m.once("render", () => {
           const src = m.getCanvas(), c = document.createElement("canvas");
           c.width = src.width; c.height = src.height;
+          // The on-screen size: MapLibre lowers the pixel ratio on very large screens (maxCanvasSize).
+          c.style.width = `${src.clientWidth}px`; c.style.height = `${src.clientHeight}px`;
           c.getContext("2d")!.drawImage(src, 0, 0);
           resolve(c);
         });
