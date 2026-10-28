@@ -14,7 +14,7 @@ import { LANDING } from "@/lib/landing";
 import { readStoredTheme, useResolvedTheme } from "@/lib/theme";
 import { MapView, type FeatureHit, type HoverInfo, type MapApi } from "./map/MapView";
 import { DATASET_BY_ID, DATASETS, type Dataset } from "@/lib/registry";
-import { loadMpoShape, loadPlaceIndex, mpoById, placeByGeoid, type PlaceHit } from "@/lib/search";
+import { areaByCode, loadArea, loadMpoShape, loadPlaceIndex, mpoById, placeByGeoid, type AreaFile, type PlaceHit } from "@/lib/search";
 import { useIsCompact, useIsNarrow, useIsPhone } from "./BottomSheet";
 import { DatasetMenu, DatasetSheet, type BrowseSlot } from "./DatasetMenus";
 import { historyKey, parseUrlState, useUrlState, type UrlState } from "@/lib/url-state";
@@ -33,6 +33,7 @@ import { LeaveComparePrompt } from "./map-page/LeaveComparePrompt";
 import { pairReason } from "@/lib/layers";
 import { FeatureHoverPopup, PlaceHoverPopup } from "./map-page/HoverPopups";
 import { DetailPanel } from "./map-page/DetailPanel";
+import { AreaValue } from "./map-page/AreaValue";
 import { useUnreliable } from "./map-page/useUnreliable";
 import { FeaturePanel } from "./map-page/FeaturePanel";
 import { ContextLink, ContextPanel, CONTEXT_PANEL_RIGHT } from "./map-page/ContextPanel";
@@ -75,7 +76,7 @@ export function Viewer({ search }: { search: string }) {
   const [leaveFor, setLeaveFor] = useState<string | null>(null);
   const [searchOpen, setSearchOpen] = useState(false);
   // A shared drill-down link opens full screen, where the focused place's name shows (issue #203).
-  const [immersed, setImmersed] = useState(() => !!initial.in || !!initial.mpo);
+  const [immersed, setImmersed] = useState(() => !!initial.in || !!initial.mpo || !!initial.area);
   /** The filters panel (issue #34): a sidebar on desktop, a full-screen sheet on phones. `anchor`
    *  is the filter button it grows from and shrinks back into. */
   const [filters, setFilters] = useState<{ anchor: HTMLElement | null } | null>(null);
@@ -187,31 +188,43 @@ export function Viewer({ search }: { search: string }) {
     setNoChange(since && !v.since && v.pinned && !availableLevels.includes(v.pinned) ? v.pinned : null);
     if (v.pinned !== pinnedLevel || v.stop !== stopId || v.since !== (since?.id ?? null)) update({ lv: v.pinned, t: v.stop, since: v.since });
   };
-  /** A searched MPO (issue #276; the URL's `mpo`): outlined and named, never a geography level, so
-   *  nothing on the map selects it. Its shape loads only once it's picked or linked. */
-  const [mpoHit, setMpoHit] = useState<PlaceHit | null>(null);
-  const mpo = mpoHit?.mpo?.id === state.mpo ? mpoHit : null;
+  /** A searched MPO (issue #276; the URL's `mpo`) or city or metro area (issue #332; the URL's `area`):
+   *  outlined and named, never a geography level, so nothing on the map selects it. Its shape (and a
+   *  city's or metro's published numbers) load only once it's picked or linked. */
+  const [pickedHit, setPickedHit] = useState<PlaceHit | null>(null);
+  const picked = pickedHit && (pickedHit.mpo ? pickedHit.mpo.id === state.mpo : pickedHit.area === state.area) ? pickedHit : null;
+  const [areaFile, setAreaFile] = useState<{ code: string; file: AreaFile } | null>(null);
   useEffect(() => {
-    const id = state.mpo;
+    const id = state.mpo, code = state.area;
     mapApi.current?.showArea(null);
-    if (!id) return;
+    if (!id && !code) return;
     let live = true;
     loadPlaceIndex().then((rows) => {
-      const hit = mpoById(rows, id);
+      const hit = code ? areaByCode(rows, code) : mpoById(rows, id!);
       if (!hit || !live) return;
-      setMpoHit(hit);
-      return loadMpoShape(id).then((shape) => { if (live) mapApi.current?.showArea(shape); });
-    }).catch(() => {}); // shortcut: an unknown or failed MPO just shows no outline; say so if visitors hit it.
+      setPickedHit(hit);
+      if (!code) return loadMpoShape(id!).then((shape) => { if (live) mapApi.current?.showArea(shape); });
+      return loadArea(code).then((file) => { if (live) { setAreaFile({ code, file }); mapApi.current?.showArea(file.g); } });
+    }).catch(() => {}); // shortcut: an unknown or failed MPO or area just shows no outline; say so if visitors hit it.
     return () => { live = false; };
-  }, [state.mpo]);
+  }, [state.mpo, state.area]);
   const onSearchPlace = (p: PlaceHit) => {
     setSearchOpen(false);
-    if (!p.mpo) { if (state.mpo) update({ mpo: null }); goToPlace(p); return; }
+    if (p.area) {
+      // A city or metro: outlined with its own numbers, framed like any searched place.
+      setSelected(null); setFeatureSelected(null); mapApi.current?.select("county", null);
+      setPickedHit(p);
+      update({ area: p.area, mpo: null });
+      goToPlace(p);
+      setImmersed(true); setPeek(false);
+      return;
+    }
+    if (!p.mpo) { if (state.mpo || state.area) update({ mpo: null, area: null }); goToPlace(p); return; }
     const { id, bbox } = p.mpo;
     setSelected(null); setFeatureSelected(null); mapApi.current?.select("county", null);
     if (focus) leaveFocus();
-    setMpoHit(p);
-    update({ mpo: id });
+    setPickedHit(p);
+    update({ mpo: id, area: null });
     setImmersed(true); setPeek(false);
     // Wait a frame so panels that just closed are measured where they now are (as goToPlace does).
     requestAnimationFrame(() => requestAnimationFrame(() => mapApi.current?.fitBbox(bbox, clearArea())));
@@ -417,7 +430,8 @@ export function Viewer({ search }: { search: string }) {
           onShowNav={() => { setImmersed(false); setPeek(false); }}
           onOpenFilters={toggleFilters} onOpenLevel={openLevelFilters} levelPill={!isFeature}
           menuOpen={menuOpen && immersed} menu={immersed ? datasetMenu : null} onBrowse={changeDataset} onExit={exitCompare}
-          place={mpo ? { name: `${mpo.name} · ${mpo.mpo!.states}`, onClear: () => update({ mpo: null }) } : focus && focusName ? { name: focusName, onClear: leaveFocus } : null} backShown={canGoBack || phone} />
+          place={picked ? { name: picked.mpo ? `${picked.name} · ${picked.mpo.states}` : picked.name, onClear: () => update({ mpo: null, area: null }) } : focus && focusName ? { name: focusName, onClear: leaveFocus } : null} backShown={canGoBack || phone}
+          detail={picked?.area && primary ? <AreaValue datasets={secondary ? [primary, secondary] : [primary]} code={picked.area} kind={picked.kind} file={areaFile?.code === picked.area ? areaFile.file : null} /> : null} />
       )}
 
       {filters && primary && !phone && (

@@ -1,5 +1,5 @@
 // npm run ingest -- <step> [dataset or level ids…]
-// Steps: geographies | label-mask | mpo | timeline | acs | acs-bg | census2020 | lodes | places | climdiv | nbi | fars | overdose | airquality | features | vmt | cejst | ddp287g | tri | nri | svi | lead | food-access | tiles | publish-tiles | publish-values | publish-geo | publish-data | counts | publish-counts | details | publish-details | tract-geo | export | insights [--reflag] | combinations [--dry-run] | tracts-out | docs | mn-catalog | all
+// Steps: geographies | label-mask | mpo | areas | publish-areas | timeline | acs | acs-bg | census2020 | lodes | places | climdiv | nbi | fars | overdose | airquality | features | vmt | cejst | ddp287g | tri | nri | svi | lead | food-access | tiles | publish-tiles | publish-values | publish-geo | publish-data | counts | publish-counts | details | publish-details | tract-geo | export | insights [--reflag] | combinations [--dry-run] | tracts-out | docs | mn-catalog | all
 import { ingestGeographies, tractGeography } from "./geographies.ts";
 import { ingestAcs, ingestAcsTimeline } from "./acs.ts";
 import { ingestCensus2020 } from "./census2020.ts";
@@ -10,7 +10,7 @@ import { computeInsights, reflagInsights } from "./insights.ts";
 import { computeCombinations } from "./combinations.ts";
 import { ingestPlaces } from "./places.ts";
 import { ingestClimdiv, ingestClimdivTimeline } from "./climdiv.ts";
-import { publishCounts, publishData, publishDetails, publishGeo, publishTiles, publishValues } from "./publish-tiles.ts";
+import { publishAreas, publishCounts, publishData, publishDetails, publishGeo, publishTiles, publishValues } from "./publish-tiles.ts";
 import { setCountsOnly } from "./values.ts";
 import { detailsOut } from "./details.ts";
 import { writeDataSourcesDoc } from "./docs.ts";
@@ -30,6 +30,7 @@ import { ingestNri } from "./nri.ts";
 import { ingestSvi } from "./svi.ts";
 import { buildLabelMask } from "./label-mask.ts";
 import { buildMpo } from "./mpo.ts";
+import { buildAreas } from "./areas.ts";
 import { tractsOut } from "./tracts.ts";
 const [step, ...rest] = process.argv.slice(2);
 const only = rest.length ? rest : undefined;
@@ -57,6 +58,9 @@ const steps: Record<string, () => Promise<void> | void> = {
   tiles: () => buildTiles(only),
   "label-mask": buildLabelMask,
   mpo: buildMpo,
+  // Cities and metro areas (#332): their published values and outlines; `publish-areas` uploads only areas/.
+  areas: buildAreas,
+  "publish-areas": () => publishAreas(),
   // Year control (D-36): earlier periods, written to the web export only. ACS first (FARS
   // uses its 2015–2019 population).
   timeline: async () => { await ingestAcsTimeline(only); await ingestFarsTimeline(only); await ingestClimdivTimeline(only);

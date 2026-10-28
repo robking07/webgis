@@ -31,3 +31,12 @@ describe("mpo (a searched MPO, issue #276)", () => {
     expect(historyKey({ ...base, mpo: "27197300" })).not.toBe(historyKey(base));
   });
 });
+
+describe("area (issue #332)", () => {
+  it("keeps a city or metro code and drops anything else", () => {
+    expect(parseUrlState("?area=cbsa33460").area).toBe("cbsa33460");
+    expect(parseUrlState("?area=place2743000").area).toBe("place2743000");
+    expect(parseUrlState("?area=27053").area).toBeNull();
+    expect(serializeUrlState({ ...parseUrlState("?d=median_household_income"), area: "cbsa33460" })).toContain("area=cbsa33460");
+  });
+});

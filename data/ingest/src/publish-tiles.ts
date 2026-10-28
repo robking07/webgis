@@ -122,6 +122,8 @@ export const publishValues = (only?: string[]) => publishJson("values", "export"
 export const publishGeo = () => publishJson("geo", "export` and `ingest tract-geo");
 /** The state/county click details (details/, from `ingest details`), gzip-encoded. */
 export const publishDetails = () => publishJson("details", "details");
+/** City and metro area files (areas/, from `ingest areas`, #332), gzip-encoded. */
+export const publishAreas = () => publishJson("areas", "areas");
 
 /** The files `ingest counts` writes (#156, #154), relative to values/: margins of error, counts, U.S.
  *  rows and the tract and block-group count shards. Nothing else matches, so existing files are
