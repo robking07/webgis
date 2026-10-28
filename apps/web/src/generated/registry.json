@@ -376,7 +376,7 @@
   "id": "asthma",
   "title": "Asthma",
   "phrase": "asthma rates",
-  "description": "Share of adults who have been told they have asthma and still have it. Age-adjusted prevalence; model-based small-area estimate.",
+  "description": "Share of adults who have been told they have asthma and still have it. Model-based small-area estimate, age-adjusted for counties but not for tracts (CDC publishes tract rates unadjusted).",
   "category": "Health",
   "subcategory": "Conditions",
   "tags": [
@@ -388,13 +388,14 @@
    "name": "CDC PLACES (Local Data for Better Health), 2025 release",
    "shortName": "CDC PLACES",
    "url": "https://www.cdc.gov/places/",
-   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County and Census Tract Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
   },
   "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
   "updateCadence": "annual",
   "vintage": "2023 data",
   "geographyLevels": [
-   "county"
+   "county",
+   "tract"
   ],
   "unit": "percent",
   "universe": "adults 18+ (model-based estimate)",
@@ -402,13 +403,14 @@
    "kind": "places",
    "socrata": "swc5-untb",
    "measureId": "CASTHMA",
-   "valueType": "AgeAdjPrv"
+   "valueType": "AgeAdjPrv",
+   "tractSocrata": "cwsq-ngmh"
   },
   "modelInputs": [
    "pct_poverty",
    "median_household_income"
   ],
-  "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
+  "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate, as do tracts with very few residents.",
   "facets": [],
   "excludeFromInsights": false,
   "learnMore": [],
@@ -1426,7 +1428,7 @@
   "id": "depression",
   "title": "Depression",
   "phrase": "depression rates",
-  "description": "Share of adults a doctor has ever told they have a depressive disorder. Age-adjusted prevalence; model-based small-area estimate.",
+  "description": "Share of adults a doctor has ever told they have a depressive disorder. Model-based small-area estimate, age-adjusted for counties but not for tracts (CDC publishes tract rates unadjusted).",
   "category": "Health",
   "subcategory": "Conditions",
   "tags": [
@@ -1438,13 +1440,14 @@
    "name": "CDC PLACES (Local Data for Better Health), 2025 release",
    "shortName": "CDC PLACES",
    "url": "https://www.cdc.gov/places/",
-   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County and Census Tract Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
   },
   "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
   "updateCadence": "annual",
   "vintage": "2023 data",
   "geographyLevels": [
-   "county"
+   "county",
+   "tract"
   ],
   "unit": "percent",
   "universe": "adults 18+ (model-based estimate)",
@@ -1452,13 +1455,14 @@
    "kind": "places",
    "socrata": "swc5-untb",
    "measureId": "DEPRESSION",
-   "valueType": "AgeAdjPrv"
+   "valueType": "AgeAdjPrv",
+   "tractSocrata": "cwsq-ngmh"
   },
   "modelInputs": [
    "pct_poverty",
    "median_household_income"
   ],
-  "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
+  "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate, as do tracts with very few residents.",
   "facets": [],
   "excludeFromInsights": false,
   "learnMore": [],
@@ -1478,7 +1482,7 @@
   "id": "diabetes",
   "title": "Diabetes",
   "phrase": "diabetes rates",
-  "description": "Share of adults a doctor has told they have diabetes (not counting diabetes only during pregnancy). Age-adjusted prevalence; model-based small-area estimate.",
+  "description": "Share of adults a doctor has told they have diabetes (not counting diabetes only during pregnancy). Model-based small-area estimate, age-adjusted for counties but not for tracts (CDC publishes tract rates unadjusted).",
   "category": "Health",
   "subcategory": "Conditions",
   "tags": [
@@ -1490,13 +1494,14 @@
    "name": "CDC PLACES (Local Data for Better Health), 2025 release",
    "shortName": "CDC PLACES",
    "url": "https://www.cdc.gov/places/",
-   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County and Census Tract Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
   },
   "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
   "updateCadence": "annual",
   "vintage": "2023 data",
   "geographyLevels": [
-   "county"
+   "county",
+   "tract"
   ],
   "unit": "percent",
   "universe": "adults 18+ (model-based estimate)",
@@ -1504,13 +1509,14 @@
    "kind": "places",
    "socrata": "swc5-untb",
    "measureId": "DIABETES",
-   "valueType": "AgeAdjPrv"
+   "valueType": "AgeAdjPrv",
+   "tractSocrata": "cwsq-ngmh"
   },
   "modelInputs": [
    "pct_poverty",
    "median_household_income"
   ],
-  "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
+  "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate, as do tracts with very few residents.",
   "facets": [],
   "excludeFromInsights": false,
   "learnMore": [],
@@ -2030,7 +2036,7 @@
   "id": "fair_poor_health",
   "title": "Fair or poor health",
   "phrase": "rates of fair or poor health",
-  "description": "Share of adults who describe their general health as fair or poor. Age-adjusted prevalence; model-based small-area estimate.",
+  "description": "Share of adults who describe their general health as fair or poor. Model-based small-area estimate, age-adjusted for counties but not for tracts (CDC publishes tract rates unadjusted).",
   "category": "Health",
   "subcategory": "Conditions",
   "tags": [
@@ -2042,13 +2048,14 @@
    "name": "CDC PLACES (Local Data for Better Health), 2025 release",
    "shortName": "CDC PLACES",
    "url": "https://www.cdc.gov/places/",
-   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County and Census Tract Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
   },
   "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
   "updateCadence": "annual",
   "vintage": "2023 data",
   "geographyLevels": [
-   "county"
+   "county",
+   "tract"
   ],
   "unit": "percent",
   "universe": "adults 18+ (model-based estimate)",
@@ -2056,13 +2063,14 @@
    "kind": "places",
    "socrata": "swc5-untb",
    "measureId": "GHLTH",
-   "valueType": "AgeAdjPrv"
+   "valueType": "AgeAdjPrv",
+   "tractSocrata": "cwsq-ngmh"
   },
   "modelInputs": [
    "pct_poverty",
    "median_household_income"
   ],
-  "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
+  "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate, as do tracts with very few residents.",
   "facets": [],
   "excludeFromInsights": false,
   "learnMore": [],
@@ -2607,7 +2615,7 @@
   "id": "heart_disease",
   "title": "Coronary heart disease",
   "phrase": "heart disease rates",
-  "description": "Share of adults a doctor has told they have coronary heart disease or angina. Age-adjusted prevalence; model-based small-area estimate.",
+  "description": "Share of adults a doctor has told they have coronary heart disease or angina. Model-based small-area estimate, age-adjusted for counties but not for tracts (CDC publishes tract rates unadjusted).",
   "category": "Health",
   "subcategory": "Conditions",
   "tags": [
@@ -2620,13 +2628,14 @@
    "name": "CDC PLACES (Local Data for Better Health), 2025 release",
    "shortName": "CDC PLACES",
    "url": "https://www.cdc.gov/places/",
-   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County and Census Tract Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
   },
   "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
   "updateCadence": "annual",
   "vintage": "2023 data",
   "geographyLevels": [
-   "county"
+   "county",
+   "tract"
   ],
   "unit": "percent",
   "universe": "adults 18+ (model-based estimate)",
@@ -2634,13 +2643,14 @@
    "kind": "places",
    "socrata": "swc5-untb",
    "measureId": "CHD",
-   "valueType": "AgeAdjPrv"
+   "valueType": "AgeAdjPrv",
+   "tractSocrata": "cwsq-ngmh"
   },
   "modelInputs": [
    "pct_poverty",
    "median_household_income"
   ],
-  "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
+  "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate, as do tracts with very few residents.",
   "facets": [],
   "excludeFromInsights": false,
   "learnMore": [],
@@ -2731,7 +2741,7 @@
   "id": "high_blood_pressure",
   "title": "High blood pressure",
   "phrase": "high blood pressure rates",
-  "description": "Share of adults a doctor has told they have high blood pressure. Age-adjusted prevalence; model-based small-area estimate.",
+  "description": "Share of adults a doctor has told they have high blood pressure. Model-based small-area estimate, age-adjusted for counties but not for tracts (CDC publishes tract rates unadjusted).",
   "category": "Health",
   "subcategory": "Conditions",
   "tags": [
@@ -2744,13 +2754,14 @@
    "name": "CDC PLACES (Local Data for Better Health), 2025 release",
    "shortName": "CDC PLACES",
    "url": "https://www.cdc.gov/places/",
-   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County and Census Tract Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
   },
   "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
   "updateCadence": "annual",
   "vintage": "2023 data",
   "geographyLevels": [
-   "county"
+   "county",
+   "tract"
   ],
   "unit": "percent",
   "universe": "adults 18+ (model-based estimate)",
@@ -2758,13 +2769,14 @@
    "kind": "places",
    "socrata": "swc5-untb",
    "measureId": "BPHIGH",
-   "valueType": "AgeAdjPrv"
+   "valueType": "AgeAdjPrv",
+   "tractSocrata": "cwsq-ngmh"
   },
   "modelInputs": [
    "pct_poverty",
    "median_household_income"
   ],
-  "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
+  "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate, as do tracts with very few residents.",
   "facets": [],
   "excludeFromInsights": false,
   "learnMore": [],
@@ -3894,7 +3906,7 @@
   "id": "mental_distress",
   "title": "Frequent mental distress",
   "phrase": "rates of frequent mental distress",
-  "description": "Share of adults who say their mental health was not good on 14 or more of the past 30 days. Age-adjusted prevalence; model-based small-area estimate.",
+  "description": "Share of adults who say their mental health was not good on 14 or more of the past 30 days. Model-based small-area estimate, age-adjusted for counties but not for tracts (CDC publishes tract rates unadjusted).",
   "category": "Health",
   "subcategory": "Conditions",
   "tags": [
@@ -3906,13 +3918,14 @@
    "name": "CDC PLACES (Local Data for Better Health), 2025 release",
    "shortName": "CDC PLACES",
    "url": "https://www.cdc.gov/places/",
-   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County and Census Tract Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
   },
   "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
   "updateCadence": "annual",
   "vintage": "2023 data",
   "geographyLevels": [
-   "county"
+   "county",
+   "tract"
   ],
   "unit": "percent",
   "universe": "adults 18+ (model-based estimate)",
@@ -3920,13 +3933,14 @@
    "kind": "places",
    "socrata": "swc5-untb",
    "measureId": "MHLTH",
-   "valueType": "AgeAdjPrv"
+   "valueType": "AgeAdjPrv",
+   "tractSocrata": "cwsq-ngmh"
   },
   "modelInputs": [
    "pct_poverty",
    "median_household_income"
   ],
-  "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
+  "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate, as do tracts with very few residents.",
   "facets": [],
   "excludeFromInsights": false,
   "learnMore": [],
@@ -4595,7 +4609,7 @@
   "id": "obesity",
   "title": "Obesity",
   "phrase": "obesity rates",
-  "description": "Share of adults with a body mass index of 30 or more. Age-adjusted prevalence among adults; model-based small-area estimate.",
+  "description": "Share of adults with a body mass index of 30 or more. Model-based small-area estimate, age-adjusted for counties but not for tracts (CDC publishes tract rates unadjusted).",
   "category": "Health",
   "subcategory": "Conditions",
   "tags": [
@@ -4607,13 +4621,14 @@
    "name": "CDC PLACES (Local Data for Better Health), 2025 release",
    "shortName": "CDC PLACES",
    "url": "https://www.cdc.gov/places/",
-   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County and Census Tract Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
   },
   "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
   "updateCadence": "annual",
   "vintage": "2023 data",
   "geographyLevels": [
-   "county"
+   "county",
+   "tract"
   ],
   "unit": "percent",
   "universe": "adults 18+ (model-based estimate)",
@@ -4621,13 +4636,14 @@
    "kind": "places",
    "socrata": "swc5-untb",
    "measureId": "OBESITY",
-   "valueType": "AgeAdjPrv"
+   "valueType": "AgeAdjPrv",
+   "tractSocrata": "cwsq-ngmh"
   },
   "modelInputs": [
    "pct_poverty",
    "median_household_income"
   ],
-  "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
+  "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate, as do tracts with very few residents.",
   "facets": [],
   "excludeFromInsights": false,
   "learnMore": [],
@@ -7798,7 +7814,7 @@
   "id": "physical_inactivity",
   "title": "No leisure-time exercise",
   "phrase": "physical inactivity rates",
-  "description": "Share of adults with no leisure-time physical activity. Age-adjusted prevalence among adults; model-based small-area estimate.",
+  "description": "Share of adults with no leisure-time physical activity. Model-based small-area estimate, age-adjusted for counties but not for tracts (CDC publishes tract rates unadjusted).",
   "category": "Health",
   "subcategory": "Behaviors",
   "tags": [
@@ -7811,13 +7827,14 @@
    "name": "CDC PLACES (Local Data for Better Health), 2025 release",
    "shortName": "CDC PLACES",
    "url": "https://www.cdc.gov/places/",
-   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County and Census Tract Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
   },
   "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
   "updateCadence": "annual",
   "vintage": "2023 data",
   "geographyLevels": [
-   "county"
+   "county",
+   "tract"
   ],
   "unit": "percent",
   "universe": "adults 18+ (model-based estimate)",
@@ -7825,13 +7842,14 @@
    "kind": "places",
    "socrata": "swc5-untb",
    "measureId": "LPA",
-   "valueType": "AgeAdjPrv"
+   "valueType": "AgeAdjPrv",
+   "tractSocrata": "cwsq-ngmh"
   },
   "modelInputs": [
    "pct_poverty",
    "median_household_income"
   ],
-  "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
+  "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate, as do tracts with very few residents.",
   "facets": [],
   "excludeFromInsights": false,
   "learnMore": [],
@@ -8070,7 +8088,7 @@
   "id": "smoking",
   "title": "Cigarette smoking",
   "phrase": "smoking rates",
-  "description": "Share of adults who currently smoke cigarettes. Age-adjusted prevalence among adults; model-based small-area estimate.",
+  "description": "Share of adults who currently smoke cigarettes. Model-based small-area estimate, age-adjusted for counties but not for tracts (CDC publishes tract rates unadjusted).",
   "category": "Health",
   "subcategory": "Behaviors",
   "tags": [
@@ -8083,13 +8101,14 @@
    "name": "CDC PLACES (Local Data for Better Health), 2025 release",
    "shortName": "CDC PLACES",
    "url": "https://www.cdc.gov/places/",
-   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+   "citation": "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County and Census Tract Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
   },
   "license": "Public domain (U.S. Government work; data.cdc.gov license field \"Public Domain\")",
   "updateCadence": "annual",
   "vintage": "2023 data",
   "geographyLevels": [
-   "county"
+   "county",
+   "tract"
   ],
   "unit": "percent",
   "universe": "adults 18+ (model-based estimate)",
@@ -8097,13 +8116,14 @@
    "kind": "places",
    "socrata": "swc5-untb",
    "measureId": "CSMOKING",
-   "valueType": "AgeAdjPrv"
+   "valueType": "AgeAdjPrv",
+   "tractSocrata": "cwsq-ngmh"
   },
   "modelInputs": [
    "pct_poverty",
    "median_household_income"
   ],
-  "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
+  "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate, as do tracts with very few residents.",
   "facets": [],
   "excludeFromInsights": false,
   "learnMore": [],
@@ -8648,6 +8668,56 @@
   ],
   "symbology": {
    "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": false
+  }
+ },
+ {
+  "id": "uninsured_under_65",
+  "title": "No health insurance (under 65)",
+  "phrase": "uninsured rates under 65",
+  "description": "Share of residents under 65 with no health insurance of any kind. A Census Bureau model-based estimate, built from survey answers plus tax, SNAP and Medicaid records, and updated every year.",
+  "category": "Health",
+  "subcategory": "Care and coverage",
+  "tags": [
+   "health insurance",
+   "uninsured",
+   "health care",
+   "SAHIE"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, Small Area Health Insurance Estimates (SAHIE)",
+   "shortName": "Census SAHIE",
+   "url": "https://www.census.gov/programs-surveys/sahie.html",
+   "citation": "U.S. Census Bureau, Small Area Health Insurance Estimates (SAHIE), 2024 estimates (released August 2026)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2024",
+  "geographyLevels": [
+   "state",
+   "county"
+  ],
+  "unit": "percent",
+  "universe": "residents under 65 (model-based estimate)",
+  "measure": {
+   "kind": "sahie",
+   "year": 2024
+  },
+  "modelInputs": [
+   "pct_uninsured"
+  ],
+  "coverageNote": "States and counties only. Kalawao County, Hawaii, has no estimate, and Puerto Rico is not covered.",
+  "facets": [],
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "margin-of-error",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
    "classification": "quantile",
    "classes": 5,
    "higherIsBetter": false

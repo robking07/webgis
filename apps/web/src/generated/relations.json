@@ -709,6 +709,10 @@
     {
      "id": "routine_checkup",
      "why": "People without insurance see a doctor less often."
+    },
+    {
+     "id": "uninsured_under_65",
+     "why": "The same question two ways: the survey for all ages, and the Census model for under-65s, updated every year."
     }
    ]
   },
@@ -740,6 +744,15 @@
   "stroke": {
    "group": "Health",
    "links": []
+  },
+  "uninsured_under_65": {
+   "group": "Health",
+   "links": [
+    {
+     "id": "pct_uninsured",
+     "why": "The same question two ways: the survey for all ages, and the Census model for under-65s, updated every year."
+    }
+   ]
   },
   "utility_shutoff_threat": {
    "group": "Health",

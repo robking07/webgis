@@ -45,7 +45,7 @@ describe("checkSplash", () => {
   it("rejects bad edits", () => {
     expect(() => check({ ...ok, link: "/map?d=bike" })).toThrow(/"bike" is not a registry dataset/);
     expect(() => check({ ...ok, link: "/map?d=pct_bike_commute&b=nope" })).toThrow(/second map "nope"/);
-    expect(() => check({ ...ok, link: "/map?d=smoking&lv=tract" })).toThrow(/no tract level/);
+    expect(() => check({ ...ok, link: "/map?d=stroke&lv=tract" })).toThrow(/no tract level/);
     expect(() => check({ ...ok, county: undefined })).toThrow(/\{county\}/);
     expect(() => check({ ...ok, text: "Bike?" })).toThrow(/\{county\}/);
     expect(() => check({ ...ok, link: "/map?d=pct_bike_commute&x=1" })).toThrow(/unknown map setting "x"/);
