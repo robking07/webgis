@@ -1,7 +1,7 @@
 # Next ascent research: what the foundation can already do (R1)
 
-Status: section 1 done.
-Next: write section 2 (cheap unlocks).
+Status: sections 1–2 done.
+Next: write section 3 (parked issues).
 
 Research notes for the lead. Not for merge. Sizes: S ≈ 100k tokens, M ≈ 275k, L ≈ 500k, XL = several L.
 Read on 2026-10-27 at `origin/main` 5bd1f06. Every claim below points at a file or decision so it can be checked.
@@ -37,6 +37,106 @@ tiers (R2 ≈ 4.2 GB of the 10 GB free tier, D-210; Supabase ≈ 115–320 MB of
 | **Guardrails and process** (D-147, D-451, CI, `brief.mjs`, `merge-pr.sh`) | Hooks block bad merges and secret reads; CI build, lint, click-through, Lighthouse; the session brief. | e2e only runs in CI (no Chromium in the agent sandbox); Robbie's machine is the only data runner. |
 
 ## 2. Cheap unlocks (ranked by value to Robbie's weekly use ÷ cost)
+
+"Cheap" = mostly wiring blocks that already exist. Value is judged against Robbie's week as a
+transportation planner and GIS lead: "my area → my numbers → my staff report" (the review lead's
+framing on #291/#292), plus showing the site off. Running cost is $0/month for all of these unless
+noted. A licensing note that matters for every Fork flag below: 130 of 138 maps are U.S.
+government public domain; only FEMA NRI (10 maps, "FEMA may ask users to stop") and three EPA
+maps ("free non-commercial and educational use") carry conditions, so a paid Fork could reuse
+almost all of today's data (check those 13 first).
+
+| # | Unlock | Value to weekly use | Size (tokens) | Builds on |
+|---|---|---|---|---|
+| 1 | My area home | High | S (~70k) | URL state, search, MPO outlines |
+| 2 | Region data pack (one CSV for a whole area) | High | S (~90k) | details files, tract shards, `csv.ts` |
+| 3 | Address lookup → my tract | High | S–M (~150k) | search overlay, tract tiles, place pages |
+| 4 | New-release watcher | Medium-high, needs no Robbie | S (~100k) | registry vintages, GitHub issues |
+| 5 | Similar places (#291) | High | S–M (~150k) | county value files |
+| 6 | Totals for an MPO or chosen counties (#292) | High | M (~275k) | counts files (D-257), MPO shapes |
+| 7 | Peer table: my county against 3–10 others | High | M (~200k) | compare, benchmarks, #5 |
+| 8 | "What changed" column on place pages | High | M (~250k) | timeline files, `change.ts` |
+| 9 | CDC PLACES health maps at tract and city level | Medium-high | S–M (~150k) | `places` recipe, tract shards |
+| 10 | Embeddable map for slides and web pages | Medium | S (~80k) | `SpecialMap`, share URL |
+| 11 | Small trust fixes bundle (#343, #296, #187) | Medium | S (~100k) | existing code |
+| 12 | Dataset key facts (#244, first half) | Medium | S–M (~120k) | `us.json`, state/county values |
+
+**1. My area home.** *Visitor sees:* a "Set as my area" choice on a state, county or MPO; from then
+on `/map` opens framed on it, with his pinned maps one tap away and the area's outline drawn.
+*Why weekly:* Robbie opens Mapwich for the Twin Cities most weeks; today every visit starts at the
+national view. *Build:* browser storage (already used for the theme, `lib/theme.ts`) plus the
+existing URL state and MPO outline. S ≈ 70k. *Running:* $0. *Fork:* no.
+
+**2. Region data pack.** *Visitor sees:* on a state or county page, "Download every map for every
+county in Minnesota" (or every tract in Hennepin), one tidy CSV with margins and source notes.
+*Why weekly:* this is the staff-report step; today it means one CSV per dataset. *Build:* the
+per-state `details/<fips>.json` already holds every dataset for the state and its counties, and
+`values/tracts/<county>.json` every tract dataset for a county, so this is a browser-side join
+and `csv.ts` work. S ≈ 90k. *Fork:* weak (consultants buy this from PolicyMap; a richer "report
+pack" is a Fork idea, see #7 in §5). *Limit:* MPO packs need #6's crosswalk first.
+
+**3. Address lookup → my tract.** *Visitor sees:* type an address in search, the map flies there
+and selects the tract, with "Open this tract's profile". *Why weekly:* planners get "what's it like
+around 123 Main St" questions; the public's first question is "my neighborhood". Tracts aren't in
+search today (`PlaceProfile.tsx` shortcut comment). *Build:* one geocoder call (Census Bureau
+geocoder through a tiny Vercel function, or a free OSM geocoder within its usage policy), then a
+point-in-tract lookup against tiles already loaded. S–M ≈ 150k. *Running:* $0 at Mapwich traffic.
+*Fork:* no. *Note:* the address must not be logged or put in share links (privacy).
+
+**4. New-release watcher.** *Visitor sees:* nothing directly; datasets stay current, and the data
+page can say "checked 2026-11-02". *Why weekly:* keeps Robbie out of the refresh loop (2–4 h/week
+rule) and is the first brick of Library maps. *Build:* a weekly GitHub Action (free on a public
+repo) reads each source's "latest vintage" (Census API vintages, Socrata `rowsUpdatedAt`, OpenFEMA
+`lastDataSetRefresh`, NOAA file dates) and opens or updates one issue listing stale maps. No
+secrets, no writes to R2. S ≈ 100k. *Fork:* no. This overlaps the data-scout's "release watch";
+the Action is the script version of it (handbook rule: no agent when a script will do).
+
+**5. Similar places (#291, Robbie: build).** *Visitor sees:* "Counties most like Hennepin: …" on a
+place page, each a link to Compare, with one line on what "like" means. *Build:* an offline step
+over county value files already on R2 → one small JSON. S–M ≈ 150k. *Fork:* possible (peer-region
+selection is a paid consulting task), but the free version is the hook.
+
+**6. Totals for an MPO or chosen counties (#292).** *Visitor sees:* focus Met Council → "3.2 million
+people, 11.4% in poverty ±0.3" with the Census way of combining margins; medians say why they
+can't be added. *Build:* the counts and their margins already exist per county and tract
+(`values/counts/…`, D-257); missing is an MPO → county/tract crosswalk (one ingest step from the
+MPO shapes already in `public/mpo/`) and the panel. M ≈ 275k. Unlocks "custom region" (pick
+counties) for little more. *Fork:* no.
+
+**7. Peer table.** *Visitor sees:* "Compare with…" accepts several places; a table, my area first,
+peers below, benchmarks at the bottom, downloadable. *Why weekly:* grant applications and long-range
+plans need peers, not one pair. *Build:* `/compare/A/B` is two-place only; the row logic and
+benchmarks exist. M ≈ 200k; best after #5 so peers can be suggested. *Fork:* possible.
+
+**8. "What changed" on place pages.** *Visitor sees:* a "since 2019" column on every place row that
+has a timeline (63 maps), grey when inside the margin of error. *Build:* the per-period value files
+exist; the cheap path is for `ingest details` to also write the earliest comparable period into
+`details/` and the tract shards, then reuse `change.ts`. Needs Robbie's machine for one rerun.
+M ≈ 250k. Pairs naturally with #188 (real margins).
+
+**9. CDC PLACES at tract and city level.** *Visitor sees:* the 38 health maps keep coloring when
+zoomed into tracts; city values once #332 lands. *Build:* `places.ts` is county-only by choice; CDC
+publishes the same measures for tracts and places on data.cdc.gov (public domain). Ingest + level
+lists only, no UI code. S–M ≈ 150k. *Cost:* tract shards grow ~1 MB per county file at most;
+R2 stays inside the free tier. *Check first:* which tract vintage (2010 vs 2020) the current PLACES
+release uses.
+
+**10. Embeddable map.** *Visitor sees:* "Embed" in the share menu gives an iframe snippet of the
+exact view, chrome-free. *Why weekly:* Robbie can drop a live map in a slide deck, a staff-report
+web page or his portfolio. *Build:* `SpecialMap` already renders a bare map from a dataset +
+`at`; an `/embed` route wraps it. S ≈ 80k. *Running:* traffic from embeds hits R2 (free egress).
+
+**11. Small trust fixes.** #343 (hover vs details numbers), #296 (U.S. figures; waits on Robbie's
+counts upload), #187 (screen-reader name, endless spinner, false "tiles missing" banner). Together
+S ≈ 100k. Not glamorous; they are the things a hiring manager or colleague would notice.
+
+**12. Dataset key facts (#244, first half).** National value, top and bottom 3 states, at the top of
+`/data/[id]`. Needs a registry field for which direction is "better", and that is a wording
+judgment on sensitive topics (smoking yes; race shares never), so default to "highest / lowest"
+and flag. S–M ≈ 120k.
+
+Left out on purpose: AI features (another researcher's topic), new data sources (the data-scale
+researcher's), and anything that adds a server.
 
 ## 3. Parked issues: still fit? how big?
 
