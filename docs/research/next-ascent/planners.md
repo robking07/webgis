@@ -1,7 +1,7 @@
 # Research notes: how planners work, and the MPO rabbit hole (R5)
 
-Status: sections 1–3 done (2026-10-27).
-Next: section 4, outputs planners need; then top 10 and sources.
+Status: complete (2026-10-27). All five sections and sources written.
+Next: nothing; the lead harvests. Possible follow-ups listed in the PR report.
 
 Not for merge. The lead harvests these notes for the Vision and the Next phase.
 
@@ -269,5 +269,92 @@ TIP PDF, extract project lists, compare plan goals) is the "comparing plan conte
 roadmap lists under "Not now" as a possible paid product. It needs PDF storage, text extraction
 and LLM calls at scale; running cost likely above $50/month. **Fork candidate.**
 ## 4. Outputs planners need
+
+What already exists: CSV download with a "Cite as" line (`apps/web/src/lib/csv.ts`), a "Cite as"
+row on each dataset's page, link previews, share URLs. Missing: anything that carries the **map**
+or the **number with its citation** into a Word memo, a slide or a printed board.
+
+| Output | What the visitor sees/does | Why it matters | Size · cost |
+|---|---|---|---|
+| **Copy for my memo** | One button on a value: copies "Ramsey County: 9.1% of households have no vehicle (±0.4), ACS 5-year 2020–2024, U.S. Census Bureau table B25044, via mapwich.org/…" | This is what goes into a staff report, verbatim; today it's retyped | S (~100k) · $0 |
+| **Save map image** | PNG of the current view with title, legend, source line, date and a small Mapwich mark; landscape or square | Board memos, slides, grant attachments; replaces screenshots of Google Maps | M (~275k; MapLibre `preserveDrawingBuffer` + canvas compositing for legend/text) · $0 (client-side) |
+| **Print layout** | "Print" gives a letter or tabloid page: map, legend, the ten numbers, sources, QR code back to the live view | Public-meeting boards and handouts | S–M after the image export (~150k) · $0 |
+| **Embed** | "Embed" gives an `<iframe>` snippet for a locked view (dataset, place, period) with a small legend | MPO and city websites, story maps, Specials re-use | M (~275k; a chrome-less route + size guard) · probably $0 at current traffic; watch Vercel bandwidth if an agency embeds on a busy page |
+| **Grant data table** | For a place, MPO or picked area: the grant-ready numbers (population, poverty/≤200% FPL, zero-car, disability, 65+, traffic deaths 5-yr and per 100k, archived "disadvantaged tract" share) in one table with citations; copy as table or CSV | The same table gets rebuilt for every SS4A, BUILD, TA application | S–M (~150k) after totals (#292) · $0 |
+| **Methods note** | A per-dataset "How this was made" paragraph a consultant can paste into an appendix | Credibility in formal documents | Exists in part (dataset pages); S to make copyable |
+
+Notes: citations should name the agency and table, not just "Mapwich". Image and print exports
+must carry the vintage and the reliability warning when one applies, or a stale/unreliable number
+travels without its caveat.
+
 ## 5. Top 10
+
+Ordered for Robbie's weekly use (the tie-break). Sizes: S≈100k, M≈275k, L≈500k tokens.
+
+1. **Place-first "ten numbers" card.** Search or tap a place and see its ten planner numbers with
+   benchmarks (state, US) before choosing any dataset. *Why:* the in-meeting lookup, in one tap.
+   M (~275k) · $0 · not a fork · builds on S1 static details, reliability warnings, compare.
+2. **Cities and metros as places (#332).** Search "Brooklyn Park" and get the city's own numbers
+   with ±. *Why:* most conversations name a city, not a county. L (~350–450k, from the issue) ·
+   $0 · not a fork · builds on search, ACS ingest.
+3. **MPO and county totals (#292).** With an MPO in focus, its population, jobs, zero-car
+   households etc. as one regional number with a combined MOE. *Why:* "how many people in our
+   MPO?" is asked weekly. M (~275k) · $0 · not a fork · builds on D-378 MPO focus.
+4. **MPO profile with a "Plans" block + self-checking plans registry.** Tap a region and get its
+   long-range plan, TIP, work plan and grant program links, each "checked N days ago", with
+   archived fallbacks. *Why:* the rabbit hole; the thing no competitor has. M + M (~550k) · $0
+   (GitHub Actions + Wayback) · not a fork · builds on D-378, #292.
+5. **TIP projects on the map (Met Council first, then DVRPC).** Funded projects as lines/points;
+   tap one for what, where, cost, year, and the numbers around it. *Why:* "what's planned on this
+   road?" S (~100k) each as registry + ingest · $0 · not a fork · builds on the `features` dataset
+   kind (as AADT).
+6. **Copy for my memo + Save map image.** A citation line and a clean PNG with legend and source.
+   *Why:* every lookup ends in a memo or slide. S + M (~375k) · $0 · not a fork · builds on CSV
+   citations.
+7. **Similar places, including similar MPOs (#291).** "Regions like ours" one tap into Compare.
+   *Why:* peer regions for plans and grants. S–M (~150–275k) · $0 · not a fork · builds on
+   compare, #292 for MPO-level inputs.
+8. **Grant kit table.** The standard grant numbers for a place, MPO or area, with citations, plus a
+   small dated list of open federal programs (SS4A, BUILD) and their status. *Why:* repeated for
+   every application; saves hours. S–M (~150k) · $0 · not a fork · builds on #292, items 1 and 6.
+   **Sensitive wording:** the "underserved / disadvantaged" columns rest on rescinded federal tools
+   (CEJST) and SS4A's current definition; Robbie should approve the labels.
+9. **Pick or draw an area (corridor, station area).** Tap tracts or draw a ½-mile buffer around a
+   line and get its totals. *Why:* corridor and station-area studies, TIP project surroundings.
+   L (~500k; client-side area weighting on block-group files) · $0 · not a fork · builds on #292.
+10. **Embed and print.** An embed snippet for a locked view, and a letter/tabloid print layout with
+    QR code. *Why:* public meetings and agency websites; also spreads the portfolio. M + S–M
+    (~425k) · ~$0, watch bandwidth · not a fork · builds on item 6.
+
+Honorable mentions: offline-friendly place summaries for bad meeting-room signal (S); federal
+performance-target peers (PM1 safety five-year averages by MPO, M, needs MPO totals); rural
+planning organizations and state DOT districts as places so rural areas get the same Plans block
+(M). **Fork candidate:** searching and comparing plan *contents* across MPOs (PDF extraction + LLM
+at scale; running cost above $50/month).
+
 ## Sources
+
+All accessed 2026-10-27.
+
+Policy status
+- CRS, Surface Transportation Authorization Legislation: Timelines and Extensions (2026-09-14): https://www.everycrsreport.com/files/2026-09-14_IG10101_7bde9a13a694b6e97925717dcb69733c2b454af8.html
+- Holland & Knight, Duffy reauthorization priorities (2026-07-27): https://www.hklaw.com/en/insights/publications/2026/07/dot-secretary-duffy-reiterates-surface-transportation-reauthorization
+- USDOT SS4A program page: https://www.transportation.gov/grants/SS4A ; FY26 NOFO: https://www.transportation.gov/sites/dot.gov/files/2026-03/SS4A-FY26-NOFO.pdf
+- HDR, SS4A FY2026 NOFO summary (2026-03-27): https://www.hdrinc.com/node/12111
+- USDOT FY2026 BUILD NOFO: https://www.transportation.gov/sites/dot.gov/files/2025-12/FY_2026_BUILD_NOFO_Final.pdf ; CSAC summary: https://www.counties.org/news-and-media-article/fy-2026-build-nofo-released-applications-due-february-24-2026/
+- Harvard EELP tracker, Justice40 rescission: https://eelp.law.harvard.edu/tracker/rollback-trump-rescinded-bidens-executive-order-14008-that-established-justice40-initiative/ ; CEJST removed: https://eelp.law.harvard.edu/tracker/ceqs-climate-economic-justice-screening-tool-removed/ ; ETC Explorer: https://eelp.law.harvard.edu/tracker/dot-launched-the-equitable-transportation-community-explorer
+- SEJ, EPA removes EJScreen: https://www.sej.org/node/49426
+- AAAE alert, DOT Title VI rule (2026-06-11): https://alerts.aaae.org/latest/regulatory_061126 ; FR public inspection 2026-11790: https://public-inspection.federalregister.gov/2026-11790.pdf ; Planetizen (2026-06): https://www.planetizen.com/news/2026/06/137818-usdot-will-stop-enforcing-key-civil-rights-law
+- Huntsville Area MPO resolutions (May 2025, PL funds and PEAs): https://www.huntsvillempo.org/wp-content/uploads/2025/05/Resolutions_May-2025.pdf
+
+MPO sites surveyed
+- Met Council: https://metrocouncil.org/Transportation/Planning-2/Key-Transportation-Planning-Documents.aspx ; TIP GIS: https://gisdata.mn.gov/dataset/us-mn-state-metc-trans-tip-final-data
+- CMAP: https://cmap.illinois.gov/funding-assistance/transportation-improvement-program/
+- DVRPC: https://www.dvrpc.org/our-work/transportation-improvement-program ; TIP GIS: https://catalog.dvrpc.org/dataset/dvrpc-fy2025-tip-for-pa-fy25-28-lines
+- NCTCOG: https://www.nctcog.org/trans/funds/tip
+- SANDAG: https://www.sandag.org/funding/grant-programs
+- ARC: https://atlantaregional.org/what-we-do/transportation-planning/unified-planning-work-program-upwp/
+- MAPO: https://mnmapo.org/tip/ · St. Cloud APO: https://stcloudapo.org/current-plans/current-tip/ · Cheyenne MPO: https://www.plancheyenne.org/transportation/transportation-improvement-program/ · Flint Hills MPO: https://www.flinthillsmpo.org/upwp
+- MnDOT MPO TIP index: https://www.dot.state.mn.us/planning/mpo/transportation-improvement-program.html
+- NTAD MPO layer (fields: ID, name, state, area only): https://services.arcgis.com/xOi1kZaI0eWDREZv/arcgis/rest/services/NTAD_Metropolitan_Planning_Organizations/FeatureServer/0
+- Wayback availability API: https://archive.org/wayback/available
