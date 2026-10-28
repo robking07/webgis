@@ -2,8 +2,8 @@
 
 Research agent R8, 2026-10-27. Research only; not for merge. The lead harvests it.
 
-Status: sections 1–4 done.
-Next: 5. Recommendation and top 10.
+Status: done (all five sections).
+Next: nothing; the lead harvests it.
 
 ## 1. The landscape
 
@@ -248,7 +248,7 @@ the tier names and the line between "clue only" and "never" are wording and judg
 - **County equivalents:** Mapwich uses Connecticut's nine planning regions (geoids 09110–09190, not the old
   eight counties), Virginia's 38 independent cities, Alaska's 30 boroughs and census areas, Louisiana
   parishes, and Puerto Rico's municipios. Players will guess "Fairfield County, CT" and find it doesn't exist.
-  Default: the answer pool is the 50 states and DC, minus Connecticut and Alaska for answers (still allowed
+  Default: answers are counties and equivalents in the 50 states and DC, minus Connecticut and Alaska (still allowed
   as guesses); Puerto Rico in a later "hard" track. Explain in the help text.
 - **Ties and rounding:** two values that look the same once rounded ("$1,200 vs $1,200") are never asked.
 - **Statistical ties:** pairs whose margins overlap are skipped (about a quarter of random pairs, section 2);
@@ -333,4 +333,64 @@ finished games click through to a map, park new games and keep only what's cheap
 
 ## 5. Recommendation and top 10
 
+### Build first: Mystery County (Concept A), smallest complete version
+
+It's the literal answer to Robbie's "Wordle for maps", it seems not to exist yet at county level, it runs
+itself, and every finish ends on a real Mapwich map.
+
+**In the first version**
+- `/play` page, phone first: three data clues, a guess box using the existing search (counties only),
+  six tries, distance + compass arrow + hot/cold word per guess, one new clue per wrong guess (4th and 5th
+  data clue, then the state), small locator map of guesses.
+- End card: the county, its clues with rank and period, links to `/place/<geoid>`, each clue's map, and
+  compare with the closest guess.
+- Share: emoji grid + plain-text version, phone share sheet with copy fallback. Streak and stats in
+  `localStorage`.
+- Generator script after each export: a year of puzzles in one JSON file, with the checks in section 2
+  (reliable values only, games list from section 3, clue set narrows to exactly one county, easy track of
+  populous counties first), plus a small test. No daily work.
+- One "Today's puzzle" link from the home page.
+
+**Left out on purpose:** archive, easy/hard switch, state silhouettes, global stats, leaderboards,
+accounts, multiplayer, sound.
+
+**Before building (needs Robbie, once):** approve the games list (the three tiers in section 3) and the
+game's name. Everything else the lead can decide.
+
+**Size and cost.** M, ≈275k tokens (≈300k with review). Running cost $0 (static JSON on Vercel/R2).
+If the lead wants an S first instead, build **Higher or Lower** (B, ≈100k) and reuse its pair checks in A later.
+
+### Top 10
+
+| # | Game | One line | Size / tokens | Monthly cost | Fork? | Builds on |
+|---|---|---|---|---|---|---|
+| 1 | **Mystery County** (A) | Daily "Wordle for maps": guess the county from its data clues, hot/cold distance hints. | M / ≈275k | $0 | No | details files, search, splash county list |
+| 2 | **Higher or Lower** (B) | Five daily "which is higher?" pairs, only where the gap beats the margins; endless mode. | S / ≈100k | $0 | No | compare page, values + margins |
+| 3 | **Know Your County** (F) | ONS-style slider quiz about any county, ending on its place page; embeddable for meetings. | S–M / ≈150k | $0 | No | place page, details files |
+| 4 | **Specials "Guess first"** (I) | Two or three guess-before-you-read questions at the top of each Special. | S / ≈100k once | $0 | No | Specials pipeline, numbers scripts |
+| 5 | **Guess the Link** (G) | Guess whether two things rise together, then see the scatter and the bivariate map. | S / ≈100k | $0 | No | insights.json, splash-style links |
+| 6 | **Rank It** (E) | Order five places on one measure; Wordle-style colored positions. | S / ≈50k on top of #2 | $0 | No | #2's pair engine |
+| 7 | **Guess the Map** (C) | Paint your guess of a choropleth, then reveal the real map and score it. | M–L / ≈275–450k | $0 | No | MapView, design classes |
+| 8 | **Map Connections** (D) | Weekly 16 states into four hidden traits; generator offers five, a human picks one. | M / ≈275k | $0 | No | values files, insights correlations |
+| 9 | **Change Detective** (J) | Which places changed most between two periods; ends on the change map. | S–M / ≈150k | $0 | No | timeline, change maps (#188 caveat) |
+| 10 | **Live quiz for meetings and classrooms** (H) | Host screen + phones join with a code; questions about this county; live results then the map. | L / ≈500k | $0 on Supabase free tier at meeting scale | **Yes** | #2, #3, #5 question engines, Supabase Realtime |
+
+Whole set, all ten: roughly 2.0–2.4M tokens. A sensible Vision slice: #1, #2 and #4 in the first year
+(≈475k), #3 and #5 if games prove they feed the maps (the click-through gate in section 4), the rest later.
+
+**Not on the list, and why:** a Crossplay-style head-to-head game (real-time multiplayer and matchmaking for
+a small audience; poor fit); "where is this?" from aerial photos (NAIP imagery is public domain but hosting
+imagery tiles is a real cost, and it's GeoGuessr's turf); global leaderboards (need accounts and moderation).
+
 ## Sources
+
+- NYT Crossplay launch (Jan 2026) and downloads: [WTOP/AP](https://wtop.com/consumer-news/2026/01/this-just-in-from-the-new-york-times-its-first-2-player-game-and-an-evolving-business-model/), [Pocket Gamer](https://www.pocketgamer.biz/nyt-games-multiplayer-word-game-crossplay-surpasses-one-million-downloads), [GamesBeat](https://gamesbeat.com/?p=314688)
+- NYT Pips: [Tom's Guide](https://www.tomsguide.com/gaming/nyts-new-game-pips-is-already-addictive-heres-how-to-play), [NYT help center](https://thenewyorktimeshelpcenter.helpjuice.com/pips)
+- The Atlantic games hub and Bracket City: [Nieman Lab](https://www.niemanlab.org/2025/06/wordle-who-the-atlantic-launches-a-suite-of-new-daily-puzzles-and-games/), [Show HN: build your own Bracket City](https://hn.svelte.dev/item/45772650)
+- Washington Post Keyword: [Editor & Publisher](https://www.editorandpublisher.com/stories/the-washington-post-expands-games-suite-with-keyword,244335)
+- Bloomberg Pointed and Alphadots: [Bloomberg Media](https://www.bloombergmedia.com/press/introducing-pointed-bloombergs-weekly-news-quiz-for-risk-takers/), [Bloomberg help](https://www.bloomberg.com/help/question/pointed/)
+- Worldle, Globle, Travle: [Worldle FAQ](https://worldle.teuteuf.fr/faq), [Beebom on Globle](https://beebom.com/puzzle/how-to-play-globle/), [Geography Education on Travle](https://geographyeducation.org/2023/11/28/travle-the-newest-geography-game/)
+- You Draw It and descendants: [FlowingData](https://flowingdata.com/2019/07/12/make-charts-that-ask-readers-to-predict-the-line), [Flourish Draw the Line](https://flourish.studio/blog/draw-the-line-chart/), [ONS reusable visualisation](https://digitalblog.ons.gov.uk/2018/01/16/reusable-visualisation), [Northwestern They Draw It](https://mucollective.northwestern.edu/theydrawit)
+- ONS "How well do you know your area?": [ONS 2022](https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/articles/playthecensus2021quizhowwelldoyouknowyourarea/2022-12-02), [ONS blog 2014](https://digitalblog.ons.gov.uk/2014/07/21/so-how-well-do-you-know-your-area)
+- From memory, not re-checked this session: Wordle's original pre-shuffled answer list and localStorage streaks; Tradle (exports treemap); Guardian Wordiply; NYT dialect quiz as 2013's most-visited piece; FiveThirtyEight's 2025 closure; GeoGuessr's ownership of Seterra.
+- Mapwich measurements: local `data/tiles/values/*/county(.moe).json`, 2026-10-27; script kept in the session scratchpad.
