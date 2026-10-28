@@ -9,6 +9,8 @@ export interface ImageLegend {
   labels?: string[];
   grid?: { x: string; y: string };
   noData?: string;
+  /** A muted first line: the geography level ("County"). */
+  caption?: string;
 }
 
 /** The image's legend, picked the way MapLegend picks the on-screen one. */
@@ -29,7 +31,7 @@ export function imageLegend({ theme, unit, current, feature, biv }: {
   return null;
 }
 
-const PAD = 12, SW = 14, ROW = 20, LEGEND_W = 210;
+const PAD = 12, SW = 14, GRID = 20, ROW = 20, LEGEND_W = 210;
 
 /** Greedy word wrap to `w` px in the context's current font. */
 function wrap(ctx: CanvasRenderingContext2D, text: string, w: number): string[] {
@@ -91,7 +93,7 @@ export function mapImage({ map, theme, title, legend, sources, date }: {
     const rows = legend.grid ? [] : legend.colors.map((c, i) => [c, legend.labels?.[i] ?? ""]);
     if (legend.noData) rows.push([legend.noData, "No data"]);
     const boxW = Math.min(LEGEND_W, W - 2 * PAD);
-    const boxH = PAD * 2 + (legend.grid ? 3 * SW + 2 * ROW : 0) + rows.length * ROW;
+    const boxH = PAD * 2 + (legend.caption ? ROW : 0) + (legend.grid ? 3 * GRID + 2 * ROW : 0) + rows.length * ROW;
     const x = PAD, y = top + H - PAD - boxH;
     ctx.fillStyle = ui.surface;
     ctx.strokeStyle = ui.border;
@@ -99,13 +101,18 @@ export function mapImage({ map, theme, title, legend, sources, date }: {
     ctx.strokeRect(x + 0.5, y + 0.5, boxW - 1, boxH - 1);
     ctx.font = font(12);
     let ry = y + PAD;
+    if (legend.caption) {
+      ctx.fillStyle = ui.textMuted;
+      ctx.fillText(legend.caption, x + PAD, ry, boxW - 2 * PAD);
+      ry += ROW;
+    }
     if (legend.grid) {
       // colors[y * 3 + x], as in BivariateLegend: high y draws at the top.
       ctx.fillStyle = ui.text;
       ctx.fillText(`↑ ${legend.grid.y}`, x + PAD, ry, boxW - 2 * PAD);
       ry += ROW;
-      legend.colors.forEach((c, i) => { ctx.fillStyle = c; ctx.fillRect(x + PAD + (i % 3) * SW, ry + (2 - Math.floor(i / 3)) * SW, SW, SW); });
-      ry += 3 * SW + 4;
+      legend.colors.forEach((c, i) => { ctx.fillStyle = c; ctx.fillRect(x + PAD + (i % 3) * GRID, ry + (2 - Math.floor(i / 3)) * GRID, GRID, GRID); });
+      ry += 3 * GRID + 4;
       ctx.fillStyle = ui.text;
       ctx.fillText(`${legend.grid.x} →`, x + PAD, ry, boxW - 2 * PAD);
       ry += ROW - 4;

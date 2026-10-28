@@ -363,7 +363,8 @@ export function Viewer({ search }: { search: string }) {
     image: async () => {
       const map = await mapApi.current?.snapshot();
       if (!map) return null;
-      const legend = imageLegend({ theme, unit: primary.unit, current, feature: featureSpec, biv: secondary && { x: primary.title, y: secondary.title } });
+      const found = imageLegend({ theme, unit: primary.unit, current, feature: featureSpec, biv: secondary && { x: primary.title, y: secondary.title } });
+      const legend = found && { ...found, caption: isFeature ? featureNoun : GEO_LEVELS[level].label };
       const blob = await mapImage({ map, theme, title: citeTitle({ datasets: cited, place: placeLabel, period: periodLabel }), legend, sources: citeSources(cited), date: new Date() });
       return blob && { blob, name: `mapwich-${cited.map((d) => d.id).join("-")}.png` };
     },
