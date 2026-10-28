@@ -1,7 +1,7 @@
 # Making the map feel familiar (research R2)
 
-Status: sections 1–3 done.
-Next: section 4, bigger dreams.
+Status: complete (sections 1–5). Not verified: live clicks on the site; USGS imagery terms read only from memory.
+Next: nothing; the lead harvests.
 
 Robbie's note: "Research and review of Google Maps functionality by Claude to use established best
 practices and cement familiarity with the users that 'they know how this works'."
@@ -239,3 +239,130 @@ three ACS periods. *Size:* S–M (~120k). Respect reduced motion (no autoplay).
   familiar directions gesture into Mapwich's compare feature.
 - **The link is the save.** The URL already holds dataset, place, year and view
   (`lib/url-state.ts`), so saved places and lists are just links, shareable without accounts.
+
+## 4. Bigger "familiar" dreams
+
+**D1. "What's here?" with everything at once.** (Grows A5.)
+- *Visitor:* right-click or long-press anywhere, or search an address (A3). A card opens: the pin's
+  coordinates; the chain of places it sits in — block group › tract › city/township › county ›
+  metro › state — plus **districts**: congressional, state house and senate, school district,
+  MPO. Each line shows the current map's value with its rank. Below, "What stands out here": the
+  3–5 numbers where this tract is most unusual against its county and state (D-27's place-first
+  idea, finally with a home). Links: Street View here, place profile, Compare with…, Copy link.
+- *Why weekly:* this is the planner's question in one gesture, and it's "go deeper, not wider"
+  (districts are a planned direction).
+- *How, at $0:* the Census Geocoder's *coordinates* call (same proxy as A3) returns, in one answer
+  checked 2026-10-27, states, counties, county subdivisions, incorporated places, urban areas,
+  combined statistical areas, the 120th congressional districts, 2026 state legislative districts,
+  tracts and 2020 blocks (block groups and school districts with `layers=all`). The numbers come
+  from Mapwich's existing static files (`lib/details.ts`: state/county shards, tract values).
+  Fallback if Census is down: the click behavior of today (the current level only).
+- *Size:* M for the card on the existing levels (~275k); +S per district type shown with values
+  once districts exist as datasets. *Cost:* $0. *Builds on:* A3's proxy, `lib/details.ts`,
+  `PlaceDataList.tsx`, the "inside" links, the insight engine for "stands out".
+- **Fork candidate:** a printable **site report** for any address (all levels, all topics, margins,
+  sources) is what consultants buy from PolicyMap and Esri Business Analyst. Free here as
+  education; a polished paid version would be a fork.
+- **Sensitive (flag for Robbie):** an address pin that leads with race/ethnicity or income of "the
+  people here" can read as steering; U.S. real estate sites avoid showing neighborhood demographics
+  for fair-housing reasons. Suggest: the card leads with the current map and the place chain;
+  people-category numbers appear only when that category's map is on, and "stands out" skips the
+  race/ethnicity datasets. Robbie's call.
+
+**D2. Saved places and lists, no account.**
+- *Visitor:* a Save star on every card. A "My places" page lists saved places with the *current
+  map's* value for each, side by side, sortable — a watchlist. Lists can be named ("Corridor
+  study", "Holmes County trip") and shared as one link that opens the same list for anyone. A
+  quiet "new data" dot appears on a saved place when a dataset it uses gets a new year (checked in
+  the browser on visit, no email).
+- *Why weekly:* Robbie's recurring places become one page he opens every week; it is also the
+  natural way into Compare with 3+ places.
+- *Size:* M (~250k). *Cost:* $0 (browser storage; the list lives in the URL, so nothing is stored
+  on a server). *Builds on:* A8, compare (1.1), `lib/url-state.ts`, `generated/periods.json`.
+- **Fork candidate:** email alerts on saved places ("your county's rent burden was updated") need
+  accounts and a mail service (~$0–20/month at small scale, more at scale): price it, Robbie decides.
+
+**D3. Home place.** "Make this my place" on any card. The landing map then opens framed on it, and
+every dataset card adds one quiet line: "Ramsey County: 31% (state 27%)". S (~80k) on top of D2.
+Robbie's weekly use: his county is always one glance away. $0.
+
+**D4. Place timeline on the card.**
+- *Visitor:* a card tab "Over time": for every dataset with a timeline, a small line through its
+  periods (2010–14, 2015–19, 2020–24; climate 1991–2025; FARS 2015–2024), and "Changed most here
+  since 2014" at the top. Margins shown where the change is within noise (the 1.3 rules).
+- *Why weekly:* "has it gotten better here?" is the second question after "what is it?".
+- *Size:* M (~275k). *Cost:* $0 (reads the timeline values already on R2). *Builds on:* D-36 timeline
+  files, change maps (1.2), reliability (1.3). Wording about decline in a place (e.g. "worse") needs
+  a neutral template.
+
+**D5. "What in where" search.** Typing "asthma in Duluth", "rent burden Hennepin" or "commute near
+me" opens that map framed on that place, the way people type into Google. Both indexes (places,
+datasets) already exist in the browser, so a plain split on "in / near / at" plus best match on
+each side covers most of it without AI. S–M (~150k). $0. An AI version (any wording, "where do old
+people live alone near transit?") belongs to the visitor-AI research; price there.
+
+**D6. Save the map as an image (for slides).**
+- *Visitor:* "Save image" in the Share menu downloads a PNG of the view with the title, legend,
+  source line and mapwich.org credit, ready for PowerPoint. Felt and Google My Maps users expect it.
+- *Why weekly:* planners paste maps into slides every week. High use for Robbie, and every slide is
+  quiet publicity.
+- *Size:* M (~200k; MapLibre can hand over its canvas after a render; the legend is drawn onto the
+  same image). *Cost:* $0. *Builds on:* `ShareButton.tsx`, `MapLegend.tsx`, `MapCredits.tsx`, the
+  link-preview image work (1.5).
+
+**D7. Draw an area.** Zillow and Redfin taught people to trace a shape. Here: draw a corridor or a
+neighborhood and get totals (people, jobs, households) and averages for it. This is parked #292
+(focused-area totals) reached by a familiar gesture. L (~500k; area weighting from blocks or
+tracts). $0 if computed in the browser from static files; check the size of block data first.
+
+**D8. Field mode (phone).** With My location on, the card follows you: walk or ride, and the
+tract/block group card updates as you cross lines (Strava's moving map feel). S (~80k) once A5 and
+A6 exist. Fun for Robbie on site visits; low priority.
+
+## 5. Top 10
+
+Ranked by Robbie's weekly use first, then by cost. Tokens are build estimates; all run at $0/month.
+
+| # | Idea | Size (tokens) | Familiar from |
+|---|---|---|---|
+| 1 | **"What's here?"**: right-click/long-press shows every place and district the point is in, with values (A5 → D1) | M, ~275k (+S per district type) | Google, Apple, Windy |
+| 2 | **Address and coordinate search** that answers "which tract/block group?" (Census Geocoder via a tiny proxy) (A3) | S–M, ~150k | Google, Zillow |
+| 3 | **Search box in view, recents, nearby first** (A1 + A2) | S, ~120k | Google, Apple |
+| 4 | **Save the map as an image** with legend and source, for slides (D6) | M, ~200k | Felt, My Maps |
+| 5 | **Measure distance and area** (A7) | S–M, ~120k | Google, Felt |
+| 6 | **Saved places, lists by link, home place** (A8 + D2 + D3) | M, ~300k | Google, Zillow, Redfin |
+| 7 | **Place timeline on the card** (D4) | M, ~275k | Windy, Zillow price history |
+| 8 | **Phone sheet with a half stop and one action row** (A4) | S, ~90k | Google, Apple |
+| 9 | **"What in where" search** ("asthma in Duluth") (D5) | S–M, ~150k | Google |
+| 10 | **My location** (A6) | S, ~60k | every phone map |
+
+Also worth doing when nearby: keyboard `?` sheet (A9, S ~50k), "Go to" icon fix (A10, XS), USGS
+imagery base map (A11, M ~200k), bottom time scrubber (A12, S–M ~120k), draw an area (D7, L).
+
+**Rough total for the top 10: ~1.75M tokens.** A natural "Familiar map" next-phase bundle is #2, #3,
+#8, #10 (all S, ~420k together) plus #1 (M): the visitor's first ten seconds then match Google.
+
+**Fork candidates:** address site report (D1); email alerts on saved places (D2).
+
+**Wording about people or sensitive topics (send to Robbie):**
+- D1 / A3: an address pin showing who lives "here" (race, income) can read as neighborhood
+  steering. Proposed default: lead with the current map and the place chain; people numbers only
+  when that map is on; "stands out" skips race/ethnicity.
+- A6: the location prompt's wording ("Your location stays on this device").
+- A3: the one-line notice that typed addresses go to the Census Bureau.
+- D4: templates for "changed most" must stay neutral (no "worse"/"declining" about a community).
+
+## Sources
+
+- Google Maps keyboard shortcuts: https://support.google.com/maps/answer/6396990
+- Google Maps measure distance (right-click → Measure distance): https://support.google.com/maps/answer/1628031
+- Google Maps coordinates via right-click: https://support.google.com/maps/answer/18539
+- Felt keyboard shortcuts (0 reset, F fit, copy-link chord): https://help.felt.com/getting-started/keyboard-shortcuts
+- Felt interface and measure tool: https://help.felt.com/getting-started/tour-the-interface, https://help.felt.com/field-app/tour-the-field-app.md
+- Redfin draw-your-own-search: https://redfin.com/blog/2015/03/draw-your-own-search-on-the-redfin-iphone-app.html
+- Zillow draw boundary (GeekWire 2011): https://www.geekwire.com/2011/zillow-app-draw-search-map/
+- Map-first real estate UX write-up: https://raw.studio/blog/using-maps-as-the-core-ux-in-real-estate-platforms/
+- Windy picker and timeline (community): https://community.windy.com/topic/27232/windy-39-is-here-learn-how-to-masterclass-new-features/?page=1
+- Apple HIG, Maps (page body didn't load via fetch; general guidance from knowledge): https://developer.apple.com/design/human-interface-guidelines/maps
+- U.S. Census Geocoder (tested 2026-10-27, address and coordinates calls): https://geocoding.geo.census.gov/geocoder/
+- USGS National Map imagery service: https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer
