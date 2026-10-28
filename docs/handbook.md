@@ -103,7 +103,8 @@ say so. The lead marks UI PRs ready once the build passes, so CI's click-through
 
 **Self-review before you report.** Run the `ponytail-review` skill on your own diff against
 `origin/main`. Fix every **Must fix** item; fix **Should fix** items that are in scope and list the
-rest in your report. Paste its `Verdict:` line in your report.
+rest in your report. Paste its verdict in your report and in the PR body as a line starting
+`Ponytail verdict: Ship` (`scripts/merge-pr.sh` refuses a code PR without it).
 
 Skills to use (invoke by name):
 

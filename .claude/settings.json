@@ -10,11 +10,35 @@
 },
 
   "permissions": {
+    "allow": [
+    "Bash(gh pr ready:*)",
+    "Bash(bash scripts/merge-pr.sh:*)",
+    "Bash(gh issue edit:*)",
+    "Bash(gh pr comment:*)"
+    ],
     "deny": [
       "Read(.env.local)",
       "Read(**/.env.local)",
       "Edit(.env.local)",
-      "Edit(**/.env.local)"
+      "Edit(**/.env.local)",
+      "mcp__claude_ai_Gmail",
+      "mcp__claude_ai_Google_Calendar",
+      "mcp__claude_ai_Google_Drive",
+      "mcp__claude_ai_Era_Context",
+      "mcp__claude_ai_Monarch",
+      "mcp__claude_ai_Crustdata",
+      "mcp__claude_ai_Dice",
+      "mcp__claude_ai_Indeed",
+      "mcp__claude_ai_ZipRecruiter",
+      "mcp__claude_ai_Spotify",
+      "mcp__plugin_vercel_vercel__buy_domain",
+      "mcp__plugin_vercel_vercel__create_or_transfer_domain",
+      "mcp__plugin_vercel_vercel__create_project_env",
+      "mcp__plugin_vercel_vercel__edit_project_env",
+      "mcp__plugin_vercel_vercel__request_promote",
+      "mcp__plugin_vercel_vercel__request_rollback",
+      "mcp__plugin_vercel_vercel__pause_project",
+      "mcp__plugin_vercel_vercel__update_firewall_config"
     ]
   },
   "hooks": {

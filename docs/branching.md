@@ -63,10 +63,18 @@ to do instead:
 - **`--no-verify`** on any git command. It skips the checks.
 - **Merging a PR any other way** than `bash scripts/merge-pr.sh <n>` (so no
   `gh pr merge`, no `gh api .../merge`). The script is the gate: it refuses when the
-  branch is behind `main` or a check is red. The script itself still works.
+  branch is behind `main`, a check is red, or a code PR's body lacks a
+  `Ponytail verdict: Ship` line. The script itself still works.
 - **Reading or printing `.env.local`** (the Read tool, or `cat`, `grep`, `source`,
   `printenv` and the like). It holds secrets. Use `.env.example` to see variable
   names. Scripts such as `bash scripts/db-push.sh` load it themselves and keep working.
+- **A browser user agent** (`Mozilla/5.0` and the like) in a command or a code file.
+  Don't get past a site's bot check; write manual-download steps for Robbie instead. A
+  plain agent such as `Mapwich-ingest/1.0` is fine.
+- **Work outside `~/webgis`**: writing files anywhere but the repo, the session
+  scratchpad (`/tmp/claude-*`) and Claude's memory, and any path on `/mnt/`, `smb://` or
+  a `//host/` share.
+- **Editing the main checkout** outside `drafts/` and `data/cache/`. Edit in your worktree.
 
 Everything else in the loop (worktrees, commits, `git push -u origin <branch>`,
 `git merge origin/main`, `gh pr create/ready/view/diff/checks`) is unaffected.

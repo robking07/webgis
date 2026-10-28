@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Merge a PR safely (docs/branching.md): refuse if the branch is behind main or a
-# check isn't green, then merge.
+# check isn't green, or a code PR lacks its ponytail-review verdict, then merge.
 #   bash scripts/merge-pr.sh <pr-number>
 set -euo pipefail
 
@@ -31,6 +31,11 @@ if [ "$(status_of build)" = "pass" ]; then
       exit 1
     fi
   done
+  # Code PRs need the ponytail-review verdict (docs/handbook.md §3) in the PR body.
+  if ! gh pr view "$pr" --json body --jq .body | grep -q '^Ponytail verdict: Ship'; then
+    echo "Refused: PR #$pr has no 'Ponytail verdict: Ship' line. Run the ponytail-review skill and paste its verdict into the PR body." >&2
+    exit 1
+  fi
 fi
 
 # The repo deletes the branch on GitHub after merging (delete_branch_on_merge).
