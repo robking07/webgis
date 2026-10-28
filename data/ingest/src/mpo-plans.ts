@@ -155,7 +155,7 @@ export async function publishMpoPlans(dryRun: boolean) {
     const key = KEY_PREFIX + l.file;
     if (have.has(key)) continue;
     await new Upload({ client: s3, params: { Bucket: bucket, Key: key, Body: createReadStream(join(ARCHIVE, l.file!)),
-      ContentType: l.type || "application/octet-stream", CacheControl: "public, max-age=31536000, immutable" } }).done();
+      ContentType: l.file!.endsWith(".pdf") ? "application/pdf" : "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // from the extension, never the source server's header CacheControl: "public, max-age=31536000, immutable" } }).done();
     sent++;
   }
   log("publish-mpo-plans", `${sent} uploaded, ${files.length - sent} already on R2`);
