@@ -9,7 +9,7 @@ state › MPO › metro › county › city › tract (a tract only above a bloc
 existing "Minnesota › Hennepin County" links. State, county and tract select and frame the place, as
 before; a city, metro or MPO opens it the way search does (outlined, with its own numbers, D-475,
 D-488). Metros read "… metro" or "… micro area" and MPOs "… (MPO)" unless the name already says MPO,
-so a metro named for a city isn't mistaken for it. A name already in the chain is dropped (D.C.).
+so a metro named for a city isn't mistaken for it. A county named like its state is listed once (D.C.); a city named like its metro (Duluth) keeps both.
 Nothing new on the map; the chain is one wrapped line of small links in the panel that was already
 there.
 

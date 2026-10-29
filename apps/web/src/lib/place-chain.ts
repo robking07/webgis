@@ -67,7 +67,7 @@ export async function placeChain(geoid: string, level: GeoLevel, lon?: number, l
   }) : Promise.resolve(null);
   const soft = <T,>(p: Promise<T>) => p.catch(() => null);
   const [m, me, c, t] = await Promise.all([soft(mpo), soft(metro), soft(city), soft(tract)]);
-  // A name already listed is dropped (D.C. is a state and a county by the same name).
-  const short = (p: PlaceHit) => p.name.split(",")[0];
-  return [state, m, me, inCounty ? county : null, c, t].filter((p, i, all): p is PlaceHit => !!p && all.findIndex((q) => q && short(q) === short(p)) === i);
+  // D.C. is a state and a county by the same name: list it once. (A metro and its city may share a name; both stay.)
+  const sameAsState = county?.name.split(",")[0] === state?.name;
+  return [state, m, me, inCounty && !sameAsState ? county : null, c, t].filter((p): p is PlaceHit => !!p);
 }
