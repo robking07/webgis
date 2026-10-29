@@ -1,7 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { X } from "lucide-react";
 import { StatusState } from "@webgis/design/components";
-import { CHANGE_CLASSES, formatEstimate, formatValue, GEO_LEVELS, isGradable, STATIC_ONLY_LEVELS, TILE_VALUE_LEVELS } from "@webgis/design";
+import { CHANGE_CLASSES, formatEstimate, formatValue, GEO_LEVELS, isGradable, STATIC_ONLY_LEVELS, TILE_VALUE_LEVELS, type GeoLevel } from "@webgis/design";
 import { moeRangeLine, noDataReason, reliabilityNote } from "@/lib/reliability";
 import { changeSummary, differenceMoe, formatChange, withinMoe } from "@/lib/change";
 import type { ClassedLevel } from "./useViewerData";
@@ -15,7 +15,8 @@ import { BottomSheet, useIsPhone } from "../BottomSheet";
 import { PlaceDataList, type Detail } from "../PlaceDataList";
 import { Benchmarks } from "../Benchmarks";
 import { LearnMore } from "./LearnMore";
-import { loadPlaceIndex, placeByGeoid, type PlaceHit } from "@/lib/search";
+import type { PlaceHit } from "@/lib/search";
+import { placeChain } from "@/lib/place-chain";
 import { CompareWith } from "../compare/CompareWith";
 
 const dedupe = (links: Link[]) => links.filter((l, i) => links.findIndex((m) => m.url === l.url) === i);
@@ -34,7 +35,7 @@ interface DetailProps {
   onMapIt: (id: string) => void;
   /** A timeline stop is shown (D-36): the primary value comes from `xv` for that period. */
   period?: { label: string; defaultLabel: string };
-  /** Select and frame a place this one sits inside (the "inside" links, issue #34). */
+  /** Open a place this one sits inside (the "inside" links, issues #34, #364): select and frame it, or outline a city, metro or MPO. */
   onPlace?: (p: PlaceHit) => void;
   /** Phones: the legend key, shown in the sheet with this place's class outlined. */
   legendKey?: { colors: string[]; cls: number | null; ends: [string, string] } | null;
@@ -45,32 +46,36 @@ interface DetailProps {
   finest?: boolean;
 }
 
-/** The state and county a place sits inside (from its GEOID), coarse first. */
-function useInside(geoid: string, level: string) {
+/** The places a clicked place sits inside, coarse first (state › MPO › metro › county › city › tract; issue #364). */
+function useInside(geoid: string, level: GeoLevel, lon?: number, lat?: number) {
   const [inside, setInside] = useState<PlaceHit[]>([]);
   // Clear the list when the place changes (state adjusted during render, not in an effect).
   const [seen, setSeen] = useState({ geoid, level });
   if (seen.geoid !== geoid || seen.level !== level) { setSeen({ geoid, level }); setInside([]); }
   useEffect(() => {
     let live = true;
-    const ids = level === "state" ? [] : level === "county" ? [geoid.slice(0, 2)] : [geoid.slice(0, 2), geoid.slice(0, 5)];
-    if (!ids.length) return;
-    loadPlaceIndex().then((rows) => live && setInside(ids.map((id) => placeByGeoid(rows, id)).filter((p): p is PlaceHit => !!p)), () => {});
+    placeChain(geoid, level, lon, lat).then((c) => live && setInside(c), () => {});
     return () => { live = false; };
-  }, [geoid, level]);
+  }, [geoid, level, lon, lat]);
   return inside;
 }
 
-/** "Minnesota › Hennepin County": tap a place to select it and frame it (digging back up). */
+/** "Edina" alone could be anything: metros and MPOs say what they are. */
+const chainLabel = (p: PlaceHit) => {
+  const short = p.name.split(",")[0];
+  return p.kind === "Metro area" ? `${short} metro` : p.kind === "Micro area" ? `${short} micro area` : p.mpo && !/\bMPO\b/.test(short) ? `${short} (MPO)` : short;
+};
+
+/** "Minnesota › Metropolitan Council (MPO) › … › Edina": tap a place to open it (digging back up). */
 function InsideLinks({ inside, name, onPlace }: { inside: PlaceHit[]; name: string; onPlace?: (p: PlaceHit) => void }) {
   if (!inside.length) return null;
   return (
-    <nav aria-label="Places this sits inside" className="mb-1 flex flex-wrap items-center gap-x-1 text-xs">
+    <nav aria-label="Places this sits inside" className="mb-1 flex flex-wrap items-center gap-x-1 text-xs" data-place-chain="">
       {inside.map((p) => (
-        <span key={p.geoid} className="flex items-center gap-1">
-          <button type="button" onClick={() => onPlace?.(p)} onPointerDown={(e) => e.stopPropagation()}
+        <span key={p.geoid ?? p.area ?? p.mpo?.id} className="flex items-center gap-1">
+          <button type="button" onClick={() => onPlace?.(p)} onPointerDown={(e) => e.stopPropagation()} title={p.kind}
             className="rounded font-medium text-primary underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-ring">
-            {p.name.split(",")[0]}
+            {chainLabel(p)}
           </button>
           <span aria-hidden className="text-muted-foreground">›</span>
         </span>
@@ -175,7 +180,7 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
 
-  const inside = useInside(info.geoid, info.level);
+  const inside = useInside(info.geoid, info.level, info.lon, info.lat);
   const featured = [primary, secondary].filter((d): d is Dataset => !!d);
   const links = dedupe(featured.flatMap((d) => learnMoreLinks(d, { level: info.level, geoid: info.geoid, lon: info.lon, lat: info.lat })));
   const summary = (

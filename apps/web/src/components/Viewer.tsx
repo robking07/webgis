@@ -566,7 +566,7 @@ export function Viewer({ search }: { search: string }) {
           xv={x.values[selected.level]} yv={y.values[selected.level]}
           period={stopId && !since ? { label: stop!.label, defaultLabel: primary.vintage } : undefined}
           change={since && selClassed?.change ? { fromLabel: since.label, toLabel: stop!.label, fromValues: xFrom.values[selected.level], classed: selClassed, toIsDefault: !!stop?.isDefault, boundaryNote: areaChangeNote(since, stop!, selected.level, selected.geoid) } : undefined}
-          onMapIt={pickDataset} onPlace={goToPlace} legendKey={legendKey} finest={!childLevel(availableLevels, selected.level)} />
+          onMapIt={pickDataset} onPlace={onSearchPlace} legendKey={legendKey} finest={!childLevel(availableLevels, selected.level)} />
       )}
     </div>
   );
