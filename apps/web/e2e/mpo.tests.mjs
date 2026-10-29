@@ -102,4 +102,36 @@ export default function mpoTests({ test, expect, mapIdle, tapLonLat, HENNEPIN })
     await median.locator("[data-region-total]").waitFor({ timeout: 15000 });
     expect(/can’t be added up/i.test(await median.locator("[data-region-total]").innerText()), "a median shows no total");
   });
+
+  // #365: a Minnesota MPO's panel lists its four plans (open on desktop, closed on phones); a site that
+  // blocks scripts reads as such; an MPO outside Minnesota has no Plans block at all.
+  for (const vp of ["laptop", "phone"]) {
+    test(`${vp} MPO plans: Met Council shows 4 plan rows with source, check date, Mapwich's copy and Wayback; SCAG shows none`, async (o) => {
+      const { page } = await o(vp, `/map?d=pct_poverty&mpo=${MET_COUNCIL}`);
+      const plans = page.locator("[data-mpo-plans]");
+      await plans.waitFor({ timeout: 15000 });
+      await page.waitForTimeout(300); // a phone closes it right after the first render
+      expect((await plans.evaluate((d) => d.open)) === (vp !== "phone"), `${vp}: Plans open = ${await plans.evaluate((d) => d.open)}`);
+      if (vp === "phone") await plans.locator("> summary").click();
+      const rows = plans.locator("[data-plan]");
+      expect((await rows.count()) === 4, `rows: ${await rows.count()}`);
+      const lr = plans.locator('[data-plan="longRange"]');
+      await lr.locator("summary").click();
+      const text = await lr.innerText();
+      expect(/Imagine 2050/.test(text) && /Checked on \w+ \d+, \d{4}/.test(text), `long-range row: ${text}`);
+      expect(await lr.locator('a[href^="https://tiles.mapwich.org/plans/27197300/"]').count() === 1, "no Mapwich copy link");
+      expect(await lr.locator('a[href^="https://web.archive.org/"]').count() === 1, "no Wayback link");
+
+      const { page: lax } = await o(vp, "/map?d=pct_poverty&mpo=55196700");
+      const grants = lax.locator('[data-mpo-plans] [data-plan="grants"]');
+      await grants.waitFor({ state: "attached", timeout: 15000 });
+      expect(/the site blocks automatic checks/.test(await grants.textContent()), "La Crosse's blocked grants page isn't explained");
+      expect(!/broken/i.test(await lax.locator("[data-mpo-plans]").textContent()), "says broken");
+
+      const { page: scag } = await o(vp, "/map?d=pct_poverty&mpo=06197501");
+      await scag.locator("[data-focus-name]").waitFor({ timeout: 15000 });
+      await scag.waitForTimeout(1500);
+      expect(await scag.locator("[data-mpo-plans]").count() === 0, "an MPO outside Minnesota shows a Plans block");
+    });
+  }
 }
