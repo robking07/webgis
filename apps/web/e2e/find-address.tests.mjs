@@ -10,7 +10,13 @@ export default function findAddressTests({ test, expect, mapIdle, HENNEPIN }) {
     await dlg.getByRole("combobox").fill(q);
     return dlg;
   };
-  const details = (page) => page.getByRole("region", { name: /^Details for Census tract/ });
+  /** The details that open must be a tract's (the tiles name them "Census Tract 266.07, Hennepin County, MN"). */
+  const details = async (page) => {
+    const det = page.locator('section[aria-label^="Details for"]');
+    await det.waitFor({ timeout: 30000 });
+    const name = await det.getAttribute("aria-label");
+    expect(/^Details for Census tract/i.test(name), `details opened for "${name}", not a tract`);
+  };
   const pinned = (page) => page.waitForFunction(() => window.__wgMap.querySourceFeatures("pin").length > 0, null, { timeout: 15000 });
 
   for (const vp of ["laptop", "phone"]) {
@@ -24,7 +30,7 @@ export default function findAddressTests({ test, expect, mapIdle, HENNEPIN }) {
       const dlg = await search(page, ADDRESS);
       expect(await dlg.getByText("Addresses are looked up by the Census Bureau's public geocoder").isVisible(), "no geocoder note under the search box");
       await dlg.getByRole("option", { name: "Find this address" }).click();
-      await details(page).waitFor({ timeout: 30000 });
+      await details(page);
       await pinned(page);
       expect(sent.length === 1 && sent[0].q === ADDRESS, `sent ${JSON.stringify(sent)}`);
       expect(new URL(page.url()).searchParams.get("d") === "mean_commute_minutes", `map switched to ${new URL(page.url()).searchParams.get("d")}`);
@@ -56,7 +62,7 @@ export default function findAddressTests({ test, expect, mapIdle, HENNEPIN }) {
     await ctx.setGeolocation({ longitude: HENNEPIN[0], latitude: HENNEPIN[1] });
     await page.getByRole("button", { name: "Near me" }).click();
     await page.getByText("Your location stays on your device.").waitFor({ timeout: 5000 });
-    await details(page).waitFor({ timeout: 30000 });
+    await details(page);
     await pinned(page);
     const lon = HENNEPIN[0].toFixed(2);
     expect(!page.requests.some((u) => u.includes("/api/geocode") || u.includes(lon)), "a request carried the position");
