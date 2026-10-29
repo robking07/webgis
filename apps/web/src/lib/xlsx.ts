@@ -1,4 +1,4 @@
-// A minimal, dependency-free .xlsx writer (D-506): text cells stay text, so an 11-digit GEOID keeps
+// A minimal, dependency-free .xlsx writer (D-504): text cells stay text, so an 11-digit GEOID keeps
 // its leading zero in Excel, and QGIS/ArcGIS read the column as a string that joins to tract GEOIDs.
 export type Cell = string | number | null;
 export interface Sheet { name: string; rows: Cell[][] }
@@ -25,15 +25,15 @@ export function crc32(b: Uint8Array): number {
 
 // shortcut: entries are stored, not deflated (a big county's sheet is ~10 MB), use CompressionStream if size bites.
 export function zip(files: Array<[string, string]>): Blob {
-  const enc = new TextEncoder(), parts: BlobPart[] = [], dir: Uint8Array[] = [];
+  const enc = new TextEncoder(), parts: BlobPart[] = [], dir: Uint8Array<ArrayBuffer>[] = [];
+  const head = (size: number, sig: number) => {
+    const h = new DataView(new ArrayBuffer(size));
+    h.setUint32(0, sig, true);
+    return h;
+  };
   let offset = 0;
   for (const [name, text] of files) {
     const n = enc.encode(name), data = enc.encode(text), crc = crc32(data);
-    const head = (size: number, sig: number) => {
-      const h = new DataView(new ArrayBuffer(size));
-      h.setUint32(0, sig, true);
-      return h;
-    };
     const loc = head(30, 0x04034b50);
     loc.setUint16(4, 20, true); loc.setUint32(14, crc, true); loc.setUint32(18, data.length, true); loc.setUint32(22, data.length, true); loc.setUint16(26, n.length, true);
     const cen = head(46, 0x02014b50);

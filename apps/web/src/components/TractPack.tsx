@@ -1,5 +1,5 @@
 "use client";
-// A county's region data pack (#370, D-506): every map for its tracts in one .xlsx, built in the
+// A county's region data pack (#370, D-504): every map for its tracts in one .xlsx, built in the
 // browser from the tract files the details panel already reads, plus how to join it in GIS.
 import { useState } from "react";
 import { loadTractGeoShard, loadTractShard } from "@/lib/details";
