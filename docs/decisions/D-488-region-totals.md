@@ -49,7 +49,7 @@ takes in about a quarter of Sherburne and Wright counties' residents, so the tot
 
 - 2026-10-29 (lead review): map-first. Visible: heading, the number ± MOE, one count line and one status line ("Approximate · 7 counties; leaves out parts of Sherburne and Wright"). The county list, the half rule and the 90% note sit behind a closed "How this is counted" disclosure. Maps that can't be added up get one line. Questions 1–4 in the PR decided by the lead: MPO only (county picker and tract sums are follow-up issues), the half rule and the "Exact" basis stay, non-percent ratios show sums only.
 - 2026-10-29 (PR #395, issue #390): **tract sums for cut counties.** `mpo/counties.json` now lists, for
-  each county an MPO cuts (share under 1), its 2020 tracts inside: `[county, share, [6-digit tracts]]`.
+  each county an MPO cuts by more than 2% (share under 0.98), its 2020 tracts inside: `[county, share, [6-digit tracts]]`.
   A tract is inside when its CenPop2020 population center is (tracts with no residents use the same
   point, so job-only tracts count). The total for each count map is the whole counties plus those
   tracts' rows from `values/counts/tract/<county>.json`, combined with the same `sumCounts` (√Σ MOE²) and
@@ -59,4 +59,8 @@ takes in about a quarter of Sherburne and Wright counties' residents, so the tot
   "Approximate" on its own row. Limits: tract-centroid membership, not area or block weighting; summing
   many tract MOEs widens the margin (Met Council's poverty universe MOE goes from about ±1,180 for 7
   counties to ±2,606 with 9 tracts added), as the ACS Handbook warns for aggregates of many estimates.
-  The file grew from 20 KB to 183 KB (43 KB gzipped), loaded only when an MPO is in focus.
+  A county with at least 98% of its residents inside counts as whole (no tract list, no tract-file
+  fetch; lead call, so a phone never pulls LA's 3.7 MB tract file for SCAG); the status still says
+  "Near-exact" and "How this is counted" names those counties. counties.json: 20 KB before, 117 KB now
+  (27 KB gzipped), loaded only when an MPO is in focus. The largest tract file any MPO now fetches is
+  Middlesex County, MA (540 KB, 167 KB gzipped) for the Boston Region MPO.

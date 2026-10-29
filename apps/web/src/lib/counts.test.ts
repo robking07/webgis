@@ -36,8 +36,9 @@ describe("an MPO's total (#292)", () => {
 
 describe("an MPO's near-exact total from tracts (#390)", () => {
   const list: RegionCounty[] = [["27003", 1], ["27027", 0.6, ["000100"]], ["27141", 0.258, ["030503", "030504"]]];
-  it("adds whole counties and the cut counties' tracts inside", () => {
+  it("adds whole counties (98% inside counts as whole) and the other cut counties' tracts inside", () => {
     expect(regionParts(list)).toEqual(["27003", "27027000100", "27141030503", "27141030504"]);
+    expect(regionParts([["27053", 0.99], ["27141", 0.258, ["030503"]]])).toEqual(["27053", "27141030503"]);
     expect(regionParts([["27003", 1], ["27141", 0.258]])).toBeNull();
   });
   it("sums tracts with √Σ MOE², and falls back to the half rule when a tract count is missing", async () => {

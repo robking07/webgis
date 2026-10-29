@@ -92,6 +92,9 @@ export async function buildMpo() {
 // with residents inside. Shares are
 // rounded down, so 1 means every resident is inside. Run alone: npm run ingest -- mpo-counties
 // shortcut: 2020 tracts use Connecticut's old counties, so CT MPOs match no 2022+ county counts; redo with 2022 CT tracts if a CT planner needs it.
+/** A county with at least this share of residents inside counts as whole: no tract list, so the panel
+ *  never fetches a big county's tract file for a sliver (#390; same constant in apps/web lib/counts.ts). */
+const WHOLE = 0.98;
 const CENPOP = "https://www2.census.gov/geo/docs/reference/cenpop2020/tract/CenPop2020_Mean_TR.txt";
 
 type Ring = number[][];
@@ -109,7 +112,7 @@ export function inShape(g: Geom, x: number, y: number): boolean {
 }
 
 /** Each MPO's counties with their share of residents inside, from tract points [county, pop, lon,
- *  lat, tract]. A cut county (share under 1) also lists its tracts inside (#390), so the panel can add
+ *  lat, tract]. A county cut by more than 2% (share under WHOLE) also lists its tracts inside (#390), so the panel can add
  *  those up instead of the whole county; tracts with no residents count by their centroid too (jobs). */
 export function countyShares(shapes: Map<string, Geom>, tracts: Array<[string, number, number, number, string]>): Record<string, Array<[string, number] | [string, number, string[]]>> {
   const countyPop = new Map<string, number>();
@@ -127,7 +130,7 @@ export function countyShares(shapes: Map<string, Geom>, tracts: Array<[string, n
     }
     out[id] = [...inside].filter(([, k]) => k.pop > 0).map(([c, k]): [string, number] | [string, number, string[]] => {
       const share = Math.floor((k.pop / countyPop.get(c)!) * 1000) / 1000;
-      return share < 1 ? [c, share, k.tracts.sort()] : [c, share];
+      return share < WHOLE ? [c, share, k.tracts.sort()] : [c, share];
     }).sort((a, b) => a[0].localeCompare(b[0]));
   }
   return out;

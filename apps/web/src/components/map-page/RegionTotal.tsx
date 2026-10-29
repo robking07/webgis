@@ -6,7 +6,7 @@
 // that county's tracts inside are added instead (#390); "approximate" (the half rule) when they can't be.
 import { useEffect, useState } from "react";
 import { formatEstimate } from "@webgis/design";
-import { countsLabels, regionCounties, regionTotal, shareOf, type RegionCounty } from "@/lib/counts";
+import { countsLabels, regionCounties, regionTotal, shareOf, WHOLE, type RegionCounty } from "@/lib/counts";
 import { loadMpoCounties, loadPlaceIndex, placeByGeoid } from "@/lib/search";
 import type { Dataset } from "@/lib/registry";
 
@@ -48,7 +48,9 @@ export function RegionTotal({ datasets, mpo }: { datasets: Dataset[]; mpo: strin
   if (!list) return null;
 
   const { counted, cut } = regionCounties(list);
-  const whole = list.filter(([, s]) => s === 1).map(([g]) => g);
+  // In a near-exact total, a county at least 98% inside counts as whole ("rounded"); the rest of the cut ones add tracts.
+  const whole = list.filter(([, s]) => s >= WHOLE).map(([g]) => g);
+  const rounded = cut.filter(([, s]) => s >= WHOLE), tractCut = cut.filter(([, s]) => s < WHOLE);
   // Near-exact when a map on screen added the cut counties' tracts; one that couldn't says so on its row.
   const shown = datasets.map((d) => totals[d.id]).filter((t) => t?.c);
   const tracts = shown.some((t) => t.basis === "tracts");
@@ -69,7 +71,7 @@ export function RegionTotal({ datasets, mpo }: { datasets: Dataset[]; mpo: strin
   const status = !cut.length
     ? `Exact · ${wholeText}`
     : tracts
-    ? `Near-exact (tracts) · ${wholeText ? `${wholeText} and ` : ""}tracts inside ${few(cut)}`
+    ? `Near-exact (tracts) · ${[wholeText, tractCut.length ? `tracts inside ${few(tractCut)}` : ""].filter(Boolean).join(" and ")}`
     : `Approximate · ${counties(counted.length)}${cutIn.length ? `; ${few(cutIn)} only partly inside` : ""}${cutOut.length ? `; leaves out parts of ${few(cutOut)}` : ""}`;
   return (
     <div className="wg-panel pointer-events-auto mt-1 w-80 max-w-[calc(100vw-1.5rem)] space-y-2 rounded-xl px-3 py-2" data-region-total={!cut.length ? "exact" : tracts ? "near-exact" : "approximate"}>
@@ -108,8 +110,9 @@ export function RegionTotal({ datasets, mpo }: { datasets: Dataset[]; mpo: strin
             <summary className="cursor-pointer rounded text-primary focus-visible:outline-2 focus-visible:outline-ring">How this is counted</summary>
             {tracts && (
               <p className="mt-1">
-                {wholeText ? `The sum of ${wholeText} (${named(whole)}) and of` : "The sum of"} the 2020 census tracts inside the
-                boundary in the counties it cuts: {cutText(cut)}. A tract counts as inside when its population center (2020 Census) is.
+                The sum of {[wholeText && `${wholeText} (${named(whole)})`, tractCut.length && `the 2020 census tracts inside the boundary in the counties it cuts by more than 2%: ${cutText(tractCut)}`].filter(Boolean).join(" and of ")}.
+                {rounded.length > 0 && ` Counted as whole, with at least 98% of residents inside: ${cutText(rounded)}.`}
+                {tractCut.length > 0 && " A tract counts as inside when its population center (2020 Census) is."}
               </p>
             )}
             {(!tracts || halfRule) && (
