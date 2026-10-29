@@ -8,7 +8,10 @@ import { DATASET_BY_ID } from "@/lib/registry";
 
 type Match = [string, number, number[], number[]];
 const { measures, counties } = SIMILAR as unknown as { measures: string[]; counties: Record<string, Match[]> };
-const titles = (idx: number[]) => idx.map((i) => DATASET_BY_ID.get(measures[i])?.title ?? measures[i]).join(", ");
+// "residents" isn't a registry dataset (the population map's counts, under People).
+const titles = (idx: number[]) => idx.map((i) => DATASET_BY_ID.get(measures[i])?.title ?? "Residents").join(", ");
+const topics = new Set(measures.map((id) => DATASET_BY_ID.get(id)?.category ?? "People")).size;
+const WORDS = ["no", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
 
 export function SimilarPlaces({ geoid }: { geoid: string }) {
   const matches = (counties[geoid] ?? []).filter(([b]) => placeName(b));
@@ -18,7 +21,7 @@ export function SimilarPlaces({ geoid }: { geoid: string }) {
     <section aria-labelledby="similar-places" className="mb-6" data-similar-places="">
       <h2 id="similar-places" className="text-base font-semibold">Similar counties</h2>
       <p className="mt-0.5 text-xs text-muted-foreground">
-        The counties that rank closest to {shortName(name)} across {measures.length} measures, each counted equally.
+        The counties that rank closest to {shortName(name)} across {measures.length} measures in {WORDS[topics] ?? topics} topics, each topic counted equally.
         “Both high” or “both low” means both counties are in the top or bottom quarter of U.S. counties.
       </p>
       <ul className="mt-2 space-y-2">

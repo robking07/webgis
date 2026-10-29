@@ -28,7 +28,9 @@ describe("findSimilar", () => {
 
   it("names what made them alike, high and low, one measure per topic", () => {
     const [, dist, high, low] = out.counties["00001"][0];
-    expect(dist).toBeGreaterThan(0);
+    // Each topic counts equally: rank gaps 0.25, 0.25 (Economy, half weight each) and 1/3 (People).
+    // sqrt((0.5·0.25² + 0.5·0.25² + 1·(1/3)²) / 2) = 0.295; counting each measure equally would give 0.280.
+    expect(dist).toBe(0.295);
     // Income and density are both in their top quarters but share a topic, so only income (first) is named.
     expect(high.map((i) => out.measures[i])).toEqual(["income"]);
     expect(low).toEqual([]);
