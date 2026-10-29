@@ -1,5 +1,38 @@
 import { describe, expect, it } from "vitest";
-import { countsLabels, PARTS, parentsOf, partsOf, shareOf } from "./counts";
+import { countsLabels, PARTS, parentsOf, partsOf, regionCounties, shareOf, sumCounts, type Counts } from "./counts";
+
+describe("an MPO's total (#292)", () => {
+  // Worked example: people below the poverty line in the Met Council's 7 counties (ACS 2020–2024,
+  // values/pct_poverty/county.counts.json): Anoka, Carver, Dakota, Hennepin, Ramsey, Scott, Washington.
+  const metro: Counts[] = [
+    [25759, 2099, 366968, 301], [4817, 688, 108941, 268], [25893, 1769, 442814, 367], [123902, 4816, 1245143, 861],
+    [65292, 4212, 529185, 508], [7034, 1045, 152827, 213], [13989, 1650, 273029, 229],
+  ];
+  it("adds estimates and combines margins as √Σ MOE²", () => {
+    const [x, mx, y, my] = sumCounts(metro)!;
+    expect(x).toBe(266686);
+    expect(y).toBe(3118907);
+    expect(mx).toBeCloseTo(Math.sqrt(2099 ** 2 + 688 ** 2 + 1769 ** 2 + 4816 ** 2 + 4212 ** 2 + 1045 ** 2 + 1650 ** 2), 6);
+    expect(mx!).toBeCloseTo(7263.5, 1);
+    expect(my!).toBeCloseTo(1180.8, 1);
+    // The area's rate is the proportion of the sums: 8.55% ±0.23 points.
+    const s = shareOf(x, mx, y, my)!;
+    expect(s.share).toBeCloseTo(8.5506, 3);
+    expect(s.moe!).toBeCloseTo(0.2329, 3);
+  });
+  it("never totals short a county, and keeps full counts margin-free", () => {
+    expect(sumCounts([metro[0], null])).toBeNull();
+    expect(sumCounts([metro[0], [null, null, 5, 1]])).toBeNull();
+    expect(sumCounts([])).toBeNull();
+    expect(sumCounts([[10, null, null, null], [5, null, null, null]])).toEqual([15, null, null, null]);
+    expect(sumCounts([[10, 3, 20, null], [5, null, null, null]])).toEqual([15, 3, null, null]);
+  });
+  it("counts a county when most of its residents are inside; anything less than all of them is cut", () => {
+    const r = regionCounties([["27003", 1], ["27141", 0.258], ["27027", 0.5], ["27171", 0.999]]);
+    expect(r.counted).toEqual(["27003", "27027", "27171"]);
+    expect(r.cut).toEqual([["27141", 0.258], ["27027", 0.5], ["27171", 0.999]]);
+  });
+});
 
 describe("share of a parent place", () => {
   it("uses the ACS proportion formula", () => {

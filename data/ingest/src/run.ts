@@ -1,5 +1,5 @@
 // npm run ingest -- <step> [dataset or level ids…]
-// Steps: geographies | label-mask | mpo | areas | publish-areas | publish-search | timeline | acs | acs-bg | census2020 | lodes | places | climdiv | nbi | fars | overdose | airquality | features | vmt | cejst | ddp287g | tri | nri | svi | sahie | lead | food-access | tiles | publish-tiles | publish-reload | publish-values | publish-geo | publish-data | counts | publish-counts | details | publish-details | tract-geo | export [--allow-period-drop] | export-values | insights [--reflag] | combinations [--dry-run] | tracts-out | docs | mn-catalog | mpo-plans | publish-mpo-plans [--dry-run] | all
+// Steps: geographies | label-mask | mpo | mpo-counties | areas | publish-areas | publish-search | timeline | acs | acs-bg | census2020 | lodes | places | climdiv | nbi | fars | overdose | airquality | features | vmt | cejst | ddp287g | tri | nri | svi | sahie | lead | food-access | tiles | publish-tiles | publish-reload | publish-values | publish-geo | publish-data | counts | publish-counts | details | publish-details | tract-geo | export [--allow-period-drop] | export-values | insights [--reflag] | combinations [--dry-run] | tracts-out | docs | mn-catalog | mpo-plans | publish-mpo-plans [--dry-run] | all
 import { ingestGeographies, tractGeography } from "./geographies.ts";
 import { ingestAcs, ingestAcsTimeline } from "./acs.ts";
 import { ingestCensus2020 } from "./census2020.ts";
@@ -30,7 +30,7 @@ import { ingestNri } from "./nri.ts";
 import { ingestSvi } from "./svi.ts";
 import { ingestSahie } from "./sahie.ts";
 import { buildLabelMask } from "./label-mask.ts";
-import { buildMpo } from "./mpo.ts";
+import { buildMpo, buildMpoCounties } from "./mpo.ts";
 import { buildAreas } from "./areas.ts";
 import { checkMpoPlans, publishMpoPlans } from "./mpo-plans.ts";
 import { tractsOut } from "./tracts.ts";
@@ -63,6 +63,8 @@ const steps: Record<string, () => Promise<void> | void> = {
   tiles: () => buildTiles(only),
   "label-mask": buildLabelMask,
   mpo: buildMpo,
+  // #292: which counties each MPO holds (share of residents inside), from the committed shapes; `mpo` runs it too.
+  "mpo-counties": buildMpoCounties,
   // Cities and metro areas (#332): their published values and outlines; `publish-areas` uploads only areas/.
   areas: buildAreas,
   "publish-areas": () => publishAreas(),

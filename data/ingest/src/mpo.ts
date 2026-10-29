@@ -3,7 +3,7 @@
 // server. The source names one state per MPO; the states each one covers come from Census state
 // outlines. Writes apps/web/public/mpo/index.json (search rows) and mpo/<id>.json (one shape each),
 // committed and served by the site itself, so no upload. Run: npm run ingest -- mpo
-import { mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { spawnSync } from "node:child_process";
 import { cached, CACHE, log, ROOT } from "./util.ts";
@@ -82,4 +82,55 @@ export async function buildMpo() {
   });
   writeFileSync(join(OUT, "index.json"), JSON.stringify(rows));
   log("mpo", `wrote ${rows.length} shapes and index.json to apps/web/public/mpo (${rows.filter((r) => String(r[6]).includes(",")).length} span states)`);
+  await buildMpoCounties();
+}
+
+// Counties in each MPO (#292), for the focused-area totals: the share of each county's residents who
+// live inside the MPO, from Census 2020 tract population centroids (public domain) tested against the
+// shapes above. A tract counts wholly in or out by its centroid. Writes mpo/counties.json:
+// { <MPO id>: [[county geoid, share 0–1], ...] }, only counties with residents inside. Shares are
+// rounded down, so 1 means every resident is inside. Run alone: npm run ingest -- mpo-counties
+// shortcut: 2020 tracts use Connecticut's old counties, so CT MPOs match no 2022+ county counts; redo with 2022 CT tracts if a CT planner needs it.
+const CENPOP = "https://www2.census.gov/geo/docs/reference/cenpop2020/tract/CenPop2020_Mean_TR.txt";
+
+type Ring = number[][];
+/** Even-odd test of a point against a Polygon or MultiPolygon (holes are rings too). */
+export function inShape(g: Geom, x: number, y: number): boolean {
+  const polys = (g.type === "Polygon" ? [g.coordinates] : g.coordinates) as Ring[][];
+  let inside = false;
+  for (const poly of polys) for (const ring of poly) {
+    for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+      const [xi, yi] = ring[i], [xj, yj] = ring[j];
+      if (yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) inside = !inside;
+    }
+  }
+  return inside;
+}
+
+/** Each MPO's counties with their share of residents inside, from tract points [county, pop, lon, lat]. */
+export function countyShares(shapes: Map<string, Geom>, tracts: Array<[string, number, number, number]>): Record<string, Array<[string, number]>> {
+  const countyPop = new Map<string, number>();
+  for (const [c, pop] of tracts) countyPop.set(c, (countyPop.get(c) ?? 0) + pop);
+  const out: Record<string, Array<[string, number]>> = {};
+  for (const [id, g] of shapes) {
+    const [w, s, e, n] = bboxOf(g);
+    const inside = new Map<string, number>();
+    for (const [c, pop, x, y] of tracts) if (pop > 0 && x >= w && x <= e && y >= s && y <= n && inShape(g, x, y)) inside.set(c, (inside.get(c) ?? 0) + pop);
+    out[id] = [...inside].map(([c, p]): [string, number] => [c, Math.floor((p / countyPop.get(c)!) * 1000) / 1000]).sort((a, b) => a[0].localeCompare(b[0]));
+  }
+  return out;
+}
+
+export async function buildMpoCounties() {
+  const rows = readFileSync(await cached(CENPOP), "utf8").replace(/^﻿/, "").trim().split(/\r?\n/);
+  const head = rows[0].split(",");
+  const [st, co, pop, lat, lon] = ["STATEFP", "COUNTYFP", "POPULATION", "LATITUDE", "LONGITUDE"].map((k) => head.indexOf(k));
+  if ([st, co, pop, lat, lon].includes(-1)) throw new Error(`CenPop columns changed: ${rows[0]}`);
+  const tracts = rows.slice(1).map((l) => l.split(",")).map((f): [string, number, number, number] => [f[st] + f[co], Number(f[pop]), Number(f[lon]), Number(f[lat])]);
+  if (tracts.length < 80000) throw new Error(`CenPop: only ${tracts.length} tracts`);
+  const index = JSON.parse(readFileSync(join(OUT, "index.json"), "utf8")) as Array<[string, string, string]>;
+  const shapes = new Map(index.map((r) => [r[2], JSON.parse(readFileSync(join(OUT, `${r[2]}.json`), "utf8")) as Geom]));
+  const out = countyShares(shapes, tracts);
+  writeFileSync(join(OUT, "counties.json"), JSON.stringify(out));
+  log("mpo", `counties.json: ${Object.keys(out).length} MPOs, ${Object.values(out).filter((l) => l.every(([, s]) => s === 1)).length} made of whole counties`);
 }
