@@ -62,18 +62,19 @@ Free-tier numbers drift; confirm on the vendor pricing page before relying on on
 
 Names only. Never print, commit or pass a secret on a command line. Three places hold them:
 **local** = `.env.local` at the repo root (git-ignored, Robbie's machine), **Vercel** = project
-Settings, Environment Variables, **GH** = repo Settings, Secrets and variables, Actions.
+Settings, Environment Variables, **GH** = repo Settings, Secrets and variables, Actions, **GH data** =
+repo Settings, Environments, `data` (main branch only; the data run in section 8 reads it).
 After rotating anything in Vercel, redeploy (values are read at build or start).
 
 | Name | Lives in | Rotate |
 | --- | --- | --- |
 | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` (public by design) | local, Vercel, GH | Supabase, Project Settings, API keys; update all three places, redeploy |
-| `SUPABASE_DB_URL` (session-pooler string with the DB password) | local only | Supabase, Project Settings, Database, reset password; update the string |
+| `SUPABASE_DB_URL` (session-pooler string with the DB password) | local, GH data | Supabase, Project Settings, Database, reset password; update the string in both places |
 | `NEXT_PUBLIC_TILES_BASE_URL` (public: `https://tiles.mapwich.org`; also set in `ci.yml`) | local, Vercel | Not a secret; change only if the tile domain moves |
-| `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET` | local only | Cloudflare, R2, Manage API tokens: create a new token, update `.env.local`, delete the old one |
+| `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET` | local, GH data (its own token, section 8) | Cloudflare, R2, Manage API tokens: create a new token, update `.env.local` (or GH data), delete the old one |
 | `CRON_SECRET` | Vercel (Vercel sends it on cron calls) | Set a new random value in Vercel and redeploy |
 | `NEXT_PUBLIC_SENTRY_DSN` (public, ships to browsers) | Vercel, local | Sentry, Project Settings, Client Keys; rotating is rarely needed |
-| `CENSUS_API_KEY` | local only | Request a new key from the Census signup page |
+| `CENSUS_API_KEY` | local, GH data | Request a new key from the Census signup page; update both places |
 | `ANTHROPIC_API_KEY` | local only | console.anthropic.com, API keys: create, update `.env.local`, revoke the old one |
 | GitHub, Vercel, Supabase, Cloudflare, Sentry logins | Robbie's password manager | Each vendor's account security page |
 
@@ -159,3 +160,44 @@ Gaps found:
 | Whether `ingest -- all` covers every registry dataset was not checked | Follow-up |
 | No `.env.example`; a names-only template would make setup safer | Fixed (names-only `.env.example` added) |
 | Handbook section 7 had no pointer to this runbook | Fixed |
+
+## 8. Data runs on GitHub (D-478)
+
+A dataset refresh can run on GitHub instead of Robbie's machine: `.github/workflows/data-run.yml`.
+
+**Run one:** GitHub, Actions, "Data run", "Run workflow" (branch `main`). Fill in:
+
+- **steps**, run in order: e.g. `acs`, or `acs timeline`. Allowed: acs, acs-bg, lodes, places,
+  climdiv, nbi, fars, airquality, overdose, cejst, tri, lead, food-access, nri, svi, timeline.
+- **datasets**: the ids, e.g. `pct_poverty median_household_income`. Every step must load every
+  id (`acs` with a FARS id is refused before anything runs; `data/ingest/src/check-run.ts`).
+
+There is no dry-run switch: every run writes the database and publishes. Visitors see new values
+within an hour. The run loads, then `export-values <ids>` and `details` (from the database), then
+`publish-reload`: for each tract or count file it wrote, it fetches the live file from R2, swaps in
+only the reloaded datasets and keeps the rest. If any county would lose a reloaded dataset (a source
+that came back short), it stops **before the first upload**. Then it uploads the changed value files,
+and the click details last. A run that loads no tract or block-group values skips the merge.
+
+**Not on GitHub yet:** anything needing GDAL or tippecanoe (geographies, tiles, features,
+census2020, ddp287g, vmt, counts, label-mask, mpo); `timeline` for `fars` (it needs
+`population_density`'s 2019 stop on disk); and anything that changes committed files (a new
+dataset, level or timeline stop, insights). Those still run locally, through a PR. A real loss of
+tracts (a county a source no longer covers) also runs locally with `ALLOW_TRACT_DROP=1`.
+
+**One-time setup (Robbie):**
+
+1. Cloudflare, R2, Manage API tokens, Create API token: permission **Object Read & Write**, applied
+   to **the Mapwich bucket only**, no expiry (or a year, with a reminder). Copy the Access Key ID and
+   Secret Access Key it shows once.
+2. GitHub, the repo, Settings, Environments, New environment, name `data`. Under Deployment
+   branches and tags choose **Selected branches and tags** and add `main`.
+3. In that environment, Add environment secret, six times, pasting each value: `SUPABASE_DB_URL`,
+   `CENSUS_API_KEY` (same as `.env.local`), `R2_ACCOUNT_ID`, `R2_BUCKET` (same as `.env.local`),
+   `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY` (the new token from step 1). Don't add
+   `ANTHROPIC_API_KEY`.
+4. Try it on one small dataset you can check by eye, e.g. `places` + `stroke` (county only, no tract merge),
+   then curl one of its files (section 6, "Re-upload the data files").
+
+GitHub hides secret values in logs, but this repo is public, so run logs are too: don't paste a
+secret into an input. If one ever shows in a log, rotate it (section 5).
