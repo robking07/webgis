@@ -1181,6 +1181,28 @@ test("/specials: a piece's Combination origin links to the map, not a Combinatio
   expect(hrefs.some((h) => h?.startsWith("/map?d=pct_work_from_home&b=physical_inactivity")), "origin link goes to the map with both datasets");
 });
 
+// #187: a long method note sits behind "About this scale", and opening Map options leaves the full legend in view.
+for (const [w, h] of [[1440, 900], [1024, 768]]) {
+  test(`laptop ${w}×${h}: Map options leaves the whole legend showing, notes behind a toggle`, async (o) => {
+    const { page } = await o({ viewport: { width: w, height: h } }, "/map?d=energy_burden_low_income");
+    await page.locator('section[aria-label="Legend"] li').nth(4).waitFor();
+    await live(page).click();
+    await wait(500);
+    const [leg, side] = await page.evaluate(() => [
+      document.querySelector('section[aria-label="Legend"]').getBoundingClientRect().toJSON(),
+      document.querySelector('[aria-label="Map options"]:not(button)')?.getBoundingClientRect().toJSON(),
+    ]);
+    expect(leg.height > 120 && leg.bottom <= h, `legend collapsed or off screen: ${JSON.stringify(leg)}`);
+    expect(await page.locator('section[aria-label="Legend"] li').count() >= 5, "swatches missing");
+    expect(!side || side.bottom <= leg.top || side.right <= leg.left, "Map options overlaps the legend");
+    const text = await page.locator('section[aria-label="Legend"] figure').innerText();
+    expect(!text.includes("Modelled, not metered"), "the method note is still in the legend body");
+    await page.locator('section[aria-label="Legend"] summary').focus();
+    await page.keyboard.press("Enter");
+    expect(await page.locator('section[aria-label="Legend"] details').evaluate((d) => d.open), "About this scale didn't open");
+  });
+}
+
 // ── Run ────────────────────────────────────────────────────────────────────────
 // Round-robin keeps the slow tests spread across shards.
 const mine = shard ? queue.filter((_, i) => i % +shard[2] === +shard[1] - 1) : queue;
