@@ -5,7 +5,7 @@
 // slot, never read as a GEOID: their published numbers and outline are in areas/<code>.json.
 import type { Geometry } from "geojson";
 import type { GeoLevel } from "@webgis/design";
-import { staticUrl } from "@/lib/static-files";
+import { fetchRetry, staticUrl } from "@/lib/static-files";
 import type { RegionCounty } from "@/lib/counts";
 
 export type Bbox = [number, number, number, number];
@@ -18,7 +18,7 @@ export interface PlaceHit { name: string; kind: string; geoid: string | null; le
 export const AREA_CODE = /^(place\d{7}|cbsa\d{5})$/;
 const isMetro = (kind: string) => kind === "Metro area" || kind === "Micro area";
 
-const json = (url: string) => fetch(url).then((r) => { if (!r.ok) throw new Error(`${url} → ${r.status}`); return r.json(); });
+const json = (url: string) => fetchRetry(url).then((r) => { if (!r.ok) throw new Error(`${url} → ${r.status}`); return r.json(); });
 let cache: Promise<PlaceRow[]> | null = null;
 /** MPOs and metros are optional: if their file fails, search still finds every other place. */
 export const loadPlaceIndex = () => (cache ??= Promise.all([json(staticUrl("geo/search.json")), json("/mpo/index.json").catch(() => []), json(staticUrl("areas/index.json")).catch(() => [])])

@@ -5,7 +5,7 @@
 //   values/<id>/us.json                     { value, moe, counts: row }
 // relations.json (from relations.yaml) names the counts and lists the parts sets.
 import RELATIONS from "@/generated/relations.json";
-import { staticUrl } from "./static-files";
+import { fetchRetry, staticUrl } from "./static-files";
 
 /** [numerator, its MOE, denominator, its MOE]; null where there is none. */
 export type Counts = [number | null, number | null, number | null, number | null];
@@ -24,7 +24,7 @@ export const PARTS = Object.values(REL.parts);
 // Counts are an extra: a missing or failed file shows nothing rather than breaking the page.
 const cache = new Map<string, Promise<unknown>>();
 function load<T>(path: string): Promise<T | null> {
-  if (!cache.has(path)) cache.set(path, fetch(staticUrl(path)).then((r) => (r.ok ? r.json() : null)).catch(() => null));
+  if (!cache.has(path)) cache.set(path, fetchRetry(staticUrl(path)).then((r) => (r.ok ? r.json() : null)).catch(() => null));
   return cache.get(path) as Promise<T | null>;
 }
 

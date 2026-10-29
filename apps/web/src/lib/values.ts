@@ -6,7 +6,7 @@ import { classify, classifyValues, classOf, LAZY_LEVELS, rampColors, TILE_VALUE_
 import { DATASET_BY_ID, type Dataset } from "./registry";
 // Every level's file lives with the tiles (R2 in production, the /tiles link locally; D-124, S2).
 import { reportError } from "./report-error";
-import { staticUrl } from "./static-files";
+import { fetchRetry, staticUrl } from "./static-files";
 
 export type Values = Record<string, number>;
 const cache = new Map<string, Promise<Values>>();
@@ -19,7 +19,7 @@ export function loadValues(id: string, level: GeoLevel, stop?: string | null): P
     const url = staticUrl(`values/${key}.json`);
     // Tracts and block groups (85k and 240k values) are fetched, parsed and classified in a
     // worker, so the map doesn't stall when they first load (D-277).
-    const onMain = () => fetch(url).then((r) => (r.ok ? r.json() : r.status));
+    const onMain = () => fetchRetry(url).then((r) => (r.ok ? r.json() : r.status));
     // A worker that fails (its script missing after a deploy, a network error) falls back to the main thread.
     const loaded = LAZY_LEVELS.has(level) && typeof Worker !== "undefined"
       ? loadInWorker(url, stop ? undefined : DATASET_BY_ID.get(id), level).catch(onMain)

@@ -11,7 +11,7 @@ import type { ViewState } from "@/lib/url-state";
 import type { Geometry } from "geojson";
 import { boundaryFile } from "@webgis/registry/timeline";
 import { CONUS } from "@/lib/us-view";
-import { TILES_BASE } from "@/lib/static-files";
+import { retryTile, TILES_BASE } from "@/lib/static-files";
 
 export interface LevelPaint {
   colors: string[];
@@ -182,7 +182,8 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
     if (!container.current) return;
     if (!protocolReady) {
       setWorkerUrl(new URL("/maplibre/maplibre-gl-worker.mjs", window.location.href).href);
-      addProtocol("pmtiles", new Protocol().tile);
+      const protocol = new Protocol();
+      addProtocol("pmtiles", (p, c) => retryTile(() => protocol.tile(p, c)));
       protocolReady = true;
     }
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
