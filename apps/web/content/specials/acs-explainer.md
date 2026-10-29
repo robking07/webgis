@@ -48,7 +48,7 @@ caption: "Central Minneapolis, by tract. Tract 59.02, just south of downtown: 7.
 The trouble is the uncommon answer, not the place. Ask the same tracts how many people drive to work alone, the most common answer, and the picture flips.
 
 | Share of workers who… | Reliable (CV under 15%) | Use with caution (15–30%) | Unreliable (over 30%, hatched) | Zero, not graded |
-|---|---|---|---|---|
+|---|---:|---:|---:|---:|
 | Bike to work | 0 | 4 | 155 | 169 |
 | Work from home | 96 | 186 | 46 | 0 |
 | Drive alone | 290 | 34 | 4 | 0 |
@@ -67,7 +67,7 @@ caption: "Same area, share of workers who drive alone to work. Across Hennepin, 
 Combine areas and the margin shrinks compared with the estimate. The table follows bike commuting from one block group, the smallest area the ACS reports, up to the state.
 
 | Area | Workers 16+ | Share who bike | Likely between | Margin as a share of the estimate |
-|---|---|---|---|---|
+|---|---:|---:|---:|---:|
 | Block group 3, tract 59.02 | 733 | 11.6% | 0% and 24.8% | 114% |
 | Tract 59.02 | 1,410 | 7.7% | 0.1% and 15.4% | 99% |
 | Minneapolis | 239,419 | 2.02% | 1.76% and 2.27% | 13% |

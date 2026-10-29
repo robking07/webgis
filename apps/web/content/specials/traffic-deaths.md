@@ -20,7 +20,7 @@ By state, Mississippi has the highest rate, 25.1 deaths per 100,000 residents a 
 Deaths jumped during the pandemic. The national rate went from 11.2 per 100,000 in 2019 to 12.9 in 2021, when about 43,200 people died, the highest single year from 2014-2024. It has fallen every year since, to 11.7 in 2024, but that is still higher than any year from 2015 to 2019.
 
 | Year | Traffic deaths per 100,000 residents |
-|---|---|
+|---|---:|
 | 2015 | 10.9 |
 | 2016 | 11.6 |
 | 2017 | 11.5 |
