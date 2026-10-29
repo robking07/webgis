@@ -21,7 +21,9 @@ export default function contextTests({ test, expect, wait }) {
     expect(cites.length >= traffic.summary.length + traffic.points.length, `only ${cites.length} citations`);
     expect(cites.every((h) => traffic.sources.some((s) => s.url === h)), `citation not to a source: ${cites.join(", ")}`);
     expect((await panel.getByRole("link", { name: "About this data →" }).count()) === 1, "no line to About this data");
-    await wait(1200);
+    // Ready signal: the map has shifted clear. That flyTo is issued from the same effect pass that mounts
+    // the panel's Esc listener, so waiting on it (not a sleep) means Esc has a handler to reach.
+    await page.waitForFunction(() => window.__wgMap.getPadding().right > 300, null, { timeout: 8000 }).catch(() => {});
     const pad = await page.evaluate(() => window.__wgMap.getPadding());
     expect(pad.right > 300, `map not shifted clear of the panel: padding ${JSON.stringify(pad)}`);
     await page.keyboard.press("Escape");
