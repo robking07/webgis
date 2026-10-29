@@ -29,6 +29,7 @@
   "updateCadence": "annual",
   "vintage": "2024",
   "geographyLevels": [],
+  "areaLevels": [],
   "unit": "vehicles_per_day",
   "universe": "road segments with a reported AADT",
   "measure": {
@@ -222,6 +223,7 @@
   "geographyLevels": [
    "county"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "adults 65+ (model-based estimate)",
   "measure": {
@@ -275,6 +277,7 @@
   "geographyLevels": [
    "county"
   ],
+  "areaLevels": [],
   "unit": "inches",
   "universe": "county area (area-weighted grid average)",
   "measure": {
@@ -344,6 +347,7 @@
   "geographyLevels": [
    "county"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "adults 18+ (model-based estimate)",
   "measure": {
@@ -397,6 +401,7 @@
    "county",
    "tract"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "adults 18+ (model-based estimate)",
   "measure": {
@@ -451,6 +456,7 @@
   "geographyLevels": [
    "county"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "adults 18+ (model-based estimate)",
   "measure": {
@@ -504,6 +510,7 @@
   "geographyLevels": [
    "county"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "adults 18+ with high blood pressure (model-based estimate)",
   "measure": {
@@ -560,6 +567,7 @@
    "state",
    "county"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "highway bridge deck area",
   "measure": {
@@ -613,6 +621,7 @@
   "geographyLevels": [
    "county"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "adults 18+ (model-based estimate)",
   "measure": {
@@ -667,6 +676,7 @@
   "updateCadence": "static",
   "vintage": "Version 2.0 (Dec. 2024)",
   "geographyLevels": [],
+  "areaLevels": [],
   "unit": "categories",
   "universe": "census tracts (2010 boundaries)",
   "measure": {
@@ -942,6 +952,7 @@
    "state",
    "county"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "residents (CEJST tract population, 2010 tracts)",
   "measure": {
@@ -1008,6 +1019,7 @@
    "block_group",
    "block"
   ],
+  "areaLevels": [],
   "unit": "per_sq_mi",
   "universe": "housing units (2020 Census count)",
   "measure": {
@@ -1062,6 +1074,7 @@
    "block_group",
    "block"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "housing units (2020 Census count)",
   "measure": {
@@ -1114,6 +1127,7 @@
    "block_group",
    "block"
   ],
+  "areaLevels": [],
   "unit": "per_sq_mi",
   "universe": "total population (2020 Census count)",
   "measure": {
@@ -1161,6 +1175,7 @@
   "geographyLevels": [
    "county"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "adults 18+ (model-based estimate)",
   "measure": {
@@ -1215,6 +1230,7 @@
   "geographyLevels": [
    "county"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "adults 45–75 (model-based estimate)",
   "measure": {
@@ -1270,6 +1286,7 @@
   "geographyLevels": [
    "county"
   ],
+  "areaLevels": [],
   "unit": "degree_days",
   "universe": "county area (area-weighted grid average)",
   "measure": {
@@ -1342,6 +1359,7 @@
   "geographyLevels": [
    "county"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "adults 18+ (model-based estimate)",
   "measure": {
@@ -1395,6 +1413,7 @@
   "geographyLevels": [
    "county"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "adults 18+ (model-based estimate)",
   "measure": {
@@ -1449,6 +1468,7 @@
    "county",
    "tract"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "adults 18+ (model-based estimate)",
   "measure": {
@@ -1503,6 +1523,7 @@
    "county",
    "tract"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "adults 18+ (model-based estimate)",
   "measure": {
@@ -1555,6 +1576,7 @@
   "geographyLevels": [
    "county"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "adults 18+ (model-based estimate)",
   "measure": {
@@ -1608,6 +1630,7 @@
   "geographyLevels": [
    "county"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "adults 18+ (model-based estimate)",
   "measure": {
@@ -1661,6 +1684,7 @@
   "geographyLevels": [
    "county"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "adults 18+ (model-based estimate)",
   "measure": {
@@ -1713,6 +1737,7 @@
   "geographyLevels": [
    "county"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "adults 18+ (model-based estimate)",
   "measure": {
@@ -1766,6 +1791,7 @@
   "geographyLevels": [
    "county"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "adults 18+ (model-based estimate)",
   "measure": {
@@ -1818,6 +1844,7 @@
   "geographyLevels": [
    "county"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "adults 18+ (model-based estimate)",
   "measure": {
@@ -1871,6 +1898,7 @@
   "geographyLevels": [
    "county"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "adults 18+ (model-based estimate)",
   "measure": {
@@ -1930,6 +1958,7 @@
    "county",
    "tract"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "households (occupied housing units)",
   "measure": {
@@ -1992,6 +2021,7 @@
    "county",
    "tract"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "households at or below 200% of the federal poverty level",
   "measure": {
@@ -2057,6 +2087,7 @@
    "county",
    "tract"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "adults 18+ (model-based estimate)",
   "measure": {
@@ -2114,6 +2145,7 @@
    "state",
    "county"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "residents (2010 Census, 2010 tracts)",
   "measure": {
@@ -2174,6 +2206,7 @@
   "updateCadence": "irregular",
   "vintage": "2019 data",
   "geographyLevels": [],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "occupied housing units (2010 Census, 2010 tracts)",
   "measure": {
@@ -2316,6 +2349,7 @@
   "updateCadence": "irregular",
   "vintage": "2019 data",
   "geographyLevels": [],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "residents (2010 Census, 2010 tracts)",
   "measure": {
@@ -2461,6 +2495,7 @@
    "state",
    "county"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "residents (2010 Census, 2010 tracts)",
   "measure": {
@@ -2522,6 +2557,7 @@
   "geographyLevels": [
    "county"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "adults 18+ (model-based estimate)",
   "measure": {
@@ -2577,6 +2613,7 @@
    "county",
    "tract"
   ],
+  "areaLevels": [],
   "unit": "ratio",
   "universe": "households",
   "measure": {
@@ -2637,6 +2674,7 @@
    "county",
    "tract"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "adults 18+ (model-based estimate)",
   "measure": {
@@ -2691,6 +2729,7 @@
   "geographyLevels": [
    "county"
   ],
+  "areaLevels": [],
   "unit": "degree_days",
   "universe": "county area (area-weighted grid average)",
   "measure": {
@@ -2763,6 +2802,7 @@
    "county",
    "tract"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "adults 18+ (model-based estimate)",
   "measure": {
@@ -2816,6 +2856,7 @@
   "geographyLevels": [
    "county"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "adults 18+ ever screened for cholesterol (model-based estimate)",
   "measure": {
@@ -2875,6 +2916,7 @@
    "county",
    "tract"
   ],
+  "areaLevels": [],
   "unit": "dollars",
   "universe": "households (occupied housing units)",
   "measure": {
@@ -2927,6 +2969,7 @@
   "geographyLevels": [
    "county"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "adults 18+ (model-based estimate)",
   "measure": {
@@ -2980,6 +3023,7 @@
   "geographyLevels": [
    "county"
   ],
+  "areaLevels": [],
   "unit": "deg_f",
   "universe": "county area (area-weighted grid average)",
   "measure": {
@@ -3042,6 +3086,7 @@
    "county",
    "tract"
   ],
+  "areaLevels": [],
   "unit": "per_sq_mi",
   "universe": "jobs (by workplace)",
   "measure": {
@@ -3097,6 +3142,7 @@
   "geographyLevels": [
    "county"
   ],
+  "areaLevels": [],
   "unit": "deg_f",
   "universe": "county area (area-weighted grid average)",
   "measure": {
@@ -3157,6 +3203,7 @@
   "geographyLevels": [
    "county"
   ],
+  "areaLevels": [],
   "unit": "deg_f",
   "universe": "county area (area-weighted grid average)",
   "measure": {
@@ -3219,6 +3266,7 @@
    "tract",
    "block_group"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "population 16+",
   "measure": {
@@ -3279,6 +3327,7 @@
   "geographyLevels": [
    "county"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "adults 18+ (model-based estimate)",
   "measure": {
@@ -3332,6 +3381,7 @@
   "geographyLevels": [
    "county"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "adults 18+ (model-based estimate)",
   "measure": {
@@ -3384,6 +3434,7 @@
   "geographyLevels": [
    "county"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "adults 18+ (model-based estimate)",
   "measure": {
@@ -3438,6 +3489,7 @@
   "geographyLevels": [
    "county"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "women 50–74 (model-based estimate)",
   "measure": {
@@ -3495,6 +3547,7 @@
    "county",
    "tract"
   ],
+  "areaLevels": [],
   "unit": "minutes",
   "universe": "workers 16+ not working from home",
   "measure": {
@@ -3554,6 +3607,7 @@
   "geographyLevels": [
    "county"
   ],
+  "areaLevels": [],
   "unit": "deg_f",
   "universe": "county area (area-weighted grid average)",
   "measure": {
@@ -3626,6 +3680,10 @@
    "tract",
    "block_group"
   ],
+  "areaLevels": [
+   "cbsa",
+   "place"
+  ],
   "unit": "years",
   "universe": "total population",
   "measure": {
@@ -3685,6 +3743,10 @@
    "county",
    "tract",
    "block_group"
+  ],
+  "areaLevels": [
+   "cbsa",
+   "place"
   ],
   "unit": "dollars",
   "universe": "renter-occupied housing units paying cash rent",
@@ -3748,6 +3810,10 @@
    "tract",
    "block_group"
   ],
+  "areaLevels": [
+   "cbsa",
+   "place"
+  ],
   "unit": "dollars",
   "universe": "owner-occupied housing units",
   "measure": {
@@ -3809,6 +3875,10 @@
    "tract",
    "block_group"
   ],
+  "areaLevels": [
+   "cbsa",
+   "place"
+  ],
   "unit": "dollars",
   "universe": "households",
   "measure": {
@@ -3868,6 +3938,7 @@
    "tract",
    "block_group"
   ],
+  "areaLevels": [],
   "unit": "dollars",
   "universe": "owner-occupied housing units with a mortgage",
   "measure": {
@@ -3927,6 +3998,7 @@
    "county",
    "tract"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "adults 18+ (model-based estimate)",
   "measure": {
@@ -3984,6 +4056,7 @@
    "state",
    "county"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "occupied housing units (2010 Census, 2010 tracts)",
   "measure": {
@@ -4049,6 +4122,7 @@
    "county",
    "tract"
   ],
+  "areaLevels": [],
   "unit": "dollars",
   "universe": "residents (FEMA National Risk Index population)",
   "measure": {
@@ -4104,6 +4178,7 @@
   "geographyLevels": [
    "county"
   ],
+  "areaLevels": [],
   "unit": "percentile",
   "universe": "counties (national rank)",
   "measure": {
@@ -4165,6 +4240,7 @@
    "county",
    "tract"
   ],
+  "areaLevels": [],
   "unit": "dollars",
   "universe": "residents (FEMA National Risk Index population)",
   "measure": {
@@ -4228,6 +4304,7 @@
    "county",
    "tract"
   ],
+  "areaLevels": [],
   "unit": "dollars",
   "universe": "residents (FEMA National Risk Index population)",
   "measure": {
@@ -4284,6 +4361,7 @@
    "county",
    "tract"
   ],
+  "areaLevels": [],
   "unit": "dollars",
   "universe": "residents (FEMA National Risk Index population)",
   "measure": {
@@ -4341,6 +4419,7 @@
    "county",
    "tract"
   ],
+  "areaLevels": [],
   "unit": "dollars",
   "universe": "residents (FEMA National Risk Index population)",
   "measure": {
@@ -4397,6 +4476,7 @@
    "county",
    "tract"
   ],
+  "areaLevels": [],
   "unit": "percentile",
   "universe": "counties or census tracts (national rank among the same level)",
   "measure": {
@@ -4457,6 +4537,7 @@
    "county",
    "tract"
   ],
+  "areaLevels": [],
   "unit": "percentile",
   "universe": "counties or census tracts (national rank among the same level)",
   "measure": {
@@ -4522,6 +4603,7 @@
    "county",
    "tract"
   ],
+  "areaLevels": [],
   "unit": "dollars",
   "universe": "residents (FEMA National Risk Index population)",
   "measure": {
@@ -4578,6 +4660,7 @@
    "county",
    "tract"
   ],
+  "areaLevels": [],
   "unit": "dollars",
   "universe": "residents (FEMA National Risk Index population)",
   "measure": {
@@ -4630,6 +4713,7 @@
    "county",
    "tract"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "adults 18+ (model-based estimate)",
   "measure": {
@@ -4687,6 +4771,7 @@
   "geographyLevels": [
    "county"
   ],
+  "areaLevels": [],
   "unit": "per_100k",
   "universe": "deaths per resident (rate uses ACS population), by the decedent's county of residence",
   "measure": {
@@ -4744,6 +4829,7 @@
   "geographyLevels": [
    "county"
   ],
+  "areaLevels": [],
   "unit": "ppm",
   "universe": "air at each county's highest-reading valid monitor (not people or area)",
   "measure": {
@@ -4801,6 +4887,7 @@
    "tract",
    "block_group"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "total population",
   "measure": {
@@ -4877,6 +4964,7 @@
    "tract",
    "block_group"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "total population",
   "measure": {
@@ -4941,6 +5029,7 @@
    "tract",
    "block_group"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "total population",
   "measure": {
@@ -5003,6 +5092,10 @@
    "county",
    "tract",
    "block_group"
+  ],
+  "areaLevels": [
+   "cbsa",
+   "place"
   ],
   "unit": "percent",
   "universe": "population 25+",
@@ -5069,6 +5162,7 @@
    "tract",
    "block_group"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "workers 16+",
   "measure": {
@@ -5132,6 +5226,7 @@
    "tract",
    "block_group"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "total population",
   "measure": {
@@ -5194,6 +5289,7 @@
    "tract",
    "block_group"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "households",
   "measure": {
@@ -5252,6 +5348,7 @@
    "tract",
    "block_group"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "workers 16+",
   "measure": {
@@ -5312,6 +5409,7 @@
    "county",
    "tract"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "children under 18 for whom poverty status is determined",
   "measure": {
@@ -5381,6 +5479,7 @@
    "county",
    "tract"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "civilian noninstitutionalized population",
   "measure": {
@@ -5449,6 +5548,7 @@
    "tract",
    "block_group"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "workers 16+",
   "measure": {
@@ -5512,6 +5612,7 @@
    "tract",
    "block_group"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "workers 16+ not working from home",
   "measure": {
@@ -5573,6 +5674,7 @@
    "county",
    "tract"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "total population",
   "measure": {
@@ -5636,6 +5738,7 @@
    "tract",
    "block_group"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "population 25+",
   "measure": {
@@ -5702,6 +5805,7 @@
    "tract",
    "block_group"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "total population",
   "measure": {
@@ -5765,6 +5869,7 @@
    "tract",
    "block_group"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "housing units",
   "measure": {
@@ -5824,6 +5929,7 @@
    "tract",
    "block_group"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "workers 16+ not working from home",
   "measure": {
@@ -5891,6 +5997,7 @@
    "tract",
    "block_group"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "households",
   "measure": {
@@ -5958,6 +6065,7 @@
    "tract",
    "block_group"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "workers 16+ not working from home",
   "measure": {
@@ -6020,6 +6128,7 @@
    "tract",
    "block_group"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "housing units",
   "measure": {
@@ -6082,6 +6191,7 @@
    "tract",
    "block_group"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "population 1 year and over",
   "measure": {
@@ -6145,6 +6255,7 @@
    "tract",
    "block_group"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "total population",
   "measure": {
@@ -6210,6 +6321,7 @@
    "tract",
    "block_group"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "total population",
   "measure": {
@@ -6273,6 +6385,7 @@
    "tract",
    "block_group"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "households",
   "measure": {
@@ -6331,6 +6444,7 @@
    "tract",
    "block_group"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "population 25+",
   "measure": {
@@ -6406,6 +6520,7 @@
    "tract",
    "block_group"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "households",
   "measure": {
@@ -6463,6 +6578,7 @@
    "tract",
    "block_group"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "occupied housing units",
   "measure": {
@@ -6531,6 +6647,7 @@
    "tract",
    "block_group"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "owner-occupied housing units (cost burden computed)",
   "measure": {
@@ -6619,6 +6736,7 @@
    "tract",
    "block_group"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "total population",
   "measure": {
@@ -6686,6 +6804,10 @@
    "county",
    "tract",
    "block_group"
+  ],
+  "areaLevels": [
+   "cbsa",
+   "place"
   ],
   "unit": "percent",
   "universe": "people for whom poverty status is determined",
@@ -6759,6 +6881,7 @@
    "tract",
    "block_group"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "households",
   "measure": {
@@ -6820,6 +6943,10 @@
    "county",
    "tract",
    "block_group"
+  ],
+  "areaLevels": [
+   "cbsa",
+   "place"
   ],
   "unit": "percent",
   "universe": "renter households (rent burden computed)",
@@ -6895,6 +7022,7 @@
    "tract",
    "block_group"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "households",
   "measure": {
@@ -6957,6 +7085,7 @@
    "tract",
    "block_group"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "households",
   "measure": {
@@ -7018,6 +7147,7 @@
    "tract",
    "block_group"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "families with own children under 18",
   "measure": {
@@ -7084,6 +7214,7 @@
    "tract",
    "block_group"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "households",
   "measure": {
@@ -7148,6 +7279,7 @@
    "tract",
    "block_group"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "workers 16+",
   "measure": {
@@ -7209,6 +7341,7 @@
    "tract",
    "block_group"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "total population",
   "measure": {
@@ -7277,6 +7410,7 @@
    "tract",
    "block_group"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "civilian noninstitutionalized population",
   "measure": {
@@ -7341,6 +7475,7 @@
    "tract",
    "block_group"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "civilian population 18+",
   "measure": {
@@ -7403,6 +7538,7 @@
    "tract",
    "block_group"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "workers 16+",
   "measure": {
@@ -7465,6 +7601,7 @@
    "tract",
    "block_group"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "total population",
   "measure": {
@@ -7528,6 +7665,7 @@
    "tract",
    "block_group"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "workers 16+",
   "measure": {
@@ -7591,6 +7729,7 @@
    "tract",
    "block_group"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "workers 16+",
   "measure": {
@@ -7654,6 +7793,7 @@
    "tract",
    "block_group"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "households",
   "measure": {
@@ -7725,6 +7865,7 @@
    "tract",
    "block_group"
   ],
+  "areaLevels": [],
   "unit": "dollars",
   "universe": "total population",
   "measure": {
@@ -7782,6 +7923,7 @@
   "geographyLevels": [
    "county"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "adults 18+ (model-based estimate)",
   "measure": {
@@ -7836,6 +7978,7 @@
    "county",
    "tract"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "adults 18+ (model-based estimate)",
   "measure": {
@@ -7892,6 +8035,7 @@
   "geographyLevels": [
    "county"
   ],
+  "areaLevels": [],
   "unit": "ug_m3",
   "universe": "air at each county's highest-reading valid monitor (not people or area)",
   "measure": {
@@ -7948,6 +8092,7 @@
    "tract",
    "block_group"
   ],
+  "areaLevels": [],
   "unit": "per_sq_mi",
   "universe": "total population",
   "measure": {
@@ -8003,6 +8148,7 @@
   "geographyLevels": [
    "county"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "adults 18+ (model-based estimate)",
   "measure": {
@@ -8056,6 +8202,7 @@
   "geographyLevels": [
    "county"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "adults 18+ (model-based estimate)",
   "measure": {
@@ -8110,6 +8257,7 @@
    "county",
    "tract"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "adults 18+ (model-based estimate)",
   "measure": {
@@ -8163,6 +8311,7 @@
   "geographyLevels": [
    "county"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "adults 18+ (model-based estimate)",
   "measure": {
@@ -8223,6 +8372,7 @@
    "county",
    "tract"
   ],
+  "areaLevels": [],
   "unit": "percentile",
   "universe": "counties or census tracts (national rank among the same level)",
   "measure": {
@@ -8285,6 +8435,7 @@
    "county",
    "tract"
   ],
+  "areaLevels": [],
   "unit": "percentile",
   "universe": "counties or census tracts (national rank among the same level)",
   "measure": {
@@ -8343,6 +8494,7 @@
    "county",
    "tract"
   ],
+  "areaLevels": [],
   "unit": "percentile",
   "universe": "counties or census tracts (national rank among the same level)",
   "measure": {
@@ -8406,6 +8558,7 @@
    "county",
    "tract"
   ],
+  "areaLevels": [],
   "unit": "percentile",
   "universe": "counties or census tracts (national rank among the same level)",
   "measure": {
@@ -8466,6 +8619,7 @@
    "county",
    "tract"
   ],
+  "areaLevels": [],
   "unit": "percentile",
   "universe": "counties or census tracts (national rank among the same level)",
   "measure": {
@@ -8524,6 +8678,7 @@
    "state",
    "county"
   ],
+  "areaLevels": [],
   "unit": "per_100k",
   "universe": "traffic deaths per resident, counted where the crash happened (rate uses ACS population)",
   "measure": {
@@ -8586,6 +8741,7 @@
    "state",
    "county"
   ],
+  "areaLevels": [],
   "unit": "per_sq_mi",
   "universe": "pounds of TRI chemicals released on site by reporting facilities, per square mile of land (not people or exposure)",
   "measure": {
@@ -8636,6 +8792,10 @@
    "county",
    "tract",
    "block_group"
+  ],
+  "areaLevels": [
+   "cbsa",
+   "place"
   ],
   "unit": "percent",
   "universe": "civilian labor force 16+",
@@ -8699,6 +8859,7 @@
    "state",
    "county"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "residents under 65 (model-based estimate)",
   "measure": {
@@ -8749,6 +8910,7 @@
   "geographyLevels": [
    "county"
   ],
+  "areaLevels": [],
   "unit": "percent",
   "universe": "adults 18+ (model-based estimate)",
   "measure": {
@@ -8805,6 +8967,7 @@
    "state",
    "county"
   ],
+  "areaLevels": [],
   "unit": "miles_per_day",
   "universe": "vehicle miles on counted roads per resident",
   "measure": {

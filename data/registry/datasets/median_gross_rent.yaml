@@ -14,6 +14,7 @@ license: Public domain (U.S. Government work, 17 U.S.C. § 105)
 updateCadence: annual
 vintage: "2020–2024 (5-year estimate)"
 geographyLevels: [state, county, tract, block_group]
+areaLevels: [cbsa, place]
 unit: dollars
 universe: renter-occupied housing units paying cash rent
 coverageNote: "The Census Bureau caps the top value ($3,500 or more) and the bottom value, so the most and least expensive areas show the cap rather than their true median. Block groups with too few renters paying cash rent show no median."

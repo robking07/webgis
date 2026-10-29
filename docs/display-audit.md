@@ -46,3 +46,4 @@ Run with the `dataset-display-review` skill (`.claude/skills/dataset-display-rev
 2. **Dataset families** (switch commute mode, health behavior or climate month from the card instead of the list).
 3. **Finer geography**: built (D-124): block groups for ACS and the 2020 Census, blocks for the 2020 Census. Block groups for 25 of the 27 D-113 ACS datasets followed (D-131); Gini, foreign-born and mean commute stop at tracts because the Census Bureau publishes no block-group table for them.
 4. **Place-first entry** (pick a place, then see a short, curated set of its numbers). See `docs/roadmap.md`.
+5. **Cities and metro areas** (D-475): eight ACS maps show a searched city's or metro's published value. Next: more ACS maps opting in (`areaLevels`), a one-line explainer for "Micro area" (a CBSA around a town of 10,000–50,000) where the search row or panel shows it, and comparing two metros.

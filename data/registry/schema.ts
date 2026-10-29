@@ -314,6 +314,9 @@ export const DatasetEntry = z.object({
   vintage: z.string(),
   /** Census levels a choropleth dataset has. Empty for `features` layers. */
   geographyLevels: z.array(GeoLevel).default([]),
+  /** Cities (incorporated places) and metro/micro areas (CBSAs) that get the Census Bureau's own
+   *  published value and margin, shown when one is searched (issue #332). acs5 only; never a map level. */
+  areaLevels: z.array(z.enum(["cbsa", "place"])).default([]),
   unit: Unit,
   /** For insights: the population the value describes. Pairs that share one are flagged. */
   universe: z.string(),

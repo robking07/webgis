@@ -29,6 +29,7 @@ export function loadRegistry(): DatasetEntry[] {
     const subs: readonly string[] = CATEGORY_TREE[res.data.category];
     if (!subs.includes(res.data.subcategory)) throw new Error(`${f}: subcategory "${res.data.subcategory}" must be one of ${res.data.category}'s: ${subs.join(", ")}`);
     if (res.data.measure.kind !== "features" && res.data.geographyLevels.length === 0) throw new Error(`${f}: geographyLevels is required for ${res.data.measure.kind} datasets`);
+    if (res.data.areaLevels.length && (res.data.measure.kind !== "acs5" || res.data.measure.perSqMi)) throw new Error(`${f}: areaLevels is for acs5 datasets without perSqMi`);
     return res.data;
   });
   // Every referenced glossary term must exist.

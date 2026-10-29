@@ -9,7 +9,7 @@ import { FilterButton } from "./FiltersPanel";
 /** Immersed: menu button and wordmark, then the category above the dataset name (both open the
  *  dataset menu, issue #225), then the filter button with a caption (the level shown, or what's filtered).
  *  Phones drop the wordmark and put the heading beside the menu button, on one row (issue #34). */
-export function ImmersedHeading({ primary, secondary, immersed, hasFilters, filtersOpen, filterCount, caption, captionHint, phone, motion, onShowNav, onOpenFilters, onOpenLevel, levelPill, menuOpen, menu, onBrowse, onExit, place, backShown }: {
+export function ImmersedHeading({ primary, secondary, immersed, hasFilters, filtersOpen, filterCount, caption, captionHint, phone, motion, onShowNav, onOpenFilters, onOpenLevel, levelPill, menuOpen, menu, onBrowse, onExit, place, detail, backShown }: {
   primary: Dataset;
   secondary: Dataset | null;
   immersed: boolean;
@@ -39,6 +39,8 @@ export function ImmersedHeading({ primary, secondary, immersed, hasFilters, filt
   onExit: () => void;
   /** Drill-down (issue #203): the focused place's name, larger, with a control that leaves it. */
   place?: { name: string; onClear: () => void } | null;
+  /** Under the place's name: a searched city's or metro's own numbers (issue #332). */
+  detail?: ReactNode;
   /** The map's back button is showing (top right on phones): keep the heading clear of it. */
   backShown?: boolean;
 }) {
@@ -75,6 +77,7 @@ export function ImmersedHeading({ primary, secondary, immersed, hasFilters, filt
           </p>
         </div>
       )}
+      {place && detail && <div className={phone ? "pl-[52px]" : ""}>{detail}</div>}
       <div className={`mt-1 flex max-w-[calc(100vw-1.5rem)] items-center gap-2 ${phone ? "pl-[52px]" : "pl-0.5"}`}>
         {secondary && (
           <Button type="button" size="sm" variant="ghost" onClick={onExit} aria-label="Exit comparing" data-compare-exit=""
