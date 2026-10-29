@@ -2,10 +2,11 @@
 // A focused MPO's own total for the map(s) on screen (#292): its counties' counts added up, with
 // margins combined the Census Bureau's way (lib/counts sumCounts, shareOf). Only maps whose counts the
 // ingest publishes (relations.json) get a number; medians, indexes and modelled rates say they can't
-// be added up. Exact when the MPO is whole counties; "approximate" when its boundary cuts one.
+// be added up. Exact when the MPO is whole counties; "near-exact" when its boundary cuts a county and
+// that county's tracts inside are added instead (#390); "approximate" (the half rule) when they can't be.
 import { useEffect, useState } from "react";
 import { formatEstimate } from "@webgis/design";
-import { countsLabels, placeCounts, regionCounties, shareOf, sumCounts, type Counts } from "@/lib/counts";
+import { countsLabels, regionCounties, regionTotal, shareOf, WHOLE, type RegionCounty } from "@/lib/counts";
 import { loadMpoCounties, loadPlaceIndex, placeByGeoid } from "@/lib/search";
 import type { Dataset } from "@/lib/registry";
 
@@ -21,9 +22,9 @@ const est = (n: number, moe: number | null) => {
 
 // Viewer keys it by MPO, so a new pick starts empty.
 export function RegionTotal({ datasets, mpo }: { datasets: Dataset[]; mpo: string }) {
-  const [list, setList] = useState<Array<[string, number]> | null>(null);
+  const [list, setList] = useState<RegionCounty[] | null>(null);
   const [names, setNames] = useState<Record<string, string>>({});
-  const [totals, setTotals] = useState<Record<string, Counts | null>>({});
+  const [totals, setTotals] = useState<Record<string, Awaited<ReturnType<typeof regionTotal>>>>({});
   useEffect(() => {
     let live = true;
     Promise.all([loadMpoCounties(), loadPlaceIndex()]).then(([all, rows]) => {
@@ -39,15 +40,21 @@ export function RegionTotal({ datasets, mpo }: { datasets: Dataset[]; mpo: strin
   useEffect(() => {
     if (!list) return;
     let live = true;
-    const { counted } = regionCounties(list);
     for (const id of ids ? ids.split(" ") : []) {
-      Promise.all(counted.map((g) => placeCounts(id, g))).then((rows) => live && setTotals((t) => ({ ...t, [id]: sumCounts(rows) })));
+      regionTotal(id, list).then((r) => live && setTotals((t) => ({ ...t, [id]: r })));
     }
     return () => { live = false; };
   }, [list, ids]);
   if (!list) return null;
 
   const { counted, cut } = regionCounties(list);
+  // In a near-exact total, a county at least 98% inside counts as whole ("rounded"); the rest of the cut ones add tracts.
+  const whole = list.filter(([, s]) => s >= WHOLE).map(([g]) => g);
+  const rounded = cut.filter(([, s]) => s >= WHOLE), tractCut = cut.filter(([, s]) => s < WHOLE);
+  // Near-exact when a map on screen added the cut counties' tracts; one that couldn't says so on its row.
+  const shown = datasets.map((d) => totals[d.id]).filter((t) => t?.c);
+  const tracts = shown.some((t) => t.basis === "tracts");
+  const halfRule = cut.length > 0 && shown.some((t) => t.basis === "counties");
   // "Anoka County, MN" → "Anoka County" when every county is in one state.
   const one = new Set(list.map(([g]) => g.slice(0, 2))).size === 1;
   const name = (g: string) => (one ? names[g]?.replace(/, [A-Z]{2}$/, "") : names[g]);
@@ -60,19 +67,21 @@ export function RegionTotal({ datasets, mpo }: { datasets: Dataset[]; mpo: strin
     return n.length > 2 ? `${n.length} counties` : n.join(" and ");
   };
   const counties = (n: number) => `${n} ${n === 1 ? "county" : "counties"}`;
-  const status = cut.length
-    ? `Approximate · ${counties(counted.length)}${cutIn.length ? `; ${few(cutIn)} only partly inside` : ""}${cutOut.length ? `; leaves out parts of ${few(cutOut)}` : ""}`
-    : `Exact · ${counted.length} whole ${counted.length === 1 ? "county" : "counties"}`;
-  const anyCounts = datasets.some((d) => countsLabels(d.id));
+  const wholeText = whole.length ? `${whole.length} whole ${whole.length === 1 ? "county" : "counties"}` : "";
+  const status = !cut.length
+    ? `Exact · ${wholeText}`
+    : tracts
+    ? `Near-exact (tracts) · ${[wholeText, tractCut.length ? `tracts inside ${few(tractCut)}` : ""].filter(Boolean).join(" and ")}`
+    : `Approximate · ${counties(counted.length)}${cutIn.length ? `; ${few(cutIn)} only partly inside` : ""}${cutOut.length ? `; leaves out parts of ${few(cutOut)}` : ""}`;
   return (
-    <div className="wg-panel pointer-events-auto mt-1 w-80 max-w-[calc(100vw-1.5rem)] space-y-2 rounded-xl px-3 py-2" data-region-total={cut.length ? "approximate" : "exact"}>
+    <div className="wg-panel pointer-events-auto mt-1 w-80 max-w-[calc(100vw-1.5rem)] space-y-2 rounded-xl px-3 py-2" data-region-total={!cut.length ? "exact" : tracts ? "near-exact" : "approximate"}>
       {datasets.map((d) => {
         const labels = countsLabels(d.id);
         const head = <p className="text-xs text-muted-foreground">{d.title}, {d.vintage.replace(/ \(.*\)$/, "")}</p>;
         if (!labels) return <p key={d.id} className="text-xs text-muted-foreground">{d.title}: can’t be added up across counties, so no area total.</p>;
-        if (!counted.length) return <div key={d.id}>{head}<p className="text-sm text-muted-foreground">No county-based total: less than half of each county’s residents live inside this area.</p></div>;
         if (!(d.id in totals)) return <div key={d.id}>{head}<p className="text-sm text-muted-foreground">Adding up…</p></div>;
-        const c = totals[d.id];
+        const { c, basis } = totals[d.id];
+        if (!c && !counted.length) return <div key={d.id}>{head}<p className="text-sm text-muted-foreground">No total: this map has no tract counts here, and less than half of each county’s residents live inside this area.</p></div>;
         if (!c || c[0] == null) return <div key={d.id}>{head}<p className="text-sm text-muted-foreground">No total: a county’s numbers are missing.</p></div>;
         // Percent maps are a count over a count, so the area's own rate is the proportion of the sums.
         // shortcut: ratio maps that aren't percents (mean commute minutes, deaths per 100,000) show their sums only; add the ratio formula if planners ask.
@@ -90,21 +99,31 @@ export function RegionTotal({ datasets, mpo }: { datasets: Dataset[]; mpo: strin
               {labels.per && c[2] != null && <> out of <span className="tabular-nums">{est(c[2], c[3])}</span> {labels.per}</>}
               {c[1] == null && " (a full count, no margin of error)"}
             </p>
+            {tracts && cut.length > 0 && basis === "counties" && <p className="text-xs text-muted-foreground">Approximate: this map has no tract counts here, so it counts whole counties.</p>}
           </div>
         );
       })}
-      {anyCounts && counted.length > 0 && (
+      {shown.length > 0 && (
         <div className="text-xs text-muted-foreground">
           <p data-region-status="">{status}</p>
           <details data-region-method="">
             <summary className="cursor-pointer rounded text-primary focus-visible:outline-2 focus-visible:outline-ring">How this is counted</summary>
-            <p className="mt-1">
-              The sum of {counties(counted.length)}: {named(counted)}.
-              {cutIn.length > 0 && ` Counted in full though partly outside: ${cutText(cutIn)}.`}
-              {cutOut.length > 0 && ` Left out though partly inside: ${cutText(cutOut)}.`}
-              {cut.length > 0 && " A county counts when at least half its residents (2020 Census) live inside."}
-              {" "}Margins of error are at 90% confidence, combined as the Census Bureau does.
-            </p>
+            {tracts && (
+              <p className="mt-1">
+                The sum of {[wholeText && `${wholeText} (${named(whole)})`, tractCut.length && `the 2020 census tracts inside the boundary in the counties it cuts by more than 2%: ${cutText(tractCut)}`].filter(Boolean).join(" and of ")}.
+                {rounded.length > 0 && ` Counted as whole, with at least 98% of residents inside: ${cutText(rounded)}.`}
+                {tractCut.length > 0 && " A tract counts as inside when its population center (2020 Census) is."}
+              </p>
+            )}
+            {(!tracts || halfRule) && (
+              <p className="mt-1">
+                {tracts ? "Maps with no tract counts here: the" : "The"} sum of {counties(counted.length)}: {named(counted)}.
+                {cutIn.length > 0 && ` Counted in full though partly outside: ${cutText(cutIn)}.`}
+                {cutOut.length > 0 && ` Left out though partly inside: ${cutText(cutOut)}.`}
+                {cut.length > 0 && " A county counts when at least half its residents (2020 Census) live inside."}
+              </p>
+            )}
+            <p className="mt-1">Margins of error are at 90% confidence, combined as the Census Bureau does.</p>
           </details>
         </div>
       )}

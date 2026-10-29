@@ -88,9 +88,13 @@ export async function buildMpo() {
 // Counties in each MPO (#292), for the focused-area totals: the share of each county's residents who
 // live inside the MPO, from Census 2020 tract population centroids (public domain) tested against the
 // shapes above. A tract counts wholly in or out by its centroid. Writes mpo/counties.json:
-// { <MPO id>: [[county geoid, share 0–1], ...] }, only counties with residents inside. Shares are
+// { <MPO id>: [[county geoid, share 0–1, cut county's 6-digit tracts inside?], ...] }, only counties
+// with residents inside. Shares are
 // rounded down, so 1 means every resident is inside. Run alone: npm run ingest -- mpo-counties
 // shortcut: 2020 tracts use Connecticut's old counties, so CT MPOs match no 2022+ county counts; redo with 2022 CT tracts if a CT planner needs it.
+/** A county with at least this share of residents inside counts as whole: no tract list, so the panel
+ *  never fetches a big county's tract file for a sliver (#390; same constant in apps/web lib/counts.ts). */
+const WHOLE = 0.98;
 const CENPOP = "https://www2.census.gov/geo/docs/reference/cenpop2020/tract/CenPop2020_Mean_TR.txt";
 
 type Ring = number[][];
@@ -107,16 +111,27 @@ export function inShape(g: Geom, x: number, y: number): boolean {
   return inside;
 }
 
-/** Each MPO's counties with their share of residents inside, from tract points [county, pop, lon, lat]. */
-export function countyShares(shapes: Map<string, Geom>, tracts: Array<[string, number, number, number]>): Record<string, Array<[string, number]>> {
+/** Each MPO's counties with their share of residents inside, from tract points [county, pop, lon,
+ *  lat, tract]. A county cut by more than 2% (share under WHOLE) also lists its tracts inside (#390), so the panel can add
+ *  those up instead of the whole county; tracts with no residents count by their centroid too (jobs). */
+export function countyShares(shapes: Map<string, Geom>, tracts: Array<[string, number, number, number, string]>): Record<string, Array<[string, number] | [string, number, string[]]>> {
   const countyPop = new Map<string, number>();
   for (const [c, pop] of tracts) countyPop.set(c, (countyPop.get(c) ?? 0) + pop);
-  const out: Record<string, Array<[string, number]>> = {};
+  const out: Record<string, Array<[string, number] | [string, number, string[]]>> = {};
   for (const [id, g] of shapes) {
     const [w, s, e, n] = bboxOf(g);
-    const inside = new Map<string, number>();
-    for (const [c, pop, x, y] of tracts) if (pop > 0 && x >= w && x <= e && y >= s && y <= n && inShape(g, x, y)) inside.set(c, (inside.get(c) ?? 0) + pop);
-    out[id] = [...inside].map(([c, p]): [string, number] => [c, Math.floor((p / countyPop.get(c)!) * 1000) / 1000]).sort((a, b) => a[0].localeCompare(b[0]));
+    const inside = new Map<string, { pop: number; tracts: string[] }>();
+    for (const [c, pop, x, y, t] of tracts) {
+      if (!(x >= w && x <= e && y >= s && y <= n && inShape(g, x, y))) continue;
+      const k = inside.get(c) ?? { pop: 0, tracts: [] };
+      k.pop += pop;
+      k.tracts.push(t);
+      inside.set(c, k);
+    }
+    out[id] = [...inside].filter(([, k]) => k.pop > 0).map(([c, k]): [string, number] | [string, number, string[]] => {
+      const share = Math.floor((k.pop / countyPop.get(c)!) * 1000) / 1000;
+      return share < WHOLE ? [c, share, k.tracts.sort()] : [c, share];
+    }).sort((a, b) => a[0].localeCompare(b[0]));
   }
   return out;
 }
@@ -124,9 +139,9 @@ export function countyShares(shapes: Map<string, Geom>, tracts: Array<[string, n
 export async function buildMpoCounties() {
   const rows = readFileSync(await cached(CENPOP), "utf8").replace(/^﻿/, "").trim().split(/\r?\n/);
   const head = rows[0].split(",");
-  const [st, co, pop, lat, lon] = ["STATEFP", "COUNTYFP", "POPULATION", "LATITUDE", "LONGITUDE"].map((k) => head.indexOf(k));
-  if ([st, co, pop, lat, lon].includes(-1)) throw new Error(`CenPop columns changed: ${rows[0]}`);
-  const tracts = rows.slice(1).map((l) => l.split(",")).map((f): [string, number, number, number] => [f[st] + f[co], Number(f[pop]), Number(f[lon]), Number(f[lat])]);
+  const [st, co, tr, pop, lat, lon] = ["STATEFP", "COUNTYFP", "TRACTCE", "POPULATION", "LATITUDE", "LONGITUDE"].map((k) => head.indexOf(k));
+  if ([st, co, tr, pop, lat, lon].includes(-1)) throw new Error(`CenPop columns changed: ${rows[0]}`);
+  const tracts = rows.slice(1).map((l) => l.split(",")).map((f): [string, number, number, number, string] => [f[st] + f[co], Number(f[pop]), Number(f[lon]), Number(f[lat]), f[tr]]);
   if (tracts.length < 80000) throw new Error(`CenPop: only ${tracts.length} tracts`);
   const index = JSON.parse(readFileSync(join(OUT, "index.json"), "utf8")) as Array<[string, string, string]>;
   const shapes = new Map(index.map((r) => [r[2], JSON.parse(readFileSync(join(OUT, `${r[2]}.json`), "utf8")) as Geom]));

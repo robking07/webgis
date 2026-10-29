@@ -13,13 +13,15 @@ describe("MPO counties (#292)", () => {
     expect(inShape(two, 5.5, 5.5)).toBe(true);
     expect(inShape(two, 3, 3)).toBe(false);
   });
-  it("gives each county's share of residents inside, rounded down, whole counties as 1", () => {
+  it("gives each county's share of residents inside, rounded down, whole counties as 1, cut ones with their tracts inside", () => {
     const shapes = new Map([["m1", { type: "Polygon" as const, coordinates: [square(0, 0, 10, 10)] }]]);
     const out = countyShares(shapes, [
-      ["27003", 100, 1, 1], ["27003", 50, 2, 2], // all inside
-      ["27141", 1, 9, 9], ["27141", 2, 20, 20], // a third inside: 0.333
-      ["27999", 10, 30, 30], // none inside: left out
+      ["27003", 100, 1, 1, "000100"], ["27003", 50, 2, 2, "000200"], // all inside
+      ["27141", 1, 9, 9, "030502"], ["27141", 0, 8, 8, "030501"], ["27141", 2, 20, 20, "030600"], // a third inside: 0.333; the empty tract inside is listed too
+      ["27999", 10, 30, 30, "000100"], // none inside: left out
+      ["27777", 0, 5, 5, "000100"], // only an empty tract inside: no residents, left out
+      ["27053", 99, 3, 3, "000100"], ["27053", 1, 40, 40, "000200"], // 99% inside: counts as whole, no tract list
     ]);
-    expect(out.m1).toEqual([["27003", 1], ["27141", 0.333]]);
+    expect(out.m1).toEqual([["27003", 1], ["27053", 0.99], ["27141", 0.333, ["030501", "030502"]]]);
   });
 });

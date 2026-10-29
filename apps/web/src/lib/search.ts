@@ -6,6 +6,7 @@
 import type { Geometry } from "geojson";
 import type { GeoLevel } from "@webgis/design";
 import { staticUrl } from "@/lib/static-files";
+import type { RegionCounty } from "@/lib/counts";
 
 export type Bbox = [number, number, number, number];
 /** [name, kind, geoid ("" for cities), lon, lat, land sq mi]; MPO rows (kind "MPO", their id in the
@@ -89,8 +90,8 @@ export function mpoById(rows: PlaceRow[], id: string): PlaceHit | null {
 
 /** An MPO's shape (one small GeoJSON geometry, fetched only when it's picked). */
 export const loadMpoShape = (id: string) => json("/mpo/" + id + ".json");
-/** Each MPO's counties with the share of their residents inside it (#292; ingest `mpo-counties`). */
-type MpoCounties = Record<string, Array<[string, number]>>;
+/** Each MPO's counties with the share of their residents inside it, and a cut county's tracts inside (#292, #390; ingest `mpo-counties`). */
+type MpoCounties = Record<string, RegionCounty[]>;
 let mpoCounties: Promise<MpoCounties> | null = null;
 export const loadMpoCounties = (): Promise<MpoCounties> => (mpoCounties ??= json("/mpo/counties.json").catch((e) => { mpoCounties = null; throw e; }));
 

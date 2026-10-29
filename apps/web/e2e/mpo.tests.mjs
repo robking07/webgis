@@ -1,5 +1,6 @@
 // MPOs in search (issue #276), registered by menus.spec.mjs: picking one outlines the whole area
 // and names it; the share URL reopens it; a click on the map never selects it.
+import { readFileSync } from "node:fs";
 export default function mpoTests({ test, expect, mapIdle, tapLonLat, HENNEPIN }) {
   const MET_COUNCIL = "27197300";
   const mpoParam = (page) => new URL(page.url()).searchParams.get("mpo");
@@ -68,12 +69,19 @@ export default function mpoTests({ test, expect, mapIdle, tapLonLat, HENNEPIN })
     });
   }
 
-  // #292: the focused MPO's total is its counties' counts added up, with a margin, marked approximate
-  // where the boundary cuts a county; a median says it can't be added up.
-  test("laptop MPO total: Met Council's poverty count is its 7 counties summed, ± shown, approximate; a median has no total", async (o) => {
+  // #292, #390: the focused MPO's total is its whole counties' counts plus the tracts inside the counties
+  // its boundary cuts, with a margin, marked near-exact; a median says it can't be added up.
+  test("laptop MPO total: Met Council's poverty count is 7 counties plus Sherburne and Wright tracts, ± shown, near-exact; a median has no total", async (o) => {
     const SEVEN = ["27003", "27019", "27037", "27053", "27123", "27139", "27163"];
-    const counts = await (await fetch("https://tiles.mapwich.org/values/pct_poverty/county.counts.json")).json();
-    const sum = SEVEN.reduce((a, g) => a + counts[g][0], 0).toLocaleString("en-US");
+    const T = "https://tiles.mapwich.org/values/";
+    const counts = await (await fetch(T + "pct_poverty/county.counts.json")).json();
+    const cut = JSON.parse(readFileSync(new URL("../public/mpo/counties.json", import.meta.url), "utf8"))[MET_COUNCIL].filter((c) => c[2]);
+    let n = SEVEN.reduce((a, g) => a + counts[g][0], 0);
+    for (const [g, , tracts] of cut) {
+      const t = (await (await fetch(`${T}counts/tract/${g}.json`)).json()).pct_poverty;
+      n += tracts.reduce((a, k) => a + t[k][0], 0);
+    }
+    const sum = n.toLocaleString("en-US");
     const { page } = await o("laptop", `/map?d=pct_poverty&mpo=${MET_COUNCIL}`);
     const row = page.locator('[data-region-dataset="pct_poverty"]');
     await row.waitFor({ timeout: 15000 });
@@ -81,14 +89,14 @@ export default function mpoTests({ test, expect, mapIdle, tapLonLat, HENNEPIN })
     expect(text.includes(sum), `total ${sum} not in: ${text}`);
     expect(/%\s*±[\d.]+%/.test(text) && /\d ±[\d,]+ people below the poverty line/.test(text), `no margin in: ${text}`);
     const box = page.locator("[data-region-total]");
-    expect((await box.getAttribute("data-region-total")) === "approximate", "Met Council's MPO boundary cuts Sherburne and Wright, so the total is approximate");
+    expect((await box.getAttribute("data-region-total")) === "near-exact", "Met Council's MPO boundary cuts Sherburne and Wright, so their tracts inside are added");
     const status = await box.locator("[data-region-status]").innerText();
-    expect(/^Approximate · 7 counties; leaves out parts of Sherburne and Wright$/.test(status), `status: ${status}`);
+    expect(/^Near-exact \(tracts\) · 7 whole counties and tracts inside Sherburne and Wright$/.test(status), `status: ${status}`);
     // The full method sits behind a closed "How this is counted" disclosure.
     const method = box.locator("[data-region-method]");
     expect(!(await method.evaluate((d) => d.open)), "the method starts closed");
     await method.locator("summary").click();
-    expect(/Hennepin/.test(await method.innerText()) && /at least half/.test(await method.innerText()), "the method lists the counties and the rule");
+    expect(/Hennepin/.test(await method.innerText()) && /population center/.test(await method.innerText()), "the method lists the counties and the tract rule");
 
     const { page: median } = await o("laptop", `/map?d=median_household_income&mpo=${MET_COUNCIL}`);
     await median.locator("[data-region-total]").waitFor({ timeout: 15000 });
