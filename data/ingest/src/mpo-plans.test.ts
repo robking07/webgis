@@ -29,6 +29,9 @@ describe("catalog", () => {
   it("matches the map's copy (run `npm run ingest -- export-mpo-plans` after an edit)", () => {
     expect(JSON.parse(readFileSync(WEB_PLANS, "utf8"))).toEqual(JSON.parse(JSON.stringify(webPlans(c))));
   });
+  it("writes links in notes as [text](https://…), never a bare URL", () => {
+    for (const n of JSON.stringify(c).match(/"note":"[^"]*"/g)!) expect(n.replace(/\[[^\]]+\]\(https:\/\/[^)\s]+\)/g, "")).not.toMatch(/https?:/);
+  });
   it("links a kept copy only for documents publish uploads", () => {
     const kept = JSON.stringify(webPlans(c)).match(/"kept":"[^"]+"/g)!;
     expect(kept.length).toBeGreaterThan(0);

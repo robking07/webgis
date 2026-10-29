@@ -16,6 +16,11 @@ area total (RegionTotal) and, for MPOs in the plan catalog (D-479), a **Plans** 
   `https://tiles.mapwich.org/plans/<file>`. Web pages rely on the Wayback link (D-479).
 - **Layout:** one line per document (label and title); a tap opens the source link with its date,
   "Checked on <date>", Mapwich's copy (naming the source site), the Wayback snapshot, any parts and
-  the note. `cant-verify` reads "the site blocks automatic checks"; a missing page shows its note.
+  the note. `cant-verify` reads "the site blocks automatic checks; it may still work in a browser"; a missing page shows its note.
   The block is open on desktop and starts closed on phones so the map stays clear.
+- **Links in notes:** a catalog note writes a link as `[text](https://…)`; the panel shows it as a
+  link, so no raw URL is visible. A unit test rejects bare URLs in notes.
+- **Wording (lead, 2026-10-29):** `cant-verify` reads "Checked on <date>: the site blocks automatic
+  checks; it may still work in a browser."
+- Lead hand-checked all 49 Minnesota links 2026-10-29: 47 ok, 2 can't verify (La Crosse).
 - **Outside the catalog:** no Plans block at all. Another state = more catalog entries; no UI change.

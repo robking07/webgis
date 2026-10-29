@@ -142,7 +142,7 @@ export default function mpoTests({ test, expect, mapIdle, tapLonLat, HENNEPIN })
       const { page: lax } = await o(vp, "/map?d=pct_poverty&mpo=55196700");
       const grants = lax.locator('[data-mpo-plans] [data-plan="grants"]');
       await grants.waitFor({ state: "attached", timeout: 15000 });
-      expect(/the site blocks automatic checks/.test(await grants.textContent()), "La Crosse's blocked grants page isn't explained");
+      expect(/the site blocks automatic checks; it may still work in a browser/.test(await grants.textContent()), "La Crosse's blocked grants page isn't explained");
       expect(!/broken/i.test(await lax.locator("[data-mpo-plans]").textContent()), "says broken");
 
       const { page: scag } = await o(vp, "/map?d=pct_poverty&mpo=06197501");

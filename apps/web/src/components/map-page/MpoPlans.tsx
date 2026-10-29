@@ -9,10 +9,15 @@ const day = (d: string) => new Date(`${d}T00:00:00Z`).toLocaleDateString("en-US"
 const site = (url: string) => new URL(url).hostname.replace(/^www\./, "");
 const link = "text-primary underline-offset-2 hover:underline";
 const out = (href: string, text: string) => <a href={href} target="_blank" rel="noopener" className={link}>{text}</a>;
+// A catalog note writes a link as [text](https://…), so no raw URL shows.
+const note = (s: string) => {
+  const p = s.split(/\[([^\]]+)\]\((https:\/\/[^)\s]+)\)/); // text, link text, url, text, …
+  return p.map((t, i) => (i % 3 === 0 ? t : i % 3 === 1 ? <span key={i}>{out(p[i + 1], t)}</span> : null));
+};
 
 /** When it was checked, and the copies: "Checked on Oct 29, 2026 · Mapwich's copy (from x.org) · Wayback snapshot". */
 function Copies({ l }: { l: PlanLink }) {
-  const said = l.status === "cant-verify" ? ": the site blocks automatic checks" : l.status === "dead" ? ": the link no longer works" : "";
+  const said = l.status === "cant-verify" ? ": the site blocks automatic checks; it may still work in a browser" : l.status === "dead" ? ": the link no longer works" : "";
   return (
     <p className="text-muted-foreground">
       {l.checked && `Checked on ${day(l.checked)}${said}`}
@@ -39,7 +44,7 @@ export function MpoPlans({ mpo, phone }: { mpo: string; phone: boolean }) {
       <div className="mt-1 max-h-[45vh] space-y-1 overflow-y-auto">{/* Saint Cloud's plan has 13 parts */}
         {Object.entries(plans.labels).map(([k, label]) => {
           const d = docs[k];
-          if (!d.url) return <p key={k} data-plan={k}>{label}: <span className="text-muted-foreground">{d.note}</span></p>;
+          if (!d.url) return <p key={k} data-plan={k}>{label}: <span className="text-muted-foreground">{d.note && note(d.note)}</span></p>;
           return (
             <details key={k} data-plan={k}>
               <summary className="cursor-pointer list-inside truncate rounded focus-visible:outline-2 focus-visible:outline-ring">
@@ -54,7 +59,7 @@ export function MpoPlans({ mpo, phone }: { mpo: string; phone: boolean }) {
                     <Copies l={p} />
                   </div>
                 ))}
-                {d.note && <p className="text-muted-foreground">{d.note}</p>}
+                {d.note && <p className="text-muted-foreground">{note(d.note)}</p>}
               </div>
             </details>
           );
