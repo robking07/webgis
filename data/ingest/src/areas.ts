@@ -50,6 +50,14 @@ export function metroRow(name: string, cbsa: string, aland: number, b: Bbox): [s
   return [`${m[1]}, ${m[2]}`, `${m[3]} area`, `cbsa${cbsa}`, r4((b[0] + b[2]) / 2), r4((b[1] + b[3]) / 2), Math.max(1, Math.round(aland / 2589988)), m[2].split("-").join(", "), b];
 }
 
+// shortcut: one entry; ACS publishes Louisville's consolidated city (place 48000, FUNCSTAT N) only as the "(balance)" place 48006.
+// Census's place list has no other C9 city with a C8 "(balance)" twin that matters (Nashville, Indianapolis, Augusta, Athens
+// are already published as their balance place); check `missing` in the areas log after a new vintage.
+const ACS_ID: Record<string, string> = { "2148000": "2148006" };
+/** Places in states ACS has no data for (territories other than PR: 60, 66, 69, 78) are not cities here. */
+export const inAcsStates = (placeGeoid: string) => placeGeoid.slice(0, 2) in STATES;
+export const acsId = (placeGeoid: string) => ACS_ID[placeGeoid] ?? placeGeoid;
+
 const round = (v: number | null, digits: number) => (v == null || !Number.isFinite(v) ? null : Number(v.toPrecision(digits)));
 
 /** Each area's [value, moe] for every entry; areas the API has no row for get none. */
@@ -97,11 +105,11 @@ export async function buildAreas() {
   if (placeEntries.length) {
     const vars = varsOf(placeEntries), table = new Map<string, Row>();
     for (const s of Object.keys(STATES)) for (const [k, v] of await fetchTable(vars, `for=place:*&in=state:${s}`)) table.set(k, v);
-    const fs = await features(LAYERS.place, "0.0005");
-    for (const f of fs) write(`place${f.properties.GEOID}`, placeEntries, table, f, f.properties.GEOID);
-    const missing = fs.filter((f) => !table.has(f.properties.GEOID)).length;
+    const fs = (await features(LAYERS.place, "0.0005")).filter((f) => inAcsStates(f.properties.GEOID));
+    for (const f of fs) write(`place${f.properties.GEOID}`, placeEntries, table, f, acsId(f.properties.GEOID));
+    const missing = fs.filter((f) => !table.has(acsId(f.properties.GEOID))).length;
     log("areas", `${fs.length} incorporated places (${missing} with no ACS row)`);
     if (fs.length < 19000) throw new Error(`areas: only ${fs.length} incorporated places`);
-    if (missing > 200) throw new Error(`areas: ${missing} incorporated places have no ACS row (vintage mismatch?)`);
+    if (missing > 20) throw new Error(`areas: ${missing} incorporated places have no ACS row (vintage mismatch?)`);
   }
 }

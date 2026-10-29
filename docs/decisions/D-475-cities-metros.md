@@ -38,4 +38,6 @@
 that county's number labelled, CDPs, townships, CDC PLACES at places, a metro map level, a place
 page or CSV for areas.
 
+**Territories and Louisville:** places in American Samoa, Guam, the Northern Marianas and the U.S. Virgin Islands (ACS doesn't cover them) are not written as cities; Louisville (place 48000) reads its numbers from the ACS "(balance)" place 48006. The no-ACS-row guard is 20.
+
 Lead: — · Ponytail: — · Outcome: pending review.

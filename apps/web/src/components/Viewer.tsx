@@ -370,7 +370,7 @@ export function Viewer({ search }: { search: string }) {
     : null;
   // Share's citation and image (issue #361): the shown maps, period and place.
   const cited = [primary, secondary].filter((d): d is Dataset => !!d);
-  const placeLabel = selected?.name ?? (mpo ? mpo.name : focus ? focusName : null);
+  const placeLabel = selected?.name ?? (picked ? picked.name : focus ? focusName : null);
   const share: ShareExtras | null = primary && {
     memo: () => memoCitation({ datasets: cited, place: placeLabel, period: periodLabel, url: shareUrl(), date: new Date() }),
     image: async () => {
