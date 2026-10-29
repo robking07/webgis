@@ -7,7 +7,7 @@ import { StatusState } from "@webgis/design/components";
 import { DatasetFilter, useDatasetFilter } from "./DatasetFilter";
 import { Benchmarks } from "./Benchmarks";
 import { loadValues, type Values } from "@/lib/values";
-import { rankText } from "@/lib/place";
+import { isRaceRow, rankText } from "@/lib/place";
 import { noDataReason, reliabilityNote } from "@/lib/reliability";
 import { CATEGORIES, DATASET_BY_ID, type Dataset } from "@/lib/registry";
 
@@ -42,7 +42,7 @@ export function PlaceDataList({ geoid, level, detail, mapHref, onMapIt, compact 
     if (level === "tract" || level === "block_group") return;
     let live = true;
     for (const [id, r] of Object.entries(detail)) {
-      if (r.value == null) continue;
+      if (r.value == null || isRaceRow(DATASET_BY_ID.get(id))) continue;
       // Only levels the dataset exports (county-only datasets have no state file to rank against).
       if (!DATASET_BY_ID.get(id)?.geographyLevels.includes(level)) continue;
       loadValues(id, level).then((vals: Values) => {
