@@ -418,6 +418,13 @@ export function areaHighlightLayers(theme: ThemeName): LayerSpecification[] {
   ];
 }
 
+/** A found address or the visitor's own spot (issue #363): one dot in the selection colors, on top. */
+export const PIN_SOURCE = "pin";
+export function pinLayers(theme: ThemeName): LayerSpecification[] {
+  const m = THEMES[theme].map;
+  return [{ id: "pin", type: "circle", source: PIN_SOURCE, paint: { "circle-radius": 6, "circle-color": m.highlight, "circle-stroke-color": m.highlightHalo, "circle-stroke-width": 3 } }];
+}
+
 /** Fill, outline and hover/selection outline for one geography level. */
 export function thematicLayers(o: ThematicLayerOptions): LayerSpecification[] {
   const m = THEMES[o.theme].map;

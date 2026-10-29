@@ -4,7 +4,7 @@
 import { useEffect, useLayoutEffect, useRef } from "react";
 import { AttributionControl, LngLatBounds, Map as MlMap, ScaleControl, addProtocol, setWorkerUrl, type LayerSpecification, type MapGeoJSONFeature } from "maplibre-gl";
 import { Protocol } from "pmtiles";
-import { areaHighlightLayers, AREA_SOURCE, basemapStyle, choroplethFill, hatchImage, hatchLayerId, HATCH_IMAGE, HATCH_LEVELS, membershipFilter, NO_FEATURES, choroplethFillsByState, DATA_BEFORE_ID, STATIC_ONLY_LEVELS, TILE_VALUE_LEVELS, THEMES, featureLineLayers, featurePolygonLayers, fillLayerIds, focusDimLayer, FOCUS_DIM_LAYER, focusFilters, focusLandLayer, FOCUS_LAND_BEFORE_ID, GEO_LEVELS, MOTION, PER_STATE_LEVELS, thematicLayers, type GeoLevel, type NoDataFill, type PackedClasses, type ThemeName } from "@webgis/design";
+import { areaHighlightLayers, AREA_SOURCE, basemapStyle, pinLayers, PIN_SOURCE, choroplethFill, hatchImage, hatchLayerId, HATCH_IMAGE, HATCH_LEVELS, membershipFilter, NO_FEATURES, choroplethFillsByState, DATA_BEFORE_ID, STATIC_ONLY_LEVELS, TILE_VALUE_LEVELS, THEMES, featureLineLayers, featurePolygonLayers, fillLayerIds, focusDimLayer, FOCUS_DIM_LAYER, focusFilters, focusLandLayer, FOCUS_LAND_BEFORE_ID, GEO_LEVELS, MOTION, PER_STATE_LEVELS, thematicLayers, type GeoLevel, type NoDataFill, type PackedClasses, type ThemeName } from "@webgis/design";
 import { comparePickOpen } from "@/lib/compare";
 import type { FeatureLayerSpec } from "@/lib/layers";
 import type { ViewState } from "@/lib/url-state";
@@ -135,6 +135,11 @@ export interface MapApi {
   /** A copy of the map as drawn (issue #361). Copied in the frame it renders, since WebGL clears its
    *  buffer after each frame and `preserveDrawingBuffer` would slow every frame. */
   snapshot: () => Promise<HTMLCanvasElement>;
+  /** Mark a point (a found address, the visitor's spot; issue #363), or clear with null. */
+  showPin: (at: [number, number] | null) => void;
+  /** Fly to a point, then select the place drawn under it exactly as a click would (its details open);
+   *  resolves with that place, or null (open water, a feature map). */
+  pickAt: (lon: number, lat: number, zoom: number, padding?: Padding) => Promise<HoverInfo | null>;
 }
 
 const LEVELS = Object.keys(GEO_LEVELS) as GeoLevel[];
@@ -169,6 +174,7 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
   const selected = useRef<Flag>(compare ? { level: compare.level, id: compare.a } : null);
   const second = useRef<Flag>(compare ? { level: compare.level, id: compare.b } : null);
   const area = useRef<Geometry | null>(null);
+  const pin = useRef<Geometry | null>(null);
   const scale = useRef<ScaleControl | null>(null);
 
   // Create the map once.
@@ -229,6 +235,20 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
       setCamera: (c) => m.flyTo({ ...c, padding: { top: 0, right: 0, bottom: 0, left: 0 }, duration: fly, essential: true }),
       isMoving: () => m.isMoving(),
       showArea: (shape) => { area.current = shape; if (ready.current) applyArea(m, shape, latest.current.theme); },
+      showPin: (at) => { pin.current = at && { type: "Point", coordinates: at }; if (ready.current) applyPin(m, pin.current, latest.current.theme); },
+      pickAt: (lon, lat, zoom, padding) => new Promise((resolve) => {
+        m.flyTo({ center: [lon, lat], zoom, padding: safePadding(m, padding), duration: fly, essential: true });
+        // Idle: the move is done and the tiles there are drawn, so the place under the point can be read.
+        m.once("idle", () => {
+          const pt = m.project([lon, lat]);
+          const f = latest.current.featureLayer ? undefined : placeAt(pt);
+          if (!f) return resolve(null);
+          setFlag(m, selected, { level: f.sourceLayer as GeoLevel, id: String(f.properties.geoid) }, "selected");
+          const info = { ...infoOf(f, pt.x, pt.y), lon, lat };
+          latest.current.onSelect?.(info);
+          resolve(info);
+        });
+      }),
       snapshot: () => new Promise((resolve) => {
         m.once("render", () => {
           const src = m.getCanvas(), c = document.createElement("canvas");
@@ -271,6 +291,7 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
       syncHatch(m, latest.current.hatch, appliedHatch.current, latest.current.levelZooms);
       applyFocus(m, latest.current.focus, latest.current.theme);
       applyArea(m, area.current, latest.current.theme);
+      applyPin(m, pin.current, latest.current.theme);
     });
     // The opening bbox is an estimate from the place's center and area; frame it exactly once its tiles are in.
     if (compare) m.once("idle", () => {
@@ -585,14 +606,15 @@ function addThematic(m: MlMap, theme: ThemeName, boundaries: string | null) {
 }
 
 /** The searched area's outline: a GeoJSON source with the selection outline, above every fill. */
-function applyArea(m: MlMap, shape: Geometry | null, theme: ThemeName) {
-  const layers = areaHighlightLayers(theme);
+function applyArea(m: MlMap, shape: Geometry | null, theme: ThemeName, source = AREA_SOURCE, layers = areaHighlightLayers(theme), before: string | undefined = DATA_BEFORE_ID) {
   for (const l of layers) if (m.getLayer(l.id)) m.removeLayer(l.id);
-  if (m.getSource(AREA_SOURCE)) m.removeSource(AREA_SOURCE);
+  if (m.getSource(source)) m.removeSource(source);
   if (!shape) return;
-  m.addSource(AREA_SOURCE, { type: "geojson", data: shape });
-  for (const l of layers) m.addLayer(l, m.getLayer(DATA_BEFORE_ID) ? DATA_BEFORE_ID : undefined);
+  m.addSource(source, { type: "geojson", data: shape });
+  for (const l of layers) m.addLayer(l, before && m.getLayer(before) ? before : undefined);
 }
+/** The pin draws above everything. */
+const applyPin = (m: MlMap, at: Geometry | null, theme: ThemeName) => applyArea(m, at, theme, PIN_SOURCE, pinLayers(theme), undefined);
 
 /** Point the county and tract sources at another boundary vintage. A source's URL can't be
  *  changed in place, so its layers are lifted out (keeping their order, zoom bands and paint),

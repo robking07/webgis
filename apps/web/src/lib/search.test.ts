@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { mpoById, normalizeName, placeByGeoid, searchPlaces, type PlaceRow } from "./search";
+import { mpoById, normalizeName, parseQuery, placeByGeoid, searchPlaces, type PlaceRow } from "./search";
 
 // Rows from the live geo/search.json (issue #258): every county starting "Du" or "Cook", and the places tested.
 const ROWS: PlaceRow[] = [
@@ -104,5 +104,14 @@ describe("cities and metro areas in place search (issue #332)", () => {
   it("'metro' and dashes find the metro first", () => {
     for (const q of ["Minneapolis metro", "minneapolis metro area", "Minneapolis–St. Paul", "Minneapolis-St Paul"])
       expect(searchPlaces(rows, q)[0], q).toMatchObject({ kind: "Metro area", area: "cbsa33460" });
+  });
+});
+
+describe("parseQuery", () => {
+  it("splits 'topic in place'", () => {
+    expect(parseQuery("asthma in Duluth")).toEqual({ topic: "asthma", place: "Duluth" });
+    expect(parseQuery("Asthma IN  St. Paul, MN")).toEqual({ topic: "Asthma", place: "St. Paul, MN" });
+    expect(parseQuery("Duluth")).toBeNull();
+    expect(parseQuery("in Duluth")).toBeNull();
   });
 });

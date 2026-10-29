@@ -4,7 +4,7 @@
 // framing in useFraming, and one file per panel).
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { StatusState } from "@webgis/design/components";
-import { childLevel, formatValue, GEO_LEVELS, HATCH_LEVELS, isGradable, type GeoLevel } from "@webgis/design";
+import { childLevel, formatValue, GEO_LEVELS, HATCH_LEVELS, isGradable, levelBands, type GeoLevel } from "@webgis/design";
 import { DataTable } from "./DataTable";
 import { MapCredits } from "./MapCredits";
 import { SearchOverlay } from "./SearchOverlay";
@@ -211,8 +211,33 @@ export function Viewer({ search }: { search: string }) {
     }).catch(() => {}); // shortcut: an unknown or failed MPO or area just shows no outline; say so if visitors hit it.
     return () => { live = false; };
   }, [state.mpo, state.area]);
+  /** A found address or the visitor's spot (issue #363): its pin, and the geoid selected there ("" if none). */
+  const [pin, setPin] = useState<{ at: [number, number]; geoid?: string } | null>(null);
+  // The pin goes once its place's details close or another place is picked (adjusted during render).
+  if (pin?.geoid && selected?.geoid !== pin.geoid) setPin(null);
+  useEffect(() => { mapApi.current?.showPin(pin?.at ?? null); }, [pin]);
+  /** Frame a point at tract zoom and open the details of the place drawn there, on the map already
+   *  showing (the anti-steering rule, issue #363): exactly what a tap there does. */
+  const goToPoint = (lon: number, lat: number) => {
+    setSelected(null); setFeatureSelected(null); mapApi.current?.select("county", null);
+    if (state.mpo || state.area) update({ mpo: null, area: null });
+    if (focus) leaveFocus();
+    setPin({ at: [lon, lat] });
+    const b = (focus ? levelBands(availableLevels) : bands).tract;
+    const zoom = b ? (b.minzoom + Math.min(b.maxzoom, b.minzoom + 2)) / 2 : 10;
+    mapApi.current?.pickAt(lon, lat, zoom, clearArea(true)).then((hit) => setPin({ at: [lon, lat], geoid: hit?.geoid ?? "" }));
+  };
+  const [toast, setToast] = useState<string | null>(null);
+  useEffect(() => { if (toast) { const t = setTimeout(() => setToast(null), 8000); return () => clearTimeout(t); } }, [toast]);
+  /** Phones: "Near me" (issue #363). The position stays in the browser: the tract comes from the map's own tiles. */
+  const nearMe = () => {
+    setToast("Your location stays on your device. Mapwich uses it only to find your census tract.");
+    navigator.geolocation.getCurrentPosition((p) => goToPoint(p.coords.longitude, p.coords.latitude),
+      () => setToast("Couldn't get your location."), { timeout: 15000, maximumAge: 60000 });
+  };
   const onSearchPlace = (p: PlaceHit) => {
     setSearchOpen(false);
+    setPin(null);
     if (p.area) {
       // A city or metro: outlined with its own numbers, framed like any searched place.
       setSelected(null); setFeatureSelected(null); mapApi.current?.select("county", null);
@@ -261,6 +286,8 @@ export function Viewer({ search }: { search: string }) {
     else update({ d: id, lv: null, ...keepStops(id) });
   };
   const onSearchDataset = (d: Dataset) => { setSearchOpen(false); pickDataset(d.id); };
+  // shortcut: a county or state picked this way is framed but not selected (the map switch clears the selection); fine while the issue's case is a city.
+  const onSearchBoth = (d: Dataset, p: PlaceHit) => { onSearchDataset(d); onSearchPlace(p); };
   // Compare mode (issue #198). Entering, swapping and leaving each add a Back step (useUrlState).
   const pickSecond = (id: string) => update({ b: id, t: null, since: null });
   const swapMaps = () => update({ d: state.b, b: state.d, lv: null, t: null, since: null });
@@ -461,7 +488,7 @@ export function Viewer({ search }: { search: string }) {
       )}
 
       <MapControls mapApi={mapApi} atRest={chromeShown && !immersed} canGoBack={canGoBack} onBack={goBack} phone={phone} cardH={cardH}
-        onRegion={goToRegion} onPlace={onSearchPlace} />
+        onRegion={goToRegion} onPlace={onSearchPlace} onNearMe={phone && "geolocation" in navigator ? nearMe : null} />
       {usLost && (
         <button type="button" onClick={() => goToRegion(CONUS)}
           className="wg-panel wg-zbtn absolute bottom-24 left-1/2 z-20 h-11 -translate-x-1/2 rounded-full px-4 text-sm font-semibold text-foreground">
@@ -487,7 +514,8 @@ export function Viewer({ search }: { search: string }) {
 
       {listOpen && slot && primary && <DatasetSheet key={slot} slot={slot} primary={primary} secondary={secondary} onSlot={setBrowse} onPick={onMenuPick} onClose={() => setBrowse(null)} />}
 
-      {searchOpen && <SearchOverlay full={phone} current={state.d} onClose={() => setSearchOpen(false)} onPlace={onSearchPlace} onDataset={onSearchDataset} />}
+      {searchOpen && <SearchOverlay full={phone} current={state.d} onClose={() => setSearchOpen(false)} onPlace={onSearchPlace} onDataset={onSearchDataset}
+        onBoth={onSearchBoth} onAddress={(m) => { setSearchOpen(false); goToPoint(m.lon, m.lat); }} />}
 
       {tableOpen && primary && tableLevel && (
         <DataTable top={panelTop} level={tableLevel} within={tableWithin} x={primary} xv={x.values[tableLevel]} y={secondary} yv={y.values[tableLevel]} period={stopId ? stop!.label : undefined} selected={selected?.geoid ?? null}
@@ -503,6 +531,12 @@ export function Viewer({ search }: { search: string }) {
       {noChange && noChange === pinnedLevel && !since && (
         <div className="absolute left-1/2 top-16 z-30 max-w-[90vw] -translate-x-1/2 rounded-lg border bg-card p-1 shadow-sm">
           <StatusState status="empty" message={`Change over time isn't available for ${GEO_LEVELS[noChange].plural.toLowerCase()}.`} />
+        </div>
+      )}
+
+      {toast && (
+        <div className="absolute left-1/2 top-16 z-30 max-w-[90vw] -translate-x-1/2 rounded-lg border bg-card p-1 shadow-sm">
+          <StatusState status="empty" message={toast} />
         </div>
       )}
 
