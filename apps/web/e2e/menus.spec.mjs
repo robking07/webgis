@@ -967,9 +967,9 @@ for (const vp of ["phone", "laptop"]) {
     const tractFiles = () => page.requests.filter((u) => /\/values\/([a-z0-9_]+\/)?tracts\/\d{5}\.json/.test(u));
     expect(tractFiles().length > 0 && tractFiles().every((u) => u.includes("/values/median_household_income/tracts/")), `tract files after the click: ${tractFiles().join(", ") || "none"}`);
     if (vp === "phone") {
+      const others = page.waitForRequest((r) => r.url().includes("/values/median_age/tracts/"), { timeout: 20000 }).catch(() => null);
       await page.getByRole("button", { name: /^Expand: Details for/ }).click();
-      await page.waitForFunction(() => document.querySelectorAll('section[aria-label^="Details for"] li').length > 5, null, { timeout: 20000 });
-      expect(tractFiles().some((u) => u.includes("/values/median_age/tracts/")), "the swipe up didn't load the other maps");
+      expect(await others, "the swipe up didn't load the other maps");
       expect(!tractFiles().some((u) => /\/values\/tracts\//.test(u)), "requested an old all-maps tract file");
     }
   });
