@@ -153,36 +153,9 @@ export function basemapStyle(themeName: ThemeName): StyleSpecification {
       },
       paint: { "text-color": m.labelMuted, ...halo },
     },
-    // Places: U.S. cities and towns at full strength; foreign ones (outside the U.S. mask)
-    // fewer, smaller and muted, so the map reads as a U.S. map (Robbie, D-37). Big cities
-    // only before z6, every city from z6, towns from z8; sized big city > city > town (audit F3).
-    {
-      id: "label-place", type: "symbol", source: "omt", "source-layer": "place", minzoom: 4,
-      filter: ["all", ["in", cls, ["literal", ["city", "town"]]], inUS,
-        ["step", ["zoom"], ["all", ["==", cls, "city"], big], 6, ["==", cls, "city"], 8, true]] as never,
-      layout: {
-        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
-        "text-font": LABEL.font as unknown as string[],
-        "text-size": ["interpolate", ["linear"], ["zoom"],
-          ...LABEL.sizes.placeByRank.flatMap(([z, bigPx, cityPx, townPx]) => [z, ["case", ["==", cls, "town"], townPx, big, bigPx, cityPx]])] as never,
-        "symbol-sort-key": ["get", "rank"],
-      },
-      paint: { "text-color": m.label, ...halo },
-    },
-    // Foreign: only the biggest cities at first, the rest of the cities from z8, never towns.
-    ...([["label-place-foreign", 5, ["<=", ["get", "rank"], LABEL.foreignMajorRank]], ["label-place-foreign-minor", 8, [">", ["get", "rank"], LABEL.foreignMajorRank]]] as const).map(([id, minzoom, rank]): LayerSpecification => ({
-      id, type: "symbol", source: "omt", "source-layer": "place", minzoom,
-      filter: ["all", ["==", ["get", "class"], "city"], rank, ["!", inUS]] as never,
-      layout: {
-        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
-        "text-font": LABEL.font as unknown as string[],
-        "text-size": zoomInterp(LABEL.sizes.foreign) as never,
-        "symbol-sort-key": ["get", "rank"],
-      },
-      paint: { "text-color": m.labelForeign, "text-halo-color": haloColor, "text-halo-width": LABEL.haloWidth * 0.7 },
-    })),
     // Route shields (issue #201): Interstates from z7, U.S. routes from z8, from the sprite's
     // `{network}_{ref_length}` images (1–3 digit refs). Before z7 Interstates get plain "I-25" text.
+    // Below the places, so a city name wins over a shield (Saint Paul sits among 35E and 94).
     {
       id: "label-interstate", type: "symbol", source: "omt", "source-layer": "transportation_name", minzoom: 6, maxzoom: 7,
       // A plain number only: ways tagged with an Interstate relation can carry refs like "US 90 BUS".
@@ -212,6 +185,7 @@ export function basemapStyle(themeName: ThemeName): StyleSpecification {
       },
       paint: { "text-color": m.shieldText },
     })),
+    // State names under the places: a big city wins a collision with its state name (audit F3).
     {
       id: "label-state", type: "symbol", source: "omt", "source-layer": "place", minzoom: 3, maxzoom: 7,
       filter: ["all", ["==", ["get", "class"], "state"], inUS],
@@ -237,6 +211,37 @@ export function basemapStyle(themeName: ThemeName): StyleSpecification {
       },
       paint: { "text-color": m.labelForeign, "text-halo-color": haloColor, "text-halo-width": LABEL.haloWidth * 0.7, "text-opacity": 0.8 },
     },
+    // Places: U.S. cities and towns at full strength; foreign ones (outside the U.S. mask)
+    // fewer, smaller and muted, so the map reads as a U.S. map (Robbie, D-37). Big cities
+    // only before z6, every city from z6, towns from z8; sized big city > city > town (audit F3).
+    {
+      id: "label-place", type: "symbol", source: "omt", "source-layer": "place", minzoom: 3,
+      filter: ["all", ["in", cls, ["literal", ["city", "town"]]], inUS,
+        ["step", ["zoom"], ["all", ["==", cls, "city"], big], 6, ["==", cls, "city"], 8, true]] as never,
+      layout: {
+        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-font": LABEL.font as unknown as string[],
+        "text-size": ["interpolate", ["linear"], ["zoom"],
+          ...LABEL.sizes.placeByRank.flatMap(([z, bigPx, cityPx, townPx]) => [z, ["case", ["==", cls, "town"], townPx, big, bigPx, cityPx]])] as never,
+        "symbol-sort-key": ["get", "rank"],
+        // A city may sit just above or below its point rather than lose to a state name (Atlanta, Seattle).
+        "text-variable-anchor": ["center", "top", "bottom"],
+        "text-radial-offset": 0.6,
+      },
+      paint: { "text-color": m.label, ...halo },
+    },
+    // Foreign: only the biggest cities at first, the rest of the cities from z8, never towns.
+    ...([["label-place-foreign", 5, ["<=", ["get", "rank"], LABEL.foreignMajorRank]], ["label-place-foreign-minor", 8, [">", ["get", "rank"], LABEL.foreignMajorRank]]] as const).map(([id, minzoom, rank]): LayerSpecification => ({
+      id, type: "symbol", source: "omt", "source-layer": "place", minzoom,
+      filter: ["all", ["==", ["get", "class"], "city"], rank, ["!", inUS]] as never,
+      layout: {
+        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-font": LABEL.font as unknown as string[],
+        "text-size": zoomInterp(LABEL.sizes.foreign) as never,
+        "symbol-sort-key": ["get", "rank"],
+      },
+      paint: { "text-color": m.labelForeign, "text-halo-color": haloColor, "text-halo-width": LABEL.haloWidth * 0.7 },
+    })),
   ];
   return {
     version: 8,

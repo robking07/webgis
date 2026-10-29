@@ -200,7 +200,7 @@ Light and dark come from the same token structure; the basemap and the UI chrome
 | Block group | 11 – 13 | 7 |
 | Block | 13 – max | 7 |
 
-Line widths and outlines scale with zoom (`SIZE`: featureOutline, fineOutlineOpacity, highlightOutline, line, lineMajor, point, dataLine, interstate, interstateCasing, river, riverCasing, pointStroke, arterial). Labels use Noto Sans Regular with a 1.2px halo that matches the basemap tone. Thematic fills are inserted **below** the basemap's label layers, so place names stay readable over any fill.
+Line widths and outlines scale with zoom (`SIZE`: featureOutline, fineOutlineOpacity, highlightOutline, line, lineMajor, point, dataLine, interstate, interstateCasing, river, riverCasing, pointStroke, arterial). Labels use Noto Sans Regular with a 1.3px halo that matches the basemap tone. Thematic fills are inserted **below** the basemap's label layers, so place names stay readable over any fill.
 
 ## Motion and accessibility
 

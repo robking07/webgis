@@ -120,7 +120,7 @@ export const THEMES: Record<ThemeName, Theme> = {
       park: "#e4e8dc",
       road: "#ffffff",
       roadMajor: "#e6dfd2",
-      boundary: "#8c8880",
+      boundary: "#7f7b74",
       boundaryMajor: "#77736c",
       arterial: "#ffffff",
       label: "#2e2f33",
@@ -273,12 +273,12 @@ export const FOCUS_DIM = {
   minSpread: 10,
 } as const;
 
+/** Main streets over the data: thin and faint, so they orient without competing with the fills. */
+export const ARTERIAL_OPACITY: Record<ThemeName, number> = { light: 0.75, dark: 0.35 };
+
 /** Opacity of the frosted-glass desktop filters sidebar (`.wg-glass` in components/design.css,
  *  which must match). `scripts/check.ts` composites the panel over the darkest and lightest map
  *  colors and requires its text and secondary text to keep 4.5:1 on top. */
-/** Main streets over the data: thin and faint, so they orient without competing with the fills. */
-export const ARTERIAL_OPACITY: Record<ThemeName, number> = { light: 0.55, dark: 0.3 };
-
 export const GLASS_ALPHA: Record<ThemeName, number> = { light: 0.84, dark: 0.88 };
 
 export function themeColor(theme: Theme, key: string): string {

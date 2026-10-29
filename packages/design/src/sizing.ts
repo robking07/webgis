@@ -117,7 +117,7 @@ export const SIZE = {
   riverCasing: [[3, 1.4], [6, 2], [9, 3], [12, 4.4], [16, 7.5]],
   pointStroke: [[4, 0.5], [12, 1], [16, 1.5]],
   /** Main streets drawn over the data at city zoom (audit F4). */
-  arterial: [[11, 0.6], [14, 1.8]],
+  arterial: [[11, 0.8], [12, 1.4], [14, 2.4]],
 } as const satisfies Record<string, ReadonlyArray<readonly [number, number]>>;
 
 /** Width multiplier by rank (1 = most important, e.g. Interstate). */
@@ -126,15 +126,15 @@ export const RANK_WIDTH: Record<number, number> = { 1: 1.7, 2: 1.45, 3: 1.2, 4: 
 export const LABEL = {
   font: ["Noto Sans Regular"],
   fontBold: ["Noto Sans Bold"],
-  haloWidth: 1.2,
+  haloWidth: 1.3,
   /** A little see-through and soft, so the halo doesn't cut a hard block out of dark classes (audit F13). */
-  haloOpacity: 0.75,
-  haloBlur: 0.5,
+  haloOpacity: 0.85,
+  haloBlur: 0.3,
   sizes: {
     country: [[2, 11], [6, 16]],
     state: [[3, 10], [6, 14]],
     /** U.S. places by importance: [zoom, big city (rank ≤ majorCityRank), other city, town]. */
-    placeByRank: [[4, 12, 10, 9], [8, 15, 13, 11], [12, 19, 16, 13]],
+    placeByRank: [[4, 12, 10, 9], [8, 15, 13, 12], [12, 19, 16, 14]],
     road: 10.5,
     /** Cities outside the U.S.: a step smaller at every zoom. */
     foreign: [[5, 9], [8, 11], [12, 13]],
