@@ -50,23 +50,27 @@ const errCode = (e: unknown) => String((e as { cause?: { code?: string } }).caus
 async function check(link: Link, mpo: string, name: string) {
   if (!link.url) return;
   link.checked = new Date().toISOString().slice(0, 10);
-  try {
-    const res = await fetch(link.url, { headers: UA, redirect: "follow", signal: AbortSignal.timeout(300_000) });
-    link.http = res.status;
-    link.status = classify(res.status);
-    if (link.status !== "ok") { await res.body?.cancel(); return; }
-    // shortcut: a 200 "soft 404" or parked-domain page counts as ok; the lead's hand check catches those until a content check is worth it.
-    const type = (res.headers.get("content-type") ?? "").split(";")[0].trim();
-    // shortcut: whole file in memory (largest today 127 MB); stream to disk if a plan passes ~1 GB.
-    const buf = Buffer.from(await res.arrayBuffer());
-    const sha256 = createHash("sha256").update(buf).digest("hex");
-    const file = `${mpo}/${name}-${sha256.slice(0, 8)}.${extOf(type)}`;
-    mkdirSync(join(ARCHIVE, mpo), { recursive: true });
-    writeFileSync(join(ARCHIVE, file), buf);
-    Object.assign(link, { type, bytes: buf.length, sha256, file });
-  } catch (e) {
-    link.http = errCode(e);
-    link.status = classify(link.http);
+  for (const ms of [300_000, 900_000]) { // a timeout gets one retry with a longer limit (big PDFs on slow servers)
+    try {
+      const res = await fetch(link.url, { headers: UA, redirect: "follow", signal: AbortSignal.timeout(ms) });
+      link.http = res.status;
+      link.status = classify(res.status);
+      if (link.status !== "ok") { await res.body?.cancel(); return; }
+      // shortcut: a 200 "soft 404" or parked-domain page counts as ok; the lead's hand check catches those until a content check is worth it.
+      const type = (res.headers.get("content-type") ?? "").split(";")[0].trim();
+      // shortcut: whole file in memory (largest today 127 MB); stream to disk if a plan passes ~1 GB.
+      const buf = Buffer.from(await res.arrayBuffer());
+      const sha256 = createHash("sha256").update(buf).digest("hex");
+      const file = `${mpo}/${name}-${sha256.slice(0, 8)}.${extOf(type)}`;
+      mkdirSync(join(ARCHIVE, mpo), { recursive: true });
+      writeFileSync(join(ARCHIVE, file), buf);
+      Object.assign(link, { type, bytes: buf.length, sha256, file });
+      return;
+    } catch (e) {
+      link.http = errCode(e);
+      link.status = classify(link.http);
+      if (link.http !== "TimeoutError") return;
+    }
   }
 }
 
@@ -135,12 +139,16 @@ export async function checkMpoPlans() {
 export async function publishMpoPlans(dryRun: boolean) {
   const files = [...links(readCatalog())].map(([, , l]) => l).filter((l) => l.file && l.host !== false && /\.(pdf|docx)$/.test(l.file));
   const missing = files.filter((l) => !existsSync(join(ARCHIVE, l.file!)));
-  if (missing.length) throw new Error(`${missing.length} files not in data/cache/mpo-plans (first: ${missing[0].file}); run \`ingest mpo-plans\` first`);
+  files.splice(0, files.length, ...files.filter((l) => !missing.includes(l))); // upload what we have, fail at the end
+  const finish = () => {
+    for (const l of missing) log("publish-mpo-plans", `missing ${l.file}: run \`npm run ingest -- mpo-plans\` to fetch it`);
+    if (missing.length) throw new Error(`${missing.length} files not in data/cache/mpo-plans; the rest were handled`);
+  };
   const mb = (n: number) => `${(n / 1e6).toFixed(1)} MB`;
   if (dryRun) {
     for (const l of files) log("publish-mpo-plans", `would upload ${KEY_PREFIX}${l.file} (${mb(statSync(join(ARCHIVE, l.file!)).size)})`);
     log("publish-mpo-plans", `dry run: ${files.length} files, ${mb(files.reduce((t, l) => t + l.bytes!, 0))}; nothing sent`);
-    return;
+    return finish();
   }
   const { s3, bucket } = r2();
   const have = new Set<string>();
@@ -159,4 +167,5 @@ export async function publishMpoPlans(dryRun: boolean) {
     sent++;
   }
   log("publish-mpo-plans", `${sent} uploaded, ${files.length - sent} already on R2`);
+  finish();
 }
