@@ -108,6 +108,7 @@ export function regionParts(list: RegionCounty[]): string[] | null {
 /** A map's total for an MPO: whole counties plus the cut counties' tracts inside ("tracts"), or, when
  *  any of those tract counts is missing (CT, maps with no tract counts), the half rule's counties
  *  ("counties"). `c` is null when neither adds up. */
+// shortcut: a big cut county pulls its whole tract file (LA's is 3.7 MB for SCAG, cut at 99.9%); publish per-MPO sums at ingest if that load hurts.
 export async function regionTotal(id: string, list: RegionCounty[]): Promise<{ c: Counts | null; basis: "tracts" | "counties" }> {
   const parts = regionParts(list);
   const near = parts && list.some(([, s]) => s < 1) ? sumCounts(await Promise.all(parts.map((g) => placeCounts(id, g)))) : null;
