@@ -7,7 +7,7 @@ import { changeSummary, differenceMoe, formatChange, withinMoe } from "@/lib/cha
 import type { ClassedLevel } from "./useViewerData";
 import type { HoverInfo } from "../map/MapView";
 import type { Dataset } from "@/lib/registry";
-import { placeHref, rankText } from "@/lib/place";
+import { isRaceRow, placeHref, rankText } from "@/lib/place";
 import { learnMoreLinks, type Link } from "@/lib/learn-more";
 import { fetchDetail, TRACT_IDS } from "@/lib/details";
 import { loadMoes, type Values } from "@/lib/values";
@@ -212,12 +212,12 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
                   <div key={d.id} className="rounded-md bg-muted px-3 py-2">
                     <p className="text-xs text-muted-foreground">{d.title}, {period.label}</p>
                     <p className="text-xl font-semibold tabular-nums">{formatValue(v, d.unit)}</p>
-                    {rankText(xv, v, info.level) && <p className="text-xs text-muted-foreground">{rankText(xv, v, info.level)}</p>}
+                    {!isRaceRow(d) && rankText(xv, v, info.level) && <p className="text-xs text-muted-foreground">{rankText(xv, v, info.level)}</p>}
                     {r?.value != null && <p className="mt-1 text-xs text-muted-foreground">{period.defaultLabel}: <span className="tabular-nums">{formatValue(r.value, d.unit)}</span></p>}
                   </div>
                 );
               }
-              const rank = rankText(i === 0 ? xv : yv, r?.value, info.level);
+              const rank = isRaceRow(d) ? null : rankText(i === 0 ? xv : yv, r?.value, info.level);
               const est = formatEstimate(r?.value, r?.moe, d.unit);
               return (
                 <div key={d.id} className="rounded-md bg-muted px-3 py-2">

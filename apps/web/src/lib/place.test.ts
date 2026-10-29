@@ -1,5 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { placeHref } from "./place";
+import { isRaceRow, placeHref } from "./place";
+import { DATASET_BY_ID } from "./registry";
+
+describe("isRaceRow", () => {
+  it("is true for every Race and ethnicity dataset, false for others", () => {
+    expect(isRaceRow(DATASET_BY_ID.get("pct_people_of_color"))).toBe(true);
+    expect(isRaceRow(DATASET_BY_ID.get("pct_poverty"))).toBe(false);
+  });
+});
 
 describe("placeHref", () => {
   it("carries the map's dataset, if any", () => {
