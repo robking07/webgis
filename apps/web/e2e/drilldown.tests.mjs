@@ -51,7 +51,7 @@ export default function drilldownTests({ test, expect, immerse, mapIdle, tapLonL
     const { page } = await o("laptop", `/map?d=median_household_income&lv=county&at=${HENNEPIN.join(",")},8`);
     await immerse(page);
     expect(await step(page, HENNEPIN, "tract", 5) === "27053", "a fixed county level didn't drill into Hennepin");
-    const { page: p2 } = await o("laptop", `/map?d=asthma&at=${HENNEPIN.join(",")},8`);
+    const { page: p2 } = await o("laptop", `/map?d=stroke&at=${HENNEPIN.join(",")},8`);
     await immerse(p2);
     await tapLonLat(p2, ...HENNEPIN);
     await p2.locator('section[aria-label^="Details for Hennepin County"]').waitFor();

@@ -15,7 +15,7 @@ export default function clickTests({ test, expect, immerse, mapIdle, tapAt, HENN
   for (const vp of ["phone", "laptop"]) {
     test(`${vp} map click: one click centers at the same zoom, Back clears the padding, double click fits`, async (o) => {
       // A county-only map: a click selects without drilling in.
-      const { page } = await o(vp, `/map?d=asthma&at=${HENNEPIN[0] + 0.5},${HENNEPIN[1] + 0.2},8`);
+      const { page } = await o(vp, `/map?d=stroke&at=${HENNEPIN[0] + 0.5},${HENNEPIN[1] + 0.2},8`);
       await immerse(page);
       const before = await cam(page);
       await tapAt(page, ...(await at(page, ...HENNEPIN)));

@@ -30,7 +30,7 @@
   "id": "margin-of-error",
   "term": "Margin of error (±)",
   "short": "How far the true value could reasonably be from the estimate shown.",
-  "long": "Survey and model-based numbers are estimates. A value of 12% ± 3% means the true value is likely between 9% and 15%. For Census ACS data the range covers 90% confidence; for CDC PLACES it is a 95% interval. When two places' ranges overlap a lot, the difference between them may not be real."
+  "long": "Survey and model-based numbers are estimates. A value of 12% ± 3% means the true value is likely between 9% and 15%. For Census Bureau data (the ACS and its insurance estimates) the range covers 90% confidence; for CDC PLACES it is a 95% interval. When two places' ranges overlap a lot, the difference between them may not be real."
  },
  {
   "id": "age-adjusted",
@@ -42,7 +42,7 @@
   "id": "model-based-estimate",
   "term": "Model-based estimate",
   "short": "A value predicted from survey data and local characteristics rather than counted directly in that place.",
-  "long": "CDC's PLACES project has health survey responses for states, not for every county. It uses a statistical model that combines those responses with each county's demographics (such as age, race and poverty) to estimate local rates. The estimates are useful for comparison, but they partly reflect the model's inputs, which is why Combinations won't pair them with those inputs.",
+  "long": "CDC's PLACES project has health survey responses for states, not for every county or tract. It uses a statistical model that combines those responses with each place's demographics (such as age, race and poverty) to estimate local rates. The Census Bureau's uninsured estimates (SAHIE) work the same way, adding tax, SNAP and Medicaid records to its survey. The estimates are useful for comparison, but they partly reflect the model's inputs, which is why Combinations won't pair them with those inputs.",
   "source": "https://www.cdc.gov/places/methodology/"
  },
  {

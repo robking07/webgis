@@ -1,7 +1,7 @@
 id: diabetes
 title: "Diabetes"
 phrase: diabetes rates
-description: "Share of adults a doctor has told they have diabetes (not counting diabetes only during pregnancy). Age-adjusted prevalence; model-based small-area estimate."
+description: "Share of adults a doctor has told they have diabetes (not counting diabetes only during pregnancy). Model-based small-area estimate, age-adjusted for counties but not for tracts (CDC publishes tract rates unadjusted)."
 category: Health
 subcategory: Conditions
 tags: [diabetes, chronic disease, health]
@@ -9,15 +9,15 @@ source:
   name: CDC PLACES (Local Data for Better Health), 2025 release
   shortName: CDC PLACES
   url: https://www.cdc.gov/places/
-  citation: "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
+  citation: "Centers for Disease Control and Prevention, PLACES: Local Data for Better Health, County and Census Tract Data, 2025 release (BRFSS 2023/2022 model-based estimates)"
 license: Public domain (U.S. Government work; data.cdc.gov license field "Public Domain")
 updateCadence: annual
-geographyLevels: [county]
+geographyLevels: [county, tract]
 unit: percent
 universe: adults 18+ (model-based estimate)
 modelInputs: [pct_poverty, median_household_income]  # PLACES models county poverty; median income is near-collinear with it
-coverageNote: "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate."
+coverageNote: "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate, as do tracts with very few residents."
 vintage: "2023 data"
 terms: [model-based-estimate, age-adjusted, margin-of-error, quantile-classes]
-measure: { kind: places, socrata: swc5-untb, measureId: DIABETES, valueType: AgeAdjPrv }
+measure: { kind: places, socrata: swc5-untb, measureId: DIABETES, valueType: AgeAdjPrv, tractSocrata: cwsq-ngmh }
 symbology: { ramp: oranges, classification: quantile, classes: 5 }

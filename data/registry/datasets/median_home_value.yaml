@@ -14,6 +14,7 @@ license: Public domain (U.S. Government work, 17 U.S.C. § 105)
 updateCadence: annual
 vintage: "2020–2024 (5-year estimate)"
 geographyLevels: [state, county, tract, block_group]
+areaLevels: [cbsa, place]
 unit: dollars
 universe: owner-occupied housing units
 coverageNote: "The Census Bureau caps the top value (about $2 million) and the bottom value, so the most and least expensive areas show the cap rather than their true median. Block groups with too few owner-occupied homes show no median."

@@ -57,6 +57,10 @@ const PlacesMeasure = z.object({
   socrata: z.string(),
   measureId: z.string(),
   valueType: z.enum(["AgeAdjPrv", "CrdPrv"]).default("AgeAdjPrv"),
+  /** Socrata id of the matching tract release (e.g. cwsq-ngmh, 2025; 2020 tracts). CDC publishes
+   *  tracts as crude prevalence only, so tract values are crude whatever `valueType` says.
+   *  Needed when `geographyLevels` includes tract. */
+  tractSocrata: z.string().optional(),
 });
 const ClimdivMeasure = z.object({
   kind: z.literal("climdiv"),
@@ -148,6 +152,14 @@ const FemaNriMeasure = z.object({
   /** Rating field: a blank value rated "Not Applicable" (the hazard isn't possible there) counts
    *  as 0 instead of no data. Blanks rated "Insufficient Data" stay no data. */
   ratingField: z.string().regex(/^[A-Z][A-Z_]*$/).optional(),
+});
+
+/** Census Small Area Health Insurance Estimates (public domain): percent uninsured, under 65,
+ *  all races, sexes and incomes, by county and state, from the yearly CSV. Ingest: sahie.ts. */
+const SahieMeasure = z.object({
+  kind: z.literal("sahie"),
+  /** Estimate year (the file is sahie-<year>-csv.zip). */
+  year: z.number().int(),
 });
 
 /** CDC/ATSDR Social Vulnerability Index: one percentile-rank field of CDC's U.S.-wide county and
@@ -302,10 +314,13 @@ export const DatasetEntry = z.object({
   vintage: z.string(),
   /** Census levels a choropleth dataset has. Empty for `features` layers. */
   geographyLevels: z.array(GeoLevel).default([]),
+  /** Cities (incorporated places) and metro/micro areas (CBSAs) that get the Census Bureau's own
+   *  published value and margin, shown when one is searched (issue #332). acs5 only; never a map level. */
+  areaLevels: z.array(z.enum(["cbsa", "place"])).default([]),
   unit: Unit,
   /** For insights: the population the value describes. Pairs that share one are flagged. */
   universe: z.string(),
-  measure: z.discriminatedUnion("kind", [AcsMeasure, Census2020Measure, LodesMeasure, PlacesMeasure, ClimdivMeasure, NbiMeasure, FarsMeasure, FeaturesMeasure, HpmsVmtMeasure, CejstMeasure, Ddp287gMeasure, LeadMeasure, FoodAccessMeasure, FemaNriMeasure, SviMeasure, AirQualityMeasure, OverdoseMeasure, TriMeasure]),
+  measure: z.discriminatedUnion("kind", [AcsMeasure, Census2020Measure, LodesMeasure, PlacesMeasure, ClimdivMeasure, NbiMeasure, FarsMeasure, FeaturesMeasure, HpmsVmtMeasure, CejstMeasure, Ddp287gMeasure, LeadMeasure, FoodAccessMeasure, FemaNriMeasure, SviMeasure, AirQualityMeasure, OverdoseMeasure, TriMeasure, SahieMeasure]),
   /** Other registry datasets used as inputs to this dataset's model (e.g. PLACES uses county poverty).
    *  Insight pairs with these are flagged: they correlate partly by construction. */
   modelInputs: z.array(z.string()).default([]),

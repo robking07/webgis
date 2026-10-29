@@ -6,7 +6,7 @@
   "minAbsRho": 0.3,
   "minWithinStateRho": 0.15
  },
- "generatedAt": "2026-10-21T04:20:10.707Z",
+ "generatedAt": "2026-10-28T22:01:49.206Z",
  "insights": [
   {
    "id": "pct_people_of_color__pct_white_nh",
@@ -3128,6 +3128,25 @@
    "caption": "A strong link across 2,956 counties (Spearman ρ = −0.84). It holds within states too (ρ = −0.85). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template",
    "fingerprint": "6e5fbda18c8ee01d"
+  },
+  {
+   "id": "pct_uninsured__uninsured_under_65",
+   "x": "pct_uninsured",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": 0.816,
+   "rho": 0.839,
+   "withinState": 0.631,
+   "status": "flagged",
+   "flags": [
+    "by construction: No health insurance (under 65) is modeled using No health insurance",
+    "same category (Health): expected, not weird"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "cc59e72195bccbec"
   },
   {
    "id": "disability_independent_living__smoking",
@@ -11185,6 +11204,22 @@
    "fingerprint": "852ffd7ffa633b83"
   },
   {
+   "id": "nri_community_resilience__uninsured_under_65",
+   "x": "nri_community_resilience",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": -0.614,
+   "rho": -0.659,
+   "withinState": -0.494,
+   "status": "published",
+   "flags": [],
+   "headline": "Counties with higher community resilience scores tend to have lower uninsured rates under 65",
+   "caption": "A strong link across 3,143 counties (Spearman ρ = −0.66). It holds within states too (ρ = −0.49). Both may reflect something else, such as how urban a county is.",
+   "captionBy": "template",
+   "fingerprint": "23e21b33beaeabc6"
+  },
+  {
    "id": "pct_poverty__smoking",
    "x": "pct_poverty",
    "y": "smoking",
@@ -12826,6 +12861,24 @@
    "fingerprint": "f58baa65170beaa5"
   },
   {
+   "id": "disability_vision__uninsured_under_65",
+   "x": "disability_vision",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 2955,
+   "r": 0.533,
+   "rho": 0.637,
+   "withinState": 0.581,
+   "status": "flagged",
+   "flags": [
+    "same category (Health): expected, not weird"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "a8ab2b43ba64a29c"
+  },
+  {
    "id": "pct_no_internet__physical_inactivity",
    "x": "pct_no_internet",
    "y": "physical_inactivity",
@@ -14205,6 +14258,24 @@
    "caption": "A strong link across 3,144 counties (Spearman ρ = −0.62). It holds within states too (ρ = −0.53). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template",
    "fingerprint": "3ca7792543716b14"
+  },
+  {
+   "id": "dentist_visit__uninsured_under_65",
+   "x": "dentist_visit",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3142,
+   "r": -0.445,
+   "rho": -0.62,
+   "withinState": -0.498,
+   "status": "flagged",
+   "flags": [
+    "same category (Health): expected, not weird"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "dbe29bf00ed722d7"
   },
   {
    "id": "dentist_visit__lack_emotional_support",
@@ -15783,6 +15854,24 @@
    "fingerprint": "62450179f11b045c"
   },
   {
+   "id": "colorectal_screening__uninsured_under_65",
+   "x": "colorectal_screening",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3142,
+   "r": -0.6,
+   "rho": -0.601,
+   "withinState": -0.508,
+   "status": "flagged",
+   "flags": [
+    "same category (Health): expected, not weird"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "3e5d3c2df9219854"
+  },
+  {
    "id": "cancer__diabetes",
    "x": "cancer",
    "y": "diabetes",
@@ -16425,6 +16514,22 @@
    "fingerprint": "f4394ea176ad783d"
   },
   {
+   "id": "svi_socioeconomic__uninsured_under_65",
+   "x": "svi_socioeconomic",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": 0.542,
+   "rho": 0.595,
+   "withinState": 0.558,
+   "status": "published",
+   "flags": [],
+   "headline": "Counties with higher socioeconomic vulnerability ranks tend to have higher uninsured rates under 65",
+   "caption": "A moderate link across 3,143 counties (Spearman ρ = 0.59). It holds within states too (ρ = 0.56). Both may reflect something else, such as how urban a county is.",
+   "captionBy": "template",
+   "fingerprint": "47f0b88b17bb435f"
+  },
+  {
    "id": "per_capita_income__short_sleep",
    "x": "per_capita_income",
    "y": "short_sleep",
@@ -16807,6 +16912,24 @@
    "caption": "A moderate link across 2,299 counties (Spearman ρ = 0.59). It holds within states too (ρ = 0.53). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template",
    "fingerprint": "8ba896b620fe1f2a"
+  },
+  {
+   "id": "july_high__uninsured_under_65",
+   "x": "july_high",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3132,
+   "r": 0.468,
+   "rho": 0.592,
+   "withinState": 0.071,
+   "status": "flagged",
+   "flags": [
+    "regional only: within states ρ=0.07"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "bfad95370d785563"
   },
   {
    "id": "median_household_income__pct_no_hs_diploma",
@@ -17307,6 +17430,22 @@
    "caption": "A moderate link across 2,910 counties (Spearman ρ = −0.59). Much of it is regional: within the same state the link is weaker (ρ = −0.15).",
    "captionBy": "template",
    "fingerprint": "3002493101cb9100"
+  },
+  {
+   "id": "pct_no_hs_diploma__uninsured_under_65",
+   "x": "pct_no_hs_diploma",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": 0.598,
+   "rho": 0.587,
+   "withinState": 0.678,
+   "status": "published",
+   "flags": [],
+   "headline": "Counties with higher shares of adults without a high school diploma tend to have higher uninsured rates under 65",
+   "caption": "A moderate link across 3,143 counties (Spearman ρ = 0.59). It holds within states too (ρ = 0.68). Both may reflect something else, such as how urban a county is.",
+   "captionBy": "template",
+   "fingerprint": "c410d97a5fde8cd7"
   },
   {
    "id": "dentist_visit__pct_no_internet",
@@ -18248,6 +18387,24 @@
    "fingerprint": "d791b6af5b64be23"
   },
   {
+   "id": "lack_transportation__uninsured_under_65",
+   "x": "lack_transportation",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 2298,
+   "r": 0.479,
+   "rho": 0.578,
+   "withinState": 0.527,
+   "status": "flagged",
+   "flags": [
+    "same category (Health): expected, not weird"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "546a777572c2722d"
+  },
+  {
    "id": "arthritis__disability_selfcare",
    "x": "arthritis",
    "y": "disability_selfcare",
@@ -18280,6 +18437,24 @@
    "caption": "A moderate link across 2,253 counties (Spearman ρ = −0.58). Much of it is regional: within the same state the link is weaker (ρ = −0.17).",
    "captionBy": "template",
    "fingerprint": "c444834755c96561"
+  },
+  {
+   "id": "fair_poor_health__uninsured_under_65",
+   "x": "fair_poor_health",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 2955,
+   "r": 0.526,
+   "rho": 0.577,
+   "withinState": 0.565,
+   "status": "flagged",
+   "flags": [
+    "same category (Health): expected, not weird"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "b1d8bf9b0eee303e"
   },
   {
    "id": "annual_precipitation__loneliness",
@@ -18482,6 +18657,24 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "3badcf408b2a8331"
+  },
+  {
+   "id": "disability_selfcare__uninsured_under_65",
+   "x": "disability_selfcare",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 2955,
+   "r": 0.464,
+   "rho": 0.574,
+   "withinState": 0.549,
+   "status": "flagged",
+   "flags": [
+    "same category (Health): expected, not weird"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "106438df84074a0e"
   },
   {
    "id": "disability_mobility__heating_degree_days",
@@ -18883,6 +19076,24 @@
    "fingerprint": "8094c045a8c0e5c8"
   },
   {
+   "id": "food_insecurity__uninsured_under_65",
+   "x": "food_insecurity",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 2298,
+   "r": 0.483,
+   "rho": 0.57,
+   "withinState": 0.557,
+   "status": "flagged",
+   "flags": [
+    "same category (Health): expected, not weird"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "48db6b4355910703"
+  },
+  {
    "id": "pct_child_poverty__short_sleep",
    "x": "pct_child_poverty",
    "y": "short_sleep",
@@ -19263,6 +19474,24 @@
    "fingerprint": "5029c8c34eacbe44"
   },
   {
+   "id": "disability_mobility__uninsured_under_65",
+   "x": "disability_mobility",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 2955,
+   "r": 0.477,
+   "rho": 0.567,
+   "withinState": 0.522,
+   "status": "flagged",
+   "flags": [
+    "same category (Health): expected, not weird"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "8f2b69f50b9b71c1"
+  },
+  {
    "id": "cancer__pct_no_hs_diploma",
    "x": "cancer",
    "y": "pct_no_hs_diploma",
@@ -19531,6 +19760,24 @@
    "caption": "A moderate link across 2,956 counties (Spearman ρ = 0.57). It holds within states too (ρ = 0.55). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template",
    "fingerprint": "bad3f85160e1289a"
+  },
+  {
+   "id": "uninsured_under_65__utility_shutoff_threat",
+   "x": "uninsured_under_65",
+   "y": "utility_shutoff_threat",
+   "level": "county",
+   "n": 2298,
+   "r": 0.451,
+   "rho": 0.565,
+   "withinState": 0.455,
+   "status": "flagged",
+   "flags": [
+    "same category (Health): expected, not weird"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "7b3da012319f49aa"
   },
   {
    "id": "pct_limited_english__pct_people_of_color",
@@ -20483,6 +20730,22 @@
    "fingerprint": "eb4c095ccafd028c"
   },
   {
+   "id": "svi_overall__uninsured_under_65",
+   "x": "svi_overall",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": 0.521,
+   "rho": 0.557,
+   "withinState": 0.509,
+   "status": "published",
+   "flags": [],
+   "headline": "Counties with higher social vulnerability ranks tend to have higher uninsured rates under 65",
+   "caption": "A moderate link across 3,143 counties (Spearman ρ = 0.56). It holds within states too (ρ = 0.51). Both may reflect something else, such as how urban a county is.",
+   "captionBy": "template",
+   "fingerprint": "384a7ac181c350fd"
+  },
+  {
    "id": "annual_precipitation__high_blood_pressure",
    "x": "annual_precipitation",
    "y": "high_blood_pressure",
@@ -21065,6 +21328,24 @@
    "fingerprint": "fbc14c00f80297b8"
   },
   {
+   "id": "disability_any__uninsured_under_65",
+   "x": "disability_any",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 2955,
+   "r": 0.461,
+   "rho": 0.553,
+   "withinState": 0.501,
+   "status": "flagged",
+   "flags": [
+    "same category (Health): expected, not weird"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "c981a9e5b7e8f602"
+  },
+  {
    "id": "disability_selfcare__pct_uninsured",
    "x": "disability_selfcare",
    "y": "pct_uninsured",
@@ -21149,6 +21430,24 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "b63b336b97a61114"
+  },
+  {
+   "id": "housing_insecurity__uninsured_under_65",
+   "x": "housing_insecurity",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 2298,
+   "r": 0.475,
+   "rho": 0.552,
+   "withinState": 0.52,
+   "status": "flagged",
+   "flags": [
+    "same category (Health): expected, not weird"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "293f5498c9e5742f"
   },
   {
    "id": "pct_bachelors_plus__pct_disability",
@@ -22618,6 +22917,24 @@
    "fingerprint": "ac9d2f14dd9133d0"
   },
   {
+   "id": "cooling_degree_days__uninsured_under_65",
+   "x": "cooling_degree_days",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3098,
+   "r": 0.557,
+   "rho": 0.541,
+   "withinState": -0.009,
+   "status": "flagged",
+   "flags": [
+    "regional only: within states ρ=-0.01"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "d3755601ddf19e6b"
+  },
+  {
    "id": "disability_selfcare__heating_degree_days",
    "x": "disability_selfcare",
    "y": "heating_degree_days",
@@ -23922,6 +24239,24 @@
    "fingerprint": "8096942fbb2cebe1"
   },
   {
+   "id": "heating_degree_days__uninsured_under_65",
+   "x": "heating_degree_days",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3098,
+   "r": -0.492,
+   "rho": -0.528,
+   "withinState": -0.017,
+   "status": "flagged",
+   "flags": [
+    "regional only: within states ρ=-0.02"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "6387a504be0985d5"
+  },
+  {
    "id": "energy_burden__pct_foreign_born",
    "x": "energy_burden",
    "y": "pct_foreign_born",
@@ -24706,6 +25041,24 @@
    "fingerprint": "267e804e4a4dd24b"
   },
   {
+   "id": "diabetes__uninsured_under_65",
+   "x": "diabetes",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 2955,
+   "r": 0.448,
+   "rho": 0.522,
+   "withinState": 0.481,
+   "status": "flagged",
+   "flags": [
+    "same category (Health): expected, not weird"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "4c11b8741ebb762d"
+  },
+  {
    "id": "housing_insecurity__july_low",
    "x": "housing_insecurity",
    "y": "july_low",
@@ -25363,6 +25716,24 @@
    "fingerprint": "8221dea1523f228e"
   },
   {
+   "id": "disability_cognition__uninsured_under_65",
+   "x": "disability_cognition",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 2955,
+   "r": 0.42,
+   "rho": 0.518,
+   "withinState": 0.519,
+   "status": "flagged",
+   "flags": [
+    "same category (Health): expected, not weird"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "e30bf5f16cf11592"
+  },
+  {
    "id": "pct_mobile_homes__smoking",
    "x": "pct_mobile_homes",
    "y": "smoking",
@@ -25580,6 +25951,24 @@
    "caption": "A moderate link across 2,956 counties (Spearman ρ = 0.52). It holds within states too (ρ = 0.32). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template",
    "fingerprint": "5f32cdd1c0302b00"
+  },
+  {
+   "id": "stroke__uninsured_under_65",
+   "x": "stroke",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 2955,
+   "r": 0.374,
+   "rho": 0.515,
+   "withinState": 0.5,
+   "status": "flagged",
+   "flags": [
+    "same category (Health): expected, not weird"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "ddfe7988f0370f70"
   },
   {
    "id": "colorectal_screening__disability_cognition",
@@ -25824,6 +26213,24 @@
    "fingerprint": "d6b9459ed399bb2a"
   },
   {
+   "id": "mammogram__uninsured_under_65",
+   "x": "mammogram",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3142,
+   "r": -0.487,
+   "rho": -0.513,
+   "withinState": -0.357,
+   "status": "flagged",
+   "flags": [
+    "same category (Health): expected, not weird"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "1dbf7307576a0360"
+  },
+  {
    "id": "median_home_value__pct_child_poverty",
    "x": "median_home_value",
    "y": "pct_child_poverty",
@@ -25936,6 +26343,24 @@
    "caption": "A moderate link across 3,215 counties (Spearman ρ = 0.51). It holds within states too (ρ = 0.61). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template",
    "fingerprint": "e9f6ccf3f15e43ff"
+  },
+  {
+   "id": "physical_distress__uninsured_under_65",
+   "x": "physical_distress",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 2955,
+   "r": 0.451,
+   "rho": 0.512,
+   "withinState": 0.528,
+   "status": "flagged",
+   "flags": [
+    "same category (Health): expected, not weird"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "7e9a748a89b3a143"
   },
   {
    "id": "mean_temperature__svi_minority",
@@ -26313,6 +26738,24 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "da4bbbf459b9da1d"
+  },
+  {
+   "id": "mean_temperature__uninsured_under_65",
+   "x": "mean_temperature",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3132,
+   "r": 0.473,
+   "rho": 0.507,
+   "withinState": 0.009,
+   "status": "flagged",
+   "flags": [
+    "regional only: within states ρ=0.01"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "151a2f606a102c67"
   },
   {
    "id": "cooling_degree_days__lack_emotional_support",
@@ -26831,6 +27274,24 @@
    "fingerprint": "28f1e1f80adaaa67"
   },
   {
+   "id": "disability_independent_living__uninsured_under_65",
+   "x": "disability_independent_living",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 2955,
+   "r": 0.404,
+   "rho": 0.503,
+   "withinState": 0.514,
+   "status": "flagged",
+   "flags": [
+    "same category (Health): expected, not weird"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "5c4032d702790788"
+  },
+  {
    "id": "high_blood_pressure__july_high",
    "x": "high_blood_pressure",
    "y": "july_high",
@@ -27121,6 +27582,24 @@
    "fingerprint": "0e399ca228df49d2"
   },
   {
+   "id": "physical_inactivity__uninsured_under_65",
+   "x": "physical_inactivity",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 2955,
+   "r": 0.468,
+   "rho": 0.501,
+   "withinState": 0.526,
+   "status": "flagged",
+   "flags": [
+    "same category (Health): expected, not weird"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "a635bdff7fcca5b9"
+  },
+  {
    "id": "disability_mobility__july_low",
    "x": "disability_mobility",
    "y": "july_low",
@@ -27153,6 +27632,24 @@
    "caption": "A moderate link across 2,950 counties (Spearman ρ = −0.50). It holds within states too (ρ = −0.49). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template",
    "fingerprint": "fd5bffef96d9065d"
+  },
+  {
+   "id": "disability_hearing__uninsured_under_65",
+   "x": "disability_hearing",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 2955,
+   "r": 0.397,
+   "rho": 0.5,
+   "withinState": 0.508,
+   "status": "flagged",
+   "flags": [
+    "same category (Health): expected, not weird"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "8772c4ca45abd6af"
   },
   {
    "id": "median_gross_rent__physical_inactivity",
@@ -29751,6 +30248,22 @@
    "fingerprint": "9bd9b429ae53d4f6"
   },
   {
+   "id": "svi_household__uninsured_under_65",
+   "x": "svi_household",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": 0.461,
+   "rho": 0.481,
+   "withinState": 0.396,
+   "status": "published",
+   "flags": [],
+   "headline": "Counties with higher household vulnerability ranks tend to have higher uninsured rates under 65",
+   "caption": "A moderate link across 3,143 counties (Spearman ρ = 0.48). It holds within states too (ρ = 0.40). Both may reflect something else, such as how urban a county is.",
+   "captionBy": "template",
+   "fingerprint": "9758248e1771f584"
+  },
+  {
    "id": "cooling_degree_days__pct_people_of_color",
    "x": "cooling_degree_days",
    "y": "pct_people_of_color",
@@ -30188,6 +30701,22 @@
    "caption": "A moderate link across 2,299 counties (Spearman ρ = 0.48). It holds within states too (ρ = 0.40). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template",
    "fingerprint": "f74ae20d5a76809d"
+  },
+  {
+   "id": "pct_mobile_homes__uninsured_under_65",
+   "x": "pct_mobile_homes",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": 0.387,
+   "rho": 0.477,
+   "withinState": 0.3,
+   "status": "published",
+   "flags": [],
+   "headline": "Counties with higher shares of mobile homes tend to have higher uninsured rates under 65",
+   "caption": "A moderate link across 3,143 counties (Spearman ρ = 0.48). It holds within states too (ρ = 0.30). Both may reflect something else, such as how urban a county is.",
+   "captionBy": "template",
+   "fingerprint": "bb89cfff312d99b7"
   },
   {
    "id": "colorectal_screening__median_household_income",
@@ -30759,6 +31288,24 @@
    "caption": "A moderate link across 2,945 counties (Spearman ρ = 0.47). Much of it is regional: within the same state the link is weaker (ρ = 0.18).",
    "captionBy": "template",
    "fingerprint": "a77a8f0d4dcf76c0"
+  },
+  {
+   "id": "cejst_pct_pop_disadvantaged__uninsured_under_65",
+   "x": "cejst_pct_pop_disadvantaged",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3130,
+   "r": 0.429,
+   "rho": 0.472,
+   "withinState": 0.428,
+   "status": "flagged",
+   "flags": [
+    "same category (Health): expected, not weird"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "33d4007813edb8e6"
   },
   {
    "id": "loneliness__smoking",
@@ -31553,6 +32100,24 @@
    "fingerprint": "854eeb2d670964c0"
   },
   {
+   "id": "january_low__uninsured_under_65",
+   "x": "january_low",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3132,
+   "r": 0.428,
+   "rho": 0.463,
+   "withinState": -0.014,
+   "status": "flagged",
+   "flags": [
+    "regional only: within states ρ=-0.01"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "cd0afd2384b94484"
+  },
+  {
    "id": "pct_black_nh__utility_shutoff_threat",
    "x": "pct_black_nh",
    "y": "utility_shutoff_threat",
@@ -32163,6 +32728,24 @@
    "fingerprint": "b158c1e3dcdce278"
   },
   {
+   "id": "heart_disease__uninsured_under_65",
+   "x": "heart_disease",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 2955,
+   "r": 0.377,
+   "rho": 0.459,
+   "withinState": 0.51,
+   "status": "flagged",
+   "flags": [
+    "same category (Health): expected, not weird"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "db9b9ec603e312b8"
+  },
+  {
    "id": "disability_selfcare__svi_minority",
    "x": "disability_selfcare",
    "y": "svi_minority",
@@ -32396,6 +32979,22 @@
    "caption": "A moderate link across 3,217 counties (Spearman ρ = −0.46). It holds within states too (ρ = −0.48). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template",
    "fingerprint": "b7b93bb4b31da912"
+  },
+  {
+   "id": "per_capita_income__uninsured_under_65",
+   "x": "per_capita_income",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": -0.374,
+   "rho": -0.457,
+   "withinState": -0.421,
+   "status": "published",
+   "flags": [],
+   "headline": "Counties with higher incomes per person tend to have lower uninsured rates under 65",
+   "caption": "A moderate link across 3,143 counties (Spearman ρ = −0.46). It holds within states too (ρ = −0.42). Both may reflect something else, such as how urban a county is.",
+   "captionBy": "template",
+   "fingerprint": "1e52c9aa6fd1c547"
   },
   {
    "id": "asthma__disability_independent_living",
@@ -32733,6 +33332,24 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "83875f2b3c6d4e2a"
+  },
+  {
+   "id": "cancer__uninsured_under_65",
+   "x": "cancer",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 2955,
+   "r": -0.47,
+   "rho": -0.454,
+   "withinState": -0.284,
+   "status": "flagged",
+   "flags": [
+    "same category (Health): expected, not weird"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "4da7e67be3a0f7ca"
   },
   {
    "id": "median_household_income__pct_zero_vehicle_households",
@@ -33160,6 +33777,24 @@
    "fingerprint": "a80290936eb4f5ff"
   },
   {
+   "id": "traffic_fatalities__uninsured_under_65",
+   "x": "traffic_fatalities",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3134,
+   "r": 0.013,
+   "rho": 0.45,
+   "withinState": 0.23,
+   "status": "flagged",
+   "flags": [
+    "Pearson and Spearman disagree (r=0.01, ρ=0.45): outlier-driven"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "cbf8ebaac572ede7"
+  },
+  {
    "id": "disability_hearing__pct_asian_nh",
    "x": "disability_hearing",
    "y": "pct_asian_nh",
@@ -33333,6 +33968,24 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "83be281b7f16bf92"
+  },
+  {
+   "id": "july_low__uninsured_under_65",
+   "x": "july_low",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3132,
+   "r": 0.354,
+   "rho": 0.447,
+   "withinState": -0.063,
+   "status": "flagged",
+   "flags": [
+    "regional only: within states ρ=-0.06"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "09ac814f724e536c"
   },
   {
    "id": "census2020_pop_density__energy_burden_low_income",
@@ -33599,6 +34252,22 @@
    "caption": "A moderate link across 2,955 counties (Spearman ρ = 0.44). It holds within states too (ρ = 0.44). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template",
    "fingerprint": "703bbf35458185ef"
+  },
+  {
+   "id": "nri_social_vulnerability__uninsured_under_65",
+   "x": "nri_social_vulnerability",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": 0.415,
+   "rho": 0.445,
+   "withinState": 0.446,
+   "status": "published",
+   "flags": [],
+   "headline": "Counties with higher social vulnerability scores tend to have higher uninsured rates under 65",
+   "caption": "A moderate link across 3,143 counties (Spearman ρ = 0.44). It holds within states too (ρ = 0.45). Both may reflect something else, such as how urban a county is.",
+   "captionBy": "template",
+   "fingerprint": "c42791b27792e127"
   },
   {
    "id": "median_household_income__svi_household",
@@ -34549,6 +35218,24 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "5df5371a0624a47c"
+  },
+  {
+   "id": "binge_drinking__uninsured_under_65",
+   "x": "binge_drinking",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 2955,
+   "r": -0.34,
+   "rho": -0.436,
+   "withinState": -0.276,
+   "status": "flagged",
+   "flags": [
+    "same category (Health): expected, not weird"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "8069be15414b04df"
   },
   {
    "id": "nri_community_resilience__pct_poverty",
@@ -35819,6 +36506,24 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "e4417ec03583c636"
+  },
+  {
+   "id": "all_teeth_lost__uninsured_under_65",
+   "x": "all_teeth_lost",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3142,
+   "r": 0.334,
+   "rho": 0.427,
+   "withinState": 0.395,
+   "status": "flagged",
+   "flags": [
+    "same category (Health): expected, not weird"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "43040d66dd36ff8b"
   },
   {
    "id": "pct_bike_commute__pct_moved_last_year",
@@ -37142,6 +37847,24 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "b8bab1782ccb99ad"
+  },
+  {
+   "id": "svi_minority__uninsured_under_65",
+   "x": "svi_minority",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": 0.424,
+   "rho": 0.418,
+   "withinState": 0.116,
+   "status": "flagged",
+   "flags": [
+    "regional only: within states ρ=0.12"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "0c73474aba372b9a"
   },
   {
    "id": "nri_risk_score__pct_nhpi_nh",
@@ -38975,6 +39698,42 @@
    "fingerprint": "a131bb9897a66df1"
   },
   {
+   "id": "pct_people_of_color__uninsured_under_65",
+   "x": "pct_people_of_color",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": 0.422,
+   "rho": 0.408,
+   "withinState": 0.113,
+   "status": "flagged",
+   "flags": [
+    "regional only: within states ρ=0.11"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "8a5a547fb40e247d"
+  },
+  {
+   "id": "pct_white_nh__uninsured_under_65",
+   "x": "pct_white_nh",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": -0.422,
+   "rho": -0.408,
+   "withinState": -0.113,
+   "status": "flagged",
+   "flags": [
+    "regional only: within states ρ=-0.11"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "748353306370ed3c"
+  },
+  {
    "id": "disability_mobility__svi_housing_transport",
    "x": "disability_mobility",
    "y": "svi_housing_transport",
@@ -39359,6 +40118,25 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "a89fd9c019d68f4c"
+  },
+  {
+   "id": "nri_wildfire_loss__uninsured_under_65",
+   "x": "nri_wildfire_loss",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": 0.049,
+   "rho": 0.406,
+   "withinState": 0.104,
+   "status": "flagged",
+   "flags": [
+    "regional only: within states ρ=0.10",
+    "Pearson and Spearman disagree (r=0.05, ρ=0.41): outlier-driven"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "a27916cbee4f67a1"
   },
   {
    "id": "cancer__pct_limited_english",
@@ -39964,6 +40742,24 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "5f1b70cd00bef84e"
+  },
+  {
+   "id": "high_blood_pressure__uninsured_under_65",
+   "x": "high_blood_pressure",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 2955,
+   "r": 0.287,
+   "rho": 0.401,
+   "withinState": 0.343,
+   "status": "flagged",
+   "flags": [
+    "same category (Health): expected, not weird"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "55089b8f5b73e2b7"
   },
   {
    "id": "high_cholesterol__median_household_income",
@@ -41160,6 +41956,22 @@
    "fingerprint": "863a1c59028fdf0e"
   },
   {
+   "id": "median_household_income__uninsured_under_65",
+   "x": "median_household_income",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3142,
+   "r": -0.331,
+   "rho": -0.394,
+   "withinState": -0.384,
+   "status": "published",
+   "flags": [],
+   "headline": "Counties with higher household incomes tend to have lower uninsured rates under 65",
+   "caption": "A modest link across 3,142 counties (Spearman ρ = −0.39). It holds within states too (ρ = −0.38). Both may reflect something else, such as how urban a county is.",
+   "captionBy": "template",
+   "fingerprint": "e6eb7a0c188b2080"
+  },
+  {
    "id": "job_density__pct_rent_burdened",
    "x": "job_density",
    "y": "pct_rent_burdened",
@@ -42166,6 +42978,22 @@
    "fingerprint": "fdccd43cf6c73cd9"
   },
   {
+   "id": "pct_poverty__uninsured_under_65",
+   "x": "pct_poverty",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": 0.303,
+   "rho": 0.388,
+   "withinState": 0.391,
+   "status": "published",
+   "flags": [],
+   "headline": "Counties with higher poverty rates tend to have higher uninsured rates under 65",
+   "caption": "A modest link across 3,143 counties (Spearman ρ = 0.39). It holds within states too (ρ = 0.39). Both may reflect something else, such as how urban a county is.",
+   "captionBy": "template",
+   "fingerprint": "d6cd5df51bc1a10f"
+  },
+  {
    "id": "energy_burden__pct_disability",
    "x": "energy_burden",
    "y": "pct_disability",
@@ -42180,6 +43008,22 @@
    "caption": "A modest link across 3,222 counties (Spearman ρ = 0.39). It holds within states too (ρ = 0.51). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template",
    "fingerprint": "2230360db9b99fcb"
+  },
+  {
+   "id": "pct_overcrowded__uninsured_under_65",
+   "x": "pct_overcrowded",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": 0.303,
+   "rho": 0.388,
+   "withinState": 0.297,
+   "status": "published",
+   "flags": [],
+   "headline": "Counties with higher overcrowding rates tend to have higher uninsured rates under 65",
+   "caption": "A modest link across 3,143 counties (Spearman ρ = 0.39). It holds within states too (ρ = 0.30). Both may reflect something else, such as how urban a county is.",
+   "captionBy": "template",
+   "fingerprint": "c35350ccd28b39d1"
   },
   {
    "id": "blood_pressure_medication__nri_tornado_loss",
@@ -45195,6 +46039,22 @@
    "fingerprint": "43ae28d67d237cc5"
   },
   {
+   "id": "pct_carpool__uninsured_under_65",
+   "x": "pct_carpool",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": 0.378,
+   "rho": 0.369,
+   "withinState": 0.328,
+   "status": "published",
+   "flags": [],
+   "headline": "Counties with higher carpooling rates tend to have higher uninsured rates under 65",
+   "caption": "A modest link across 3,143 counties (Spearman ρ = 0.37). It holds within states too (ρ = 0.33). Both may reflect something else, such as how urban a county is.",
+   "captionBy": "template",
+   "fingerprint": "e836b2127578aa1f"
+  },
+  {
    "id": "pct_uninsured__per_capita_income",
    "x": "pct_uninsured",
    "y": "per_capita_income",
@@ -45580,6 +46440,22 @@
    "caption": "A modest link across 2,956 counties (Spearman ρ = 0.37). It holds within states too (ρ = 0.25). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template",
    "fingerprint": "56b75b7dfc52f5d7"
+  },
+  {
+   "id": "pct_child_poverty__uninsured_under_65",
+   "x": "pct_child_poverty",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3142,
+   "r": 0.278,
+   "rho": 0.366,
+   "withinState": 0.37,
+   "status": "published",
+   "flags": [],
+   "headline": "Counties with higher child poverty rates tend to have higher uninsured rates under 65",
+   "caption": "A modest link across 3,142 counties (Spearman ρ = 0.37). It holds within states too (ρ = 0.37). Both may reflect something else, such as how urban a county is.",
+   "captionBy": "template",
+   "fingerprint": "8b1552c78966cacc"
   },
   {
    "id": "heating_degree_days__nri_community_resilience",
@@ -46349,6 +47225,22 @@
    "caption": "A modest link across 3,142 counties (Spearman ρ = −0.36). It holds within states too (ρ = −0.51). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template",
    "fingerprint": "69a41d998a54d234"
+  },
+  {
+   "id": "pct_bachelors_plus__uninsured_under_65",
+   "x": "pct_bachelors_plus",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": -0.331,
+   "rho": -0.36,
+   "withinState": -0.4,
+   "status": "published",
+   "flags": [],
+   "headline": "Counties with higher shares of adults with a bachelor's degree or more tend to have lower uninsured rates under 65",
+   "caption": "A modest link across 3,143 counties (Spearman ρ = −0.36). It holds within states too (ρ = −0.40). Both may reflect something else, such as how urban a county is.",
+   "captionBy": "template",
+   "fingerprint": "26faac8b34e545bf"
   },
   {
    "id": "pct_drive_alone__utility_shutoff_threat",
@@ -47287,6 +48179,24 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "4230a39e2c94eb7a"
+  },
+  {
+   "id": "copd__uninsured_under_65",
+   "x": "copd",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 2955,
+   "r": 0.264,
+   "rho": 0.353,
+   "withinState": 0.466,
+   "status": "flagged",
+   "flags": [
+    "same category (Health): expected, not weird"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "0f7d85b036a14f11"
   },
   {
    "id": "mammogram__pct_mobile_homes",
@@ -48561,6 +49471,22 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "e5c8d46c42c3b884"
+  },
+  {
+   "id": "pct_no_internet__uninsured_under_65",
+   "x": "pct_no_internet",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": 0.298,
+   "rho": 0.345,
+   "withinState": 0.372,
+   "status": "published",
+   "flags": [],
+   "headline": "Counties with higher shares of households offline tend to have higher uninsured rates under 65",
+   "caption": "A modest link across 3,143 counties (Spearman ρ = 0.35). It holds within states too (ρ = 0.37). Both may reflect something else, such as how urban a county is.",
+   "captionBy": "template",
+   "fingerprint": "140135c9c6282731"
   },
   {
    "id": "mean_temperature__pct_snap_households",
@@ -50452,6 +51378,24 @@
    "fingerprint": "3499d9cc90cd3148"
   },
   {
+   "id": "cholesterol_screening__uninsured_under_65",
+   "x": "cholesterol_screening",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 2955,
+   "r": -0.334,
+   "rho": -0.335,
+   "withinState": -0.522,
+   "status": "flagged",
+   "flags": [
+    "same category (Health): expected, not weird"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "7bcb8ce8d0e199d3"
+  },
+  {
    "id": "blood_pressure_medication__nri_social_vulnerability",
    "x": "blood_pressure_medication",
    "y": "nri_social_vulnerability",
@@ -51259,6 +52203,22 @@
    "fingerprint": "78603ac8fa841243"
   },
   {
+   "id": "pct_broadband__uninsured_under_65",
+   "x": "pct_broadband",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": -0.277,
+   "rho": -0.333,
+   "withinState": -0.365,
+   "status": "published",
+   "flags": [],
+   "headline": "Counties with higher broadband rates tend to have lower uninsured rates under 65",
+   "caption": "A modest link across 3,143 counties (Spearman ρ = −0.33). It holds within states too (ρ = −0.37). Both may reflect something else, such as how urban a county is.",
+   "captionBy": "template",
+   "fingerprint": "3ca33b61e3f3e2d7"
+  },
+  {
    "id": "heart_disease__july_high",
    "x": "heart_disease",
    "y": "july_high",
@@ -51833,6 +52793,22 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "4c1acfa826c0e269"
+  },
+  {
+   "id": "pct_hispanic_latino__uninsured_under_65",
+   "x": "pct_hispanic_latino",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": 0.494,
+   "rho": 0.329,
+   "withinState": 0.173,
+   "status": "published",
+   "flags": [],
+   "headline": "Counties with higher shares of Hispanic or Latino residents tend to have higher uninsured rates under 65",
+   "caption": "A modest link across 3,143 counties (Spearman ρ = 0.33). Much of it is regional: within the same state the link is weaker (ρ = 0.17).",
+   "captionBy": "template",
+   "fingerprint": "26b773daf6f12d07"
   },
   {
    "id": "food_desert_residents__per_capita_income",
@@ -52978,6 +53954,22 @@
    "caption": "A modest link across 3,143 counties (Spearman ρ = 0.32). It holds within states too (ρ = 0.20). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template",
    "fingerprint": "2577b618e03adcac"
+  },
+  {
+   "id": "pct_graduate_degree__uninsured_under_65",
+   "x": "pct_graduate_degree",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": -0.316,
+   "rho": -0.324,
+   "withinState": -0.352,
+   "status": "published",
+   "flags": [],
+   "headline": "Counties with higher shares of graduate degrees tend to have lower uninsured rates under 65",
+   "caption": "A modest link across 3,143 counties (Spearman ρ = −0.32). It holds within states too (ρ = −0.35). Both may reflect something else, such as how urban a county is.",
+   "captionBy": "template",
+   "fingerprint": "5d175e019b23f7ac"
   },
   {
    "id": "median_age__svi_overall",
@@ -54321,6 +55313,24 @@
    "fingerprint": "aeb1b30296590ef6"
   },
   {
+   "id": "pct_homes_built_before_1960__uninsured_under_65",
+   "x": "pct_homes_built_before_1960",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": -0.267,
+   "rho": -0.318,
+   "withinState": 0.15,
+   "status": "flagged",
+   "flags": [
+    "regional only: within states ρ=0.15"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "a4ef5f42475a375d"
+  },
+  {
    "id": "mean_temperature__pm25_annual",
    "x": "mean_temperature",
    "y": "pm25_annual",
@@ -54421,6 +55431,24 @@
    "caption": "A modest link across 3,222 counties (Spearman ρ = 0.32). It holds within states too (ρ = 0.24). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template",
    "fingerprint": "2c1567f3b49ebc02"
+  },
+  {
+   "id": "high_cholesterol__uninsured_under_65",
+   "x": "high_cholesterol",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 2955,
+   "r": 0.268,
+   "rho": 0.318,
+   "withinState": 0.234,
+   "status": "flagged",
+   "flags": [
+    "same category (Health): expected, not weird"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "181292e2c11820ef"
   },
   {
    "id": "pct_hispanic_latino__svi_household",
@@ -55176,6 +56204,24 @@
    "caption": "A modest link across 3,143 counties (Spearman ρ = 0.31). It holds within states too (ρ = 0.39). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template",
    "fingerprint": "8c33752d877513c1"
+  },
+  {
+   "id": "bridges_poor_condition__uninsured_under_65",
+   "x": "bridges_poor_condition",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3083,
+   "r": -0.233,
+   "rho": -0.314,
+   "withinState": 0.039,
+   "status": "flagged",
+   "flags": [
+    "regional only: within states ρ=0.04"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "26284a667b7815c2"
   },
   {
    "id": "pct_bike_commute__stroke",
@@ -56548,6 +57594,24 @@
    "fingerprint": "b0a81469e55fd597"
   },
   {
+   "id": "lack_emotional_support__uninsured_under_65",
+   "x": "lack_emotional_support",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 2298,
+   "r": 0.306,
+   "rho": 0.308,
+   "withinState": 0.414,
+   "status": "flagged",
+   "flags": [
+    "same category (Health): expected, not weird"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "b75ca851446ebc81"
+  },
+  {
    "id": "pct_single_parent_families__routine_checkup",
    "x": "pct_single_parent_families",
    "y": "routine_checkup",
@@ -56718,6 +57782,24 @@
    "caption": "A modest link across 1,186 counties (Spearman ρ = 0.31). It holds within states too (ρ = 0.31). Both may reflect something else, such as how urban a county is.",
    "captionBy": "template",
    "fingerprint": "7eaa98e3f611b2fa"
+  },
+  {
+   "id": "loneliness__uninsured_under_65",
+   "x": "loneliness",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 2298,
+   "r": 0.331,
+   "rho": 0.307,
+   "withinState": 0.346,
+   "status": "flagged",
+   "flags": [
+    "same category (Health): expected, not weird"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "6fa93c7b54a461b4"
   },
   {
    "id": "energy_burden_low_income__median_gross_rent",
@@ -57682,6 +58764,24 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "fd96987ac1f16297"
+  },
+  {
+   "id": "smoking__uninsured_under_65",
+   "x": "smoking",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 2955,
+   "r": 0.23,
+   "rho": 0.303,
+   "withinState": 0.443,
+   "status": "flagged",
+   "flags": [
+    "same category (Health): expected, not weird"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "c1fe5a194628dd10"
   },
   {
    "id": "nri_heat_wave_loss__pct_under_18",
@@ -58868,6 +59968,25 @@
    "fingerprint": "d0f052ff89a67fc3"
   },
   {
+   "id": "short_sleep__uninsured_under_65",
+   "x": "short_sleep",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3142,
+   "r": 0.266,
+   "rho": 0.297,
+   "withinState": 0.201,
+   "status": "flagged",
+   "flags": [
+    "same category (Health): expected, not weird",
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "de7b506ff581af7e"
+  },
+  {
    "id": "disability_mobility__pct_walk_commute",
    "x": "disability_mobility",
    "y": "pct_walk_commute",
@@ -59832,6 +60951,24 @@
    "fingerprint": "d25a65a7d646705d"
   },
   {
+   "id": "census2020_housing_density__uninsured_under_65",
+   "x": "census2020_housing_density",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": -0.071,
+   "rho": -0.293,
+   "withinState": -0.244,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "8d46ccf552f3384c"
+  },
+  {
    "id": "nri_community_resilience__pct_bike_commute",
    "x": "nri_community_resilience",
    "y": "pct_bike_commute",
@@ -59956,6 +61093,24 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "5f02ce752451ba3d"
+  },
+  {
+   "id": "job_density__uninsured_under_65",
+   "x": "job_density",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3113,
+   "r": -0.049,
+   "rho": -0.292,
+   "withinState": -0.243,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "a28d2aa33e9dc609"
   },
   {
    "id": "pct_leave_before_7am__pct_no_computer",
@@ -60407,6 +61562,24 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "d18db2dd680b0f97"
+  },
+  {
+   "id": "labor_force_participation__uninsured_under_65",
+   "x": "labor_force_participation",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": -0.217,
+   "rho": -0.29,
+   "withinState": -0.27,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "050ad49a87688d55"
   },
   {
    "id": "nri_expected_loss_per_person__pct_transit_commute",
@@ -62446,6 +63619,24 @@
    "fingerprint": "65b78b271a3a51a4"
   },
   {
+   "id": "pct_work_from_home__uninsured_under_65",
+   "x": "pct_work_from_home",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": -0.241,
+   "rho": -0.281,
+   "withinState": -0.221,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "08d34e4388c25e72"
+  },
+  {
    "id": "lack_transportation__pct_carpool",
    "x": "lack_transportation",
    "y": "pct_carpool",
@@ -62646,6 +63837,25 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "1552b8d818bbbb50"
+  },
+  {
+   "id": "mental_distress__uninsured_under_65",
+   "x": "mental_distress",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 2955,
+   "r": 0.212,
+   "rho": 0.28,
+   "withinState": 0.362,
+   "status": "flagged",
+   "flags": [
+    "same category (Health): expected, not weird",
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "2f7582388d06a174"
   },
   {
    "id": "heating_degree_days__pct_long_commute",
@@ -63143,6 +64353,24 @@
    "fingerprint": "a8febb4db9ace900"
   },
   {
+   "id": "census2020_pop_density__uninsured_under_65",
+   "x": "census2020_pop_density",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": -0.075,
+   "rho": -0.278,
+   "withinState": -0.244,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "a52120fbfec1b61c"
+  },
+  {
    "id": "loneliness__pct_rent_burdened",
    "x": "loneliness",
    "y": "pct_rent_burdened",
@@ -63178,6 +64406,24 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "110ad350048522bc"
+  },
+  {
+   "id": "home_energy_cost__uninsured_under_65",
+   "x": "home_energy_cost",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": -0.136,
+   "rho": -0.278,
+   "withinState": 0.082,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "704926e00c9aac56"
   },
   {
    "id": "disability_mobility__pct_carpool",
@@ -63711,6 +64957,24 @@
    "fingerprint": "1a124c0b47236fd9"
   },
   {
+   "id": "census2020_pct_vacant__uninsured_under_65",
+   "x": "census2020_pct_vacant",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": 0.157,
+   "rho": 0.277,
+   "withinState": 0.244,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "f01b024ec625b9be"
+  },
+  {
    "id": "july_low__median_household_income",
    "x": "july_low",
    "y": "median_household_income",
@@ -64075,6 +65339,24 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "cdf368994344539d"
+  },
+  {
+   "id": "population_density__uninsured_under_65",
+   "x": "population_density",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": -0.076,
+   "rho": -0.275,
+   "withinState": -0.244,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "6a174fd3e77c0145"
   },
   {
    "id": "january_low__population_density",
@@ -68179,6 +69461,25 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "d57263f5f62248fc"
+  },
+  {
+   "id": "pct_disability__uninsured_under_65",
+   "x": "pct_disability",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": 0.165,
+   "rho": 0.259,
+   "withinState": 0.21,
+   "status": "flagged",
+   "flags": [
+    "same category (Health): expected, not weird",
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "4e4637659ccbaf7d"
   },
   {
    "id": "pct_transit_commute__per_capita_income",
@@ -73185,6 +74486,24 @@
    "fingerprint": "cfe819d350001d5a"
   },
   {
+   "id": "pct_transit_commute__uninsured_under_65",
+   "x": "pct_transit_commute",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": -0.11,
+   "rho": -0.239,
+   "withinState": -0.053,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "71ecf8566f177fb9"
+  },
+  {
    "id": "pct_snap_households__pm25_annual",
    "x": "pct_snap_households",
    "y": "pm25_annual",
@@ -75219,6 +76538,24 @@
    "fingerprint": "1ec3ee32dcc01d45"
   },
   {
+   "id": "median_home_value__uninsured_under_65",
+   "x": "median_home_value",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3139,
+   "r": -0.228,
+   "rho": -0.23,
+   "withinState": -0.284,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "0860965855272e2e"
+  },
+  {
    "id": "pct_long_commute__pct_snap_households",
    "x": "pct_long_commute",
    "y": "pct_snap_households",
@@ -76852,6 +78189,24 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "66b10156e19858c9"
+  },
+  {
+   "id": "pct_limited_english__uninsured_under_65",
+   "x": "pct_limited_english",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": 0.374,
+   "rho": 0.224,
+   "withinState": 0.225,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "193ec077d405aaf1"
   },
   {
    "id": "pct_long_commute__unemployment_rate",
@@ -79701,6 +81056,24 @@
    "fingerprint": "8e335edc6a1fb552"
   },
   {
+   "id": "pct_under_18__uninsured_under_65",
+   "x": "pct_under_18",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": 0.222,
+   "rho": 0.214,
+   "withinState": 0.12,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "b321e7fbe7853e6c"
+  },
+  {
    "id": "binge_drinking__bridges_poor_condition",
    "x": "binge_drinking",
    "y": "bridges_poor_condition",
@@ -79898,6 +81271,24 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "9e2cb3a3f69492f2"
+  },
+  {
+   "id": "nri_hurricane_loss__uninsured_under_65",
+   "x": "nri_hurricane_loss",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": 0.117,
+   "rho": 0.213,
+   "withinState": 0.129,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "eade46d8a3bd6747"
   },
   {
    "id": "census2020_pop_density__disability_cognition",
@@ -81115,6 +82506,24 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "50239b82551db9ce"
+  },
+  {
+   "id": "svi_housing_transport__uninsured_under_65",
+   "x": "svi_housing_transport",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": 0.196,
+   "rho": 0.209,
+   "withinState": 0.247,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "1419b07296b3e0fc"
   },
   {
    "id": "arthritis__mean_temperature",
@@ -82805,6 +84214,24 @@
    "fingerprint": "f6c44864c720b713"
   },
   {
+   "id": "energy_burden_low_income__uninsured_under_65",
+   "x": "energy_burden_low_income",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": -0.134,
+   "rho": -0.204,
+   "withinState": 0.11,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "2240504e9a521cb2"
+  },
+  {
    "id": "energy_burden__high_blood_pressure",
    "x": "energy_burden",
    "y": "high_blood_pressure",
@@ -83275,6 +84702,24 @@
    "fingerprint": "17dcffc507d28dbc"
   },
   {
+   "id": "pct_no_computer__uninsured_under_65",
+   "x": "pct_no_computer",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": 0.171,
+   "rho": 0.202,
+   "withinState": 0.377,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "0bdfeda4b794b1d4"
+  },
+  {
    "id": "cancer__pct_walk_commute",
    "x": "cancer",
    "y": "pct_walk_commute",
@@ -83418,6 +84863,24 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "ad88b3f5daf92287"
+  },
+  {
+   "id": "pct_bike_commute__uninsured_under_65",
+   "x": "pct_bike_commute",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": -0.005,
+   "rho": -0.202,
+   "withinState": -0.01,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "5131dc816b873a85"
   },
   {
    "id": "heating_degree_days__median_age",
@@ -84782,6 +86245,25 @@
    "fingerprint": "c30ffc9a48887ecc"
   },
   {
+   "id": "routine_checkup__uninsured_under_65",
+   "x": "routine_checkup",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 2955,
+   "r": -0.246,
+   "rho": -0.196,
+   "withinState": -0.31,
+   "status": "flagged",
+   "flags": [
+    "same category (Health): expected, not weird",
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "ec4c4f1075a7a029"
+  },
+  {
    "id": "cancer__median_home_value",
    "x": "cancer",
    "y": "median_home_value",
@@ -85070,6 +86552,25 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "63997e1a9b67cdad"
+  },
+  {
+   "id": "food_desert_residents__uninsured_under_65",
+   "x": "food_desert_residents",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3132,
+   "r": 0.209,
+   "rho": 0.196,
+   "withinState": 0.157,
+   "status": "flagged",
+   "flags": [
+    "same category (Health): expected, not weird",
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "bd5cd0e0b78216da"
   },
   {
    "id": "july_low__unemployment_rate",
@@ -85380,6 +86881,24 @@
    "fingerprint": "d36d810c99e4da6f"
   },
   {
+   "id": "pct_snap_households__uninsured_under_65",
+   "x": "pct_snap_households",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": 0.166,
+   "rho": 0.195,
+   "withinState": 0.335,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "6ce3dd1dd5cbd46b"
+  },
+  {
    "id": "blood_pressure_medication__pct_leave_before_7am",
    "x": "blood_pressure_medication",
    "y": "pct_leave_before_7am",
@@ -85616,6 +87135,24 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "84fe1ba2bf6b9d98"
+  },
+  {
+   "id": "nri_heat_wave_loss__uninsured_under_65",
+   "x": "nri_heat_wave_loss",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3113,
+   "r": 0.06,
+   "rho": 0.194,
+   "withinState": -0.026,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "b29dfb0b24fb0f26"
   },
   {
    "id": "nri_tornado_loss__pct_homes_built_before_1960",
@@ -89313,6 +90850,24 @@
    "fingerprint": "7e2dd4567dc2a7bb"
   },
   {
+   "id": "pct_asian_nh__uninsured_under_65",
+   "x": "pct_asian_nh",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": -0.144,
+   "rho": -0.181,
+   "withinState": -0.173,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "575dd220de90fa0f"
+  },
+  {
    "id": "ozone_8hr__svi_minority",
    "x": "ozone_8hr",
    "y": "svi_minority",
@@ -90113,6 +91668,24 @@
    "fingerprint": "28bf3eb3c251b560"
   },
   {
+   "id": "pct_walk_commute__uninsured_under_65",
+   "x": "pct_walk_commute",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": -0.026,
+   "rho": -0.178,
+   "withinState": 0.082,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "447e52eecd59634c"
+  },
+  {
    "id": "nri_tornado_loss__pct_people_of_color",
    "x": "nri_tornado_loss",
    "y": "pct_people_of_color",
@@ -90366,6 +91939,24 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "8718e1b9b1e3a3af"
+  },
+  {
+   "id": "median_owner_costs_mortgage__uninsured_under_65",
+   "x": "median_owner_costs_mortgage",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3137,
+   "r": -0.176,
+   "rho": -0.178,
+   "withinState": -0.314,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "1e463bcbd188b403"
   },
   {
    "id": "nri_heat_wave_loss__pct_work_from_home",
@@ -91319,6 +92910,24 @@
    "fingerprint": "9d11a3be1d7bee1d"
   },
   {
+   "id": "nri_inland_flood_loss__uninsured_under_65",
+   "x": "nri_inland_flood_loss",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": -0.088,
+   "rho": -0.175,
+   "withinState": 0.048,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "f35de4dd70676c63"
+  },
+  {
    "id": "pct_bike_commute__vmt_per_capita",
    "x": "pct_bike_commute",
    "y": "vmt_per_capita",
@@ -91444,6 +93053,25 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "5d6c1342407d5cc3"
+  },
+  {
+   "id": "blood_pressure_medication__uninsured_under_65",
+   "x": "blood_pressure_medication",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 2955,
+   "r": 0.104,
+   "rho": 0.175,
+   "withinState": 0.136,
+   "status": "flagged",
+   "flags": [
+    "same category (Health): expected, not weird",
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "e899e0e85a7ea8b3"
   },
   {
    "id": "food_insecurity__pct_public_assistance",
@@ -92408,6 +94036,24 @@
    "fingerprint": "4e0ae486f0a7475b"
   },
   {
+   "id": "gini_index__uninsured_under_65",
+   "x": "gini_index",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": 0.135,
+   "rho": 0.172,
+   "withinState": 0.127,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "f620360fafb21ca0"
+  },
+  {
    "id": "no_car_far_from_supermarket__svi_minority",
    "x": "no_car_far_from_supermarket",
    "y": "svi_minority",
@@ -92678,6 +94324,24 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "6f6f094acd5599ac"
+  },
+  {
+   "id": "uninsured_under_65__vmt_per_capita",
+   "x": "uninsured_under_65",
+   "y": "vmt_per_capita",
+   "level": "county",
+   "n": 3130,
+   "r": 0.032,
+   "rho": 0.171,
+   "withinState": 0.027,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "ff0152c3c36abf82"
   },
   {
    "id": "pct_multiracial_nh__physical_inactivity",
@@ -95480,6 +97144,24 @@
    "fingerprint": "86beff851e75f4bc"
   },
   {
+   "id": "median_gross_rent__uninsured_under_65",
+   "x": "median_gross_rent",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3136,
+   "r": -0.166,
+   "rho": -0.162,
+   "withinState": -0.28,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "236e8b09a98d6145"
+  },
+  {
    "id": "bridges_poor_condition__dentist_visit",
    "x": "bridges_poor_condition",
    "y": "dentist_visit",
@@ -95695,6 +97377,24 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "4766fe11f33e2c79"
+  },
+  {
+   "id": "pm25_annual__uninsured_under_65",
+   "x": "pm25_annual",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 540,
+   "r": 0.22,
+   "rho": 0.162,
+   "withinState": 0.119,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "5b889bd6e3305b37"
   },
   {
    "id": "census2020_housing_density__copd",
@@ -96407,6 +98107,25 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "cd2a1585d72d1e96"
+  },
+  {
+   "id": "obesity__uninsured_under_65",
+   "x": "obesity",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 2955,
+   "r": 0.162,
+   "rho": 0.16,
+   "withinState": 0.267,
+   "status": "flagged",
+   "flags": [
+    "same category (Health): expected, not weird",
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "f804373b703b51c9"
   },
   {
    "id": "pct_transit_commute__pct_uninsured",
@@ -97172,6 +98891,24 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "46dc76bbc63da988"
+  },
+  {
+   "id": "nri_tornado_loss__uninsured_under_65",
+   "x": "nri_tornado_loss",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": 0.117,
+   "rho": 0.157,
+   "withinState": 0.002,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "fa5fc1396a7583fb"
   },
   {
    "id": "nri_expected_loss_per_person__pct_work_outside_county",
@@ -98348,6 +100085,24 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "01112bc24c31f073"
+  },
+  {
+   "id": "pct_long_commute__uninsured_under_65",
+   "x": "pct_long_commute",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": 0.12,
+   "rho": 0.153,
+   "withinState": 0.142,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "016e0f2685be7238"
   },
   {
    "id": "colorectal_screening__pct_work_outside_county",
@@ -99565,6 +101320,24 @@
    "fingerprint": "16a6bffe12a8ed9e"
   },
   {
+   "id": "pct_foreign_born__uninsured_under_65",
+   "x": "pct_foreign_born",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": 0.215,
+   "rho": 0.149,
+   "withinState": 0.099,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "f293598bbd11b8ed"
+  },
+  {
    "id": "disability_any__mean_commute_minutes",
    "x": "disability_any",
    "y": "mean_commute_minutes",
@@ -100164,6 +101937,24 @@
    "fingerprint": "ff526acd74e0a97d"
   },
   {
+   "id": "pct_extreme_commute__uninsured_under_65",
+   "x": "pct_extreme_commute",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": 0.122,
+   "rho": 0.148,
+   "withinState": 0.169,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "761b3f517cd92e69"
+  },
+  {
    "id": "nri_heat_wave_loss__pct_no_internet",
    "x": "nri_heat_wave_loss",
    "y": "pct_no_internet",
@@ -100345,6 +102136,24 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "af453b4dfcce6cfc"
+  },
+  {
+   "id": "nri_coastal_flood_loss__uninsured_under_65",
+   "x": "nri_coastal_flood_loss",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": -0.034,
+   "rho": -0.147,
+   "withinState": -0.068,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "02878529c9a128c9"
   },
   {
    "id": "nri_risk_score__pct_disability",
@@ -100819,6 +102628,24 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "ad880e8fe5b55483"
+  },
+  {
+   "id": "nri_expected_loss_per_person__uninsured_under_65",
+   "x": "nri_expected_loss_per_person",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": 0.115,
+   "rho": 0.146,
+   "withinState": 0.127,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "d6b3e68cbc66df22"
   },
   {
    "id": "loneliness__median_age",
@@ -102562,6 +104389,24 @@
    "fingerprint": "8eba16123e76a8c4"
   },
   {
+   "id": "pct_public_assistance__uninsured_under_65",
+   "x": "pct_public_assistance",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": -0.078,
+   "rho": -0.141,
+   "withinState": 0.136,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "0c02079d5c5c1cc4"
+  },
+  {
    "id": "pct_multiracial_nh__pct_renter_households",
    "x": "pct_multiracial_nh",
    "y": "pct_renter_households",
@@ -103417,6 +105262,24 @@
    "fingerprint": "97231743523711b2"
   },
   {
+   "id": "median_age__uninsured_under_65",
+   "x": "median_age",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": -0.133,
+   "rho": -0.139,
+   "withinState": 0.013,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "36175f8e208ede13"
+  },
+  {
    "id": "energy_burden_low_income__obesity",
    "x": "energy_burden_low_income",
    "y": "obesity",
@@ -103939,6 +105802,24 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "2b7e5be40404d356"
+  },
+  {
+   "id": "pct_single_parent_families__uninsured_under_65",
+   "x": "pct_single_parent_families",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3142,
+   "r": 0.098,
+   "rho": 0.137,
+   "withinState": 0.187,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "f39853ca942406ee"
   },
   {
    "id": "pct_renter_households__physical_inactivity",
@@ -107337,6 +109218,24 @@
    "fingerprint": "7284638331eb41d2"
   },
   {
+   "id": "pct_moved_last_year__uninsured_under_65",
+   "x": "pct_moved_last_year",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 1185,
+   "r": 0.072,
+   "rho": 0.128,
+   "withinState": -0.023,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "db03cdf1636f7f2d"
+  },
+  {
    "id": "disability_vision__pct_public_assistance",
    "x": "disability_vision",
    "y": "pct_public_assistance",
@@ -108849,6 +110748,24 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "80c19d9517886949"
+  },
+  {
+   "id": "pct_black_nh__uninsured_under_65",
+   "x": "pct_black_nh",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": 0.111,
+   "rho": 0.122,
+   "withinState": -0.114,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "dbc7a72522d7a721"
   },
   {
    "id": "pct_moved_last_year__pct_no_hs_diploma",
@@ -110669,6 +112586,25 @@
    "fingerprint": "7bf0e0d22127d1b1"
   },
   {
+   "id": "depression__uninsured_under_65",
+   "x": "depression",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 2955,
+   "r": -0.131,
+   "rho": -0.117,
+   "withinState": 0.096,
+   "status": "flagged",
+   "flags": [
+    "same category (Health): expected, not weird",
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "085b34d7aef69c8e"
+  },
+  {
    "id": "no_car_far_from_supermarket__pct_walk_commute",
    "x": "no_car_far_from_supermarket",
    "y": "pct_walk_commute",
@@ -110686,6 +112622,24 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "2e3e541536d5d35c"
+  },
+  {
+   "id": "unemployment_rate__uninsured_under_65",
+   "x": "unemployment_rate",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": 0.095,
+   "rho": 0.117,
+   "withinState": 0.133,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "a4ac885267dda44e"
   },
   {
    "id": "far_from_supermarket__vmt_per_capita",
@@ -111106,6 +113060,24 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "be4d01d990f0d4ce"
+  },
+  {
+   "id": "pct_aian_nh__uninsured_under_65",
+   "x": "pct_aian_nh",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": 0.074,
+   "rho": 0.116,
+   "withinState": 0.045,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "a7bc948a56377151"
   },
   {
    "id": "dentist_visit__routine_checkup",
@@ -111649,6 +113621,25 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "56f3c964704cf575"
+  },
+  {
+   "id": "arthritis__uninsured_under_65",
+   "x": "arthritis",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 2955,
+   "r": 0.008,
+   "rho": 0.114,
+   "withinState": 0.278,
+   "status": "flagged",
+   "flags": [
+    "same category (Health): expected, not weird",
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "a54258f343e317c6"
   },
   {
    "id": "fair_poor_health__pct_age_65_plus",
@@ -115551,6 +117542,24 @@
    "fingerprint": "b43dcd3632a1c7c4"
   },
   {
+   "id": "pct_renter_households__uninsured_under_65",
+   "x": "pct_renter_households",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": 0.065,
+   "rho": 0.104,
+   "withinState": 0.062,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "d54e63ecf137690a"
+  },
+  {
    "id": "annual_precipitation__pct_foreign_born",
    "x": "annual_precipitation",
    "y": "pct_foreign_born",
@@ -115786,6 +117795,24 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "0fcff97c71074d42"
+  },
+  {
+   "id": "ozone_8hr__uninsured_under_65",
+   "x": "ozone_8hr",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 680,
+   "r": -0.005,
+   "rho": -0.104,
+   "withinState": -0.096,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "52382f5bc85b3ed2"
   },
   {
    "id": "mammogram__svi_housing_transport",
@@ -117903,6 +119930,24 @@
    "fingerprint": "9739f6aca0c17750"
   },
   {
+   "id": "pct_drive_alone__uninsured_under_65",
+   "x": "pct_drive_alone",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": 0.038,
+   "rho": 0.097,
+   "withinState": -0.006,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "6ba2550da5d3161b"
+  },
+  {
    "id": "nri_risk_score__pct_veterans",
    "x": "nri_risk_score",
    "y": "pct_veterans",
@@ -117937,6 +119982,25 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "563372afe8db80ee"
+  },
+  {
+   "id": "no_car_far_from_supermarket__uninsured_under_65",
+   "x": "no_car_far_from_supermarket",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3132,
+   "r": 0.092,
+   "rho": 0.097,
+   "withinState": 0.233,
+   "status": "flagged",
+   "flags": [
+    "same category (Health): expected, not weird",
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "28813e13ace58f8b"
   },
   {
    "id": "asthma__blood_pressure_medication",
@@ -121984,6 +124048,24 @@
    "fingerprint": "481c33e105345239"
   },
   {
+   "id": "nri_risk_score__uninsured_under_65",
+   "x": "nri_risk_score",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": -0.078,
+   "rho": -0.085,
+   "withinState": -0.077,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "5c9b712fde0def90"
+  },
+  {
    "id": "colorectal_screening__no_car_far_from_supermarket",
    "x": "colorectal_screening",
    "y": "no_car_far_from_supermarket",
@@ -122059,6 +124141,24 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "9f4fa206a5122447"
+  },
+  {
+   "id": "pct_age_65_plus__uninsured_under_65",
+   "x": "pct_age_65_plus",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": -0.081,
+   "rho": -0.085,
+   "withinState": 0.085,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "9da82bd697249b12"
   },
   {
    "id": "pct_limited_english__pct_public_assistance",
@@ -125565,6 +127665,24 @@
    "fingerprint": "d528902b5fd6470c"
   },
   {
+   "id": "energy_burden__uninsured_under_65",
+   "x": "energy_burden",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": 0.082,
+   "rho": 0.076,
+   "withinState": 0.317,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "919a9dc7b50afadf"
+  },
+  {
    "id": "no_car_far_from_supermarket__pct_carpool",
    "x": "no_car_far_from_supermarket",
    "y": "pct_carpool",
@@ -125896,6 +128014,25 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "28895247924cd474"
+  },
+  {
+   "id": "asthma__uninsured_under_65",
+   "x": "asthma",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 2955,
+   "r": -0.131,
+   "rho": -0.075,
+   "withinState": 0.207,
+   "status": "flagged",
+   "flags": [
+    "same category (Health): expected, not weird",
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "fb08e0e3c950c947"
   },
   {
    "id": "pct_multiracial_nh__short_sleep",
@@ -127440,6 +129577,24 @@
    "fingerprint": "f4666ae32e45033c"
   },
   {
+   "id": "pct_leave_before_7am__uninsured_under_65",
+   "x": "pct_leave_before_7am",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": 0.056,
+   "rho": 0.07,
+   "withinState": 0.137,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "ad33d653761636e0"
+  },
+  {
    "id": "pct_under_18__short_sleep",
    "x": "pct_under_18",
    "y": "short_sleep",
@@ -127982,6 +130137,24 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "145a8e526087cc18"
+  },
+  {
+   "id": "pct_multiracial_nh__uninsured_under_65",
+   "x": "pct_multiracial_nh",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": -0.023,
+   "rho": -0.069,
+   "withinState": -0.146,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "1ee3ca1a07954ec4"
   },
   {
    "id": "colorectal_screening__pct_zero_vehicle_households",
@@ -136324,6 +138497,24 @@
    "fingerprint": "f597a04446eadb28"
   },
   {
+   "id": "annual_precipitation__uninsured_under_65",
+   "x": "annual_precipitation",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3132,
+   "r": -0.054,
+   "rho": 0.047,
+   "withinState": -0.051,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "13485b78569af5cf"
+  },
+  {
    "id": "nri_heat_wave_loss__nri_wildfire_loss",
    "x": "nri_heat_wave_loss",
    "y": "nri_wildfire_loss",
@@ -136854,6 +139045,24 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "5a82dc387616b9a8"
+  },
+  {
+   "id": "pct_owner_cost_burdened__uninsured_under_65",
+   "x": "pct_owner_cost_burdened",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": 0.006,
+   "rho": 0.045,
+   "withinState": 0.09,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "a6117c0b63df6f2b"
   },
   {
    "id": "pct_broadband__svi_minority",
@@ -137837,6 +140046,25 @@
    "fingerprint": "3cd1c578ab6d2888"
   },
   {
+   "id": "far_from_supermarket__uninsured_under_65",
+   "x": "far_from_supermarket",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3132,
+   "r": 0.062,
+   "rho": 0.042,
+   "withinState": -0.159,
+   "status": "flagged",
+   "flags": [
+    "same category (Health): expected, not weird",
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "4344fc7c4b60b584"
+  },
+  {
    "id": "census2020_pct_vacant__short_sleep",
    "x": "census2020_pct_vacant",
    "y": "short_sleep",
@@ -138288,6 +140516,24 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "c3384f1e127c26f8"
+  },
+  {
+   "id": "pct_work_outside_county__uninsured_under_65",
+   "x": "pct_work_outside_county",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": -0.051,
+   "rho": -0.04,
+   "withinState": -0.08,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "a07083dcde9202b7"
   },
   {
    "id": "pct_transit_commute__svi_overall",
@@ -140701,6 +142947,24 @@
    "fingerprint": "2b96fe82643bed38"
   },
   {
+   "id": "pct_nhpi_nh__uninsured_under_65",
+   "x": "pct_nhpi_nh",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": -0.017,
+   "rho": -0.034,
+   "withinState": -0.062,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "135420b040c3394b"
+  },
+  {
    "id": "pct_under_18__traffic_fatalities",
    "x": "pct_under_18",
    "y": "traffic_fatalities",
@@ -141619,6 +143883,24 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "0adbc9725ee0730e"
+  },
+  {
+   "id": "mean_commute_minutes__uninsured_under_65",
+   "x": "mean_commute_minutes",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3142,
+   "r": -0.011,
+   "rho": 0.031,
+   "withinState": -0.008,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "9019fc2c9d7e1daa"
   },
   {
    "id": "pct_age_65_plus__pct_single_parent_families",
@@ -144634,6 +146916,24 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "b46b4dd5dfd0a4e3"
+  },
+  {
+   "id": "pct_rent_burdened__uninsured_under_65",
+   "x": "pct_rent_burdened",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": -0.049,
+   "rho": -0.024,
+   "withinState": -0.045,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "df72ed0de675b2a8"
   },
   {
    "id": "nri_hurricane_loss__pct_public_assistance",
@@ -150434,6 +152734,24 @@
    "fingerprint": "6343d70da054892f"
   },
   {
+   "id": "pct_zero_vehicle_households__uninsured_under_65",
+   "x": "pct_zero_vehicle_households",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": 0.015,
+   "rho": -0.007,
+   "withinState": 0.236,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "2619712b305c45c2"
+  },
+  {
    "id": "pct_child_poverty__pct_hispanic_latino",
    "x": "pct_child_poverty",
    "y": "pct_hispanic_latino",
@@ -150669,6 +152987,24 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "2fe6b1f2b1f8bc5b"
+  },
+  {
+   "id": "pct_veterans__uninsured_under_65",
+   "x": "pct_veterans",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": -0.037,
+   "rho": 0.007,
+   "withinState": -0.085,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "2f426ed487a1fdc5"
   },
   {
    "id": "cooling_degree_days__nri_expected_loss_per_person",
@@ -151664,6 +154000,24 @@
    "caption": null,
    "captionBy": null,
    "fingerprint": "d654f398aa485650"
+  },
+  {
+   "id": "pct_seniors_living_alone__uninsured_under_65",
+   "x": "pct_seniors_living_alone",
+   "y": "uninsured_under_65",
+   "level": "county",
+   "n": 3143,
+   "r": -0.022,
+   "rho": 0.004,
+   "withinState": 0.165,
+   "status": "flagged",
+   "flags": [
+    "weak (|ρ|<0.3)"
+   ],
+   "headline": null,
+   "caption": null,
+   "captionBy": null,
+   "fingerprint": "982109aed3717f1f"
   },
   {
    "id": "energy_burden__pct_veterans",

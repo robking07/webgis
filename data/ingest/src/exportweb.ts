@@ -95,7 +95,8 @@ export async function exportSearch() {
     if (!usps) continue;
     const k = KIND.find(([re]) => re.test(p.NAME));
     const name = k ? p.NAME.replace(k[0], "") : p.NAME;
-    out.push([`${name}, ${usps}`, k?.[1] ?? "Place", "", +(+p.INTPTLONG).toFixed(4), +(+p.INTPTLAT).toFixed(4), Math.max(1, Math.round(+p.ALAND_SQMI))]);
+    // Incorporated places carry their tagged code (issue #332: their own published numbers in areas/); CDPs none yet.
+    out.push([`${name}, ${usps}`, k?.[1] ?? "Place", p.FUNCSTAT === "S" ? "" : `place${p.GEOID}`, +(+p.INTPTLONG).toFixed(4), +(+p.INTPTLAT).toFixed(4), Math.max(1, Math.round(+p.ALAND_SQMI))]);
     n++;
   }
   const dir = join(TILES, "geo");

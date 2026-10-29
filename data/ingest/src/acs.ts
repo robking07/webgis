@@ -30,7 +30,7 @@ function clean(raw: string | null, isMoe: boolean): number | null {
   return v;
 }
 
-async function fetchTable(vars: string[], geo: string, year = YEAR): Promise<Map<string, Row>> {
+export async function fetchTable(vars: string[], geo: string, year = YEAR): Promise<Map<string, Row>> {
   const key = process.env.CENSUS_API_KEY;
   if (!key) throw new Error("CENSUS_API_KEY is not set in .env.local (free: https://api.census.gov/data/key_signup.html)");
   const out = new Map<string, PackedRow>();
@@ -100,7 +100,7 @@ export function derive(entry: DatasetEntry, row: Row, area?: number, level?: Lev
 
 /** Every variable the entries need, plus `extra` (remainder cells); block groups use each entry's
  *  `blockGroup` tables (D-124). */
-function varsOf(entries: DatasetEntry[], level?: Level, extra: string[] = []): string[] {
+export function varsOf(entries: DatasetEntry[], level?: Level, extra: string[] = []): string[] {
   return [...new Set([...entries.flatMap((e) => {
     if (e.measure.kind !== "acs5") return [];
     const m = tablesOf(e, level);
