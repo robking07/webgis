@@ -6,6 +6,7 @@
 // counties whose ranks are closest overall. "Alike on" lists the measures where both sit
 // furthest from the national middle on the same side (both in the top or bottom quarter), one per topic so the 27
 // health measures don't crowd out the rest.
+// shortcut: the GitHub "Data run" (publish-reload) doesn't rerun this, so matches go stale until someone runs `similar` after `details` and commits; wire it into that workflow if it gets missed.
 import { readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { loadRegistry } from "@webgis/registry/load";
