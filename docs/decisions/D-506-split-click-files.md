@@ -10,6 +10,10 @@ existing drop guard stays on that prefix; no Library paragraph. The lead also se
 questions: the split runs as a one-off GitHub workflow, not on Robbie's machine; the old files stay on
 R2; the phone line's N comes from the registry; the 87- and 174-request fan-out is accepted.
 
+**Cut 1 reversed after code review: stale county files (2026-10-29, lead).** A reload clears the
+map's local folder and writes only the counties it has, so a county that dropped out kept its old file
+on R2, and the panel would show old numbers. The county check is back (rule 3).
+
 ## 1. Today
 
 **Layout.** Each county has one file with every map's tract values, `values/tracts/<county>.json` =
@@ -94,9 +98,13 @@ A partial local folder must not be able to delete or shrink another map's live t
    can upload only X's files, so there is nothing of Y's in it to lose.
 2. **Publish never deletes.** `publishJson` only puts objects; there is no delete call anywhere in
    ingest, and this stays so (the review checks it).
-3. **No shrink of a map's own files.** Before overwriting `values/X/tracts/<c>.json`, publish fetches
-   the live file (the same `guardTractShard` the shards use) and refuses if any live tract is missing
-   from the new one. `ALLOW_TRACT_DROP=1` stays the only override, for a real loss.
+3. **No shrink of a map's own files, checked before anything goes up.** `publishJson` checks every
+   changed file first (`uploadProblems`). It refuses a map's tract file that drops a live tract, a
+   count shard that drops a live dataset, and a reloaded map whose county files on R2 include one this
+   load lacks. For that last check it reuses the one paginated listing publish already makes, and it
+   fetches only changed files R2 already holds. If any check fails, nothing is uploaded.
+   `ALLOW_TRACT_DROP=1` stays the only override, for a real loss (a new tract vintage). The Data run
+   has an "Allow tract drop" input for it, default off, set on the publish step only.
 4. **The old files stop being written.** `writeTractValues` no longer writes `values/tracts/`; the
    existing drop guard stays on that prefix. `publish-reload` drops `values/tracts` from its merge
    list (the counts shards keep theirs).
