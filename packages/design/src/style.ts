@@ -3,7 +3,7 @@
 // the client through feature state: each feature gets `c` = its class index, so the
 // same tiles serve every dataset and adding one needs no re-tiling.
 import type { LayerSpecification, StyleSpecification } from "maplibre-gl";
-import { FOCUS_DIM, HATCH, THEMES, type ThemeName } from "./themes.ts";
+import { ARTERIAL_OPACITY, FOCUS_DIM, HATCH, THEMES, type ThemeName } from "./themes.ts";
 import { LABEL, RANK_WIDTH, SECOND_OUTLINE_DASH, SIZE, zoomInterp, GEO_LEVELS, type GeoLevel } from "./sizing.ts";
 import { US_LABEL_MASK } from "./us-label-mask.ts";
 
@@ -27,7 +27,10 @@ export const HIGHLIGHT_BEFORE_ID = "ref-county-line";
 
 export function basemapStyle(themeName: ThemeName): StyleSpecification {
   const m = THEMES[themeName].map;
-  const halo = { "text-halo-color": m.labelHalo, "text-halo-width": LABEL.haloWidth };
+  const haloColor = `rgba(${rgb(m.labelHalo).join(",")},${LABEL.haloOpacity})`;
+  const halo = { "text-halo-color": haloColor, "text-halo-width": LABEL.haloWidth, "text-halo-blur": LABEL.haloBlur };
+  const cls = ["get", "class"];
+  const big = ["<=", ["coalesce", ["get", "rank"], 99], LABEL.majorCityRank];
   /** True for label points inside the U.S. (OpenMapTiles places have no country code). */
   const inUS = ["within", US_LABEL_MASK] as never;
   const layers: LayerSpecification[] = [
@@ -99,6 +102,13 @@ export function basemapStyle(themeName: ThemeName): StyleSpecification {
       layout: { "line-cap": "round", "line-join": "round" },
       paint: { "line-color": m.river, "line-width": zoomInterp(SIZE.river) as never },
     },
+    // Main streets at city zoom, so a tract or block-group map has something to orient by (audit F4).
+    {
+      id: "overlay-arterial", type: "line", source: "omt", "source-layer": "transportation", minzoom: 10.5,
+      filter: ["all", ["in", ["get", "class"], ["literal", ["trunk", "primary", "secondary"]]], ["!=", ["get", "brunnel"], "tunnel"]],
+      layout: { "line-cap": "round", "line-join": "round" },
+      paint: { "line-color": m.arterial, "line-opacity": ARTERIAL_OPACITY[themeName], "line-width": zoomInterp(SIZE.arterial) as never },
+    },
     {
       id: "overlay-interstate-casing", type: "line", source: "omt", "source-layer": "transportation", minzoom: 4,
       filter: ["all", ["==", ["get", "class"], "motorway"], ["!=", ["get", "ramp"], 1]],
@@ -117,15 +127,44 @@ export function basemapStyle(themeName: ThemeName): StyleSpecification {
       layout: { "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]], "text-font": ["Noto Sans Italic"], "text-size": 12 },
       paint: { "text-color": m.labelMuted, ...halo },
     },
-    // Places: U.S. cities and towns at full strength; foreign ones (outside the U.S. mask)
-    // fewer, smaller and muted, so the map reads as a U.S. map (Robbie, D-37).
+    // Street names from z13 and neighbourhood names from z12. Listed before the places: lower
+    // layers lose label collisions, so a town name always wins.
     {
-      id: "label-place", type: "symbol", source: "omt", "source-layer": "place", minzoom: 4,
-      filter: ["all", ["in", ["get", "class"], ["literal", ["city", "town"]]], inUS],
+      id: "label-road", type: "symbol", source: "omt", "source-layer": "transportation_name", minzoom: 13,
+      filter: ["all", ["in", cls, ["literal", ["trunk", "primary", "secondary", "tertiary", "minor"]]], ["has", "name"]] as never,
+      layout: {
+        "symbol-placement": "line",
+        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-font": LABEL.font as unknown as string[],
+        "text-size": LABEL.sizes.road,
+      },
+      paint: { "text-color": m.labelMuted, ...halo },
+    },
+    {
+      id: "label-neighbourhood", type: "symbol", source: "omt", "source-layer": "place", minzoom: 12,
+      filter: ["all", ["in", cls, ["literal", ["suburb", "quarter", "neighbourhood"]]], inUS] as never,
       layout: {
         "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
         "text-font": LABEL.font as unknown as string[],
-        "text-size": zoomInterp(LABEL.sizes.city) as never,
+        "text-size": zoomInterp(LABEL.sizes.place) as never,
+        "text-transform": "uppercase",
+        "text-letter-spacing": 0.05,
+        "symbol-sort-key": ["get", "rank"],
+      },
+      paint: { "text-color": m.labelMuted, ...halo },
+    },
+    // Places: U.S. cities and towns at full strength; foreign ones (outside the U.S. mask)
+    // fewer, smaller and muted, so the map reads as a U.S. map (Robbie, D-37). Big cities
+    // only before z6, every city from z6, towns from z8; sized big city > city > town (audit F3).
+    {
+      id: "label-place", type: "symbol", source: "omt", "source-layer": "place", minzoom: 4,
+      filter: ["all", ["in", cls, ["literal", ["city", "town"]]], inUS,
+        ["step", ["zoom"], ["all", ["==", cls, "city"], big], 6, ["==", cls, "city"], 8, true]] as never,
+      layout: {
+        "text-field": ["coalesce", ["get", "name:en"], ["get", "name"]],
+        "text-font": LABEL.font as unknown as string[],
+        "text-size": ["interpolate", ["linear"], ["zoom"],
+          ...LABEL.sizes.placeByRank.flatMap(([z, bigPx, cityPx, townPx]) => [z, ["case", ["==", cls, "town"], townPx, big, bigPx, cityPx]])] as never,
         "symbol-sort-key": ["get", "rank"],
       },
       paint: { "text-color": m.label, ...halo },
@@ -140,7 +179,7 @@ export function basemapStyle(themeName: ThemeName): StyleSpecification {
         "text-size": zoomInterp(LABEL.sizes.foreign) as never,
         "symbol-sort-key": ["get", "rank"],
       },
-      paint: { "text-color": m.labelForeign, "text-halo-color": m.labelHalo, "text-halo-width": LABEL.haloWidth * 0.7 },
+      paint: { "text-color": m.labelForeign, "text-halo-color": haloColor, "text-halo-width": LABEL.haloWidth * 0.7 },
     })),
     // Route shields (issue #201): Interstates from z7, U.S. routes from z8, from the sprite's
     // `{network}_{ref_length}` images (1–3 digit refs). Before z7 Interstates get plain "I-25" text.
@@ -196,7 +235,7 @@ export function basemapStyle(themeName: ThemeName): StyleSpecification {
         "text-transform": "uppercase",
         "text-letter-spacing": 0.08,
       },
-      paint: { "text-color": m.labelForeign, "text-halo-color": m.labelHalo, "text-halo-width": LABEL.haloWidth * 0.7, "text-opacity": 0.8 },
+      paint: { "text-color": m.labelForeign, "text-halo-color": haloColor, "text-halo-width": LABEL.haloWidth * 0.7, "text-opacity": 0.8 },
     },
   ];
   return {

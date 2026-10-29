@@ -116,6 +116,8 @@ export const SIZE = {
   river: [[3, 0.6], [6, 1], [9, 1.6], [12, 2.6], [16, 5]],
   riverCasing: [[3, 1.4], [6, 2], [9, 3], [12, 4.4], [16, 7.5]],
   pointStroke: [[4, 0.5], [12, 1], [16, 1.5]],
+  /** Main streets drawn over the data at city zoom (audit F4). */
+  arterial: [[11, 0.6], [14, 1.8]],
 } as const satisfies Record<string, ReadonlyArray<readonly [number, number]>>;
 
 /** Width multiplier by rank (1 = most important, e.g. Interstate). */
@@ -124,11 +126,16 @@ export const RANK_WIDTH: Record<number, number> = { 1: 1.7, 2: 1.45, 3: 1.2, 4: 
 export const LABEL = {
   font: ["Noto Sans Regular"],
   fontBold: ["Noto Sans Bold"],
-  haloWidth: 1.4,
+  haloWidth: 1.2,
+  /** A little see-through and soft, so the halo doesn't cut a hard block out of dark classes (audit F13). */
+  haloOpacity: 0.75,
+  haloBlur: 0.5,
   sizes: {
     country: [[2, 11], [6, 16]],
     state: [[3, 10], [6, 14]],
-    city: [[4, 10], [8, 13], [12, 16]],
+    /** U.S. places by importance: [zoom, big city (rank ≤ majorCityRank), other city, town]. */
+    placeByRank: [[4, 12, 10, 9], [8, 15, 13, 11], [12, 19, 16, 13]],
+    road: 10.5,
     /** Cities outside the U.S.: a step smaller at every zoom. */
     foreign: [[5, 9], [8, 11], [12, 13]],
     stateForeign: [[4, 8.5], [6, 10.5]],
@@ -137,6 +144,9 @@ export const LABEL = {
   /** Foreign cities with OpenMapTiles rank ≤ this show from z5 (Toronto, Monterrey, Tijuana…);
    *  the rest of the cities wait for z8. */
   foreignMajorRank: 4,
+  /** U.S. cities with OpenMapTiles rank ≤ this are the only places labelled before z6 (Seattle,
+   *  St. Louis, Atlanta; not Minot or Elko, rank 5) and the biggest after. Towns wait for z8. */
+  majorCityRank: 3,
   /** Minimum on-screen spacing between repeated line labels, px. */
   symbolSpacing: 300,
 } as const;
