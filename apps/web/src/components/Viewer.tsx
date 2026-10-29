@@ -199,6 +199,7 @@ export function Viewer({ search }: { search: string }) {
   const [pickedHit, setPickedHit] = useState<PlaceHit | null>(null);
   const picked = pickedHit && (pickedHit.mpo ? pickedHit.mpo.id === state.mpo : pickedHit.area === state.area) ? pickedHit : null;
   const [areaFile, setAreaFile] = useState<{ code: string; file: AreaFile } | null>(null);
+  const frameLinked = useRef(!!(initial.mpo || initial.area) && initial.at.fit && !initial.in); // a link with no at= or in= frames its area once (#393)
   useEffect(() => {
     const id = state.mpo, code = state.area;
     mapApi.current?.showArea(null);
@@ -208,10 +209,17 @@ export function Viewer({ search }: { search: string }) {
       const hit = code ? areaByCode(rows, code) : mpoById(rows, id!);
       if (!hit || !live) return;
       setPickedHit(hit);
+      if (frameLinked.current) {
+        frameLinked.current = false;
+        // As a search pick does; by now the phone/laptop layout is known and panels are measured a frame later.
+        if (hit.mpo) { const bbox = hit.mpo.bbox; requestAnimationFrame(() => requestAnimationFrame(() => mapApi.current?.fitBbox(bbox, clearArea()))); }
+        else goToPlace(hit);
+      }
       if (!code) return loadMpoShape(id!).then((shape) => { if (live) mapApi.current?.showArea(shape); });
       return loadArea(code).then((file) => { if (live) { setAreaFile({ code, file }); mapApi.current?.showArea(file.g); } });
     }).catch(() => {}); // shortcut: an unknown or failed MPO or area just shows no outline; say so if visitors hit it.
     return () => { live = false; };
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- framing runs once, with the first-render closures
   }, [state.mpo, state.area]);
   /** A found address or the visitor's spot (issue #363): its pin, and the geoid selected there ("" if none). */
   const [pin, setPin] = useState<{ at: [number, number]; geoid?: string } | null>(null);
