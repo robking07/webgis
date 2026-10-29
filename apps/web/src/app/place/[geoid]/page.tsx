@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PlaceProfile } from "@/components/PlaceProfile";
+import { SimilarPlaces } from "@/components/SimilarPlaces";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteNav";
 import { placeNameChecked } from "@/lib/place-name";
@@ -22,7 +23,7 @@ export default async function PlacePage({ params }: PageProps<"/place/[geoid]">)
   return (
     <>
       <SiteHeader />
-      <PlaceProfile geoid={geoid} />
+      <PlaceProfile geoid={geoid} similar={<SimilarPlaces geoid={geoid} />} />
       <div className="mx-auto max-w-3xl px-4 pb-8 md:px-8"><SiteFooter /></div>
     </>
   );
