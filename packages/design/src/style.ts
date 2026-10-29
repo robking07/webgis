@@ -19,9 +19,11 @@ export const BASEMAP = {
 /** The U.S. "focus land" fill (from the state boundary tiles) goes directly below this layer. */
 export const FOCUS_LAND_BEFORE_ID = "park";
 
-/** Thematic layers are inserted directly below this basemap layer: the reference overlays
- *  (rivers, interstates) and the labels stay on top of the data. */
-export const DATA_BEFORE_ID = "overlay-river-casing";
+/** Thematic fills and outlines go directly below this basemap layer: inland water, boundary lines,
+ *  rivers, interstates and labels all stay on top of the data (water-and-lines decision). */
+export const DATA_BEFORE_ID = "overlay-water";
+/** Selection outlines go here: above the water (a lakeside pick still shows), under the boundary lines. */
+export const HIGHLIGHT_BEFORE_ID = "ref-county-line";
 
 export function basemapStyle(themeName: ThemeName): StyleSpecification {
   const m = THEMES[themeName].map;
@@ -75,6 +77,16 @@ export function basemapStyle(themeName: ThemeName): StyleSpecification {
       paint: { "line-color": m.countryLine, "line-width": ["interpolate", ["linear"], ["zoom"], 2, 1, 8, 2] as never },
     },
     // Reference overlays: above thematic data (cased so they read over any fill), below labels.
+    // Census cb polygons aren't clipped to inland lakes, so water is redrawn over the data.
+    {
+      id: "overlay-water", type: "fill", source: "omt", "source-layer": "water",
+      paint: { "fill-color": m.water },
+    },
+    {
+      id: "overlay-shoreline", type: "line", source: "omt", "source-layer": "water",
+      filter: ["!=", ["get", "brunnel"], "tunnel"],
+      paint: { "line-color": m.coastline, "line-width": ["interpolate", ["linear"], ["zoom"], 2, 0.6, 6, 1, 12, 1.4] as never, "line-opacity": 0.9 },
+    },
     {
       id: "overlay-river-casing", type: "line", source: "omt", "source-layer": "waterway", minzoom: 3,
       filter: ["all", ["==", ["get", "class"], "river"], ["!=", ["get", "intermittent"], 1], ["!=", ["get", "brunnel"], "tunnel"]],
@@ -521,8 +533,8 @@ export interface FeaturePolygonOptions extends FeatureLineOptions {}
 
 /**
  * Areas from their own geometry (e.g. CEJST tracts): step color by value, thin outline.
- * Such geometry is often not clipped to the shoreline (CEJST's 2010 tracts cover lakes and bays),
- * so the basemap's water and shoreline are drawn again on top as a mask.
+ * Such geometry is often not clipped to the shoreline (CEJST's 2010 tracts cover lakes and bays);
+ * the basemap's `overlay-water` hides that.
  */
 export function featurePolygonLayers(o: FeaturePolygonOptions): LayerSpecification[] {
   const m = THEMES[o.theme].map;
@@ -532,11 +544,23 @@ export function featurePolygonLayers(o: FeaturePolygonOptions): LayerSpecificati
   return [
     { id: `${o.id}-fill`, type: "fill", ...base, paint: { "fill-color": color as never, "fill-opacity": 0.85 } },
     { id: `${o.id}-casing`, type: "line", ...base, paint: { "line-color": m.featureOutline, "line-width": zoomInterp(SIZE.featureOutline) as never, "line-opacity": 0.6 } },
-    { id: `${o.id}-water-mask`, type: "fill", source: "omt", "source-layer": "water", paint: { "fill-color": m.water } },
-    {
-      id: `${o.id}-shoreline`, type: "line", source: "omt", "source-layer": "water",
-      filter: ["!=", ["get", "brunnel"], "tunnel"],
-      paint: { "line-color": m.coastline, "line-width": ["interpolate", ["linear"], ["zoom"], 2, 0.6, 6, 1, 12, 1.4] as never, "line-opacity": 0.9 },
-    },
+  ];
+}
+
+/** Parent boundaries drawn over the data: state lines over counties and tracts, county lines over
+ *  tracts. Census sources, so they match the fills exactly. Cased, and heavier for the parent. */
+const REF_STATE = [[3, 1.4], [5, 2.5], [10, 4]] as const;
+const REF_STATE_CORE = [[3, 0.5], [5, 0.9], [10, 1.6]] as const;
+const REF_COUNTY_CORE = [[6, 0.5], [9, 1], [14, 1.4]] as const;
+export function referenceLineLayers(theme: ThemeName): LayerSpecification[] {
+  const m = THEMES[theme].map;
+  const state = { source: "b-state", "source-layer": "state" };
+  return [
+    { id: "ref-county-line", type: "line", source: "b-county", "source-layer": "county", minzoom: 6,
+      paint: { "line-color": m.boundary, "line-opacity": 1, "line-width": zoomInterp(REF_COUNTY_CORE) as never } },
+    { id: "ref-state-line-casing", type: "line", ...state, minzoom: 3,
+      paint: { "line-color": m.featureOutline, "line-opacity": 0.8, "line-width": zoomInterp(REF_STATE) as never } },
+    { id: "ref-state-line", type: "line", ...state, minzoom: 3,
+      paint: { "line-color": m.boundaryMajor, "line-width": zoomInterp(REF_STATE_CORE) as never } },
   ];
 }

@@ -174,8 +174,8 @@ export const THEMES: Record<ThemeName, Theme> = {
       park: "#39443d",
       road: "#42464e",
       roadMajor: "#4c5058",
-      boundary: "#4a4e56",
-      boundaryMajor: "#6b707a",
+      boundary: "#6b707a",
+      boundaryMajor: "#8b919c",
       label: "#d4d6da",
       labelMuted: "#9a9ea6",
       labelForeign: "#73777f",
@@ -242,6 +242,7 @@ export const CONTRAST_RULES: Array<[keyof Theme["ui"] | `map.${keyof Theme["map"
   ["map.shieldText", "map.shieldFill", 4.5, "route number on its highway shield"],
   ["map.countryLine", "map.focusLand", 3, "national boundary vs U.S. land (non-text)"],
   ["map.countryLine", "map.land", 3, "national boundary vs land outside the U.S. (non-text)"],
+  ["map.boundaryMajor", "map.featureOutline", 3, "state line core vs its casing (non-text, reads over any fill)"],
   ["map.coastline", "map.land", 1.5, "shoreline vs land outside the U.S. (decorative)"],
   ["map.coastline", "map.water", 1.5, "shoreline vs water (decorative)"],
 ];
