@@ -34,6 +34,11 @@ export default function mpoTests({ test, expect, mapIdle, tapLonLat, HENNEPIN })
       const { page: shared } = await o(vp, `/map?d=pct_poverty&mpo=${MET_COUNCIL}`);
       await outlined(shared);
       expect(/Metropolitan Council/.test(await shared.locator("[data-focus-name]").innerText()), "shared link doesn't name the MPO");
+      if (vp === "phone") { // #392: the chip's ✕ is a 44 px target that Near me doesn't sit on
+        const x = await shared.locator("[data-focus-name] button").boundingBox();
+        const near = await shared.getByRole("button", { name: "Near me" }).boundingBox();
+        expect(x.width >= 44 && x.x + x.width <= near.x || x.y + x.height <= near.y || near.y + near.height <= x.y, `✕ ${JSON.stringify(x)} overlaps Near me ${JSON.stringify(near)}`);
+      }
       await shared.locator("[data-focus-name] button").click();
       await shared.waitForFunction(() => !new URL(location.href).searchParams.get("mpo"), null, { timeout: 5000 });
       await shared.waitForFunction(() => !window.__wgMap.getLayer("area-highlight"), null, { timeout: 5000 });

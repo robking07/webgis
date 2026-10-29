@@ -67,11 +67,11 @@ export function ImmersedHeading({ primary, secondary, immersed, hasFilters, filt
       </div>
       {!phone && <div className="mt-1.5">{heading}</div>}
       {place && (
-        <div className={`pointer-events-auto mt-1 flex max-w-[calc(100vw-1.5rem)] ${phone ? "pl-[52px]" : ""}`}>
+        <div className={`pointer-events-auto mt-1 flex ${phone ? "max-w-[calc(100vw-5rem)] pl-[52px]" : "max-w-[calc(100vw-1.5rem)]"}`}>
           <p data-focus-name="" className={`wg-panel inline-flex min-w-0 items-center gap-1 rounded-xl py-0.5 pl-3 pr-1 font-bold text-foreground ${phone ? "text-lg" : "text-2xl"}`}>
             <span className="truncate">{place.name}</span>
             <button type="button" onClick={place.onClear} aria-label={`Leave ${place.name}: show the whole map`} title="Show the whole map"
-              className="grid size-8 shrink-0 place-items-center rounded-lg text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring">
+              className={`grid shrink-0 place-items-center rounded-lg text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring ${phone ? "-my-1 size-11" : "size-8"}`}>
               <X className="size-4" aria-hidden />
             </button>
           </p>
