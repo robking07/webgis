@@ -73,6 +73,7 @@ function vars(e: DatasetEntry): string[] {
   if (m.kind === "svi") return [`SVI:${m.field}`];
   if (m.kind === "airquality") return [`AIRQUALITY:${m.sheet.includes("County Status Annual") ? "PM25" : "O3"}`];
   if (m.kind === "overdose") return ["VSRR:OVERDOSE"];
+  if (m.kind === "sahie") return ["SAHIE:PCTUI"];
   return ["FARS:FATALS"];
 }
 function perArea(e: DatasetEntry) {
