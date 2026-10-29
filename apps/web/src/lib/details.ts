@@ -5,7 +5,7 @@
 //  - tract values: values/tracts/<county fips>.json (D-113);
 //  - tract geography (name, point, land area): geo/tracts/<county fips>.json (`ingest tract-geo`, #106).
 import { tidyPlaceName } from "./place";
-import { staticUrl, TILES_BASE } from "./static-files";
+import { fetchRetry, staticUrl, TILES_BASE } from "./static-files";
 
 export type Detail = Record<string, { value: number | null; moe: number | null }>;
 export interface Geography { geoid: string; level: "state" | "county" | "tract"; name: string; lon: number; lat: number; aland_sqmi: number }
@@ -51,7 +51,7 @@ export function detailFromTractShard(shard: TractShard | null, geoid: string): D
 const cache = new Map<string, Promise<unknown>>();
 function loadJson<T>(url: string, what: string): Promise<T | null> {
   if (!cache.has(url)) {
-    cache.set(url, fetch(url).then((r) => {
+    cache.set(url, fetchRetry(url).then((r) => {
       if (r.status === 404) return null;
       if (!r.ok) throw new Error(`${what} couldn't be loaded (${r.status})`);
       return r.json();

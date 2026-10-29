@@ -2,7 +2,7 @@
 import type { GeoLevel } from "@webgis/design";
 import { loadMoes, loadValues, type Values } from "./values";
 import type { Dataset } from "./registry";
-import { staticUrl } from "@/lib/static-files";
+import { fetchRetry, staticUrl } from "@/lib/static-files";
 
 /** Levels that have a downloadable values file (blocks keep their values in the tiles, D-124). */
 export const CSV_LEVELS: GeoLevel[] = ["state", "county", "tract", "block_group"];
@@ -34,7 +34,7 @@ const tick = () => new Promise<void>((r) => setTimeout(r, 0));
 export async function buildCsv(d: Dataset, level: GeoLevel, load = loadValues, names?: Record<string, string>, loadMoe = loadMoes): Promise<{ blob: Blob; rows: number }> {
   const [values, nm, moes] = await Promise.all([
     load(d.id, level),
-    names ?? fetch(staticUrl("geo/names.json")).then((r) => r.json() as Promise<Record<string, string>>),
+    names ?? fetchRetry(staticUrl("geo/names.json")).then((r) => r.json() as Promise<Record<string, string>>),
     marginsFor(d, level, loadMoe),
   ]);
   return csvFile(d, Object.keys(values).sort(), values, moes, nm);

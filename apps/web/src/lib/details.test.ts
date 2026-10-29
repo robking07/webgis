@@ -79,7 +79,7 @@ describe("fetchDetail / fetchGeography", () => {
   it("throws on a server error and retries next time", async () => {
     await expect(fetchDetail("72")).rejects.toThrow("Place data couldn't be loaded (503)");
     await expect(fetchDetail("72")).rejects.toThrow();
-    expect(calls).toEqual([PR_URL, PR_URL]);
+    expect(calls).toEqual([PR_URL, PR_URL, PR_URL, PR_URL]); // each load = first try + one retry
   });
   it("has nothing for block groups or blocks (they read their own files)", async () => {
     expect(await fetchDetail("270530261001")).toEqual({});

@@ -10,14 +10,14 @@ import { StatusState } from "@webgis/design/components";
 import { Input } from "@/components/ui/input";
 import type { Dataset } from "@/lib/registry";
 import type { Values } from "@/lib/values";
-import { staticUrl } from "@/lib/static-files";
+import { fetchRetry, staticUrl } from "@/lib/static-files";
 import { csvFile, csvFileName, marginsFor, placeLabel, saveBlob } from "@/lib/csv";
 import { useIsNarrow } from "./BottomSheet";
 
 /** geoid → [name, lon, lat] for states and counties (exported by ingest). */
 export type Places = Record<string, [string, number, number]>;
 let placesCache: Promise<Places> | null = null;
-export const loadPlaces = () => (placesCache ??= fetch(staticUrl("geo/places.json")).then((r) => r.json()));
+export const loadPlaces = () => (placesCache ??= fetchRetry(staticUrl("geo/places.json")).then((r) => r.json()));
 
 const ROW_H = 32;
 const OVERSCAN = 8;

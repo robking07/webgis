@@ -10,7 +10,7 @@ import { DATASET_BY_ID } from "@/lib/registry";
 import { classifyBivariate, loadValues, type Values } from "@/lib/values";
 import type { Insight } from "@/lib/insights";
 import { DEFAULT_VIEW, serializeUrlState } from "@/lib/url-state";
-import { staticUrl } from "@/lib/static-files";
+import { fetchRetry, staticUrl } from "@/lib/static-files";
 
 const MapView = dynamic(() => import("./map/MapView").then((m) => m.MapView), { ssr: false });
 
@@ -29,7 +29,7 @@ export function InsightDetail({ insight }: { insight: Insight }) {
   const theme = useSyncExternalStore<ThemeName>(noopSubscribe, readTheme, () => "light");
   useEffect(() => {
     Promise.all([loadValues(x.id, "county"), loadValues(y.id, "county")]).then(setVals, () => setErr(true));
-    fetch(staticUrl("geo/names.json")).then((r) => r.json()).then(setNames, () => {});
+    fetchRetry(staticUrl("geo/names.json")).then((r) => r.json()).then(setNames, () => {});
   }, [x.id, y.id]);
   const biv = useMemo(() => (vals ? classifyBivariate(vals[0], vals[1]) : null), [vals]);
   const mapHref = `/map${serializeUrlState({ d: x.id, b: y.id, at: { lon: DEFAULT_VIEW.lon, lat: DEFAULT_VIEW.lat, zoom: 6 }, theme: null, lv: null })}`;
