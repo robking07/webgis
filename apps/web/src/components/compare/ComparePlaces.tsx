@@ -15,7 +15,7 @@ import { bothHave, canCompare, compareValues, rowVerdictText, shortName, stripRa
 import { countsLabels, PARTS, parentsOf, partsOf, placeCounts, shareOf, type Counts } from "@/lib/counts";
 import { reliabilityNote } from "@/lib/reliability";
 import { fetchDetail, fetchGeography, type Detail, type Geography } from "@/lib/details";
-import { levelOfGeoid, PLACE_ZOOM, placeHref, rankText } from "@/lib/place";
+import { isRaceRow, levelOfGeoid, PLACE_ZOOM, placeHref, rankText } from "@/lib/place";
 import { CATEGORIES, DATASET_BY_ID, DATASETS, type Dataset } from "@/lib/registry";
 import { loadValues, type Values } from "@/lib/values";
 import { serializeUrlState } from "@/lib/url-state";
@@ -242,7 +242,7 @@ function Headline({ ds, a, b, names, vals, level, counts, geoids, parentNames }:
   counts: CountsBy; geoids: { a: string; b: string }; parentNames: Record<string, string>;
 }) {
   const ea = a ?? { value: null, moe: null }, eb = b ?? { value: null, moe: null };
-  const ranks = vals && { a: rankText(vals, ea.value, level), b: rankText(vals, eb.value, level) };
+  const ranks = vals && (isRaceRow(ds) ? { a: null, b: null } : { a: rankText(vals, ea.value, level), b: rankText(vals, eb.value, level) });
   const v = compareValues(ds.measure.kind, ea, eb);
   const survey = isGradable(ds.measure.kind);
   const note = v.kind === "about_same" ? "The gap is within the margins of error (90% confidence), so it may not be real."

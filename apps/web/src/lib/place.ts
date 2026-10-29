@@ -10,6 +10,9 @@ export const PLACE_ZOOM: Record<GeoLevel, number> = { state: 5.5, county: 8, tra
 /** `d`: the map's dataset, carried so the profile's "Back to the map" returns to the map you came from. */
 export const placeHref = (geoid: string, d?: string | null) => `/place/${geoid}${d ? `?d=${encodeURIComponent(d)}` : ""}`;
 
+/** Race and ethnicity numbers never stand out on their own (site rule, 2026-10-29, #414): no rank line, no "both high/low". */
+export const isRaceRow = (d?: { subcategory?: string }) => d?.subcategory === "Race and ethnicity";
+
 /**
  * "Ranks higher than 39 of 52 states" — count of places at this level with a lower value.
  * The ends read plainly instead of "Ranks higher than 0 of 3,222": "Lowest of 52 states",
