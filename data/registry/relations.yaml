@@ -85,6 +85,7 @@ links:
   - { maps: [pm25_annual, copd], why: Fine-particle pollution worsens lung disease. }
   - { maps: [overdose_deaths, mental_distress], why: Overdose and mental distress often go together. }
   - { maps: [pct_uninsured, routine_checkup], why: People without insurance see a doctor less often. }
+  - { maps: [pct_uninsured, uninsured_under_65], why: "The same question two ways: the survey for all ages, and the Census model for under-65s, updated every year." }
   # Food access
   - { maps: [far_from_supermarket, food_access_tracts], why: The share of residents and the tracts behind it. }
   - { maps: [no_car_far_from_supermarket, food_access_no_car_tracts], why: The share of households and the tracts behind it. }
@@ -294,6 +295,8 @@ maps:
   smoking:
     group: "Health"
   stroke:
+    group: "Health"
+  uninsured_under_65:
     group: "Health"
   utility_shutoff_threat:
     group: "Health"
