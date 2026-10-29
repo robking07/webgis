@@ -18,7 +18,15 @@ import { readGazetteer } from "./geographies.ts";
 const round = (v: number) => Number(v.toPrecision(4));
 const LEVEL_FILE = new RegExp(`^(${GeoLevel.options.join("|")})\\.json$`);
 
-export function exportRegistry() {
+type Periods = Record<string, Record<string, string[]>>;
+
+/** Datasets and stops in `old` that `next` no longer has (adding is fine). */
+export function periodLosses(old: Periods, next: Periods): string[] {
+  return Object.entries(old).flatMap(([id, stops]) =>
+    !next[id] ? [id] : Object.keys(stops).filter((s) => !next[id][s]).map((s) => `${id}/${s}`));
+}
+
+export function exportRegistry(allowPeriodDrop = false) {
   const dir = join(ROOT, "apps/web/src/generated");
   mkdirSync(dir, { recursive: true });
   const entries = loadRegistry();
@@ -29,7 +37,7 @@ export function exportRegistry() {
   log("export", `glossary.json: ${glossary.length} terms`);
   // Timeline stops whose values are on disk, with the levels each has, so the year control
   // only offers what was exported: { dataset: { stop: [levels] } }.
-  const periods: Record<string, Record<string, string[]>> = {};
+  const periods: Periods = {};
   for (const e of entries) {
     for (const s of timelineStops(e)) {
       const dir = join(TILES, "values", e.id, s.id);
@@ -39,7 +47,14 @@ export function exportRegistry() {
       if (levels.length) (periods[e.id] ??= {})[s.id] = levels;
     }
   }
-  writeFileSync(join(dir, "periods.json"), JSON.stringify(periods, null, 1));
+  // Refuse to shrink: a worktree without data/tiles/values timeline folders would silently drop years (#384).
+  const file = join(dir, "periods.json");
+  const lost = existsSync(file) && !allowPeriodDrop ? periodLosses(JSON.parse(readFileSync(file, "utf8")), periods) : [];
+  if (lost.length) {
+    throw new Error(`export: periods.json would lose years for ${lost.length} dataset(s)/stop(s): ${lost.slice(0, 20).join(", ")}${lost.length > 20 ? ", ..." : ""}. ` +
+      "The data folder is probably incomplete (docs/handbook.md section 1). Nothing written to periods.json. If the drop is intended, add --allow-period-drop.");
+  }
+  writeFileSync(file, JSON.stringify(periods, null, 1));
   // How maps relate (#156): groups, counts labels, parts sets and links, for Compare places.
   writeFileSync(join(dir, "relations.json"), JSON.stringify(relationsExport(loadRelations(entries)), null, 1));
   log("export", `periods.json: ${Object.values(periods).reduce((n, p) => n + Object.keys(p).length, 0)} timeline stops in ${Object.keys(periods).length} datasets`);
