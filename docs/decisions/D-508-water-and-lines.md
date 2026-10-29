@@ -1,4 +1,4 @@
-# D-508: Water and parent boundaries drawn over the data
+# D-508 · Water and parent boundaries drawn over the data
 
 PR #408, refs #187 (cartography audit F1, F2). Style-only: no new tiles, no data changes.
 
