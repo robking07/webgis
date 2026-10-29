@@ -28,7 +28,9 @@ Full build spec: `docs/SPEC.md`. Project rules: `CLAUDE.md`.
   and `http://localhost:3000`), or fill `data/tiles/` to work
   offline. **Any ingest that uploads must start from a complete `data/tiles/`** (with `values/tracts/`,
   `geo/`, `details/` and the timeline stops); a partial folder plus `publish-data` wiped live tract data
-  on 2026-10-08. The main checkout's copy is incomplete until #146 is done. Nothing goes in `apps/web/public/data` any more.
+  on 2026-10-08. The GitHub "Data run" workflow (runbook §8) is the exception: it reads each file it
+  changes from R2 and merges into it, and checks every file for dropped datasets before the first
+  upload. The main checkout's copy is incomplete until #146 is done. Nothing goes in `apps/web/public/data` any more.
 - Ingest also needs `ogr2ogr` (GDAL) and `tippecanoe` on the PATH (the `build-tiles` skill says how they
   are installed on Robbie's machine). Check with `ogr2ogr --version` and `tippecanoe --version`.
 - Read `docs/progress.md` first (where things stand, lessons from earlier tasks). For a fast
