@@ -1,6 +1,6 @@
 "use client";
 // Every dataset for one place. Values, margins of error and geography come from static files (lib/details.ts).
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { StatusState } from "@webgis/design/components";
 import { PlaceDataList, type Detail } from "./PlaceDataList";
 import { KeyNumbers } from "./KeyNumbers";
@@ -14,7 +14,8 @@ import { DATASETS } from "@/lib/registry";
 
 const link = "rounded text-primary underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-ring";
 
-export function PlaceProfile({ geoid }: { geoid: string }) {
+/** `similar`: the server-rendered similar-counties list (counties only), shown under the key numbers. */
+export function PlaceProfile({ geoid, similar }: { geoid: string; similar?: ReactNode }) {
   const level = levelOfGeoid(geoid)!;
   const [geo, setGeo] = useState<Geography | null | undefined>(undefined);
   const [detail, setDetail] = useState<Detail | null>(null);
@@ -62,6 +63,7 @@ export function PlaceProfile({ geoid }: { geoid: string }) {
         )}
       </header>
       <KeyNumbers geoid={geoid} detail={detail} />
+      {similar}
       <PlaceDataList geoid={geoid} level={level} detail={detail} mapHref={mapHref} />
     </main>
   );

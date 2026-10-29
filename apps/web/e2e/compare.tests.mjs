@@ -183,7 +183,8 @@ export default function compareTests({ test, expect, wait, immerse, tapLonLat, l
       expect(await btn.evaluate((b) => b === document.activeElement), "focus not back on Compare with… after Escape");
       await btn.click();
       await input.fill("Ramsey");
-      await page.getByRole("link", { name: "Ramsey County, MN" }).click();
+      // The picker's result, not the similar-counties link to Ramsey further down the page (#291).
+      await page.locator("a:not([data-similar-places] a)", { hasText: /^Ramsey County, MN$/ }).click();
       await page.waitForURL(/\/compare\/27053\/27123$/, { timeout: 20000 });
       await page.locator("[data-compare-verdict]").waitFor({ timeout: 20000 });
     });
