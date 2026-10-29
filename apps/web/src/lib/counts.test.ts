@@ -49,7 +49,7 @@ describe("an MPO's near-exact total from tracts (#390)", () => {
       "values/n/county.counts.json": { 27003: [100, 30, 1000, 40], 27027: [50, 20, 500, 10] },
     };
     vi.stubGlobal("fetch", async (url: string) => {
-      const f = files[url.replace(/^\/tiles\//, "")];
+      const f = files[Object.keys(files).find((k) => url.endsWith("/" + k)) ?? ""]; // any TILES_BASE (CI sets the full URL)
       return { ok: !!f, json: async () => f };
     });
     const t = await regionTotal("m", list);
