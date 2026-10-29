@@ -36,5 +36,16 @@ export default function placeChainTests({ test, expect, immerse, mapIdle, tapLon
       const box = await keys.boundingBox();
       expect(box.x >= 0 && box.x + box.width <= page.viewportSize().width, `key numbers overflow: ${JSON.stringify(box)}`);
     });
+
+    test(`${vp} similar counties (#291): Hennepin's profile lists five, each linking to Compare`, async (o) => {
+      const { page } = await o(vp, "/place/27053", { ready: false });
+      const list = page.locator("[data-similar-places]");
+      await list.waitFor({ timeout: 20000 });
+      const links = list.locator("li a");
+      expect((await links.count()) === 5, `similar counties: ${await links.count()}`);
+      const href = await links.first().getAttribute("href");
+      expect(/^\/compare\/27053\/\d{5}(\?d=\w+)?$/.test(href), `similar link: ${href}`);
+      expect(/Both (high|low):/.test(await list.innerText()), "no 'Both high/low' line");
+    });
   }
 }

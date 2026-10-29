@@ -1,5 +1,5 @@
 // npm run ingest -- <step> [dataset or level ids…]
-// Steps: geographies | label-mask | mpo | mpo-counties | areas | publish-areas | publish-search | timeline | acs | acs-bg | census2020 | lodes | places | climdiv | nbi | fars | overdose | airquality | features | vmt | cejst | ddp287g | tri | nri | svi | sahie | lead | food-access | tiles | publish-tiles | publish-reload | publish-values | publish-geo | publish-data | counts | publish-counts | details | publish-details | tract-geo | export [--allow-period-drop] | export-values | insights [--reflag] | combinations [--dry-run] | tracts-out | docs | mn-catalog | mpo-plans | publish-mpo-plans [--dry-run] | all
+// Steps: geographies | label-mask | mpo | mpo-counties | areas | publish-areas | publish-search | timeline | acs | acs-bg | census2020 | lodes | places | climdiv | nbi | fars | overdose | airquality | features | vmt | cejst | ddp287g | tri | nri | svi | sahie | lead | food-access | tiles | publish-tiles | publish-reload | publish-values | publish-geo | publish-data | counts | publish-counts | details | similar | publish-details | tract-geo | export [--allow-period-drop] | export-values | insights [--reflag] | combinations [--dry-run] | tracts-out | docs | mn-catalog | mpo-plans | publish-mpo-plans [--dry-run] | all
 import { ingestGeographies, tractGeography } from "./geographies.ts";
 import { ingestAcs, ingestAcsTimeline } from "./acs.ts";
 import { ingestCensus2020 } from "./census2020.ts";
@@ -13,6 +13,7 @@ import { ingestClimdiv, ingestClimdivTimeline } from "./climdiv.ts";
 import { publishAreas, publishCounts, publishSearch, publishData, publishDetails, publishGeo, publishReload, publishTiles, publishValues } from "./publish-tiles.ts";
 import { setCountsOnly } from "./values.ts";
 import { detailsOut } from "./details.ts";
+import { similarOut } from "./similar.ts";
 import { writeDataSourcesDoc } from "./docs.ts";
 import { mnCatalog } from "./mn-catalog.ts";
 import { ingestNbi, ingestNbiTimeline } from "./nbi.ts";
@@ -96,6 +97,8 @@ const steps: Record<string, () => Promise<void> | void> = {
   "tract-geo": tractGeography,
   // State and county click details as static files on R2 (S1): the browser no longer queries the database.
   details: detailsOut,
+  // #291: the counties most like each county, from the details files, to src/generated/similar.json.
+  similar: similarOut,
   "publish-details": publishDetails,
   docs: writeDataSourcesDoc,
   "mn-catalog": mnCatalog,
@@ -114,7 +117,7 @@ const steps: Record<string, () => Promise<void> | void> = {
     await ingestFeatures(); await ingestVmt(); await ingestCejst(); await ingestDdp287g(); await ingestTri(); await ingestNri(); await ingestLead(); await ingestSvi(); await ingestSahie(); await ingestFoodAccess();
     await ingestAcsTimeline(); await ingestFarsTimeline(); await ingestClimdivTimeline(); await ingestNbiTimeline(); await ingestLodesTimeline(); await ingestOverdoseTimeline(); await buildLabelMask(); await buildTiles();
     await tractGeography();
-    exportRegistry(allowDrop); await exportNames(); await exportSearch(); await exportValues(); await detailsOut(); await computeInsights(); await computeCombinations(); await writeDataSourcesDoc();
+    exportRegistry(allowDrop); await exportNames(); await exportSearch(); await exportValues(); await detailsOut(); similarOut(); await computeInsights(); await computeCombinations(); await writeDataSourcesDoc();
   },
 };
 if (!step || !steps[step]) {
