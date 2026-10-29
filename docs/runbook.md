@@ -176,10 +176,17 @@ There is no dry-run switch: every run writes the database and publishes. Visitor
 within an hour. The run loads, then `export-values <ids>` and `details` (from the database), then
 `publish-reload`: for each tract or block-group count file it wrote, it fetches the live file from R2,
 swaps in only the reloaded datasets and keeps the rest. If any county would lose a reloaded dataset (a
-source that came back short), it stops **before the first upload**. Then it uploads the changed value
-files, and the click details last. Tract values need no merge: each map has its own file per county,
-`values/<id>/tracts/<county>.json` (D-506), and the upload refuses one that would lose live tracts.
-A run that writes no count files skips the merge.
+source that came back short), it stops **before the first upload**. Tract values need no merge: each
+map has its own file per county, `values/<id>/tracts/<county>.json` (D-506). Before uploading anything,
+`publish-values` checks every changed file: a count shard that drops a live dataset, a map's tract
+file that drops live tracts, or a reloaded map with a county file on R2 that this load doesn't have
+(it would stay live with old numbers, since publish never deletes). If any check fails, **nothing is
+uploaded**. Then it uploads the changed value files, and the click details last. A run that writes
+no count files skips the merge.
+
+**A real loss** (a new tract vintage, a county a source no longer covers): tick **Allow tract drop**
+when starting the run. It sets `ALLOW_TRACT_DROP=1` for the publish step only and skips those
+checks, so use it only after reading the refused run's list of files.
 
 **Split tract files (one-off, D-506).** The "Split tract files" workflow (Actions tab, main only)
 reads every old all-maps file `values/tracts/<county>.json` from R2 and uploads the per-map files.
@@ -189,8 +196,8 @@ local reload between merging the new writer and the web switch to the per-map fi
 **Not on GitHub yet:** anything needing GDAL or tippecanoe (geographies, tiles, features,
 census2020, ddp287g, vmt, counts, label-mask, mpo); `timeline` for `fars` (it needs
 `population_density`'s 2019 stop on disk); and anything that changes committed files (a new
-dataset, level or timeline stop, insights). Those still run locally, through a PR. A real loss of
-tracts (a county a source no longer covers) also runs locally with `ALLOW_TRACT_DROP=1`.
+dataset, level or timeline stop, insights). Those still run locally, through a PR (a local real
+loss uses `ALLOW_TRACT_DROP=1`).
 
 **One-time setup (Robbie):**
 

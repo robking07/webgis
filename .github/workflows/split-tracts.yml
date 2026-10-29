@@ -1,9 +1,10 @@
 # Split tract files (#371, D-506): one-off. Reads every live all-maps tract file on R2
-# (values/tracts/<county>.json) and uploads one file per map per county
+# (values/tracts/<county>.json, no longer written) and uploads one file per map per county
 # (values/<id>/tracts/<county>.json). Manual only (Actions tab, "Split tract files", "Run workflow").
 # The runner's data/tiles starts empty, so publish-values sends only the new files; nothing is
-# deleted, the old files stay on R2, and the drop guard checks every upload. Keys come from the
-# "data" environment (main branch only), as in the Data run.
+# deleted, the old files stay on R2, and every changed file is checked before the first upload.
+# Keys come from the "data" environment (main branch only), as in the Data run, and reach only the
+# two steps that use R2.
 name: Split tract files
 
 on:
@@ -23,11 +24,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 180
     environment: data
-    env:
-      R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
-      R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
-      R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
-      R2_BUCKET: ${{ secrets.R2_BUCKET }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -38,8 +34,18 @@ jobs:
           cache: npm
       - run: npm ci
       - name: Split the live files
+        env:
+          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_BUCKET: ${{ secrets.R2_BUCKET }}
         run: npm run ingest -- split-tracts
       - name: Upload the per-map files
+        env:
+          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_BUCKET: ${{ secrets.R2_BUCKET }}
         run: npm run ingest -- publish-values
       - name: Summary
         if: always()
