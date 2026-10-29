@@ -1,5 +1,326 @@
 [
  {
+  "slug": "acs-explainer",
+  "title": "109 bike commuters, give or take 110: how to read a neighborhood survey number",
+  "dek": "Neighborhood numbers from the American Community Survey often come with very wide ranges. What they mean, why they get so wide, and how to use the numbers anyway, using bike commuting in Hennepin County, Minnesota.",
+  "topic": "How surveys work",
+  "date": "2026-10-27",
+  "author": "Drafted by Claude for Robbie King",
+  "datasets": [
+   "pct_bike_commute"
+  ],
+  "pairing": null,
+  "at": {
+   "lon": -93.45,
+   "lat": 45,
+   "zoom": 9.4
+  },
+  "caption": "Share of workers 16 and over who usually bike to work, by census tract, Hennepin County, Minnesota (ACS 2020–2024 5-year estimates).",
+  "method": "Every number was computed from the U.S. Census Bureau's American Community Survey 2020–2024 5-year estimates with a script kept in the repository (`apps/web/scripts/specials-numbers/acs-explainer.mjs`). It reads the Bureau's public [table-based summary files](https://www2.census.gov/programs-surveys/acs/summary_file/2024/table-based-SF/) (no API key): table B08301, Means of Transportation to Work (workers 16 and over); B98001, Unweighted Housing Unit Sample; B98021, Housing Unit Response Rates; and B25001, Housing Units. Geographies: Hennepin County's 329 census tracts (2020 boundaries) and their block groups, Minneapolis city, Hennepin County and Minnesota. The script checks every Hennepin tract's bike and drive-alone shares, and the example block groups, county and state, against the values Mapwich publishes; they match. Percentage margins use the Census Bureau's formula for a proportion. Reliability grades follow Mapwich's rule: coefficient of variation (CV) = (margin ÷ 1.645) ÷ estimate; under 15% reliable, 15–30% use with caution, over 30% unreliable; a zero is graded unreliable only when its margin is over 5 points. Outside sources: Census Bureau, [ACS sample size](https://www.census.gov/acs/www/methodology/sample-size-and-data-quality/sample-size/); [*Understanding and Using American Community Survey Data: What All Data Users Need to Know*](https://www.census.gov/programs-surveys/acs/library/handbooks/general.html) (2018), chapters [7](https://www.census.gov/content/dam/Census/library/publications/2018/acs/acs_general_handbook_2018_ch07.pdf) and [8](https://www.census.gov/content/dam/Census/library/publications/2018/acs/acs_general_handbook_2018_ch08.pdf); [*Multiyear Accuracy of the Data (5-year 2020–2024)*](https://www2.census.gov/programs-surveys/acs/tech_docs/accuracy/MultiyearACSAccuracyofData2024.pdf); [user note on 2020 margins](https://www.census.gov/programs-surveys/acs/technical-documentation/user-notes/2022-04.html); [Summary File training transcript](https://census.gov/content/dam/Census/programs-surveys/acs/guidance/training-presentations/2017_SummaryFile_Transcript_01.pdf) (2017); [SAIPE](https://www.census.gov/programs-surveys/saipe/about.html). ONS, [*Income estimates for small areas, England and Wales*](https://www.ons.gov.uk/peoplepopulationandcommunity/personalandhouseholdfinances/incomeandwealth/bulletins/smallareamodelbasedincomeestimates/latest) (December 2025) and [technical report](https://www.ons.gov.uk/peoplepopulationandcommunity/personalandhouseholdfinances/incomeandwealth/methodologies/incomeestimatesforsmallareasinenglandandwalestechnicalreportfinancialyearending2023). CDC, [PLACES methodology](https://www.cdc.gov/places/methodology/index.html) and [FAQ](https://www.cdc.gov/places/faqs/index.html). Statistics Canada, survey quality indicators (see note in the text). This piece was drafted by Claude, an AI model, and reviewed by Robbie King before publication.",
+  "image": null,
+  "draft": false,
+  "body": [
+   {
+    "kind": "html",
+    "html": "<p>In one census tract just south of downtown Minneapolis, the Census Bureau estimates that 109 workers usually bike to work. The margin of error is 110. Taken at its word, the true number is somewhere between 0 and 219.</p>\n<p>A margin bigger than the number itself looks like a broken statistic. It isn&#39;t. It&#39;s an honest statement of how little a survey can say about one small neighborhood, and the same survey, read the right way, is still the best source there is. Here is why, using the 329 census tracts of Hennepin County, Minnesota.</p>\n<h2>One home in 41</h2>\n<p>The American Community Survey (ACS) is the Census Bureau&#39;s ongoing survey of how Americans live: jobs, commutes, rent, income, health insurance, internet access and more. Unlike the census every ten years, it doesn&#39;t ask everyone. In 2024 it picked <a href=\"https://www.census.gov/acs/www/methodology/sample-size-and-data-quality/sample-size/\">3,543,672 addresses</a>, about one home in 41, from the Bureau&#39;s master list of addresses. Small places are <a href=\"https://www2.census.gov/programs-surveys/acs/tech_docs/accuracy/MultiyearACSAccuracyofData2024.pdf\">sampled at higher rates</a> and big, populous tracts at lower ones.</p>\n<p>A single year is far too few answers for a neighborhood, so for small areas the Bureau pools five years. The newest set covers 2020 through 2024. Over those five years, 56,099 Hennepin County addresses were picked, about one home in 10, and 36,133 households completed the survey, about one home in 16. Spread across the county&#39;s 329 tracts, that is about 110 completed surveys per tract, on average.</p>\n<h2>What the ± means</h2>\n<p>Every ACS number comes with a margin of error, published at 90% confidence. In the <a href=\"https://www.census.gov/content/dam/Census/library/publications/2018/acs/acs_general_handbook_2018_ch07.pdf\">Bureau&#39;s words</a>, it gives a range &quot;expected to contain the true or population value of an estimate 90 percent of the time.&quot; So &quot;109 ± 110&quot; means the true count is most likely between 0 and 219. A count can&#39;t be negative, so the low end stops at zero.</p>\n<p>The margin only covers the luck of the draw: which homes happened to be picked. It doesn&#39;t cover questions misread or left blank, so the Bureau says its error measures are <a href=\"https://www2.census.gov/programs-surveys/acs/tech_docs/accuracy/MultiyearACSAccuracyofData2024.pdf\">&quot;only lower bounds of the total error.&quot;</a></p>\n<h2>Why small places get wide ranges</h2>\n<p>Two things make a range wide: few answers, and an uncommon answer. Bike commuting is uncommon: 0.89% of Hennepin&#39;s workers do it. In a tract, the survey may reach only a handful of households with a bike commuter, and each answer stands in for many homes; Hennepin has about 16 homes for every completed survey. Whether the survey happened to reach three of those households or six changes the estimate a lot, and the margin says so.</p>\n<p>So a margin bigger than the estimate doesn&#39;t mean the survey talked to fewer people than the margin. It means the sample can say &quot;some,&quot; but not how many.</p>\n<p>Zeros work the same way. In 170 Hennepin tracts the estimate is zero bike commuters, with margins of 10, 14 or 16. The survey found none among the homes it reached; the margin, worked out by a <a href=\"https://www2.census.gov/programs-surveys/acs/tech_docs/accuracy/MultiyearACSAccuracyofData2024.pdf\">special method for zeros</a>, says there could still be a few.</p>\n<p>In all, 278 of the 329 tracts have a bike-commuter margin larger than the estimate. Only one count passes the usual reliability test: tract 1040.01 in Southeast Minneapolis, 122 ± 28, likely between 94 and 150. Even there, the share of workers who bike only rates &quot;use with caution,&quot; because the number of workers is an estimate too.</p>\n"
+   },
+   {
+    "kind": "map",
+    "datasets": [
+     "pct_bike_commute"
+    ],
+    "at": {
+     "lon": -93.243,
+     "lat": 44.972,
+     "zoom": 12
+    },
+    "level": "tract",
+    "caption": "Central Minneapolis, by tract. Tract 59.02, just south of downtown: 7.7% of workers bike, likely between 0.1% and 15.4%. Tract 1040.01, east of the river: 6.0%, likely between 4.0% and 7.9%. Similar estimates, very different certainty."
+   },
+   {
+    "kind": "html",
+    "html": "<p>The trouble is the uncommon answer, not the place. Ask the same tracts how many people drive to work alone, the most common answer, and the picture flips.</p>\n<table>\n<thead>\n<tr>\n<th>Share of workers who…</th>\n<th>Reliable (CV under 15%)</th>\n<th>Use with caution (15–30%)</th>\n<th>Unreliable (over 30%, hatched)</th>\n<th>Zero, not graded</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>Bike to work</td>\n<td>0</td>\n<td>4</td>\n<td>155</td>\n<td>169</td>\n</tr>\n<tr>\n<td>Work from home</td>\n<td>96</td>\n<td>186</td>\n<td>46</td>\n<td>0</td>\n</tr>\n<tr>\n<td>Drive alone</td>\n<td>290</td>\n<td>34</td>\n<td>4</td>\n<td>0</td>\n</tr>\n</tbody></table>\n<p><em>Hennepin County&#39;s census tracts, graded as Mapwich grades them (CV is explained below); one tract has no workers. ACS 2020–2024, table B08301.</em></p>\n"
+   },
+   {
+    "kind": "map",
+    "datasets": [
+     "pct_drive_alone"
+    ],
+    "at": {
+     "lon": -93.243,
+     "lat": 44.972,
+     "zoom": 12
+    },
+    "level": "tract",
+    "caption": "Same area, share of workers who drive alone to work. Across Hennepin, 290 of these tract estimates are reliable; 4 are not."
+   },
+   {
+    "kind": "html",
+    "html": "<h2>Zoom out and the range shrinks</h2>\n<p>Combine areas and the margin shrinks compared with the estimate. The table follows bike commuting from one block group, the smallest area the ACS reports, up to the state.</p>\n<table>\n<thead>\n<tr>\n<th>Area</th>\n<th>Workers 16+</th>\n<th>Share who bike</th>\n<th>Likely between</th>\n<th>Margin as a share of the estimate</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>Block group 3, tract 59.02</td>\n<td>733</td>\n<td>11.6%</td>\n<td>0% and 24.8%</td>\n<td>114%</td>\n</tr>\n<tr>\n<td>Tract 59.02</td>\n<td>1,410</td>\n<td>7.7%</td>\n<td>0.1% and 15.4%</td>\n<td>99%</td>\n</tr>\n<tr>\n<td>Minneapolis</td>\n<td>239,419</td>\n<td>2.02%</td>\n<td>1.76% and 2.27%</td>\n<td>13%</td>\n</tr>\n<tr>\n<td>Hennepin County</td>\n<td>686,167</td>\n<td>0.89%</td>\n<td>0.80% and 0.97%</td>\n<td>10%</td>\n</tr>\n<tr>\n<td>Minnesota</td>\n<td>2,939,889</td>\n<td>0.47%</td>\n<td>0.44% and 0.49%</td>\n<td>6%</td>\n</tr>\n</tbody></table>\n<p><em>ACS 2020–2024, table B08301. Each row is a bigger place, not the same place seen more sharply, so the share itself changes too.</em></p>\n<p>Adding areas works because their sampling errors partly cancel out. To get the margin of a sum, the Bureau says to <a href=\"https://www.census.gov/content/dam/Census/library/publications/2018/acs/acs_general_handbook_2018_ch08.pdf\">square each margin, add them up and take the square root</a>. Tract 59.02&#39;s three block groups estimate 0, 24 and 85 bike commuters, with margins of 10, 38 and 102. Added up, that&#39;s 109 with a margin of 109, almost exactly the 110 the Bureau publishes for the tract.</p>\n<p>Do the same with all 329 tracts and you get the county&#39;s total, 6,080 bike commuters, with a margin of 627. The Bureau&#39;s own figure, worked out from the full survey records, is 610. The margin went from bigger than the estimate to about a tenth of it. The formula is an approximation, so when the Bureau publishes a figure for the bigger area, use that.</p>\n<h2>Why it&#39;s still worth using</h2>\n<ul>\n<li><strong>It&#39;s often the only source.</strong> A Census Bureau trainer put it plainly: for tracts, block groups and other small areas, &quot;the ACS is <a href=\"https://census.gov/content/dam/Census/programs-surveys/acs/guidance/training-presentations/2017_SummaryFile_Transcript_01.pdf\">often the only source of information</a>.&quot;</li>\n<li><strong>It&#39;s consistent.</strong> The sample is drawn from <a href=\"https://www2.census.gov/programs-surveys/acs/tech_docs/accuracy/MultiyearACSAccuracyofData2024.pdf\">every county in the country</a> and processed with one set of methods, so a tract in Hennepin can be set beside one anywhere else.</li>\n<li><strong>People answer.</strong> The Bureau reports a response rate of 82.7% for Hennepin County&#39;s sampled homes over 2020–2024.</li>\n<li><strong>It tells you how sure it is.</strong> Every number arrives with its own margin. Many data sources give you a number and nothing else.</li>\n</ul>\n<h2>Rules of thumb</h2>\n<ol>\n<li><strong>Read the range, not the number.</strong> &quot;Likely between 0.1% and 15.4%&quot; says more than &quot;7.7%.&quot;</li>\n<li><strong>Size up the margin against the number.</strong> If the margin is less than about a quarter of the estimate, the number is solid. Between a quarter and a half, use it with caution. More than half, treat it as a rough guide. Mapwich uses those cut-offs (statisticians call the measure behind them the coefficient of variation), though the Bureau itself says there are <a href=\"https://www.census.gov/content/dam/Census/library/publications/2018/acs/acs_general_handbook_2018_ch07.pdf\">&quot;no hard-and-fast rules&quot;</a>.</li>\n<li><strong>Combine areas</strong> when single tracts are too fuzzy, with the formula above.</li>\n<li><strong>Test a difference; don&#39;t eyeball it.</strong> Tracts 59.02 and 1040.01 differ by 1.8 points, but the margin of that difference is 7.9 points, so the survey can&#39;t tell them apart. The Bureau warns that checking whether two ranges overlap <a href=\"https://www.census.gov/content/dam/Census/library/publications/2018/acs/acs_general_handbook_2018_ch07.pdf\">&quot;will not always provide an accurate result.&quot;</a></li>\n<li><strong>Use the 5-year file for small areas.</strong> Single-year estimates exist only for <a href=\"https://www.census.gov/programs-surveys/saipe/about.html\">areas of 65,000 people or more</a>. A 5-year estimate is an average over the period, not a snapshot of its last year. Compare periods that don&#39;t overlap, such as 2015–2019 and 2020–2024. And 2020–2024 includes 2020, when the pandemic cut the survey to <a href=\"https://www.census.gov/programs-surveys/acs/technical-documentation/user-notes/2022-04.html\">about two-thirds of its usual responses</a>, so its margins run wider.</li>\n<li><strong>Treat percentages with care.</strong> Both halves of a share are estimates: tract 59.02&#39;s 1,410 workers carry their own margin of 288.</li>\n</ol>\n<h2>How Mapwich shows it</h2>\n<p>Click a tract and the details panel shows the estimate with its ±. When the margin is wide, it spells out the range: for tract 59.02, &quot;Few households were surveyed here, so this is a range: likely between 0.09% and 15%.&quot; In the legend, <strong>Hatch unreliable estimates</strong> draws light stripes over tracts and block groups with a CV over 30% (or a zero with a margin over 5 points); the color still shows. On change-over-time maps, a change smaller than its margin of error is labeled <strong>No clear change</strong>. Mapwich doesn&#39;t yet have the published margins for earlier periods, so it estimates those from the latest one.</p>\n<h2>How other surveys handle it</h2>\n<ul>\n<li><strong>The UK</strong> doesn&#39;t lean on survey answers alone. Its statistics office <a href=\"https://www.ons.gov.uk/peoplepopulationandcommunity/personalandhouseholdfinances/incomeandwealth/bulletins/smallareamodelbasedincomeestimates/latest\">estimates income for 7,264 neighborhoods</a> in England and Wales by blending a household survey with the 2021 Census and government records. Every number still comes with a range, and the office tells you to look at those ranges any time you compare or rank places.</li>\n<li><strong>CDC PLACES</strong>, where Mapwich&#39;s health maps come from, also uses a <a href=\"https://www.cdc.gov/places/methodology/index.html\">statistical model</a>. It takes a big national health survey and predicts what each tract probably looks like, with a range for each. Those ranges come out narrower, but the model can&#39;t see what&#39;s happening on the ground, like a new local health program, so the CDC says not to use the numbers <a href=\"https://www.cdc.gov/places/faqs/index.html\">to judge those programs</a>.</li>\n</ul>\n<p>Models narrow the range by borrowing from other data; the ACS sticks to what people in each place said, and shows the cost in the width of its ranges. Either way, the good habit is the same: say how sure you are, next to the number, in plain words.</p>\n"
+   }
+  ],
+  "allDatasets": [
+   "pct_bike_commute",
+   "pct_drive_alone"
+  ],
+  "words": 1661,
+  "minutes": 7
+ },
+ {
+  "slug": "holmes-county-bikes",
+  "title": "America's biking capital isn't where you think",
+  "dek": "No county has a larger share of workers who bike to work than Holmes County, Ohio, where it's about one in seven. The county number is solid. Many of the neighborhood numbers behind it, here and elsewhere, are not.",
+  "topic": "Commuting",
+  "date": "2026-10-27",
+  "author": "Drafted by Claude for Robbie King",
+  "datasets": [
+   "pct_bike_commute"
+  ],
+  "pairing": null,
+  "at": null,
+  "caption": "Share of workers 16 and over who usually biked to work, by county (ACS 2020–2024). Darker blue means a larger share. Holmes County, Ohio, has the highest estimate of the 3,222 counties. In 3,028 of them, fewer than 1% of workers bike.",
+  "method": "Every number from Mapwich data in the text was computed from Mapwich's published county and tract files with a script kept with this piece (`apps/web/scripts/specials-numbers/holmes-county-bikes.mjs`); the table of commuting shares is computed from the same files when the site is built. Margins of error are the Census Bureau's, at 90% confidence. Reliability grades follow Mapwich's rule: the coefficient of variation, (margin ÷ 1.645) ÷ estimate, under 15% is reliable, 15% to 30% \"use with caution\", over 30% unreliable; an estimate of zero is not graded. Earlier periods (2010–2014 and 2015–2019) have no margins of error on Mapwich, so changes over time are not tested. Approximate county populations are the 2020 Census count per square mile times land area. The distance from the University of Minnesota is measured from each tract's center point to a point on the East Bank campus (Northrop Auditorium).\n\nMapwich maps counties and tracts, not cities, so the figures for the City of Minneapolis are not Mapwich data. They come from the Census Bureau's American Community Survey 5-year tables, retrieved from data.census.gov on 12 October 2026: shares with margins from table S0801 ([2020–2024](https://data.census.gov/table/ACSST5Y2024.S0801?g=160XX00US2743000), [2015–2019](https://data.census.gov/table/ACSST5Y2019.S0801?g=160XX00US2743000)), and the counts of workers and bike commuters for Minneapolis and Holmes County from table [B08301, 2020–2024](https://data.census.gov/table/ACSDT5Y2024.B08301?g=050XX00US39075,160XX00US2743000). Mapwich works out its share margins from these counts; for Holmes County that gives ±2.2 points, where table S0801 shows ±2.1. Portland's and Davis's shares and margins are worked out the same way from table B08301, 2020–2024 ([Portland](https://data.census.gov/table/ACSDT5Y2024.B08301?g=160XX00US4159000), [Davis](https://data.census.gov/table/ACSDT5Y2024.B08301?g=160XX00US0618100)), retrieved through [Census Reporter](https://censusreporter.org/) on 27 October 2026.\n\nAward and rating facts: the League of American Bicyclists' [2025 Bicycle Friendly Community report card for Minneapolis](https://bikeleague.org/wp-content/uploads/bfareportcards/bfc/2025/Minneapolis_MN.pdf) (award level, history, scoring areas, the city's own bike-share estimate) and its [award database](https://bikeleague.org/bfa/award-database/) (counts of current award holders and the absence of any Holmes County community, checked 12 October 2026); PeopleForBikes' [2026 City Ratings results](https://www.peopleforbikes.org/news/2026s-best-places-to-bike) (16 June 2026) and [methodology](https://www.peopleforbikes.org/news/2026-city-ratings-methodology) (28 April 2026), and its [Minneapolis page](https://cityratings.peopleforbikes.org/cities/minneapolis-mn). Portland's and Davis's first Platinum awards are from BikePortland's reports at the time ([2005](https://bikeportland.org/2005/09/28/california-city-is-first-to-platinum-487/), [2008](https://bikeportland.org/2008/04/29/portland-gets-platinum-becomes-first-major-us-city-to-win-the-award/)). The Holmes County Trail is described by the [Holmes County Chamber of Commerce](https://www.holmescountychamber.com/recreation/holmes-county-rails-trails-coalition).\n\nAmish settlement sizes and the counties each settlement covers are from the [Young Center for Anabaptist and Pietist Studies, Elizabethtown College](https://groups.etown.edu/amishstudies/twelve-largest-settlements-2024/) (2024 estimates; [by county](https://groups.etown.edu/amishstudies/files/2024/08/Amish-Pop-2024_by-state-and-county_c.pdf)). Which communities use bicycles or scooters is from Erik Wesner of Amish America, [*Do Amish people ride bicycles?*](https://amishamerica.com/do-amish-ride-bicycles/) (updated 2024) and [*Why do some Amish ride scooters (but not bicycles)?*](https://amishamerica.com/why-do-amish-ride-scooters-but-not-bicycles/) (2020, updated 2024); e-bikes in Holmes County from Kyle Barnett, [*Some Amish are embracing e-bikes*](https://mountvernonnews.com/stories/649415724-some-amish-are-embracing-e-bikes-as-a-form-of-transportation), Mount Vernon News (2023). Tract sizes are from the [Census Bureau's geography glossary](https://www.census.gov/programs-surveys/geography/about/glossary.html). This piece was drafted by Claude, an AI model, from Mapwich data, and reviewed by Robbie King before publication.",
+  "image": null,
+  "draft": false,
+  "body": [
+   {
+    "kind": "html",
+    "html": "<p>Ask people where Americans bike to work and most will name a big city or a college town. The county map says otherwise. The county with the largest share of workers who usually bike to work is Holmes County, Ohio: 14.0%, about one worker in seven, in the Census Bureau&#39;s American Community Survey for 2020–2024. Next is LaGrange County, Indiana, at 7.2%. San Francisco County is at 3.3%, the District of Columbia at 3.3%, and Multnomah County, Oregon, which includes Portland, at 2.8%.</p>\n<p>Biking to work is rare almost everywhere. In 3,028 of the 3,222 counties, fewer than 1% of workers bike, and the typical county is at 0.09%. That is why a county of about 44,000 people stands out so sharply on the map.</p>\n<h2>How sure can we be?</h2>\n<p>The survey reaches a sample of households, so every estimate has a margin of error and gives us a range of the real value as if we were able to ask everyone. Holmes County&#39;s is ±2.2 points. With 90% confidence, the true share is between 11.8% and 16.2%, and the estimate is graded reliable. Even the low end is above the top of LaGrange County&#39;s range (7.2% ±1.2), so the county ranking holds up.</p>\n<p>Neighborhood numbers are another matter. A census tract <a href=\"https://www.census.gov/programs-surveys/geography/about/glossary.html\">usually has between 1,200 and 8,000 residents</a>, and the survey reaches only some of their households. Of the 84,378 tracts with a bike-to-work estimate, 63,956 (76%) show zero. A zero usually means the survey found no bike commuters among the households it reached, not that nobody bikes. At the other end, the highest tract estimate in the country, 47.1% for a tract on Nantucket, has a margin of ±45.1 points. It is graded unreliable.</p>\n<h2>Holmes County up close</h2>\n"
+   },
+   {
+    "kind": "map",
+    "datasets": [
+     "pct_bike_commute"
+    ],
+    "at": {
+     "lon": -81.88,
+     "lat": 40.57,
+     "zoom": 9.2
+    },
+    "level": "tract",
+    "caption": "Holmes County, Ohio, and its neighbors, by census tract. The high shares are on the county&#39;s east side; two tracts in the west show none. Turn on reliability hatching in the full map to see which tract numbers are shaky."
+   },
+   {
+    "kind": "html",
+    "html": "<p>Inside the county, the numbers split east and west: three of the ten tracts are above one worker in five, all east or southeast of the center, and two in the west and southwest show zero.</p>\n<p>Tract 9768.01, southeast of the center, is at 37.5% ±6.4, the highest tract estimate in the country that Mapwich grades reliable. Its neighbor, Tract 9768.02, is at 27.3% ±13.5: the true share could be anywhere from 13.8% to 40.8%, and it is graded unreliable. For areas this small, the county figure is the better guide.</p>\n<h2>Bicycles and scooters</h2>\n<p>Holmes County gives its name to one of the country&#39;s largest Amish settlements: <a href=\"https://groups.etown.edu/amishstudies/twelve-largest-settlements-2024/\">40,435 people in 2024</a>, by the estimate of the Young Center for Anabaptist and Pietist Studies at Elizabethtown College, reaching into Coshocton, Tuscarawas and Wayne counties. Only the Lancaster County, Pennsylvania, settlement is larger.</p>\n<p>The census does not ask about religion, so the map cannot say who is riding. What it shows does line up with what has been written about Amish travel. Amish church communities set their own rules on technology, and they differ on bicycles. The guide Amish America <a href=\"https://amishamerica.com/do-amish-ride-bicycles/\">lists Holmes County</a>, northern Indiana&#39;s Shipshewana and Nappanee areas, and Arthur, Illinois, among communities where bicycles are common. It lists Lancaster County, Geauga County in Ohio, Allen County in Indiana, and Dover, Delaware, among communities that use push scooters instead. Local reporting describes <a href=\"https://mountvernonnews.com/stories/649415724-some-amish-are-embracing-e-bikes-as-a-form-of-transportation\">electric bikes catching on in Holmes County</a>, though not every church allows them.</p>\n<p>Set beside the census numbers, the two lists split cleanly:</p>\n<ul>\n<li><strong>Bicycle communities.</strong> LaGrange County, in the third-largest settlement (Elkhart-LaGrange, 29,180 people), is second in the country at 7.2% ±1.2. Douglas County, Illinois, in the Arthur-Arcola settlement, is 16th at 4.0% ±1.3.</li>\n<li><strong>Scooter communities.</strong> Lancaster County is at 0.7% ±0.1, Geauga County at 0.1% ±0.1, and Allen County, Indiana, and Kent County, Delaware (Dover), near 0.3%.</li>\n</ul>\n<p>One caution: Lancaster County has about 553,000 residents and Geauga about 95,000, so Amish workers are a much smaller share of all workers there than in Holmes. A county average shows a community&#39;s habits only where that community is a large part of the county.</p>\n<p>Biking is not the only way these counties stand apart.</p>\n"
+   },
+   {
+    "kind": "counties",
+    "title": "How workers get to work, and households without a car",
+    "caption": "ACS 2020–2024. Holmes, LaGrange and Douglas counties are in settlements where bicycles are common; Lancaster and Geauga in settlements that use scooters. Hennepin County, Minnesota, includes Minneapolis.",
+    "columns": [
+     {
+      "id": "pct_bike_commute",
+      "stop": null,
+      "title": "Bike to work",
+      "unit": "percent",
+      "period": null
+     },
+     {
+      "id": "pct_walk_commute",
+      "stop": null,
+      "title": "Walk to work",
+      "unit": "percent",
+      "period": null
+     },
+     {
+      "id": "pct_drive_alone",
+      "stop": null,
+      "title": "Drive to work alone",
+      "unit": "percent",
+      "period": null
+     },
+     {
+      "id": "pct_zero_vehicle_households",
+      "stop": null,
+      "title": "Households with no vehicle",
+      "unit": "percent",
+      "period": null
+     }
+    ],
+    "rows": [
+     {
+      "geoid": "39075",
+      "name": "Holmes County, OH",
+      "values": [
+       14.02,
+       6.942,
+       47.77,
+       30.94
+      ]
+     },
+     {
+      "geoid": "18087",
+      "name": "LaGrange County, IN",
+      "values": [
+       7.189,
+       2.568,
+       47.71,
+       29.19
+      ]
+     },
+     {
+      "geoid": "17041",
+      "name": "Douglas County, IL",
+      "values": [
+       3.979,
+       4.052,
+       74.52,
+       10.82
+      ]
+     },
+     {
+      "geoid": "42071",
+      "name": "Lancaster County, PA",
+      "values": [
+       0.7165,
+       3.543,
+       71.83,
+       8.613
+      ]
+     },
+     {
+      "geoid": "39055",
+      "name": "Geauga County, OH",
+      "values": [
+       0.1296,
+       1.288,
+       69.78,
+       8.091
+      ]
+     },
+     {
+      "geoid": "27053",
+      "name": "Hennepin County, MN",
+      "values": [
+       0.8861,
+       2.764,
+       59.95,
+       9.324
+      ]
+     }
+    ]
+   },
+   {
+    "kind": "html",
+    "html": "<p>In Holmes and LaGrange counties, fewer than half of workers drive alone (47.8% and 47.7%), and nearly a third of households have no vehicle (30.9% and 29.2%). Holmes County also has 6.9% walking to work; with biking, that&#39;s about one worker in five.</p>\n<h2>Minneapolis, Portland and Davis, for comparison</h2>\n<p>The League of American Bicyclists has rated Minneapolis a Gold <a href=\"https://bikeleague.org/wp-content/uploads/bfareportcards/bfc/2025/Minneapolis_MN.pdf\">Bicycle Friendly Community</a> since 2011, most recently in 2025, and PeopleForBikes&#39; <a href=\"https://www.peopleforbikes.org/news/2026s-best-places-to-bike\">2026 City Ratings</a> put it second among large U.S. cities.</p>\n<p>By the Census Bureau&#39;s measure, <a href=\"https://data.census.gov/table/ACSST5Y2024.S0801?g=160XX00US2743000\">2.0% ±0.3 of Minneapolis workers</a> usually biked to work in 2020–2024, about 4,800 people. The city&#39;s own <a href=\"https://bikeleague.org/wp-content/uploads/bfareportcards/bfc/2025/Minneapolis_MN.pdf\">2025 award application</a> put its bike share at 2% to 5%, combining census figures, trip diaries and counts. Hennepin County, which also takes in the suburbs, is at 0.9% ±0.1.</p>\n"
+   },
+   {
+    "kind": "map",
+    "datasets": [
+     "pct_bike_commute"
+    ],
+    "at": {
+     "lon": -93.255,
+     "lat": 44.965,
+     "zoom": 11.2
+    },
+    "level": "tract",
+    "caption": "Minneapolis, by census tract. The higher shares cluster around the University of Minnesota, east of downtown. Same colors as the Holmes County map."
+   },
+   {
+    "kind": "html",
+    "html": "<p>Within the city, the higher tract numbers cluster near the University of Minnesota: the 24 tracts centered within 3 kilometers of campus have a middle value of 2.3%, while 165 of Hennepin County&#39;s 304 other tracts show zero.</p>\n<p>The city&#39;s share has halved since <a href=\"https://data.census.gov/table/ACSST5Y2019.S0801?g=160XX00US2743000\">2015–2019, when it was 4.0% ±0.3</a>, a drop far larger than the margins. Over the same years, the share working from home went from 5.8% to 26.2%, and the later survey years include the pandemic. These figures cannot say how much one change had to do with the other.</p>\n<p>Two other cities share the top of the bike-friendly lists. Portland, Oregon, became the <a href=\"https://bikeportland.org/2008/04/29/portland-gets-platinum-becomes-first-major-us-city-to-win-the-award/\">first large U.S. city the League rated Platinum</a>, in 2008, and is eighth among large cities in PeopleForBikes&#39; <a href=\"https://www.peopleforbikes.org/news/2026s-best-places-to-bike\">2026 City Ratings</a>. By the Census Bureau&#39;s measure, <a href=\"https://data.census.gov/table/ACSDT5Y2024.B08301?g=160XX00US4159000\">3.4% ±0.3 of Portland workers</a> usually biked to work in 2020–2024, about 12,000 people.</p>\n<p>Davis, California, was the League&#39;s <a href=\"https://bikeportland.org/2005/09/28/california-city-is-first-to-platinum-487/\">first Platinum community of any size</a>, in 2005. Its share is the highest of the three cities: <a href=\"https://data.census.gov/table/ACSDT5Y2024.B08301?g=160XX00US0618100\">11.2% ±1.5</a>, about 3,700 workers. That range, 9.8% to 12.7%, overlaps Holmes County&#39;s (11.8% to 16.2%), so the survey can&#39;t say which is higher. Davis is a city and Holmes is a county, though: Yolo County, which takes in Davis, is at 4.9%.</p>\n"
+   },
+   {
+    "kind": "counties",
+    "title": "Bike to work across three survey periods",
+    "caption": "ACS 5-year estimates for 2010–2014, 2015–2019 and 2020–2024. Margins of error for the two earlier periods aren&#39;t on Mapwich, so small changes may not be real.",
+    "columns": [
+     {
+      "id": "pct_bike_commute",
+      "stop": "2014",
+      "title": "Bike to work",
+      "unit": "percent",
+      "period": "2010–2014"
+     },
+     {
+      "id": "pct_bike_commute",
+      "stop": "2019",
+      "title": "Bike to work",
+      "unit": "percent",
+      "period": "2015–2019"
+     },
+     {
+      "id": "pct_bike_commute",
+      "stop": null,
+      "title": "Bike to work",
+      "unit": "percent",
+      "period": null
+     }
+    ],
+    "rows": [
+     {
+      "geoid": "39075",
+      "name": "Holmes County, OH",
+      "values": [
+       7.762,
+       8.062,
+       14.02
+      ]
+     },
+     {
+      "geoid": "18087",
+      "name": "LaGrange County, IN",
+      "values": [
+       5.623,
+       7.875,
+       7.189
+      ]
+     },
+     {
+      "geoid": "06113",
+      "name": "Yolo County, CA",
+      "values": [
+       9.405,
+       7.29,
+       4.856
+      ]
+     },
+     {
+      "geoid": "41051",
+      "name": "Multnomah County, OR",
+      "values": [
+       5.261,
+       5.007,
+       2.829
+      ]
+     },
+     {
+      "geoid": "06075",
+      "name": "San Francisco County, CA",
+      "values": [
+       3.801,
+       3.955,
+       3.302
+      ]
+     },
+     {
+      "geoid": "27053",
+      "name": "Hennepin County, MN",
+      "values": [
+       1.655,
+       1.66,
+       0.8861
+      ]
+     }
+    ]
+   },
+   {
+    "kind": "html",
+    "html": "<p>Holmes County went the other way, from 8.1% to 14.0%, while its share working from home rose by less than one point; in 2015–2019 it ranked second, behind Mackinac County, Michigan. Mapwich has no margins for the earlier periods, so we can&#39;t say whether that jump is more than sampling noise. Part of the headline is a 2020s story.</p>\n<h2>Why Holmes County isn&#39;t on the bike-friendly lists</h2>\n<p>If Holmes County leads the census measure, why isn&#39;t it on lists of the best places to bike? Part of the answer is that the lists measure something else.</p>\n<p>The League&#39;s award starts with an application from a town, city or county. Reviewers score it in five areas: engineering, education, encouragement, evaluation and planning, and equity and accessibility. Each <a href=\"https://bikeleague.org/wp-content/uploads/bfareportcards/bfc/2025/Minneapolis_MN.pdf\">report card</a> also shows the share of commuters who bike, and reviewers told Minneapolis that evidence of more riding would be &quot;critical&quot; to reaching Platinum, the top level. The League&#39;s <a href=\"https://bikeleague.org/bfa/award-database/\">award database</a> lists 447 communities, including 19 counties and 21 places listed as rural. None is in Holmes County, and we found no record of a Holmes County application.</p>\n<p>PeopleForBikes works from map data instead. Its <a href=\"https://www.peopleforbikes.org/news/2026s-best-places-to-bike\">City Ratings</a> score 3,019 cities on how well low-stress streets and paths inside city limits connect homes to jobs, shops, schools and other everyday places. How many people ride is <a href=\"https://www.peopleforbikes.org/news/2026-city-ratings-methodology\">not part of the score</a>. The 2026 ratings have no page for Millersburg, the county seat, or other Holmes County villages we checked.</p>\n<p>The census measure looks only at how workers usually get to work.</p>\n<table>\n<thead>\n<tr>\n<th></th>\n<th>Holmes County, Ohio</th>\n<th>Minneapolis</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>Workers 16 and over</td>\n<td>20,065 ±559</td>\n<td>239,419 ±2,736</td>\n</tr>\n<tr>\n<td>Usually biked to work</td>\n<td>2,813 ±450</td>\n<td>4,825 ±606</td>\n</tr>\n<tr>\n<td>Share who biked</td>\n<td>14.0% ±2.2</td>\n<td>2.0% ±0.3</td>\n</tr>\n<tr>\n<td>League award</td>\n<td>None</td>\n<td>Gold since 2011</td>\n</tr>\n<tr>\n<td>PeopleForBikes rating, 2026</td>\n<td>No rated place</td>\n<td>68 out of 100</td>\n</tr>\n</tbody></table>\n<p>Minneapolis has about 12 times as many workers as Holmes County, but fewer than twice as many bike commuters.</p>\n<p>The awards and ratings describe what a place has built and planned for people on bikes; the census describes how people get to work. They answer different questions. Holmes County does have the <a href=\"https://www.holmescountychamber.com/recreation/holmes-county-rails-trails-coalition\">Holmes County Trail</a>, a paved rail trail shared by bicyclists, walkers, horseback riders and buggies.</p>\n<h2>The top of the list, with margins</h2>\n<p>County estimates are steadier than tract estimates. Holmes County&#39;s lead is clear; below it, the margins overlap enough that the order could easily change.</p>\n<table>\n<thead>\n<tr>\n<th>County</th>\n<th>Bike to work (%)</th>\n<th>Margin of error (points)</th>\n<th>Grade</th>\n</tr>\n</thead>\n<tbody><tr>\n<td>Holmes County, OH</td>\n<td>14.0</td>\n<td>±2.2</td>\n<td>Reliable</td>\n</tr>\n<tr>\n<td>LaGrange County, IN</td>\n<td>7.2</td>\n<td>±1.2</td>\n<td>Reliable</td>\n</tr>\n<tr>\n<td>Pitkin County, CO</td>\n<td>6.7</td>\n<td>±2.1</td>\n<td>Use with caution</td>\n</tr>\n<tr>\n<td>Presidio County, TX</td>\n<td>6.3</td>\n<td>±4.7</td>\n<td>Unreliable</td>\n</tr>\n<tr>\n<td>Grand County, UT</td>\n<td>6.3</td>\n<td>±3.1</td>\n<td>Use with caution</td>\n</tr>\n<tr>\n<td>San Juan County, CO</td>\n<td>5.9</td>\n<td>±4.2</td>\n<td>Unreliable</td>\n</tr>\n</tbody></table>\n<p>Of the 69 tracts nationwide with estimates of 15% or more, 46 are graded unreliable and only 6 reliable. Five of those six are in California, within 2 kilometers of the Stanford, UC Davis and UC Santa Barbara campuses. The sixth is in Holmes County.</p>\n<h2>What the map can&#39;t tell us</h2>\n<p>The census counts how workers 16 and over usually got to work, not trips to school, the store or church. It can&#39;t say how many of Holmes County&#39;s bike commuters are Amish, and we couldn&#39;t find whether the survey tells people on electric bikes to answer &quot;bicycle&quot;. Tract numbers rest on small samples. The county number, 14.0% ±2.2, is the solid one.</p>\n<p>What the map does show is a small Ohio county where biking to work is about four times as common as in San Francisco, and where it goes with more walking and more households without a car.</p>\n"
+   }
+  ],
+  "allDatasets": [
+   "pct_bike_commute",
+   "pct_walk_commute",
+   "pct_drive_alone",
+   "pct_zero_vehicle_households"
+  ],
+  "words": 1800,
+  "minutes": 8
+ },
+ {
   "slug": "traffic-deaths",
   "title": "Traffic death rates run highest where the fewest people live",
   "dek": "About 41,000 people a year died in U.S. traffic crashes from 2020 to 2024. Per resident, the toll is several times higher in thinly settled counties than in big cities, and serious injuries, which are far more common, have no national county map at all.",

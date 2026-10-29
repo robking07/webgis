@@ -132,6 +132,9 @@ export interface MapApi {
   isMoving: () => boolean;
   /** Outline an area that has no tiles (a searched MPO, issue #276), or clear with null. Never clickable. */
   showArea: (shape: Geometry | null) => void;
+  /** A copy of the map as drawn (issue #361). Copied in the frame it renders, since WebGL clears its
+   *  buffer after each frame and `preserveDrawingBuffer` would slow every frame. */
+  snapshot: () => Promise<HTMLCanvasElement>;
 }
 
 const LEVELS = Object.keys(GEO_LEVELS) as GeoLevel[];
@@ -226,6 +229,17 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
       setCamera: (c) => m.flyTo({ ...c, padding: { top: 0, right: 0, bottom: 0, left: 0 }, duration: fly, essential: true }),
       isMoving: () => m.isMoving(),
       showArea: (shape) => { area.current = shape; if (ready.current) applyArea(m, shape, latest.current.theme); },
+      snapshot: () => new Promise((resolve) => {
+        m.once("render", () => {
+          const src = m.getCanvas(), c = document.createElement("canvas");
+          c.width = src.width; c.height = src.height;
+          // The on-screen size: MapLibre lowers the pixel ratio on very large screens (maxCanvasSize).
+          c.style.width = `${src.clientWidth}px`; c.style.height = `${src.clientHeight}px`;
+          c.getContext("2d")!.drawImage(src, 0, 0);
+          resolve(c);
+        });
+        m.triggerRepaint();
+      }),
     });
     // User gestures only (programmatic flyTo etc. must not immerse): wheel/trackpad scroll,
     // drag-pan (mouse or touch), pinch and double-click zoom.
