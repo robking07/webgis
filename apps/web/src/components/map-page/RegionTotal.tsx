@@ -54,12 +54,22 @@ export function RegionTotal({ datasets, mpo }: { datasets: Dataset[]; mpo: strin
   const named = (gs: string[]) => gs.map(name).join(", ");
   const cutIn = cut.filter(([, s]) => s >= 0.5), cutOut = cut.filter(([, s]) => s < 0.5);
   const cutText = (l: Array<[string, number]>) => l.map(([g, s]) => `${name(g)} (${pct(s)} of residents inside)`).join(", ");
+  // The one visible status line: "Sherburne and Wright", or "3 counties" when the list would run long.
+  const few = (l: Array<[string, number]>) => {
+    const n = l.map(([g]) => name(g)?.replace(/ County(?=,|$)/, ""));
+    return n.length > 2 ? `${n.length} counties` : n.join(" and ");
+  };
+  const counties = (n: number) => `${n} ${n === 1 ? "county" : "counties"}`;
+  const status = cut.length
+    ? `Approximate · ${counties(counted.length)}${cutIn.length ? `; ${few(cutIn)} only partly inside` : ""}${cutOut.length ? `; leaves out parts of ${few(cutOut)}` : ""}`
+    : `Exact · ${counted.length} whole ${counted.length === 1 ? "county" : "counties"}`;
+  const anyCounts = datasets.some((d) => countsLabels(d.id));
   return (
     <div className="wg-panel pointer-events-auto mt-1 w-80 max-w-[calc(100vw-1.5rem)] space-y-2 rounded-xl px-3 py-2" data-region-total={cut.length ? "approximate" : "exact"}>
       {datasets.map((d) => {
         const labels = countsLabels(d.id);
         const head = <p className="text-xs text-muted-foreground">{d.title}, {d.vintage.replace(/ \(.*\)$/, "")}</p>;
-        if (!labels) return <div key={d.id}>{head}<p className="text-sm text-muted-foreground">Can’t be added up across counties, so this area has no total.</p></div>;
+        if (!labels) return <p key={d.id} className="text-xs text-muted-foreground">{d.title}: can’t be added up across counties, so no area total.</p>;
         if (!counted.length) return <div key={d.id}>{head}<p className="text-sm text-muted-foreground">No county-based total: less than half of each county’s residents live inside this area.</p></div>;
         if (!(d.id in totals)) return <div key={d.id}>{head}<p className="text-sm text-muted-foreground">Adding up…</p></div>;
         const c = totals[d.id];
@@ -83,14 +93,20 @@ export function RegionTotal({ datasets, mpo }: { datasets: Dataset[]; mpo: strin
           </div>
         );
       })}
-      {counted.length > 0 && (
-        <p className="text-xs text-muted-foreground" data-region-method="">
-          {cut.length ? "Approximate" : "Exact"}: the sum of {counted.length} {counted.length === 1 ? "county" : "counties"} ({named(counted)}).
-          {cutIn.length > 0 && ` Counted in full though partly outside: ${cutText(cutIn)}.`}
-          {cutOut.length > 0 && ` Left out though partly inside: ${cutText(cutOut)}.`}
-          {cut.length > 0 && " A county counts when at least half its residents (2020 Census) live inside."}
-          {" "}Margins of error are at 90% confidence, combined as the Census Bureau does.
-        </p>
+      {anyCounts && counted.length > 0 && (
+        <div className="text-xs text-muted-foreground">
+          <p data-region-status="">{status}</p>
+          <details data-region-method="">
+            <summary className="cursor-pointer rounded text-primary focus-visible:outline-2 focus-visible:outline-ring">How this is counted</summary>
+            <p className="mt-1">
+              The sum of {counties(counted.length)}: {named(counted)}.
+              {cutIn.length > 0 && ` Counted in full though partly outside: ${cutText(cutIn)}.`}
+              {cutOut.length > 0 && ` Left out though partly inside: ${cutText(cutOut)}.`}
+              {cut.length > 0 && " A county counts when at least half its residents (2020 Census) live inside."}
+              {" "}Margins of error are at 90% confidence, combined as the Census Bureau does.
+            </p>
+          </details>
+        </div>
       )}
     </div>
   );

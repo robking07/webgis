@@ -77,8 +77,13 @@ export default function mpoTests({ test, expect, mapIdle, tapLonLat, HENNEPIN })
     expect(/%\s*±[\d.]+%/.test(text) && /\d ±[\d,]+ people below the poverty line/.test(text), `no margin in: ${text}`);
     const box = page.locator("[data-region-total]");
     expect((await box.getAttribute("data-region-total")) === "approximate", "Met Council's MPO boundary cuts Sherburne and Wright, so the total is approximate");
-    const method = await box.locator("[data-region-method]").innerText();
-    expect(/Hennepin/.test(method) && /Sherburne/.test(method) && /Approximate/.test(method), `method: ${method}`);
+    const status = await box.locator("[data-region-status]").innerText();
+    expect(/^Approximate · 7 counties; leaves out parts of Sherburne and Wright$/.test(status), `status: ${status}`);
+    // The full method sits behind a closed "How this is counted" disclosure.
+    const method = box.locator("[data-region-method]");
+    expect(!(await method.evaluate((d) => d.open)), "the method starts closed");
+    await method.locator("summary").click();
+    expect(/Hennepin/.test(await method.innerText()) && /at least half/.test(await method.innerText()), "the method lists the counties and the rule");
 
     const { page: median } = await o("laptop", `/map?d=median_household_income&mpo=${MET_COUNCIL}`);
     await median.locator("[data-region-total]").waitFor({ timeout: 15000 });

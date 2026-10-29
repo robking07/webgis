@@ -44,3 +44,7 @@ takes in about a quarter of Sherburne and Wright counties' residents, so the tot
   so summing the tracts inside the boundary would give a near-exact total for cut MPOs.
 - Connecticut MPOs: 2020 tracts use the old CT counties, so they match no 2022+ county counts and show
   "a county's numbers are missing".
+
+## Amendments
+
+- 2026-10-29 (lead review): map-first. Visible: heading, the number ± MOE, one count line and one status line ("Approximate · 7 counties; leaves out parts of Sherburne and Wright"). The county list, the half rule and the 90% note sit behind a closed "How this is counted" disclosure. Maps that can't be added up get one line. Questions 1–4 in the PR decided by the lead: MPO only (county picker and tract sums are follow-up issues), the half rule and the "Exact" basis stay, non-percent ratios show sums only.
