@@ -73,7 +73,7 @@ Source: ColorBrewer 2.0. Worst-case adjacent-class ΔE2000 across certified clas
 
 ![Orange–Purple](design-system/ramp-puor.svg)
 
-Source: ColorBrewer 2.0. Worst-case adjacent-class ΔE2000 across certified class counts: Normal vision **14.8** · Protanopia **13.7** · Deuteranopia **13.8** · Tritanopia **6.9**.
+Source: ColorBrewer 2.0. Worst-case adjacent-class ΔE2000 across certified class counts: Normal vision **14.7** · Protanopia **12.9** · Deuteranopia **13.4** · Tritanopia **10.7**.
 
 ### Brown–Teal (`brbg`) · diverging, 3–7 classes
 
