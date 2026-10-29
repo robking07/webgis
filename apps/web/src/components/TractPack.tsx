@@ -3,7 +3,7 @@
 // browser from the tract files the details panel already reads, plus how to join it in GIS.
 import { useState } from "react";
 import { loadTractGeoShard, loadTractShard } from "@/lib/details";
-import { saveBlob, tractPack } from "@/lib/csv";
+import { PACK_2010_NOTE, saveBlob, tractPack } from "@/lib/csv";
 import { DATASETS } from "@/lib/registry";
 
 const link = "rounded text-primary underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-ring";
@@ -41,6 +41,7 @@ export function TractPack({ county, name }: { county: string; name: string }) {
         <p className="mt-1">QGIS: add the file’s “data” sheet as a layer, then in the tract layer’s Properties › Joins, join GEOID to GEOID.</p>
         <p className="mt-1">ArcGIS Pro: add the “data” sheet, right-click the tract layer › Joins and Relates › Add Join, with GEOID as both fields.</p>
         <p className="mt-1">Save the result as a GeoPackage or geodatabase; a shapefile cuts field names to 10 characters.</p>
+        <p className="mt-1">{PACK_2010_NOTE}</p>
       </details>
     </section>
   );

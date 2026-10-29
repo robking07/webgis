@@ -34,6 +34,15 @@ describe("tractPack", () => {
     expect(cells(rows[2])).toEqual([["A", "01001020200"], ["B", "Tract 202, Autauga County, AL"], ["E", 3]]);
     expect(files["xl/worksheets/sheet2.xml"]).toContain("C &amp; D");
   });
+  it("leaves out a map whose headline stop is on 2010 tracts (boundaries 2019), and says so in the about sheet", async () => {
+    // A bridge inventory whose headline year is 2019: timelineStops gives its default stop boundaries "2019".
+    const old = { ...ds("old"), measure: { kind: "nbi", year: 2019 }, timeline: { from: 2018, to: 2019, step: 1 } } as unknown as Dataset;
+    const values = { a: { "020100": [1, null] as [number, null] }, old: { "020100": [2, null] as [number, null] } };
+    const files = await unzip(tractPack("01001", "Autauga County, AL", values, {}, [ds("a"), old]));
+    const header = cells(files["xl/worksheets/sheet1.xml"].split("<row ")[1]).map(([, v]) => v);
+    expect(header).toEqual(["GEOID", "name", "a", "a_moe"]);
+    expect(files["xl/worksheets/sheet2.xml"]).toContain("Maps drawn on 2010 tracts (e.g. food access) are left out");
+  });
   it("crc32 matches zlib", () => {
     const b = new TextEncoder().encode("Mapwich tract pack");
     expect(crc32(b)).toBe(zlibCrc(b));

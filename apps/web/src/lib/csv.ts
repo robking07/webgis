@@ -5,6 +5,7 @@ import type { Dataset } from "./registry";
 import { fetchRetry, staticUrl } from "@/lib/static-files";
 import type { TractGeoShard, TractShard } from "./details";
 import { xlsx, type Cell } from "./xlsx";
+import { timelineStops } from "@webgis/registry/timeline";
 
 /** Levels that have a downloadable values file (blocks keep their values in the tiles, D-124). */
 export const CSV_LEVELS: GeoLevel[] = ["state", "county", "tract", "block_group"];
@@ -76,10 +77,13 @@ export function placeCsv(geoid: string, name: string, rows: Array<{ d: Dataset; 
   return new Blob(["\uFEFF", head, body, "\r\n", notes], { type: "text/csv;charset=utf-8" });
 }
 
+export const PACK_2010_NOTE = "Maps drawn on 2010 tracts (e.g. food access) are left out; download them from their map page.";
+
 /** A county's region data pack (#370): every map for its tracts, one row per tract, a value and a
  *  `<id>_moe` column per map, and an "about" sheet saying what each column is. GEOID is text. */
 export function tractPack(county: string, name: string, values: TractShard, geo: TractGeoShard, datasets: Dataset[]): Blob {
-  const ds = datasets.filter((d) => values[d.id]);
+  // Only maps on 2020 tracts: a headline stop on 2010 tracts would land on a different shape where an ID repeats.
+  const ds = datasets.filter((d) => values[d.id] && !timelineStops(d).find((s) => s.isDefault)?.boundaries);
   const tracts = [...new Set([...Object.keys(geo), ...ds.flatMap((d) => Object.keys(values[d.id]))])].sort();
   const data: Cell[][] = [
     ["GEOID", "name", ...ds.flatMap((d) => [d.id, `${d.id}_moe`])],
@@ -94,6 +98,7 @@ export function tractPack(county: string, name: string, values: TractShard, geo:
       [`${d.id}_moe`, `${d.title}: margin of error (±), blank when the source publishes none`, d.unit, d.vintage],
     ]),
     [],
+    [PACK_2010_NOTE],
     [`Downloaded from Mapwich: https://mapwich.org/place/${county} (${name})`],
   ];
   return xlsx([{ name: "data", rows: data }, { name: "about", rows: about }]);

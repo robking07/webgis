@@ -30,6 +30,16 @@ the Census cartographic boundary file (`cb_2024_<state>_tract_500k`) or TIGER/Li
 later) and says to join GEOID to GEOID, then save as a GeoPackage, because shapefiles cut field
 names to 10 characters.
 
+**2020 tracts only (lead review).** The pack is for joining to 2020 tract shapes, so it leaves out
+any map whose headline stop is on 2010 tracts. That is the `boundaries: "2019"` that
+`timelineStops` (data/registry/timeline.ts) gives a stop before 2020. Those maps' tract IDs are
+2010 IDs, and where an ID repeats in 2020 the value would silently land on a different shape. No
+registry entry has a dataset-level `boundaries` field. Today no map with tract values has a 2010
+headline stop, so Hennepin keeps all 87 maps. The 2010-tract maps (food access and CEJST tracts,
+D-284) are feature layers and were never in the tract files. The filter guards against a future
+pre-2020 headline. Both the how-to and the "about" sheet say: "Maps drawn on 2010 tracts (e.g. food
+access) are left out; download them from their map page."
+
 **Limits.**
 - County to tracts only. State to counties and MPO packs are follow-ups.
 - The zip is stored, not deflated. Hennepin is 1.6 MB; the largest counties (Los Angeles, about
