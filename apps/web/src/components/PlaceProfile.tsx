@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { StatusState } from "@webgis/design/components";
 import { PlaceDataList, type Detail } from "./PlaceDataList";
+import { KeyNumbers } from "./KeyNumbers";
 import { Picker } from "./compare/CompareWith";
 import { fetchDetail, fetchGeography, type Geography } from "@/lib/details";
 import { levelOfGeoid, PLACE_ZOOM } from "@/lib/place";
@@ -60,6 +61,7 @@ export function PlaceProfile({ geoid }: { geoid: string }) {
           </div>
         )}
       </header>
+      <KeyNumbers geoid={geoid} detail={detail} />
       <PlaceDataList geoid={geoid} level={level} detail={detail} mapHref={mapHref} />
     </main>
   );
