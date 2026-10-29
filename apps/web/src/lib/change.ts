@@ -3,7 +3,7 @@
 // in percentage points, counts and other amounts in percent, everything else (rates, minutes,
 // degrees…) as a plain difference in its own unit. When both stops' margins of error are known, a
 // change within the margin of error of the difference is "no clear change" (the ramp's middle).
-import { CHANGE_CLASSES, CHANGE_RAMP, formatValue, rampColors, UNIT_LABEL, type Unit } from "@webgis/design";
+import { CHANGE_CLASSES, CHANGE_RAMP, formatValue, niceBreaks, rampColors, UNIT_LABEL, type Unit } from "@webgis/design";
 import type { Values } from "./values";
 
 export type ChangeMeasure = "points" | "percent" | "difference";
@@ -100,7 +100,8 @@ export function classifyChange(from: Values, to: Values, unit: Unit, toMoes?: Va
   // stays put while margins for more counties load.
   const mags = Object.values(change).filter((c) => c !== 0).map(Math.abs).sort((x, y) => x - y);
   const at = (p: number) => (mags.length ? mags[Math.floor(p * (mags.length - 1))] : 0);
-  const m1 = at(1 / 3), m2 = at(2 / 3);
+  // One significant figure (±2, ±5 pts), two where that would merge the cut-offs.
+  const [m1, m2] = niceBreaks([at(1 / 3), at(2 / 3)], 0, mags.length ? mags[mags.length - 1] : 0, 1);
   const classes = new Map<string, number>();
   for (const [g, c] of Object.entries(change)) {
     if (steady.has(g)) { classes.set(g, MID); continue; }
