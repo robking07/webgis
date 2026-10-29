@@ -137,6 +137,7 @@ Light and dark come from the same token structure; the basemap and the UI chrome
 | light | route number on its highway shield | `map.shieldText` on `map.shieldFill` | 17.05 | 4.5 |
 | light | national boundary vs U.S. land (non-text) | `map.countryLine` on `map.focusLand` | 5.65 | 3 |
 | light | national boundary vs land outside the U.S. (non-text) | `map.countryLine` on `map.land` | 4.79 | 3 |
+| light | state line core vs its casing (non-text, reads over any fill) | `map.boundaryMajor` on `map.featureOutline` | 4.72 | 3 |
 | light | shoreline vs land outside the U.S. (decorative) | `map.coastline` on `map.land` | 2.14 | 1.5 |
 | light | shoreline vs water (decorative) | `map.coastline` on `map.water` | 2.09 | 1.5 |
 | dark | body text | `text` on `bg` | 15.75 | 7 |
@@ -172,6 +173,7 @@ Light and dark come from the same token structure; the basemap and the UI chrome
 | dark | route number on its highway shield | `map.shieldText` on `map.shieldFill` | 17.05 | 4.5 |
 | dark | national boundary vs U.S. land (non-text) | `map.countryLine` on `map.focusLand` | 4.85 | 3 |
 | dark | national boundary vs land outside the U.S. (non-text) | `map.countryLine` on `map.land` | 3.39 | 3 |
+| dark | state line core vs its casing (non-text, reads over any fill) | `map.boundaryMajor` on `map.featureOutline` | 5.61 | 3 |
 | dark | shoreline vs land outside the U.S. (decorative) | `map.coastline` on `map.land` | 1.87 | 1.5 |
 | dark | shoreline vs water (decorative) | `map.coastline` on `map.water` | 2.53 | 1.5 |
 
@@ -198,7 +200,7 @@ Light and dark come from the same token structure; the basemap and the UI chrome
 | Block group | 11 – 13 | 7 |
 | Block | 13 – max | 7 |
 
-Line widths and outlines scale with zoom (`SIZE`: featureOutline, fineOutlineOpacity, highlightOutline, line, lineMajor, point, dataLine, interstate, interstateCasing, river, riverCasing, pointStroke). Labels use Noto Sans Regular with a 1.4px halo that matches the basemap tone. Thematic fills are inserted **below** the basemap's label layers, so place names stay readable over any fill.
+Line widths and outlines scale with zoom (`SIZE`: featureOutline, fineOutlineOpacity, highlightOutline, line, lineMajor, point, dataLine, interstate, interstateCasing, river, riverCasing, pointStroke, arterial). Labels use Noto Sans Regular with a 1.3px halo that matches the basemap tone. Thematic fills are inserted **below** the basemap's label layers, so place names stay readable over any fill.
 
 ## Motion and accessibility
 

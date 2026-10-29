@@ -43,6 +43,8 @@ export interface Theme {
     roadMajor: string;
     boundary: string;
     boundaryMajor: string;
+    /** Main streets over the data at city zoom, at ARTERIAL_OPACITY. */
+    arterial: string;
     label: string;
     labelMuted: string;
     /** Labels outside the U.S.: deliberately quiet (D-37). */
@@ -118,8 +120,9 @@ export const THEMES: Record<ThemeName, Theme> = {
       park: "#e4e8dc",
       road: "#ffffff",
       roadMajor: "#e6dfd2",
-      boundary: "#a39f97",
+      boundary: "#7f7b74",
       boundaryMajor: "#77736c",
+      arterial: "#ffffff",
       label: "#2e2f33",
       labelMuted: "#5f6168",
       labelForeign: "#8b8d93",
@@ -176,6 +179,7 @@ export const THEMES: Record<ThemeName, Theme> = {
       roadMajor: "#4c5058",
       boundary: "#6b707a",
       boundaryMajor: "#8b919c",
+      arterial: "#ffffff",
       label: "#d4d6da",
       labelMuted: "#9a9ea6",
       labelForeign: "#73777f",
@@ -268,6 +272,9 @@ export const FOCUS_DIM = {
   /** ΔE2000 between the lightest and darkest class, both dimmed. */
   minSpread: 10,
 } as const;
+
+/** Main streets over the data: thin and faint, so they orient without competing with the fills. */
+export const ARTERIAL_OPACITY: Record<ThemeName, number> = { light: 0.75, dark: 0.35 };
 
 /** Opacity of the frosted-glass desktop filters sidebar (`.wg-glass` in components/design.css,
  *  which must match). `scripts/check.ts` composites the panel over the darkest and lightest map
