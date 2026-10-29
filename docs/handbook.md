@@ -14,8 +14,9 @@ Full build spec: `docs/SPEC.md`. Project rules: `CLAUDE.md`.
   commit it, and never pass a secret on a command line.** The guardrails hook blocks reading it.
   `.env.example` lists these names (names only, empty values):
   - Site: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `NEXT_PUBLIC_TILES_BASE_URL`, `CRON_SECRET`
-  - Ingest (Robbie's machine only): `SUPABASE_DB_URL`, `CENSUS_API_KEY`, `ANTHROPIC_API_KEY`,
-    `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET`
+  - Ingest (Robbie's machine, and GitHub Actions secrets for scheduled runs): `SUPABASE_DB_URL`,
+    `CENSUS_API_KEY`, `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, `R2_BUCKET`
+    (`ANTHROPIC_API_KEY` stays on Robbie's machine only.)
   - If a task needs a key you don't have, stop and say so in your report. Don't hunt for it.
 - Docs-only work needs no install.
 - With no `.env.local`, `npm run build` and `npm run start -w web` still work (16 s build; the build
@@ -173,8 +174,7 @@ Error reporting is off until `NEXT_PUBLIC_SENTRY_DSN` is set; with it unset (CI,
 does nothing and no Sentry code ships to browsers. It is errors only: no session replay, no
 performance tracing, no user context, no cookies, headers or query strings. Source maps are not
 uploaded, so stack traces show minified code; uploading them later needs a Sentry auth token
-secret. There is deliberately no scheduled GitHub Action for uptime: the repo is private and a
-15-minute check would use about 2,900 of the 2,000 free Actions minutes a month.
+secret.
 
 ### Robbie's setup checklist
 
