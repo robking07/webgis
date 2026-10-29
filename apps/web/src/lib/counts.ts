@@ -65,6 +65,31 @@ export function shareOf(x: number | null, mx: number | null, y: number | null, m
   return { share: p * 100, moe: (Math.sqrt(under >= 0 ? under : mx ** 2 + p ** 2 * my ** 2) / y) * 100 };
 }
 
+/**
+ * Counts summed over several places (a focused MPO's counties, #292): estimates add, and margins
+ * combine as √Σ MOE² (ACS General Handbook, ch. 8). A missing margin counts as 0 unless every
+ * place lacks one (full counts: null). Null when a place has no row or no numerator, so a total is
+ * never short a county; the denominator is null when any place lacks one.
+ */
+export function sumCounts(rows: Array<Counts | null | undefined>): Counts | null {
+  if (!rows.length || rows.some((r) => r == null || r[0] == null)) return null;
+  const rs = rows as Counts[];
+  const out: Counts = [null, null, null, null];
+  for (const i of [0, 2] as const) {
+    if (rs.some((r) => r[i] == null)) continue;
+    out[i] = rs.reduce((a, r) => a + r[i]!, 0);
+    out[i + 1] = rs.some((r) => r[i + 1] != null) ? Math.sqrt(rs.reduce((a, r) => a + (r[i + 1] ?? 0) ** 2, 0)) : null;
+  }
+  return out;
+}
+
+/** An MPO's counties ([geoid, share of its residents inside], from mpo/counties.json) split into
+ *  the ones counted (at least half their residents inside) and the ones its boundary cuts (some inside, not all).
+ *  The total is exact only when nothing is cut. */
+export function regionCounties(list: Array<[string, number]>): { counted: string[]; cut: Array<[string, number]> } {
+  return { counted: list.filter(([, s]) => s >= 0.5).map(([g]) => g), cut: list.filter(([, s]) => s < 1) };
+}
+
 /** A parts set's shares (percent) for one place, in member order, plus the remainder: 100 − Σ
  *  members (at least 0), so the bar adds to 100% (D-257's remainder rule, on the published
  *  percentages). Null when a member is missing. */

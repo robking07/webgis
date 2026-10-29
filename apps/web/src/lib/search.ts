@@ -83,6 +83,9 @@ export function mpoById(rows: PlaceRow[], id: string): PlaceHit | null {
 
 /** An MPO's shape (one small GeoJSON geometry, fetched only when it's picked). */
 export const loadMpoShape = (id: string) => json("/mpo/" + id + ".json");
+/** Each MPO's counties with the share of their residents inside it (#292; ingest `mpo-counties`). */
+let mpoCounties: Promise<Record<string, Array<[string, number]>>> | null = null;
+export const loadMpoCounties = () => (mpoCounties ??= json("/mpo/counties.json").catch((e) => { mpoCounties = null; throw e; }));
 
 export function areaByCode(rows: PlaceRow[], code: string): PlaceHit | null {
   const r = rows.find((x) => x[2] === code);

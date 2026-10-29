@@ -34,6 +34,7 @@ import { pairReason } from "@/lib/layers";
 import { FeatureHoverPopup, PlaceHoverPopup } from "./map-page/HoverPopups";
 import { DetailPanel } from "./map-page/DetailPanel";
 import { AreaValue } from "./map-page/AreaValue";
+import { RegionTotal } from "./map-page/RegionTotal";
 import { useUnreliable } from "./map-page/useUnreliable";
 import { FeaturePanel } from "./map-page/FeaturePanel";
 import { ContextLink, ContextPanel, CONTEXT_PANEL_RIGHT } from "./map-page/ContextPanel";
@@ -448,7 +449,8 @@ export function Viewer({ search }: { search: string }) {
           onOpenFilters={toggleFilters} onOpenLevel={openLevelFilters} levelPill={!isFeature}
           menuOpen={menuOpen && immersed} menu={immersed ? datasetMenu : null} onBrowse={changeDataset} onExit={exitCompare}
           place={picked ? { name: picked.mpo ? `${picked.name} · ${picked.mpo.states}` : picked.name, onClear: () => update({ mpo: null, area: null }) } : focus && focusName ? { name: focusName, onClear: leaveFocus } : null} backShown={canGoBack || phone}
-          detail={picked?.area && primary ? <AreaValue datasets={secondary ? [primary, secondary] : [primary]} code={picked.area} kind={picked.kind} file={areaFile?.code === picked.area ? areaFile.file : null} /> : null} />
+          detail={picked?.area && primary ? <AreaValue datasets={secondary ? [primary, secondary] : [primary]} code={picked.area} kind={picked.kind} file={areaFile?.code === picked.area ? areaFile.file : null} />
+            : picked?.mpo && primary && !isFeature ? <RegionTotal datasets={secondary ? [primary, secondary] : [primary]} mpo={picked.mpo.id} /> : null} />
       )}
 
       {filters && primary && !phone && (
