@@ -1,5 +1,5 @@
 // npm run ingest -- <step> [dataset or level ids…]
-// Steps: geographies | label-mask | mpo | areas | publish-areas | publish-search | timeline | acs | acs-bg | census2020 | lodes | places | climdiv | nbi | fars | overdose | airquality | features | vmt | cejst | ddp287g | tri | nri | svi | sahie | lead | food-access | tiles | publish-tiles | publish-reload | publish-values | publish-geo | publish-data | counts | publish-counts | details | publish-details | tract-geo | export | export-values | insights [--reflag] | combinations [--dry-run] | tracts-out | docs | mn-catalog | mpo-plans | publish-mpo-plans [--dry-run] | all
+// Steps: geographies | label-mask | mpo | areas | publish-areas | publish-search | timeline | acs | acs-bg | census2020 | lodes | places | climdiv | nbi | fars | overdose | airquality | features | vmt | cejst | ddp287g | tri | nri | svi | sahie | lead | food-access | tiles | publish-tiles | publish-reload | publish-values | publish-geo | publish-data | counts | publish-counts | details | publish-details | tract-geo | export [--allow-period-drop] | export-values | insights [--reflag] | combinations [--dry-run] | tracts-out | docs | mn-catalog | mpo-plans | publish-mpo-plans [--dry-run] | all
 import { ingestGeographies, tractGeography } from "./geographies.ts";
 import { ingestAcs, ingestAcsTimeline } from "./acs.ts";
 import { ingestCensus2020 } from "./census2020.ts";
@@ -35,7 +35,9 @@ import { buildAreas } from "./areas.ts";
 import { checkMpoPlans, publishMpoPlans } from "./mpo-plans.ts";
 import { tractsOut } from "./tracts.ts";
 const [step, ...rest] = process.argv.slice(2);
-const only = rest.length ? rest : undefined;
+const ids = rest.filter((a) => !a.startsWith("--"));
+const only = ids.length ? ids : undefined;
+const allowDrop = rest.includes("--allow-period-drop");
 const steps: Record<string, () => Promise<void> | void> = {
   geographies: ingestGeographies,
   acs: () => ingestAcs(only),
@@ -71,7 +73,7 @@ const steps: Record<string, () => Promise<void> | void> = {
   // Year control (D-36): earlier periods, written to the web export only. ACS first (FARS
   // uses its 2015–2019 population).
   timeline: async () => { await ingestAcsTimeline(only); await ingestFarsTimeline(only); await ingestClimdivTimeline(only);
-    await ingestNbiTimeline(only); await ingestLodesTimeline(only); await ingestOverdoseTimeline(only); exportRegistry(); },
+    await ingestNbiTimeline(only); await ingestLodesTimeline(only); await ingestOverdoseTimeline(only); exportRegistry(allowDrop); },
   "publish-tiles": () => publishTiles(only),
   // S2: every value file, names, search and tract geography live on R2 beside the tiles, not in
   // the site's folder. `publish-data` uploads all of it (values/, geo/, details/); only changed files go up.
@@ -95,7 +97,7 @@ const steps: Record<string, () => Promise<void> | void> = {
   "publish-details": publishDetails,
   docs: writeDataSourcesDoc,
   "mn-catalog": mnCatalog,
-  export: async () => { exportRegistry(); await exportNames(); await exportSearch(); await exportValues(only); },
+  export: async () => { exportRegistry(allowDrop); await exportNames(); await exportSearch(); await exportValues(only); },
   "export-values": () => exportValues(only),
   search: exportSearch,
   // --reflag: re-apply the by-construction rules to the committed insights.json (no database; captions and fingerprints kept).
@@ -110,7 +112,7 @@ const steps: Record<string, () => Promise<void> | void> = {
     await ingestFeatures(); await ingestVmt(); await ingestCejst(); await ingestDdp287g(); await ingestTri(); await ingestNri(); await ingestLead(); await ingestSvi(); await ingestSahie(); await ingestFoodAccess();
     await ingestAcsTimeline(); await ingestFarsTimeline(); await ingestClimdivTimeline(); await ingestNbiTimeline(); await ingestLodesTimeline(); await ingestOverdoseTimeline(); await buildLabelMask(); await buildTiles();
     await tractGeography();
-    exportRegistry(); await exportNames(); await exportSearch(); await exportValues(); await detailsOut(); await computeInsights(); await computeCombinations(); await writeDataSourcesDoc();
+    exportRegistry(allowDrop); await exportNames(); await exportSearch(); await exportValues(); await detailsOut(); await computeInsights(); await computeCombinations(); await writeDataSourcesDoc();
   },
 };
 if (!step || !steps[step]) {
