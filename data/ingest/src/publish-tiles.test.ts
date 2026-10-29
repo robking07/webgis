@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { droppedDatasets, isCountFile, mergeShard, SHARD_PREFIXES } from "./publish-tiles.ts";
+import { droppedDatasets, isCountFile, isTractFile, mergeShard, SHARD_PREFIXES } from "./publish-tiles.ts";
 
 describe("droppedDatasets", () => {
   it("lists live datasets missing from the new shard", () => {
@@ -19,6 +19,16 @@ describe("isCountFile", () => {
   });
   it("covers the count shards with the drop guard", () => {
     expect(SHARD_PREFIXES).toEqual(["values/tracts/", "values/counts/"]);
+  });
+});
+
+describe("isTractFile (D-506)", () => {
+  it("matches one map's per-county tract file, which the drop guard checks for lost tracts", () => {
+    expect(isTractFile("values/pct_poverty/tracts/27053.json")).toBe(true);
+    for (const k of ["values/tracts/27053.json", "values/pct_poverty/tract.json", "values/counts/tract/27053.json", "values/pct_poverty/2019/tract.json"])
+      expect(isTractFile(k), k).toBe(false);
+    // The guard's test for one tract file: live tracts missing from the new one.
+    expect(droppedDatasets({ "026100": [1, 0], "026200": [2, 0] }, { "026100": [1, 0] })).toEqual(["026200"]);
   });
 });
 

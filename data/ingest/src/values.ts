@@ -1,7 +1,7 @@
 // Writing a dataset: mirror the registry entry, then replace its values per level.
 import type pg from "pg";
 import type { DatasetEntry } from "@webgis/registry";
-import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { log, TILES, upsert } from "./util.ts";
 
@@ -88,15 +88,16 @@ export function writeStopValues(datasetId: string, stop: string, level: Level, v
 }
 
 const round = (v: number | null, digits: number) => (v == null || !Number.isFinite(v) ? null : Number(v.toPrecision(digits)));
-export const TRACT_DETAIL_DIR = join(TILES, "values", "tracts");
-type TractShard = Record<string, Record<string, [number | null, number | null]>>;
-
+/** One map's tract values for one county (D-506). */
+export const tractFile = (datasetId: string, county: string, root = TILES) => join(root, "values", datasetId, "tracts", `${county}.json`);
 /** Tract values live in static files, not the database (D-113: the free tier's 500 MB holds
- *  about a dozen tract datasets but hundreds of county ones). Two files:
+ *  about a dozen tract datasets but hundreds of county ones). Both files sit in the map's own
+ *  folder, so a load writes nothing that holds another map's values (D-506):
  *  - values/<dataset>/tract.json, the map's colors (same shape as every other level);
- *  - values/tracts/<county fips>.json, every dataset's [value, moe] for that county's tracts,
- *    keyed by the 6-digit tract code, so a details panel needs one small fetch. */
-export function writeTractValues(datasetId: string, values: Map<string, Value>) {
+ *  - values/<dataset>/tracts/<county fips>.json, { <6-digit tract>: [value, moe] }, so a details
+ *    panel fetches only the maps it shows. The old all-maps files (values/tracts/) are no longer
+ *    written. `root`: data/tiles (tests use a temp dir). */
+export function writeTractValues(datasetId: string, values: Map<string, Value>, root = TILES) {
   const map: Record<string, number> = {};
   const byCounty = new Map<string, Record<string, [number | null, number | null]>>();
   for (const [g, v] of values) {
@@ -105,22 +106,19 @@ export function writeTractValues(datasetId: string, values: Map<string, Value>) 
     const c = g.slice(0, 5);
     (byCounty.get(c) ?? byCounty.set(c, {}).get(c)!)[g.slice(5)] = [value, round(v.moe, 3)];
   }
-  const dir = join(TILES, "values", datasetId);
+  const dir = join(root, "values", datasetId);
   mkdirSync(dir, { recursive: true });
   writeFileSync(join(dir, "tract.json"), JSON.stringify(map));
+  writeTractFiles(datasetId, byCounty, root);
+}
 
-  mkdirSync(TRACT_DETAIL_DIR, { recursive: true });
-  const counties = new Set([...readdirSync(TRACT_DETAIL_DIR).filter((f) => f.endsWith(".json")).map((f) => f.slice(0, -5)), ...byCounty.keys()]);
-  for (const c of counties) {
-    const path = join(TRACT_DETAIL_DIR, `${c}.json`);
-    const shard: TractShard = existsSync(path) ? JSON.parse(readFileSync(path, "utf8")) : {};
-    delete shard[datasetId];
-    const rows = byCounty.get(c);
-    if (rows) shard[datasetId] = rows;
-    if (!Object.keys(shard).length) { rmSync(path); continue; }
-    // Sorted keys keep diffs small when one dataset is reloaded.
-    writeFileSync(path, JSON.stringify(Object.fromEntries(Object.entries(shard).sort(([a], [b]) => a.localeCompare(b)))));
-  }
+/** Replace one map's per-county tract files with `byCounty`, its whole load (counties it no longer
+ *  has go from data/tiles; R2 keeps them, publish never deletes). */
+export function writeTractFiles(datasetId: string, byCounty: Map<string, Record<string, unknown>>, root = TILES) {
+  const dir = join(root, "values", datasetId, "tracts");
+  rmSync(dir, { recursive: true, force: true });
+  mkdirSync(dir, { recursive: true });
+  for (const [c, rows] of byCounty) writeFileSync(tractFile(datasetId, c, root), JSON.stringify(rows));
 }
 
 /** Number of non-null tract values a dataset has in its map file (for docs). */

@@ -174,10 +174,17 @@ A dataset refresh can run on GitHub instead of Robbie's machine: `.github/workfl
 
 There is no dry-run switch: every run writes the database and publishes. Visitors see new values
 within an hour. The run loads, then `export-values <ids>` and `details` (from the database), then
-`publish-reload`: for each tract or count file it wrote, it fetches the live file from R2, swaps in
-only the reloaded datasets and keeps the rest. If any county would lose a reloaded dataset (a source
-that came back short), it stops **before the first upload**. Then it uploads the changed value files,
-and the click details last. A run that loads no tract or block-group values skips the merge.
+`publish-reload`: for each tract or block-group count file it wrote, it fetches the live file from R2,
+swaps in only the reloaded datasets and keeps the rest. If any county would lose a reloaded dataset (a
+source that came back short), it stops **before the first upload**. Then it uploads the changed value
+files, and the click details last. Tract values need no merge: each map has its own file per county,
+`values/<id>/tracts/<county>.json` (D-506), and the upload refuses one that would lose live tracts.
+A run that writes no count files skips the merge.
+
+**Split tract files (one-off, D-506).** The "Split tract files" workflow (Actions tab, main only)
+reads every old all-maps file `values/tracts/<county>.json` from R2 and uploads the per-map files.
+Since this change no ingest writes the old files; they stay on R2 for rollback. Run no Data run or
+local reload between merging the new writer and the web switch to the per-map files.
 
 **Not on GitHub yet:** anything needing GDAL or tippecanoe (geographies, tiles, features,
 census2020, ddp287g, vmt, counts, label-mask, mpo); `timeline` for `fars` (it needs

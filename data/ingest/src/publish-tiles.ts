@@ -59,22 +59,29 @@ export function droppedDatasets(live: Record<string, unknown>, next: Record<stri
  *  counts (values/counts/<level>/<county>.json, #156). */
 export const SHARD_PREFIXES = ["values/tracts/", "values/counts/"];
 
+/** One map's tract file for one county (values/<id>/tracts/<county>.json, D-506). Only that map's
+ *  load writes it, so it can't drop another map; the guard refuses one that drops live tracts. */
+export const isTractFile = (key: string) => /^values\/[a-z0-9_]+\/tracts\/\d{5}\.json$/.test(key);
+
 /** A shard holds every dataset's tracts for one county, so a checkout that never had the
  *  shards writes new ones holding only what it just loaded. Uploading those would erase the other
  *  datasets' tract details on the live site (2026-10-08). Refuse instead, unless
  *  ALLOW_TRACT_DROP=1 says the drop is intended (a dataset being removed). */
 async function guardTractShard(s3: S3Client, bucket: string, key: string, body: Buffer) {
-  if (!SHARD_PREFIXES.some((p) => key.startsWith(p)) || process.env.ALLOW_TRACT_DROP === "1") return;
+  const own = isTractFile(key);
+  if (!(own || SHARD_PREFIXES.some((p) => key.startsWith(p))) || process.env.ALLOW_TRACT_DROP === "1") return;
   const live = await getLive(s3, bucket, key);
   if (!live) return;
   const dropped = droppedDatasets(live, JSON.parse(gunzipSync(body).toString("utf8")));
+  if (dropped.length && own) throw new Error(`${key}: upload would drop ${dropped.length} live tract(s) (${dropped.slice(0, 5).join(", ")}${dropped.length > 5 ? ", …" : ""}). `
+    + "This map's reload came back short for the county. Check the source; set ALLOW_TRACT_DROP=1 only if the loss is real.");
   if (dropped.length) throw new Error(`${key}: upload would drop ${dropped.length} live dataset(s) (${dropped.slice(0, 5).join(", ")}${dropped.length > 5 ? ", …" : ""}). `
     + "This checkout's data/tiles/values/tracts (or values/counts) is incomplete: copy the full folder in (or rebuild it with `ingest tracts-out` plus the loads) first. "
     + "Set ALLOW_TRACT_DROP=1 only when removing a dataset on purpose.");
 }
 
 /** The object R2 holds now, parsed (null if there is none). */
-async function getLive(s3: S3Client, bucket: string, key: string): Promise<Record<string, unknown> | null> {
+export async function getLive(s3: S3Client, bucket: string, key: string): Promise<Record<string, unknown> | null> {
   try {
     const r = await s3.send(new GetObjectCommand({ Bucket: bucket, Key: key }));
     const raw = Buffer.from(await r.Body!.transformToByteArray());
@@ -86,7 +93,7 @@ async function getLive(s3: S3Client, bucket: string, key: string): Promise<Recor
 }
 
 /** Every object key under `prefix/` with its ETag (quotes stripped). */
-async function liveEtags(s3: S3Client, bucket: string, prefix: string) {
+export async function liveEtags(s3: S3Client, bucket: string, prefix: string) {
   const etags = new Map<string, string>();
   let token: string | undefined;
   do {
@@ -106,14 +113,15 @@ export function mergeShard(live: Record<string, unknown>, local: Record<string, 
   return { next, dropped: droppedDatasets(live, next) };
 }
 
-/** Shard folders a fresh checkout's run may have written (tract values, tract and block-group counts). */
-const SHARD_DIRS = ["values/tracts", "values/counts/tract", "values/counts/block_group"];
+/** Shard folders a fresh checkout's run may have written (tract and block-group counts). Tract
+ *  values need no merge: each map has its own files (D-506). */
+const SHARD_DIRS = ["values/counts/tract", "values/counts/block_group"];
 
 /** `ingest publish-reload`, for a checkout that holds only what this run loaded (a GitHub runner,
  *  #369, D-478): rewrite each local shard as the live one from R2 with only the reloaded datasets
  *  swapped in, and stop before any upload if a county would lose one. Then upload all of values/
- *  (only changed files go up; the drop guard re-checks each shard). A run that wrote no tract or
- *  block-group values has no shard folders, so this skips straight to the value files. */
+ *  (only changed files go up; the drop guard re-checks each shard and each map's tract files). A run
+ *  that wrote no tract or block-group counts has no shard folders, so this skips straight to the value files. */
 export async function publishReload() {
   const { s3, bucket } = r2();
   const dropped: string[] = [];

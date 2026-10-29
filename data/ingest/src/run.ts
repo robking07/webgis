@@ -1,5 +1,5 @@
 // npm run ingest -- <step> [dataset or level ids…]
-// Steps: geographies | label-mask | mpo | mpo-counties | areas | publish-areas | publish-search | timeline | acs | acs-bg | census2020 | lodes | places | climdiv | nbi | fars | overdose | airquality | features | vmt | cejst | ddp287g | tri | nri | svi | sahie | lead | food-access | tiles | publish-tiles | publish-reload | publish-values | publish-geo | publish-data | counts | publish-counts | details | similar | publish-details | tract-geo | export [--allow-period-drop] | export-values | insights [--reflag] | combinations [--dry-run] | tracts-out | docs | mn-catalog | mpo-plans | export-mpo-plans | publish-mpo-plans [--dry-run] | all
+// Steps: geographies | label-mask | mpo | mpo-counties | areas | publish-areas | publish-search | timeline | acs | acs-bg | census2020 | lodes | places | climdiv | nbi | fars | overdose | airquality | features | vmt | cejst | ddp287g | tri | nri | svi | sahie | lead | food-access | tiles | publish-tiles | publish-reload | publish-values | publish-geo | publish-data | counts | publish-counts | details | similar | publish-details | tract-geo | export [--allow-period-drop] | export-values | insights [--reflag] | combinations [--dry-run] | tracts-out | split-tracts | docs | mn-catalog | mpo-plans | export-mpo-plans | publish-mpo-plans [--dry-run] | all
 import { ingestGeographies, tractGeography } from "./geographies.ts";
 import { ingestAcs, ingestAcsTimeline } from "./acs.ts";
 import { ingestCensus2020 } from "./census2020.ts";
@@ -34,7 +34,7 @@ import { buildLabelMask } from "./label-mask.ts";
 import { buildMpo, buildMpoCounties } from "./mpo.ts";
 import { buildAreas } from "./areas.ts";
 import { checkMpoPlans, exportMpoPlans, publishMpoPlans } from "./mpo-plans.ts";
-import { tractsOut } from "./tracts.ts";
+import { splitTracts, tractsOut } from "./tracts.ts";
 const [step, ...rest] = process.argv.slice(2);
 const ids = rest.filter((a) => !a.startsWith("--"));
 const only = ids.length ? ids : undefined;
@@ -112,6 +112,8 @@ const steps: Record<string, () => Promise<void> | void> = {
   combinations: () => computeCombinations(rest.includes("--dry-run")),
   // D-113: tract values live in static files; moves the database's tract rows out (--drop deletes them).
   "tracts-out": () => tractsOut(rest),
+  // D-506, one-off: the live all-maps tract files → one file per map per county (the "Split tract files" workflow).
+  "split-tracts": splitTracts,
   // Every ingest step above also goes in `all`.
   all: async () => {
     await ingestGeographies(); await ingestAcs(); await ingestCensus2020(); await ingestLodes(); await ingestPlaces(); await ingestClimdiv(); await ingestNbi(); await ingestFars(); await ingestOverdose(); await ingestAirQuality();
