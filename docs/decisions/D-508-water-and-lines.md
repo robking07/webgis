@@ -11,7 +11,7 @@ Layer order, bottom to top, around the data:
 2. Thematic fills and outlines (inserted before `DATA_BEFORE_ID` = `overlay-water`)
 3. Selection outlines (before `HIGHLIGHT_BEFORE_ID` = `ref-county-line`)
 4. `overlay-water`, `overlay-shoreline` (OpenMapTiles water, same tokens as the basemap)
-5. `ref-county-line`: core `map.boundary`, opacity 0.8, 0.4 px at z6, 0.6 at z9, 1.2 at z14, no casing
+5. `ref-county-line`: core `map.boundary`, opacity 1, 0.5 px at z6, 1 at z9, 1.4 at z14, no casing
 6. `ref-state-line-casing`: `map.featureOutline`, opacity 0.8, 1.4 px at z3, 2.5 at z5, 4 at z10
 7. `ref-state-line`: core `map.boundaryMajor`, 0.5 px at z3, 0.9 at z5, 1.6 at z10
 8. Rivers, interstates, labels (unchanged)

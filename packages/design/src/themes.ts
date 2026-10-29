@@ -174,7 +174,7 @@ export const THEMES: Record<ThemeName, Theme> = {
       park: "#39443d",
       road: "#42464e",
       roadMajor: "#4c5058",
-      boundary: "#4a4e56",
+      boundary: "#6b707a",
       boundaryMajor: "#8b919c",
       label: "#d4d6da",
       labelMuted: "#9a9ea6",

@@ -551,13 +551,13 @@ export function featurePolygonLayers(o: FeaturePolygonOptions): LayerSpecificati
  *  tracts. Census sources, so they match the fills exactly. Cased, and heavier for the parent. */
 const REF_STATE = [[3, 1.4], [5, 2.5], [10, 4]] as const;
 const REF_STATE_CORE = [[3, 0.5], [5, 0.9], [10, 1.6]] as const;
-const REF_COUNTY_CORE = [[6, 0.4], [9, 0.6], [14, 1.2]] as const;
+const REF_COUNTY_CORE = [[6, 0.5], [9, 1], [14, 1.4]] as const;
 export function referenceLineLayers(theme: ThemeName): LayerSpecification[] {
   const m = THEMES[theme].map;
   const state = { source: "b-state", "source-layer": "state" };
   return [
     { id: "ref-county-line", type: "line", source: "b-county", "source-layer": "county", minzoom: 6,
-      paint: { "line-color": m.boundary, "line-opacity": 0.8, "line-width": zoomInterp(REF_COUNTY_CORE) as never } },
+      paint: { "line-color": m.boundary, "line-opacity": 1, "line-width": zoomInterp(REF_COUNTY_CORE) as never } },
     { id: "ref-state-line-casing", type: "line", ...state, minzoom: 3,
       paint: { "line-color": m.featureOutline, "line-opacity": 0.8, "line-width": zoomInterp(REF_STATE) as never } },
     { id: "ref-state-line", type: "line", ...state, minzoom: 3,
