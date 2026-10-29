@@ -98,7 +98,7 @@ function SheetKey({ colors, cls, ends }: { colors: string[]; cls: number | null;
 /** "Use with caution" / "Unreliable estimate" under an ACS value whose margin of error is large
  *  (D-222). Shown whether or not the map's hatching is on; nothing for other sources. With no value,
  *  why not (issue #193). */
-function ReliabilityNote({ dataset, geoid, value, moe }: { dataset: Dataset; geoid: string; value?: number | null; moe?: number | null }) {
+export function ReliabilityNote({ dataset, geoid, value, moe }: { dataset: Dataset; geoid: string; value?: number | null; moe?: number | null }) {
   if (value == null) return <p className="mt-1 text-xs text-muted-foreground" data-no-data-reason="">{noDataReason(dataset, geoid)}</p>;
   const note = isGradable(dataset.measure.kind) ? reliabilityNote(value, moe) : null;
   if (!note) return null;

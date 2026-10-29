@@ -92,3 +92,17 @@ describe("Saint/St., Twin Cities (issue #289)", () => {
   it("a half-typed st still finds Stillwater", () => expect(f("st")).toContain("Stillwater, MN"));
   it("twin cities finds the Metropolitan Council first", () => expect(f("Twin Cities")[0]).toBe("Metropolitan Council"));
 });
+
+describe("cities and metro areas in place search (issue #332)", () => {
+  const metro: PlaceRow = ["Minneapolis-St. Paul-Bloomington, MN-WI", "Metro area", "cbsa33460", -93.2, 45.22, 7048, "MN, WI", [-94.26, 44.2, -92.14, 46.25]];
+  const rows: PlaceRow[] = [...ROWS.map((r): PlaceRow => (r[0] === "Minneapolis, MN" ? [r[0], r[1], "place2743000", r[3], r[4], r[5]] : r)), metro];
+  it("a city with a code is an area, never a geography level", () => {
+    expect(searchPlaces(rows, "Minneapolis")[0]).toMatchObject({ name: "Minneapolis, MN", kind: "City", geoid: null, level: null, area: "place2743000" });
+    expect(searchPlaces(rows, "Minneapolis").map((h) => h.kind)).toContain("Metro area");
+    expect(placeByGeoid(rows, "place2743000")).toMatchObject({ area: "place2743000" }); // tagged codes can't collide with GEOIDs
+  });
+  it("'metro' and dashes find the metro first", () => {
+    for (const q of ["Minneapolis metro", "minneapolis metro area", "Minneapolis–St. Paul", "Minneapolis-St Paul"])
+      expect(searchPlaces(rows, q)[0], q).toMatchObject({ kind: "Metro area", area: "cbsa33460" });
+  });
+});

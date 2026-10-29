@@ -4,8 +4,10 @@
 //   &since=<earlier stop: map the change from it to the shown stop (issue #127)>
 //   &in=<geoid: the place clicked into, drawn with the next level inside it (issue #203)>
 //   &mpo=<MPO id: a Metropolitan Planning Organization picked in search, outlined (issue #276)>
+//   &area=<a city or metro area picked in search, by tagged code: place2743000, cbsa33460 (issue #332)>
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { AREA_CODE } from "./search";
 
 export interface ViewState {
   lon: number; lat: number; zoom: number;
@@ -28,6 +30,7 @@ export interface UrlState {
   in?: string | null;
   /** A searched MPO (outlined, not a geography level); null = none. */
   mpo?: string | null;
+  area?: string | null;
 }
 
 export const DEFAULT_VIEW: ViewState = { lon: -96.5, lat: 38.5, zoom: 3.6, fit: true };
@@ -46,6 +49,7 @@ export function parseUrlState(search: string): UrlState {
     since: p.get("since")?.match(/^[a-z0-9]{1,12}$/)?.[0] ?? null,
     in: p.get("in")?.match(/^\d{2,15}$/)?.[0] ?? null,
     mpo: p.get("mpo")?.match(/^\w{1,10}$/)?.[0] ?? null,
+    area: p.get("area")?.match(AREA_CODE)?.[0] ?? null,
   };
 }
 
@@ -60,11 +64,12 @@ export function serializeUrlState(s: UrlState): string {
   if (s.since) p.set("since", s.since);
   if (s.in) p.set("in", s.in);
   if (s.mpo) p.set("mpo", s.mpo);
+  if (s.area) p.set("area", s.area);
   return `?${p.toString().replaceAll("%2C", ",")}`;
 }
 
 /** The deliberate choices; changing one adds a Back step (each drill-down step too). Panning, zooming and theme don't. */
-export const historyKey = (s: UrlState) => [s.d, s.b, s.lv, s.t, s.since, s.in, s.mpo].join("|");
+export const historyKey = (s: UrlState) => [s.d, s.b, s.lv, s.t, s.since, s.in, s.mpo, s.area].join("|");
 
 /** URL-backed state. Pan/zoom write with replaceState (debounced); a change to the dataset, second
  *  dataset, level, period or focused place pushes a history entry, and Back/Forward re-read the URL. */
@@ -86,7 +91,7 @@ export function useUrlState(initial: UrlState) {
     const onPop = () => {
       const p = parseUrlState(window.location.search);
       setState((s) => {
-        const next = { ...s, d: p.d ?? initial.d, b: p.b, lv: p.lv, t: p.t, since: p.since, in: p.in, mpo: p.mpo };
+        const next = { ...s, d: p.d ?? initial.d, b: p.b, lv: p.lv, t: p.t, since: p.since, in: p.in, mpo: p.mpo, area: p.area };
         lastKey.current = historyKey(next); // the URL already holds it: don't push it again
         return next;
       });

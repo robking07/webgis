@@ -25,11 +25,12 @@ export function benchmarkRows(unit: Unit, geoid: string, state: { name: string; 
 }
 
 // shortcut: one small us.json fetch per map (cached), ~60 on a place page; bundle them into one file if that shows up as slow.
+/** `geoid` "" (a metro area, issue #332): the U.S. only. */
 export async function loadBenchmarks(d: Dataset, geoid: string): Promise<Benchmark[]> {
   if (NO_BENCHMARK.has(d.unit)) return [];
   const st = geoid.slice(0, 2);
   // Benchmarks are an extra: a failed file shows nothing.
   const [geo, detail, us] = await Promise.all([
-    fetchGeography(st).catch(() => null), fetchDetail(st).catch((): Detail => ({})), US_KINDS.has(d.measure.kind) ? usValue(d.id) : null]);
+    st ? fetchGeography(st).catch(() => null) : null, st ? fetchDetail(st).catch((): Detail => ({})) : ({} as Detail), US_KINDS.has(d.measure.kind) ? usValue(d.id) : null]);
   return benchmarkRows(d.unit, geoid, geo && { name: geo.name, value: detail[d.id]?.value ?? null }, us);
 }
