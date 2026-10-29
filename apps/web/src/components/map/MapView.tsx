@@ -4,7 +4,7 @@
 import { useEffect, useLayoutEffect, useRef } from "react";
 import { AttributionControl, LngLatBounds, Map as MlMap, ScaleControl, addProtocol, setWorkerUrl, type LayerSpecification, type MapGeoJSONFeature } from "maplibre-gl";
 import { Protocol } from "pmtiles";
-import { areaHighlightLayers, AREA_SOURCE, basemapStyle, pinLayers, PIN_SOURCE, choroplethFill, hatchImage, hatchLayerId, HATCH_IMAGE, HATCH_LEVELS, membershipFilter, NO_FEATURES, choroplethFillsByState, DATA_BEFORE_ID, STATIC_ONLY_LEVELS, TILE_VALUE_LEVELS, THEMES, featureLineLayers, featurePolygonLayers, fillLayerIds, focusDimLayer, FOCUS_DIM_LAYER, focusFilters, focusLandLayer, FOCUS_LAND_BEFORE_ID, GEO_LEVELS, MOTION, PER_STATE_LEVELS, thematicLayers, type GeoLevel, type NoDataFill, type PackedClasses, type ThemeName } from "@webgis/design";
+import { areaHighlightLayers, AREA_SOURCE, basemapStyle, pinLayers, PIN_SOURCE, choroplethFill, hatchImage, hatchLayerId, HATCH_IMAGE, HATCH_LEVELS, membershipFilter, NO_FEATURES, choroplethFillsByState, DATA_BEFORE_ID, HIGHLIGHT_BEFORE_ID, referenceLineLayers, STATIC_ONLY_LEVELS, TILE_VALUE_LEVELS, THEMES, featureLineLayers, featurePolygonLayers, fillLayerIds, focusDimLayer, FOCUS_DIM_LAYER, focusFilters, focusLandLayer, FOCUS_LAND_BEFORE_ID, GEO_LEVELS, MOTION, PER_STATE_LEVELS, thematicLayers, type GeoLevel, type NoDataFill, type PackedClasses, type ThemeName } from "@webgis/design";
 import { comparePickOpen } from "@/lib/compare";
 import type { FeatureLayerSpec } from "@/lib/layers";
 import type { ViewState } from "@/lib/url-state";
@@ -595,6 +595,10 @@ function addThematic(m: MlMap, theme: ThemeName, boundaries: string | null) {
   }
   // U.S. land a step lighter than neighbors, under water and parks (always on).
   if (!m.getLayer("us-focus-land")) m.addLayer(focusLandLayer("b-state", theme), m.getLayer(FOCUS_LAND_BEFORE_ID) ? FOCUS_LAND_BEFORE_ID : undefined);
+  // Parent boundaries over the data, under rivers and labels.
+  for (const layer of referenceLineLayers(theme)) {
+    if (!m.getLayer(layer.id)) m.addLayer(layer, m.getLayer("overlay-river-casing") ? "overlay-river-casing" : undefined);
+  }
   // Placeholder colors; the real ones come from syncPaint.
   for (const level of LEVELS) {
     for (const layer of thematicLayers({ source: `b-${level}`, sourceLayer: level, level, colors: [], theme })) {
@@ -603,12 +607,12 @@ function addThematic(m: MlMap, theme: ThemeName, boundaries: string | null) {
   }
   // Selection outlines go above every level's fill, so a county picked while tracts are drawn still shows.
   for (const level of LEVELS) for (const id of [`${level}-highlight-halo`, `${level}-highlight`, `${level}-highlight-second`]) {
-    if (m.getLayer(id)) m.moveLayer(id, m.getLayer(DATA_BEFORE_ID) ? DATA_BEFORE_ID : undefined);
+    if (m.getLayer(id)) m.moveLayer(id, m.getLayer(HIGHLIGHT_BEFORE_ID) ? HIGHLIGHT_BEFORE_ID : undefined);
   }
 }
 
 /** The searched area's outline: a GeoJSON source with the selection outline, above every fill. */
-function applyArea(m: MlMap, shape: Geometry | null, theme: ThemeName, source = AREA_SOURCE, layers = areaHighlightLayers(theme), before: string | undefined = DATA_BEFORE_ID) {
+function applyArea(m: MlMap, shape: Geometry | null, theme: ThemeName, source = AREA_SOURCE, layers = areaHighlightLayers(theme), before: string | undefined = HIGHLIGHT_BEFORE_ID) {
   for (const l of layers) if (m.getLayer(l.id)) m.removeLayer(l.id);
   if (m.getSource(source)) m.removeSource(source);
   if (!shape) return;
