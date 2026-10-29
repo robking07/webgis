@@ -1,5 +1,5 @@
 // Similar counties on a county's profile (#291): the five counties that rank closest across every
-// county measure, worked out at ingest (`ingest similar`, D-<PR+100>) and rendered on the server,
+// county measure, worked out at ingest (`ingest similar`, D-499) and rendered on the server,
 // so the browser fetches nothing extra. Each links to Compare, opened on a measure they share.
 import SIMILAR from "@/generated/similar.json";
 import { compareHref, shortName } from "@/lib/compare";
@@ -7,7 +7,7 @@ import { placeName } from "@/lib/place-name";
 import { DATASET_BY_ID } from "@/lib/registry";
 
 type Match = [string, number, number[], number[]];
-const { measures, counties } = SIMILAR as { measures: string[]; counties: Record<string, Match[]> };
+const { measures, counties } = SIMILAR as unknown as { measures: string[]; counties: Record<string, Match[]> };
 const titles = (idx: number[]) => idx.map((i) => DATASET_BY_ID.get(measures[i])?.title ?? measures[i]).join(", ");
 
 export function SimilarPlaces({ geoid }: { geoid: string }) {

@@ -1,4 +1,4 @@
-// Similar counties (#291, D-<PR+100>): for every county, the counties most like it across every
+// Similar counties (#291, D-499): for every county, the counties most like it across every
 // live county measure, worked out once here so the place page only reads a small file.
 //   npm run ingest -- similar     reads data/tiles/details/*.json (run `details` first),
 //                                 writes apps/web/src/generated/similar.json
