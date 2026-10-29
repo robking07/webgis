@@ -3,7 +3,7 @@ import { ArrowLeftRight, ChevronDown, Info, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { Dataset } from "@/lib/registry";
 import { TERM_BY_ID } from "@/lib/glossary";
-import { ShareButton } from "../ShareButton";
+import { ShareButton, type ShareExtras } from "../ShareButton";
 import { FilterButton } from "./FiltersPanel";
 
 /** Compare mode (issue #198): a tinted strip across the card's top says two maps are compared, with
@@ -21,7 +21,9 @@ function CompareStrip({ onSwap, onExit, className }: { onSwap: () => void; onExi
 /** At rest: the factual dataset card (category, title, filter button, meta line, explainer, actions).
  *  The title and its caret open the dataset menu; there is no separate Change dataset button
  *  (Robbie, 2026-10-14, issue #225). */
-export function DatasetCard({ cardRef, primary, secondary, meta, immersed, isFeature, tableReady, hasFilters, filtersOpen, filterCount, onOpenFilters, onBrowse, menuOpen, menu, onTable, phone, contextLink, onCompare, onSwap, onExit, explainOpen, setExplainOpen }: {
+export function DatasetCard({ cardRef, primary, secondary, meta, immersed, isFeature, tableReady, hasFilters, filtersOpen, filterCount, onOpenFilters, onBrowse, menuOpen, menu, onTable, phone, contextLink, onCompare, onSwap, onExit, explainOpen, setExplainOpen, share }: {
+  /** Share's "Copy for my memo" and "Save image" (issue #361). */
+  share: ShareExtras;
   /** The "What do these numbers mean?" panel is open; the page owns it so the legend can step aside. */
   explainOpen: boolean;
   setExplainOpen: (f: (o: boolean) => boolean) => void;
@@ -77,14 +79,14 @@ export function DatasetCard({ cardRef, primary, secondary, meta, immersed, isFea
     // one line that never wraps: the meta uses the period without its note and the short source
     // name (and ellipsizes as a last resort); the actions sit on their own line.
     const link = "rounded font-semibold text-primary hover:underline focus-visible:outline-2 focus-visible:outline-ring";
-    const share = <ShareButton variant="link" size="xs" className="h-auto p-0 font-semibold" />;
+    const shareButton = (align: "left" | "right") => <ShareButton extras={share} align={align} variant="link" size="xs" className="h-auto p-0 font-semibold" />;
     // Comparing: the strip takes the category row (two maps have no one category), and Share moves
     // to the actions line in place of Compare datasets, so the card grows only by the strip's padding.
     const actions = [
       !isFeature && !secondary && <button key="c" type="button" onClick={onCompare} className={link}>Compare datasets</button>,
       tableReady && <button key="t" type="button" onClick={onTable} className={link}>Table</button>,
       <a key="a" href={`/data/${primary.id}`} className={link}>About</a>,
-      secondary && <span key="s">{share}</span>,
+      secondary && <span key="s">{shareButton("left")}</span>,
     ].filter(Boolean);
     return (
       <section ref={cardRef} aria-label="Mapped dataset" data-obstructs={!immersed ? "" : undefined} className={`${shell} wg-panel px-3 py-2.5`} inert={immersed || undefined}>
@@ -92,7 +94,7 @@ export function DatasetCard({ cardRef, primary, secondary, meta, immersed, isFea
         {secondary ? <CompareStrip onSwap={onSwap} onExit={onExit} className="-mx-3 -mt-2.5 mb-1 px-3 py-0.5" /> : (
           <div className="flex items-baseline justify-between gap-2">
             <span className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">{primary.category}</span>
-            {share}
+            {shareButton("right")}
           </div>
         )}
         <h1>
@@ -138,7 +140,7 @@ export function DatasetCard({ cardRef, primary, secondary, meta, immersed, isFea
         {!isFeature && !secondary && <button type="button" onClick={onCompare} className="rounded-md border px-2.5 py-1 text-[13px] hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring">Compare datasets</button>}
         {tableReady && <button type="button" onClick={onTable} className="rounded-md border px-2.5 py-1 text-[13px] hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring">Table</button>}
         <a href={`/data/${primary.id}`} className="rounded-md border px-2.5 py-1 text-[13px] text-foreground hover:bg-muted">About this data</a>
-        <ShareButton className="h-auto bg-transparent py-1 text-[13px] font-normal dark:bg-transparent" />
+        <ShareButton extras={share} align="left" className="h-auto bg-transparent py-1 text-[13px] font-normal dark:bg-transparent" />
       </div>
     </section>
   );
