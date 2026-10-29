@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { CATALOG, classify } from "./mpo-plans.ts";
+import { CATALOG, classify, WEB_PLANS, webPlans } from "./mpo-plans.ts";
 
 describe("classify", () => {
   it("counts a plain success as ok", () => {
@@ -25,5 +25,16 @@ describe("catalog", () => {
   });
   it("has all four documents for every MPO", () => {
     for (const m of c.mpos) expect(Object.keys(m.docs).sort(), m.name).toEqual(Object.keys(c.labels).sort());
+  });
+  it("matches the map's copy (run `npm run ingest -- export-mpo-plans` after an edit)", () => {
+    expect(JSON.parse(readFileSync(WEB_PLANS, "utf8"))).toEqual(JSON.parse(JSON.stringify(webPlans(c))));
+  });
+  it("writes links in notes as [text](https://…), never a bare URL", () => {
+    for (const n of JSON.stringify(c).match(/"note":"[^"]*"/g)!) expect(n.replace(/\[[^\]]+\]\(https:\/\/[^)\s]+\)/g, "")).not.toMatch(/https?:/);
+  });
+  it("links a kept copy only for documents publish uploads", () => {
+    const kept = JSON.stringify(webPlans(c)).match(/"kept":"[^"]+"/g)!;
+    expect(kept.length).toBeGreaterThan(0);
+    for (const k of kept) expect(k).toMatch(/^"kept":"https:\/\/tiles\.mapwich\.org\/plans\/\d+\/[\w-]+\.(pdf|docx)"$/);
   });
 });
