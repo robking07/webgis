@@ -62,7 +62,7 @@ function parseBody(file: string, body: string, firstLine: number) {
   const out: Array<{ kind: "html"; html: string; words: number } | Block> = [];
   const prose = (md: string) => {
     if (!md.trim()) return;
-    out.push({ kind: "html", html: marked.parse(md, { async: false }), words: md.split(/\s+/).filter(Boolean).length });
+    out.push({ kind: "html", html: marked.parse(md, { async: false }).replace(/<table>[\s\S]*?<\/table>/g, (t) => `<div class="wg-table-scroll" role="region" aria-label="Table" tabindex="0">${t}</div>`), words: md.split(/\s+/).filter(Boolean).length });
   };
   let last = 0, n = 0;
   for (const m of body.matchAll(FENCE)) {
