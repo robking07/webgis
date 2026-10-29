@@ -15,6 +15,11 @@ on:
       datasets:
         description: "Dataset ids, space-separated; every step must load every one"
         required: true
+      allow_tract_drop:
+        # D-506: only for a real loss (a new tract vintage, a county a source no longer covers).
+        description: "Allow the upload to drop live tracts or counties (ALLOW_TRACT_DROP=1)"
+        type: boolean
+        default: false
 
 # One data run at a time; a second one waits instead of racing the first one's uploads.
 concurrency:
@@ -65,11 +70,13 @@ jobs:
           npm run ingest -- export-values $DATASETS
           npm run ingest -- details
 
-      # publish-reload merges this run's tract and count files into the live ones on R2 and stops
-      # before the first upload if any county would lose data; ALLOW_TRACT_DROP is never set here.
+      # publish-reload merges this run's count files into the live ones on R2, then checks every
+      # changed file (count shards, each map's tract files and counties) and stops before the first
+      # upload if any would lose data. ALLOW_TRACT_DROP is set only when the run's input asks for it.
       # Click details go last, only once the values are up.
       - name: Publish to R2
         env:
+          ALLOW_TRACT_DROP: ${{ inputs.allow_tract_drop && '1' || '' }}
           R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
           R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
           R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
