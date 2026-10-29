@@ -2,7 +2,8 @@
 // plan and grants page. `ingest mpo-plans` re-checks every link, keeps a copy of each file in
 // data/cache/mpo-plans/ (named by content hash, so old versions stay), and asks the Wayback Machine
 // to snapshot links without a recent one. `ingest publish-mpo-plans [--dry-run]` uploads the copies
-// to R2 under plans/. Sequential and slow on purpose: these are small public sites.
+// to R2 under plans/. `mpo-plans` ends by writing the map's copy, apps/web/public/mpo/plans.json
+// (`ingest export-mpo-plans` writes only that, after a hand edit). Sequential and slow on purpose: these are small public sites.
 import { createHash } from "node:crypto";
 import { createReadStream, existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
@@ -12,9 +13,11 @@ import { CACHE, log, ROOT } from "./util.ts";
 import { r2 } from "./publish-tiles.ts";
 
 export const CATALOG = join(ROOT, "data/registry/mpo-plans.json");
+export const WEB_PLANS = join(ROOT, "apps/web/public/mpo/plans.json");
 /** Kept copies. A link's `file` is relative to this folder here and to plans/ on R2. */
 const ARCHIVE = join(CACHE, "mpo-plans");
 const KEY_PREFIX = "plans/";
+const PUBLIC = "https://tiles.mapwich.org/" + KEY_PREFIX;
 const UA = { "user-agent": "Mapwich-ingest/1.0 (+https://mapwich.org; archiving public MPO plans)" };
 /** A Wayback snapshot younger than this is fresh enough; older ones get a new Save Page Now. */
 const WAYBACK_MAX_AGE_DAYS = 90;
@@ -27,7 +30,7 @@ export interface Link {
   wayback?: string | null;
 }
 interface Doc extends Link { parts?: Link[] }
-interface Catalog { about: string; labels: Record<string, string>; mpos: Array<{ id: string; name: string; website: string; docs: Record<string, Doc> }> }
+export interface Catalog { about: string; labels: Record<string, string>; mpos: Array<{ id: string; name: string; website: string; docs: Record<string, Doc> }> }
 
 /** HTTP status (or network error code) → link status. Only a clear "gone" counts as dead: sites
  *  that block scripts (401/403/429, Cloudflare, 5xx, timeouts) may still work in a browser. */
@@ -105,6 +108,27 @@ async function wayback(link: Link) {
   link.wayback = (await latestSnapshot(link.url).catch(() => undefined))?.[1] ?? have?.[1] ?? null;
 }
 
+/** A kept copy that `publish-mpo-plans` uploads: documents only (see there). */
+const hosted = (l: Link) => !!l.file && l.host !== false && /\.(pdf|docx)$/.test(l.file);
+
+/** The map's copy, keyed by MPO id: what a visitor sees, without the ingest-only fields (http, type,
+ *  bytes, sha256). `kept` is the copy's public URL.
+ *  shortcut: links a copy once it is downloaded, before publish-mpo-plans uploads it; run both together. */
+export function webPlans(c: Catalog) {
+  const show = (l: Link) => ({ title: l.title, url: l.url, date: l.date, note: l.note, checked: l.checked, status: l.status,
+    kept: hosted(l) ? PUBLIC + l.file : undefined, wayback: l.wayback ?? undefined });
+  return {
+    labels: c.labels,
+    mpos: Object.fromEntries(c.mpos.map((m) => [m.id, Object.fromEntries(Object.keys(c.labels).map((k) =>
+      [k, { ...show(m.docs[k]), parts: m.docs[k].parts?.map(show) }]))])),
+  };
+}
+const exportPlans = (c: Catalog) => {
+  writeFileSync(WEB_PLANS, `${JSON.stringify(webPlans(c))}\n`);
+  log("mpo-plans", `wrote ${c.mpos.length} MPOs to apps/web/public/mpo/plans.json`);
+};
+export const exportMpoPlans = () => exportPlans(readCatalog());
+
 const readCatalog = () => JSON.parse(readFileSync(CATALOG, "utf8")) as Catalog;
 /** Every link in the catalog as [mpo id, file name stem, link]: each document, then its parts. */
 function* links(c: Catalog): Generator<[string, string, Link]> {
@@ -129,6 +153,7 @@ export async function checkMpoPlans() {
   const n = (s: string) => all.filter(([, , l]) => l.status === s).length;
   const mb = all.reduce((t, [, , l]) => t + (l.bytes ?? 0), 0) / 1e6;
   log("mpo-plans", `${all.length} links: ${n("ok")} ok, ${n("dead")} dead, ${n("cant-verify")} can't verify; ${mb.toFixed(1)} MB in data/cache/mpo-plans`);
+  exportPlans(c);
 }
 
 /** `ingest publish-mpo-plans [--dry-run]`: upload the kept copies to R2 under plans/. A link that has
@@ -137,7 +162,7 @@ export async function checkMpoPlans() {
  *  scripts there), as do links marked `"host": false`.
  *  Keys carry the content hash, so keys already on R2 are skipped. */
 export async function publishMpoPlans(dryRun: boolean) {
-  const files = [...links(readCatalog())].map(([, , l]) => l).filter((l) => l.file && l.host !== false && /\.(pdf|docx)$/.test(l.file));
+  const files = [...links(readCatalog())].map(([, , l]) => l).filter(hosted);
   const missing = files.filter((l) => !existsSync(join(ARCHIVE, l.file!)));
   files.splice(0, files.length, ...files.filter((l) => !missing.includes(l))); // upload what we have, fail at the end
   const finish = () => {

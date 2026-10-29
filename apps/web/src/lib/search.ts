@@ -94,6 +94,11 @@ export const loadMpoShape = (id: string) => json("/mpo/" + id + ".json");
 type MpoCounties = Record<string, RegionCounty[]>;
 let mpoCounties: Promise<MpoCounties> | null = null;
 export const loadMpoCounties = (): Promise<MpoCounties> => (mpoCounties ??= json("/mpo/counties.json").catch((e) => { mpoCounties = null; throw e; }));
+/** An MPO's plans (#365, D-479; ingest `export-mpo-plans`): one link, or a plan published in parts. */
+export interface PlanLink { title?: string | null; url: string | null; date?: string; note?: string; checked?: string; status?: "ok" | "dead" | "cant-verify"; kept?: string; wayback?: string }
+export interface MpoPlans { labels: Record<string, string>; mpos: Record<string, Record<string, PlanLink & { parts?: PlanLink[] }>> }
+let mpoPlans: Promise<MpoPlans> | null = null;
+export const loadMpoPlans = (): Promise<MpoPlans> => (mpoPlans ??= json("/mpo/plans.json").catch((e) => { mpoPlans = null; throw e; }));
 
 export function areaByCode(rows: PlaceRow[], code: string): PlaceHit | null {
   const r = rows.find((x) => x[2] === code);
