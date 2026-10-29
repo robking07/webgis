@@ -6,7 +6,7 @@
 // that county's tracts inside are added instead (#390); "approximate" (the half rule) when they can't be.
 import { useEffect, useState } from "react";
 import { formatEstimate } from "@webgis/design";
-import { countsLabels, regionCounties, regionTotal, shareOf, type Counts, type RegionCounty } from "@/lib/counts";
+import { countsLabels, regionCounties, regionTotal, shareOf, type RegionCounty } from "@/lib/counts";
 import { loadMpoCounties, loadPlaceIndex, placeByGeoid } from "@/lib/search";
 import type { Dataset } from "@/lib/registry";
 
