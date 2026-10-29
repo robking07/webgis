@@ -360,9 +360,9 @@ export function Viewer({ search }: { search: string }) {
   const chromeShown = !immersed || peek;
   // Popups sit under the header while it's showing and move back up when it falls away.
   const panelTop = chromeShown ? HEADER_GAP : 12;
-  // Legend: desktop shows it in full; it shrinks to its strip while the filters sidebar or the
-  // dataset menu needs the room (and the card's explainer, which grows the card down into it, #308).
-  const desktopStrip = (!!filters || menuOpen || (explainOpen && !immersed)) && !phone;
+  // Legend: desktop shows it in full (the filters sidebar stops above it); it shrinks to its strip
+  // while the dataset menu needs the room (and the card's explainer, which grows the card down into it, #308).
+  const desktopStrip = (menuOpen || (explainOpen && !immersed)) && !phone;
   const hasFilters = !!primary && (availableLevels.length > 1 || primary.facets.length > 0 || stops.length > 0);
   const featureNoun = featureSpec?.geometry === "polygon" ? "Census tracts (2010)" : "Road segments";
   const periodLabel = primary ? (since ? `${since.label} → ${stop!.label}` : stopId ? stop!.label : primary.vintage) : "";
@@ -385,6 +385,7 @@ export function Viewer({ search }: { search: string }) {
   // Left column (desktop): the filters sidebar opens below the title (or the at-rest card) and
   // stops above the legend strip.
   const [sidebarTop, setSidebarTop] = useState(160);
+  const [legendH, setLegendH] = useState(0);
   // Re-measures after every render on purpose (it follows layout changes no dependency list covers); the
   // `top !== sidebarTop` guard stops the loop.
   /* eslint-disable react-hooks/exhaustive-deps */
@@ -394,6 +395,9 @@ export function Viewer({ search }: { search: string }) {
     const owner = immersed ? el.querySelector<HTMLElement>("[data-immersed-heading]") : card.current;
     const top = Math.round((owner?.getBoundingClientRect().bottom ?? 148) + 10);
     if (top !== sidebarTop) setSidebarTop(top);
+    const legend = [...el.querySelectorAll<HTMLElement>("[data-legend]")].find((e) => e.offsetParent);
+    const lh = legend ? Math.round(legend.offsetHeight) : 0;
+    if (lh !== legendH) setLegendH(lh);
   });
   /* eslint-enable react-hooks/exhaustive-deps */
   // The selected place's class, marked in the legend (desktop) or the sheet's key (phones).
@@ -493,7 +497,7 @@ export function Viewer({ search }: { search: string }) {
       )}
 
       {filters && primary && !phone && (
-        <FiltersSidebar top={sidebarTop} bottom={84} levels={valueLevels} changeLevels={availableLevels} shown={level} facets={primary.facets} stops={stops}
+        <FiltersSidebar top={sidebarTop} bottom={Math.max(84, legendH + 34)} levels={valueLevels} changeLevels={availableLevels} shown={level} facets={primary.facets} stops={stops}
           value={filterValue} onChange={applyFilters} onClose={() => setFilters(null)} hiddenWhileMoving={stepAside || menuOpen} />
       )}
       {filters && primary && phone && (

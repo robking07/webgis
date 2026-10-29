@@ -66,18 +66,21 @@ export function MapLegend({ theme, primary, secondary, isFeature, featureSpec, c
   const legendEnds = current?.ends ?? (featureSpec
     ? [`< ${formatValue(featureSpec.breaks[0], primary!.unit)}`, `≥ ${formatValue(featureSpec.breaks[featureSpec.breaks.length - 1], primary!.unit)}`]
     : current?.breaks?.length ? ((f) => [`< ${f(current.breaks![0])}`, `≥ ${f(current.breaks!.at(-1)!)}`])(legendFormat(current.breaks, primary!.unit)) : null);
-  const changeCaption = primary && since && stop && current?.measure && [
+  // Long method notes sit behind "About this scale" so the swatches stay on screen (#187).
+  const [changeHead, ...changeNotes] = primary && since && stop && current?.measure ? [
     `Change, ${since.label} → ${stop.label}, ${changeUnitWords(current.measure, primary.unit)} · ${GEO_LEVELS[level].label}`,
     current.tested && "No clear change: within the margin of error",
     primary.measure.kind === "acs5" && primary.unit === "dollars" && "Adjusted for inflation",
     changeNote(since, stop, level),
     primary.coverageNote,
-  ].filter(Boolean).join(". ");
+  ].filter(Boolean) as string[] : [];
+  const stopText = primary && stop && stopNote(primary, stop, level);
+  const notes = (isFeature ? [primary?.coverageNote] : changeHead ? changeNotes : [stopText, primary?.coverageNote]).filter(Boolean).join(". ");
   const legendBody = (
     <div key={shown.cue} className={cueClass}>
       {primary && isFeature ? (featureSpec ? (
           <Legend title={primary.title} unit={primary.unit} colors={featureColors!} breaks={featureSpec.breaks} showNoData={false} swatch={featureSpec.geometry === "line" ? "line" : "area"}
-            caption={`${primary.vintage} · ${featureSpec.featureCount.toLocaleString()} ${featureSpec.geometry === "line" ? "segments · wider lines = higher road class" : "areas"}${primary.coverageNote ? `. ${primary.coverageNote}` : ""}`} />
+            caption={`${primary.vintage} · ${featureSpec.featureCount.toLocaleString()} ${featureSpec.geometry === "line" ? "segments · wider lines = higher road class" : "areas"}`} />
         ) : <StatusState status="empty" message="This layer hasn't been built yet." />)
         : error ? <StatusState status="error" message={error} />
         : primary && !available ? <StatusState status="empty" message="These two datasets don't share a geography level, so they can't be compared." />
@@ -86,11 +89,17 @@ export function MapLegend({ theme, primary, secondary, isFeature, featureSpec, c
           <BivariateLegend xTitle={primary.title} yTitle={secondary.title} colors={current.colors} />
         ) : primary && current?.labels ? (
           <Legend title={primary.title} unit={primary.unit} colors={current.colors} breaks={[]} labels={current.labels} mark={mark}
-            noDataFill="noDataChange" caption={changeCaption || undefined} />
+            noDataFill="noDataChange" caption={changeHead} />
         ) : primary && current?.breaks ? (
           <Legend title={primary.title} unit={primary.unit} colors={current.colors} breaks={current.breaks} minClass={current.minClass} mark={mark}
-            caption={`${GEO_LEVELS[level].label} · ${periodLabel}${stop && stopNote(primary, stop, level) ? `. ${stopNote(primary, stop, level)}` : ""}${primary.coverageNote ? `. ${primary.coverageNote}` : ""}`} />
+            caption={`${GEO_LEVELS[level].label} · ${periodLabel}`} />
         ) : null}
+      {notes && !secondary && !error && !loading && (
+        <details className="mt-2 text-xs text-muted-foreground">
+          <summary className="cursor-pointer rounded text-primary focus-visible:outline-2 focus-visible:outline-ring">About this scale</summary>
+          <p className="mt-1">{notes}</p>
+        </details>
+      )}
       {hatchToggle && current?.breaks && !secondary && (
         <HatchToggle {...hatchToggle} fill={current.colors[Math.floor(current.colors.length / 2)]} />
       )}
