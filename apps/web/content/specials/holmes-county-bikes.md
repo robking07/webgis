@@ -123,7 +123,7 @@ The awards and ratings describe what a place has built and planned for people on
 County estimates are steadier than tract estimates. Holmes County's lead is clear; below it, the margins overlap enough that the order could easily change.
 
 | County | Bike to work (%) | Margin of error (points) | Grade |
-|---|---|---|---|
+|---|---:|---:|---|
 | Holmes County, OH | 14.0 | ±2.2 | Reliable |
 | LaGrange County, IN | 7.2 | ±1.2 | Reliable |
 | Pitkin County, CO | 6.7 | ±2.1 | Use with caution |

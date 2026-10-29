@@ -38,7 +38,7 @@ export function SpecialPiece({ special: s }: { special: Special }) {
         <figcaption className="text-[13px] leading-normal text-muted-foreground">{caption}</figcaption>
       </figure>
 
-      <div className="grid gap-7 md:grid-cols-[minmax(0,1fr)_320px] md:items-start md:gap-16">
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-7 md:grid-cols-[minmax(0,1fr)_320px] md:items-start md:gap-16">
         <article className="wg-prose min-w-0 max-w-[700px]">
           {s.body.map((seg, i) => seg.kind === "html"
             // display: contents keeps the prose's paragraphs in the article's spacing.
