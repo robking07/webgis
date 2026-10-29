@@ -177,10 +177,11 @@
 .wg-prose a.wg-block-link { color: var(--ui-text); text-decoration: none; }
 .wg-prose a.wg-block-link:hover { text-decoration: underline; }
 /* Markdown tables: the box scrolls sideways on a phone so the page never does. */
-.wg-prose table { display: block; max-width: 100%; overflow-x: auto; border-collapse: collapse; font-size: 0.9375rem; line-height: 1.45; font-variant-numeric: tabular-nums; }
+.wg-table-scroll { max-width: 100%; overflow-x: auto; }
+.wg-prose table { border-collapse: collapse; font-size: 0.9375rem; line-height: 1.45; font-variant-numeric: tabular-nums; }
 .wg-prose th, .wg-prose td { padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--ui-border); vertical-align: top; }
 .wg-prose th:not([align]) { text-align: start; }
-.wg-prose th { font-weight: 700; color: var(--ui-text); border-bottom-width: 2px; }
+.wg-prose th { vertical-align: bottom; font-weight: 700; color: var(--ui-text); border-bottom-width: 2px; }
 .wg-prose td:first-child, .wg-prose th:first-child { padding-left: 0; }
 .wg-prose td:not(:first-child) { white-space: nowrap; }
 .wg-prose td:last-child, .wg-prose th:last-child { padding-right: 0; }
