@@ -2,20 +2,20 @@
 // live county measure, worked out once here so the place page only reads a small file.
 //   npm run ingest -- similar     reads data/tiles/details/*.json (run `details` first) and the
 //                                 population map's county counts (residents), writes
-//                                 apps/web/src/generated/similar.json
+//                                 data/tiles/similar/similar.json; `publish-similar` puts it on R2,
+//                                 where the place page reads it (so a Data run refreshes it, #401)
 // Method, in one sentence: each county is ranked on every measure, and its matches are the
 // counties whose ranks are closest overall, each topic (registry category) counted equally.
 // "Alike on" lists the measures where both sit furthest from the national middle on the same
 // side (both in the top or bottom quarter), one per topic.
-// shortcut: the GitHub "Data run" can't commit, so it can't refresh this git file; matches go stale until someone runs `similar` after `details` and commits. Move the file to R2 if that gets missed.
-import { readdirSync, readFileSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { dirname, join } from "node:path";
 import { loadRegistry } from "@webgis/registry/load";
 import type { DatasetEntry } from "@webgis/registry";
 import { DETAILS_DIR, type DetailShard } from "./details.ts";
-import { log, ROOT, TILES } from "./util.ts";
+import { log, TILES } from "./util.ts";
 
-export const SIMILAR_JSON = join(ROOT, "apps/web/src/generated/similar.json");
+export const SIMILAR_JSON = join(TILES, "similar/similar.json");
 /** Residents per county ([count, moe, …]), as the population map publishes them. Ranks, so no log needed. */
 const RESIDENTS_JSON = join(TILES, "values/population_density/county.counts.json");
 /** Not a registry dataset: the county's population, counted under People. */
@@ -115,6 +115,7 @@ export function similarOut() {
   const topic = new Map<string, string>([...entries.map((d) => [d.id, d.category] as const), [RESIDENTS, "People"]]);
   const out = findSimilar(table, measures, measures.map((id) => topic.get(id)!));
   const body = JSON.stringify(out);
+  mkdirSync(dirname(SIMILAR_JSON), { recursive: true });
   writeFileSync(SIMILAR_JSON, body + "\n");
   log("similar", `${geoids.length} counties, ${measures.length} measures (skipped: ${skipped.join(", ") || "none"}), ${(body.length / 1e3).toFixed(0)} KB`);
 }
