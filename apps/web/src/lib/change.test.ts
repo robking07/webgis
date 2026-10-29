@@ -71,6 +71,12 @@ describe("classifyChange", () => {
     expect(c.tested).toBe(false);
   });
 
+  it("rounds the cut-offs to one figure so the legend reads ±2, ±5", () => {
+    const f = { a: 0, b: 0, c: 0, d: 0, e: 0, f: 0 };
+    const c = classifyChange(f, { a: 1.2, b: 1.87, c: 2.5, d: 4.6, e: 5.4, f: 9 }, "percent");
+    expect(c.ends).toEqual(["−5.0 pts", "+5.0 pts"]);
+  });
+
   it("leaves areas missing in either year out", () => {
     const c = classifyChange(from, to, "percent");
     expect(c.classes.has("y")).toBe(false);

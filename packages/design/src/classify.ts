@@ -44,11 +44,11 @@ export function classify(values: number[], opts: ClassifyOptions): number[] {
   return niceBreaks(ckmeans(v, k).slice(1).map((cluster) => cluster[0]), lo, hi);
 }
 
-/** Breaks rounded to the fewest significant figures (at least 2) that keep them in order, distinct
+/** Breaks rounded to the fewest significant figures (at least `minSig`, default 2) that keep them in order, distinct
  *  and inside (lo, hi], so no class goes empty: $69,820 → $70,000, 9.31% → 9.3% (D-429). The map
  *  paints with these same breaks, so every place still matches the legend row its value falls in. */
-export function niceBreaks(breaks: number[], lo: number, hi: number): number[] {
-  for (let s = 2; s <= 15; s++) {
+export function niceBreaks(breaks: number[], lo: number, hi: number, minSig = 2): number[] {
+  for (let s = minSig; s <= 15; s++) {
     const r = breaks.map((x) => Number(x.toPrecision(s)));
     if (r.every((x, i) => x > (i ? r[i - 1] : lo) && x <= hi)) return r;
   }
