@@ -1144,6 +1144,7 @@ test("laptop map fixes (#187): canvas label follows the map, tiles banner only f
 (await import("./popups.tests.mjs")).default({ test, expect, wait, mapIdle, pointerAt, hoverCard, HENNEPIN, NEBRASKA });
 (await import("./mpo.tests.mjs")).default({ test, expect, mapIdle, tapLonLat, HENNEPIN });
 (await import("./click.tests.mjs")).default({ test, expect, immerse, mapIdle, tapAt, HENNEPIN });
+(await import("./find-address.tests.mjs")).default({ test, expect, mapIdle, HENNEPIN });
 
 test("old /specials/pairings?topic=Health redirects to /specials/combinations?topic=Health", async (o) => {
   const { page } = await o("laptop", "/specials/pairings?topic=Health", { ready: false });
