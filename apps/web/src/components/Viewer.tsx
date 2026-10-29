@@ -450,7 +450,7 @@ export function Viewer({ search }: { search: string }) {
           menuOpen={menuOpen && immersed} menu={immersed ? datasetMenu : null} onBrowse={changeDataset} onExit={exitCompare}
           place={picked ? { name: picked.mpo ? `${picked.name} · ${picked.mpo.states}` : picked.name, onClear: () => update({ mpo: null, area: null }) } : focus && focusName ? { name: focusName, onClear: leaveFocus } : null} backShown={canGoBack || phone}
           detail={picked?.area && primary ? <AreaValue datasets={secondary ? [primary, secondary] : [primary]} code={picked.area} kind={picked.kind} file={areaFile?.code === picked.area ? areaFile.file : null} />
-            : picked?.mpo && primary && !isFeature ? <RegionTotal datasets={secondary ? [primary, secondary] : [primary]} mpo={picked.mpo.id} /> : null} />
+            : picked?.mpo && primary && !isFeature ? <RegionTotal key={picked.mpo.id} datasets={secondary ? [primary, secondary] : [primary]} mpo={picked.mpo.id} /> : null} />
       )}
 
       {filters && primary && !phone && (

@@ -4,31 +4,35 @@
 // ingest publishes (relations.json) get a number; medians, indexes and modelled rates say they can't
 // be added up. Exact when the MPO is whole counties; "approximate" when its boundary cuts one.
 import { useEffect, useState } from "react";
-import { formatEstimate, formatValue } from "@webgis/design";
+import { formatEstimate } from "@webgis/design";
 import { countsLabels, placeCounts, regionCounties, shareOf, sumCounts, type Counts } from "@/lib/counts";
 import { loadMpoCounties, loadPlaceIndex, placeByGeoid } from "@/lib/search";
 import type { Dataset } from "@/lib/registry";
 
 // Shares are rounded down in the file, so floor again: a county 99.9% inside never reads "100%".
 const pct = (s: number) => (s < 0.01 ? "under 1%" : `${Math.floor(s * 100)}%`);
+// Every digit, for a staff report (formatValue would shorten a full count to "3.2M").
+const full = new Intl.NumberFormat("en-US", { maximumFractionDigits: 1 });
+const count = (n: number, moe: number | null) => (moe ? formatEstimate(n, moe, "count") : { value: full.format(n), moe: null });
 const est = (n: number, moe: number | null) => {
-  const e = formatEstimate(n, moe, "count");
+  const e = count(n, moe);
   return e.moe ? `${e.value} ±${e.moe}` : e.value;
 };
 
+// Viewer keys it by MPO, so a new pick starts empty.
 export function RegionTotal({ datasets, mpo }: { datasets: Dataset[]; mpo: string }) {
   const [list, setList] = useState<Array<[string, number]> | null>(null);
   const [names, setNames] = useState<Record<string, string>>({});
   const [totals, setTotals] = useState<Record<string, Counts | null>>({});
   useEffect(() => {
     let live = true;
-    setList(null); setTotals({});
     Promise.all([loadMpoCounties(), loadPlaceIndex()]).then(([all, rows]) => {
       if (!live) return;
-      const l = all[mpo] ?? [];
+      const l = all[mpo];
+      if (!l) return; // an MPO newer than counties.json: no panel, as when the file fails
       setList(l);
       setNames(Object.fromEntries(l.map(([g]) => [g, placeByGeoid(rows, g)?.name ?? g])));
-    }).catch(() => live && setList([]));
+    }).catch(() => {}); // shortcut: a failed file shows no total, silently; say so if visitors hit it.
     return () => { live = false; };
   }, [mpo]);
   const ids = datasets.filter((d) => countsLabels(d.id)).map((d) => d.id).join(" ");
@@ -44,21 +48,26 @@ export function RegionTotal({ datasets, mpo }: { datasets: Dataset[]; mpo: strin
   if (!list) return null;
 
   const { counted, cut } = regionCounties(list);
-  const named = (gs: string[]) => gs.map((g) => names[g]).join(", ");
+  // "Anoka County, MN" → "Anoka County" when every county is in one state.
+  const one = new Set(list.map(([g]) => g.slice(0, 2))).size === 1;
+  const name = (g: string) => (one ? names[g]?.replace(/, [A-Z]{2}$/, "") : names[g]);
+  const named = (gs: string[]) => gs.map(name).join(", ");
+  const cutIn = cut.filter(([, s]) => s >= 0.5), cutOut = cut.filter(([, s]) => s < 0.5);
+  const cutText = (l: Array<[string, number]>) => l.map(([g, s]) => `${name(g)} (${pct(s)} of residents inside)`).join(", ");
   return (
     <div className="wg-panel pointer-events-auto mt-1 w-80 max-w-[calc(100vw-1.5rem)] space-y-2 rounded-xl px-3 py-2" data-region-total={cut.length ? "approximate" : "exact"}>
       {datasets.map((d) => {
         const labels = countsLabels(d.id);
         const head = <p className="text-xs text-muted-foreground">{d.title}, {d.vintage.replace(/ \(.*\)$/, "")}</p>;
         if (!labels) return <div key={d.id}>{head}<p className="text-sm text-muted-foreground">Can’t be added up across counties, so this area has no total.</p></div>;
-        if (!counted.length) return <div key={d.id}>{head}<p className="text-sm text-muted-foreground">No total: this area holds less than half of every county it touches.</p></div>;
+        if (!counted.length) return <div key={d.id}>{head}<p className="text-sm text-muted-foreground">No county-based total: less than half of each county’s residents live inside this area.</p></div>;
         if (!(d.id in totals)) return <div key={d.id}>{head}<p className="text-sm text-muted-foreground">Adding up…</p></div>;
         const c = totals[d.id];
         if (!c || c[0] == null) return <div key={d.id}>{head}<p className="text-sm text-muted-foreground">No total: a county’s numbers are missing.</p></div>;
         // Percent maps are a count over a count, so the area's own rate is the proportion of the sums.
         // shortcut: ratio maps that aren't percents (mean commute minutes, deaths per 100,000) show their sums only; add the ratio formula if planners ask.
         const s = labels.per && d.unit === "percent" ? shareOf(c[0], c[1], c[2], c[3]) : null;
-        const big = s ? { value: formatValue(s.share, "percent"), moe: s.moe != null ? formatValue(s.moe, "percent") : null } : formatEstimate(c[0], c[1], "count");
+        const big = s ? formatEstimate(s.share, s.moe, "percent") : count(c[0], c[1]);
         return (
           <div key={d.id} data-region-dataset={d.id}>
             {head}
@@ -76,9 +85,10 @@ export function RegionTotal({ datasets, mpo }: { datasets: Dataset[]; mpo: strin
       })}
       {counted.length > 0 && (
         <p className="text-xs text-muted-foreground" data-region-method="">
-          {cut.length
-            ? <>Approximate: the sum of {counted.length} {counted.length === 1 ? "county" : "counties"} where at least half the residents live inside the boundary ({named(counted)}). The boundary cuts {cut.map(([g, sh]) => `${names[g]} (${pct(sh)} of residents inside)`).join(", ")}; a cut county counts in full when at least half its residents are inside, otherwise not at all (2020 Census).</>
-            : <>The sum of its {counted.length} whole {counted.length === 1 ? "county" : "counties"}: {named(counted)}.</>}
+          {cut.length ? "Approximate" : "Exact"}: the sum of {counted.length} {counted.length === 1 ? "county" : "counties"} ({named(counted)}).
+          {cutIn.length > 0 && ` Counted in full though partly outside: ${cutText(cutIn)}.`}
+          {cutOut.length > 0 && ` Left out though partly inside: ${cutText(cutOut)}.`}
+          {cut.length > 0 && " A county counts when at least half its residents (2020 Census) live inside."}
           {" "}Margins of error are at 90% confidence, combined as the Census Bureau does.
         </p>
       )}
