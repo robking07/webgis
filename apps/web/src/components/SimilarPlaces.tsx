@@ -10,8 +10,6 @@ type Match = [string, number, number[], number[]];
 const { measures, counties } = SIMILAR as unknown as { measures: string[]; counties: Record<string, Match[]> };
 // "residents" isn't a registry dataset (the population map's counts, under People).
 const titles = (idx: number[]) => idx.map((i) => DATASET_BY_ID.get(measures[i])?.title ?? "Residents").join(", ");
-const topics = new Set(measures.map((id) => DATASET_BY_ID.get(id)?.category ?? "People")).size;
-const WORDS = ["no", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
 
 export function SimilarPlaces({ geoid }: { geoid: string }) {
   const matches = (counties[geoid] ?? []).filter(([b]) => placeName(b));
@@ -21,8 +19,12 @@ export function SimilarPlaces({ geoid }: { geoid: string }) {
     <section aria-labelledby="similar-places" className="mb-6" data-similar-places="">
       <h2 id="similar-places" className="text-base font-semibold">Similar counties</h2>
       <p className="mt-0.5 text-xs text-muted-foreground">
-        The counties that rank closest to {shortName(name)} across {measures.length} measures in {WORDS[topics] ?? topics} topics, each topic counted equally.
+        The counties that rank closest to {shortName(name)} across {measures.length} measures, from income, housing and health to climate, commuting, and race and ethnicity, each topic counted equally.
         “Both high” or “both low” means both counties are in the top or bottom quarter of U.S. counties.
+      </p>
+      {/* Robbie approved this sentence verbatim, 2026-10-29 (D-499). */}
+      <p className="mt-1 text-xs text-muted-foreground">
+        Many of these measures, including income, housing costs, health and density, track closely with race and ethnicity in the U.S., because of a long history of where people were allowed to live, work and buy homes. So counties that match on one often match on the others.
       </p>
       <ul className="mt-2 space-y-2">
         {matches.map(([b, , high, low]) => (

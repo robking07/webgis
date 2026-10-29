@@ -38,3 +38,7 @@ with a score and the shared measures) is meant to be reusable for peer review (#
 **Limits.** Correlated measures within a topic still share its weight unevenly (income, poverty and
 education overlap). The GitHub Data run can't commit, so it doesn't refresh this git file: matches
 only update when someone re-runs `similar` after `details` and commits.
+
+**Amendments.**
+
+- 2026-10-29, Robbie: approved the two sentences on race and ethnicity (drafts/site-copy/similar-places.md).
