@@ -1,8 +1,14 @@
 # D-506 · Split the click files: one tract file per map per county
 
 - **Date:** 2026-10-29
-- **Status:** PROPOSED (worker plan for issue #371; needs the independent vote before building)
-- **PR:** #406 (issue #371)
+- **Status:** DECIDED. Lead: plan as written · Ponytail: AGREE with 3 cuts · Outcome: cuts adopted, no tie (2026-10-29).
+- **PR:** #406 (issue #371): the readers. #407: the writer, the split step, the guard and the one-off workflow, merged first.
+
+**The three cuts (2026-10-29):** no county-list comparison against R2 (publish never deletes, and the
+per-file check is enough); no freeze of `values/tracts/`: ingest stops writing those files and the
+existing drop guard stays on that prefix; no Library paragraph. The lead also settled the open
+questions: the split runs as a one-off GitHub workflow, not on Robbie's machine; the old files stay on
+R2; the phone line's N comes from the registry; the 87- and 174-request fan-out is accepted.
 
 ## 1. Today
 
@@ -74,12 +80,9 @@ link to the place page, so it stays as it is. Map-first: nothing new on screen.
 
 **Code shape.** `loadTractShard(county, ids)` fetches the ids' files in parallel and assembles the
 same `{ id: rows }` object as today, so `detailFromTractShard`, `unreliableTracts`, `tractPack` and
-the `TractShard` type don't change. A missing file (404) means no data for that map, as now.
-
-**The Library (#372).** Library maps get the same files from the same writer. Nothing loads them on
-a click unless a Library map is the one on screen. The place page lists Featured maps; #372's
-"More in the Library (n)" line loads the Library maps' files when opened. 100 Library maps add
-about 320,000 small objects (storage is a few MB).
+the `TractShard` type don't change. A missing file (404) means no data for that map, as now. Both
+`loadTractShard` and `fetchDetail` default `ids` to `TRACT_IDS` (every registry map with tract
+data), so the place page, Compare and the pack need no change.
 
 ## 3. The safety rule
 
@@ -92,30 +95,30 @@ A partial local folder must not be able to delete or shrink another map's live t
 2. **Publish never deletes.** `publishJson` only puts objects; there is no delete call anywhere in
    ingest, and this stays so (the review checks it).
 3. **No shrink of a map's own files.** Before overwriting `values/X/tracts/<c>.json`, publish fetches
-   the live file (it already does this for shards) and refuses if the new one has fewer tracts. Before
-   the first upload, it compares X's county list on R2 with the local one and refuses if a live county
-   is missing locally. `ALLOW_TRACT_DROP=1` stays the only override, for a real loss.
-4. **The old files are frozen.** After the switch, publish refuses any changed file under
-   `values/tracts/`, so an old checkout can't overwrite them, and `writeTractValues` stops writing
-   them. `publish-reload` drops `values/tracts` from its merge list (the counts shards keep it).
+   the live file (the same `guardTractShard` the shards use) and refuses if any live tract is missing
+   from the new one. `ALLOW_TRACT_DROP=1` stays the only override, for a real loss.
+4. **The old files stop being written.** `writeTractValues` no longer writes `values/tracts/`; the
+   existing drop guard stays on that prefix. `publish-reload` drops `values/tracts` from its merge
+   list (the counts shards keep theirs).
 
 Rules 1 and 2 make the 2026-10-08 incident impossible by layout, not by a check. Rule 3 covers the
 remaining case, a short reload of the same map.
 
 ## 4. Migration and rollback
 
-1. **One PR** with the new writer, the guards, the web readers and a one-off step,
-   `ingest split-tracts`. It reads each live `values/tracts/<c>.json` from `tiles.mapwich.org` with
-   plain GETs (no keys, no local copy, so the incomplete-folder trap can't bite) and writes
-   `data/tiles/values/<id>/tracts/<c>.json`.
-2. **Upload before merge** (the S2 lesson: CI and the preview read live R2). Robbie, in a fresh
-   worktree whose `data/tiles` is empty: `npm run ingest -- split-tracts`, then
-   `npm run ingest -- publish-values`. Only the new files exist locally, so only they go up (about
-   280,000 PUTs, under a third of R2's free monthly writes; listing adds about 280 calls). The lead
-   curl-checks LA, Hennepin and a median county for a few maps (200, same numbers as the old file).
-3. **No dataset reloads or Data runs** between the split and the merge (a few hours), or the old and
-   new files would differ.
-4. Merge; Vercel deploys; the site reads the new files. The old files stay on R2, untouched.
+1. **PR #407 first** (no reader changes, safe to merge): the per-map writer, the guard, the one-off
+   step `ingest split-tracts` and the workflow `.github/workflows/split-tracts.yml`. The step lists
+   and reads every live `values/tracts/<c>.json` on R2 (not a local copy, so the incomplete-folder
+   trap can't bite) and writes `data/tiles/values/<id>/tracts/<c>.json`; it refuses to run if
+   data/tiles already holds per-map files.
+2. **The lead runs the workflow** (main only, the "data" environment, the Data run's concurrency
+   group). The runner's data/tiles starts empty, so `publish-values` sends only the new files (about
+   280,000 PUTs, under a third of R2's free monthly writes). The lead curl-checks LA, Hennepin and a
+   median county for a few maps (200, same numbers as the old file).
+3. **No dataset reloads or Data runs** from the #407 merge until #406 merges: reloads now write only
+   the new files, which the site doesn't read yet.
+4. Merge #406 (CI's click-through reads live R2, so it passes only after step 2); Vercel deploys; the
+   site reads the new files. The old files stay on R2, untouched.
 5. **Rollback:** revert the web commit. The old files are still on R2 and still current until the
    first reload after the switch; after that, a rollback shows those maps' pre-reload tract values
    in the panel until a reverse join is written (left out, below). Deleting `values/tracts/` on R2
@@ -125,15 +128,15 @@ remaining case, a short reload of the same map.
 
 | Change | Check |
 |---|---|
-| `lib/details.ts`: per-map URL, `loadTractShard(county, ids)`, `fetchDetail(geoid, ids)` | `details.test.ts`: assembles the shard from per-map files, 404 = no data, one fetch per file per page view |
-| `DetailPanel`: pass the on-screen ids; phone sheet `lazy`; N from registry | e2e (`menus.spec.mjs`): a tract click requests only `values/<primary>/tracts/<county>.json` (and the secondary), nothing under `values/tracts/`; swiping up loads the list |
+| `lib/details.ts`: per-map URL, `TRACT_IDS`, `loadTractShard(county, ids)`, `fetchDetail(geoid, ids)` | `details.test.ts`: only the asked maps' files, every map by default, 404 = no data |
+| `DetailPanel`: on-screen ids; phone sheet `lazy` with its own full-list load; N from registry | e2e (`menus.spec.mjs`, "tract click: loads only the map on screen"): the click requests only the primary map's file; on a phone the swipe up loads the rest; no old file |
 | `BottomSheet`: `lazy` prop | same e2e; the other three sheets don't pass it and are unchanged |
-| `PlaceProfile`, `ComparePlaces`, `TractPack`: pass every tract map id | existing e2e for the tract place page, Compare and the pack download still pass |
+| `PlaceProfile`, `ComparePlaces`, `TractPack`: unchanged (default ids) | existing e2e for the tract place page, Compare and the pack download still pass |
 | `useUnreliable`, `useChangeMoes`: pass the one map id | existing hatching and change-map e2e still pass |
-| `values.ts writeTractValues`: write `values/<id>/tracts/`, stop writing `values/tracts/` | new unit test: writes only its own folder, clears its stale counties, leaves other folders alone |
-| `publish-tiles.ts`: shrink and county-list guards, freeze `values/tracts/`, `publish-reload` list | `publish-tiles.test.ts`: refuses fewer tracts, refuses a missing live county, refuses a changed old shard, allows with `ALLOW_TRACT_DROP=1` |
-| `split-tracts` (new, one-off) | unit test on one fixture shard → per-map files; the lead's curl check in step 2 |
-| `runbook.md` §8, `add-dataset` skill, comments naming `values/tracts/` | read-through; paths exist |
+| `values.ts writeTractValues` (#407) | `tracts.test.ts`: writes only its own folder, drops its stale counties, leaves other maps alone |
+| `publish-tiles.ts` guard and `publish-reload` list (#407) | `publish-tiles.test.ts`: `isTractFile` matches only per-map files; a missing live tract counts as a drop |
+| `split-tracts` (#407) | `tracts.test.ts`: one all-maps file → per-map files; the lead's curl check in step 2 |
+| `runbook.md` §8 (#407), comments naming `values/tracts/` | read-through; paths exist |
 
 Unchanged: `similar.ts`, `counts.ts` and the counts shards, `prepare.mts`, `details/<state>.json`.
 
@@ -149,8 +152,8 @@ from 1.38 MB to about 38 KB, and a partial upload can only touch its own map's f
 
 - Splitting the tract **counts** shards (LA 1.33 MB on the tract place page). Same pattern, own
   follow-up; the existing drop guard keeps covering them.
-- Loading the place page's list per topic on open. Library maps already stay out (#372); revisit if
-  the Featured list grows.
+- Loading the place page's list per topic on open; revisit if
+  the list of maps grows a lot (the Library, #372).
 - A reverse join for rollback after the first reload, and deleting the old files on R2.
 - Moving the Specials number scripts to the new paths (they read the frozen old files and still run).
 - Guarding a full `publish-data` from a stale but complete copy overwriting newer values. That

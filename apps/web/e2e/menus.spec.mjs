@@ -955,6 +955,26 @@ for (const vp of ["phone", "laptop"]) {
   });
 }
 
+/** #371 (D-506): a tract click fetches only the on-screen map's file for the county, never the old
+ *  all-maps file; on a phone the full list (every map's file) waits for the swipe up. */
+for (const vp of ["phone", "laptop"]) {
+  test(`${vp} tract click: loads only the map on screen`, async (o) => {
+    const { page } = await o(vp, "/map?d=median_household_income&lv=tract&at=-93.2650,44.9778,11");
+    await immerse(page);
+    await tapLonLat(page, -93.2650, 44.9778);
+    await page.locator('section[aria-label^="Details for"]').waitFor();
+    await page.waitForFunction(() => /\$\d/.test(document.querySelector('section[aria-label^="Details for"]')?.innerText ?? ""), null, { timeout: 15000 });
+    const tractFiles = () => page.requests.filter((u) => /\/values\/([a-z0-9_]+\/)?tracts\/\d{5}\.json/.test(u));
+    expect(tractFiles().length > 0 && tractFiles().every((u) => u.includes("/values/median_household_income/tracts/")), `tract files after the click: ${tractFiles().join(", ") || "none"}`);
+    if (vp === "phone") {
+      await page.getByRole("button", { name: /^Expand: Details for/ }).click();
+      await page.waitForFunction(() => document.querySelectorAll('section[aria-label^="Details for"] li').length > 5, null, { timeout: 20000 });
+      expect(tractFiles().some((u) => u.includes("/values/median_age/tracts/")), "the swipe up didn't load the other maps");
+      expect(!tractFiles().some((u) => /\/values\/tracts\//.test(u)), "requested an old all-maps tract file");
+    }
+  });
+}
+
 test("laptop CSV download: state, county, tract and block group files have rows", async (o) => {
   const { page } = await o("laptop", "/data/median_household_income", { ready: false });
   const want = { States: 50, Counties: 3000, "Census tracts": 80000, "Block groups": 200000 };

@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { detailFromShard, detailUrl, fetchDetail, fetchGeography, geographyFromShard, tractGeoUrl, tractUrl, type DetailShard } from "./details";
+import { detailFromShard, detailUrl, fetchDetail, fetchGeography, geographyFromShard, loadTractShard, TRACT_IDS, tractGeoUrl, tractUrl, type DetailShard } from "./details";
 
 const MN: DetailShard = {
   "27": { name: "Minnesota", lon: -94.3, lat: 46.2, aland_sqmi: 79631.562, values: { gini_index: [0.4525, 0.0019], census2020_pop_density: [71.67, null] } },
@@ -32,7 +32,8 @@ describe("shard lookups", () => {
 
 // The tiles base is "/tiles" locally and R2 in CI (NEXT_PUBLIC_TILES_BASE_URL).
 const MN_URL = detailUrl("27"), PR_URL = detailUrl("72");
-const TRACT_URL = tractUrl("27053026100"), TRACT_GEO_URL = tractGeoUrl("27053026100");
+const TRACT_URL = (id: string) => tractUrl(id, "27053026100"), TRACT_GEO_URL = tractGeoUrl("27053026100");
+const TRACT_FILES = new Map(Object.entries(TRACTS).map(([id, rows]) => [TRACT_URL(id), rows]));
 const TRACT_GEO = { "026100": ["Tract 261, Hennepin County, MN", -93.2567, 44.9706, 0.512] };
 
 describe("fetchDetail / fetchGeography", () => {
@@ -42,7 +43,7 @@ describe("fetchDetail / fetchGeography", () => {
     vi.stubGlobal("fetch", vi.fn(async (url: string) => {
       calls.push(url);
       if (url === MN_URL) return new Response(JSON.stringify(MN));
-      if (url === TRACT_URL) return new Response(JSON.stringify(TRACTS));
+      if (TRACT_FILES.has(url)) return new Response(JSON.stringify(TRACT_FILES.get(url)));
       if (url === TRACT_GEO_URL) return new Response(JSON.stringify(TRACT_GEO));
       if (url === PR_URL) return new Response("busy", { status: 503 });
       return new Response("not found", { status: 404 });
@@ -61,10 +62,15 @@ describe("fetchDetail / fetchGeography", () => {
     await fetchGeography("27");
     expect(calls.every((u) => !u.includes("supabase"))).toBe(true);
   });
-  it("reads a tract from its county's tract file", async () => {
+  it("reads a tract from only the asked maps' county files (D-506)", async () => {
+    expect(await fetchDetail("27053026100", ["gini_index"])).toEqual({ gini_index: { value: 0.39, moe: 0.05 } });
+    expect(calls).toEqual([TRACT_URL("gini_index")]);
+    expect(TRACT_URL("gini_index")).toMatch(/\/values\/gini_index\/tracts\/27053\.json$/);
+  });
+  it("loads every tract map by default, skipping maps with no file for the county", async () => {
     expect(await fetchDetail("27053026100")).toEqual({ gini_index: { value: 0.39, moe: 0.05 }, median_age: { value: 34.1, moe: 2.2 } });
-    expect(calls).toEqual([TRACT_URL]);
-    expect(TRACT_URL).toMatch(/\/values\/tracts\/27053\.json$/);
+    expect(calls).toEqual(TRACT_IDS.filter((id) => id !== "gini_index").map(TRACT_URL)); // gini_index is cached from the test above
+    expect(await loadTractShard("99999", ["gini_index"])).toBeNull();
   });
   it("reads a tract's name, point and land area from its county's geography file, not the database", async () => {
     expect(await fetchGeography("27053026100")).toEqual({ geoid: "27053026100", level: "tract", name: "Census tract 261, Hennepin County, MN", lon: -93.2567, lat: 44.9706, aland_sqmi: 0.512 });

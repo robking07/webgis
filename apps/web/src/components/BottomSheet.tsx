@@ -18,16 +18,20 @@ interface Props {
   fullRatio?: number;
   /** Turning true drops the drawer to "peek", out of the way of the map (a "Compare with…" pick). */
   collapsed?: boolean;
+  /** Render `children` only once the drawer has first opened full, so what they load waits for the swipe (#371). */
+  lazy?: boolean;
 }
 
 const DRAG_THRESHOLD = 40; // px of travel that counts as a deliberate swipe
 const FULL_RATIO = 0.9;    // full height as a share of the map area
 const PEEK_MAX = 0.55;
 
-export function BottomSheet({ summary, children, onClose, label, initialSnap = "peek", fullRatio = FULL_RATIO, collapsed = false }: Props) {
+export function BottomSheet({ summary, children, onClose, label, initialSnap = "peek", fullRatio = FULL_RATIO, collapsed = false, lazy = false }: Props) {
   const sheet = useRef<HTMLDivElement>(null);
   const peekRef = useRef<HTMLDivElement>(null);
   const [snap, setSnap] = useState<"peek" | "full">(initialSnap);
+  const [opened, setOpened] = useState(!lazy || initialSnap === "full");
+  if (!opened && snap === "full") setOpened(true);
   // Adjusted during render, not in an effect.
   const [wasCollapsed, setWasCollapsed] = useState(collapsed);
   if (wasCollapsed !== collapsed) { setWasCollapsed(collapsed); if (collapsed) setSnap("peek"); }
@@ -86,7 +90,7 @@ export function BottomSheet({ summary, children, onClose, label, initialSnap = "
       </button>
       <div data-sheet-scroll className={`min-h-0 flex-1 px-4 pb-6 ${snap === "full" && !drag ? "overflow-y-auto" : "overflow-hidden"}`}>
         <div ref={peekRef} className={snap === "peek" ? "touch-none" : undefined} {...(snap === "peek" ? dragProps : {})}>{summary}</div>
-        <div className="mt-4">{children}</div>
+        <div className="mt-4">{opened && children}</div>
       </div>
     </section>
   );

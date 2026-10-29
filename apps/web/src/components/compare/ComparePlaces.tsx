@@ -4,7 +4,7 @@
 // framed on it with both outlined (D-258 PR 2a, 2c): side by side beside the panel on laptops and
 // monitors, one at a time under two tabs on phones and tablets.
 // Every number comes from the same static files as the details panel and place pages
-// (details/<state>.json, values/tracts/<county>.json; lib/details.ts), so no database call.
+// (details/<state>.json, values/<id>/tracts/<county>.json; lib/details.ts), so no database call.
 // Part 2b: the head counts behind a rate, each place's share of the places above it, and
 // parts-of-a-whole bars (lib/counts.ts, D-257 files).
 import { useCallback, useEffect, useMemo, useState } from "react";
