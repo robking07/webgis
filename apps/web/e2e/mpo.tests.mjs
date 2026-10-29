@@ -69,6 +69,23 @@ export default function mpoTests({ test, expect, mapIdle, tapLonLat, HENNEPIN })
     });
   }
 
+  // #393: a shared MPO link frames the area like a search pick; an at= in the link wins.
+  for (const vp of ["laptop", "phone"]) {
+    test(`${vp} shared MPO link: frames the area (no at=), and keeps an at= view`, async (o) => {
+      const { page } = await o(vp, `/map?d=pct_poverty&mpo=${MET_COUNCIL}`);
+      await outlined(page);
+      await page.waitForFunction(() => window.__wgMap.getZoom() > 6, null, { timeout: 15000 });
+      await mapIdle(page);
+      const c = await page.evaluate(() => { const m = window.__wgMap.getCenter(); return [m.lng, m.lat]; });
+      expect(Math.abs(c[0] + 93.3) < 1.5 && Math.abs(c[1] - 45) < 1.5, `not centred on the Twin Cities: ${c}`);
+      const { page: kept } = await o(vp, `/map?d=pct_poverty&mpo=${MET_COUNCIL}&at=-100.0000,40.0000,4.00`);
+      await outlined(kept);
+      await mapIdle(kept);
+      const z = await kept.evaluate(() => window.__wgMap.getZoom());
+      expect(Math.abs(z - 4) < 0.1, `at= not kept, zoom ${z}`);
+    });
+  }
+
   // #292, #390: the focused MPO's total is its whole counties' counts plus the tracts inside the counties
   // its boundary cuts, with a margin, marked near-exact; a median says it can't be added up.
   test("laptop MPO total: Met Council's poverty count is 7 counties plus Sherburne and Wright tracts, ± shown, near-exact; a median has no total", async (o) => {
