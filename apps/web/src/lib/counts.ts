@@ -83,11 +83,37 @@ export function sumCounts(rows: Array<Counts | null | undefined>): Counts | null
   return out;
 }
 
-/** An MPO's counties ([geoid, share of its residents inside], from mpo/counties.json) split into
- *  the ones counted (at least half their residents inside) and the ones its boundary cuts (some inside, not all).
- *  The total is exact only when nothing is cut. */
-export function regionCounties(list: Array<[string, number]>): { counted: string[]; cut: Array<[string, number]> } {
-  return { counted: list.filter(([, s]) => s >= 0.5).map(([g]) => g), cut: list.filter(([, s]) => s < 1) };
+/** One county in mpo/counties.json: [geoid, share of its residents inside, its 6-digit tracts inside
+ *  when the boundary cuts it (#390)]. */
+export type RegionCounty = [string, number] | [string, number, string[]];
+
+/** An MPO's counties split into the ones counted (at least half their residents inside) and the ones its
+ *  boundary cuts (some inside, not all). The county-only total is exact only when nothing is cut. */
+export function regionCounties(list: RegionCounty[]): { counted: string[]; cut: Array<[string, number]> } {
+  return { counted: list.filter(([, s]) => s >= 0.5).map(([g]) => g), cut: list.filter(([, s]) => s < 1).map(([g, s]) => [g, s]) };
+}
+
+/** The places whose counts add up to the MPO itself (#390): whole counties plus each cut county's tracts
+ *  inside (11-digit geoids). Null when a cut county has no tract list (an older counties.json). */
+export function regionParts(list: RegionCounty[]): string[] | null {
+  const out: string[] = [];
+  for (const [g, s, tracts] of list) {
+    if (s === 1) out.push(g);
+    else if (!tracts) return null;
+    else out.push(...tracts.map((t) => g + t));
+  }
+  return out;
+}
+
+/** A map's total for an MPO: whole counties plus the cut counties' tracts inside ("tracts"), or, when
+ *  any of those tract counts is missing (CT, maps with no tract counts), the half rule's counties
+ *  ("counties"). `c` is null when neither adds up. */
+export async function regionTotal(id: string, list: RegionCounty[]): Promise<{ c: Counts | null; basis: "tracts" | "counties" }> {
+  const parts = regionParts(list);
+  const near = parts && list.some(([, s]) => s < 1) ? sumCounts(await Promise.all(parts.map((g) => placeCounts(id, g)))) : null;
+  if (near) return { c: near, basis: "tracts" };
+  const { counted } = regionCounties(list);
+  return { c: counted.length ? sumCounts(await Promise.all(counted.map((g) => placeCounts(id, g)))) : null, basis: "counties" };
 }
 
 /** A parts set's shares (percent) for one place, in member order, plus the remainder: 100 − Σ

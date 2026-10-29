@@ -1,5 +1,5 @@
-import { describe, expect, it } from "vitest";
-import { countsLabels, PARTS, parentsOf, partsOf, regionCounties, shareOf, sumCounts, type Counts } from "./counts";
+import { describe, expect, it, vi } from "vitest";
+import { countsLabels, PARTS, parentsOf, partsOf, regionCounties, regionParts, regionTotal, shareOf, sumCounts, type Counts, type RegionCounty } from "./counts";
 
 describe("an MPO's total (#292)", () => {
   // Worked example: people below the poverty line in the Met Council's 7 counties (ACS 2020–2024,
@@ -31,6 +31,34 @@ describe("an MPO's total (#292)", () => {
     const r = regionCounties([["27003", 1], ["27141", 0.258], ["27027", 0.5], ["27171", 0.999]]);
     expect(r.counted).toEqual(["27003", "27027", "27171"]);
     expect(r.cut).toEqual([["27141", 0.258], ["27027", 0.5], ["27171", 0.999]]);
+  });
+});
+
+describe("an MPO's near-exact total from tracts (#390)", () => {
+  const list: RegionCounty[] = [["27003", 1], ["27027", 0.6, ["000100"]], ["27141", 0.258, ["030503", "030504"]]];
+  it("adds whole counties and the cut counties' tracts inside", () => {
+    expect(regionParts(list)).toEqual(["27003", "27027000100", "27141030503", "27141030504"]);
+    expect(regionParts([["27003", 1], ["27141", 0.258]])).toBeNull();
+  });
+  it("sums tracts with √Σ MOE², and falls back to the half rule when a tract count is missing", async () => {
+    const files: Record<string, unknown> = {
+      "values/m/county.counts.json": { 27003: [100, 30, 1000, 40], 27027: [50, 20, 500, 10], 27141: [999, 99, 9999, 99] },
+      "values/counts/tract/27027.json": { m: { "000100": [30, 12, 300, 9] } },
+      "values/counts/tract/27141.json": { m: { "030503": [10, 4, 100, 3], "030504": [5, 3, 50, 2] } },
+      "values/n/county.counts.json": { 27003: [100, 30, 1000, 40], 27027: [50, 20, 500, 10] },
+    };
+    vi.stubGlobal("fetch", async (url: string) => {
+      const f = files[url.replace(/^\/tiles\//, "")];
+      return { ok: !!f, json: async () => f };
+    });
+    const t = await regionTotal("m", list);
+    expect(t.basis).toBe("tracts");
+    expect(t.c![0]).toBe(145);
+    expect(t.c![1]).toBeCloseTo(Math.sqrt(30 ** 2 + 12 ** 2 + 4 ** 2 + 3 ** 2));
+    expect(t.c![2]).toBe(1450);
+    // Map "n" has no tract counts: whole counties by the half rule (27003 and 27027), labelled as such.
+    expect(await regionTotal("n", list)).toEqual({ c: [150, Math.sqrt(30 ** 2 + 20 ** 2), 1500, Math.sqrt(40 ** 2 + 10 ** 2)], basis: "counties" });
+    vi.unstubAllGlobals();
   });
 });
 
