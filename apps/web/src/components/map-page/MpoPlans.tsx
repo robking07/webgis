@@ -42,7 +42,7 @@ export function MpoPlans({ mpo, phone }: { mpo: string; phone: boolean }) {
           if (!d.url) return <p key={k} data-plan={k}>{label}: <span className="text-muted-foreground">{d.note}</span></p>;
           return (
             <details key={k} data-plan={k}>
-              <summary className="cursor-pointer truncate rounded focus-visible:outline-2 focus-visible:outline-ring">
+              <summary className="cursor-pointer list-inside truncate rounded focus-visible:outline-2 focus-visible:outline-ring">
                 {label} <span className="text-muted-foreground">· {d.title}</span>
               </summary>
               <div className="mt-0.5 space-y-0.5 pb-1 pl-3">
