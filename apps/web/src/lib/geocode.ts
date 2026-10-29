@@ -1,4 +1,4 @@
-// Find an address (issue #363, D-<PR+100>): the Census Bureau's public geocoder, through our own
+// Find an address (issue #363, D-487): the Census Bureau's public geocoder, through our own
 // /api/geocode pass-through (no key, nothing logged or kept). Shared by the route and the search box.
 
 /** "411 W 1st St, Duluth": a house number, then a word. A bare ZIP or "3M" isn't one. */

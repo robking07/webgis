@@ -248,6 +248,7 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
           latest.current.onSelect?.(info);
           resolve(info);
         });
+        m.triggerRepaint(); // already there: no move, so make sure a frame (and its idle) still comes
       }),
       snapshot: () => new Promise((resolve) => {
         m.once("render", () => {
