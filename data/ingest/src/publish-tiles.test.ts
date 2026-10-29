@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { droppedDatasets, isCountFile, SHARD_PREFIXES } from "./publish-tiles.ts";
+import { droppedDatasets, isCountFile, mergeShard, SHARD_PREFIXES } from "./publish-tiles.ts";
 
 describe("droppedDatasets", () => {
   it("lists live datasets missing from the new shard", () => {
@@ -19,5 +19,21 @@ describe("isCountFile", () => {
   });
   it("covers the count shards with the drop guard", () => {
     expect(SHARD_PREFIXES).toEqual(["values/tracts/", "values/counts/"]);
+  });
+});
+
+describe("mergeShard", () => {
+  const reloaded = new Set(["pct_poverty"]);
+  it("swaps in the reloaded dataset and keeps every other live one, keys sorted", () => {
+    const m = mergeShard({ pct_poverty: { "000100": [1] }, diabetes: { "000100": [2] } }, { pct_poverty: { "000100": [3] } }, reloaded);
+    expect(m.next).toEqual({ diabetes: { "000100": [2] }, pct_poverty: { "000100": [3] } });
+    expect(Object.keys(m.next)).toEqual(["diabetes", "pct_poverty"]);
+    expect(m.dropped).toEqual([]);
+  });
+  it("adds a county the live site doesn't have yet", () => {
+    expect(mergeShard({}, { pct_poverty: {} }, reloaded)).toEqual({ next: { pct_poverty: {} }, dropped: [] });
+  });
+  it("reports a reloaded dataset that vanished from a county, keeping the rest", () => {
+    expect(mergeShard({ pct_poverty: {}, diabetes: {} }, {}, reloaded)).toEqual({ next: { diabetes: {} }, dropped: ["pct_poverty"] });
   });
 });
