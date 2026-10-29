@@ -3,6 +3,9 @@ import type { GeoLevel } from "@webgis/design";
 import { loadMoes, loadValues, type Values } from "./values";
 import type { Dataset } from "./registry";
 import { fetchRetry, staticUrl } from "@/lib/static-files";
+import type { TractGeoShard, TractShard } from "./details";
+import { xlsx, type Cell } from "./xlsx";
+import { timelineStops } from "@webgis/registry/timeline";
 
 /** Levels that have a downloadable values file (blocks keep their values in the tiles, D-124). */
 export const CSV_LEVELS: GeoLevel[] = ["state", "county", "tract", "block_group"];
@@ -72,6 +75,33 @@ export function placeCsv(geoid: string, name: string, rows: Array<{ d: Dataset; 
     [d.title, value ?? "", moe ?? "", d.unit, d.vintage, d.source.name, d.source.citation].map(csvField).join(",") + "\r\n").join("");
   const notes = [`# Place: ${name}`, `# Downloaded from Mapwich: https://mapwich.org/place/${geoid}`].map((l) => `"${l.replace(/"/g, '""')}"\r\n`).join("");
   return new Blob(["\uFEFF", head, body, "\r\n", notes], { type: "text/csv;charset=utf-8" });
+}
+
+export const PACK_2010_NOTE = "Maps drawn on 2010 tracts (e.g. food access) are left out; download them from their map page.";
+
+/** A county's region data pack (#370): every map for its tracts, one row per tract, a value and a
+ *  `<id>_moe` column per map, and an "about" sheet saying what each column is. GEOID is text. */
+export function tractPack(county: string, name: string, values: TractShard, geo: TractGeoShard, datasets: Dataset[]): Blob {
+  // Only maps on 2020 tracts: a headline stop on 2010 tracts would land on a different shape where an ID repeats.
+  const ds = datasets.filter((d) => values[d.id] && !timelineStops(d).find((s) => s.isDefault)?.boundaries);
+  const tracts = [...new Set([...Object.keys(geo), ...ds.flatMap((d) => Object.keys(values[d.id]))])].sort();
+  const data: Cell[][] = [
+    ["GEOID", "name", ...ds.flatMap((d) => [d.id, `${d.id}_moe`])],
+    ...tracts.map((t) => [county + t, geo[t]?.[0] ?? `Tract ${Number(t) / 100}, ${name}`, ...ds.flatMap((d) => values[d.id][t] ?? [null, null])]),
+  ];
+  const about: Cell[][] = [
+    ["column", "title", "unit", "period", "source", "citation", "license", "map"],
+    ["GEOID", "11-digit 2020 census tract ID, stored as text. Join it to the GEOID field of Census tract boundaries."],
+    ["name", "Tract name"],
+    ...ds.flatMap((d) => [
+      [d.id, d.title, d.unit, d.vintage, d.source.name, d.source.citation, d.license, `https://mapwich.org/data/${d.id}`],
+      [`${d.id}_moe`, `${d.title}: margin of error (±), blank when the source publishes none`, d.unit, d.vintage],
+    ]),
+    [],
+    [PACK_2010_NOTE],
+    [`Downloaded from Mapwich: https://mapwich.org/place/${county} (${name})`],
+  ];
+  return xlsx([{ name: "data", rows: data }, { name: "about", rows: about }]);
 }
 
 export function saveBlob(blob: Blob, fileName: string): void {

@@ -48,4 +48,15 @@ export default function placeChainTests({ test, expect, immerse, mapIdle, tapLon
       expect(/Both (high|low):/.test(await list.innerText()), "no 'Both high/low' line");
     });
   }
+
+  // The region data pack (issue #370): a county page downloads every map for its tracts as one .xlsx.
+  test("laptop tract data pack: Hennepin's page downloads mapwich-tracts-27053.xlsx", async (o) => {
+    const { page } = await o("laptop", "/place/27053", { ready: false });
+    const btn = page.getByRole("button", { name: "Download tract data (Excel)" });
+    await btn.waitFor({ timeout: 20000 });
+    const [download] = await Promise.all([page.waitForEvent("download", { timeout: 20000 }), btn.click()]);
+    expect(download.suggestedFilename() === "mapwich-tracts-27053.xlsx", `file name: ${download.suggestedFilename()}`);
+    await page.getByText("Join it to tract boundaries in QGIS or ArcGIS").click();
+    await page.getByText(/join GEOID to GEOID/).waitFor();
+  });
 }

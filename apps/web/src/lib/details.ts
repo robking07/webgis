@@ -72,6 +72,8 @@ export function loadTractShard(county: string): Promise<TractShard | null> {
   return loadJson<TractShard>(tractUrl(county), "Tract data");
 }
 
+export const loadTractGeoShard = (county: string) => loadJson<TractGeoShard>(tractGeoUrl(county), "Tract geography");
+
 export async function fetchGeography(geoid: string): Promise<Geography | null> {
   if (geoid.length === 2 || geoid.length === 5) return geographyFromShard(await loadJson<DetailShard>(detailUrl(geoid), "Place data"), geoid);
   if (geoid.length === 11) return geographyFromTractShard(await loadJson<TractGeoShard>(tractGeoUrl(geoid), "Tract geography"), geoid);

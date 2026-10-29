@@ -11,6 +11,7 @@ import { serializeUrlState } from "@/lib/url-state";
 import { LANDING } from "@/lib/landing";
 import { placeCsv, saveBlob } from "@/lib/csv";
 import { DATASETS } from "@/lib/registry";
+import { TractPack } from "./TractPack";
 
 const link = "rounded text-primary underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-ring";
 
@@ -54,6 +55,7 @@ export function PlaceProfile({ geoid, similar }: { geoid: string; similar?: Reac
         <div className="mt-2 flex gap-4 text-sm print:hidden">
           <button type="button" onClick={() => window.print()} className={link}>Print / save as PDF</button>
           <button type="button" onClick={() => saveBlob(placeCsv(geoid, geo.name, rows), `mapwich-place-${geoid}.csv`)} className={link}>Download CSV</button>
+          {level === "county" && <a href="#tract-data" className={link}>Tract data</a>}
         </div>
         {comparing && (
           <div className="mt-3 max-w-sm">
@@ -65,6 +67,7 @@ export function PlaceProfile({ geoid, similar }: { geoid: string; similar?: Reac
       <KeyNumbers geoid={geoid} detail={detail} />
       {similar}
       <PlaceDataList geoid={geoid} level={level} detail={detail} mapHref={mapHref} />
+      {level === "county" && <TractPack county={geoid} name={geo.name} />}
     </main>
   );
 }
