@@ -37,6 +37,17 @@ export default function placeChainTests({ test, expect, immerse, mapIdle, tapLon
       expect(box.x >= 0 && box.x + box.width <= page.viewportSize().width, `key numbers overflow: ${JSON.stringify(box)}`);
     });
 
+    test(`${vp} context notes (#411): Hennepin's list shows the race and the income note once each`, async (o) => {
+      const { page } = await o(vp, "/place/27053", { ready: false });
+      await page.locator("[data-key-numbers]").waitFor({ timeout: 20000 });
+      for (const [k, start] of [["Race and ethnicity", "These numbers count how people describe themselves"], ["Income and poverty", "Income and poverty here come from what households report"]]) {
+        const n = page.locator(`[data-context-note="${k}"]`);
+        await n.first().waitFor({ state: "attached", timeout: 15000 });
+        expect((await n.count()) === 1, `${k} notes: ${await n.count()}`);
+        expect((await n.innerText()).startsWith(start), `${k} note text`);
+      }
+    });
+
     test(`${vp} similar counties (#291): Hennepin's profile lists five, each linking to Compare`, async (o) => {
       const { page } = await o(vp, "/place/27053", { ready: false });
       const list = page.locator("[data-similar-places]");
