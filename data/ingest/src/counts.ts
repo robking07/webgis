@@ -6,7 +6,7 @@
 //                                            state and county, default period
 //   values/counts/<level>/<county>.json     tracts and block groups: { <series id>: { <tract or
 //                                            tract+block group code>: row } }, one file per county
-//                                            like values/tracts/ (D-113), so a place needs one fetch
+//                                            like the old values/tracts/ (D-113), so a place needs one fetch
 //   values/<id>/[<stop>/]us.json            { value, moe, counts }: the U.S. row
 // A series is a map (relations.ts `countsSpec`) or a parts set's remainder (relations.yaml).
 import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
@@ -113,8 +113,8 @@ export function writeUs(id: string, stop: string | null, v: Value, counts: Count
 const hasAny = (r: Counts) => r.some((x) => x != null);
 
 /** Writes every series' counts for one level. State and county: one file per series. Tracts and
- *  block groups: merged into the per-county shards, replacing only these series (like
- *  writeTractValues), so other series already in a shard stay. `root`: data/tiles (tests use a temp dir). */
+ *  block groups: merged into the per-county shards, replacing only these series (as the old
+ *  tract-value writer did), so other series already in a shard stay. `root`: data/tiles (tests use a temp dir). */
 export function writeCounts(level: Level, series: Map<string, Map<string, Counts>>, root = TILES) {
   if (level === "state" || level === "county") {
     for (const [id, rows] of series) {
