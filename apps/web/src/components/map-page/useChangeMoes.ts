@@ -1,5 +1,5 @@
 // Margins of error for a change map's tracts (issue #127): the shown (default) period's tract
-// margins, from the per-county shards of the counties in view, the same files and cache the
+// margins, from the dataset's tract files for the counties in view, the same files and cache the
 // details panel and reliability hatching use (D-222). Nothing loads until a change map of an ACS
 // dataset is at tract level.
 import { useEffect, useState } from "react";
@@ -19,7 +19,7 @@ export function useChangeMoes(id: string | null, counties: readonly string[]): V
     const todo = countyKey.split(",").filter((c) => !state.done.has(c));
     if (!todo.length) return;
     let live = true;
-    Promise.all(todo.map((c) => loadTractShard(c).then((s) => s?.[id] ?? null, () => undefined))).then((rows) => {
+    Promise.all(todo.map((c) => loadTractShard(c, [id]).then((s) => s?.[id] ?? null, () => undefined))).then((rows) => {
       if (!live) return;
       setState((s) => {
         if (s.id !== id) return s;

@@ -1,5 +1,5 @@
 // Which areas' estimates are unreliable (D-222), from files already published beside the tiles:
-// tract values and margins in the per-county shards (values/tracts/<county>.json), block-group
+// tract values and margins in each map's per-county files (values/<id>/tracts/<county>.json), block-group
 // margins in values/<id>/block_group.moe.json. Grading itself lives in @webgis/design (reliability.ts).
 import { formatValue, gradeEstimate, type Reliability, type Unit } from "@webgis/design";
 import type { TractShard } from "./details";

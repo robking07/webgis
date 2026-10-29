@@ -1,5 +1,5 @@
 // Unreliable areas to hatch (D-222). Nothing loads until the visitor turns hatching on: then the
-// tract shards of the counties in view (shared with the details panel's cache) and, at block-group
+// dataset's tract files for the counties in view (shared with the details panel's cache) and, at block-group
 // zoom, the dataset's block-group margins.
 import { useEffect, useMemo, useState } from "react";
 import type { GeoLevel } from "@webgis/design";
@@ -26,7 +26,7 @@ export function useUnreliable(ds: Dataset | null, level: GeoLevel, counties: rea
     const todo = countyKey.split(",").filter((c) => !state.tractCounties.has(c));
     if (!todo.length) return;
     // One update per batch of counties, so the map refilters once.
-    Promise.all(todo.map((c) => loadTractShard(c).then((s) => unreliableTracts(s, id, c), () => null))).then((lists) => {
+    Promise.all(todo.map((c) => loadTractShard(c, [id]).then((s) => unreliableTracts(s, id, c), () => null))).then((lists) => {
       if (!live) return;
       setState((s) => {
         if (s.id !== id) return s;

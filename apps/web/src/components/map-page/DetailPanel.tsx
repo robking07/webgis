@@ -9,7 +9,7 @@ import type { HoverInfo } from "../map/MapView";
 import type { Dataset } from "@/lib/registry";
 import { placeHref, rankText } from "@/lib/place";
 import { learnMoreLinks, type Link } from "@/lib/learn-more";
-import { fetchDetail } from "@/lib/details";
+import { fetchDetail, TRACT_IDS } from "@/lib/details";
 import { loadMoes, type Values } from "@/lib/values";
 import { BottomSheet, useIsPhone } from "../BottomSheet";
 import { PlaceDataList, type Detail } from "../PlaceDataList";
@@ -170,7 +170,8 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
           const fromTile = inTile && d.measure.kind === "census2020" ? (info.props?.[d.measure.value] as number | undefined) : undefined;
           return [d.id, { value: fromTile ?? (i === 0 ? xv : yv)?.[info.geoid] ?? null, moe: moes[info.geoid] ?? null }] as const;
         })).then((e) => Object.fromEntries(e) as Detail)
-      : fetchDetail(info.geoid);
+      // Tracts: only the maps on screen (one small file each, #371); the phone's full list loads its own.
+      : fetchDetail(info.geoid, [primary, secondary].filter((d): d is Dataset => !!d).map((d) => d.id));
     load.then((r) => live && setRows(r), (e) => live && setErr(String(e.message ?? e)));
     return () => { live = false; };
   }, [info.geoid, info.level, info.props, staticOnly, primary, secondary, xv, yv]);
@@ -237,16 +238,18 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
       <CompareWith geoid={info.geoid} level={info.level} name={info.name} dataset={primary} otherPeriod={!!period}
         aValue={!rows ? null : staticOnly ? undefined : rows[primary.id]?.value ?? null} onPicking={setPicking} />
       {!shrunk && <LearnMore links={links} />}
-      {phone && !shrunk && rows && !staticOnly && <p className="mt-2 text-center text-xs text-muted-foreground group-data-[snap=full]:hidden">Swipe up for all {Object.keys(rows).length} datasets here</p>}
+      {phone && !shrunk && rows && !staticOnly && <p className="mt-2 text-center text-xs text-muted-foreground group-data-[snap=full]:hidden">Swipe up for all {info.level === "tract" ? TRACT_IDS.length : Object.keys(rows).length} datasets here</p>}
     </>
   );
 
   if (phone) {
     return (
-      <BottomSheet label={`Details for ${info.name}`} summary={summary} onClose={onClose} collapsed={picking}>
+      <BottomSheet label={`Details for ${info.name}`} summary={summary} onClose={onClose} collapsed={picking} lazy>
         {rows && !staticOnly && (
           <>
-            <PlaceDataList geoid={info.geoid} level={info.level} detail={rows} onMapIt={onMapIt} compact />
+            {info.level === "tract"
+              ? <AllTractData key={info.geoid} geoid={info.geoid} onMapIt={onMapIt} />
+              : <PlaceDataList geoid={info.geoid} level={info.level} detail={rows} onMapIt={onMapIt} compact />}
             <a href={placeHref(info.geoid, primary.id)} className="mt-4 block text-sm font-medium text-primary underline-offset-2 hover:underline">Open the full place profile →</a>
           </>
         )}
@@ -266,4 +269,19 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
       )}
     </section>
   );
+}
+
+/** The phone sheet's list of every map for a tract: mounted on the first swipe up (BottomSheet
+ *  `lazy`), so a tap loads only the maps on screen (#371). */
+function AllTractData({ geoid, onMapIt }: { geoid: string; onMapIt: (id: string) => void }) {
+  const [all, setAll] = useState<Detail | null>(null);
+  const [failed, setFailed] = useState(false);
+  useEffect(() => {
+    let live = true;
+    fetchDetail(geoid).then((d) => live && setAll(d), () => live && setFailed(true));
+    return () => { live = false; };
+  }, [geoid]);
+  if (failed) return <StatusState status="error" message="Details are unavailable right now." />;
+  if (!all) return <StatusState status="loading" />;
+  return <PlaceDataList geoid={geoid} level="tract" detail={all} onMapIt={onMapIt} compact />;
 }

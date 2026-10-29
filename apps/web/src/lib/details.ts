@@ -2,9 +2,10 @@
 // tiles (R2 in production, the /tiles link locally). No database call from the browser (S1, S2):
 //  - states and counties: details/<state fips>.json, one file per state holding the state and its
 //    counties, values and geography (`ingest details`);
-//  - tract values: values/tracts/<county fips>.json (D-113);
+//  - tract values: values/<dataset id>/tracts/<county fips>.json, one map per file (D-113, D-506);
 //  - tract geography (name, point, land area): geo/tracts/<county fips>.json (`ingest tract-geo`, #106).
 import { tidyPlaceName } from "./place";
+import { DATASETS } from "./registry";
 import { fetchRetry, staticUrl, TILES_BASE } from "./static-files";
 
 export type Detail = Record<string, { value: number | null; moe: number | null }>;
@@ -15,13 +16,15 @@ export type DetailShard = Record<string, {
   name: string; lon: number; lat: number; aland_sqmi: number;
   values: Record<string, [number | null, number | null]>;
 }>;
-export type TractShard =Record<string, Record<string, [number | null, number | null]>>;
+export type TractShard = Record<string, Record<string, [number | null, number | null]>>;
 /** One county's tracts, as `ingest tract-geo` writes them: { "<6-digit code>": [name, lon, lat, land sq mi] }. */
 export type TractGeoShard = Record<string, [string, number, number, number]>;
 
 export { TILES_BASE };
 export const detailUrl = (geoid: string) => staticUrl(`details/${geoid.slice(0, 2)}.json`);
-export const tractUrl = (geoid: string) => staticUrl(`values/tracts/${geoid.slice(0, 5)}.json`);
+export const tractUrl = (id: string, geoid: string) => staticUrl(`values/${id}/tracts/${geoid.slice(0, 5)}.json`);
+/** Every map with tract values: what a tract place page, Compare and the region pack load. */
+export const TRACT_IDS = DATASETS.filter((d) => d.geographyLevels.includes("tract")).map((d) => d.id);
 export const tractGeoUrl = (geoid: string) => staticUrl(`geo/tracts/${geoid.slice(0, 5)}.json`);
 
 export function detailFromShard(shard: DetailShard | null, geoid: string): Detail {
@@ -60,16 +63,21 @@ function loadJson<T>(url: string, what: string): Promise<T | null> {
   return cache.get(url) as Promise<T | null>;
 }
 
-export async function fetchDetail(geoid: string): Promise<Detail> {
-  if (geoid.length === 11) return detailFromTractShard(await loadJson<TractShard>(tractUrl(geoid), "Tract data"), geoid);
+/** One place's values. For a tract, only the maps in `ids` are fetched (one small file each); states
+ *  and counties always come whole from their state's file. */
+export async function fetchDetail(geoid: string, ids: readonly string[] = TRACT_IDS): Promise<Detail> {
+  if (geoid.length === 11) return detailFromTractShard(await loadTractShard(geoid.slice(0, 5), ids), geoid);
   if (geoid.length !== 2 && geoid.length !== 5) return {};
   return detailFromShard(await loadJson<DetailShard>(detailUrl(geoid), "Place data"), geoid);
 }
 
-/** One county's tract values ({ dataset id: { 6-digit tract: [value, moe] } }), shared with the
- *  details panel's cache; null when the county has no file. */
-export function loadTractShard(county: string): Promise<TractShard | null> {
-  return loadJson<TractShard>(tractUrl(county), "Tract data");
+/** One county's tract values for the maps in `ids` ({ dataset id: { 6-digit tract: [value, moe] } }),
+ *  one file per map, shared with the details panel's cache; null when none of them has a file. */
+export async function loadTractShard(county: string, ids: readonly string[] = TRACT_IDS): Promise<TractShard | null> {
+  const rows = await Promise.all(ids.map((id) => loadJson<TractShard[string]>(tractUrl(id, county), "Tract data")));
+  const out: TractShard = {};
+  ids.forEach((id, i) => { if (rows[i]) out[id] = rows[i]!; });
+  return Object.keys(out).length ? out : null;
 }
 
 export const loadTractGeoShard = (county: string) => loadJson<TractGeoShard>(tractGeoUrl(county), "Tract geography");
