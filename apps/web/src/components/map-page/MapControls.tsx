@@ -1,4 +1,4 @@
-import { CornerUpLeft, Map as MapIcon, Minus, Plus } from "lucide-react";
+import { CornerUpLeft, LocateFixed, Map as MapIcon, Minus, Plus } from "lucide-react";
 import { useEffect, useRef, useState, type RefObject } from "react";
 import type { Bbox, MapApi } from "../map/MapView";
 import { loadPlaceIndex, toHit, type PlaceHit, type PlaceRow } from "@/lib/search";
@@ -7,7 +7,7 @@ import { HEADER_GAP } from "./layout";
 
 /** Zoom pill (desktop; phones pinch-zoom), the "Go to" picker (issue #202), and the back button,
  *  which returns to the view before the last map click (only after a click has zoomed somewhere). */
-export function MapControls({ mapApi, atRest, canGoBack, onBack, phone, cardH, onRegion, onPlace }: {
+export function MapControls({ mapApi, atRest, canGoBack, onBack, phone, cardH, onRegion, onPlace, onNearMe }: {
   mapApi: RefObject<MapApi | null>;
   /** The header and dataset card are showing (not immersed, not just peeking). */
   atRest: boolean;
@@ -19,6 +19,8 @@ export function MapControls({ mapApi, atRest, canGoBack, onBack, phone, cardH, o
   onRegion: (bbox: Bbox) => void;
   /** A state picked from the list: the search's own path, so it focuses like a click (issue #203). */
   onPlace: (p: PlaceHit) => void;
+  /** Phones only (issue #363): frame the visitor's own census tract. */
+  onNearMe: (() => void) | null;
 }) {
   // Desktop: under the zoom pill. Phones (no zoom pill): top right, below the dataset card at rest.
   const top = phone ? (atRest ? HEADER_GAP + cardH + 8 : 12) : (atRest ? 166 : 110);
@@ -39,6 +41,14 @@ export function MapControls({ mapApi, atRest, canGoBack, onBack, phone, cardH, o
           className="wg-panel wg-zbtn absolute right-3 z-20 grid size-11 place-items-center rounded-[14px] text-foreground transition-[top] duration-300 md:right-4"
           style={{ top: top + 52 }}>
           <CornerUpLeft className="size-[18px]" aria-hidden />
+        </button>
+      )}
+
+      {onNearMe && (
+        <button type="button" onClick={onNearMe} aria-label="Near me" title="Near me"
+          className="wg-panel wg-zbtn absolute right-3 z-20 grid size-11 place-items-center rounded-[14px] text-foreground transition-[top] duration-300 md:right-4"
+          style={{ top: top + (canGoBack ? 104 : 52) }}>
+          <LocateFixed className="size-[18px]" aria-hidden />
         </button>
       )}
     </>

@@ -66,6 +66,12 @@ export function searchPlaces(rows: PlaceRow[], q: string, limit = 6): PlaceHit[]
   return [...top, ...word.sort(order)].slice(0, limit).map(toHit);
 }
 
+/** "asthma in Duluth" → a topic to map and a place to frame (issue #363). */
+export function parseQuery(q: string): { topic: string; place: string } | null {
+  const m = q.trim().match(/^(.+?)\s+in\s+(.+)$/i);
+  return m ? { topic: m[1], place: m[2] } : null;
+}
+
 /** ZIP → county geoid (geo/zips.json, from ingest `search`). Fetched only when a 5-digit ZIP is typed.
  *  shortcut: the county holding most of the ZIP's land, not the city; upgrade if a ZIP-to-city file is added. */
 let zips: Promise<Record<string, string>> | null = null;
