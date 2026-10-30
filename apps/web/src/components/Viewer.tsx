@@ -433,6 +433,7 @@ export function Viewer({ search }: { search: string }) {
         className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-50 focus:rounded focus:bg-card focus:px-3 focus:py-2 focus:shadow">Choose a dataset</button>
 
       <main className="absolute inset-0">
+        {primary && <h1 className="sr-only">{primary.title}{secondary ? ` and ${secondary.title}` : ""}</h1>}
         <MapView
           theme={theme}
           initialView={initial.at}

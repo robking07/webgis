@@ -82,7 +82,7 @@ function CorrelationsBlock({ b }: { b: CorrelationTable }) {
   return (
     <div role="figure" aria-label={b.title} className={frame}>
       <p className={titleCls}>{b.title}</p>
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto" tabIndex={0} role="region" aria-label={b.title}>
         <table className="w-full border-collapse text-[13px] md:text-sm">
           <caption className="sr-only">{b.title}. Spearman rank correlation across counties; −1 to 1, 0 means no link.</caption>
           <thead>
@@ -121,7 +121,7 @@ function CountiesBlock({ b }: { b: CountyTable }) {
   return (
     <div role="figure" aria-label={b.title} className={frame}>
       <p className={titleCls}>{b.title}</p>
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto" tabIndex={0} role="region" aria-label={b.title}>
         <table className="w-full border-collapse text-xs sm:text-[13px] md:text-sm">
           <caption className="sr-only">{b.title}</caption>
           <thead>
