@@ -62,6 +62,7 @@ export function checkRelations(rel: Relations, entries: DatasetEntry[]): string[
   const out: string[] = [];
   const byId = new Map(entries.map((e) => [e.id, e]));
   for (const e of entries) {
+    if (e.library) continue; // Library maps (#372) get their relations entry on promotion to Featured.
     const r = rel.maps[e.id];
     if (!r) { out.push(`${e.id}: no entry in relations.yaml (add it under maps:)`); continue; }
     if (r.group !== e.category) out.push(`${e.id}: group "${r.group}" must be the registry category "${e.category}"`);

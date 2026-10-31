@@ -91,7 +91,7 @@ export function findSimilar(table: Record<string, (number | null)[]>, measures: 
 /** Live county measures that are numbers (not categories) and cover enough counties. */
 export function pickMeasures(entries: DatasetEntry[], coverage: Record<string, number>, counties: number): string[] {
   return entries
-    .filter((d) => d.geographyLevels.includes("county") && d.unit !== "categories" && (coverage[d.id] ?? 0) >= MIN_COVERAGE * counties)
+    .filter((d) => !d.library && d.geographyLevels.includes("county") && d.unit !== "categories" && (coverage[d.id] ?? 0) >= MIN_COVERAGE * counties)
     .map((d) => d.id).sort();
 }
 

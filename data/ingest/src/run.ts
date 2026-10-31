@@ -1,7 +1,8 @@
 // npm run ingest -- <step> [dataset or level ids…]
-// Steps: geographies | label-mask | mpo | mpo-counties | areas | publish-areas | publish-search | timeline | acs | acs-bg | census2020 | lodes | places | climdiv | nbi | fars | overdose | airquality | features | vmt | cejst | ddp287g | tri | nri | svi | sahie | lead | food-access | tiles | publish-tiles | publish-reload | publish-values | publish-geo | publish-data | counts | publish-counts | details | similar | publish-details | tract-geo | export [--allow-period-drop] | export-values | insights [--reflag] | combinations [--dry-run] | tracts-out | split-tracts | docs | mn-catalog | mpo-plans | export-mpo-plans | publish-mpo-plans [--dry-run] | all
+// Steps: geographies | label-mask | mpo | mpo-counties | areas | publish-areas | publish-search | timeline | library [--offline] | acs | acs-bg | census2020 | lodes | places | climdiv | nbi | fars | overdose | airquality | features | vmt | cejst | ddp287g | tri | nri | svi | sahie | lead | food-access | tiles | publish-tiles | publish-reload | publish-values | publish-geo | publish-data | counts | publish-counts | details | similar | publish-details | tract-geo | export [--allow-period-drop] | export-values | insights [--reflag] | combinations [--dry-run] | tracts-out | split-tracts | docs | mn-catalog | mpo-plans | export-mpo-plans | publish-mpo-plans [--dry-run] | all
 import { ingestGeographies, tractGeography } from "./geographies.ts";
 import { ingestAcs, ingestAcsTimeline } from "./acs.ts";
+import { buildLibrary } from "./library.ts";
 import { ingestCensus2020 } from "./census2020.ts";
 import { ingestLodes, ingestLodesTimeline } from "./lodes.ts";
 import { buildTiles } from "./tiles.ts";
@@ -41,6 +42,7 @@ const only = ids.length ? ids : undefined;
 const allowDrop = rest.includes("--allow-period-drop");
 const steps: Record<string, () => Promise<void> | void> = {
   geographies: ingestGeographies,
+  library: () => buildLibrary(rest.includes("--offline")),
   acs: () => ingestAcs(only),
   "acs-bg": () => ingestAcs(only, ["block_group"]),
   census2020: () => ingestCensus2020(only),
