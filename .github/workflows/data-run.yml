@@ -78,6 +78,9 @@ jobs:
           for s in $STEPS; do [ "$s" = export-values ] || npm run ingest -- "$s" $DATASETS; done
           npm run ingest -- export-values $DATASETS
           npm run ingest -- details
+          # #453: similar also reads the residents counts, which only a population_density load writes; else use the live file.
+          f=data/tiles/values/population_density/county.counts.json
+          [ -e "$f" ] || curl -fsS --compressed --create-dirs -o "$f" "https://tiles.mapwich.org/values/population_density/county.counts.json"
           npm run ingest -- similar
 
       # publish-reload merges this run's count files into the live ones on R2, then checks every

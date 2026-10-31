@@ -11,4 +11,6 @@
 
 No new secrets; keys stay in the `data` environment as env only. The 180-minute timeout stays: a re-export writes only state and county files (tract files aren't in the database), far fewer than #373's 142k.
 
+**Similar counties on a runner (#453).** `similar` reads `values/population_density/county.counts.json`, which only a population load writes, so every other Data run failed there (run 41240260580). When the file is missing, the run downloads the live one from `tiles.mapwich.org` first (public, no key). `details` reads only the database; `similar` reads only what `details` just wrote plus this file.
+
 **Limits.** `publish-tiles` also sets the bucket's CORS rule, so the GitHub R2 token needs bucket-settings permission; if it is object-only, the first features run fails before uploading. Ubuntu 24.04's tippecanoe is 2.49 (Robbie's machine may be newer). A re-export can't re-round tract values; D-545 says those already match.
