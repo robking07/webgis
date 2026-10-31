@@ -31,6 +31,8 @@ export interface UrlState {
   /** A searched MPO (outlined, not a geography level); null = none. */
   mpo?: string | null;
   area?: string | null;
+  /** `preview` also shows unapproved "Why this matters" drafts; kept in the URL as is. */
+  context?: "preview" | null;
 }
 
 export const DEFAULT_VIEW: ViewState = { lon: -96.5, lat: 38.5, zoom: 3.6, fit: true };
@@ -50,6 +52,7 @@ export function parseUrlState(search: string): UrlState {
     in: p.get("in")?.match(/^\d{2,15}$/)?.[0] ?? null,
     mpo: p.get("mpo")?.match(/^\w{1,10}$/)?.[0] ?? null,
     area: p.get("area")?.match(AREA_CODE)?.[0] ?? null,
+    context: p.get("context") === "preview" ? "preview" : null,
   };
 }
 
@@ -65,6 +68,7 @@ export function serializeUrlState(s: UrlState): string {
   if (s.in) p.set("in", s.in);
   if (s.mpo) p.set("mpo", s.mpo);
   if (s.area) p.set("area", s.area);
+  if (s.context) p.set("context", s.context);
   return `?${p.toString().replaceAll("%2C", ",")}`;
 }
 

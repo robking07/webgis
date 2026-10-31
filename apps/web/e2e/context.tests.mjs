@@ -32,6 +32,10 @@ export default function contextTests({ test, expect, wait }) {
     await page.waitForFunction(() => window.__wgMap.getPadding().right === 0, null, { timeout: 8000 }).catch(() => {});
     const after = await page.evaluate(() => window.__wgMap.getPadding());
     expect(after.right === 0, `padding not reset: ${JSON.stringify(after)}`);
+    // Moving the map rewrites the URL (#429); the draft preview stays on.
+    await page.evaluate(() => window.__wgMap.jumpTo({ center: [-93, 45], zoom: 8 }));
+    await page.waitForFunction(() => location.search.includes("at="), null, { timeout: 8000 });
+    expect(page.url().includes("context=preview"), `map move dropped context=preview: ${page.url()}`);
   });
 
   test("laptop why this matters: a linked map switches the map and closes the panel", async (o) => {
