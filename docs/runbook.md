@@ -193,6 +193,15 @@ reads every old all-maps file `values/tracts/<county>.json` from R2 and uploads 
 Since this change no ingest writes the old files; they stay on R2 for rollback. Run no Data run or
 local reload between merging the new writer and the web switch to the per-map files.
 
+**Raw downloads (#368).** The last step, "Save raw downloads to R2", copies every file the run
+downloaded into `data/cache/` to R2 under `raw/`, same relative path (a file with no year in its path
+gets the run date: `raw/fema-nri-county.2026-10-31.json`). It never deletes and never overwrites: a key
+already there with the same size is skipped, and a different file under an existing key is saved beside
+it under today's date. A failure only warns (`::warning::` in the run log); it never fails a run that
+published. Fetch one back: `https://tiles.mapwich.org/raw/<path>` (list the folder in the Cloudflare R2
+dashboard, prefix `raw/`). It is public domain source data, so the copies are publicly downloadable.
+Local runs keep theirs in `data/cache/` already. About 0.1 to 1 GB per run, a cent or less a month.
+
 **Not on GitHub yet:** anything needing GDAL or tippecanoe (geographies, tiles, features,
 census2020, ddp287g, vmt, counts, label-mask, mpo); `timeline` for `fars` (it needs
 `population_density`'s 2019 stop on disk); and anything that changes committed files (a new
