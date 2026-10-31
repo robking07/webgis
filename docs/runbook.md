@@ -172,7 +172,7 @@ A dataset refresh can run on GitHub instead of Robbie's machine: `.github/workfl
 - **datasets**: the ids, e.g. `pct_poverty median_household_income`. Every step must load every
   id (`acs` with a FARS id is refused before anything runs; `data/ingest/src/check-run.ts`).
 
-Three more ways to run, each with that step alone (D-552, D-<n>):
+Three more ways to run, each with that step alone (D-552, D-557):
 
 - **A map layer from files** (`features` in the registry, e.g. TIP projects): steps `features`,
   datasets `tip_projects` (type `features` exactly, no extra spaces). The run installs GDAL and
@@ -190,7 +190,7 @@ Three more ways to run, each with that step alone (D-552, D-<n>):
   the ids (typed `counts` exactly). It fetches from the Census API and reads land areas from the
   database, writes nothing else (no database rows, no value files), then publishes with
   `publish-reload` as below: the count shards are merged into the live ones and every check runs.
-  D-<n> lists the ids of every ACS change map (a `timeline` in the registry).
+  D-557 lists the ids of every ACS change map (a `timeline` in the registry).
 
 There is no dry-run switch: every run writes the database and publishes. Visitors see new values
 within an hour. The run loads, then `export-values <ids>` and `details` (from the database), then

@@ -87,7 +87,7 @@ jobs:
           R2_BUCKET: ${{ secrets.R2_BUCKET }}
         run: npm run ingest -- publish-tiles $DATASETS
 
-      # `counts` alone (#454, D-257): margins (every period), counts and U.S. rows for the ACS maps named,
+      # `counts` alone (#454, D-557, D-257): margins (every period), counts and U.S. rows for the ACS maps named,
       # from the Census API; the database is only read (land areas), no value file is written.
       # publish-reload merges its tract and block-group count shards into the live ones and runs the same
       # drop checks as a load before uploading anything.
