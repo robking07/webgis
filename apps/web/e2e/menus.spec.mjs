@@ -1181,6 +1181,7 @@ test("laptop map fixes (#187): canvas label follows the map, tiles banner only f
 (await import("./click.tests.mjs")).default({ test, expect, immerse, mapIdle, tapAt, HENNEPIN });
 (await import("./find-address.tests.mjs")).default({ test, expect, mapIdle, HENNEPIN });
 (await import("./place-chain.tests.mjs")).default({ test, expect, immerse, mapIdle, tapLonLat });
+(await import("./pick-area.tests.mjs")).default({ test, expect, immerse, mapIdle, tapLonLat });
 
 test("old /specials/pairings?topic=Health redirects to /specials/combinations?topic=Health", async (o) => {
   const { page } = await o("laptop", "/specials/pairings?topic=Health", { ready: false });

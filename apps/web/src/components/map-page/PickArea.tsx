@@ -42,7 +42,7 @@ export function PickArea({ datasets, picked, picking, full, onDone, onClear }: {
   const btn = "wg-zbtn h-11 rounded-full px-4 text-sm font-semibold text-foreground";
   return (
     <section aria-label="Picked area" data-pick-area=""
-      className="absolute inset-x-3 bottom-6 z-20 flex max-h-[45%] flex-col gap-1 md:left-[18rem] md:right-auto md:w-80">
+      className="absolute inset-x-3 bottom-[4.25rem] z-20 flex max-h-[45%] flex-col gap-1 md:bottom-6 md:left-[18rem] md:right-auto md:w-80">
       {n > 0 && (
         <div className="wg-panel min-h-0 space-y-2 overflow-y-auto rounded-xl px-3 py-2" data-pick-total="">
           {datasets.map((d) => (

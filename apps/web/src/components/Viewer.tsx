@@ -426,6 +426,7 @@ export function Viewer({ search }: { search: string }) {
   };
   // Pick an area (#455): taps toggle tracts while picking; the total stays after Done until Clear.
   const [picking, setPicking] = useState(false);
+  // shortcut: picks on a 2010-tract timeline stop are 2010 geoids with no 2020 counts ("numbers are missing"); map them if planners pick on old years.
   const [pickedTracts, setPickedTracts] = useState<string[]>([]);
   const [pickFull, setPickFull] = useState(false);
   const pickable = !!primary && !isFeature && availableLevels.includes("tract");
@@ -548,7 +549,7 @@ export function Viewer({ search }: { search: string }) {
         desktopStrip={desktopStrip} mark={selected && selected.level === level ? selClass : null}
         covered={phone && (placeOpen || tableOpen || listOpen || stepAside || ctxOpen || pickShown)} tableReady={tableReady} tableLevel={tableLevel} onTable={() => setTableOpen(true)}
         // Phones, once a tap or pick has zoomed in (the header and its search are gone): search above the legend (issue #246).
-        onSearch={phone && immersed && (canGoBack || !!focus) ? () => setSearchOpen(true) : null} />
+        onSearch={phone && immersed && (canGoBack || !!focus) && !pickShown ? () => setSearchOpen(true) : null} />
 
       <MapCredits datasets={[primary, secondary].filter((d): d is Dataset => !!d)} />
 
