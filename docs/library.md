@@ -20,6 +20,8 @@ gets the map when it is promoted to Featured.
    tract values for every recipe map and keeps a map only if, at every level, at least 90% of
    areas have a value, at least 90% of those values have a published margin of error (so
    reliability hatching works as for every ACS map, D-222), and every value is within 0–100. It
+   If more than half of a map's graded tract values are unreliable, the map ships at state and
+   county only, with a note in the checks file (D-521). It
    writes `data/registry/datasets/<id>.yaml` (with `library: true`) for each map that passes, removes the file of
    each map that fails, and records the results, including the share of unreliable estimates, in
    `data/registry/library/acs-profile.checks.json`. Nobody fixes a failing map by hand. The map is

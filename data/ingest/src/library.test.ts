@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { checkLevel, loadRecipe, shape, toYaml } from "./library.ts";
+import { checkLevel, loadRecipe, shape, shippedLevels, toYaml, type MapCheck } from "./library.ts";
 import { derive } from "./acs.ts";
 
 const recipe = loadRecipe();
@@ -39,6 +39,15 @@ describe("checkLevel", () => {
     const r = checkLevel("tract", [ok(10), ok(20), ok(1, 5), ok(0, 0)]);
     expect(r.reasons).toEqual([]);
     expect(r.stats.unreliable).toBeCloseTo(1 / 3); // 1 ± 5 is unreliable; 0 ± 0 is not graded (D-364)
+  });
+  it("ships a map with mostly unreliable tracts at state and county only, with a note (not a failure)", () => {
+    const stats = (unreliable: number) => ({ areas: 10, coverage: 1, withMoe: 1, unreliable, min: 0, max: 50 });
+    const shaky: MapCheck = { pass: true, reasons: [], levels: { county: stats(0.1), tract: stats(0.6) } };
+    expect(shippedLevels(shaky)).toEqual(["state", "county"]);
+    expect(shaky.pass).toBe(true);
+    expect(shaky.notes?.[0]).toMatch(/60% of graded values are unreliable/);
+    expect(shippedLevels({ pass: true, reasons: [], levels: { tract: stats(0.5) } })).toEqual(["state", "county", "tract"]);
+    expect(shippedLevels(undefined)).toEqual(["state", "county", "tract"]); // offline: not checked yet
   });
   it("fails thin coverage, missing margins and values outside 0–100", () => {
     const none = { value: null, moe: null };

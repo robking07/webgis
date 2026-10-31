@@ -19,6 +19,8 @@ const DATASETS = join(ROOT, "data/registry/datasets");
 const LEVELS = ["state", "county", "tract"] as const;
 /** Gate thresholds: share of areas with a value, and of those, share with a published margin. */
 export const MIN_COVERAGE = 0.9, MIN_MOE = 0.9;
+/** Above this share of unreliable graded tract values, the map ships at state and county only (D-521). */
+export const MAX_UNRELIABLE_TRACTS = 0.5;
 
 export interface RecipeMap { id: string; title: string; topic: string; universe: string; num: string[]; den?: string[]; text: string; tags: string[] }
 export interface Recipe { vintage: string; year: number; ramps: Record<string, string>; tables: Record<string, string>; maps: RecipeMap[] }
@@ -54,7 +56,16 @@ export function shape(m: RecipeMap, r: Recipe): { raw: Record<string, unknown>; 
 }
 
 export interface LevelCheck { areas: number; coverage: number; withMoe: number; unreliable: number; min: number | null; max: number | null }
-export interface MapCheck { pass: boolean; reasons: string[]; levels: Partial<Record<GeoLevel, LevelCheck>> }
+export interface MapCheck { pass: boolean; reasons: string[]; notes?: string[]; levels: Partial<Record<GeoLevel, LevelCheck>> }
+
+/** The levels a checked map ships at: no tracts when most graded tract values are unreliable (they'd
+ *  be mostly hatched, and nobody judges a Library map by hand). Adds a note, not a failure. */
+export function shippedLevels(c: MapCheck | undefined): GeoLevel[] {
+  const t = c?.levels.tract;
+  if (!t || t.unreliable <= MAX_UNRELIABLE_TRACTS) return [...LEVELS];
+  c!.notes = [`tract: ${pct(t.unreliable)} of graded values are unreliable (over ${pct(MAX_UNRELIABLE_TRACTS)}), so state and county only`];
+  return ["state", "county"];
+}
 
 /** The automatic checks for one level: values within 0–100, most areas have a value, most values
  *  carry a margin (so reliability grading works as for every ACS map, D-222). `unreliable` (share of
@@ -118,13 +129,16 @@ export async function buildLibrary(offline = false) {
         c.pass = !c.reasons.length;
       }
     }
-    writeFileSync(CHECKS, JSON.stringify({ recipe: "acs-profile.yaml", checked: new Date().toISOString().slice(0, 10), maps: checks }, null, 1) + "\n");
   }
+  // Before the checks file is written: shippedLevels adds its note to the check.
+  const levels = new Map(entries.map((e) => [e.id, shippedLevels(checks[e.id])]));
+  if (!offline) writeFileSync(CHECKS, JSON.stringify({ recipe: "acs-profile.yaml", checked: new Date().toISOString().slice(0, 10), maps: checks }, null, 1) + "\n");
   let written = 0;
   for (const { raw, entry: e } of shaped) {
     const file = join(DATASETS, `${e.id}.yaml`);
     if (!offline && !checks[e.id].pass) { rmSync(file, { force: true }); log("library", `left out ${e.id}: ${checks[e.id].reasons.join("; ")}`); continue; }
-    writeFileSync(file, HEADER + toYaml(raw));
+    if (checks[e.id]?.notes) log("library", `${e.id}: ${checks[e.id].notes!.join("; ")}`);
+    writeFileSync(file, HEADER + toYaml({ ...raw, geographyLevels: levels.get(e.id) }));
     written++;
   }
   log("library", `${written} of ${entries.length} maps written${offline ? " (offline: not checked)" : ""}`);

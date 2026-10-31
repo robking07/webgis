@@ -19,8 +19,13 @@
   passing check.
 - **The checks are the ones the brief listed, at state, county and tract:** values within 0–100,
   coverage (90% of areas or more), and margins present (90% of values or more), so D-222 hatching works.
-  Reliability itself is not a gate. The share of unreliable tract estimates is recorded per map
-  for the lead and Robbie. Thresholds are `MIN_COVERAGE` and `MIN_MOE` in `library.ts`.
+  Thresholds are `MIN_COVERAGE` and `MIN_MOE` in `library.ts`.
+- **Mostly unreliable tracts mean no tract level (lead, 2026-10-30).** When more than 50% of a map's
+  graded tract values are unreliable (CV over 30%, D-222), the map still ships, at state and county
+  only: `tract` is dropped from its `geographyLevels`, and `acs-profile.checks.json` records a note,
+  not a failure (`MAX_UNRELIABLE_TRACTS`, `shippedLevels`). Featured maps get a person's judgment; Library maps
+  don't, so a mostly hatched tract map shouldn't appear. `ingest acs` and the Data run's `acs` step
+  already load only an entry's own levels, so those maps get no tract files.
 - **Where Library maps show:** search (Featured first), the **More in the Library (n)** line under
   each subcategory in the dataset menu (folded, open when the map on screen is one of them), the
   `/data` page (their own source group, "ACS 5-year estimates (added automatically)") and
