@@ -481,7 +481,7 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
   // unlayered, which beats Tailwind's layered utilities on the map element itself.
   return (
     <div className="absolute inset-0">
-      <div ref={container} className="h-full w-full" role="region" aria-label={ariaLabel} />
+      <div ref={container} className="h-full w-full" />
     </div>
   );
 }

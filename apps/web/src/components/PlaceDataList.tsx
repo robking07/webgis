@@ -14,7 +14,7 @@ import { CATEGORIES, DATASET_BY_ID, type Dataset } from "@/lib/registry";
 export type Detail = Record<string, { value: number | null; moe: number | null }>;
 
 /** One "Map it" per row reads as noise in a 28-row list: hidden until hover/focus on mouse devices. */
-const MAP_IT = "text-xs text-primary underline-offset-2 hover:underline [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-focus-within:opacity-100 focus-visible:opacity-100";
+const MAP_IT = "text-xs text-primary underline underline-offset-2 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-focus-within:opacity-100 focus-visible:opacity-100";
 
 /** Context notes (wording approved by Robbie 2026-10-29, issue #411), shown once before the first row of their subcategory. */
 const NOTES: Record<string, string> = {

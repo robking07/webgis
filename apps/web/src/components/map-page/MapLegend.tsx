@@ -109,9 +109,11 @@ export function MapLegend({ theme, primary, secondary, isFeature, featureSpec, c
   return (
     <>
       {legendStrip && legendEnds && !legendOpen && (
-        <button key={shown.cue} type="button" data-legend="" onClick={() => setLegendOpen(true)} aria-expanded={false} aria-label={`Show legend for ${primary!.title}`}
+        <button key={shown.cue} type="button" data-legend="" onClick={() => setLegendOpen(true)} aria-expanded={false}
           className={`wg-panel absolute bottom-6 left-3 z-20 max-w-[calc(100%-9rem)] items-center gap-2 whitespace-nowrap rounded-full px-3 py-2 text-xs tabular-nums text-foreground focus-visible:outline-2 focus-visible:outline-ring md:left-4 md:max-w-none ${desktopStrip ? "flex" : "flex md:hidden"} ${cueClass}`}>
           {/* The strip is a compact key: numbers only ("< 2.5K", "≥ 75K"); the unit is in the full legend. */}
+          {/* Name = this text + the visible ends, so the visible label is part of it (WCAG 2.5.3). */}
+          <span className="sr-only">Show legend for {primary!.title}</span>
           {since ? <span className="font-semibold">Change</span> : stopId && <span className="font-semibold">{stop!.label}</span>}
           <span>{stripEnd(legendEnds[0])}</span>
           <span className="flex overflow-hidden rounded-sm" aria-hidden>

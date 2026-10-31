@@ -31,8 +31,11 @@ export function SearchOverlay({ onClose, onPlace, onDataset, onBoth, onAddress, 
   const listId = useId();
 
   useEffect(() => {
+    // Closing hands focus back to whatever opened search (the button), not the page body.
+    const opener = document.activeElement as HTMLElement | null;
     input.current?.focus();
     loadPlaceIndex().then(setRows, () => setFailed(true));
+    return () => opener?.focus();
   }, []);
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") { e.stopPropagation(); onClose(); } };
