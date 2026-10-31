@@ -4,7 +4,7 @@
 import { useEffect, useLayoutEffect, useRef } from "react";
 import { AttributionControl, LngLatBounds, Map as MlMap, ScaleControl, addProtocol, setWorkerUrl, type LayerSpecification, type MapGeoJSONFeature } from "maplibre-gl";
 import { Protocol } from "pmtiles";
-import { areaHighlightLayers, AREA_SOURCE, basemapStyle, pinLayers, PIN_SOURCE, choroplethFill, hatchImage, hatchLayerId, HATCH_IMAGE, HATCH_LEVELS, membershipFilter, NO_FEATURES, choroplethFillsByState, DATA_BEFORE_ID, HIGHLIGHT_BEFORE_ID, referenceLineLayers, STATIC_ONLY_LEVELS, TILE_VALUE_LEVELS, THEMES, featureLineLayers, featurePolygonLayers, fillLayerIds, focusDimLayer, FOCUS_DIM_LAYER, focusFilters, focusLandLayer, FOCUS_LAND_BEFORE_ID, GEO_LEVELS, MOTION, PER_STATE_LEVELS, thematicLayers, type GeoLevel, type NoDataFill, type PackedClasses, type ThemeName } from "@webgis/design";
+import { areaHighlightLayers, AREA_SOURCE, basemapStyle, pinLayers, PIN_SOURCE, choroplethFill, hatchImage, hatchLayerId, HATCH_IMAGE, HATCH_LEVELS, membershipFilter, NO_FEATURES, choroplethFillsByState, DATA_BEFORE_ID, HIGHLIGHT_BEFORE_ID, referenceLineLayers, STATIC_ONLY_LEVELS, TILE_VALUE_LEVELS, THEMES, featureLineLayers, featurePolygonLayers, POINT_FEATURES, fillLayerIds, focusDimLayer, FOCUS_DIM_LAYER, focusFilters, focusLandLayer, FOCUS_LAND_BEFORE_ID, GEO_LEVELS, MOTION, PER_STATE_LEVELS, thematicLayers, type GeoLevel, type NoDataFill, type PackedClasses, type ThemeName } from "@webgis/design";
 import { comparePickOpen } from "@/lib/compare";
 import type { FeatureLayerSpec } from "@/lib/layers";
 import type { ViewState } from "@/lib/url-state";
@@ -355,10 +355,10 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
     /** Lines are thin: hit-test a small box around the pointer, busiest (top-drawn) first. */
     const featureAt = (pt: { x: number; y: number }): FeatureHit | null => {
       const fl = latest.current.featureLayer;
-      const hitLayer = fl ? `${fl.id}-${fl.geometry === "polygon" ? "fill" : "line"}` : "";
-      if (!fl || !m.getLayer(hitLayer)) return null;
+      const hitLayers = !fl ? [] : (fl.geometry === "polygon" ? ["fill"] : ["line", "point"]).map((k) => `${fl.id}-${k}`).filter((id) => m.getLayer(id));
+      if (!fl || !hitLayers.length) return null;
       const r = fl.geometry === "polygon" ? 0 : 6;
-      const hits = m.queryRenderedFeatures([[pt.x - r, pt.y - r], [pt.x + r, pt.y + r]], { layers: [hitLayer] });
+      const hits = m.queryRenderedFeatures([[pt.x - r, pt.y - r], [pt.x + r, pt.y + r]], { layers: hitLayers });
       const f = hits.sort((a, b) => Number(b.properties[fl.valueField] ?? 0) - Number(a.properties[fl.valueField] ?? 0))[0];
       if (!f) return null;
       const ll = m.unproject([pt.x, pt.y]);
@@ -718,4 +718,6 @@ function applyFeatureFilter(m: MlMap, spec: FeatureLayerSpec | null, filter?: Re
   ]);
   const expr = clauses.length ? ["all", ...clauses] : null;
   for (const id of [`${spec.id}-casing`, `${spec.id}-line`, `${spec.id}-fill`]) if (m.getLayer(id)) m.setFilter(id, expr as never);
+  // The dots keep their points-only filter (see POINT_FEATURES).
+  if (m.getLayer(`${spec.id}-point`)) m.setFilter(`${spec.id}-point`, ["all", POINT_FEATURES, ...clauses] as never);
 }
