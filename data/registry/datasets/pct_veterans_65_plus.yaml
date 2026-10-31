@@ -14,7 +14,7 @@ source:
 license: Public domain (U.S. Government work, 17 U.S.C. § 105)
 updateCadence: annual
 vintage: 2020–2024 (5-year estimate)
-geographyLevels: [state, county, tract]
+geographyLevels: [state, county]
 unit: percent
 universe: civilians 65 and older
 terms: [acs-5-year, margin-of-error, census-geography, quantile-classes]

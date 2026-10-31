@@ -1,0 +1,3279 @@
+{
+ "recipe": "acs-profile.yaml",
+ "checked": "2026-10-31",
+ "maps": {
+  "pct_homes_single_family_detached": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 11,
+     "max": 73.8
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 1.1,
+     "max": 97.2
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9874,
+     "withMoe": 1,
+     "unreliable": 0.0804,
+     "min": 0,
+     "max": 100
+    }
+   }
+  },
+  "pct_homes_townhouses": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 1.4,
+     "max": 21.7
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.4871,
+     "min": 0,
+     "max": 55.6
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9874,
+     "withMoe": 1,
+     "unreliable": 0.7971,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 80% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_homes_duplex": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 1.3,
+     "max": 10.4
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.4482,
+     "min": 0,
+     "max": 25.1
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9874,
+     "withMoe": 1,
+     "unreliable": 0.9079,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 91% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_homes_3_4_units": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 2.1,
+     "max": 11.6
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.3823,
+     "min": 0,
+     "max": 22.6
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9874,
+     "withMoe": 1,
+     "unreliable": 0.8901,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 89% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_homes_5_9_units": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 2.2,
+     "max": 6.7
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.437,
+     "min": 0,
+     "max": 18.1
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9874,
+     "withMoe": 1,
+     "unreliable": 0.8798,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 88% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_homes_10_19_units": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 1.8,
+     "max": 8.2
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.5534,
+     "min": 0,
+     "max": 19.8
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9874,
+     "withMoe": 1,
+     "unreliable": 0.8737,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 87% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_homes_20_plus_units": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 2.8,
+     "max": 42
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.4577,
+     "min": 0,
+     "max": 78.9
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9874,
+     "withMoe": 1,
+     "unreliable": 0.6813,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 68% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_homes_built_2020_later": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0192,
+     "min": 0.2,
+     "max": 4.2
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.5425,
+     "min": 0,
+     "max": 12.8
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9874,
+     "withMoe": 1,
+     "unreliable": 0.9529,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 95% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_homes_built_2010s": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 3.2,
+     "max": 18.5
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0869,
+     "min": 0,
+     "max": 54.1
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9874,
+     "withMoe": 1,
+     "unreliable": 0.7216,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 72% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_homes_built_2000s": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 6.1,
+     "max": 26.1
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0559,
+     "min": 0,
+     "max": 42
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9874,
+     "withMoe": 1,
+     "unreliable": 0.5595,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 56% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_homes_built_1990s": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 2.8,
+     "max": 22.6
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0385,
+     "min": 0.3,
+     "max": 40.1
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9874,
+     "withMoe": 1,
+     "unreliable": 0.5696,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 57% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_homes_built_1980s": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 4.3,
+     "max": 24
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0205,
+     "min": 0,
+     "max": 37.9
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9874,
+     "withMoe": 1,
+     "unreliable": 0.559,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 56% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_homes_built_1970s": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 6.7,
+     "max": 22.7
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0096,
+     "min": 0,
+     "max": 36.8
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9874,
+     "withMoe": 1,
+     "unreliable": 0.4953,
+     "min": 0,
+     "max": 100
+    }
+   }
+  },
+  "pct_homes_built_1960s": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 5.4,
+     "max": 17.1
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.041,
+     "min": 0,
+     "max": 41.3
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9874,
+     "withMoe": 1,
+     "unreliable": 0.6473,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 65% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_homes_built_before_1940": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 1.1,
+     "max": 31.5
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0655,
+     "min": 0,
+     "max": 57.9
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9874,
+     "withMoe": 1,
+     "unreliable": 0.5915,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 59% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_homes_studio": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 1.3,
+     "max": 11.7
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.5465,
+     "min": 0,
+     "max": 29.9
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9874,
+     "withMoe": 1,
+     "unreliable": 0.949,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 95% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_homes_1_bedroom": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 5.5,
+     "max": 31.2
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0866,
+     "min": 0,
+     "max": 38.6
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9874,
+     "withMoe": 1,
+     "unreliable": 0.6639,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 66% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_homes_2_bedrooms": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 18.5,
+     "max": 31.4
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0012,
+     "min": 7.1,
+     "max": 57.5
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9874,
+     "withMoe": 1,
+     "unreliable": 0.2084,
+     "min": 0,
+     "max": 100
+    }
+   }
+  },
+  "pct_homes_3_bedrooms": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 18.4,
+     "max": 56.9
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0006,
+     "min": 12.5,
+     "max": 78.8
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9874,
+     "withMoe": 1,
+     "unreliable": 0.0675,
+     "min": 0,
+     "max": 100
+    }
+   }
+  },
+  "pct_homes_4_bedrooms": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 8.2,
+     "max": 22.3
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0118,
+     "min": 0,
+     "max": 41.4
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9874,
+     "withMoe": 1,
+     "unreliable": 0.3776,
+     "min": 0,
+     "max": 100
+    }
+   }
+  },
+  "pct_homes_5_plus_bedrooms": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 1.6,
+     "max": 21.3
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.2087,
+     "min": 0,
+     "max": 33.4
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9874,
+     "withMoe": 1,
+     "unreliable": 0.8401,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 84% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_moved_in_2023_later": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 2.4,
+     "max": 7.7
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.3012,
+     "min": 0,
+     "max": 21.1
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9871,
+     "withMoe": 1,
+     "unreliable": 0.9656,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 97% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_moved_in_2020_2022": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 11.5,
+     "max": 28.6
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0227,
+     "min": 0,
+     "max": 45.9
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9871,
+     "withMoe": 1,
+     "unreliable": 0.2835,
+     "min": 0,
+     "max": 100
+    }
+   }
+  },
+  "pct_moved_in_before_1990": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 3,
+     "max": 25.7
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0133,
+     "min": 0,
+     "max": 40.4
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9871,
+     "withMoe": 1,
+     "unreliable": 0.5634,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 56% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_seniors_renting": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 14.495833126232252,
+     "max": 40.85593152547796
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.1186,
+     "min": 0,
+     "max": 100
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9827,
+     "withMoe": 1,
+     "unreliable": 0.7823,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 78% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "rental_vacancy_rate": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 3,
+     "max": 8.3
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.6555,
+     "min": 0,
+     "max": 65.6
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.985,
+     "withMoe": 1,
+     "unreliable": 0.9907,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 99% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_heat_utility_gas": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0192,
+     "min": 0.1,
+     "max": 78.7
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.1057,
+     "min": 0,
+     "max": 91.4
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9871,
+     "withMoe": 1,
+     "unreliable": 0.2052,
+     "min": 0,
+     "max": 100
+    }
+   }
+  },
+  "pct_heat_propane": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 0.7,
+     "max": 19.2
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0758,
+     "min": 0,
+     "max": 81.9
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9871,
+     "withMoe": 1,
+     "unreliable": 0.8272,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 83% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_heat_electricity": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 9.2,
+     "max": 90.4
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0143,
+     "min": 0,
+     "max": 97.8
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9871,
+     "withMoe": 1,
+     "unreliable": 0.1896,
+     "min": 0,
+     "max": 100
+    }
+   }
+  },
+  "pct_heat_fuel_oil": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.3529,
+     "min": 0,
+     "max": 55.3
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.6138,
+     "min": 0,
+     "max": 94.1
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9871,
+     "withMoe": 1,
+     "unreliable": 0.7815,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 78% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_heat_wood": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.06,
+     "min": 0,
+     "max": 12.5
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.4138,
+     "min": 0,
+     "max": 59.8
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9871,
+     "withMoe": 1,
+     "unreliable": 0.8882,
+     "min": 0,
+     "max": 94.3
+    }
+   },
+   "notes": [
+    "tract: 89% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_home_value_under_100k": {
+   "pass": false,
+   "reasons": [
+    "tract: values outside 0–100 (0 to 100.1)"
+   ],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 1.6,
+     "max": 31
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 0.9997,
+     "withMoe": 1,
+     "unreliable": 0.0208,
+     "min": 0,
+     "max": 100
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9798,
+     "withMoe": 1,
+     "unreliable": 0.7444,
+     "min": 0,
+     "max": 100.1
+    }
+   },
+   "notes": [
+    "tract: 74% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_home_value_300k_500k": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 5.7,
+     "max": 45.8
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 0.9997,
+     "withMoe": 1,
+     "unreliable": 0.0801,
+     "min": 0,
+     "max": 66.1
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9798,
+     "withMoe": 1,
+     "unreliable": 0.4603,
+     "min": 0,
+     "max": 100
+    }
+   }
+  },
+  "pct_home_value_500k_plus": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 2.7,
+     "max": 77
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 0.9997,
+     "withMoe": 1,
+     "unreliable": 0.2293,
+     "min": 0,
+     "max": 94.5
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9798,
+     "withMoe": 1,
+     "unreliable": 0.571,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 57% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_owned_no_mortgage": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 24.3,
+     "max": 63
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 0.9997,
+     "withMoe": 1,
+     "unreliable": 0.0006,
+     "min": 19.1,
+     "max": 100
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9798,
+     "withMoe": 1,
+     "unreliable": 0.1231,
+     "min": 0,
+     "max": 100
+    }
+   }
+  },
+  "pct_mortgage_costs_3000_plus": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 2.4,
+     "max": 53.1
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 0.9991,
+     "withMoe": 1,
+     "unreliable": 0.4783,
+     "min": 0,
+     "max": 83
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9755,
+     "withMoe": 1,
+     "unreliable": 0.7131,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 71% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_mortgage_costs_under_1000": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 2.1,
+     "max": 55.599999999999994
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 0.9991,
+     "withMoe": 1,
+     "unreliable": 0.1073,
+     "min": 0,
+     "max": 94.30000000000001
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9755,
+     "withMoe": 1,
+     "unreliable": 0.881,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 88% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_no_mortgage_cost_burdened": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 7.3,
+     "max": 17.9
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 0.9997,
+     "withMoe": 1,
+     "unreliable": 0.1696,
+     "min": 0,
+     "max": 36.1
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9747,
+     "withMoe": 1,
+     "unreliable": 0.9544,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 95% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_rent_under_1000": {
+   "pass": false,
+   "reasons": [
+    "tract: values outside 0–100 (0 to 100.1)"
+   ],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 10.8,
+     "max": 86.5
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0273,
+     "min": 0,
+     "max": 100
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9829,
+     "withMoe": 1,
+     "unreliable": 0.6993,
+     "min": 0,
+     "max": 100.1
+    }
+   },
+   "notes": [
+    "tract: 70% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_rent_2000_plus": {
+   "pass": false,
+   "reasons": [
+    "tract: values outside 0–100 (0 to 100.10000000000001)"
+   ],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 1.7000000000000002,
+     "max": 51.4
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.7084,
+     "min": 0,
+     "max": 82.2
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9829,
+     "withMoe": 1,
+     "unreliable": 0.8268,
+     "min": 0,
+     "max": 100.10000000000001
+    }
+   },
+   "notes": [
+    "tract: 83% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_under_5": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 3.1,
+     "max": 6.9
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0236,
+     "min": 0,
+     "max": 15.7
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.99,
+     "withMoe": 1,
+     "unreliable": 0.6153,
+     "min": 0,
+     "max": 53.3
+    }
+   },
+   "notes": [
+    "tract: 62% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_age_20_24": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 5.6,
+     "max": 8.5
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0494,
+     "min": 0,
+     "max": 28.6
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.99,
+     "withMoe": 1,
+     "unreliable": 0.633,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 63% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_age_25_34": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 11.9,
+     "max": 22
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0121,
+     "min": 0,
+     "max": 26.1
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.99,
+     "withMoe": 1,
+     "unreliable": 0.1728,
+     "min": 0,
+     "max": 100
+    }
+   }
+  },
+  "pct_age_35_44": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 11.9,
+     "max": 16.7
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0087,
+     "min": 0,
+     "max": 38.8
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.99,
+     "withMoe": 1,
+     "unreliable": 0.1183,
+     "min": 0,
+     "max": 100
+    }
+   }
+  },
+  "pct_age_45_54": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 10.1,
+     "max": 12.9
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0084,
+     "min": 0,
+     "max": 20.3
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.99,
+     "withMoe": 1,
+     "unreliable": 0.156,
+     "min": 0,
+     "max": 100
+    }
+   }
+  },
+  "pct_age_55_64": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 9.2,
+     "max": 15.5
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0043,
+     "min": 4,
+     "max": 25.3
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.99,
+     "withMoe": 1,
+     "unreliable": 0.129,
+     "min": 0,
+     "max": 100
+    }
+   }
+  },
+  "pct_age_65_74": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 7.3,
+     "max": 13.4
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0043,
+     "min": 2.9,
+     "max": 31
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.99,
+     "withMoe": 1,
+     "unreliable": 0.1828,
+     "min": 0,
+     "max": 100
+    }
+   }
+  },
+  "pct_age_75_plus": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 4.6,
+     "max": 11.5
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0102,
+     "min": 0.6000000000000001,
+     "max": 69.7
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.99,
+     "withMoe": 1,
+     "unreliable": 0.3899,
+     "min": 0,
+     "max": 100
+    }
+   }
+  },
+  "pct_age_85_plus": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 0.9,
+     "max": 3.1
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0998,
+     "min": 0,
+     "max": 63.6
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.99,
+     "withMoe": 1,
+     "unreliable": 0.9144,
+     "min": 0,
+     "max": 68.7
+    }
+   },
+   "notes": [
+    "tract: 91% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_married_couple_households": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 0.9808,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 24.7,
+     "max": 58.9
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 0.9758,
+     "withMoe": 1,
+     "unreliable": 0.001,
+     "min": 12.5,
+     "max": 81.6
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9763,
+     "withMoe": 1,
+     "unreliable": 0.0554,
+     "min": 0,
+     "max": 100
+    }
+   }
+  },
+  "pct_married_with_children": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 0.9808,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 9.8,
+     "max": 27.8
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 0.9758,
+     "withMoe": 1,
+     "unreliable": 0.0181,
+     "min": 0,
+     "max": 39.3
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9763,
+     "withMoe": 1,
+     "unreliable": 0.3267,
+     "min": 0,
+     "max": 100
+    }
+   }
+  },
+  "pct_unmarried_partner_households": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 0.9808,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 4.9,
+     "max": 10.1
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 0.9758,
+     "withMoe": 1,
+     "unreliable": 0.1531,
+     "min": 0,
+     "max": 22.7
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9763,
+     "withMoe": 1,
+     "unreliable": 0.8873,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 89% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_one_person_households": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 0.9808,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 20.5,
+     "max": 47.3
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 0.9758,
+     "withMoe": 1,
+     "unreliable": 0.0019,
+     "min": 8.7,
+     "max": 85.2
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9763,
+     "withMoe": 1,
+     "unreliable": 0.1473,
+     "min": 0,
+     "max": 100
+    }
+   }
+  },
+  "pct_households_with_children": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 0.9808,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 20.1,
+     "max": 37.8
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 0.9758,
+     "withMoe": 1,
+     "unreliable": 0.0051,
+     "min": 0,
+     "max": 69.6
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9763,
+     "withMoe": 1,
+     "unreliable": 0.078,
+     "min": 0,
+     "max": 100
+    }
+   }
+  },
+  "pct_households_with_seniors": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 0.9808,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 21.4,
+     "max": 40.8
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 0.9758,
+     "withMoe": 1,
+     "unreliable": 0.001,
+     "min": 13.9,
+     "max": 100
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9763,
+     "withMoe": 1,
+     "unreliable": 0.0531,
+     "min": 0,
+     "max": 100
+    }
+   }
+  },
+  "pct_moved_from_other_state": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 0.9808,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 0,
+     "max": 4.8
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 0.9758,
+     "withMoe": 1,
+     "unreliable": 0.1796,
+     "min": 0,
+     "max": 19.6
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9792,
+     "withMoe": 1,
+     "unreliable": 0.9434,
+     "min": 0,
+     "max": 69
+    }
+   },
+   "notes": [
+    "tract: 94% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_moved_from_other_county": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 0.9808,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 3.8,
+     "max": 8.6
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 0.9758,
+     "withMoe": 1,
+     "unreliable": 0.091,
+     "min": 0,
+     "max": 30.2
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9792,
+     "withMoe": 1,
+     "unreliable": 0.8749,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 87% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_students_in_college": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 0.9808,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 20.8,
+     "max": 37.6
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 0.9752,
+     "withMoe": 1,
+     "unreliable": 0.078,
+     "min": 0,
+     "max": 89.5
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9775,
+     "withMoe": 1,
+     "unreliable": 0.5242,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 52% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_less_than_9th_grade": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 0.9808,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 1.6,
+     "max": 8.7
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 0.9758,
+     "withMoe": 1,
+     "unreliable": 0.1493,
+     "min": 0,
+     "max": 43.1
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.979,
+     "withMoe": 1,
+     "unreliable": 0.8671,
+     "min": 0,
+     "max": 79.3
+    }
+   },
+   "notes": [
+    "tract: 87% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_high_school_only": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 0.9808,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 14.5,
+     "max": 39.3
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 0.9758,
+     "withMoe": 1,
+     "unreliable": 0.0016,
+     "min": 4.2,
+     "max": 54.9
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.979,
+     "withMoe": 1,
+     "unreliable": 0.0966,
+     "min": 0,
+     "max": 100
+    }
+   }
+  },
+  "pct_some_college_no_degree": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 0.9808,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 11.2,
+     "max": 24.5
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 0.9758,
+     "withMoe": 1,
+     "unreliable": 0.0025,
+     "min": 7.8,
+     "max": 46
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.979,
+     "withMoe": 1,
+     "unreliable": 0.1115,
+     "min": 0,
+     "max": 100
+    }
+   }
+  },
+  "pct_associates_degree": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 0.9808,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 2.7,
+     "max": 14
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 0.9758,
+     "withMoe": 1,
+     "unreliable": 0.0242,
+     "min": 0,
+     "max": 64.5
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.979,
+     "withMoe": 1,
+     "unreliable": 0.5039,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 50% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_bachelors_only": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 0.9808,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 14.4,
+     "max": 28.1
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 0.9758,
+     "withMoe": 1,
+     "unreliable": 0.0102,
+     "min": 0,
+     "max": 46.4
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.979,
+     "withMoe": 1,
+     "unreliable": 0.1812,
+     "min": 0,
+     "max": 100
+    }
+   }
+  },
+  "pct_veterans_65_plus": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 5.4524156889851545,
+     "max": 21.19200739473322
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0649,
+     "min": 0,
+     "max": 51.06382978723404
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9859,
+     "withMoe": 1,
+     "unreliable": 0.7849,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 78% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_veterans_18_54": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 0.7923063302580149,
+     "max": 7.01377172903349
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.2772,
+     "min": 0,
+     "max": 19.25826912649273
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9895,
+     "withMoe": 1,
+     "unreliable": 0.9624,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 96% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_women_in_labor_force": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 41.9,
+     "max": 69.6
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0006,
+     "min": 24.5,
+     "max": 77.5
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9889,
+     "withMoe": 1,
+     "unreliable": 0.0075,
+     "min": 0,
+     "max": 100
+    }
+   }
+  },
+  "pct_young_kids_parents_work": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 56.1,
+     "max": 77.5
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 0.9984,
+     "withMoe": 1,
+     "unreliable": 0.032,
+     "min": 0,
+     "max": 100
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9722,
+     "withMoe": 1,
+     "unreliable": 0.3533,
+     "min": 0,
+     "max": 100
+    }
+   }
+  },
+  "pct_school_kids_parents_work": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 65.6,
+     "max": 81
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 0.9994,
+     "withMoe": 1,
+     "unreliable": 0.0062,
+     "min": 10.5,
+     "max": 100
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9786,
+     "withMoe": 1,
+     "unreliable": 0.1473,
+     "min": 0,
+     "max": 100
+    }
+   }
+  },
+  "pct_jobs_management": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 33,
+     "max": 71.7
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0056,
+     "min": 6.1,
+     "max": 76.9
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9881,
+     "withMoe": 1,
+     "unreliable": 0.0745,
+     "min": 0,
+     "max": 100
+    }
+   }
+  },
+  "pct_jobs_service": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 11.2,
+     "max": 22.6
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0233,
+     "min": 0,
+     "max": 41.2
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9881,
+     "withMoe": 1,
+     "unreliable": 0.344,
+     "min": 0,
+     "max": 100
+    }
+   }
+  },
+  "pct_jobs_sales_office": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 12.1,
+     "max": 24.8
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0112,
+     "min": 2.3,
+     "max": 36
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9881,
+     "withMoe": 1,
+     "unreliable": 0.1937,
+     "min": 0,
+     "max": 100
+    }
+   }
+  },
+  "pct_jobs_construction_maintenance": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 1.7,
+     "max": 14.2
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0264,
+     "min": 0,
+     "max": 44.9
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9881,
+     "withMoe": 1,
+     "unreliable": 0.7328,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 73% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_jobs_production_transport": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 3.3,
+     "max": 19.1
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0354,
+     "min": 0,
+     "max": 45.1
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9881,
+     "withMoe": 1,
+     "unreliable": 0.5247,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 52% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_industry_agriculture": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0192,
+     "min": 0.1,
+     "max": 9.1
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.2251,
+     "min": 0,
+     "max": 51.3
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9881,
+     "withMoe": 1,
+     "unreliable": 0.9353,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 94% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_industry_construction": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 2.3,
+     "max": 9.3
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0922,
+     "min": 0,
+     "max": 27.8
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9881,
+     "withMoe": 1,
+     "unreliable": 0.8413,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 84% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_industry_manufacturing": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 1.4,
+     "max": 18.2
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.1102,
+     "min": 0,
+     "max": 44.4
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9881,
+     "withMoe": 1,
+     "unreliable": 0.6628,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 66% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_industry_retail": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 4.5,
+     "max": 13.2
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0583,
+     "min": 1.6,
+     "max": 31.3
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9881,
+     "withMoe": 1,
+     "unreliable": 0.6192,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 62% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_industry_transportation": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 2.7,
+     "max": 9.1
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.1285,
+     "min": 0,
+     "max": 73.1
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9881,
+     "withMoe": 1,
+     "unreliable": 0.8945,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 89% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_industry_finance": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 4,
+     "max": 9.3
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.2058,
+     "min": 0,
+     "max": 19.5
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9881,
+     "withMoe": 1,
+     "unreliable": 0.8268,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 83% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_industry_professional": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 7.1,
+     "max": 26
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.1345,
+     "min": 0,
+     "max": 56.6
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9881,
+     "withMoe": 1,
+     "unreliable": 0.5606,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 56% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_industry_education_health": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 17.1,
+     "max": 29.3
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0081,
+     "min": 0,
+     "max": 52.3
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9881,
+     "withMoe": 1,
+     "unreliable": 0.1416,
+     "min": 0,
+     "max": 100
+    }
+   }
+  },
+  "pct_industry_arts_food": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 6.9,
+     "max": 19.7
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.1363,
+     "min": 0,
+     "max": 31.9
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9881,
+     "withMoe": 1,
+     "unreliable": 0.7892,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 79% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_industry_public_admin": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 3.4,
+     "max": 18.2
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.1307,
+     "min": 0,
+     "max": 29.6
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9881,
+     "withMoe": 1,
+     "unreliable": 0.9098,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 91% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_government_workers": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 11.5,
+     "max": 26.3
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0084,
+     "min": 5,
+     "max": 84.6
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9881,
+     "withMoe": 1,
+     "unreliable": 0.4269,
+     "min": 0,
+     "max": 100
+    }
+   }
+  },
+  "pct_self_employed": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 4,
+     "max": 11.6
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0646,
+     "min": 0,
+     "max": 34.8
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9881,
+     "withMoe": 1,
+     "unreliable": 0.8778,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 88% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_income_under_25k": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 9.1,
+     "max": 48.2
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0183,
+     "min": 2.5,
+     "max": 66.80000000000001
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9871,
+     "withMoe": 1,
+     "unreliable": 0.5843,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 58% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_income_25k_50k": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 10,
+     "max": 25.6
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0059,
+     "min": 0,
+     "max": 49.099999999999994
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9871,
+     "withMoe": 1,
+     "unreliable": 0.4485,
+     "min": 0,
+     "max": 100
+    }
+   }
+  },
+  "pct_income_50k_100k": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 18.2,
+     "max": 32.8
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0034,
+     "min": 6.199999999999999,
+     "max": 70.4
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9871,
+     "withMoe": 1,
+     "unreliable": 0.1242,
+     "min": 0,
+     "max": 100
+    }
+   }
+  },
+  "pct_income_100k_150k": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 4.6,
+     "max": 21.6
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0292,
+     "min": 0,
+     "max": 31.8
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9871,
+     "withMoe": 1,
+     "unreliable": 0.3444,
+     "min": 0,
+     "max": 100
+    }
+   }
+  },
+  "pct_income_200k_plus": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 1.7,
+     "max": 26.7
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.1684,
+     "min": 0,
+     "max": 44.7
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9871,
+     "withMoe": 1,
+     "unreliable": 0.603,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 60% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_households_with_earnings": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 57.3,
+     "max": 84.3
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 36,
+     "max": 91.2
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9871,
+     "withMoe": 1,
+     "unreliable": 0.003,
+     "min": 0,
+     "max": 100
+    }
+   }
+  },
+  "pct_households_social_security": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 17.9,
+     "max": 45.6
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0003,
+     "min": 13.5,
+     "max": 92.6
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9871,
+     "withMoe": 1,
+     "unreliable": 0.0644,
+     "min": 0,
+     "max": 100
+    }
+   }
+  },
+  "pct_households_retirement_income": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 16.3,
+     "max": 32.3
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0037,
+     "min": 5.5,
+     "max": 88.9
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9871,
+     "withMoe": 1,
+     "unreliable": 0.1711,
+     "min": 0,
+     "max": 100
+    }
+   }
+  },
+  "pct_smartphone_only": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 5.371302337829534,
+     "max": 27.01558488642508
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0289,
+     "min": 0,
+     "max": 50.4870675176352
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9871,
+     "withMoe": 1,
+     "unreliable": 0.7404,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 74% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_desktop_or_laptop": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 49.25414411720504,
+     "max": 88.45879614730153
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0009,
+     "min": 28.854551561975146,
+     "max": 98.99749373433583
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9871,
+     "withMoe": 1,
+     "unreliable": 0.0025,
+     "min": 0,
+     "max": 100
+    }
+   }
+  },
+  "pct_cellular_only_internet": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 7.755540442803631,
+     "max": 23.399020502515366
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0292,
+     "min": 0,
+     "max": 48.59081419624217
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9871,
+     "withMoe": 1,
+     "unreliable": 0.6468,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 65% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_cable_fiber_dsl": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 50.38160428735438,
+     "max": 83.10790145046437
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0019,
+     "min": 13.622129436325677,
+     "max": 94.70747648652957
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9871,
+     "withMoe": 1,
+     "unreliable": 0.0047,
+     "min": 0,
+     "max": 100
+    }
+   }
+  },
+  "pct_satellite_internet": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 3.099558283142588,
+     "max": 11.08384911925957
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0481,
+     "min": 0,
+     "max": 81.06796116504854
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9871,
+     "withMoe": 1,
+     "unreliable": 0.8461,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 85% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_short_commute": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 12.913688774061438,
+     "max": 54.20804493931186
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0022,
+     "min": 6.5094091574954,
+     "max": 100
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9881,
+     "withMoe": 1,
+     "unreliable": 0.2523,
+     "min": 0,
+     "max": 100
+    }
+   }
+  },
+  "pct_work_in_other_state": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 0.3020111746814412,
+     "max": 17.1283257811851
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.4483,
+     "min": 0,
+     "max": 60.44362292051756
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9882,
+     "withMoe": 1,
+     "unreliable": 0.8716,
+     "min": 0,
+     "max": 100
+    }
+   },
+   "notes": [
+    "tract: 87% of graded values are unreliable (over 50%), so state and county only"
+   ]
+  },
+  "pct_one_vehicle_households": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 24.1,
+     "max": 46.4
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0056,
+     "min": 7.6,
+     "max": 77.8
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9871,
+     "withMoe": 1,
+     "unreliable": 0.0681,
+     "min": 0,
+     "max": 100
+    }
+   }
+  },
+  "pct_two_vehicle_households": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 14.3,
+     "max": 41.1
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0019,
+     "min": 2,
+     "max": 58.7
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9871,
+     "withMoe": 1,
+     "unreliable": 0.0798,
+     "min": 0,
+     "max": 100
+    }
+   }
+  },
+  "pct_three_plus_vehicle_households": {
+   "pass": true,
+   "reasons": [],
+   "levels": {
+    "state": {
+     "areas": 52,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0,
+     "min": 3.2,
+     "max": 33.6
+    },
+    "county": {
+     "areas": 3222,
+     "coverage": 1,
+     "withMoe": 1,
+     "unreliable": 0.0043,
+     "min": 0.4,
+     "max": 59.4
+    },
+    "tract": {
+     "areas": 85382,
+     "coverage": 0.9871,
+     "withMoe": 1,
+     "unreliable": 0.2732,
+     "min": 0,
+     "max": 100
+    }
+   }
+  }
+ }
+}
