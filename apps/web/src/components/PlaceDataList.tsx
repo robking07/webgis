@@ -93,9 +93,9 @@ export function PlaceDataList({ geoid, level, detail, mapHref, onMapIt, compact 
                     </p>
                     {/* "Map it" shows on row hover/focus where there's a mouse; touch screens always show it. */}
                     {onMapIt ? (
-                      <button type="button" onClick={() => onMapIt(d.id)} aria-label={`Map ${d.title}`} className={`${MAP_IT} rounded focus-visible:outline-2 focus-visible:outline-ring`}>Map it</button>
+                      <button type="button" onClick={() => onMapIt(d.id)} aria-label={`Map it: ${d.title}`} className={`${MAP_IT} rounded focus-visible:outline-2 focus-visible:outline-ring`}>Map it</button>
                     ) : mapHref ? (
-                      <a href={mapHref(d.id)} aria-label={`Map ${d.title}`} className={MAP_IT}>Map it</a>
+                      <a href={mapHref(d.id)} aria-label={`Map it: ${d.title}`} className={MAP_IT}>Map it</a>
                     ) : null}
                   </div>
                 </li>

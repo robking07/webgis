@@ -34,7 +34,7 @@ is `~/webgis/drafts/robbie.md` (gitignored).
 - **Working rules that still hold:** Specials publish verbatim from `drafts/specials/` ("publish
   <name>": strip `<!-- -->` comments, move the numbers script to `apps/web/scripts/specials-numbers/`,
   run `check:special` and the build). Workers self-review with `ponytail-review`; the lead runs it
-  again before merging. Chromium can't run in the agent sandbox, so e2e runs only in CI on a *ready*
+  again before merging. Chromium runs in the agent sandbox with `CHROMIUM_PATH` set (see the handbook), so workers can run e2e; CI still runs it on a *ready*
   PR. The lead adds Finished rows and Lessons at merge time.
 
 ## Finished
@@ -122,7 +122,7 @@ One line per task. These feed the project kit (#53).
 - **G2:** an alert can have no patched version (braces 3.0.3). Check `first_patched_version` and
   `npm view <pkg> versions` before trying a bump or override.
 - **F6:** Claude Code agent frontmatter supports `model` and `effort`, so routing lives in the agent files, not prose. The lead's brief can still override the model per task (opus for M/L).
-- **1.4:** the sandbox has no Chromium system libs (libnspr4), so `npm run shots` and e2e cannot run here; check that early and run the real CSV function from a node script instead. Excel treats leading `#` lines as data, so notes go after the rows.
+- **1.4:** (Corrected 2026-10-31: Chromium does run in the sandbox with `CHROMIUM_PATH`; see the handbook.) Originally: no Chromium system libs (libnspr4), so `npm run shots` and e2e could not run; check that early and run the real CSV function from a node script instead. Excel treats leading `#` lines as data, so notes go after the rows.
 - **Decision files:** two workers (#65, #75) wrote `# D-1xx: Title`; the check wants `# D-1xx · Title`. Briefs now give the exact first line; run `PR_NUMBER=<n> node scripts/check-decisions.mjs` before pushing.
 - **F2:** the e2e suite passes locally but one fade check flaked on the slower CI runner; wait
   for the state you assert (CSS transitions done), not a fixed delay. Heavy checks (~10 of a
