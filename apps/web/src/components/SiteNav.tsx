@@ -5,6 +5,8 @@ export function SiteFooter() {
   return (
     <footer className="mt-12 flex flex-wrap gap-x-4 gap-y-1 border-t pt-4 text-xs text-muted-foreground">
       <Link href="/data" className="hover:text-foreground">All datasets</Link>
+      <Link href="/about" className="hover:text-foreground">About</Link>
+      <Link href="/methods" className="hover:text-foreground">Methods</Link>
       <Link href="/design-system" className="hover:text-foreground">Design system</Link>
       <a href="https://buymeacoffee.com/mapwich" target="_blank" rel="noopener" className="hover:text-foreground">Buy me a coffee</a>
       <span>Mapwich is a non-commercial, educational project.</span>
