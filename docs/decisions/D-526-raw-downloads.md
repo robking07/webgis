@@ -1,4 +1,4 @@
-# D-526: The Data run keeps its raw source downloads
+# D-526 · The Data run keeps its raw source downloads
 
 PR #426, issue #368 (part 1). Date: 2026-10-31.
 
