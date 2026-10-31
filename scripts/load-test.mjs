@@ -37,7 +37,7 @@ const JOURNEYS = [
 ];
 const journey = () => { let r = Math.random(); for (const [w, f] of JOURNEYS) if ((r -= w) <= 0) return f(); return JOURNEYS[0][1](); };
 
-export function pct(sorted, p) { return sorted.length ? sorted[Math.min(sorted.length - 1, Math.floor((p / 100) * sorted.length))] : NaN; }
+function pct(sorted, p) { return sorted.length ? sorted[Math.min(sorted.length - 1, Math.floor((p / 100) * sorted.length))] : NaN; }
 assert.equal(pct([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 50), 6);
 assert.equal(pct([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 95), 10);
 
