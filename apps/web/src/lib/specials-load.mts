@@ -51,7 +51,7 @@ interface PairingRef { id: string; status: string }
 
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 // ```map / ```chart / ```table fences with YAML inside; everything else is Markdown.
-const FENCE = /^```(map|chart|table)[ \t]*\r?\n([\s\S]*?)^```[ \t]*$/gm;
+const FENCE = /^```(map|chart|table|callout)[ \t]*\r?\n([\s\S]*?)^```[ \t]*$/gm;
 
 function fail(file: string, msg: string): never {
   throw new Error(`content/specials/${file}: ${msg}`);
@@ -74,7 +74,7 @@ function parseBody(file: string, body: string, firstLine: number) {
   }
   prose(body.slice(last));
   // An unclosed fence would otherwise swallow the rest of the text as a code block.
-  if (/^```(map|chart|table)\b/m.test(body.replace(FENCE, ""))) fail(file, "a ```map, ```chart or ```table block is missing its closing ```");
+  if (/^```(map|chart|table|callout)\b/m.test(body.replace(FENCE, ""))) fail(file, "a ```map, ```chart, ```table or ```callout block is missing its closing ```");
   return out;
 }
 

@@ -196,3 +196,16 @@ describe("blockDatasets and blockWords", () => {
     expect(blockWords(parse("table", `type: counties\ntitle: Title\ncounties: ["51013"]\ncolumns: [wfh]`))).toBe(1);
   });
 });
+
+describe("callout block", () => {
+  it("passes its text through the inline renderer and counts the words", () => {
+    const b = parse("callout", "text: |\n  One two three.");
+    expect(b).toEqual({ kind: "callout", html: "<i>One two three.</i>" });
+    expect(blockWords(b)).toBe(3);
+    expect(blockDatasets(b)).toEqual([]);
+  });
+  it("needs text and rejects other fields", () => {
+    expect(() => parse("callout", "title: x")).toThrow(/unknown field "title"/);
+    expect(() => parse("callout", "text: ''")).toThrow(/"text" is required/);
+  });
+});
