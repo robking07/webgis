@@ -4955,8 +4955,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -5409,8 +5408,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -5597,8 +5595,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -6087,8 +6084,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -6709,8 +6705,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -6764,8 +6759,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -6873,8 +6867,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -7099,8 +7092,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -7110,60 +7102,6 @@
    "numerator": [
     "DP04_0087P",
     "DP04_0088P"
-   ],
-   "scale": 1,
-   "perSqMi": false
-  },
-  "modelInputs": [],
-  "facets": [],
-  "library": true,
-  "excludeFromInsights": false,
-  "learnMore": [],
-  "terms": [
-   "acs-5-year",
-   "margin-of-error",
-   "census-geography",
-   "quantile-classes"
-  ],
-  "symbology": {
-   "ramp": "blues",
-   "classification": "quantile",
-   "classes": 5
-  }
- },
- {
-  "id": "pct_home_value_under_100k",
-  "title": "Homes worth under $100,000",
-  "description": "Share of owner-occupied homes the owners value at under $100,000.",
-  "category": "Housing",
-  "subcategory": "Costs",
-  "tags": [
-   "home value",
-   "house prices",
-   "affordable"
-  ],
-  "source": {
-   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
-   "shortName": "Census Bureau",
-   "url": "https://data.census.gov/table/ACSDP5Y2024.DP04",
-   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP04 (Selected Housing Characteristics)"
-  },
-  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
-  "updateCadence": "annual",
-  "vintage": "2020–2024 (5-year estimate)",
-  "geographyLevels": [
-   "state",
-   "county",
-   "tract"
-  ],
-  "areaLevels": [],
-  "unit": "percent",
-  "universe": "owner-occupied homes",
-  "measure": {
-   "kind": "acs5",
-   "numerator": [
-    "DP04_0081P",
-    "DP04_0082P"
    ],
    "scale": 1,
    "perSqMi": false
@@ -7206,8 +7144,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -7258,8 +7195,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -7312,8 +7248,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -7418,8 +7353,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -7577,8 +7511,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -7630,8 +7563,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -7682,8 +7614,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -7786,8 +7717,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -7838,8 +7768,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -7890,8 +7819,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -7942,8 +7870,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -7995,8 +7922,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -8050,8 +7976,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -8165,8 +8090,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -8272,8 +8196,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -8326,8 +8249,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -8706,8 +8628,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -8866,8 +8787,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -8924,8 +8844,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -8979,8 +8898,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -9033,8 +8951,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -9144,8 +9061,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -9198,8 +9114,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -9253,8 +9168,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -9307,8 +9221,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -9361,8 +9274,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -9417,8 +9329,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -9471,8 +9382,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -9581,8 +9491,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -9809,8 +9718,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -10169,8 +10077,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -10223,8 +10130,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -10278,8 +10184,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -10332,8 +10237,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -10439,8 +10343,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -10492,8 +10395,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -10941,8 +10843,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -11505,62 +11406,6 @@
   }
  },
  {
-  "id": "pct_rent_2000_plus",
-  "title": "Rents of $2,000 or more a month",
-  "description": "Share of rented homes whose gross rent (rent plus utilities) is $2,000 or more a month.",
-  "category": "Housing",
-  "subcategory": "Costs",
-  "tags": [
-   "rent",
-   "expensive",
-   "gross rent",
-   "housing costs"
-  ],
-  "source": {
-   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
-   "shortName": "Census Bureau",
-   "url": "https://data.census.gov/table/ACSDP5Y2024.DP04",
-   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP04 (Selected Housing Characteristics)"
-  },
-  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
-  "updateCadence": "annual",
-  "vintage": "2020–2024 (5-year estimate)",
-  "geographyLevels": [
-   "state",
-   "county",
-   "tract"
-  ],
-  "areaLevels": [],
-  "unit": "percent",
-  "universe": "rented homes paying rent",
-  "measure": {
-   "kind": "acs5",
-   "numerator": [
-    "DP04_0131P",
-    "DP04_0132P",
-    "DP04_0133P"
-   ],
-   "scale": 1,
-   "perSqMi": false
-  },
-  "modelInputs": [],
-  "facets": [],
-  "library": true,
-  "excludeFromInsights": false,
-  "learnMore": [],
-  "terms": [
-   "acs-5-year",
-   "margin-of-error",
-   "census-geography",
-   "quantile-classes"
-  ],
-  "symbology": {
-   "ramp": "blues",
-   "classification": "quantile",
-   "classes": 5
-  }
- },
- {
   "id": "pct_rent_burdened",
   "title": "Renters paying 30%+ of income on rent",
   "phrase": "shares of rent-burdened renters",
@@ -11638,61 +11483,6 @@
    "classification": "quantile",
    "classes": 5,
    "higherIsBetter": false
-  }
- },
- {
-  "id": "pct_rent_under_1000",
-  "title": "Rents under $1,000 a month",
-  "description": "Share of rented homes whose gross rent (rent plus utilities) is under $1,000 a month.",
-  "category": "Housing",
-  "subcategory": "Costs",
-  "tags": [
-   "rent",
-   "affordable",
-   "gross rent",
-   "housing costs"
-  ],
-  "source": {
-   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
-   "shortName": "Census Bureau",
-   "url": "https://data.census.gov/table/ACSDP5Y2024.DP04",
-   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP04 (Selected Housing Characteristics)"
-  },
-  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
-  "updateCadence": "annual",
-  "vintage": "2020–2024 (5-year estimate)",
-  "geographyLevels": [
-   "state",
-   "county",
-   "tract"
-  ],
-  "areaLevels": [],
-  "unit": "percent",
-  "universe": "rented homes paying rent",
-  "measure": {
-   "kind": "acs5",
-   "numerator": [
-    "DP04_0127P",
-    "DP04_0128P"
-   ],
-   "scale": 1,
-   "perSqMi": false
-  },
-  "modelInputs": [],
-  "facets": [],
-  "library": true,
-  "excludeFromInsights": false,
-  "learnMore": [],
-  "terms": [
-   "acs-5-year",
-   "margin-of-error",
-   "census-geography",
-   "quantile-classes"
-  ],
-  "symbology": {
-   "ramp": "blues",
-   "classification": "quantile",
-   "classes": 5
   }
  },
  {
@@ -11780,8 +11570,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -11891,8 +11680,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -12011,8 +11799,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -12199,8 +11986,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -12375,8 +12161,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -12672,8 +12457,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -12793,8 +12577,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -12908,8 +12691,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -12971,8 +12753,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -13281,8 +13062,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
@@ -13823,8 +13603,7 @@
   "vintage": "2020–2024 (5-year estimate)",
   "geographyLevels": [
    "state",
-   "county",
-   "tract"
+   "county"
   ],
   "areaLevels": [],
   "unit": "percent",
