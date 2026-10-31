@@ -19,11 +19,12 @@ export async function generateMetadata({ params }: PageProps<"/place/[geoid]">):
 
 export default async function PlacePage({ params }: PageProps<"/place/[geoid]">) {
   const { geoid } = await params;
-  if ((await lookup(geoid)) === null) notFound();
+  const name = await lookup(geoid);
+  if (name === null) notFound();
   return (
     <>
       <SiteHeader />
-      <PlaceProfile geoid={geoid} similar={<SimilarPlaces geoid={geoid} />} />
+      <PlaceProfile geoid={geoid} name={name} similar={<SimilarPlaces geoid={geoid} />} />
       <div className="mx-auto max-w-3xl px-4 pb-8 md:px-8"><SiteFooter /></div>
     </>
   );
