@@ -81,7 +81,7 @@ export function ComparePlaces({ a, b, nameA, nameB, datasetId, parentNames, unkn
   // shortcut: tract maps load the national tract values file (~440 KB gzipped), heavy for a phone; upgrade to the per-county files if phones complain.
   const placeMap = (k: "a" | "b", className: string) => bbox && (
     <SpecialMap key={k} datasets={[ds.id]} at={null} level={level as "state" | "county" | "tract"} compare={{ a, b, bbox: bbox[k], fit: k }}
-      legend={k === "a" || !wide} className={className}>
+      legend={k === "a" || !wide} place={names[k]} className={className}>
       <p className="pointer-events-none absolute left-3 top-3 z-10 flex max-w-[calc(100%-1.5rem)] items-center gap-2 rounded-lg border bg-card/95 p-2 text-xs shadow-sm" data-compare-map-name={k}>
         <OutlineKey dashed={k === "b"} /><span className="truncate">{names[k]}</span>
       </p>

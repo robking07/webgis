@@ -26,7 +26,7 @@ Full build spec: `docs/SPEC.md`. Project rules: `CLAUDE.md`.
   `data/tiles/`, which is git-ignored and empty in a fresh clone (D-210). Either set
   `NEXT_PUBLIC_TILES_BASE_URL=https://tiles.mapwich.org` (R2 only allows the production origins
   and `http://localhost:3000`), or fill `data/tiles/` to work
-  offline. **Any ingest that uploads must start from a complete `data/tiles/`** (with `values/tracts/`,
+  offline. **Any ingest that uploads must start from a complete `data/tiles/`** (with `values/<id>/tracts/`,
   `geo/`, `details/` and the timeline stops); a partial folder plus `publish-data` wiped live tract data
   on 2026-10-08. The GitHub "Data run" workflow (runbook §8) is the exception: it reads each file it
   changes from R2 and merges into it, and checks every file for dropped datasets before the first
@@ -56,6 +56,9 @@ Each rule links to its source; follow the source, not this summary.
 - **Datasets only through the registry.** A new or changed dataset = a YAML entry in
   `data/registry/datasets/` + an ingest script in `data/ingest/src/`. No UI code. Use the
   `add-dataset` skill; the licence screen and approval flow are in `docs/data-intake.md`.
+- **Keep raw downloads.** Every source file an ingest step downloads stays in `data/cache/` (never in
+  git). Don't delete or overwrite an older copy when a source publishes a new release: keep both,
+  named by release. Never clear `data/cache/` to save space without the lead's OK; the lead asks Robbie.
 - **Never touch** Robbie's NAS, his home network, or Met Council internal systems or non-public
   data. Data the Met Council publishes openly (e.g. MN Geospatial Commons) is allowed, with the
   usual licence check (D-16).
@@ -92,8 +95,8 @@ CI runs these on every PR (`.github/workflows/ci.yml`, D-168); `scripts/merge-pr
 merge while one is red. Docs-only PRs (only `docs/`, `.claude/` or top-level `*.md`) skip the
 ones marked *, which counts as passing. Checks marked † run on ready PRs only, not drafts: the
 lead runs `gh pr ready <n>` before merging, and `merge-pr.sh` refuses a code PR until they pass.
-Agent sandboxes have no Chromium (missing `libnspr4`), so workers skip e2e and screenshots there and
-say so. The lead marks UI PRs ready once the build passes, so CI's click-through runs early.
+Chromium does run in agent sandboxes with `CHROMIUM_PATH=~/.cache/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell`,
+so e2e, `shots` and a11y scans can run there. The lead marks UI PRs ready once the build passes, so CI's click-through runs early.
 
 | CI check | What it covers | Blocking? |
 | --- | --- | --- |

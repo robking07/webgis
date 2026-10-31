@@ -52,7 +52,7 @@ export function ImmersedHeading({ primary, secondary, immersed, hasFilters, filt
     // An open menu sits above every other map panel (legend, controls, details), never under one.
     <div data-immersed-heading="" data-obstructs={immersed ? "" : undefined}
       className={`pointer-events-none absolute left-3 top-3 ${menuOpen ? "z-40" : "z-20"} flex flex-col gap-1 transition-opacity duration-300 md:left-4 ${immersed ? "opacity-100" : "opacity-0"}`}
-      inert={!immersed || undefined} aria-hidden={!immersed || undefined}>
+      inert={!immersed || undefined}>
       <div className="pointer-events-auto flex items-center gap-3">
         <button type="button" onClick={onShowNav} aria-label="Show navigation"
           className={`wg-panel grid size-10 shrink-0 place-items-center rounded-xl text-foreground transition-opacity duration-200 focus-visible:outline-2 focus-visible:outline-ring ${motionClass}`}>

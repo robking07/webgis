@@ -16,13 +16,17 @@ const FeatureField = z.object({
   items: z.record(z.string(), z.object({ description: z.string(), url: z.url().optional() })).optional(),
 });
 
+/** A detailed-table cell ("B08301_010") or a Data Profile cell ("DP04_0068P" percent, "DP04_0005"
+ *  estimate; ingest reads those from the `acs5/profile` endpoint). */
+const AcsVar = z.string().regex(/^([BC]\d{5}[A-Z]?_\d{3}|DP0[2-5]_\d{4}P?)$/);
+
 /** How the value is computed from source variables. */
 const AcsMeasure = z.object({
   kind: z.literal("acs5"),
   /** Variables summed for the numerator, e.g. ["B08301_010"]. Estimates (E) and MOEs (M) are fetched for each. */
-  numerator: z.array(z.string().regex(/^[BC]\d{5}[A-Z]?_\d{3}$/)).min(1),
+  numerator: z.array(AcsVar).min(1),
   /** Variables summed for the denominator. Omit for a direct estimate (e.g. a median). */
-  denominator: z.array(z.string().regex(/^[BC]\d{5}[A-Z]?_\d{3}$/)).optional(),
+  denominator: z.array(AcsVar).optional(),
   /** Multiply the ratio by this (100 for percent). */
   scale: z.number().default(1),
   /** Divide by land area to get a density. */
@@ -328,6 +332,10 @@ export const DatasetEntry = z.object({
   coverageNote: z.string().optional(),
   /** Filterable categorical fields (feature layers), each with an explainer. */
   facets: z.array(Facet).default([]),
+  /** A Library map (#372): made by a recipe (`data/registry/library/`), checked automatically, labelled
+   *  "Added automatically", found through search and "More in the Library", never in the dataset menus,
+   *  Combinations or similar places. Promotion to Featured drops this line (docs/library.md). */
+  library: z.boolean().default(false),
   /** Keep out of Combinations (Specials)' playful pairings (sensitive subjects, e.g. enforcement). */
   excludeFromInsights: z.boolean().default(false),
   /** Earlier (or later) moments the map can step through (D-36), `from`…`to` by `step`. The

@@ -4,7 +4,7 @@
 import Link from "next/link";
 import { formatValue } from "@webgis/design";
 import { rhoText } from "@/lib/insights";
-import type { BinsChart, Block, CorrelationTable, CountyTable, FocusMap, Ref } from "@/lib/special-blocks.mts";
+import type { BinsChart, Block, Callout, CorrelationTable, CountyTable, FocusMap, Ref } from "@/lib/special-blocks.mts";
 import { SpecialMap } from "./SpecialMap";
 import { mapHref } from "./parts";
 
@@ -82,7 +82,7 @@ function CorrelationsBlock({ b }: { b: CorrelationTable }) {
   return (
     <div role="figure" aria-label={b.title} className={frame}>
       <p className={titleCls}>{b.title}</p>
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto" tabIndex={0} role="region" aria-label={b.title}>
         <table className="w-full border-collapse text-[13px] md:text-sm">
           <caption className="sr-only">{b.title}. Spearman rank correlation across counties; −1 to 1, 0 means no link.</caption>
           <thead>
@@ -121,7 +121,7 @@ function CountiesBlock({ b }: { b: CountyTable }) {
   return (
     <div role="figure" aria-label={b.title} className={frame}>
       <p className={titleCls}>{b.title}</p>
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto" tabIndex={0} role="region" aria-label={b.title}>
         <table className="w-full border-collapse text-xs sm:text-[13px] md:text-sm">
           <caption className="sr-only">{b.title}</caption>
           <thead>
@@ -149,11 +149,19 @@ function CountiesBlock({ b }: { b: CountyTable }) {
   );
 }
 
+function CalloutBlock({ b }: { b: Callout }) {
+  return (
+    <aside role="note" className="rounded-xl border border-[var(--ui-accent)] bg-[color-mix(in_srgb,var(--ui-accent)_8%,var(--ui-surface))] p-3.5 text-[15px] leading-relaxed text-foreground md:p-5 [&_a]:underline"
+      dangerouslySetInnerHTML={{ __html: b.html }} />
+  );
+}
+
 export function SpecialBlock({ block }: { block: Block }) {
   switch (block.kind) {
     case "map": return <FocusMapBlock b={block} />;
     case "bins": return <BinsBlock b={block} />;
     case "correlations": return <CorrelationsBlock b={block} />;
     case "counties": return <CountiesBlock b={block} />;
+    case "callout": return <CalloutBlock b={block} />;
   }
 }

@@ -35,9 +35,11 @@ export async function fetchTable(vars: string[], geo: string, year = YEAR): Prom
   if (!key) throw new Error("CENSUS_API_KEY is not set in .env.local (free: https://api.census.gov/data/key_signup.html)");
   const out = new Map<string, PackedRow>();
   const index = new Map(vars.map((v, i) => [v, i]));
-  for (let i = 0; i < vars.length; i += MAX_VARS) {
-    const chunk = vars.slice(i, i + MAX_VARS);
-    const url = `${API(year)}?get=${chunk.join(",")}&${geo}&key=${key}`;
+  // Data Profile cells (DP02–DP05) live on their own endpoint; one call never mixes the two.
+  const chunks = [vars.filter((v) => !v.startsWith("DP")), vars.filter((v) => v.startsWith("DP"))]
+    .flatMap((vs) => Array.from({ length: Math.ceil(vs.length / MAX_VARS) }, (_, i) => vs.slice(i * MAX_VARS, (i + 1) * MAX_VARS)));
+  for (const chunk of chunks) {
+    const url = `${API(year)}${chunk[0].startsWith("DP") ? "/profile" : ""}?get=${chunk.join(",")}&${geo}&key=${key}`;
     let res: Response | undefined;
     for (let attempt = 0; attempt < 4; attempt++) {
       res = await fetch(url, { redirect: "manual" });
@@ -72,6 +74,9 @@ export function acsCounts(entry: DatasetEntry, row: Row, level?: Level): Counts 
   return countsRow(sum(row, numerator), denominator ? sum(row, denominator) : null);
 }
 
+/** A published-percent sum up to this is rounding and reads as 100 (half a point covers five cells rounded to 0.1). */
+export const ROUNDING_SLACK = 100.5;
+
 export function derive(entry: DatasetEntry, row: Row, area?: number, level?: Level): Value {
   if (entry.measure.kind !== "acs5") throw new Error("not acs5");
   const { scale, perSqMi } = entry.measure;
@@ -89,6 +94,8 @@ export function derive(entry: DatasetEntry, row: Row, area?: number, level?: Lev
     if (rad < 0) rad = (num.m ?? 0) ** 2 + r * r * (den.m ?? 0) ** 2;
     value = r;
     moe = Math.sqrt(rad) / den.e;
+  } else if (entry.unit === "percent" && value > 100 && value <= ROUNDING_SLACK) {
+    value = 100; // a sum of Census percents, each rounded to 0.1, can overshoot 100 a little (#373); a bigger overshoot is a real error and fails the Library check
   }
   if (perSqMi) {
     if (!area) return { value: null, moe: null };
@@ -147,7 +154,7 @@ async function writeUsRows(pool: ReturnType<typeof db>, entries: DatasetEntry[],
   }
 }
 
-function fetchLevel(level: Level | "us", vars: string[], year = YEAR): Promise<Map<string, Row>> {
+export function fetchLevel(level: Level | "us", vars: string[], year = YEAR): Promise<Map<string, Row>> {
   if (level === "us") return fetchTable(vars, "for=us:1", year);
   if (level === "state") return fetchTable(vars, "for=state:*", year);
   if (level === "county") return fetchTable(vars, "for=county:*", year);

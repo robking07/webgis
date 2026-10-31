@@ -29,4 +29,10 @@ describe("buildShards", () => {
   it("sorts datasets so a re-run gives a small diff", () => {
     expect(Object.keys(shards.get("27")!["27053"].values)).toEqual(["gini_index", "median_age"]);
   });
+  it("leaves out the datasets it is told to (Library maps)", () => {
+    const out = buildShards([geo("27", "state", "Minnesota")],
+      [{ dataset_id: "median_age", geoid: "27", value: 38, moe: 0.1 }, { dataset_id: "pct_heat_wood", geoid: "27", value: 4.2, moe: 1.1 }],
+      new Set(["pct_heat_wood"]));
+    expect(out.get("27")!["27"].values).toEqual({ median_age: [38, 0.1] });
+  });
 });

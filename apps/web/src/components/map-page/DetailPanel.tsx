@@ -1,4 +1,5 @@
 import { useEffect, useState, type ReactNode } from "react";
+import { useEscape } from "../useEscape";
 import { X } from "lucide-react";
 import { StatusState } from "@webgis/design/components";
 import { CHANGE_CLASSES, formatEstimate, formatValue, GEO_LEVELS, isGradable, STATIC_ONLY_LEVELS, TILE_VALUE_LEVELS, type GeoLevel } from "@webgis/design";
@@ -6,7 +7,7 @@ import { moeRangeLine, noDataReason, reliabilityNote } from "@/lib/reliability";
 import { changeSummary, differenceMoe, formatChange, withinMoe } from "@/lib/change";
 import type { ClassedLevel } from "./useViewerData";
 import type { HoverInfo } from "../map/MapView";
-import type { Dataset } from "@/lib/registry";
+import { DATASET_BY_ID, type Dataset } from "@/lib/registry";
 import { isRaceRow, placeHref, rankText } from "@/lib/place";
 import { learnMoreLinks, type Link } from "@/lib/learn-more";
 import { fetchDetail, TRACT_IDS } from "@/lib/details";
@@ -162,24 +163,26 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
   if (seenDeps.some((v, i) => v !== loadDeps[i])) { setSeenDeps(loadDeps); setRows(null); setErr(null); }
   useEffect(() => {
     let live = true;
+    const shown = [primary, secondary].filter((d): d is Dataset => !!d);
+    // The value the map drew and its margin file: for levels not in the database (D-124) and for
+    // Library maps at state or county, which aren't in the click files (D-536).
+    const fromMap = async (d: Dataset, i: number) => {
+      const inTile = TILE_VALUE_LEVELS.has(info.level);
+      const moes = inTile ? ({} as Values) : await loadMoes(d.id, info.level).catch(() => ({} as Values));
+      // Blocks: the value is in the tile; 2020 Census counts have no margin of error.
+      const fromTile = inTile && d.measure.kind === "census2020" ? (info.props?.[d.measure.value] as number | undefined) : undefined;
+      return [d.id, { value: fromTile ?? (i === 0 ? xv : yv)?.[info.geoid] ?? null, moe: moes[info.geoid] ?? null }] as const;
+    };
     const load = staticOnly
-      ? Promise.all([primary, secondary].filter((d): d is Dataset => !!d).map(async (d, i) => {
-          const inTile = TILE_VALUE_LEVELS.has(info.level);
-          const moes = inTile ? ({} as Values) : await loadMoes(d.id, info.level).catch(() => ({} as Values));
-          // Blocks: the value is in the tile; 2020 Census counts have no margin of error.
-          const fromTile = inTile && d.measure.kind === "census2020" ? (info.props?.[d.measure.value] as number | undefined) : undefined;
-          return [d.id, { value: fromTile ?? (i === 0 ? xv : yv)?.[info.geoid] ?? null, moe: moes[info.geoid] ?? null }] as const;
-        })).then((e) => Object.fromEntries(e) as Detail)
+      ? Promise.all(shown.map(fromMap)).then((e) => Object.fromEntries(e) as Detail)
       // Tracts: only the maps on screen (one small file each, #371); the phone's full list loads its own.
-      : fetchDetail(info.geoid, [primary, secondary].filter((d): d is Dataset => !!d).map((d) => d.id));
+      : Promise.all([fetchDetail(info.geoid, shown.map((d) => d.id)),
+          ...shown.map((d, i) => (d.library && info.level !== "tract" ? fromMap(d, i) : null))])
+          .then(([r, ...lib]) => ({ ...r, ...Object.fromEntries(lib.filter((e) => e != null)) }) as Detail);
     load.then((r) => live && setRows(r), (e) => live && setErr(String(e.message ?? e)));
     return () => { live = false; };
   }, [info.geoid, info.level, info.props, staticOnly, primary, secondary, xv, yv]);
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [onClose]);
+  useEscape(onClose);
 
   const inside = useInside(info.geoid, info.level, info.lon, info.lat);
   const featured = [primary, secondary].filter((d): d is Dataset => !!d);
@@ -238,7 +241,7 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
       <CompareWith geoid={info.geoid} level={info.level} name={info.name} dataset={primary} otherPeriod={!!period}
         aValue={!rows ? null : staticOnly ? undefined : rows[primary.id]?.value ?? null} onPicking={setPicking} />
       {!shrunk && <LearnMore links={links} />}
-      {phone && !shrunk && rows && !staticOnly && <p className="mt-2 text-center text-xs text-muted-foreground group-data-[snap=full]:hidden">Swipe up for all {info.level === "tract" ? TRACT_IDS.length : Object.keys(rows).length} datasets here</p>}
+      {phone && !shrunk && rows && !staticOnly && <p className="mt-2 text-center text-xs text-muted-foreground group-data-[snap=full]:hidden">Swipe up for all {info.level === "tract" ? TRACT_IDS.length : Object.keys(rows).filter((id) => !DATASET_BY_ID.get(id)?.library).length} datasets here</p>}
     </>
   );
 

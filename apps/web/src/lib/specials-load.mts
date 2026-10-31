@@ -51,7 +51,7 @@ interface PairingRef { id: string; status: string }
 
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 // ```map / ```chart / ```table fences with YAML inside; everything else is Markdown.
-const FENCE = /^```(map|chart|table)[ \t]*\r?\n([\s\S]*?)^```[ \t]*$/gm;
+const FENCE = /^```(map|chart|table|callout)[ \t]*\r?\n([\s\S]*?)^```[ \t]*$/gm;
 
 function fail(file: string, msg: string): never {
   throw new Error(`content/specials/${file}: ${msg}`);
@@ -60,9 +60,13 @@ function fail(file: string, msg: string): never {
 /** `firstLine`: the file line the body starts on, so messages point at the right line. */
 function parseBody(file: string, body: string, firstLine: number) {
   const out: Array<{ kind: "html"; html: string; words: number } | Block> = [];
+  let heading = "";
   const prose = (md: string) => {
     if (!md.trim()) return;
-    out.push({ kind: "html", html: marked.parse(md, { async: false }).replace(/<table>[\s\S]*?<\/table>/g, (t) => `<div class="wg-table-scroll" role="region" aria-label="Table" tabindex="0">${t}</div>`), words: md.split(/\s+/).filter(Boolean).length });
+    // A table is named by the heading above it (carried across chunks), so the landmarks differ. shortcut: two tables under one heading share a name, number them if a piece does that.
+    const html = marked.parse(md, { async: false }).replace(/<h[1-6][^>]*>([\s\S]*?)<\/h[1-6]>|<table>[\s\S]*?<\/table>/g, (t, h?: string) =>
+      h != null ? ((heading = h.replace(/<[^>]+>/g, "")), t) : `<div class="wg-table-scroll" role="region" aria-label="${heading || "Table"}" tabindex="0">${t}</div>`);
+    out.push({ kind: "html", html, words: md.split(/\s+/).filter(Boolean).length });
   };
   let last = 0, n = 0;
   for (const m of body.matchAll(FENCE)) {
@@ -74,7 +78,7 @@ function parseBody(file: string, body: string, firstLine: number) {
   }
   prose(body.slice(last));
   // An unclosed fence would otherwise swallow the rest of the text as a code block.
-  if (/^```(map|chart|table)\b/m.test(body.replace(FENCE, ""))) fail(file, "a ```map, ```chart or ```table block is missing its closing ```");
+  if (/^```(map|chart|table|callout)\b/m.test(body.replace(FENCE, ""))) fail(file, "a ```map, ```chart, ```table or ```callout block is missing its closing ```");
   return out;
 }
 

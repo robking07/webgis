@@ -33,7 +33,7 @@ export function shuffler(n: number, rand = Math.random) {
   };
 }
 
-const LINK = "group outline-none focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-current hover:text-[var(--ui-splash-ink)] focus-visible:text-[var(--ui-splash-ink)]";
+const LINK = "group focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-current hover:text-[var(--ui-splash-ink)] focus-visible:text-[var(--ui-splash-ink)]";
 // Phones can't hover: the underline and arrow show all the time there.
 const LINE = "decoration-2 underline-offset-[0.2em] group-hover:underline group-focus-visible:underline [@media(hover:none)]:underline";
 const ARROW = "opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 [@media(hover:none)]:opacity-100";

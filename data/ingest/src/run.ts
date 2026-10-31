@@ -1,7 +1,8 @@
 // npm run ingest -- <step> [dataset or level ids…]
-// Steps: geographies | label-mask | mpo | mpo-counties | areas | publish-areas | publish-search | timeline | acs | acs-bg | census2020 | lodes | places | climdiv | nbi | fars | overdose | airquality | features | vmt | cejst | ddp287g | tri | nri | svi | sahie | lead | food-access | tiles | publish-tiles | publish-reload | publish-values | publish-geo | publish-data | counts | publish-counts | details | similar | publish-similar | publish-details | tract-geo | export [--allow-period-drop] | export-values | insights [--reflag] | combinations [--dry-run] | tracts-out | split-tracts | docs | mn-catalog | mpo-plans | export-mpo-plans | publish-mpo-plans [--dry-run] | all
+// Steps: geographies | label-mask | mpo | mpo-counties | areas | publish-areas | publish-search | timeline | library [--offline] | acs | acs-bg | census2020 | lodes | places | climdiv | nbi | fars | overdose | airquality | features | vmt | cejst | ddp287g | tri | nri | svi | sahie | lead | food-access | tiles | publish-tiles | publish-reload | publish-raw | publish-values | publish-geo | publish-data | counts | publish-counts | details | similar | publish-similar | publish-details | tract-geo | export [--allow-period-drop] | export-values | insights [--reflag] | combinations [--dry-run] | tracts-out | split-tracts | docs | mn-catalog | mpo-plans | export-mpo-plans | publish-mpo-plans [--dry-run] | all
 import { ingestGeographies, tractGeography } from "./geographies.ts";
 import { ingestAcs, ingestAcsTimeline } from "./acs.ts";
+import { buildLibrary } from "./library.ts";
 import { ingestCensus2020 } from "./census2020.ts";
 import { ingestLodes, ingestLodesTimeline } from "./lodes.ts";
 import { buildTiles } from "./tiles.ts";
@@ -11,6 +12,7 @@ import { computeCombinations } from "./combinations.ts";
 import { ingestPlaces } from "./places.ts";
 import { ingestClimdiv, ingestClimdivTimeline } from "./climdiv.ts";
 import { publishAreas, publishCounts, publishSearch, publishData, publishDetails, publishGeo, publishReload, publishSimilar, publishTiles, publishValues } from "./publish-tiles.ts";
+import { publishRaw } from "./raw.ts";
 import { setCountsOnly } from "./values.ts";
 import { detailsOut } from "./details.ts";
 import { similarOut } from "./similar.ts";
@@ -41,6 +43,7 @@ const only = ids.length ? ids : undefined;
 const allowDrop = rest.includes("--allow-period-drop");
 const steps: Record<string, () => Promise<void> | void> = {
   geographies: ingestGeographies,
+  library: () => buildLibrary(rest.includes("--offline")),
   acs: () => ingestAcs(only),
   "acs-bg": () => ingestAcs(only, ["block_group"]),
   census2020: () => ingestCensus2020(only),
@@ -86,6 +89,8 @@ const steps: Record<string, () => Promise<void> | void> = {
   "publish-data": () => publishData(only),
   // #369, D-478: upload from a checkout holding only this run's loads (a GitHub runner), merging into the live shards.
   "publish-reload": publishReload,
+  // #368: copy data/cache/ to R2 under raw/ (a GitHub runner's cache is thrown away).
+  "publish-raw": publishRaw,
   // #156, #154: margins of error, the counts behind each map and U.S. rows, as new files only. Re-runs
   // the source downloads but writes nothing else (no database writes, no existing value files or
   // tiles); `publish-counts` then uploads just those files.

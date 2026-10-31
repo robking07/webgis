@@ -19,6 +19,7 @@ Run with the `dataset-display-review` skill (`.claude/skills/dataset-display-rev
 
 | Dataset | Readable values | Explainers | Facets | Opportunities (not built) |
 |---|---|---|---|---|
+| Library pilot, 103 ACS maps (#372, D-521; `library: true`) | ✓ plain titles from the recipe, no Census codes; table named in the citation, cells in "How it's computed"; "Added automatically" label | ACS 5-year, MOE, census geography, classes | – (choropleths) | **families** for a switcher: units in structure, year built, bedrooms, heating fuel, income bands, age bands, industries, occupations; link Featured siblings on promotion (renters, home age, broadband) |
 | Traffic volume (AADT) | ✓ route labels | AADT, functional class, road type | road type, functional class | NHS / truck-route facet; trucks share as a value toggle; peak-hour later |
 | Vehicle miles per resident | ✓ | VMT, AADT, classes | – (choropleth) | drill-down to the AADT segments in the county |
 | Traffic deaths | ✓ | rate per 100k, classes | – | **FARS crash points** underneath (facets: year, person type, light/weather, road type) |

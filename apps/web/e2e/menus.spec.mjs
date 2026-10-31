@@ -798,6 +798,17 @@ for (const vp of ["phone", "laptop"]) {
   });
 }
 
+// D-536: Library maps aren't in details/<state>.json; a county click reads the map's own values and margins.
+test("Library map county click: value with margin and the state benchmark, no Compare with", async (o) => {
+  const { page } = await o("laptop", "/map?d=pct_age_20_24&lv=county&at=-95.39,29.86,8");
+  await immerse(page);
+  await tapLonLat(page, -95.39, 29.86);
+  const det = page.locator('section[aria-label^="Details for Harris"]');
+  await det.waitFor();
+  await page.waitForFunction(() => /\d%\s*±[\d.]+%?[\s\S]*Texas [\d.]+%/.test(document.querySelector('section[aria-label^="Details for"]')?.innerText ?? ""), null, { timeout: 15000 });
+  expect((await det.getByRole("button", { name: "Compare with…" }).count()) === 0, "Compare with… shown on a Library map");
+});
+
 // Issue #193 (D-364): a zero with a huge margin reads as unreliable; a missing value says why.
 for (const vp of ["phone", "laptop"]) {
   test(`${vp} shaky zeros: Loving County's 0% ±57.7 bike commuting is unreliable; no-data rows say why`, async (o) => {
@@ -1116,7 +1127,9 @@ test("laptop search: \"Du\" lists places and no unrelated datasets; \"asthma\" f
   const box = dlg.getByRole("combobox"), datasets = dlg.getByRole("region", { name: "Datasets" });
   await box.fill("Du");
   await dlg.getByRole("region", { name: "Places" }).getByRole("option", { name: /^Du/ }).first().waitFor({ timeout: 15000 });
-  expect((await datasets.innerText()).includes("No matching datasets."), `datasets for "Du": ${await datasets.innerText()}`);
+  // Library maps can match on a word ("Homes in duplexes"); #252 only bans unrelated hits.
+  const dsNames = await datasets.getByRole("option").allInnerTexts();
+  expect(dsNames.every((t) => /\bdu/i.test(t.split("\n")[0])), `datasets for "Du": ${await datasets.innerText()}`);
   const places = await dlg.getByRole("region", { name: "Places" }).innerText();
   expect(places.includes("Duluth"), `"Du" doesn't list Duluth (#258): ${places}`);
   await box.fill("asthma");

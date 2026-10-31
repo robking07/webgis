@@ -62,8 +62,8 @@ More text, [a link](https://example.org), **bold**, *italic*, lists, and images:
 
 ## Maps, charts and tables inside the text
 
-Put them between paragraphs as fenced blocks: three backticks and the kind (`map`, `chart` or
-`table`), the fields in the same `name: value` form as the frontmatter, then three backticks to close.
+Put them between paragraphs as fenced blocks: three backticks and the kind (`map`, `chart`, `table` or
+`callout`), the fields in the same `name: value` form as the frontmatter, then three backticks to close.
 The numbers in charts and tables are computed from Mapwich's data when the site is built, so you never
 type them in. Captions can use Markdown links and *italics*.
 
@@ -85,6 +85,17 @@ caption: "Virginia and West Virginia, by county. Same colors as the main map."
 | `caption` | yes | The line under the map. Say where it is and what to look for. |
 
 Every focus map has its legend under it and an "Open in the full map" button.
+
+### A callout
+
+A highlighted box for one short passage, such as a definition. `text` is inline Markdown (links, bold, italics).
+
+````markdown
+```callout
+text: |
+  Noise infusion means making small, deliberate changes to published numbers.
+```
+````
 
 ### A chart: one measure across groups of counties
 

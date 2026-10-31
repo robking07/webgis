@@ -14,7 +14,7 @@ import { CATEGORIES, DATASET_BY_ID, type Dataset } from "@/lib/registry";
 export type Detail = Record<string, { value: number | null; moe: number | null }>;
 
 /** One "Map it" per row reads as noise in a 28-row list: hidden until hover/focus on mouse devices. */
-const MAP_IT = "text-xs text-primary underline-offset-2 hover:underline [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-focus-within:opacity-100 focus-visible:opacity-100";
+const MAP_IT = "text-xs text-primary underline underline-offset-2 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-focus-within:opacity-100 focus-visible:opacity-100";
 
 /** Context notes (wording approved by Robbie 2026-10-29, issue #411), shown once before the first row of their subcategory. */
 const NOTES: Record<string, string> = {
@@ -42,7 +42,8 @@ export function PlaceDataList({ geoid, level, detail, mapHref, onMapIt, compact 
     if (level === "tract" || level === "block_group") return;
     let live = true;
     for (const [id, r] of Object.entries(detail)) {
-      if (r.value == null || isRaceRow(DATASET_BY_ID.get(id))) continue;
+      // Library maps (#372) aren't listed here, so their values files aren't fetched either.
+      if (r.value == null || DATASET_BY_ID.get(id)?.library || isRaceRow(DATASET_BY_ID.get(id))) continue;
       // Only levels the dataset exports (county-only datasets have no state file to rank against).
       if (!DATASET_BY_ID.get(id)?.geographyLevels.includes(level)) continue;
       loadValues(id, level).then((vals: Values) => {
@@ -56,7 +57,7 @@ export function PlaceDataList({ geoid, level, detail, mapHref, onMapIt, compact 
   const shown = new Set<string>();
   const grouped = useMemo(() => {
     const m = new Map<string, Dataset[]>();
-    for (const d of results.filter((d) => detail[d.id])) (m.get(d.category) ?? m.set(d.category, []).get(d.category)!).push(d);
+    for (const d of results.filter((d) => !d.library && detail[d.id])) (m.get(d.category) ?? m.set(d.category, []).get(d.category)!).push(d);
     return [...m].sort((a, b) => CATEGORIES.indexOf(a[0]) - CATEGORIES.indexOf(b[0]));
   }, [results, detail]);
 
@@ -92,9 +93,9 @@ export function PlaceDataList({ geoid, level, detail, mapHref, onMapIt, compact 
                     </p>
                     {/* "Map it" shows on row hover/focus where there's a mouse; touch screens always show it. */}
                     {onMapIt ? (
-                      <button type="button" onClick={() => onMapIt(d.id)} aria-label={`Map ${d.title}`} className={`${MAP_IT} rounded focus-visible:outline-2 focus-visible:outline-ring`}>Map it</button>
+                      <button type="button" onClick={() => onMapIt(d.id)} aria-label={`Map it: ${d.title}`} className={`${MAP_IT} rounded focus-visible:outline-2 focus-visible:outline-ring`}>Map it</button>
                     ) : mapHref ? (
-                      <a href={mapHref(d.id)} aria-label={`Map ${d.title}`} className={MAP_IT}>Map it</a>
+                      <a href={mapHref(d.id)} aria-label={`Map it: ${d.title}`} className={MAP_IT}>Map it</a>
                     ) : null}
                   </div>
                 </li>
