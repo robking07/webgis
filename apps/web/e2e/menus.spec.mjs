@@ -1116,7 +1116,9 @@ test("laptop search: \"Du\" lists places and no unrelated datasets; \"asthma\" f
   const box = dlg.getByRole("combobox"), datasets = dlg.getByRole("region", { name: "Datasets" });
   await box.fill("Du");
   await dlg.getByRole("region", { name: "Places" }).getByRole("option", { name: /^Du/ }).first().waitFor({ timeout: 15000 });
-  expect((await datasets.innerText()).includes("No matching datasets."), `datasets for "Du": ${await datasets.innerText()}`);
+  // Library maps can match on a word ("Homes in duplexes"); #252 only bans unrelated hits.
+  const dsNames = await datasets.getByRole("option").allInnerTexts();
+  expect(dsNames.every((t) => /\bdu/i.test(t.split("\n")[0])), `datasets for "Du": ${await datasets.innerText()}`);
   const places = await dlg.getByRole("region", { name: "Places" }).innerText();
   expect(places.includes("Duluth"), `"Du" doesn't list Duluth (#258): ${places}`);
   await box.fill("asthma");
