@@ -7,7 +7,7 @@ import { moeRangeLine, noDataReason, reliabilityNote } from "@/lib/reliability";
 import { changeSummary, differenceMoe, formatChange, withinMoe } from "@/lib/change";
 import type { ClassedLevel } from "./useViewerData";
 import type { HoverInfo } from "../map/MapView";
-import type { Dataset } from "@/lib/registry";
+import { DATASET_BY_ID, type Dataset } from "@/lib/registry";
 import { isRaceRow, placeHref, rankText } from "@/lib/place";
 import { learnMoreLinks, type Link } from "@/lib/learn-more";
 import { fetchDetail, TRACT_IDS } from "@/lib/details";
@@ -235,7 +235,7 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
       <CompareWith geoid={info.geoid} level={info.level} name={info.name} dataset={primary} otherPeriod={!!period}
         aValue={!rows ? null : staticOnly ? undefined : rows[primary.id]?.value ?? null} onPicking={setPicking} />
       {!shrunk && <LearnMore links={links} />}
-      {phone && !shrunk && rows && !staticOnly && <p className="mt-2 text-center text-xs text-muted-foreground group-data-[snap=full]:hidden">Swipe up for all {info.level === "tract" ? TRACT_IDS.length : Object.keys(rows).length} datasets here</p>}
+      {phone && !shrunk && rows && !staticOnly && <p className="mt-2 text-center text-xs text-muted-foreground group-data-[snap=full]:hidden">Swipe up for all {info.level === "tract" ? TRACT_IDS.length : Object.keys(rows).filter((id) => !DATASET_BY_ID.get(id)?.library).length} datasets here</p>}
     </>
   );
 

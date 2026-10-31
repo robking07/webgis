@@ -1,12 +1,12 @@
 import { sourceSlug } from "@webgis/registry/describe";
-import { DATASETS, type Dataset } from "./registry";
+import { ALL_DATASETS, type Dataset } from "./registry";
 
 export interface Source { slug: string; name: string; url: string; license: string; datasets: Dataset[] }
 
 /** Datasets grouped by publishing source, largest first. */
 export const SOURCES: Source[] = (() => {
   const m = new Map<string, Source>();
-  for (const d of DATASETS) {
+  for (const d of ALL_DATASETS) {
     const slug = sourceSlug(d.source.name);
     if (!m.has(slug)) m.set(slug, { slug, name: d.source.name, url: d.source.url, license: d.license, datasets: [] });
     m.get(slug)!.datasets.push(d);

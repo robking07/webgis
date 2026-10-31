@@ -177,7 +177,8 @@ export async function computeInsights() {
     byDs.get(r.dataset_id)!.set(r.geoid, r.value);
   }
   // Sensitive datasets (e.g. immigration enforcement) never enter playful pairings.
-  const loaded = entries.filter((e) => byDs.has(e.id) && !e.excludeFromInsights);
+  // Library maps pair only once promoted to Featured (#372).
+  const loaded = entries.filter((e) => byDs.has(e.id) && !e.excludeFromInsights && !e.library);
   const pairs: Pair[] = [];
   for (let i = 0; i < loaded.length; i++) for (let j = i + 1; j < loaded.length; j++) {
     const x = loaded[i], y = loaded[j];

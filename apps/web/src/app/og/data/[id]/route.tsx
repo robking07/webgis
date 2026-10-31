@@ -1,8 +1,8 @@
-import { DATASETS, DATASET_BY_ID } from "@/lib/registry";
+import { ALL_DATASETS, DATASET_BY_ID } from "@/lib/registry";
 import { ogCard } from "@/lib/og-card";
 
 export const dynamicParams = false;
-export const generateStaticParams = () => DATASETS.map((d) => ({ id: d.id }));
+export const generateStaticParams = () => ALL_DATASETS.map((d) => ({ id: d.id }));
 
 export async function GET(_: Request, { params }: { params: Promise<{ id: string }> }) {
   const d = DATASET_BY_ID.get((await params).id);
