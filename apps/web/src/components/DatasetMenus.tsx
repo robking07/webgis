@@ -6,6 +6,7 @@
 // same sheet the details use. Both carry compare mode's picking states (D-323).
 import Link from "next/link";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode, type SyntheticEvent } from "react";
+import { useEscape } from "./useEscape";
 import { Check, ChevronDown, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CATEGORIES, DATASETS, bySubcategory, searchDatasets, type Dataset } from "@/lib/registry";
@@ -196,11 +197,7 @@ export function DatasetSheet(props: PickerProps) {
   const row = useRef<HTMLDivElement>(null);
   // Start with the current category's chip in view.
   useEffect(() => { row.current?.querySelector("[aria-checked=true]")?.scrollIntoView({ inline: "center", block: "nearest" }); }, []);
-  useEffect(() => {
-    const esc = (e: KeyboardEvent) => e.key === "Escape" && onClose();
-    window.addEventListener("keydown", esc);
-    return () => window.removeEventListener("keydown", esc);
-  }, [onClose]);
+  useEscape(onClose);
   // The search and chips take their own pointers, so typing or swiping them never drags the sheet.
   const stop = (e: SyntheticEvent) => e.stopPropagation();
   const summary = (
