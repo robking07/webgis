@@ -126,7 +126,7 @@ export default function compareTests({ test, expect, wait, immerse, tapLonLat, l
       const counts = page.locator("[data-compare-headline] [data-compare-counts]");
       await counts.first().waitFor({ timeout: 20000 });
       expect((await counts.count()) === 2, "counts under both places");
-      await page.locator('[data-compare-headline] [data-compare-share="us"]').nth(1).waitFor({ timeout: 20000 });
+      await page.locator('[data-compare-headline] [data-compare-share]').nth(3).waitFor({ timeout: 20000 });
       const shares = await page.locator("[data-compare-headline] [data-compare-share]").allInnerTexts();
       expect(shares.length === 4 && shares.some((s) => /of the Minnesota total$/.test(s)) && shares.some((s) => /of the U\.S\. total$/.test(s)), `shares: ${JSON.stringify(shares)}`);
       const race = page.locator('details[data-topic="People"]');
