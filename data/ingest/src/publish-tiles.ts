@@ -212,6 +212,8 @@ export const publishGeo = () => publishJson("geo", "export` and `ingest tract-ge
 export const publishSearch = () => publishJson("geo", "search", undefined, (f) => f === "search.json" || f === "zips.json");
 /** The state/county click details (details/, from `ingest details`), gzip-encoded. */
 export const publishDetails = () => publishJson("details", "details");
+/** Similar counties (similar/similar.json, from `ingest similar`, #401), gzip-encoded. */
+export const publishSimilar = () => publishJson("similar", "similar");
 /** City and metro area files (areas/, from `ingest areas`, #332), gzip-encoded. */
 export const publishAreas = () => publishJson("areas", "areas");
 
