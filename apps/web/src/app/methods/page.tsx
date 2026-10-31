@@ -14,7 +14,7 @@ const sources: [string, string, string, string][] = [
   ["USDA Food Access Research Atlas", "5", "2019", "Counties; 2010 tracts"],
   ["CDC/ATSDR Social Vulnerability Index", "5", "2022", "Counties and tracts"],
   ["2020 Census", "3", "2020", "States to blocks"],
-  ["Ten more: Census jobs (LODES) and insurance estimates (SAHIE), CEJST, DOE, EPA, FHWA, NHTSA, CDC overdose deaths", "15", "2018–2025", "Varies"],
+  ["The other sources: Census jobs (LODES) and insurance estimates (SAHIE), CEJST, DOE, EPA (air quality, toxic releases), FHWA, NHTSA, CDC overdose deaths", "15", "2018–2025", "Varies"],
 ];
 
 export default function MethodsPage() {
