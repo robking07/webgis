@@ -235,6 +235,8 @@ const TriMeasure = z.object({
 const FeaturesMeasure = z.object({
   kind: z.literal("features"),
   geometry: z.enum(["line", "point", "polygon"]),
+  /** What one feature is, plural and capitalized ("Road segments", "Projects"). Shown in the legend and dataset lists; defaults to "Features". */
+  noun: z.string().optional(),
   source: z.object({
     /** Download URL (cached in data/cache). */
     url: z.url(),

@@ -364,7 +364,7 @@ export function Viewer({ search }: { search: string }) {
   // while the dataset menu needs the room (and the card's explainer, which grows the card down into it, #308).
   const desktopStrip = (menuOpen || (explainOpen && !immersed)) && !phone;
   const hasFilters = !!primary && (availableLevels.length > 1 || primary.facets.length > 0 || stops.length > 0);
-  const featureNoun = featureSpec?.geometry === "polygon" ? "Census tracts (2010)" : "Road segments";
+  const featureNoun = featureSpec?.geometry === "polygon" ? "Census tracts (2010)" : (primary?.measure.kind === "features" && primary.measure.noun) || "Features";
   const periodLabel = primary ? (since ? `${since.label} → ${stop!.label}` : stopId ? stop!.label : primary.vintage) : "";
   // Phones keep the meta on one line (issue #34): the period without its note, the short source name.
   const sourceLabel = primary ? (phone && primary.source.shortName) || primary.source.name.split(",")[0].split(" (")[0] : "";

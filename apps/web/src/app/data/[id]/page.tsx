@@ -47,7 +47,7 @@ export default async function DatasetProfilePage({ params }: PageProps<"/data/[i
   const facts: Array<[string, React.ReactNode]> = [
     ["Source", <a key="s" href={d.source.url} rel="noopener" className="text-primary underline-offset-2 hover:underline">{d.source.name} ↗</a>],
     ["Vintage", d.vintage],
-    ["Geography", d.measure.kind === "features" ? `Road segments${featureCount ? ` (${featureCount.toLocaleString()})` : ""}` : d.geographyLevels.map((l) => LEVEL_LABEL[l]).join(", ")],
+    ["Geography", d.measure.kind === "features" ? `${d.measure.noun ?? "Features"}${featureCount ? ` (${featureCount.toLocaleString()})` : ""}` : d.geographyLevels.map((l) => LEVEL_LABEL[l]).join(", ")],
     ["Measures", d.universe],
     ["Unit", UNIT_LABEL[d.unit as Unit] ?? d.unit],
     ["Updated", d.updateCadence],

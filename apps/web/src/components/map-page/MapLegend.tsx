@@ -80,7 +80,7 @@ export function MapLegend({ theme, primary, secondary, isFeature, featureSpec, c
     <div key={shown.cue} className={cueClass}>
       {primary && isFeature ? (featureSpec ? (
           <Legend title={primary.title} unit={primary.unit} colors={featureColors!} breaks={featureSpec.breaks} showNoData={false} swatch={featureSpec.geometry === "line" ? "line" : "area"}
-            caption={`${primary.vintage} · ${featureSpec.featureCount.toLocaleString()} ${featureSpec.geometry === "line" ? "segments · wider lines = higher road class" : "areas"}`} />
+            caption={`${primary.vintage} · ${featureSpec.featureCount.toLocaleString()} ${featureSpec.geometry === "line" ? `${(primary.measure.kind === "features" && primary.measure.noun || "Features").toLowerCase()}${featureSpec.rankField ? " · wider lines = higher road class" : ""}` : "areas"}`} />
         ) : <StatusState status="empty" message="This layer hasn't been built yet." />)
         : error ? <StatusState status="error" message={error} />
         : primary && !available ? <StatusState status="empty" message="These two datasets don't share a geography level, so they can't be compared." />
