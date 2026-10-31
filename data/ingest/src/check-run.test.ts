@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { DatasetEntry } from "@webgis/registry";
-import { checkRun } from "./check-run.ts";
+import { checkRun, runMode } from "./check-run.ts";
 
 const entry = (id: string, kind: string, extra: object = {}) =>
   ({ id, measure: { kind }, geographyLevels: ["state", "county", "tract"], ...extra }) as unknown as DatasetEntry;
@@ -40,5 +40,8 @@ describe("checkRun", () => {
     expect(checkRun(["counts"], ["traffic_deaths"], entries)[0]).toMatch(/doesn't load/);
     expect(checkRun(["counts"], [], entries)[0]).toMatch(/at least one dataset/);
     expect(checkRun(["acs", "counts"], ["pct_poverty"], entries)[0]).toMatch(/runs alone/);
+  });
+  it("names the run's mode for data-run.yml", () => {
+    expect([["acs", "timeline"], ["features"], ["counts"], ["export-values"]].map(runMode)).toEqual(["values", "features", "counts", "export-values"]);
   });
 });

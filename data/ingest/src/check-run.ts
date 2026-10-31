@@ -1,8 +1,10 @@
 // Input check for the GitHub data run (#369, D-478): every step must be one the runner can do, and
-// every step must load every dataset named, so a run can't go green having loaded nothing.
+// every step must load every dataset named, so a run can't go green having loaded nothing. On
+// GitHub it also writes the run's `mode` to GITHUB_OUTPUT, which data-run.yml gates its steps on.
 //   STEPS="acs timeline" DATASETS="pct_poverty" node data/ingest/src/check-run.ts
 import type { DatasetEntry } from "@webgis/registry";
 import { loadRegistry } from "@webgis/registry/load";
+import { appendFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
 /** Steps the runner can do, each with the registry `measure.kind`s it loads. `features` gets GDAL
@@ -17,10 +19,13 @@ const STEP_KINDS: Record<string, string[]> = {
   // shortcut: fars' timeline reads population_density's 2019 stop, which a runner doesn't have.
   timeline: ["acs5", "climdiv", "nbi", "lodes", "overdose"],
 };
-/** Steps data-run.yml picks with `inputs.steps == '<step>'`: each runs alone, typed exactly. */
+/** Steps that run alone, each its own mode in data-run.yml. */
 const ALONE = ["features", "counts"];
 /** Loads nothing: re-exports the database's values and publishes them, every map when no ids are named (#449). */
 const REEXPORT = "export-values";
+
+/** What data-run.yml does with valid steps: a source load (`values`) or one of the steps that run alone. */
+export const runMode = (steps: string[]) => [REEXPORT, ...ALONE].find((s) => steps.includes(s)) ?? "values";
 
 /** Problems with a run's inputs; empty when it may go ahead. */
 export function checkRun(steps: string[], ids: string[], entries: DatasetEntry[]): string[] {
@@ -47,10 +52,10 @@ export function checkRun(steps: string[], ids: string[], entries: DatasetEntry[]
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const words = (v?: string) => (v ?? "").split(/\s+/).filter(Boolean);
-  const errors = checkRun(words(process.env.STEPS), words(process.env.DATASETS), loadRegistry());
-  // data-run.yml picks these steps with `inputs.steps == '<step>'`, so no stray spaces.
-  for (const s of ALONE) if (words(process.env.STEPS).includes(s) && process.env.STEPS !== s) errors.push(`type steps as exactly "${s}"`);
+  const steps = words(process.env.STEPS);
+  const errors = checkRun(steps, words(process.env.DATASETS), loadRegistry());
   for (const e of errors) console.log(`::error::${e}`);
   if (errors.length) process.exit(1);
-  console.log("inputs OK");
+  if (process.env.GITHUB_OUTPUT) appendFileSync(process.env.GITHUB_OUTPUT, `mode=${runMode(steps)}\n`);
+  console.log(`inputs OK, mode ${runMode(steps)}`);
 }
