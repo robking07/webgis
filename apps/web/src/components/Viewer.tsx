@@ -13,7 +13,7 @@ import { HeaderContent } from "./SiteHeader";
 import { LANDING } from "@/lib/landing";
 import { readStoredTheme, useResolvedTheme } from "@/lib/theme";
 import { MapView, type FeatureHit, type HoverInfo, type MapApi } from "./map/MapView";
-import { DATASET_BY_ID, DATASETS, type Dataset } from "@/lib/registry";
+import { DATASET_BY_ID, DATASETS, LIBRARY_LABEL, type Dataset } from "@/lib/registry";
 import { areaByCode, loadArea, loadMpoShape, loadPlaceIndex, mpoById, placeByGeoid, type AreaFile, type PlaceHit } from "@/lib/search";
 import { useIsCompact, useIsNarrow, useIsPhone } from "./BottomSheet";
 import { DatasetMenu, DatasetSheet, type BrowseSlot } from "./DatasetMenus";
@@ -368,7 +368,7 @@ export function Viewer({ search }: { search: string }) {
   const periodLabel = primary ? (since ? `${since.label} → ${stop!.label}` : stopId ? stop!.label : primary.vintage) : "";
   // Phones keep the meta on one line (issue #34): the period without its note, the short source name.
   const sourceLabel = primary ? (phone && primary.source.shortName) || primary.source.name.split(",")[0].split(" (")[0] : "";
-  const meta = primary ? [isFeature ? featureNoun : GEO_LEVELS[level].label, phone ? periodLabel.replace(/ \(.*\)$/, "") : periodLabel, sourceLabel].join(" · ") : "";
+  const meta = primary ? [isFeature ? featureNoun : GEO_LEVELS[level].label, phone ? periodLabel.replace(/ \(.*\)$/, "") : periodLabel, sourceLabel, ...(primary.library ? [LIBRARY_LABEL] : [])].join(" · ") : "";
   // The table lists one period's values; a change map shows only change, so it has no table.
   // shortcut: no change table yet; add a change column if planners ask for one.
   const tableReady = !!primary && !isFeature && !since && !!tableLevel && !!x.values[tableLevel];

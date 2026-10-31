@@ -172,6 +172,7 @@
     ]
    }
   ],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [
    {
@@ -238,6 +239,7 @@
   ],
   "coverageNote": "From the 2022 survey (CDC asks about teeth every other year), so every state has data, Kentucky and Pennsylvania included. Loving County, Texas, has too few residents to estimate.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -306,6 +308,7 @@
   "modelInputs": [],
   "coverageNote": "Contiguous U.S. and Alaska; Hawaii has no county series. Connecticut uses pre-2022 county codes in nClimDiv, so it shows no data.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 1991,
@@ -362,6 +365,7 @@
   ],
   "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -417,6 +421,7 @@
   ],
   "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate, as do tracts with very few residents.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -471,6 +476,7 @@
   ],
   "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -525,6 +531,7 @@
   ],
   "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -580,6 +587,7 @@
   "modelInputs": [],
   "coverageNote": "Counties with fewer than 10 bridges show no data. Connecticut's NBI records still use pre-2022 counties, so CT counties show no data.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2019,
@@ -636,6 +644,7 @@
   ],
   "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -902,6 +911,7 @@
     ]
    }
   ],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [
    {
@@ -966,6 +976,7 @@
   ],
   "coverageNote": "Built from 2010 tracts. Connecticut counties show no data (2022 county change). For each tract, map Disadvantaged communities (CEJST tracts).",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [
    {
@@ -1029,6 +1040,7 @@
   "modelInputs": [],
   "coverageNote": "Built from 2020 blocks. Block counts include Census Bureau privacy noise; block groups and larger are reliable.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -1084,6 +1096,7 @@
   "modelInputs": [],
   "coverageNote": "Built from 2020 blocks. Block counts include Census Bureau privacy noise; block groups and larger are reliable.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -1137,6 +1150,7 @@
   "modelInputs": [],
   "coverageNote": "Built from 2020 blocks. Block counts include Census Bureau privacy noise; block groups and larger are reliable.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -1190,6 +1204,7 @@
   ],
   "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -1245,6 +1260,7 @@
   ],
   "coverageNote": "From the 2022 survey (CDC asks about cancer screening every other year), so every state has data, Kentucky and Pennsylvania included. Loving County, Texas, has too few residents to estimate.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -1315,6 +1331,7 @@
   "modelInputs": [],
   "coverageNote": "Contiguous U.S. and Alaska; Hawaii has no county series. Connecticut uses pre-2022 county codes in nClimDiv, so it shows no data.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 1991,
@@ -1374,6 +1391,7 @@
   ],
   "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -1428,6 +1446,7 @@
   ],
   "coverageNote": "From the 2022 survey (CDC asks about dental visits every other year), so every state has data, Kentucky and Pennsylvania included. Loving County, Texas, has too few residents to estimate.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -1484,6 +1503,7 @@
   ],
   "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate, as do tracts with very few residents.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -1539,6 +1559,7 @@
   ],
   "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate, as do tracts with very few residents.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -1591,6 +1612,7 @@
   ],
   "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -1645,6 +1667,7 @@
   ],
   "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -1699,6 +1722,7 @@
   ],
   "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -1752,6 +1776,7 @@
   ],
   "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -1806,6 +1831,7 @@
   ],
   "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -1859,6 +1885,7 @@
   ],
   "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -1913,6 +1940,7 @@
   ],
   "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -1975,6 +2003,7 @@
   ],
   "coverageNote": "Modelled, not metered: DOE estimates each area's bills from 2018–2022 American Community Survey answers, scaled to match what utilities reported to EIA for 2022. Bills paid inside the rent are left out of the average. Small or rural areas served by small utilities are the least reliable, and differences between LEAD editions are within its error, so don't read changes over time. Tracts with fewer than 20 households have no value.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -2042,6 +2071,7 @@
   ],
   "coverageNote": "Modelled, not metered: DOE estimates each area's bills from 2018–2022 American Community Survey answers, scaled to match what utilities reported to EIA for 2022. \"Lower-income\" means income at or below 200% of the federal poverty guideline for the household's size, the same everywhere in the lower 48 (Alaska and Hawaii have higher guidelines). Bills paid inside the rent are left out of the average. The map's color edges at 6% and 10% are the common benchmarks for a \"high\" and a \"severe\" energy burden. Tracts with fewer than 20 lower-income households have no value.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -2103,6 +2133,7 @@
   ],
   "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate, as do tracts with very few residents.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -2160,6 +2191,7 @@
   "modelInputs": [],
   "coverageNote": "Built from 2010 tracts. Connecticut counties show no data (2022 county change). Store locations are from 2019 and residents from the 2010 Census. For each tract, map Far from a supermarket (tracts).",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [
    {
@@ -2300,6 +2332,7 @@
     ]
    }
   ],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [
    {
@@ -2443,6 +2476,7 @@
     ]
    }
   ],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [
    {
@@ -2513,6 +2547,7 @@
   ],
   "coverageNote": "Built from 2010 tracts. Connecticut counties show no data (2022 county change). Store locations are from 2019, residents from the 2010 Census and incomes from the 2014–2018 American Community Survey. For each tract, map Far from a supermarket (tracts) and show only low-income, low-access tracts.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [
    {
@@ -2572,6 +2607,7 @@
   ],
   "coverageNote": "Only states that asked CDC's optional social-needs questions in their 2023 survey have data on food insecurity. No data for Colorado, Florida, Kentucky, Oregon, Pennsylvania, South Dakota, Tennessee, Texas, Vermont, Washington or Wyoming.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -2627,6 +2663,7 @@
   "modelInputs": [],
   "coverageNote": "The Census Bureau doesn't publish this measure below census tracts, so there's no block-group view.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -2690,6 +2727,7 @@
   ],
   "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate, as do tracts with very few residents.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -2758,6 +2796,7 @@
   "modelInputs": [],
   "coverageNote": "Contiguous U.S. and Alaska; Hawaii has no county series. Connecticut uses pre-2022 county codes in nClimDiv, so it shows no data.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 1991,
@@ -2818,6 +2857,7 @@
   ],
   "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate, as do tracts with very few residents.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -2871,6 +2911,7 @@
   ],
   "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -2931,6 +2972,7 @@
   "modelInputs": [],
   "coverageNote": "Modelled, not metered: DOE estimates bills from 2018–2022 American Community Survey answers, scaled to match what utilities reported to EIA for 2022, in 2022 dollars. Each fuel is averaged over the households that pay it directly, so bills paid inside the rent are left out. Does not include gasoline for cars. Tracts with fewer than 20 households have no value.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -2984,6 +3026,7 @@
   ],
   "coverageNote": "Only states that asked CDC's optional social-needs questions in their 2023 survey have data on housing insecurity. No data for Colorado, Florida, Kentucky, Oregon, Pennsylvania, South Dakota, Tennessee, Texas, Vermont, Washington or Wyoming.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -3041,6 +3084,7 @@
   "modelInputs": [],
   "coverageNote": "Contiguous U.S. and Alaska; Hawaii has no county series. Connecticut uses pre-2022 county codes in nClimDiv, so it shows no data.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 1991,
@@ -3099,6 +3143,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2010,
@@ -3160,6 +3205,7 @@
   "modelInputs": [],
   "coverageNote": "Contiguous U.S. and Alaska; Hawaii has no county series. Connecticut uses pre-2022 county codes in nClimDiv, so it shows no data.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 1991,
@@ -3221,6 +3267,7 @@
   "modelInputs": [],
   "coverageNote": "Contiguous U.S. and Alaska; Hawaii has no county series. Connecticut uses pre-2022 county codes in nClimDiv, so it shows no data.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 1991,
@@ -3282,6 +3329,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -3342,6 +3390,7 @@
   ],
   "coverageNote": "Only states that asked CDC's optional social-needs questions in their 2023 survey have data on social and emotional support. No data for Colorado, Florida, Kentucky, Oregon, Pennsylvania, South Dakota, Tennessee, Texas, Vermont, Washington or Wyoming.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -3396,6 +3445,7 @@
   ],
   "coverageNote": "Only states that asked CDC's optional social-needs questions in their 2023 survey have data on transportation. No data for Colorado, Florida, Kentucky, Oregon, Pennsylvania, South Dakota, Tennessee, Texas, Vermont, Washington or Wyoming.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -3449,6 +3499,7 @@
   ],
   "coverageNote": "Only states that asked CDC's optional loneliness question in their 2023 survey have data. No data for Colorado, Florida, Kentucky, Oregon, Pennsylvania, South Dakota, Tennessee, Texas, Vermont, Washington or Wyoming.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -3504,6 +3555,7 @@
   ],
   "coverageNote": "From the 2022 survey (CDC asks about cancer screening every other year), so every state has data, Kentucky and Pennsylvania included. Loving County, Texas, has too few residents to estimate.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -3564,6 +3616,7 @@
   "modelInputs": [],
   "coverageNote": "The Census Bureau doesn't publish this measure below census tracts, so there's no block-group view.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -3636,6 +3689,7 @@
   "modelInputs": [],
   "coverageNote": "Contiguous U.S. and Alaska; Hawaii has no county series. Connecticut uses pre-2022 county codes in nClimDiv, so it shows no data.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 1991,
@@ -3696,6 +3750,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -3761,6 +3816,7 @@
   "modelInputs": [],
   "coverageNote": "The Census Bureau caps the top value ($3,500 or more) and the bottom value, so the most and least expensive areas show the cap rather than their true median. Block groups with too few renters paying cash rent show no median.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -3827,6 +3883,7 @@
   "modelInputs": [],
   "coverageNote": "The Census Bureau caps the top value (about $2 million) and the bottom value, so the most and least expensive areas show the cap rather than their true median. Block groups with too few owner-occupied homes show no median.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -3891,6 +3948,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -3952,6 +4010,7 @@
   "modelInputs": [],
   "coverageNote": "Block groups with too few mortgaged homes show no median.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -4014,6 +4073,7 @@
   ],
   "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate, as do tracts with very few residents.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -4072,6 +4132,7 @@
   ],
   "coverageNote": "Built from 2010 tracts. Connecticut counties show no data (2022 county change). Store locations are from 2019, households from the 2010 Census and car ownership from the 2014–2018 American Community Survey. For each tract, map No car, far from a supermarket (tracts).",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [
    {
@@ -4136,6 +4197,7 @@
   "modelInputs": [],
   "coverageNote": "A FEMA model of long-run averages, not a count of past losses. Mapwich divides FEMA's dollar estimate by FEMA's population count; tracts with fewer than 100 residents show no data. Inland places show $0 (FEMA marks coastal flooding Not Applicable there). Not comparable with NRI version 1.19 (March 2023).",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -4191,6 +4253,7 @@
   "modelInputs": [],
   "coverageNote": "A relative rank (0–100) among counties. County only: FEMA gives every tract its county's score. Puerto Rico and the island territories show no data. Higher is better.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -4260,6 +4323,7 @@
   ],
   "coverageNote": "A FEMA model of long-run averages, not a count of past losses. Mapwich divides FEMA's dollar estimate by FEMA's population count; tracts with fewer than 100 residents show no data. Deaths and injuries are valued in dollars and can outweigh property damage. Not comparable with NRI version 1.19 (March 2023).",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -4318,6 +4382,7 @@
   "modelInputs": [],
   "coverageNote": "A FEMA model of long-run averages, not a count of past losses. Mapwich divides FEMA's dollar estimate by FEMA's population count; tracts with fewer than 100 residents show no data. Alaska and some territories show no data (FEMA rates them Insufficient Data). Most heat-wave losses are lives and injuries valued in dollars. Not comparable with NRI version 1.19 (March 2023).",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -4375,6 +4440,7 @@
   "modelInputs": [],
   "coverageNote": "A FEMA model of long-run averages, not a count of past losses. Mapwich divides FEMA's dollar estimate by FEMA's population count; tracts with fewer than 100 residents show no data. Places FEMA considers out of hurricane reach show $0. Not comparable with NRI version 1.19 (March 2023).",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -4433,6 +4499,7 @@
   "modelInputs": [],
   "coverageNote": "A FEMA model of long-run averages, not a count of past losses. Mapwich divides FEMA's dollar estimate by FEMA's population count; tracts with fewer than 100 residents show no data. Inland flooding is river and heavy-rain flooding; coastal flooding is a separate map. Not comparable with NRI version 1.19 (March 2023).",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -4493,6 +4560,7 @@
   ],
   "coverageNote": "A relative rank (0–100) among counties, or among tracts, not an absolute amount of risk. Puerto Rico and the island territories show no data (FEMA rates them Insufficient Data). Version 1.20 switched its social vulnerability source, so scores moved even where hazards didn't. Not comparable with NRI version 1.19 (March 2023).",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -4561,6 +4629,7 @@
   ],
   "coverageNote": "A relative rank (0–100) among counties, or among tracts. Version 1.20 uses the Census Bureau's Community Resilience Estimates; version 1.19 used CDC's Social Vulnerability Index, so the two aren't comparable. Puerto Rico and the island territories show no data.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -4617,6 +4686,7 @@
   "modelInputs": [],
   "coverageNote": "A FEMA model of long-run averages, not a count of past losses. Mapwich divides FEMA's dollar estimate by FEMA's population count; tracts with fewer than 100 residents show no data. Not comparable with NRI version 1.19 (March 2023).",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -4674,6 +4744,7 @@
   "modelInputs": [],
   "coverageNote": "A FEMA model of long-run averages, not a count of past losses. Mapwich divides FEMA's dollar estimate by FEMA's population count; tracts with fewer than 100 residents show no data. Puerto Rico and the island territories show no data (FEMA rates them Insufficient Data). Not comparable with NRI version 1.19 (March 2023).",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -4729,6 +4800,7 @@
   ],
   "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate, as do tracts with very few residents.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -4786,6 +4858,7 @@
   ],
   "coverageNote": "About half of counties (1,630 of 3,144) have no value: CDC hides counts of 1–9 deaths, so a blank county is not a zero and is not necessarily low, just under 10 deaths. Shown rates come from counties with 10 or more deaths, which skews toward larger places. Provisional counts run low where cause-of-death investigations are still pending. Connecticut uses pre-2022 county codes and shows no data.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": true,
   "timeline": {
    "from": 2020,
@@ -4841,6 +4914,7 @@
   "modelInputs": [],
   "coverageNote": "Only the 688 counties with a valid ozone monitor have a value; every other county is blank, which means no monitor, not clean air. A county's value is its single highest monitor. EPA excludes exceptional-event days such as wildfire smoke. The federal 8-hour standard is 0.070 ppm; the top map classes mark counties above it (values are reported to three decimals, so 0.071 or higher exceeds it). EPA's tables are informational, not a regulatory determination.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -4857,6 +4931,325 @@
     0.071,
     0.085
    ]
+  }
+ },
+ {
+  "id": "pct_age_20_24",
+  "title": "Young adults 20 to 24",
+  "description": "Share of residents aged 20 to 24.",
+  "category": "People",
+  "subcategory": "Population and age",
+  "tags": [
+   "young adults",
+   "college age",
+   "age"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP05",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP05 (ACS Demographic and Housing Estimates)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "people",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP05_0009P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_age_25_34",
+  "title": "Adults 25 to 34",
+  "description": "Share of residents aged 25 to 34.",
+  "category": "People",
+  "subcategory": "Population and age",
+  "tags": [
+   "young adults",
+   "millennials",
+   "age"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP05",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP05 (ACS Demographic and Housing Estimates)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "people",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP05_0010P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_age_35_44",
+  "title": "Adults 35 to 44",
+  "description": "Share of residents aged 35 to 44.",
+  "category": "People",
+  "subcategory": "Population and age",
+  "tags": [
+   "adults",
+   "age"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP05",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP05 (ACS Demographic and Housing Estimates)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "people",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP05_0011P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_age_45_54",
+  "title": "Adults 45 to 54",
+  "description": "Share of residents aged 45 to 54.",
+  "category": "People",
+  "subcategory": "Population and age",
+  "tags": [
+   "adults",
+   "middle age",
+   "age"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP05",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP05 (ACS Demographic and Housing Estimates)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "people",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP05_0012P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_age_55_64",
+  "title": "Adults 55 to 64",
+  "description": "Share of residents aged 55 to 64.",
+  "category": "People",
+  "subcategory": "Population and age",
+  "tags": [
+   "adults",
+   "near retirement",
+   "age"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP05",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP05 (ACS Demographic and Housing Estimates)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "people",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP05_0013P",
+    "DP05_0014P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_age_65_74",
+  "title": "Adults 65 to 74",
+  "description": "Share of residents aged 65 to 74.",
+  "category": "People",
+  "subcategory": "Population and age",
+  "tags": [
+   "seniors",
+   "older adults",
+   "retirees",
+   "age"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP05",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP05 (ACS Demographic and Housing Estimates)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "people",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP05_0015P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
   }
  },
  {
@@ -4914,6 +5307,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -4929,6 +5323,119 @@
   ],
   "symbology": {
    "ramp": "cividis",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_age_75_plus",
+  "title": "People 75 and older",
+  "description": "Share of residents aged 75 or older.",
+  "category": "People",
+  "subcategory": "Population and age",
+  "tags": [
+   "seniors",
+   "older adults",
+   "elderly",
+   "over 75",
+   "aging",
+   "age"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP05",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP05 (ACS Demographic and Housing Estimates)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "people",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP05_0016P",
+    "DP05_0017P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_age_85_plus",
+  "title": "People 85 and older",
+  "description": "Share of residents aged 85 or older.",
+  "category": "People",
+  "subcategory": "Population and age",
+  "tags": [
+   "seniors",
+   "oldest",
+   "elderly",
+   "over 85",
+   "aging",
+   "age"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP05",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP05 (ACS Demographic and Housing Estimates)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "people",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP05_0017P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
    "classification": "quantile",
    "classes": 5
   }
@@ -4981,6 +5488,7 @@
   "modelInputs": [],
   "coverageNote": "Counts only people who give this as their single race; many Native people also report another race and are counted under two or more races. Small numbers make tract and block-group estimates uncertain outside reservations and Alaska.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -5045,6 +5553,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -5061,6 +5570,114 @@
   ],
   "symbology": {
    "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_associates_degree",
+  "title": "Adults with an associate's degree",
+  "description": "Share of adults 25 and older whose highest degree is an associate's degree.",
+  "category": "People",
+  "subcategory": "Education",
+  "tags": [
+   "education",
+   "community college",
+   "two-year degree",
+   "attainment"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP02",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP02 (Selected Social Characteristics in the United States)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "adults 25 and older",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP02_0064P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_bachelors_only",
+  "title": "Adults whose highest degree is a bachelor's",
+  "description": "Share of adults 25 and older whose highest degree is a bachelor's degree.",
+  "category": "People",
+  "subcategory": "Education",
+  "tags": [
+   "education",
+   "college",
+   "four-year degree",
+   "attainment"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP02",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP02 (Selected Social Characteristics in the United States)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "adults 25 and older",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP02_0065P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
    "classification": "quantile",
    "classes": 5
   }
@@ -5115,6 +5732,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -5178,6 +5796,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -5242,6 +5861,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -5305,6 +5925,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -5318,6 +5939,64 @@
    "classification": "quantile",
    "classes": 5,
    "higherIsBetter": true
+  }
+ },
+ {
+  "id": "pct_cable_fiber_dsl",
+  "title": "Households with cable, fiber or DSL internet",
+  "description": "Share of households with a wired broadband subscription such as cable, fiber optic or DSL.",
+  "category": "Economy",
+  "subcategory": "Internet access",
+  "tags": [
+   "broadband",
+   "fiber",
+   "cable",
+   "wired internet",
+   "internet"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDT5Y2024.B28002",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table B28002 (Presence and Types of Internet Subscriptions in Household)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "households",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B28002_007"
+   ],
+   "denominator": [
+    "B28002_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5
   }
  },
  {
@@ -5364,6 +6043,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -5379,6 +6059,64 @@
   ],
   "symbology": {
    "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_cellular_only_internet",
+  "title": "Households online only through a cell phone plan",
+  "description": "Share of households whose only internet subscription is a cellular data plan.",
+  "category": "Economy",
+  "subcategory": "Internet access",
+  "tags": [
+   "cellular",
+   "mobile data",
+   "internet",
+   "digital divide",
+   "broadband"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDT5Y2024.B28002",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table B28002 (Presence and Types of Internet Subscriptions in Household)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "households",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B28002_006"
+   ],
+   "denominator": [
+    "B28002_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
    "classification": "quantile",
    "classes": 5
   }
@@ -5433,6 +6171,7 @@
   "modelInputs": [],
   "coverageNote": "The Census Bureau doesn't publish this measure below census tracts, so there's no block-group view.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -5451,6 +6190,62 @@
    "classification": "quantile",
    "classes": 5,
    "higherIsBetter": false
+  }
+ },
+ {
+  "id": "pct_desktop_or_laptop",
+  "title": "Households with a desktop or laptop",
+  "description": "Share of households with a desktop or laptop computer.",
+  "category": "Economy",
+  "subcategory": "Internet access",
+  "tags": [
+   "computers",
+   "laptop",
+   "digital divide"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDT5Y2024.B28001",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table B28001 (Types of Computers in Household)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "households",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B28001_003"
+   ],
+   "denominator": [
+    "B28001_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5
   }
  },
  {
@@ -5501,6 +6296,7 @@
   "modelInputs": [],
   "coverageNote": "The Census Bureau doesn't publish this measure below census tracts, so there's no block-group view.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -5564,6 +6360,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -5628,6 +6425,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -5691,6 +6489,7 @@
   "modelInputs": [],
   "coverageNote": "The Census Bureau doesn't publish this measure below census tracts, so there's no block-group view.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -5706,6 +6505,60 @@
   ],
   "symbology": {
    "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_government_workers",
+  "title": "Government workers",
+  "description": "Share of employed residents who work for a federal, state or local government, in any industry.",
+  "category": "Economy",
+  "subcategory": "Jobs",
+  "tags": [
+   "government",
+   "public sector",
+   "class of worker",
+   "jobs"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP03",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP03 (Selected Economic Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "employed civilians 16 and older",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP03_0048P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
    "classification": "quantile",
    "classes": 5
   }
@@ -5756,6 +6609,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -5774,6 +6628,335 @@
    "classification": "quantile",
    "classes": 5,
    "higherIsBetter": true
+  }
+ },
+ {
+  "id": "pct_heat_electricity",
+  "title": "Homes heated with electricity",
+  "description": "Share of occupied homes heated mainly with electricity.",
+  "category": "Housing",
+  "subcategory": "Homes",
+  "tags": [
+   "heating",
+   "electric",
+   "heat pump",
+   "energy",
+   "fuel"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP04",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP04 (Selected Housing Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "occupied housing units",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP04_0065P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_heat_fuel_oil",
+  "title": "Homes heated with fuel oil or kerosene",
+  "description": "Share of occupied homes heated mainly with fuel oil, kerosene or similar.",
+  "category": "Housing",
+  "subcategory": "Homes",
+  "tags": [
+   "heating",
+   "oil",
+   "kerosene",
+   "energy",
+   "fuel"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP04",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP04 (Selected Housing Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "occupied housing units",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP04_0066P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_heat_propane",
+  "title": "Homes heated with propane",
+  "description": "Share of occupied homes heated mainly with bottled or tank gas such as propane.",
+  "category": "Housing",
+  "subcategory": "Homes",
+  "tags": [
+   "heating",
+   "propane",
+   "energy",
+   "fuel",
+   "rural"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP04",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP04 (Selected Housing Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "occupied housing units",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP04_0064P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_heat_utility_gas",
+  "title": "Homes heated with utility gas",
+  "description": "Share of occupied homes heated mainly with gas from a utility line.",
+  "category": "Housing",
+  "subcategory": "Homes",
+  "tags": [
+   "heating",
+   "natural gas",
+   "energy",
+   "fuel"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP04",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP04 (Selected Housing Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "occupied housing units",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP04_0063P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_heat_wood",
+  "title": "Homes heated with wood",
+  "description": "Share of occupied homes heated mainly with wood.",
+  "category": "Housing",
+  "subcategory": "Homes",
+  "tags": [
+   "heating",
+   "wood",
+   "energy",
+   "fuel",
+   "rural"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP04",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP04 (Selected Housing Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "occupied housing units",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP04_0068P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_high_school_only",
+  "title": "Adults whose highest level is high school",
+  "description": "Share of adults 25 and older with a high school diploma or equivalent and no college.",
+  "category": "People",
+  "subcategory": "Education",
+  "tags": [
+   "education",
+   "high school",
+   "diploma",
+   "GED",
+   "attainment"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP02",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP02 (Selected Social Characteristics in the United States)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "adults 25 and older",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP02_0062P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
   }
  },
  {
@@ -5821,6 +7004,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -5830,6 +7014,1062 @@
   "learnMore": [],
   "terms": [
    "race-ethnicity",
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_home_value_300k_500k",
+  "title": "Homes worth $300,000 to $499,999",
+  "description": "Share of owner-occupied homes the owners value at $300,000 to $499,999.",
+  "category": "Housing",
+  "subcategory": "Costs",
+  "tags": [
+   "home value",
+   "house prices"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP04",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP04 (Selected Housing Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "owner-occupied homes",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP04_0086P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_home_value_500k_plus",
+  "title": "Homes worth $500,000 or more",
+  "description": "Share of owner-occupied homes the owners value at $500,000 or more.",
+  "category": "Housing",
+  "subcategory": "Costs",
+  "tags": [
+   "home value",
+   "house prices",
+   "expensive"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP04",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP04 (Selected Housing Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "owner-occupied homes",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP04_0087P",
+    "DP04_0088P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_home_value_under_100k",
+  "title": "Homes worth under $100,000",
+  "description": "Share of owner-occupied homes the owners value at under $100,000.",
+  "category": "Housing",
+  "subcategory": "Costs",
+  "tags": [
+   "home value",
+   "house prices",
+   "affordable"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP04",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP04 (Selected Housing Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "owner-occupied homes",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP04_0081P",
+    "DP04_0082P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_homes_10_19_units",
+  "title": "Homes in 10- to 19-unit buildings",
+  "description": "Share of homes in apartment buildings with 10 to 19 units.",
+  "category": "Housing",
+  "subcategory": "Homes",
+  "tags": [
+   "apartments",
+   "housing type"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP04",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP04 (Selected Housing Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "housing units",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP04_0012P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_homes_1_bedroom",
+  "title": "One-bedroom homes",
+  "description": "Share of homes with one bedroom.",
+  "category": "Housing",
+  "subcategory": "Homes",
+  "tags": [
+   "bedrooms",
+   "home size"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP04",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP04 (Selected Housing Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "housing units",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP04_0040P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_homes_20_plus_units",
+  "title": "Homes in buildings with 20 or more units",
+  "description": "Share of homes in large apartment or condo buildings with 20 or more units.",
+  "category": "Housing",
+  "subcategory": "Homes",
+  "tags": [
+   "apartments",
+   "condos",
+   "high-rise",
+   "housing type"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP04",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP04 (Selected Housing Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "housing units",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP04_0013P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_homes_2_bedrooms",
+  "title": "Two-bedroom homes",
+  "description": "Share of homes with two bedrooms.",
+  "category": "Housing",
+  "subcategory": "Homes",
+  "tags": [
+   "bedrooms",
+   "home size"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP04",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP04 (Selected Housing Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "housing units",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP04_0041P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_homes_3_4_units",
+  "title": "Homes in 3- or 4-unit buildings",
+  "description": "Share of homes in buildings with three or four units.",
+  "category": "Housing",
+  "subcategory": "Homes",
+  "tags": [
+   "triplex",
+   "fourplex",
+   "housing type",
+   "missing middle"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP04",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP04 (Selected Housing Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "housing units",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP04_0010P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_homes_3_bedrooms",
+  "title": "Three-bedroom homes",
+  "description": "Share of homes with three bedrooms.",
+  "category": "Housing",
+  "subcategory": "Homes",
+  "tags": [
+   "bedrooms",
+   "home size",
+   "family housing"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP04",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP04 (Selected Housing Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "housing units",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP04_0042P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_homes_4_bedrooms",
+  "title": "Four-bedroom homes",
+  "description": "Share of homes with four bedrooms.",
+  "category": "Housing",
+  "subcategory": "Homes",
+  "tags": [
+   "bedrooms",
+   "home size",
+   "family housing"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP04",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP04 (Selected Housing Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "housing units",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP04_0043P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_homes_5_9_units",
+  "title": "Homes in 5- to 9-unit buildings",
+  "description": "Share of homes in small apartment buildings with five to nine units.",
+  "category": "Housing",
+  "subcategory": "Homes",
+  "tags": [
+   "apartments",
+   "housing type",
+   "missing middle"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP04",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP04 (Selected Housing Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "housing units",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP04_0011P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_homes_5_plus_bedrooms",
+  "title": "Homes with five or more bedrooms",
+  "description": "Share of homes with five or more bedrooms.",
+  "category": "Housing",
+  "subcategory": "Homes",
+  "tags": [
+   "bedrooms",
+   "home size",
+   "large homes"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP04",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP04 (Selected Housing Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "housing units",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP04_0044P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_homes_built_1960s",
+  "title": "Homes built 1960 to 1969",
+  "description": "Share of homes built from 1960 to 1969.",
+  "category": "Housing",
+  "subcategory": "Homes",
+  "tags": [
+   "housing age",
+   "year built"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP04",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP04 (Selected Housing Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "housing units",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP04_0023P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_homes_built_1970s",
+  "title": "Homes built 1970 to 1979",
+  "description": "Share of homes built from 1970 to 1979.",
+  "category": "Housing",
+  "subcategory": "Homes",
+  "tags": [
+   "housing age",
+   "year built"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP04",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP04 (Selected Housing Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "housing units",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP04_0022P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_homes_built_1980s",
+  "title": "Homes built 1980 to 1989",
+  "description": "Share of homes built from 1980 to 1989.",
+  "category": "Housing",
+  "subcategory": "Homes",
+  "tags": [
+   "housing age",
+   "year built"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP04",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP04 (Selected Housing Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "housing units",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP04_0021P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_homes_built_1990s",
+  "title": "Homes built 1990 to 1999",
+  "description": "Share of homes built from 1990 to 1999.",
+  "category": "Housing",
+  "subcategory": "Homes",
+  "tags": [
+   "housing age",
+   "year built"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP04",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP04 (Selected Housing Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "housing units",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP04_0020P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_homes_built_2000s",
+  "title": "Homes built 2000 to 2009",
+  "description": "Share of homes built from 2000 to 2009.",
+  "category": "Housing",
+  "subcategory": "Homes",
+  "tags": [
+   "housing age",
+   "year built"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP04",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP04 (Selected Housing Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "housing units",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP04_0019P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_homes_built_2010s",
+  "title": "Homes built 2010 to 2019",
+  "description": "Share of homes built from 2010 to 2019.",
+  "category": "Housing",
+  "subcategory": "Homes",
+  "tags": [
+   "housing age",
+   "year built"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP04",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP04 (Selected Housing Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "housing units",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP04_0018P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_homes_built_2020_later",
+  "title": "Homes built in 2020 or later",
+  "description": "Share of homes built in 2020 or later.",
+  "category": "Housing",
+  "subcategory": "Homes",
+  "tags": [
+   "new construction",
+   "housing age",
+   "year built"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP04",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP04 (Selected Housing Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "housing units",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP04_0017P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_homes_built_before_1940",
+  "title": "Homes built before 1940",
+  "description": "Share of homes built in 1939 or earlier.",
+  "category": "Housing",
+  "subcategory": "Homes",
+  "tags": [
+   "old homes",
+   "historic",
+   "housing age",
+   "year built",
+   "lead paint"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP04",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP04 (Selected Housing Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "housing units",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP04_0026P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
    "acs-5-year",
    "margin-of-error",
    "census-geography",
@@ -5887,6 +8127,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -5897,6 +8138,1583 @@
   ],
   "symbology": {
    "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_homes_duplex",
+  "title": "Homes in duplexes",
+  "description": "Share of homes in buildings with two units.",
+  "category": "Housing",
+  "subcategory": "Homes",
+  "tags": [
+   "duplex",
+   "two-unit",
+   "housing type",
+   "missing middle"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP04",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP04 (Selected Housing Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "housing units",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP04_0009P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_homes_single_family_detached",
+  "title": "Detached single-family homes",
+  "description": "Share of homes that are detached single-family houses.",
+  "category": "Housing",
+  "subcategory": "Homes",
+  "tags": [
+   "houses",
+   "single-family",
+   "housing type",
+   "zoning"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP04",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP04 (Selected Housing Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "housing units",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP04_0007P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_homes_studio",
+  "title": "Studio homes (no bedroom)",
+  "description": "Share of homes with no separate bedroom, such as studio apartments.",
+  "category": "Housing",
+  "subcategory": "Homes",
+  "tags": [
+   "studio",
+   "bedrooms",
+   "home size"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP04",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP04 (Selected Housing Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "housing units",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP04_0039P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_homes_townhouses",
+  "title": "Townhouses and rowhouses",
+  "description": "Share of homes that are single-family homes attached to others, such as townhouses and rowhouses.",
+  "category": "Housing",
+  "subcategory": "Homes",
+  "tags": [
+   "townhouses",
+   "attached",
+   "housing type",
+   "missing middle"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP04",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP04 (Selected Housing Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "housing units",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP04_0008P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_households_retirement_income",
+  "title": "Households with retirement income",
+  "description": "Share of households with retirement income such as pensions or retirement-account withdrawals (not Social Security).",
+  "category": "Economy",
+  "subcategory": "Income and poverty",
+  "tags": [
+   "income",
+   "pensions",
+   "retirement",
+   "retirees",
+   "seniors"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP03",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP03 (Selected Economic Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "households",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP03_0068P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_households_social_security",
+  "title": "Households receiving Social Security",
+  "description": "Share of households with Social Security income.",
+  "category": "Economy",
+  "subcategory": "Income and poverty",
+  "tags": [
+   "income",
+   "Social Security",
+   "retirees",
+   "seniors",
+   "benefits"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP03",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP03 (Selected Economic Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "households",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP03_0066P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_households_with_children",
+  "title": "Households with children",
+  "description": "Share of households with at least one person under 18.",
+  "category": "People",
+  "subcategory": "Population and age",
+  "tags": [
+   "children",
+   "kids",
+   "families",
+   "schools",
+   "household type"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP02",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP02 (Selected Social Characteristics in the United States)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "households",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP02_0014P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_households_with_earnings",
+  "title": "Households with earnings from work",
+  "description": "Share of households with any wages, salary or self-employment income.",
+  "category": "Economy",
+  "subcategory": "Income and poverty",
+  "tags": [
+   "income",
+   "earnings",
+   "wages",
+   "working households"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP03",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP03 (Selected Economic Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "households",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP03_0064P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_households_with_seniors",
+  "title": "Households with someone 65 or older",
+  "description": "Share of households with at least one person aged 65 or older.",
+  "category": "People",
+  "subcategory": "Population and age",
+  "tags": [
+   "seniors",
+   "older adults",
+   "over 65",
+   "aging",
+   "household type"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP02",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP02 (Selected Social Characteristics in the United States)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "households",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP02_0015P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_income_100k_150k",
+  "title": "Households with incomes of $100,000 to $149,999",
+  "description": "Share of households whose total income in the past 12 months was $100,000 to $149,999.",
+  "category": "Economy",
+  "subcategory": "Income and poverty",
+  "tags": [
+   "income",
+   "household income"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP03",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP03 (Selected Economic Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "households",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP03_0059P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_income_200k_plus",
+  "title": "Households with incomes of $200,000 or more",
+  "description": "Share of households whose total income in the past 12 months was $200,000 or more.",
+  "category": "Economy",
+  "subcategory": "Income and poverty",
+  "tags": [
+   "income",
+   "high income",
+   "wealthy",
+   "household income"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP03",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP03 (Selected Economic Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "households",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP03_0061P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_income_25k_50k",
+  "title": "Households with incomes of $25,000 to $49,999",
+  "description": "Share of households whose total income in the past 12 months was $25,000 to $49,999.",
+  "category": "Economy",
+  "subcategory": "Income and poverty",
+  "tags": [
+   "income",
+   "household income"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP03",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP03 (Selected Economic Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "households",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP03_0055P",
+    "DP03_0056P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_income_50k_100k",
+  "title": "Households with incomes of $50,000 to $99,999",
+  "description": "Share of households whose total income in the past 12 months was $50,000 to $99,999.",
+  "category": "Economy",
+  "subcategory": "Income and poverty",
+  "tags": [
+   "income",
+   "middle income",
+   "household income"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP03",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP03 (Selected Economic Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "households",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP03_0057P",
+    "DP03_0058P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_income_under_25k",
+  "title": "Households with incomes under $25,000",
+  "description": "Share of households whose total income in the past 12 months was under $25,000.",
+  "category": "Economy",
+  "subcategory": "Income and poverty",
+  "tags": [
+   "income",
+   "low income",
+   "household income"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP03",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP03 (Selected Economic Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "households",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP03_0052P",
+    "DP03_0053P",
+    "DP03_0054P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_industry_agriculture",
+  "title": "Workers in farming, forestry, fishing and mining",
+  "description": "Share of employed residents working in agriculture, forestry, fishing, hunting or mining.",
+  "category": "Economy",
+  "subcategory": "Jobs",
+  "tags": [
+   "industry",
+   "farming",
+   "agriculture",
+   "mining",
+   "rural",
+   "jobs"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP03",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP03 (Selected Economic Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "employed civilians 16 and older",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP03_0033P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_industry_arts_food",
+  "title": "Workers in arts, entertainment, hotels and restaurants",
+  "description": "Share of employed residents working in arts, entertainment, recreation, lodging or food service.",
+  "category": "Economy",
+  "subcategory": "Jobs",
+  "tags": [
+   "industry",
+   "hospitality",
+   "tourism",
+   "restaurants",
+   "jobs"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP03",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP03 (Selected Economic Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "employed civilians 16 and older",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP03_0043P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_industry_construction",
+  "title": "Workers in the construction industry",
+  "description": "Share of employed residents working in construction.",
+  "category": "Economy",
+  "subcategory": "Jobs",
+  "tags": [
+   "industry",
+   "construction",
+   "building",
+   "jobs"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP03",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP03 (Selected Economic Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "employed civilians 16 and older",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP03_0034P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_industry_education_health",
+  "title": "Workers in education, health care and social assistance",
+  "description": "Share of employed residents working in schools, health care or social assistance.",
+  "category": "Economy",
+  "subcategory": "Jobs",
+  "tags": [
+   "industry",
+   "education",
+   "health care",
+   "hospitals",
+   "teachers",
+   "jobs"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP03",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP03 (Selected Economic Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "employed civilians 16 and older",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP03_0042P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_industry_finance",
+  "title": "Workers in finance, insurance and real estate",
+  "description": "Share of employed residents working in finance, insurance, real estate, or rental and leasing.",
+  "category": "Economy",
+  "subcategory": "Jobs",
+  "tags": [
+   "industry",
+   "finance",
+   "banking",
+   "real estate",
+   "jobs"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP03",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP03 (Selected Economic Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "employed civilians 16 and older",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP03_0040P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_industry_manufacturing",
+  "title": "Workers in manufacturing",
+  "description": "Share of employed residents working in manufacturing.",
+  "category": "Economy",
+  "subcategory": "Jobs",
+  "tags": [
+   "industry",
+   "manufacturing",
+   "factories",
+   "jobs"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP03",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP03 (Selected Economic Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "employed civilians 16 and older",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP03_0035P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_industry_professional",
+  "title": "Workers in professional and business services",
+  "description": "Share of employed residents working in professional, scientific, management, administrative or waste management services.",
+  "category": "Economy",
+  "subcategory": "Jobs",
+  "tags": [
+   "industry",
+   "professional services",
+   "tech",
+   "consulting",
+   "jobs"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP03",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP03 (Selected Economic Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "employed civilians 16 and older",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP03_0041P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_industry_public_admin",
+  "title": "Workers in public administration",
+  "description": "Share of employed residents working in public administration (government offices and agencies).",
+  "category": "Economy",
+  "subcategory": "Jobs",
+  "tags": [
+   "industry",
+   "government",
+   "public sector",
+   "jobs"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP03",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP03 (Selected Economic Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "employed civilians 16 and older",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP03_0045P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_industry_retail",
+  "title": "Workers in retail",
+  "description": "Share of employed residents working in retail trade.",
+  "category": "Economy",
+  "subcategory": "Jobs",
+  "tags": [
+   "industry",
+   "retail",
+   "stores",
+   "jobs"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP03",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP03 (Selected Economic Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "employed civilians 16 and older",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP03_0037P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_industry_transportation",
+  "title": "Workers in transportation, warehousing and utilities",
+  "description": "Share of employed residents working in transportation, warehousing or utilities.",
+  "category": "Economy",
+  "subcategory": "Jobs",
+  "tags": [
+   "industry",
+   "logistics",
+   "warehousing",
+   "trucking",
+   "utilities",
+   "jobs"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP03",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP03 (Selected Economic Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "employed civilians 16 and older",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP03_0038P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_jobs_construction_maintenance",
+  "title": "Workers in construction, maintenance and natural resources jobs",
+  "description": "Share of employed residents in natural resources, construction and maintenance occupations.",
+  "category": "Economy",
+  "subcategory": "Jobs",
+  "tags": [
+   "occupation",
+   "trades",
+   "construction",
+   "jobs"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP03",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP03 (Selected Economic Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "employed civilians 16 and older",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP03_0030P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_jobs_management",
+  "title": "Workers in management, business, science and arts jobs",
+  "description": "Share of employed residents in management, business, science and arts occupations.",
+  "category": "Economy",
+  "subcategory": "Jobs",
+  "tags": [
+   "occupation",
+   "white collar",
+   "professional",
+   "jobs"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP03",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP03 (Selected Economic Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "employed civilians 16 and older",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP03_0027P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_jobs_production_transport",
+  "title": "Workers in production and transportation jobs",
+  "description": "Share of employed residents in production, transportation and material moving occupations.",
+  "category": "Economy",
+  "subcategory": "Jobs",
+  "tags": [
+   "occupation",
+   "factory",
+   "drivers",
+   "warehouse",
+   "blue collar",
+   "jobs"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP03",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP03 (Selected Economic Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "employed civilians 16 and older",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP03_0031P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_jobs_sales_office",
+  "title": "Workers in sales and office jobs",
+  "description": "Share of employed residents in sales and office occupations.",
+  "category": "Economy",
+  "subcategory": "Jobs",
+  "tags": [
+   "occupation",
+   "sales",
+   "clerical",
+   "jobs"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP03",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP03 (Selected Economic Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "employed civilians 16 and older",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP03_0029P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_jobs_service",
+  "title": "Workers in service jobs",
+  "description": "Share of employed residents in service occupations, such as food service, care and cleaning.",
+  "category": "Economy",
+  "subcategory": "Jobs",
+  "tags": [
+   "occupation",
+   "service work",
+   "jobs"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP03",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP03 (Selected Economic Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "employed civilians 16 and older",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP03_0028P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
    "classification": "quantile",
    "classes": 5
   }
@@ -5949,6 +9767,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -5964,6 +9783,59 @@
   ],
   "symbology": {
    "ramp": "cividis",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_less_than_9th_grade",
+  "title": "Adults who didn't finish 9th grade",
+  "description": "Share of adults 25 and older whose schooling ended before 9th grade.",
+  "category": "People",
+  "subcategory": "Education",
+  "tags": [
+   "education",
+   "schooling",
+   "attainment"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP02",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP02 (Selected Social Characteristics in the United States)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "adults 25 and older",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP02_0060P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
    "classification": "quantile",
    "classes": 5
   }
@@ -6016,6 +9888,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2019,
@@ -6082,6 +9955,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -6097,6 +9971,115 @@
   ],
   "symbology": {
    "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_married_couple_households",
+  "title": "Married-couple households",
+  "description": "Share of households that are a married couple, with or without children.",
+  "category": "People",
+  "subcategory": "Population and age",
+  "tags": [
+   "married",
+   "couples",
+   "household type",
+   "families"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP02",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP02 (Selected Social Characteristics in the United States)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "households",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP02_0002P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_married_with_children",
+  "title": "Married couples with children",
+  "description": "Share of households that are a married couple with their own children under 18.",
+  "category": "People",
+  "subcategory": "Population and age",
+  "tags": [
+   "married",
+   "children",
+   "kids",
+   "families",
+   "household type"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP02",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP02 (Selected Social Characteristics in the United States)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "households",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP02_0003P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
    "classification": "quantile",
    "classes": 5
   }
@@ -6144,6 +10127,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -6159,6 +10143,382 @@
   ],
   "symbology": {
    "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_mortgage_costs_3000_plus",
+  "title": "Owners paying $3,000 or more a month",
+  "description": "Share of homes with a mortgage whose monthly owner costs (mortgage, taxes, insurance, utilities) are $3,000 or more.",
+  "category": "Housing",
+  "subcategory": "Costs",
+  "tags": [
+   "mortgage",
+   "owner costs",
+   "housing costs"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP04",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP04 (Selected Housing Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "owner-occupied homes with a mortgage",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP04_0100P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_mortgage_costs_under_1000",
+  "title": "Owners paying under $1,000 a month",
+  "description": "Share of homes with a mortgage whose monthly owner costs (mortgage, taxes, insurance, utilities) are under $1,000.",
+  "category": "Housing",
+  "subcategory": "Costs",
+  "tags": [
+   "mortgage",
+   "owner costs",
+   "housing costs",
+   "affordable"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP04",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP04 (Selected Housing Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "owner-occupied homes with a mortgage",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP04_0094P",
+    "DP04_0095P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_moved_from_other_county",
+  "title": "Moved from another county in the same state in the past year",
+  "description": "Share of residents who lived in a different county of the same state one year earlier.",
+  "category": "People",
+  "subcategory": "Population and age",
+  "tags": [
+   "migration",
+   "movers",
+   "newcomers",
+   "moved"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP02",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP02 (Selected Social Characteristics in the United States)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "people 1 year and older",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP02_0084P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_moved_from_other_state",
+  "title": "Moved from another state in the past year",
+  "description": "Share of residents who lived in a different state one year earlier.",
+  "category": "People",
+  "subcategory": "Population and age",
+  "tags": [
+   "migration",
+   "movers",
+   "newcomers",
+   "moved"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP02",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP02 (Selected Social Characteristics in the United States)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "people 1 year and older",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP02_0085P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_moved_in_2020_2022",
+  "title": "Households that moved in 2020 to 2022",
+  "description": "Share of occupied homes whose householder moved in from 2020 to 2022.",
+  "category": "Housing",
+  "subcategory": "Homes",
+  "tags": [
+   "moved in",
+   "turnover",
+   "tenure length"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP04",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP04 (Selected Housing Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "occupied housing units",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP04_0052P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_moved_in_2023_later",
+  "title": "Households that moved in since 2023",
+  "description": "Share of occupied homes whose householder moved in during 2023 or later.",
+  "category": "Housing",
+  "subcategory": "Homes",
+  "tags": [
+   "moved in",
+   "turnover",
+   "tenure length",
+   "newcomers"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP04",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP04 (Selected Housing Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "occupied housing units",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP04_0051P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_moved_in_before_1990",
+  "title": "Households in the same home since before 1990",
+  "description": "Share of occupied homes whose householder moved in during 1989 or earlier.",
+  "category": "Housing",
+  "subcategory": "Homes",
+  "tags": [
+   "long-time residents",
+   "tenure length",
+   "aging in place"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP04",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP04 (Selected Housing Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "occupied housing units",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP04_0056P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
    "classification": "quantile",
    "classes": 5
   }
@@ -6208,6 +10568,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -6272,6 +10633,7 @@
   "modelInputs": [],
   "coverageNote": "The Census Bureau changed how it codes written-in race answers starting with 2020 data, so this share jumps between 2015–2019 and 2020–2024 partly because of the change, not only because of real change.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -6338,6 +10700,7 @@
   "modelInputs": [],
   "coverageNote": "A small group outside Hawaii and a few West Coast and Mountain West communities, so most block-group, tract and county estimates are near zero with wide margins of error.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -6401,6 +10764,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -6474,6 +10838,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -6536,6 +10901,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -6549,6 +10915,169 @@
    "classification": "quantile",
    "classes": 5,
    "higherIsBetter": false
+  }
+ },
+ {
+  "id": "pct_no_mortgage_cost_burdened",
+  "title": "Owners without a mortgage spending 35% or more of income on housing",
+  "description": "Share of owners with no mortgage whose taxes, insurance and utilities take 35% or more of household income.",
+  "category": "Housing",
+  "subcategory": "Costs",
+  "tags": [
+   "cost burden",
+   "owner costs",
+   "property tax",
+   "seniors",
+   "fixed income"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP04",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP04 (Selected Housing Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "owner-occupied homes without a mortgage",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP04_0124P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_one_person_households",
+  "title": "One-person households",
+  "description": "Share of households that are one person living alone, at any age.",
+  "category": "People",
+  "subcategory": "Population and age",
+  "tags": [
+   "living alone",
+   "single",
+   "household type",
+   "household size"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP02",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP02 (Selected Social Characteristics in the United States)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "households",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP02_0008P",
+    "DP02_0012P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_one_vehicle_households",
+  "title": "Households with one vehicle",
+  "description": "Share of households with one car, van or truck available.",
+  "category": "Transportation",
+  "subcategory": "Roads and vehicles",
+  "tags": [
+   "vehicles",
+   "cars",
+   "car ownership"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP04",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP04 (Selected Housing Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "households",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP04_0059P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
   }
  },
  {
@@ -6599,6 +11128,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -6617,6 +11147,60 @@
    "classification": "quantile",
    "classes": 5,
    "higherIsBetter": false
+  }
+ },
+ {
+  "id": "pct_owned_no_mortgage",
+  "title": "Owned homes with no mortgage",
+  "description": "Share of owner-occupied homes with no mortgage or home loan.",
+  "category": "Housing",
+  "subcategory": "Costs",
+  "tags": [
+   "mortgage",
+   "paid off",
+   "homeowners",
+   "equity"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP04",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP04 (Selected Housing Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "owner-occupied homes",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP04_0092P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
   }
  },
  {
@@ -6687,6 +11271,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -6758,6 +11343,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -6833,6 +11419,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -6897,6 +11484,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -6912,6 +11500,62 @@
   ],
   "symbology": {
    "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_rent_2000_plus",
+  "title": "Rents of $2,000 or more a month",
+  "description": "Share of rented homes whose gross rent (rent plus utilities) is $2,000 or more a month.",
+  "category": "Housing",
+  "subcategory": "Costs",
+  "tags": [
+   "rent",
+   "expensive",
+   "gross rent",
+   "housing costs"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP04",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP04 (Selected Housing Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "rented homes paying rent",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP04_0131P",
+    "DP04_0132P",
+    "DP04_0133P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
    "classification": "quantile",
    "classes": 5
   }
@@ -6974,6 +11618,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -6993,6 +11638,61 @@
    "classification": "quantile",
    "classes": 5,
    "higherIsBetter": false
+  }
+ },
+ {
+  "id": "pct_rent_under_1000",
+  "title": "Rents under $1,000 a month",
+  "description": "Share of rented homes whose gross rent (rent plus utilities) is under $1,000 a month.",
+  "category": "Housing",
+  "subcategory": "Costs",
+  "tags": [
+   "rent",
+   "affordable",
+   "gross rent",
+   "housing costs"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP04",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP04 (Selected Housing Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "rented homes paying rent",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP04_0127P",
+    "DP04_0128P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
   }
  },
  {
@@ -7038,6 +11738,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -7053,6 +11754,170 @@
   ],
   "symbology": {
    "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_satellite_internet",
+  "title": "Households with satellite internet",
+  "description": "Share of households with a satellite internet subscription.",
+  "category": "Economy",
+  "subcategory": "Internet access",
+  "tags": [
+   "satellite",
+   "internet",
+   "rural broadband"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDT5Y2024.B28002",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table B28002 (Presence and Types of Internet Subscriptions in Household)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "households",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B28002_009"
+   ],
+   "denominator": [
+    "B28002_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_school_kids_parents_work",
+  "title": "School-age children whose parents all work",
+  "description": "Share of children 6 to 17 whose parent, or both parents, are in the labor force.",
+  "category": "Economy",
+  "subcategory": "Jobs",
+  "tags": [
+   "after-school care",
+   "working parents",
+   "children"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP03",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP03 (Selected Economic Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "children 6 to 17 living with a parent",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP03_0017P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_self_employed",
+  "title": "Self-employed workers",
+  "description": "Share of employed residents who are self-employed in their own unincorporated business.",
+  "category": "Economy",
+  "subcategory": "Jobs",
+  "tags": [
+   "self-employed",
+   "small business",
+   "entrepreneurs",
+   "gig work",
+   "jobs"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP03",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP03 (Selected Economic Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "employed civilians 16 and older",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP03_0049P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
    "classification": "quantile",
    "classes": 5
   }
@@ -7101,6 +11966,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -7116,6 +11982,130 @@
   ],
   "symbology": {
    "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_seniors_renting",
+  "title": "Renters 65 and older",
+  "description": "Share of households headed by someone 65 or older that rent their home.",
+  "category": "Housing",
+  "subcategory": "Homes",
+  "tags": [
+   "renters",
+   "seniors",
+   "older adults",
+   "over 65",
+   "aging",
+   "tenure"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDT5Y2024.B25007",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table B25007 (Tenure by Age of Householder)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "households headed by someone 65 or older",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B25007_019",
+    "B25007_020",
+    "B25007_021"
+   ],
+   "denominator": [
+    "B25007_009",
+    "B25007_010",
+    "B25007_011",
+    "B25007_019",
+    "B25007_020",
+    "B25007_021"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_short_commute",
+  "title": "Commutes under 15 minutes",
+  "description": "Share of workers who don't work from home whose trip to work takes under 15 minutes.",
+  "category": "Transportation",
+  "subcategory": "Commuting",
+  "tags": [
+   "commute",
+   "travel time",
+   "short commute"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDT5Y2024.B08303",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table B08303 (Travel Time to Work)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "workers who don't work from home",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B08303_002",
+    "B08303_003",
+    "B08303_004"
+   ],
+   "denominator": [
+    "B08303_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
    "classification": "quantile",
    "classes": 5
   }
@@ -7166,6 +12156,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -7181,6 +12172,63 @@
   ],
   "symbology": {
    "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_smartphone_only",
+  "title": "Households whose only computer is a smartphone",
+  "description": "Share of households with a smartphone and no other computer, tablet or laptop.",
+  "category": "Economy",
+  "subcategory": "Internet access",
+  "tags": [
+   "smartphone",
+   "computers",
+   "digital divide",
+   "internet"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDT5Y2024.B28001",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table B28001 (Types of Computers in Household)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "households",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B28001_006"
+   ],
+   "denominator": [
+    "B28001_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
    "classification": "quantile",
    "classes": 5
   }
@@ -7230,6 +12278,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -7245,6 +12294,167 @@
   ],
   "symbology": {
    "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_some_college_no_degree",
+  "title": "Adults with some college but no degree",
+  "description": "Share of adults 25 and older who went to college but didn't finish a degree.",
+  "category": "People",
+  "subcategory": "Education",
+  "tags": [
+   "education",
+   "college",
+   "attainment"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP02",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP02 (Selected Social Characteristics in the United States)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "adults 25 and older",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP02_0063P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_students_in_college",
+  "title": "Students in college or graduate school",
+  "description": "Of everyone 3 and older enrolled in school, the share in college or graduate school.",
+  "category": "People",
+  "subcategory": "Education",
+  "tags": [
+   "college",
+   "university",
+   "students",
+   "enrollment",
+   "school"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP02",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP02 (Selected Social Characteristics in the United States)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "people 3 and older enrolled in school",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP02_0058P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_three_plus_vehicle_households",
+  "title": "Households with three or more vehicles",
+  "description": "Share of households with three or more cars, vans or trucks available.",
+  "category": "Transportation",
+  "subcategory": "Roads and vehicles",
+  "tags": [
+   "vehicles",
+   "cars",
+   "car ownership"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP04",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP04 (Selected Housing Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "households",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP04_0061P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
    "classification": "quantile",
    "classes": 5
   }
@@ -7295,6 +12505,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -7310,6 +12521,59 @@
   ],
   "symbology": {
    "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_two_vehicle_households",
+  "title": "Households with two vehicles",
+  "description": "Share of households with two cars, vans or trucks available.",
+  "category": "Transportation",
+  "subcategory": "Roads and vehicles",
+  "tags": [
+   "vehicles",
+   "cars",
+   "car ownership"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP04",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP04 (Selected Housing Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "households",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP04_0060P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
    "classification": "quantile",
    "classes": 5
   }
@@ -7364,6 +12628,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -7379,6 +12644,61 @@
   ],
   "symbology": {
    "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_under_5",
+  "title": "Children under 5",
+  "description": "Share of residents younger than 5.",
+  "category": "People",
+  "subcategory": "Population and age",
+  "tags": [
+   "children",
+   "kids",
+   "toddlers",
+   "child care",
+   "age"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP05",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP05 (ACS Demographic and Housing Estimates)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "people",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP05_0005P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
    "classification": "quantile",
    "classes": 5
   }
@@ -7429,6 +12749,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -7447,6 +12768,60 @@
    "classification": "quantile",
    "classes": 5,
    "higherIsBetter": false
+  }
+ },
+ {
+  "id": "pct_unmarried_partner_households",
+  "title": "Unmarried-couple households",
+  "description": "Share of households that are an unmarried couple living together, with or without children.",
+  "category": "People",
+  "subcategory": "Population and age",
+  "tags": [
+   "couples",
+   "partners",
+   "cohabiting",
+   "household type"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP02",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP02 (Selected Social Characteristics in the United States)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "households",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP02_0004P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
   }
  },
  {
@@ -7491,6 +12866,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -7506,6 +12882,131 @@
   ],
   "symbology": {
    "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_veterans_18_54",
+  "title": "Veterans among adults 18 to 54",
+  "description": "Share of civilians 18 to 54 who served in the military.",
+  "category": "People",
+  "subcategory": "Population and age",
+  "tags": [
+   "veterans",
+   "military",
+   "younger veterans"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDT5Y2024.B21001",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table B21001 (Sex by Age by Veteran Status for the Civilian Population 18 Years and Over)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "civilians 18 to 54",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B21001_008",
+    "B21001_011",
+    "B21001_026",
+    "B21001_029"
+   ],
+   "denominator": [
+    "B21001_007",
+    "B21001_010",
+    "B21001_025",
+    "B21001_028"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_veterans_65_plus",
+  "title": "Veterans among people 65 and older",
+  "description": "Share of civilians 65 and older who served in the military.",
+  "category": "People",
+  "subcategory": "Population and age",
+  "tags": [
+   "veterans",
+   "military",
+   "seniors",
+   "over 65"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDT5Y2024.B21001",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table B21001 (Sex by Age by Veteran Status for the Civilian Population 18 Years and Over)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "civilians 65 and older",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B21001_017",
+    "B21001_020",
+    "B21001_035",
+    "B21001_038"
+   ],
+   "denominator": [
+    "B21001_016",
+    "B21001_019",
+    "B21001_034",
+    "B21001_037"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
    "classification": "quantile",
    "classes": 5
   }
@@ -7554,6 +13055,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -7617,6 +13119,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -7633,6 +13136,60 @@
   ],
   "symbology": {
    "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_women_in_labor_force",
+  "title": "Women in the labor force",
+  "description": "Share of women 16 and older who are working or looking for work.",
+  "category": "Economy",
+  "subcategory": "Jobs",
+  "tags": [
+   "women",
+   "labor force",
+   "employment",
+   "work"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP03",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP03 (Selected Economic Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "women 16 and older",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP03_0011P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
    "classification": "quantile",
    "classes": 5
   }
@@ -7681,6 +13238,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -7696,6 +13254,63 @@
   ],
   "symbology": {
    "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_work_in_other_state",
+  "title": "Workers who work in another state",
+  "description": "Share of workers whose job is in a different state from where they live.",
+  "category": "Transportation",
+  "subcategory": "Commuting",
+  "tags": [
+   "commute",
+   "out of state",
+   "interstate",
+   "border"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDT5Y2024.B08007",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table B08007 (Sex of Workers by Place of Work, State and County Level)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "workers 16 and older",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B08007_005"
+   ],
+   "denominator": [
+    "B08007_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
    "classification": "quantile",
    "classes": 5
   }
@@ -7746,12 +13361,67 @@
   },
   "modelInputs": [],
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
    "to": 2024,
    "step": 5
   },
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_young_kids_parents_work",
+  "title": "Young children whose parents all work",
+  "description": "Share of children under 6 whose parent, or both parents, are in the labor force.",
+  "category": "Economy",
+  "subcategory": "Jobs",
+  "tags": [
+   "child care",
+   "daycare",
+   "working parents",
+   "children"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP03",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP03 (Selected Economic Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "children under 6 living with a parent",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP03_0015P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
    "acs-5-year",
@@ -7818,6 +13488,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -7878,6 +13549,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -7938,6 +13610,7 @@
   ],
   "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -7994,6 +13667,7 @@
   ],
   "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate, as do tracts with very few residents.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -8047,6 +13721,7 @@
   "modelInputs": [],
   "coverageNote": "Only the 549 counties with a valid PM2.5 monitor have a value; every other county is blank, which means no monitor, not clean air. A county's value is its single highest monitor, so one near-road or border monitor can set it. EPA excludes wildfire-smoke days it concurs are exceptional events, so smoke-heavy years read lower than residents experienced. The federal annual standard is 9.0 µg/m³ (tightened from 12.0 in 2024); the top map class marks counties above it. EPA's tables are informational, not a regulatory determination. El Paso County, TX: its value comes from a monitor that began in May 2024, so it covers two years, not three. It includes the 2025 spring dust storms; Texas has not asked EPA to exclude those days.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -8105,6 +13780,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -8122,6 +13798,60 @@
    "ramp": "viridis",
    "classification": "quantile",
    "classes": 7
+  }
+ },
+ {
+  "id": "rental_vacancy_rate",
+  "title": "Rental vacancy rate",
+  "description": "Vacant homes for rent as a share of all rental homes, rented or for rent.",
+  "category": "Housing",
+  "subcategory": "Homes",
+  "tags": [
+   "vacancy",
+   "rentals",
+   "housing market",
+   "vacant"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP04",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP04 (Selected Housing Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "rental housing units",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP04_0005"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
   }
  },
  {
@@ -8163,6 +13893,7 @@
   ],
   "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -8217,6 +13948,7 @@
   ],
   "coverageNote": "From the 2022 survey (CDC asks about sleep every other year), so every state has data, Kentucky and Pennsylvania included. Loving County, Texas, has too few residents to estimate.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -8273,6 +14005,7 @@
   ],
   "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate, as do tracts with very few residents.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -8326,6 +14059,7 @@
   ],
   "coverageNote": "No data for Kentucky or Pennsylvania: neither state collected enough 2023 survey responses for CDC to use. Loving County, Texas, has too few residents to estimate.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -8389,6 +14123,7 @@
   ],
   "coverageNote": "A rank from 0 to 100 among all U.S. counties, or among all U.S. tracts (not within each state): the 90th percentile means more vulnerable on this theme than 90% of counties (or tracts). Tracts with no residents, and some where CDC couldn't estimate an input, show no data. Puerto Rico isn't included in CDC's U.S. files. Not comparable with earlier SVI years.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -8450,6 +14185,7 @@
   ],
   "coverageNote": "A rank from 0 to 100 among all U.S. counties, or among all U.S. tracts (not within each state): the 90th percentile means more vulnerable on this theme than 90% of counties (or tracts). Tracts with no residents, and some where CDC couldn't estimate an input, show no data. Puerto Rico isn't included in CDC's U.S. files. Not comparable with earlier SVI years.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -8514,6 +14250,7 @@
   ],
   "coverageNote": "A rank from 0 to 100 among all U.S. counties, or among all U.S. tracts (not within each state): the 90th percentile means more vulnerable on this theme than 90% of counties (or tracts). Tracts with no residents, and some where CDC couldn't estimate an input, show no data. Puerto Rico isn't included in CDC's U.S. files. Not comparable with earlier SVI years.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -8574,6 +14311,7 @@
   ],
   "coverageNote": "A rank from 0 to 100 among all U.S. counties, or among all U.S. tracts (not within each state): the 90th percentile means more vulnerable than 90% of counties (or tracts). Tracts with no residents, and some where CDC couldn't estimate an input, show no data. Puerto Rico isn't included in CDC's U.S. files. Not comparable with earlier SVI years.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -8637,6 +14375,7 @@
   ],
   "coverageNote": "A rank from 0 to 100 among all U.S. counties, or among all U.S. tracts (not within each state): the 90th percentile means more vulnerable on this theme than 90% of counties (or tracts). Tracts with no residents, and some where CDC couldn't estimate an input, show no data. Puerto Rico isn't included in CDC's U.S. files. Not comparable with earlier SVI years.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -8694,6 +14433,7 @@
   ],
   "coverageNote": "Counted where crashes happened, divided by residents, so counties with heavy through-traffic look high. Connecticut counties use pre-2022 codes and show no data.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2015,
@@ -8753,6 +14493,7 @@
   "modelInputs": [],
   "coverageNote": "Only larger facilities in covered industries report (generally 10 or more employees and above set chemical amounts), so a county shown at zero has no reporting facility, not no pollution. Amounts are the facilities' own estimates. Metal mines account for nearly half of all pounds, mostly waste rock placed on land at the mine. Pounds say nothing about how toxic a chemical is or whether anyone is exposed to it. Connecticut counties show no data (facility records use its pre-2022 counties).",
   "facets": [],
+  "library": false,
   "excludeFromInsights": true,
   "learnMore": [],
   "terms": [
@@ -8812,6 +14553,7 @@
   },
   "modelInputs": [],
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "timeline": {
    "from": 2014,
@@ -8871,6 +14613,7 @@
   ],
   "coverageNote": "States and counties only. Kalawao County, Hawaii, has no estimate, and Puerto Rico is not covered.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -8925,6 +14668,7 @@
   ],
   "coverageNote": "Only states that asked CDC's optional social-needs questions in their 2023 survey have data on utility shut-off threats. No data for Colorado, Florida, Kentucky, Oregon, Pennsylvania, South Dakota, Tennessee, Texas, Vermont, Washington or Wyoming.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
@@ -8985,6 +14729,7 @@
   ],
   "coverageNote": "Counts traffic where it drives, divided by residents, so counties on major through-routes look high. Counted roads only (about 10–15% below FHWA totals). Connecticut counties show no data.",
   "facets": [],
+  "library": false,
   "excludeFromInsights": false,
   "learnMore": [],
   "terms": [

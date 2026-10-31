@@ -3,7 +3,7 @@
 // places and datasets in separate labeled groups. Arrow keys move, Enter picks, Esc closes.
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { MapPin, Layers, LocateFixed, Search, X } from "lucide-react";
-import { searchDatasets, type Dataset } from "@/lib/registry";
+import { LIBRARY_LABEL, searchDatasets, type Dataset } from "@/lib/registry";
 import { countyForZip, loadPlaceIndex, parseQuery, placeByGeoid, searchPlaces, type PlaceHit, type PlaceRow } from "@/lib/search";
 import { findAddress, looksLikeAddress, type AddressMatch } from "@/lib/geocode";
 
@@ -109,7 +109,7 @@ export function SearchOverlay({ onClose, onPlace, onDataset, onBoth, onAddress, 
           <Layers className="size-4 shrink-0 text-muted-foreground" aria-hidden />
           <span className="min-w-0 flex-1">
             <span className="block truncate text-base font-medium">{it.d.title}{it.d.id === current && <span className="ml-2 text-xs font-normal text-muted-foreground">On the map</span>}</span>
-            <span className="block truncate text-xs text-muted-foreground">{it.d.category} · {it.d.vintage}</span>
+            <span className="block truncate text-xs text-muted-foreground">{it.d.category} · {it.d.library ? `${LIBRARY_LABEL} · ` : ""}{it.d.vintage}</span>
           </span>
         </button>
       </li>

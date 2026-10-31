@@ -7,8 +7,8 @@ const real = loadRelations(entries);
 const copy = (): Relations => structuredClone(real);
 
 describe("relations.yaml", () => {
-  it("lists every registry map and passes its checks", () => {
-    expect(Object.keys(real.maps).sort()).toEqual(entries.map((e) => e.id).sort());
+  it("lists every Featured map and passes its checks", () => {
+    expect(Object.keys(real.maps).sort()).toEqual(entries.filter((e) => !e.library).map((e) => e.id).sort()); // Library maps join on promotion (#372)
     expect(checkRelations(real, entries)).toEqual([]);
   });
   it("fails when a registry map has no entry (the hook for new datasets)", () => {
