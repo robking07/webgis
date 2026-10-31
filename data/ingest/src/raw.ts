@@ -1,4 +1,4 @@
-// #368, D-<n>: keep what a Data run downloaded. The GitHub runner's data/cache/ dies with the job, so
+// #368, D-526: keep what a Data run downloaded. The GitHub runner's data/cache/ dies with the job, so
 // copy it to R2 under raw/ (same relative path). Never overwrites, never deletes.
 import { createReadStream, existsSync, readdirSync, statSync } from "node:fs";
 import { extname, join, relative } from "node:path";
