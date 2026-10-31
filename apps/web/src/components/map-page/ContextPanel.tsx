@@ -2,7 +2,8 @@
 // dataset card and closed by default. Laptops and monitors: a panel on the right, where place
 // details open. Phones: a bottom sheet that peeks with the summary and swipes up for the rest.
 // "About this data" (how it's measured) stays on the data page; this says why the pattern matters.
-import { useEffect, type ReactNode } from "react";
+import type { ReactNode } from "react";
+import { useEscape } from "../useEscape";
 import { ArrowUpRight, ChevronRight, X } from "lucide-react";
 import { DATASET_BY_ID, type Dataset } from "@/lib/registry";
 import type { MapContext } from "@/lib/context";
@@ -44,11 +45,7 @@ const label = "mb-1 text-[11px] font-semibold uppercase tracking-wider text-mute
 
 export function ContextPanel({ ctx, dataset, top, onClose, onMapIt }: { ctx: MapContext; dataset: Dataset; top: number; onClose: () => void; onMapIt: (id: string) => void }) {
   const phone = useIsPhone();
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [onClose]);
+  useEscape(onClose);
   const name = `${dataset.title}: why this matters`;
   const summary = (
     <>
