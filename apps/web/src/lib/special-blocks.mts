@@ -68,7 +68,10 @@ export interface CountyTable {
   rows: Array<{ geoid: string; name: string; values: Array<number | null> }>;
 }
 
-export type Block = FocusMap | BinsChart | CorrelationTable | CountyTable;
+/** A highlighted paragraph set apart from the text. */
+export interface Callout { kind: "callout"; /** Inline Markdown, rendered. */ html: string }
+
+export type Block = FocusMap | BinsChart | CorrelationTable | CountyTable | Callout;
 
 let ctx: BlockContext | null = null;
 /** Call once before parsing. */
@@ -153,6 +156,11 @@ export function parseBlock(lang: string, yaml: string, fail: Fail, inline: (md: 
   try { o = (parseYaml(yaml) ?? {}) as Record<string, unknown>; } catch (e) { fail(`can't read the YAML: ${(e as Error).message}`); }
   if (typeof o !== "object" || Array.isArray(o)) fail("the block must be YAML fields (name: value)");
   const caption = (required: boolean) => { const c = text(o, "caption", fail, required); return c ? inline(c) : null; };
+
+  if (lang === "callout") {
+    checkKeys(o, ["text"], fail);
+    return { kind: "callout", html: inline(text(o, "text", fail, true)!) };
+  }
 
   if (lang === "map") {
     checkKeys(o, ["datasets", "at", "level", "caption"], fail);
@@ -244,12 +252,13 @@ export function blockDatasets(b: Block): string[] {
     case "bins": return [b.x.id, b.y.id];
     case "correlations": return [...b.rows.map((r) => r.ref.id), ...b.with.map((r) => r.id)];
     case "counties": return b.columns.map((c) => c.id);
+    case "callout": return [];
   }
 }
 
 /** Words a reader reads in a block (title and caption), for the read time. */
 export function blockWords(b: Block): number {
   const strip = (s: string | null) => (s ?? "").replace(/<[^>]+>/g, " ");
-  const t = b.kind === "map" ? strip(b.caption) : `${b.title} ${strip(b.caption)}`;
+  const t = b.kind === "callout" ? strip(b.html) : b.kind === "map" ? strip(b.caption) : `${b.title} ${strip(b.caption)}`;
   return t.split(/\s+/).filter(Boolean).length;
 }
