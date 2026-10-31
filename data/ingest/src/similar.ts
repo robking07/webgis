@@ -8,16 +8,28 @@
 // counties whose ranks are closest overall, each topic (registry category) counted equally.
 // "Alike on" lists the measures where both sit furthest from the national middle on the same
 // side (both in the top or bottom quarter), one per topic.
-import { mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { loadRegistry } from "@webgis/registry/load";
 import type { DatasetEntry } from "@webgis/registry";
 import { DETAILS_DIR, type DetailShard } from "./details.ts";
+import { getLive, r2 } from "./publish-tiles.ts";
 import { log, TILES } from "./util.ts";
 
 export const SIMILAR_JSON = join(TILES, "similar/similar.json");
 /** Residents per county ([count, moe, …]), as the population map publishes them. Ranks, so no log needed. */
-const RESIDENTS_JSON = join(TILES, "values/population_density/county.counts.json");
+const RESIDENTS_KEY = "values/population_density/county.counts.json";
+const RESIDENTS_JSON = join(TILES, RESIDENTS_KEY);
+
+/** The local residents file, else the live one from R2, kept in memory only so it can't be re-uploaded (a Data run, #453). */
+async function residentsCounts(): Promise<Record<string, (number | null)[]>> {
+  if (existsSync(RESIDENTS_JSON)) return JSON.parse(readFileSync(RESIDENTS_JSON, "utf8"));
+  const { s3, bucket } = r2();
+  const live = await getLive(s3, bucket, RESIDENTS_KEY);
+  if (!live) throw new Error(`similar: no ${RESIDENTS_KEY} here or on R2`);
+  log("similar", `residents from R2 (${RESIDENTS_KEY})`);
+  return live as Record<string, (number | null)[]>;
+}
 /** Not a registry dataset: the county's population, counted under People. */
 export const RESIDENTS = "residents";
 /** Measures with values for fewer counties than this share are left out (heavy missingness). */
@@ -95,7 +107,7 @@ export function pickMeasures(entries: DatasetEntry[], coverage: Record<string, n
     .map((d) => d.id).sort();
 }
 
-export function similarOut() {
+export async function similarOut() {
   const places: Record<string, Record<string, [number | null, number | null]>> = {};
   for (const f of readdirSync(DETAILS_DIR).filter((f) => f.endsWith(".json"))) {
     const shard = JSON.parse(readFileSync(join(DETAILS_DIR, f), "utf8")) as DetailShard;
@@ -106,7 +118,7 @@ export function similarOut() {
   const coverage: Record<string, number> = {};
   for (const v of Object.values(places)) for (const [id, [x]] of Object.entries(v)) if (x != null) coverage[id] = (coverage[id] ?? 0) + 1;
   const entries = loadRegistry();
-  const residents = JSON.parse(readFileSync(RESIDENTS_JSON, "utf8")) as Record<string, (number | null)[]>;
+  const residents = await residentsCounts();
   for (const g of geoids) places[g] = { ...places[g], [RESIDENTS]: [residents[g]?.[0] ?? null, null] };
   const picked = pickMeasures(entries, coverage, geoids.length);
   const skipped = entries.filter((d) => d.geographyLevels.includes("county") && !picked.includes(d.id)).map((d) => d.id);
