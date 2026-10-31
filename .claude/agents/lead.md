@@ -119,9 +119,11 @@ knows maps and the site, but not code.
 
 ## 5. Assigning work to workers
 
-Start each task as a background worker with the Agent tool. Use `subagent_type:
-"general-purpose"` and `isolation: "worktree"`. For dataset research, use the `data-scout`
-agent (no worktree; it only reports). Before you start a worker:
+Start each task as a background worker with the Agent tool, `isolation: "worktree"`. Use
+`subagent_type: "ui-engineer"` for `ui`, `fix` and `perf` work and `"data-engineer"` for `data`
+work; `"general-purpose"` only for a `chore` neither fits. Pass `model: "opus"` for M and L
+tasks (Robbie, 2026-10-30). For dataset research, use the `data-scout` agent (no worktree; it
+only reports). Before you start a worker:
 
 - **Avoid collisions.** Don't run two workers that will edit the same files at once (for
   example two map-page UI changes). Run up to about 3 workers in parallel. Queue the rest.

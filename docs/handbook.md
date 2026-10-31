@@ -26,7 +26,7 @@ Full build spec: `docs/SPEC.md`. Project rules: `CLAUDE.md`.
   `data/tiles/`, which is git-ignored and empty in a fresh clone (D-210). Either set
   `NEXT_PUBLIC_TILES_BASE_URL=https://tiles.mapwich.org` (R2 only allows the production origins
   and `http://localhost:3000`), or fill `data/tiles/` to work
-  offline. **Any ingest that uploads must start from a complete `data/tiles/`** (with `values/tracts/`,
+  offline. **Any ingest that uploads must start from a complete `data/tiles/`** (with `values/<id>/tracts/`,
   `geo/`, `details/` and the timeline stops); a partial folder plus `publish-data` wiped live tract data
   on 2026-10-08. The GitHub "Data run" workflow (runbook §8) is the exception: it reads each file it
   changes from R2 and merges into it, and checks every file for dropped datasets before the first
