@@ -20,12 +20,13 @@ async function load({ params, searchParams }: Props) {
   if (!state) return null;
   const nameA = placeName(state.a), nameB = placeName(state.b);
   if (!nameA || !nameB) return null;
-  // No metric named (or an unknown one): lead with the landing map's.
-  const dataset = DATASET_BY_ID.get(state.d ?? "") ?? DATASET_BY_ID.get(LANDING.d)!;
+  // No metric named (or an unknown one, or a Library map, which isn't in the click files: D-<n>): lead with the landing map's.
+  const named = DATASET_BY_ID.get(state.d ?? "");
+  const dataset = named && !named.library ? named : DATASET_BY_ID.get(LANDING.d)!;
   // Names of the places each one's share is taken of (county, state, U.S.), for the counts (2b).
   const parentNames = Object.fromEntries([...parentsOf(state.a), ...parentsOf(state.b)].map((g) => [g, g === "us" ? "U.S." : shortName(placeName(g) ?? g)]));
   // A named but unknown metric (#306): the page says it fell back and rewrites the URL.
-  const unknownD = typeof sp.d === "string" && sp.d !== "" && !DATASET_BY_ID.has(sp.d);
+  const unknownD = typeof sp.d === "string" && sp.d !== "" && dataset.id !== sp.d;
   return { ...state, nameA, nameB, dataset, parentNames, unknownD };
 }
 

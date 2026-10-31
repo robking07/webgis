@@ -27,6 +27,14 @@ describe("library recipe", () => {
     expect(derive(renters, row(cells)).value).toBeCloseTo(100 * 150 / 450);
   });
 
+  it("reads a sum of rounded Census percents just over 100 as 100, and still fails a real overshoot (#373)", () => {
+    const rent = shape(recipe.maps.find((m) => m.id === "pct_rent_2000_plus")!, recipe).entry;
+    const v = (a: number, b: number, c: number) => derive(rent, row({ DP04_0131PE: a, DP04_0131PM: 1, DP04_0132PE: b, DP04_0132PM: 1, DP04_0133PE: c, DP04_0133PM: 1 })).value;
+    expect(v(50.1, 30, 20)).toBe(100);
+    expect(checkLevel("county", [{ value: v(50.1, 30, 20), moe: 1 }]).reasons).toEqual([]);
+    expect(checkLevel("county", [{ value: v(60, 30, 20), moe: 1 }]).reasons).toHaveLength(1);
+  });
+
   it("writes compact YAML", () => {
     const yaml = toYaml(shape(recipe.maps[0], recipe).raw);
     expect(yaml).toMatch(/^measure: \{kind: acs5, numerator: \[DP04_0007P\]\}$/m);
