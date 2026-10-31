@@ -1,6 +1,6 @@
 // #368, D-<n>: keep what a Data run downloaded. The GitHub runner's data/cache/ dies with the job, so
 // copy it to R2 under raw/ (same relative path). Never overwrites, never deletes.
-import { createReadStream, readdirSync, statSync } from "node:fs";
+import { createReadStream, existsSync, readdirSync, statSync } from "node:fs";
 import { extname, join, relative } from "node:path";
 import { HeadObjectCommand, type S3Client } from "@aws-sdk/client-s3";
 import { Upload } from "@aws-sdk/lib-storage";
@@ -49,11 +49,15 @@ export async function publishRaw() {
   try {
     const { s3, bucket } = r2();
     const client: Client = {
-      head: (Key) => s3.send(new HeadObjectCommand({ Bucket: bucket, Key })).then((r) => r.ContentLength ?? null, () => null),
+      head: (Key) => s3.send(new HeadObjectCommand({ Bucket: bucket, Key })).then((r) => r.ContentLength ?? null, (e) => {
+        // Only "not there" counts as missing; any other error must stop the run, not allow an overwrite.
+        if (e?.$metadata?.httpStatusCode === 404) return null;
+        throw e;
+      }),
       // Upload streams large files in parts from disk.
       put: (Key, path) => new Upload({ client: s3 as S3Client, params: { Bucket: bucket, Key, Body: createReadStream(path) } }).done().then(() => {}),
     };
-    const [saved, kept] = await saveRaw(walk(CACHE), CACHE, new Date().toISOString().slice(0, 10), client);
+    const [saved, kept] = await saveRaw(existsSync(CACHE) ? walk(CACHE) : [], CACHE, new Date().toISOString().slice(0, 10), client);
     log("publish-raw", `saved ${saved} raw download(s) to R2 under raw/, ${kept} already there`);
   } catch (e) {
     // Never fails a run that already published.
