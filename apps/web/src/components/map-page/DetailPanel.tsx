@@ -163,22 +163,22 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
   if (seenDeps.some((v, i) => v !== loadDeps[i])) { setSeenDeps(loadDeps); setRows(null); setErr(null); }
   useEffect(() => {
     let live = true;
+    const shown = [primary, secondary].filter((d): d is Dataset => !!d);
+    // The value the map drew and its margin file: for levels not in the database (D-124) and for
+    // Library maps at state or county, which aren't in the click files (D-536).
+    const fromMap = async (d: Dataset, i: number) => {
+      const inTile = TILE_VALUE_LEVELS.has(info.level);
+      const moes = inTile ? ({} as Values) : await loadMoes(d.id, info.level).catch(() => ({} as Values));
+      // Blocks: the value is in the tile; 2020 Census counts have no margin of error.
+      const fromTile = inTile && d.measure.kind === "census2020" ? (info.props?.[d.measure.value] as number | undefined) : undefined;
+      return [d.id, { value: fromTile ?? (i === 0 ? xv : yv)?.[info.geoid] ?? null, moe: moes[info.geoid] ?? null }] as const;
+    };
     const load = staticOnly
-      ? Promise.all([primary, secondary].filter((d): d is Dataset => !!d).map(async (d, i) => {
-          const inTile = TILE_VALUE_LEVELS.has(info.level);
-          const moes = inTile ? ({} as Values) : await loadMoes(d.id, info.level).catch(() => ({} as Values));
-          // Blocks: the value is in the tile; 2020 Census counts have no margin of error.
-          const fromTile = inTile && d.measure.kind === "census2020" ? (info.props?.[d.measure.value] as number | undefined) : undefined;
-          return [d.id, { value: fromTile ?? (i === 0 ? xv : yv)?.[info.geoid] ?? null, moe: moes[info.geoid] ?? null }] as const;
-        })).then((e) => Object.fromEntries(e) as Detail)
+      ? Promise.all(shown.map(fromMap)).then((e) => Object.fromEntries(e) as Detail)
       // Tracts: only the maps on screen (one small file each, #371); the phone's full list loads its own.
-      : fetchDetail(info.geoid, [primary, secondary].filter((d): d is Dataset => !!d).map((d) => d.id)).then(async (r) => {
-          // Library maps aren't in the state click files (D-536): a state or county takes the map's own value and margin files.
-          for (const [i, d] of [primary, secondary].entries()) {
-            if (d?.library && info.level !== "tract") r[d.id] = { value: (i === 0 ? xv : yv)?.[info.geoid] ?? null, moe: (await loadMoes(d.id, info.level).catch(() => ({} as Values)))[info.geoid] ?? null };
-          }
-          return r;
-        });
+      : Promise.all([fetchDetail(info.geoid, shown.map((d) => d.id)),
+          ...shown.map((d, i) => (d.library && info.level !== "tract" ? fromMap(d, i) : null))])
+          .then(([r, ...lib]) => ({ ...r, ...Object.fromEntries(lib.filter((e) => e != null)) }) as Detail);
     load.then((r) => live && setRows(r), (e) => live && setErr(String(e.message ?? e)));
     return () => { live = false; };
   }, [info.geoid, info.level, info.props, staticOnly, primary, secondary, xv, yv]);
