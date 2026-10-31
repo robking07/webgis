@@ -126,7 +126,7 @@ const steps: Record<string, () => Promise<void> | void> = {
     await ingestFeatures(); await ingestVmt(); await ingestCejst(); await ingestDdp287g(); await ingestTri(); await ingestNri(); await ingestLead(); await ingestSvi(); await ingestSahie(); await ingestFoodAccess();
     await ingestAcsTimeline(); await ingestFarsTimeline(); await ingestClimdivTimeline(); await ingestNbiTimeline(); await ingestLodesTimeline(); await ingestOverdoseTimeline(); await buildLabelMask(); await buildTiles();
     await tractGeography();
-    exportRegistry(allowDrop); await exportNames(); await exportSearch(); await exportValues(); await detailsOut(); similarOut(); await computeInsights(); await computeCombinations(); await writeDataSourcesDoc();
+    exportRegistry(allowDrop); await exportNames(); await exportSearch(); await exportValues(); await detailsOut(); await similarOut(); await computeInsights(); await computeCombinations(); await writeDataSourcesDoc();
   },
 };
 if (!step || !steps[step]) {

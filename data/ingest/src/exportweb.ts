@@ -15,7 +15,8 @@ import { timelineStops } from "@webgis/registry/timeline";
 import { cached, db, log, NAMES_JSON, ROOT, STATES, TILES } from "./util.ts";
 import { readGazetteer } from "./geographies.ts";
 
-const round = (v: number) => Number(v.toPrecision(4));
+// 7 digits keep every published state/county value exact (ACS dollars run to 6 digits), so the hover popup matches the details (#343).
+const round = (v: number) => Number(v.toPrecision(7));
 const LEVEL_FILE = new RegExp(`^(${GeoLevel.options.join("|")})\\.json$`);
 
 type Periods = Record<string, Record<string, string[]>>;
@@ -116,10 +117,13 @@ export async function exportSearch() {
 
 export async function exportValues(only?: string[]) {
   const pool = db();
+  // Only this checkout's registry (the database is shared with unmerged branches' datasets), and
+  // no tract level: tract values live in per-county files (D-113, D-506), as in tractsOut.
+  const ids = new Set(loadRegistry().map((e) => e.id));
   const { rows: sets } = await pool.query<{ dataset_id: string; level: string }>(
     "select distinct dataset_id, level from public.dataset_values order by 1, 2");
   for (const { dataset_id, level } of sets) {
-    if (only && !only.includes(dataset_id)) continue;
+    if (!ids.has(dataset_id) || level === "tract" || (only && !only.includes(dataset_id))) continue;
     const { rows } = await pool.query<{ geoid: string; value: number | null }>(
       "select geoid, value from public.dataset_values where dataset_id = $1 and level = $2 and value is not null", [dataset_id, level]);
     const out: Record<string, number> = {};
