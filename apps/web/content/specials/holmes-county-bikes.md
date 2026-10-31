@@ -106,7 +106,7 @@ PeopleForBikes works from map data instead. Its [City Ratings](https://www.peopl
 
 The census measure looks only at how workers usually get to work.
 
-| | Holmes County, Ohio | Minneapolis |
+| Measure | Holmes County, Ohio | Minneapolis |
 |---|---|---|
 | Workers 16 and over | 20,065 ±559 | 239,419 ±2,736 |
 | Usually biked to work | 2,813 ±450 | 4,825 ±606 |
