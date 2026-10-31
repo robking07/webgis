@@ -6,16 +6,19 @@ import { loadRegistry } from "@webgis/registry/load";
 import { fileURLToPath } from "node:url";
 
 /** Steps the runner can do, each with the registry `measure.kind`s it loads. `features` gets GDAL
- *  and tippecanoe from data-run.yml and publishes tiles, not values (#449).
+ *  and tippecanoe from data-run.yml and publishes tiles, not values (#449). `counts` writes only the
+ *  margins, counts and U.S. rows (D-257), ACS maps only (#454).
  *  shortcut: other steps needing GDAL or tippecanoe (geographies, tiles, census2020, ddp287g, vmt,
- *  counts, label-mask, mpo) aren't here; add them the way `features` is when one is needed. */
+ *  label-mask, mpo) aren't here, nor `counts` for non-ACS sources; add them the way `features` is when one is needed. */
 const STEP_KINDS: Record<string, string[]> = {
   acs: ["acs5"], "acs-bg": ["acs5"], lodes: ["lodes"], places: ["places"], climdiv: ["climdiv"], nbi: ["nbi"],
   fars: ["fars"], airquality: ["airquality"], overdose: ["overdose"], cejst: ["cejst"], tri: ["tri"],
-  lead: ["lead"], "food-access": ["food_access"], nri: ["fema_nri"], svi: ["svi"], features: ["features"],
+  lead: ["lead"], "food-access": ["food_access"], nri: ["fema_nri"], svi: ["svi"], features: ["features"], counts: ["acs5"],
   // shortcut: fars' timeline reads population_density's 2019 stop, which a runner doesn't have.
   timeline: ["acs5", "climdiv", "nbi", "lodes", "overdose"],
 };
+/** Steps data-run.yml picks with `inputs.steps == '<step>'`: each runs alone, typed exactly. */
+const ALONE = ["features", "counts"];
 /** Loads nothing: re-exports the database's values and publishes them, every map when no ids are named (#449). */
 const REEXPORT = "export-values";
 
@@ -26,7 +29,7 @@ export function checkRun(steps: string[], ids: string[], entries: DatasetEntry[]
   const reexport = steps.includes(REEXPORT);
   if (!steps.length) errors.push("name at least one step");
   if (!ids.length && !reexport) errors.push("name at least one dataset id");
-  for (const s of [REEXPORT, "features"]) if (steps.includes(s) && steps.length > 1) errors.push(`step "${s}" runs alone`);
+  for (const s of [REEXPORT, ...ALONE]) if (steps.includes(s) && steps.length > 1) errors.push(`step "${s}" runs alone`);
   for (const s of steps) if (!STEP_KINDS[s] && s !== REEXPORT) errors.push(`step "${s}" can't run on GitHub (allowed: ${[...Object.keys(STEP_KINDS), REEXPORT].join(", ")})`);
   for (const id of ids) {
     const e = byId.get(id);
@@ -45,8 +48,8 @@ export function checkRun(steps: string[], ids: string[], entries: DatasetEntry[]
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const words = (v?: string) => (v ?? "").split(/\s+/).filter(Boolean);
   const errors = checkRun(words(process.env.STEPS), words(process.env.DATASETS), loadRegistry());
-  // data-run.yml picks the features steps with `inputs.steps == 'features'`, so no stray spaces.
-  if (words(process.env.STEPS).includes("features") && process.env.STEPS !== "features") errors.push('type steps as exactly "features"');
+  // data-run.yml picks these steps with `inputs.steps == '<step>'`, so no stray spaces.
+  for (const s of ALONE) if (words(process.env.STEPS).includes(s) && process.env.STEPS !== s) errors.push(`type steps as exactly "${s}"`);
   for (const e of errors) console.log(`::error::${e}`);
   if (errors.length) process.exit(1);
   console.log("inputs OK");

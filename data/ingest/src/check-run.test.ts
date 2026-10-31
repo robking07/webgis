@@ -35,4 +35,10 @@ describe("checkRun", () => {
     expect(checkRun(["export-values", "acs"], ["pct_poverty"], entries)[0]).toMatch(/runs alone/);
     expect(checkRun(["acs", "features"], ["pct_poverty"], entries)[0]).toMatch(/runs alone/);
   });
+  it("lets counts run alone, for ACS maps only (#454)", () => {
+    expect(checkRun(["counts"], ["pct_poverty"], entries)).toEqual([]);
+    expect(checkRun(["counts"], ["traffic_deaths"], entries)[0]).toMatch(/doesn't load/);
+    expect(checkRun(["counts"], [], entries)[0]).toMatch(/at least one dataset/);
+    expect(checkRun(["acs", "counts"], ["pct_poverty"], entries)[0]).toMatch(/runs alone/);
+  });
 });
