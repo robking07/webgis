@@ -62,25 +62,35 @@ export const SHARD_PREFIXES = ["values/tracts/", "values/counts/"];
 /** One map's tract file for one county (values/<id>/tracts/<county>.json, D-506). Only that map's
  *  load writes it, so it can't drop another map; the checks refuse one that drops live tracts. */
 export const isTractFile = (key: string) => /^values\/[a-z0-9_]+\/tracts\/\d{5}\.json$/.test(key);
+/** One map's state or county values (values/<id>/{state,county}.json, from export-values). */
+const isLevelFile = (key: string) => /^values\/[a-z0-9_]+\/(state|county)\.json$/.test(key);
 
 /** What would be lost if `changed` went up, checked before anything does (one list for the lot):
  *  - a shard that drops a live dataset: a checkout without the full shards writes ones holding only
  *    what it just loaded, which would erase other datasets on the live site (2026-10-08);
  *  - a map's tract file that drops live tracts (a reload that came back short for a county);
  *  - a reloaded map (one with tract files here) whose county files on R2 include one this load
- *    doesn't have: its stale file would stay live, since publish never deletes.
+ *    doesn't have: its stale file would stay live, since publish never deletes;
+ *  - a map's state or county file with fewer places than the live one (a short database, #449).
  *  Only files R2 already holds (`liveKeys`) are fetched. `local`: every key this upload covers. */
 export async function uploadProblems(changed: { key: string; body: Buffer }[], liveKeys: Set<string>, local: Set<string>,
   fetchLive: (key: string) => Promise<Record<string, unknown> | null>): Promise<string[]> {
   const problems: string[] = [];
   const maps = new Set([...local].filter(isTractFile).map((k) => k.split("/")[1]));
   for (const k of liveKeys) if (isTractFile(k) && maps.has(k.split("/")[1]) && !local.has(k)) problems.push(`${k}: on R2 but not in this load (stale county)`);
-  const queue = changed.filter((c) => liveKeys.has(c.key) && (isTractFile(c.key) || SHARD_PREFIXES.some((p) => c.key.startsWith(p))));
+  const queue = changed.filter((c) => liveKeys.has(c.key) && (isTractFile(c.key) || isLevelFile(c.key) || SHARD_PREFIXES.some((p) => c.key.startsWith(p))));
   const worker = async () => {
     for (let c = queue.pop(); c; c = queue.pop()) {
       const live = await fetchLive(c.key);
       if (!live) continue;
-      const dropped = droppedDatasets(live, JSON.parse(gunzipSync(c.body).toString("utf8")));
+      const next = JSON.parse(gunzipSync(c.body).toString("utf8"));
+      if (isLevelFile(c.key)) {
+        // A count, not a key diff: a real boundary change (Connecticut's 2022 counties) swaps geoids.
+        const [had, has] = [Object.keys(live).length, Object.keys(next).length];
+        if (has < had) problems.push(`${c.key}: would cut ${had} live places to ${has}`);
+        continue;
+      }
+      const dropped = droppedDatasets(live, next);
       if (!dropped.length) continue;
       const list = `${dropped.slice(0, 5).join(", ")}${dropped.length > 5 ? ", …" : ""}`;
       problems.push(isTractFile(c.key) ? `${c.key}: would drop ${dropped.length} live tract(s) (${list})` : `${c.key}: would drop ${dropped.length} live dataset(s) (${list})`);
