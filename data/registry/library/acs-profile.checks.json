@@ -1002,10 +1002,8 @@
    ]
   },
   "pct_home_value_under_100k": {
-   "pass": false,
-   "reasons": [
-    "tract: values outside 0–100 (0 to 100.1)"
-   ],
+   "pass": true,
+   "reasons": [],
    "levels": {
     "state": {
      "areas": 52,
@@ -1029,7 +1027,7 @@
      "withMoe": 1,
      "unreliable": 0.7444,
      "min": 0,
-     "max": 100.1
+     "max": 100
     }
    },
    "notes": [
@@ -1229,10 +1227,8 @@
    ]
   },
   "pct_rent_under_1000": {
-   "pass": false,
-   "reasons": [
-    "tract: values outside 0–100 (0 to 100.1)"
-   ],
+   "pass": true,
+   "reasons": [],
    "levels": {
     "state": {
      "areas": 52,
@@ -1256,7 +1252,7 @@
      "withMoe": 1,
      "unreliable": 0.6993,
      "min": 0,
-     "max": 100.1
+     "max": 100
     }
    },
    "notes": [
@@ -1264,10 +1260,8 @@
    ]
   },
   "pct_rent_2000_plus": {
-   "pass": false,
-   "reasons": [
-    "tract: values outside 0–100 (0 to 100.10000000000001)"
-   ],
+   "pass": true,
+   "reasons": [],
    "levels": {
     "state": {
      "areas": 52,
@@ -1291,7 +1285,7 @@
      "withMoe": 1,
      "unreliable": 0.8268,
      "min": 0,
-     "max": 100.10000000000001
+     "max": 100
     }
    },
    "notes": [
