@@ -15,8 +15,8 @@ import { TractPack } from "./TractPack";
 
 const link = "rounded text-primary underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-ring";
 
-/** `similar`: the server-rendered similar-counties list (counties only), shown under the key numbers. */
-export function PlaceProfile({ geoid, similar }: { geoid: string; similar?: ReactNode }) {
+/** `name`: the server-known place name, so the page has its h1 before the data loads. `similar`: the server-rendered similar-counties list (counties only), shown under the key numbers. */
+export function PlaceProfile({ geoid, name, similar }: { geoid: string; name?: string | null; similar?: ReactNode }) {
   const level = levelOfGeoid(geoid)!;
   const [geo, setGeo] = useState<Geography | null | undefined>(undefined);
   const [detail, setDetail] = useState<Detail | null>(null);
@@ -31,9 +31,15 @@ export function PlaceProfile({ geoid, similar }: { geoid: string; similar?: Reac
   // shortcut: opens on the place, not with it selected (the map takes no selection from the URL); add one if that is missed.
   const mapHref = (id: string) => geo ? `/map${serializeUrlState({ d: id, b: null, at: { lon: geo.lon, lat: geo.lat, zoom: PLACE_ZOOM[level] }, theme: null, lv: null })}` : "/map";
 
-  if (err) return <main className="mx-auto max-w-3xl p-6"><StatusState status="error" message="This place couldn't be loaded." /></main>;
-  if (geo === undefined || !detail) return <main className="mx-auto max-w-3xl p-6"><StatusState status="loading" message="Loading place…" /></main>;
-  if (geo === null) return <main className="mx-auto max-w-3xl p-6"><StatusState status="empty" message="No place with that ID." /></main>;
+  const early = (state: ReactNode) => (
+    <main className="mx-auto max-w-3xl p-6">
+      {name && <h1 className="mb-4 text-2xl font-semibold tracking-tight">{name}</h1>}
+      {state}
+    </main>
+  );
+  if (err) return early(<StatusState status="error" message="This place couldn't be loaded." />);
+  if (geo === undefined || !detail) return early(<StatusState status="loading" message="Loading place…" />);
+  if (geo === null) return early(<StatusState status="empty" message="No place with that ID." />);
 
   const rows = DATASETS.filter((d) => detail[d.id]).map((d) => ({ d, ...detail[d.id] }));
   return (
