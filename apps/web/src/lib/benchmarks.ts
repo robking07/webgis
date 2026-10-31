@@ -11,7 +11,7 @@ const NO_BENCHMARK = new Set<Unit>(["count", "agreements", "categories", "percen
 
 /** The kinds whose U.S. file is on R2 (D-257); others would only 404. */
 // shortcut: ACS only; census2020, lodes and fars join once their us.json files are published (#234 step 1).
-export const US_KINDS = new Set(["acs5"]);
+export const US_KINDS = new Set(["acs5", "census2020", "fars", "lodes", "food_access"]);
 
 export type Benchmark = { label: string; value: number };
 

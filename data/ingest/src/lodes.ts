@@ -121,11 +121,12 @@ export async function ingestLodes(only?: string[]) {
       // The counts behind the map (#156): jobs, for the same places (no data where a state is missing).
       const jobs = new Map([...values].map(([g, v]): [string, Counts] => [g, [t.missingStates.has(g.slice(0, 2)) ? null : t.jobs[level].get(g) ?? 0, null, null, null]]));
       writeCounts(level, new Map([[e.id, jobs]]));
-      if (level === "state") us = sumStates(jobs);
+      // States LODES doesn't publish (Alaska) stay out of the U.S. row, jobs and land area alike, so the density is still jobs per square mile of the places counted.
+      if (level === "state") us = sumStates(new Map([...jobs].filter(([g]) => !t.missingStates.has(g))));
     }
     if (us) {
       const perSqMi = e.measure.kind === "lodes" && e.measure.perSqMi;
-      writeUs(e.id, null, { value: us[0] == null ? null : perSqMi ? us[0] / usArea(await landArea(pool, "state")) : us[0], moe: null }, us);
+      writeUs(e.id, null, { value: us[0] == null ? null : perSqMi ? us[0] / usArea(new Map([...(await landArea(pool, "state"))].filter(([g]) => !t.missingStates.has(g)))) : us[0], moe: null }, us);
     }
   }
   await pool.end();
