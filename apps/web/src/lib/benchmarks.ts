@@ -31,7 +31,7 @@ export async function loadBenchmarks(d: Dataset, geoid: string): Promise<Benchma
   if (NO_BENCHMARK.has(d.unit)) return [];
   const st = geoid.slice(0, 2);
   // Benchmarks are an extra: a failed file shows nothing.
-  // Library maps aren't in the state click files (D-<n>): their state value comes from the map's state values file.
+  // Library maps aren't in the state click files (D-536): their state value comes from the map's state values file.
   const stateValue = !st ? null : d.library ? loadValues(d.id, "state").then((v) => v[st] ?? null, () => null)
     : fetchDetail(st).then((r) => r[d.id]?.value ?? null, () => null);
   const [geo, value, us] = await Promise.all([

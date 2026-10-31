@@ -20,7 +20,7 @@ async function load({ params, searchParams }: Props) {
   if (!state) return null;
   const nameA = placeName(state.a), nameB = placeName(state.b);
   if (!nameA || !nameB) return null;
-  // No metric named (or an unknown one, or a Library map, which isn't in the click files: D-<n>): lead with the landing map's.
+  // No metric named (or an unknown one, or a Library map, which isn't in the click files: D-536): lead with the landing map's.
   const named = DATASET_BY_ID.get(state.d ?? "");
   const dataset = named && !named.library ? named : DATASET_BY_ID.get(LANDING.d)!;
   // Names of the places each one's share is taken of (county, state, U.S.), for the counts (2b).

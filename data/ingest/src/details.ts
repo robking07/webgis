@@ -3,7 +3,7 @@
 //   npm run ingest -- details             write data/tiles/details/<state fips>.json from the database
 //   npm run ingest -- publish-details     upload them to R2 (details/<state fips>.json, gzip-encoded)
 // One file per state holds the state and its counties: geography (name, centroid, land area) and
-// every Featured dataset's [value, moe]. Library maps are left out (D-<n>): the details panel reads
+// every Featured dataset's [value, moe]. Library maps are left out (D-536): the details panel reads
 // theirs from the map's own values/<id>/<level>(.moe).json. Re-run both after any ingest that changes
 // state or county values.
 import { mkdirSync, rmSync, writeFileSync } from "node:fs";

@@ -43,7 +43,7 @@ export function compareGeoid(geoid: string, level: GeoLevel): string | null {
  *  (block groups: the tract's value isn't loaded in the panel). */
 export function canCompare(ds: { measure: { kind: string }; geographyLevels: readonly string[]; library?: boolean }, level: GeoLevel,
   opts: { otherPeriod?: boolean; aValue?: number | null } = {}): boolean {
-  // Library maps aren't in the click files compare reads (D-<n>): no "Compare with…" on them.
+  // Library maps aren't in the click files compare reads (D-536): no "Compare with…" on them.
   if (ds.library || ds.measure.kind === "features" || opts.otherPeriod || opts.aValue === null) return false;
   const at = level === "block_group" || level === "block" ? "tract" : level;
   return (at === "state" || at === "county" || at === "tract") && ds.geographyLevels.includes(at);

@@ -5,8 +5,9 @@ says **Added automatically** wherever it is shown: on the map card, in search re
 dataset menu, and on its `/data/<id>` page. They are not listed in the dataset menus' category
 lists. Visitors find them through search and the **More in the Library (n)** line at the end of
 each subcategory. The `/data` page lists them as their own source group. Library maps are not paired
-in Combinations or used by similar places, compare places, place pages or the "all datasets here" lists. Each of those
-gets the map when it is promoted to Featured.
+in Combinations or used by similar places, compare places ("Compare with…" is hidden on them), place pages or the "all datasets here" lists. Each of those
+gets the map when it is promoted to Featured. Their values are not in the state click files
+(`details/<state>.json`, D-536); the details panel reads them from the map's own values files.
 
 ## How a Library map is made
 
