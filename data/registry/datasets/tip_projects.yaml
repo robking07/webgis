@@ -47,11 +47,15 @@ measure:
   # shortcut: only the line layer (268 projects); the 129 point projects need a point style, which is UI work. Add when points get a style.
   # Zero cost means "not listed", so it becomes empty; county codes get plain wording.
   select: >-
-    SELECT short_desc, route_sytm AS route, CAST(year AS INTEGER) AS year, Project_Type,
+    SELECT short_desc,
+    CASE WHEN route_sytm = 'NA' THEN NULL WHEN route_sytm = 'LOCAL ST' THEN 'Local street' WHEN route_sytm = 'TRANSIT' THEN 'Transit'
+    WHEN route_sytm GLOB 'I [0-9]*' THEN 'I-' || SUBSTR(route_sytm, 3)
+    ELSE REPLACE(REPLACE(route_sytm, 'CSAH', 'County Rd'), 'MSAS', 'City street') END AS route, CAST(year AS INTEGER) AS year, Project_Type,
     CASE county WHEN 'MULTICOUNTY' THEN 'Several counties' WHEN 'DISTRICTWIDE' THEN 'Districtwide' ELSE county END AS county,
     NULLIF(Proj_total, 0) AS Proj_total, Shape FROM {layer}
   valueField: Proj_total
   fields:
+    route: Route
     short_desc: Project
     county: County
     year: Year funded

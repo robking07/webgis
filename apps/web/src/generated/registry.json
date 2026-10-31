@@ -14170,6 +14170,152 @@
   }
  },
  {
+  "id": "tip_projects",
+  "title": "Planned road projects (TIP)",
+  "description": "Funded transportation projects in the Twin Cities region's four-year plan (2027-2030), drawn where they will be built. Darker lines cost more.",
+  "category": "Transportation",
+  "subcategory": "Roads and vehicles",
+  "tags": [
+   "TIP",
+   "transportation improvement program",
+   "planned projects",
+   "construction",
+   "Met Council",
+   "Twin Cities",
+   "roads",
+   "bike",
+   "transit",
+   "safety",
+   "funding"
+  ],
+  "source": {
+   "name": "Metropolitan Council, Transportation Improvement Program (TIP) Final Data 2027-2030",
+   "shortName": "Met Council",
+   "url": "https://gis-metrocouncil.opendata.arcgis.com/datasets/6607744f7c044d4d9d416d68e227a8ec",
+   "citation": "Metropolitan Council, Transportation Improvement Program (TIP) Final Data 2027-2030, via the Minnesota Geospatial Commons"
+  },
+  "license": "Public domain under the Minnesota Government Data Practices Act (Minn. Stat. ch. 13), as stated by the publisher. Credit the Metropolitan Council.",
+  "updateCadence": "annual",
+  "vintage": "2027-2030",
+  "geographyLevels": [],
+  "areaLevels": [],
+  "unit": "dollars",
+  "universe": "federally funded projects in the Twin Cities TIP that have a mapped route",
+  "measure": {
+   "kind": "features",
+   "geometry": "line",
+   "source": {
+    "url": "https://gisdata.metc.state.mn.us/gisdata/Transportation/tip_final_data.zip",
+    "file": "tip_final_data.zip",
+    "path": "tip_final_data/fgdb/tip_final_data.gdb",
+    "layerPattern": "^TIPfinalLine$"
+   },
+   "select": "SELECT short_desc, CASE WHEN route_sytm = 'NA' THEN NULL WHEN route_sytm = 'LOCAL ST' THEN 'Local street' WHEN route_sytm = 'TRANSIT' THEN 'Transit' WHEN route_sytm GLOB 'I [0-9]*' THEN 'I-' || SUBSTR(route_sytm, 3) ELSE REPLACE(REPLACE(route_sytm, 'CSAH', 'County Rd'), 'MSAS', 'City street') END AS route, CAST(year AS INTEGER) AS year, Project_Type, CASE county WHEN 'MULTICOUNTY' THEN 'Several counties' WHEN 'DISTRICTWIDE' THEN 'Districtwide' ELSE county END AS county, NULLIF(Proj_total, 0) AS Proj_total, Shape FROM {layer}",
+   "valueField": "Proj_total",
+   "fields": {
+    "route": "Route",
+    "short_desc": "Project",
+    "county": "County",
+    "year": "Year funded",
+    "Project_Type": "Project type",
+    "Proj_total": {
+     "label": "Total cost",
+     "unit": "dollars"
+    }
+   },
+   "zooms": [
+    6,
+    14
+   ]
+  },
+  "modelInputs": [],
+  "coverageNote": "Twin Cities region only. Shows projects mapped as a road or trail line; projects mapped to a single point (such as some bridges and transit stops) and projects with no map location are not shown. Cost is the program total, so a project's listed years may share it. Plans change; check with the agency before relying on a date.",
+  "facets": [
+   {
+    "field": "Project_Type",
+    "label": "Project type",
+    "explainer": "What the project mainly does. Turn types off to focus on, say, just bike and walking projects.",
+    "values": [
+     {
+      "value": "Highway",
+      "label": "Highway",
+      "description": "Building, widening or resurfacing roads and highways."
+     },
+     {
+      "value": "Bike/Pedestrian",
+      "label": "Bike and walking",
+      "description": "Trails, bike lanes, sidewalks and crossings."
+     },
+     {
+      "value": "Traffic control devices/safety",
+      "label": "Traffic signals and safety",
+      "description": "Signals, signs, turn lanes and other safety fixes."
+     },
+     {
+      "value": "Bridge",
+      "label": "Bridge",
+      "description": "Bridge repair or replacement."
+     },
+     {
+      "value": "Transit",
+      "label": "Transit",
+      "description": "Bus and rail projects."
+     },
+     {
+      "value": "Intelligent Transportation Systems",
+      "label": "Smart traffic systems",
+      "description": "Technology such as traffic cameras and signs that adjust to conditions."
+     },
+     {
+      "value": "Other",
+      "label": "Other",
+      "description": "Projects that do not fit the types above, such as trail connections and landscaping."
+     }
+    ]
+   },
+   {
+    "field": "year",
+    "label": "Year funded",
+    "explainer": "The year the project is scheduled to receive its money, which is usually the year construction is planned.",
+    "values": [
+     {
+      "value": 2027,
+      "label": "2027"
+     },
+     {
+      "value": 2028,
+      "label": "2028"
+     },
+     {
+      "value": 2029,
+      "label": "2029"
+     },
+     {
+      "value": 2030,
+      "label": "2030"
+     }
+    ]
+   }
+  ],
+  "library": false,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "tip"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "manual",
+   "classes": 5,
+   "breaks": [
+    500000,
+    2000000,
+    5000000,
+    15000000
+   ]
+  }
+ },
+ {
   "id": "traffic_fatalities",
   "title": "Traffic deaths",
   "phrase": "traffic death rates",
