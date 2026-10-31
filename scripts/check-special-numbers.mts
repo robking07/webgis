@@ -87,7 +87,7 @@ for (const b of blocks) {
     lines.notes.push(`chart "${b.title}": ${b.n} counties with both ${b.x.id} and ${b.y.id}, ${b.rows.length} groups`);
   } else if (b.kind === "correlations") {
     lines.notes.push(`table "${b.title}": ${b.rows.length} x ${b.with.length} rank correlations`);
-  } else lines.notes.push(`map: ${b.datasets.join(" + ")} at ${b.at.lon}, ${b.at.lat} (${b.level}); not a number claim`);
+  } else if (b.kind === "map") lines.notes.push(`map: ${b.datasets.join(" + ")} at ${b.at.lon}, ${b.at.lat} (${b.level}); not a number claim`);
 }
 
 // The prose: dek, caption, block titles and captions, and the body text.
