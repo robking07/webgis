@@ -489,7 +489,8 @@ export function thematicLayers(o: ThematicLayerOptions): LayerSpecification[] {
   // No-data until syncPaint sets the level's class expression.
   const fillColor = choroplethFill(o.colors, new Map(), o.theme);
   const flag = (k: string) => ["boolean", ["feature-state", k], false];
-  const shown = ["case", ["any", flag("hover"), flag("selected")], 1, 0];
+  // "picked": a tract in a hand-picked area (#455), outlined like the selection.
+  const shown = ["case", ["any", flag("hover"), flag("selected"), flag("picked")], 1, 0];
   const perState = PER_STATE_LEVELS.has(o.level);
   const fills: LayerSpecification[] = [
     // Per-state levels keep this layer for hit-testing only (fills draw nothing at opacity 0).
@@ -512,7 +513,7 @@ export function thematicLayers(o: ThematicLayerOptions): LayerSpecification[] {
     {
       id: `${o.level}-highlight-halo`, type: "line", ...base,
       paint: { "line-color": m.highlightHalo, "line-width": HALO_WIDTH,
-        "line-opacity": ["case", ["any", flag("hover"), flag("selected"), flag("second")], 1, 0] as never },
+        "line-opacity": ["case", ["any", flag("hover"), flag("selected"), flag("second"), flag("picked")], 1, 0] as never },
     },
     {
       id: `${o.level}-highlight`, type: "line", ...base,

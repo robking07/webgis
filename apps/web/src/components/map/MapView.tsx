@@ -109,6 +109,11 @@ interface Props {
   /** Drill-down (issue #203): the clicked-into place. Its `child` level draws only inside it, the rest
    *  of its level sits under a dim wash, and hover and clicks reach only its children. */
   focus?: Focus | null;
+  /** Pick an area (#455): while true, a tract click calls onPick with its geoid instead of selecting. */
+  picking?: boolean;
+  onPick?: (geoid: string) => void;
+  /** The picked tracts (11-digit geoids), outlined. */
+  picked?: string[];
 }
 
 export interface Focus { level: GeoLevel; geoid: string; child: GeoLevel }
@@ -145,6 +150,7 @@ export interface MapApi {
 const LEVELS = Object.keys(GEO_LEVELS) as GeoLevel[];
 /** Two clicks this close in time are a double click (MapLibre's double-tap window). */
 const DOUBLE_MS = 500;
+const NONE: string[] = [];
 let protocolReady = false;
 
 /** A PMTiles archive on the tiles base (made absolute: the pmtiles protocol needs a full URL). */
@@ -154,13 +160,13 @@ function pmtilesUrl(path: string) {
 }
 const tilesUrl = (level: GeoLevel, boundaries?: string | null) => pmtilesUrl(`${boundaryFile(level, boundaries)}.pmtiles`);
 
-export function MapView({ theme, initialView, paint, onViewChange, onHover, onSelect, onTilesError, ariaLabel, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, onApi, featureFilter, scaleUnit = "imperial", fitLeft = 16, attribution = true, boundaries = null, cooperative = false, hatch = null, onTractCounties, watchCounties = false, compare, focus = null }: Props) {
+export function MapView({ theme, initialView, paint, onViewChange, onHover, onSelect, onTilesError, ariaLabel, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, onApi, featureFilter, scaleUnit = "imperial", fitLeft = 16, attribution = true, boundaries = null, cooperative = false, hatch = null, onTractCounties, watchCounties = false, compare, focus = null, picking = false, onPick, picked = NONE }: Props) {
   const container = useRef<HTMLDivElement>(null);
   const map = useRef<MlMap | null>(null);
   const applied = useRef<Partial<Record<GeoLevel, LevelPaint>>>({});
-  const latest = useRef({ paint, theme, onViewChange, onHover, onSelect, onTilesError, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, boundaries, featureFilter, hatch, onTractCounties, watchCounties, focus });
+  const latest = useRef({ paint, theme, onViewChange, onHover, onSelect, onTilesError, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, boundaries, featureFilter, hatch, onTractCounties, watchCounties, focus, picking, onPick });
   // Refresh after every render, before any effect or event handler reads it.
-  useLayoutEffect(() => { latest.current = { paint, theme, onViewChange, onHover, onSelect, onTilesError, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, boundaries, featureFilter, hatch, onTractCounties, watchCounties, focus }; });
+  useLayoutEffect(() => { latest.current = { paint, theme, onViewChange, onHover, onSelect, onTilesError, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, boundaries, featureFilter, hatch, onTractCounties, watchCounties, focus, picking, onPick }; });
   /** Hatch filters currently on the map, per level (by set identity). */
   const appliedHatch = useRef<Partial<Record<GeoLevel, ReadonlySet<string> | undefined>>>({});
   /** Last county list reported to onTractCounties. */
@@ -174,6 +180,7 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
   const selected = useRef<Flag>(compare ? { level: compare.level, id: compare.a } : null);
   const second = useRef<Flag>(compare ? { level: compare.level, id: compare.b } : null);
   const area = useRef<Geometry | null>(null);
+  const pickedRef = useRef<string[]>(NONE);
   const pin = useRef<Geometry | null>(null);
   const scale = useRef<ScaleControl | null>(null);
 
@@ -288,7 +295,7 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
       syncPaint(m, latest.current.paint, applied.current, latest.current.theme);
       syncFeatureLayer(m, latest.current.featureLayer ?? null, latest.current.theme);
       applyFeatureFilter(m, latest.current.featureLayer ?? null, latest.current.featureFilter);
-      restoreFlags(m, hovered.current, selected.current, second.current);
+      restoreFlags(m, hovered.current, selected.current, second.current, pickedRef.current);
       appliedHatch.current = {};
       syncHatch(m, latest.current.hatch, appliedHatch.current, latest.current.levelZooms);
       applyFocus(m, latest.current.focus, latest.current.theme);
@@ -397,6 +404,12 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
         last!.fit(); last = null; return;
       }
       last = null;
+      if (latest.current.picking && !latest.current.featureLayer) {
+        // No details and no double-click fit (D-418) while picking: each tap toggles a tract.
+        const f = placeAt(e.point);
+        if (f?.sourceLayer === "tract") latest.current.onPick?.(String(f.properties.geoid));
+        return;
+      }
       if (latest.current.featureLayer) {
         const hit = featureAt(e.point);
         latest.current.onFeatureSelect?.(hit);
@@ -452,14 +465,27 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
     shownBoundaries.current = boundaries;
     delete applied.current.county; delete applied.current.tract;
     syncPaint(m, latest.current.paint, applied.current, latest.current.theme);
-    restoreFlags(m, hovered.current, selected.current, second.current);
+    restoreFlags(m, hovered.current, selected.current, second.current, pickedRef.current);
   }, [boundaries]);
 
   // Paint: diff per level and push class indices into feature state.
   useEffect(() => {
     const m = map.current;
-    if (m && ready.current) { syncPaint(m, paint, applied.current, latest.current.theme); restoreFlags(m, hovered.current, selected.current, second.current); }
+    if (m && ready.current) { syncPaint(m, paint, applied.current, latest.current.theme); restoreFlags(m, hovered.current, selected.current, second.current, pickedRef.current); }
   }, [paint]);
+
+  // Two quick taps while picking toggle tracts; they don't zoom in.
+  useEffect(() => { if (picking) map.current?.doubleClickZoom.disable(); else map.current?.doubleClickZoom.enable(); }, [picking]);
+
+  // Picked tracts: flag the new ones, unflag the dropped ones.
+  useEffect(() => {
+    const m = map.current;
+    const prev = pickedRef.current;
+    pickedRef.current = picked;
+    if (!m || !ready.current || !m.getSource("b-tract")) return;
+    for (const id of prev) if (!picked.includes(id)) m.removeFeatureState({ source: "b-tract", sourceLayer: "tract", id }, "picked");
+    for (const id of picked) m.setFeatureState({ source: "b-tract", sourceLayer: "tract", id }, { picked: true });
+  }, [picked]);
 
   // Drill-down focus: filters and the dim wash.
   useEffect(() => {
@@ -673,10 +699,11 @@ function blockName(geoid: string) {
 type Flag = { level: GeoLevel; id: string } | null;
 
 /** Repainting clears feature state per source; put the hover/selection flags back. */
-function restoreFlags(m: MlMap, hover: Flag, sel: Flag, second: Flag) {
+function restoreFlags(m: MlMap, hover: Flag, sel: Flag, second: Flag, picked: string[]) {
   for (const [f, key] of [[hover, "hover"], [sel, "selected"], [second, "second"]] as const) {
     if (f && m.getSource(`b-${f.level}`)) m.setFeatureState({ source: `b-${f.level}`, sourceLayer: f.level, id: f.id }, { [key]: true });
   }
+  if (m.getSource("b-tract")) for (const id of picked) m.setFeatureState({ source: "b-tract", sourceLayer: "tract", id }, { picked: true });
 }
 
 function setFlag(m: MlMap, ref: { current: { level: GeoLevel; id: string } | null }, next: { level: GeoLevel; id: string } | null, key: string) {

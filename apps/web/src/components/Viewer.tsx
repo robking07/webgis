@@ -35,6 +35,7 @@ import { FeatureHoverPopup, PlaceHoverPopup } from "./map-page/HoverPopups";
 import { DetailPanel } from "./map-page/DetailPanel";
 import { AreaValue } from "./map-page/AreaValue";
 import { RegionTotal } from "./map-page/RegionTotal";
+import { PickArea, PICK_MAX } from "./map-page/PickArea";
 import { MpoPlans } from "./map-page/MpoPlans";
 import { useUnreliable } from "./map-page/useUnreliable";
 import { FeaturePanel } from "./map-page/FeaturePanel";
@@ -423,6 +424,23 @@ export function Viewer({ search }: { search: string }) {
       return blob && { blob, name: `mapwich-${cited.map((d) => d.id).join("-")}.png` };
     },
   };
+  // Pick an area (#455): taps toggle tracts while picking; the total stays after Done until Clear.
+  const [picking, setPicking] = useState(false);
+  const [pickedTracts, setPickedTracts] = useState<string[]>([]);
+  const [pickFull, setPickFull] = useState(false);
+  const pickable = !!primary && !isFeature && availableLevels.includes("tract");
+  const onPick = (g: string) => {
+    if (pickedTracts.includes(g)) { setPickedTracts(pickedTracts.filter((t) => t !== g)); setPickFull(false); }
+    else if (pickedTracts.length >= PICK_MAX) setPickFull(true);
+    else setPickedTracts([...pickedTracts, g]);
+  };
+  const togglePicking = () => {
+    if (!picking) { setSelected(null); setFeatureSelected(null); mapApi.current?.select("county", null); }
+    setPicking(!picking);
+  };
+  const donePicking = useCallback(() => setPicking(false), []);
+  const clearPicks = () => { setPickedTracts([]); setPickFull(false); setPicking(false); };
+  const pickShown = pickable && (picking || pickedTracts.length > 0) && !(phone && placeOpen);
   // Narrow screens dock the table at the bottom; the details panel waits until it closes.
   const detailHidden = tableOpen && narrow;
 
@@ -462,6 +480,9 @@ export function Viewer({ search }: { search: string }) {
           onTractCounties={setTractCounties}
           watchCounties={testMoes}
           focus={focus}
+          picking={picking && pickable}
+          onPick={onPick}
+          picked={pickable ? pickedTracts : undefined}
           ariaLabel={primary ? `Map of ${since ? "change in " : ""}${primary.title}${since ? ` from ${since.label} to ${stop!.label}` : ""}${secondary ? ` compared with ${secondary.title}` : ""} by ${GEO_LEVELS[level].label.toLowerCase()}` : "Map"}
         />
       </main>
@@ -507,7 +528,12 @@ export function Viewer({ search }: { search: string }) {
       )}
 
       <MapControls mapApi={mapApi} atRest={chromeShown && !immersed} canGoBack={canGoBack} onBack={goBack} phone={phone} cardH={cardH}
-        onRegion={goToRegion} onPlace={onSearchPlace} onNearMe={phone && "geolocation" in navigator ? nearMe : null} />
+        onRegion={goToRegion} onPlace={onSearchPlace} onNearMe={phone && "geolocation" in navigator ? nearMe : null}
+        pick={pickable ? { on: picking, off: level !== "tract" && !picking, onToggle: togglePicking } : null} />
+      {pickShown && (
+        <PickArea datasets={secondary ? [primary!, secondary] : [primary!]} picked={pickedTracts} picking={picking} full={pickFull}
+          onDone={donePicking} onClear={clearPicks} />
+      )}
       {usLost && (
         <button type="button" onClick={() => goToRegion(CONUS)}
           className="wg-panel wg-zbtn absolute bottom-24 left-1/2 z-20 h-11 -translate-x-1/2 rounded-full px-4 text-sm font-semibold text-foreground">
@@ -520,7 +546,7 @@ export function Viewer({ search }: { search: string }) {
         stop={stop} stopId={stopId} since={since}
         hatchToggle={hatchable ? { on: hatchOn, onChange: setHatchOn, loading: hatchOn && !hatch?.[level] } : null}
         desktopStrip={desktopStrip} mark={selected && selected.level === level ? selClass : null}
-        covered={phone && (placeOpen || tableOpen || listOpen || stepAside || ctxOpen)} tableReady={tableReady} tableLevel={tableLevel} onTable={() => setTableOpen(true)}
+        covered={phone && (placeOpen || tableOpen || listOpen || stepAside || ctxOpen || pickShown)} tableReady={tableReady} tableLevel={tableLevel} onTable={() => setTableOpen(true)}
         // Phones, once a tap or pick has zoomed in (the header and its search are gone): search above the legend (issue #246).
         onSearch={phone && immersed && (canGoBack || !!focus) ? () => setSearchOpen(true) : null} />
 
