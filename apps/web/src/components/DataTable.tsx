@@ -4,6 +4,7 @@
 // Rows are windowed (only the visible ones render), so 3,000+ counties scroll smoothly.
 // Tracts and block groups list a focused area only (`within`), named through their county.
 import { memo, useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { useEscape } from "./useEscape";
 import { Download, X } from "lucide-react";
 import { formatValue, type GeoLevel } from "@webgis/design";
 import { StatusState } from "@webgis/design/components";
@@ -71,11 +72,7 @@ export const DataTable = memo(function DataTable({ top = 12, level, within, x, x
   } : {};
 
   useEffect(() => { loadPlaces().then(setPlaces, () => setPlaces({})); closeRef.current?.focus(); }, []);
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [onClose]);
+  useEscape(onClose);
   useEffect(() => {
     const el = scroller.current;
     if (!el) return;

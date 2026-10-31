@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEscape } from "../useEscape";
 import { X } from "lucide-react";
 import { Popup, type PopupRow } from "@webgis/design/components";
 import type { Facet } from "@webgis/registry";
@@ -91,11 +91,7 @@ function ExplainedLists({ spec, hit }: { spec: FeatureLayerSpec; hit: FeatureHit
 /** A clicked feature (e.g. a road segment): its fields, explainers and links. */
 export function FeaturePanel({ hit, spec, dataset, top, onClose }: { hit: FeatureHit; spec: FeatureLayerSpec; dataset: Dataset; top: number; onClose: () => void }) {
   const phone = useIsPhone();
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [onClose]);
+  useEscape(onClose);
   const links = learnMoreLinks(dataset, { lon: hit.lon, lat: hit.lat, props: hit.properties });
   const head = (
     <>

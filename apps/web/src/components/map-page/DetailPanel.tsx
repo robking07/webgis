@@ -1,4 +1,5 @@
 import { useEffect, useState, type ReactNode } from "react";
+import { useEscape } from "../useEscape";
 import { X } from "lucide-react";
 import { StatusState } from "@webgis/design/components";
 import { CHANGE_CLASSES, formatEstimate, formatValue, GEO_LEVELS, isGradable, STATIC_ONLY_LEVELS, TILE_VALUE_LEVELS, type GeoLevel } from "@webgis/design";
@@ -175,11 +176,7 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
     load.then((r) => live && setRows(r), (e) => live && setErr(String(e.message ?? e)));
     return () => { live = false; };
   }, [info.geoid, info.level, info.props, staticOnly, primary, secondary, xv, yv]);
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [onClose]);
+  useEscape(onClose);
 
   const inside = useInside(info.geoid, info.level, info.lon, info.lat);
   const featured = [primary, secondary].filter((d): d is Dataset => !!d);

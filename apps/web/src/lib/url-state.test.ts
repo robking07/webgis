@@ -40,3 +40,11 @@ describe("area (issue #332)", () => {
     expect(serializeUrlState({ ...parseUrlState("?d=median_household_income"), area: "cbsa33460" })).toContain("area=cbsa33460");
   });
 });
+
+describe("context=preview", () => {
+  it("survives a round trip, so moving the map keeps it", () => {
+    const s = parseUrlState("?d=traffic_fatalities&context=preview");
+    expect(serializeUrlState({ ...s, at: { lon: -93, lat: 45, zoom: 8 } })).toContain("context=preview");
+    expect(serializeUrlState(parseUrlState("?context=other"))).not.toContain("context");
+  });
+});

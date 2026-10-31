@@ -26,12 +26,24 @@ export default function contextTests({ test, expect, wait }) {
     await page.waitForFunction(() => window.__wgMap.getPadding().right > 300, null, { timeout: 8000 }).catch(() => {});
     const pad = await page.evaluate(() => window.__wgMap.getPadding());
     expect(pad.right > 300, `map not shifted clear of the panel: padding ${JSON.stringify(pad)}`);
+    // Scroll the map first: the chrome falls away, so the page's own Esc handler re-renders mid-key-press.
+    // That used to drop the panel's Esc listener for that press (issue #405), and only sometimes without the scroll.
+    // Wait for the scroll's zoom to end (it starts a beat after the wheel), so it can't cut short the shift back.
+    await page.evaluate(() => { window.__zoomed = new Promise((r) => window.__wgMap.once("zoomend", r)); });
+    await page.mouse.move(400, 450);
+    await page.mouse.wheel(0, -200);
+    await page.evaluate(() => Promise.race([window.__zoomed, new Promise((r) => setTimeout(r, 8000))]));
+    expect((await page.locator(`${CARD}[inert]`).count()) === 1, "a map scroll didn't let the chrome fall away");
     await page.keyboard.press("Escape");
     await panel.waitFor({ state: "detached", timeout: 8000 }).catch(() => {});
     expect((await panel.count()) === 0, "Esc didn't close the panel");
     await page.waitForFunction(() => window.__wgMap.getPadding().right === 0, null, { timeout: 8000 }).catch(() => {});
     const after = await page.evaluate(() => window.__wgMap.getPadding());
     expect(after.right === 0, `padding not reset: ${JSON.stringify(after)}`);
+    // Moving the map rewrites the URL (#429); the draft preview stays on.
+    await page.evaluate(() => window.__wgMap.jumpTo({ center: [-93, 45], zoom: 8 }));
+    await page.waitForFunction(() => location.search.includes("at="), null, { timeout: 8000 });
+    expect(page.url().includes("context=preview"), `map move dropped context=preview: ${page.url()}`);
   });
 
   test("laptop why this matters: a linked map switches the map and closes the panel", async (o) => {
