@@ -39,6 +39,7 @@ facets:
 measure:
   kind: features
   geometry: line
+  noun: Projects
   source:
     url: https://gisdata.metc.state.mn.us/gisdata/Transportation/tip_final_data.zip
     file: tip_final_data.zip
