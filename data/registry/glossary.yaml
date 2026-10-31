@@ -315,3 +315,12 @@
   long: >-
     Larger facilities in covered industries report each year what they released at their own site: into the air or water, underground, or onto land. The amounts are mostly their own estimates, and small sites and many industries don't report, so zero means no reporting facility, not no pollution. Pounds don't show how toxic a chemical is, where it goes or who breathes or drinks it; EPA says the amount alone is not a measure of exposure. Metal mines, which put waste rock on land, make up nearly half of all pounds.
   source: https://www.epa.gov/toxics-release-inventory-tri-program/what-toxics-release-inventory
+
+- id: tip
+  term: >-
+    Transportation Improvement Program (TIP)
+  short: >-
+    The Twin Cities region's four-year list of road, transit, bike and walking projects that have federal money.
+  long: >-
+    Any project that uses federal transportation dollars in the seven-county Twin Cities area has to be listed in the TIP before it can be built. The Metropolitan Council, the region's planning agency, publishes it each year after state, county and city agencies submit their projects. Being in the TIP means the money is committed on paper; schedules and designs can still change.
+  source: https://metrocouncil.org/Transportation/Planning-2/Transportation-Improvement-Program.aspx

@@ -318,5 +318,34 @@
   },
   "rankField": null,
   "featureCount": 72531
+ },
+ "tip_projects": {
+  "tiles": "tip_projects.pmtiles",
+  "sourceLayer": "tip_projects",
+  "geometry": "line",
+  "valueField": "Proj_total",
+  "fields": {
+   "route": {
+    "label": "Route"
+   },
+   "short_desc": {
+    "label": "Project"
+   },
+   "county": {
+    "label": "County"
+   },
+   "year": {
+    "label": "Year funded"
+   },
+   "Project_Type": {
+    "label": "Project type"
+   },
+   "Proj_total": {
+    "label": "Total cost",
+    "unit": "dollars"
+   }
+  },
+  "rankField": null,
+  "featureCount": 268
  }
 }

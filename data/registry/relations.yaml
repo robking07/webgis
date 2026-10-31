@@ -432,6 +432,8 @@ maps:
   # Transportation: Roads and vehicles, Traffic safety
   aadt:
     group: "Transportation"
+  tip_projects:
+    group: "Transportation"
   bridges_poor_condition:
     group: "Transportation"
   traffic_fatalities:
