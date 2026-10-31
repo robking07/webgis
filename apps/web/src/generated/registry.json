@@ -9450,8 +9450,8 @@
  },
  {
   "id": "pct_jobs_construction_maintenance",
-  "title": "Workers in construction, maintenance and natural resources jobs",
-  "description": "Share of employed residents in natural resources, construction and maintenance occupations.",
+  "title": "Workers in construction and maintenance jobs",
+  "description": "Share of employed residents in construction, maintenance and repair, and farming, fishing and forestry occupations.",
   "category": "Economy",
   "subcategory": "Jobs",
   "tags": [
@@ -10257,7 +10257,7 @@
  },
  {
   "id": "pct_moved_from_other_county",
-  "title": "Moved from another county in the same state in the past year",
+  "title": "Moved from elsewhere in the state in the past year",
   "description": "Share of residents who lived in a different county of the same state one year earlier.",
   "category": "People",
   "subcategory": "Population and age",
@@ -10919,7 +10919,7 @@
  },
  {
   "id": "pct_no_mortgage_cost_burdened",
-  "title": "Owners without a mortgage spending 35% or more of income on housing",
+  "title": "Owners with no mortgage paying 35% or more of income for housing",
   "description": "Share of owners with no mortgage whose taxes, insurance and utilities take 35% or more of household income.",
   "category": "Housing",
   "subcategory": "Costs",

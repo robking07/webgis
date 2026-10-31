@@ -102,6 +102,7 @@ export async function buildLibrary(offline = false) {
     for (const e of entries) checks[e.id] = { pass: true, reasons: [], levels: {} };
     for (const level of LEVELS) {
       log("library", `fetching ${level} (${vars.length} variables)…`);
+      // shortcut: no cache, about 380 Census API calls a run; cache the tables in data/cache/ if runs get frequent.
       const table = await fetchLevel(level, vars);
       for (const e of entries) {
         const m = e.measure as Extract<DatasetEntry["measure"], { kind: "acs5" }>;

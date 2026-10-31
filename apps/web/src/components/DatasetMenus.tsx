@@ -126,6 +126,7 @@ export function DatasetMenu(props: PickerProps) {
 function DatasetList({ p, onPick, className }: { p: Picker; onPick: (id: string) => void; className?: string }) {
   const groups = bySubcategory(p.datasets);
   // Which subcategory's Library maps are shown under its Featured ones (#372).
+  // shortcut: the line hangs off a Featured group, so a subcategory with only Library maps shows none; add an empty group if one appears.
   const [more, setMore] = useState<string | null>(null);
   const row = (d: Dataset) => {
     const reason = p.pairWith && d.id !== p.current ? pairReason(d, p.pairWith) : null;
