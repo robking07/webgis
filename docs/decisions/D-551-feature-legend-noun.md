@@ -1,4 +1,4 @@
-# D-551: Feature layers name their own noun
+# D-551 · Feature layers name their own noun
 
 Status: accepted (PR #451, issue #448)
 
