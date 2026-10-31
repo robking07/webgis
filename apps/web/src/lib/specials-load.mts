@@ -63,7 +63,7 @@ function parseBody(file: string, body: string, firstLine: number) {
   let heading = "";
   const prose = (md: string) => {
     if (!md.trim()) return;
-    // A table is named by the heading above it (carried across chunks), so the landmarks differ.
+    // A table is named by the heading above it (carried across chunks), so the landmarks differ. shortcut: two tables under one heading share a name, number them if a piece does that.
     const html = marked.parse(md, { async: false }).replace(/<h[1-6][^>]*>([\s\S]*?)<\/h[1-6]>|<table>[\s\S]*?<\/table>/g, (t, h?: string) =>
       h != null ? ((heading = h.replace(/<[^>]+>/g, "")), t) : `<div class="wg-table-scroll" role="region" aria-label="${heading || "Table"}" tabindex="0">${t}</div>`);
     out.push({ kind: "html", html, words: md.split(/\s+/).filter(Boolean).length });
