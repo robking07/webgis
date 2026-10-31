@@ -32,8 +32,9 @@ each in `docs/decisions/` (D-100 and up); D-01 to D-99 are in `docs/DECISIONS.md
 - Never touch Robbie's NAS, home network, or Met Council internal systems or non-public data.
   Open data the Met Council publishes publicly (e.g. MN Geospatial Commons) is allowed under the
   same license checks as any other source (D-16).
-- Secrets live in `.env.local` only (names in `docs/handbook.md` §1). Never commit them, print
-  them, or pass them as command-line arguments.
+- Secrets live in `.env.local` on Robbie's machine and, for scheduled data runs only, as GitHub
+  encrypted secrets in the `data` environment, limited to `main` (names in `docs/handbook.md` §1). Never commit them, print them, echo them in a
+  workflow, or pass them as command-line arguments. Only Robbie adds or changes a GitHub secret.
 - Every task gets its own worktree and branch from the latest `origin/main`. Never commit to
   `main`, edit the main checkout, or stack on an unmerged branch.
 - Open the PR (draft) right after the first commit. Decision ID = PR number + 100

@@ -56,6 +56,9 @@ Each rule links to its source; follow the source, not this summary.
 - **Datasets only through the registry.** A new or changed dataset = a YAML entry in
   `data/registry/datasets/` + an ingest script in `data/ingest/src/`. No UI code. Use the
   `add-dataset` skill; the licence screen and approval flow are in `docs/data-intake.md`.
+- **Keep raw downloads.** Every source file an ingest step downloads stays in `data/cache/` (never in
+  git). Don't delete or overwrite an older copy when a source publishes a new release: keep both,
+  named by release. Never clear `data/cache/` to save space without the lead's OK; the lead asks Robbie.
 - **Never touch** Robbie's NAS, his home network, or Met Council internal systems or non-public
   data. Data the Met Council publishes openly (e.g. MN Geospatial Commons) is allowed, with the
   usual licence check (D-16).
