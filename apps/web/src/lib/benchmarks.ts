@@ -1,8 +1,9 @@
 // The state and U.S. value beside a place's own (issue #288). State values come from the state's
 // details file, U.S. values from values/<id>/us.json (D-257); a map with neither shows nothing.
 import type { Unit } from "@webgis/design";
-import { fetchDetail, fetchGeography, type Detail } from "./details";
+import { fetchDetail, fetchGeography } from "./details";
 import { usValue } from "./counts";
+import { loadValues } from "./values";
 import type { Dataset } from "./registry";
 
 /** Totals, categories and percentiles have no like-for-like state or U.S. figure. */
@@ -30,7 +31,10 @@ export async function loadBenchmarks(d: Dataset, geoid: string): Promise<Benchma
   if (NO_BENCHMARK.has(d.unit)) return [];
   const st = geoid.slice(0, 2);
   // Benchmarks are an extra: a failed file shows nothing.
-  const [geo, detail, us] = await Promise.all([
-    st ? fetchGeography(st).catch(() => null) : null, st ? fetchDetail(st).catch((): Detail => ({})) : ({} as Detail), US_KINDS.has(d.measure.kind) ? usValue(d.id) : null]);
-  return benchmarkRows(d.unit, geoid, geo && { name: geo.name, value: detail[d.id]?.value ?? null }, us);
+  // Library maps aren't in the state click files (D-536): their state value comes from the map's state values file.
+  const stateValue = !st ? null : d.library ? loadValues(d.id, "state").then((v) => v[st] ?? null, () => null)
+    : fetchDetail(st).then((r) => r[d.id]?.value ?? null, () => null);
+  const [geo, value, us] = await Promise.all([
+    st ? fetchGeography(st).catch(() => null) : null, stateValue, US_KINDS.has(d.measure.kind) ? usValue(d.id) : null]);
+  return benchmarkRows(d.unit, geoid, geo && { name: geo.name, value }, us);
 }

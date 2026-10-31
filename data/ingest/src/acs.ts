@@ -74,6 +74,9 @@ export function acsCounts(entry: DatasetEntry, row: Row, level?: Level): Counts 
   return countsRow(sum(row, numerator), denominator ? sum(row, denominator) : null);
 }
 
+/** A published-percent sum up to this is rounding and reads as 100 (half a point covers five cells rounded to 0.1). */
+export const ROUNDING_SLACK = 100.5;
+
 export function derive(entry: DatasetEntry, row: Row, area?: number, level?: Level): Value {
   if (entry.measure.kind !== "acs5") throw new Error("not acs5");
   const { scale, perSqMi } = entry.measure;
@@ -91,6 +94,8 @@ export function derive(entry: DatasetEntry, row: Row, area?: number, level?: Lev
     if (rad < 0) rad = (num.m ?? 0) ** 2 + r * r * (den.m ?? 0) ** 2;
     value = r;
     moe = Math.sqrt(rad) / den.e;
+  } else if (entry.unit === "percent" && value > 100 && value <= ROUNDING_SLACK) {
+    value = 100; // a sum of Census percents, each rounded to 0.1, can overshoot 100 a little (#373); a bigger overshoot is a real error and fails the Library check
   }
   if (perSqMi) {
     if (!area) return { value: null, moe: null };

@@ -123,8 +123,9 @@ describe("only what works for compare (Robbie, 2026-10-09)", () => {
     expect(canCompare(blocksOnly, "block_group")).toBe(false);
     expect(canCompare(blocksOnly, "block")).toBe(false);
   });
-  it("never for feature layers, another period, or a place with no value", () => {
+  it("never for feature layers, Library maps, another period, or a place with no value", () => {
     expect(canCompare(roads, "county")).toBe(false);
+    expect(canCompare({ ...acs, library: true }, "county", { aValue: 3 })).toBe(false);
     expect(canCompare(acs, "county", { otherPeriod: true, aValue: 3 })).toBe(false);
     expect(canCompare(acs, "county", { aValue: null })).toBe(false);
   });

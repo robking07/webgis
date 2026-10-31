@@ -33,7 +33,7 @@ jobs:
   run:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 180 # #373: the Library pilot's ~142k value files took ~60 min to upload
     environment: data
     env:
       STEPS: ${{ inputs.steps }}
