@@ -1,6 +1,6 @@
 id: tip_projects
 title: Planned road projects (TIP)
-description: Funded transportation projects in the Twin Cities region's four-year plan (2027-2030), drawn where they will be built. Darker lines cost more.
+description: "Funded transportation projects in the Twin Cities region's four-year plan (2027-2030), drawn where they will be built: a line along a road or trail, or a dot for a single spot such as a bridge or stop. Darker colors cost more."
 category: Transportation
 subcategory: Roads and vehicles
 tags: [TIP, transportation improvement program, planned projects, construction, Met Council, Twin Cities, roads, bike, transit, safety, funding]
@@ -14,7 +14,7 @@ updateCadence: annual
 vintage: "2027-2030"
 unit: dollars
 universe: federally funded projects in the Twin Cities TIP that have a mapped route
-coverageNote: "Twin Cities region only. Shows projects mapped as a road or trail line; projects mapped to a single point (such as some bridges and transit stops) and projects with no map location are not shown. Cost is the program total, so a project's listed years may share it. Plans change; check with the agency before relying on a date."
+coverageNote: "Twin Cities region only. Projects with no map location are not shown. Cost is the program total, so a project's listed years may share it. Plans change; check with the agency before relying on a date."
 terms: [tip]
 facets:
   - field: Project_Type
@@ -27,6 +27,7 @@ facets:
       - { value: "Bridge", label: "Bridge", description: "Bridge repair or replacement." }
       - { value: "Transit", label: "Transit", description: "Bus and rail projects." }
       - { value: "Intelligent Transportation Systems", label: "Smart traffic systems", description: "Technology such as traffic cameras and signs that adjust to conditions." }
+      - { value: "Electronic vehicle/Charging infrastructure", label: "EV charging", description: "Charging stations for electric vehicles." }
       - { value: "Other", label: "Other", description: "Projects that do not fit the types above, such as trail connections and landscaping." }
   - field: year
     label: Year funded
@@ -38,14 +39,13 @@ facets:
       - { value: 2030, label: "2030" }
 measure:
   kind: features
-  geometry: line
+  geometry: line # the point projects share the tiles and draw as dots (D-558)
   noun: Projects
   source:
     url: https://gisdata.metc.state.mn.us/gisdata/Transportation/tip_final_data.zip
     file: tip_final_data.zip
     path: tip_final_data/fgdb/tip_final_data.gdb
-    layerPattern: "^TIPfinalLine$"
-  # shortcut: only the line layer (268 projects); the 129 point projects need a point style, which is UI work. Add when points get a style.
+    layerPattern: "^TIPfinal(Line|Point)$"
   # Zero cost means "not listed", so it becomes empty; county codes get plain wording.
   select: >-
     SELECT short_desc,
