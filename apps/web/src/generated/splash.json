@@ -24,8 +24,8 @@
    "county": true
   },
   {
-   "text": "How many kids grow up in poverty in {county}?",
-   "link": "/map?d=pct_child_poverty&lv=county",
+   "text": "How many adults in {county} are working or looking for work?",
+   "link": "/map?d=labor_force_participation&lv=county",
    "county": true
   },
   {
