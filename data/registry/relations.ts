@@ -42,6 +42,7 @@ export type Relations = z.infer<typeof Relations>;
  *  counts (medians, indexes, modelled estimates). CDC PLACES stays percentages only (#156, Robbie's
  *  default until he says otherwise). */
 export function countsSpec(e: DatasetEntry): { denominator: boolean } | null {
+  if (e.library) return null; // Library maps (#372) publish no counts until promoted, so shared count files don't grow.
   const m = e.measure;
   switch (m.kind) {
     case "acs5": return m.denominator ? { denominator: true } : m.perSqMi ? { denominator: false } : null;

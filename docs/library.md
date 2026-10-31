@@ -43,8 +43,10 @@ Keep the id, so links keep working.
    for a cold visitor, a ramp checked against its subcategory, `higherIsBetter` if it applies, and a
    `timeline` if earlier periods use the same cells (Data Profile numbers change between years, so
    check each one).
-4. Add it to `data/registry/relations.yaml` under `maps:` (`group` = category; no `counts` for a Data
-   Profile percent).
+4. Add it to `data/registry/relations.yaml` under `maps:` (`group` = category). A detailed-table map
+   starts publishing counts once promoted, so give it `counts: { of, per }` and reload it with
+   `ingest acs <id>`. A Data
+   Profile percent has no `counts`.
 5. Run `npm run registry:validate`, `npm test` and `npm run build`. Run the `dataset-display-review`
    skill on it.
 6. After merging, run `npm run ingest -- insights` (and `combinations`) so it gets pairs. Its

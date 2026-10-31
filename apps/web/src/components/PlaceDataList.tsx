@@ -42,7 +42,8 @@ export function PlaceDataList({ geoid, level, detail, mapHref, onMapIt, compact 
     if (level === "tract" || level === "block_group") return;
     let live = true;
     for (const [id, r] of Object.entries(detail)) {
-      if (r.value == null || isRaceRow(DATASET_BY_ID.get(id))) continue;
+      // Library maps (#372) aren't listed here, so their values files aren't fetched either.
+      if (r.value == null || DATASET_BY_ID.get(id)?.library || isRaceRow(DATASET_BY_ID.get(id))) continue;
       // Only levels the dataset exports (county-only datasets have no state file to rank against).
       if (!DATASET_BY_ID.get(id)?.geographyLevels.includes(level)) continue;
       loadValues(id, level).then((vals: Values) => {
@@ -56,7 +57,7 @@ export function PlaceDataList({ geoid, level, detail, mapHref, onMapIt, compact 
   const shown = new Set<string>();
   const grouped = useMemo(() => {
     const m = new Map<string, Dataset[]>();
-    for (const d of results.filter((d) => detail[d.id])) (m.get(d.category) ?? m.set(d.category, []).get(d.category)!).push(d);
+    for (const d of results.filter((d) => !d.library && detail[d.id])) (m.get(d.category) ?? m.set(d.category, []).get(d.category)!).push(d);
     return [...m].sort((a, b) => CATEGORIES.indexOf(a[0]) - CATEGORIES.indexOf(b[0]));
   }, [results, detail]);
 
