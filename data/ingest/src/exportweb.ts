@@ -15,7 +15,8 @@ import { timelineStops } from "@webgis/registry/timeline";
 import { cached, db, log, NAMES_JSON, ROOT, STATES, TILES } from "./util.ts";
 import { readGazetteer } from "./geographies.ts";
 
-const round = (v: number) => Number(v.toPrecision(4));
+// 7 digits keep every published state/county value exact (ACS dollars run to 6 digits), so the hover popup matches the details (#343).
+const round = (v: number) => Number(v.toPrecision(7));
 const LEVEL_FILE = new RegExp(`^(${GeoLevel.options.join("|")})\\.json$`);
 
 type Periods = Record<string, Record<string, string[]>>;
