@@ -1,7 +1,7 @@
 [
  {
   "slug": "census-privacy-order",
-  "title": "The yearly census numbers are out. Small places are still waiting.",
+  "title": "The yearly numbers came out fine. Small places are still waiting.",
   "dek": "Since June, the Census Bureau may no longer add statistical noise to protect privacy. Its yearly survey numbers for larger places came out October 29 with slightly more tables than the old rules allowed; the five-year file that small counties and neighborhoods rely on has no date and no announced method.",
   "topic": "Data policy",
   "date": "2026-10-28",
@@ -14,7 +14,7 @@
   "caption": "Share of workers who usually work from home, by county (ACS 2020–2024 5-year estimates). Every one of these 3,144 county numbers comes from the 5-year survey release, the one that now has no date.",
   "method": "Every Mapwich number was computed from the U.S. Census Bureau's American Community Survey 2020–2024 5-year estimates, as Mapwich publishes them (estimates, margins of error and population counts), with a script kept beside this piece (`numbers.mjs`). The 50 states and DC; Puerto Rico is left out. County size is the ACS 2020–2024 total population (table B01001). The Census Bureau decides which areas get 1-year estimates from its own population estimates, so the county counts against the 65,000 and 20,000 lines are close, not exact. Reliability grades follow Mapwich's rule: coefficient of variation (CV) = (margin ÷ 1.645) ÷ estimate; under 15% reliable, 15–30% use with caution, over 30% unreliable; a zero is graded unreliable when its margin is over 5 points. Outside sources are linked in the text. This piece was drafted by Claude, an AI model, for Robbie King, and reviewed by Robbie King.",
   "image": null,
-  "draft": true,
+  "draft": false,
   "body": [
    {
     "kind": "html",
