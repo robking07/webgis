@@ -33,7 +33,7 @@ export function DataDirectory() {
                   </span>
                   <span className="shrink-0 text-xs text-muted-foreground sm:text-right">
                     {d.category} › {d.subcategory} · {d.vintage}
-                    <span className="block">{d.measure.kind === "features" ? "Road segments" : d.geographyLevels.map((l) => GEO_LEVELS[l as GeoLevel].plural).join(", ")}</span>
+                    <span className="block">{d.measure.kind === "features" ? d.measure.noun ?? "Features" : d.geographyLevels.map((l) => GEO_LEVELS[l as GeoLevel].plural).join(", ")}</span>
                   </span>
                 </a>
               </li>

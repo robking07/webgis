@@ -35,6 +35,7 @@
   "measure": {
    "kind": "features",
    "geometry": "line",
+   "noun": "Road segments",
    "source": {
     "url": "https://www.arcgis.com/sharing/rest/content/items/5e6a977c2d7c4ec1bdc82e684d3384f2/data",
     "file": "HPMS2024.zip",
