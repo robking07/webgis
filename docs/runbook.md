@@ -175,12 +175,16 @@ A dataset refresh can run on GitHub instead of Robbie's machine: `.github/workfl
 Two more ways to run, each with that step alone (D-552):
 
 - **A map layer from files** (`features` in the registry, e.g. TIP projects): steps `features`,
-  datasets `tip_projects`. The run installs GDAL and tippecanoe, builds `<id>.pmtiles`, and uploads
-  only those tiles (`publish-tiles <ids>`); no values are touched. The registry and `layers.json`
-  entry must already be on `main` (they ship with the dataset's PR).
+  datasets `tip_projects` (type `features` exactly, no extra spaces). The run installs GDAL and
+  tippecanoe, builds `<id>.pmtiles`, and uploads only those tiles (`publish-tiles <ids>`, which
+  leaves the bucket's CORS rule alone); no values are touched. The registry and `layers.json` entry
+  must already be on `main` (they ship with the dataset's PR): if the load writes a different
+  `layers.json` (say the source gained features), the run stops before uploading. Regenerate it in a
+  PR, merge, run again.
 - **Re-export values, no reload** (e.g. after a rounding change like D-545): steps `export-values`,
-  datasets empty for every map (or ids for just those). It loads nothing: it rewrites the state and
-  county value files from the database, then publishes exactly as below, with the same checks.
+  datasets empty for every registry map (or ids for just those). It loads nothing: it rewrites the
+  state and county value files from the database (registry ids only, never tracts), then publishes
+  exactly as below, with the same checks.
 
 There is no dry-run switch: every run writes the database and publishes. Visitors see new values
 within an hour. The run loads, then `export-values <ids>` and `details` (from the database), then
@@ -189,8 +193,9 @@ swaps in only the reloaded datasets and keeps the rest. If any county would lose
 source that came back short), it stops **before the first upload**. Tract values need no merge: each
 map has its own file per county, `values/<id>/tracts/<county>.json` (D-506). Before uploading anything,
 `publish-values` checks every changed file: a count shard that drops a live dataset, a map's tract
-file that drops live tracts, or a reloaded map with a county file on R2 that this load doesn't have
-(it would stay live with old numbers, since publish never deletes). If any check fails, **nothing is
+file that drops live tracts, a map's state or county file with fewer places than the live one, or a
+reloaded map with a county file on R2 that this load doesn't have (it would stay live with old
+numbers, since publish never deletes). If any check fails, **nothing is
 uploaded**. Then it uploads the changed value files, and the click details last. A run that writes
 no count files skips the merge.
 
