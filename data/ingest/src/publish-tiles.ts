@@ -1,5 +1,5 @@
-// Upload data/tiles/*.pmtiles to Cloudflare R2 (D-01) and set the bucket CORS rule
-// the browser needs for PMTiles range requests.
+// Upload data/tiles/*.pmtiles to Cloudflare R2 (D-01); with no ids named, also set the bucket CORS
+// rule the browser needs for PMTiles range requests.
 import { createReadStream, existsSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { gunzipSync, gzipSync } from "node:zlib";
 import { createHash } from "node:crypto";
@@ -23,17 +23,20 @@ export function r2() {
 
 export async function publishTiles(only?: string[]) {
   const { s3, bucket: R2_BUCKET } = r2();
-  await s3.send(new PutBucketCorsCommand({
-    Bucket: R2_BUCKET,
-    CORSConfiguration: { CORSRules: [{
-      AllowedOrigins: ["https://mapwich.org", "https://www.mapwich.org", "https://*.vercel.app", "http://localhost:3000"],
-      AllowedMethods: ["GET", "HEAD"],
-      AllowedHeaders: ["range", "if-match"],
-      ExposeHeaders: ["etag", "content-length", "content-range", "accept-ranges"],
-      MaxAgeSeconds: 86400,
-    }] },
-  }));
-  log("r2", "CORS rule set");
+  // Named ids (a Data run's features load) upload tiles only: no bucket-admin key, no overwriting the CORS rule.
+  if (!only) {
+    await s3.send(new PutBucketCorsCommand({
+      Bucket: R2_BUCKET,
+      CORSConfiguration: { CORSRules: [{
+        AllowedOrigins: ["https://mapwich.org", "https://www.mapwich.org", "https://*.vercel.app", "http://localhost:3000"],
+        AllowedMethods: ["GET", "HEAD"],
+        AllowedHeaders: ["range", "if-match"],
+        ExposeHeaders: ["etag", "content-length", "content-range", "accept-ranges"],
+        MaxAgeSeconds: 86400,
+      }] },
+    }));
+    log("r2", "CORS rule set");
+  }
   for (const f of readdirSync(TILES).filter((f) => f.endsWith(".pmtiles") && (!only || only.includes(f.replace(/\.pmtiles$/, ""))))) {
     const path = join(TILES, f);
     await new Upload({
