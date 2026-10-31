@@ -65,8 +65,9 @@ export const SHARD_PREFIXES = ["values/tracts/", "values/counts/"];
 /** One map's tract file for one county (values/<id>/tracts/<county>.json, D-506). Only that map's
  *  load writes it, so it can't drop another map; the checks refuse one that drops live tracts. */
 export const isTractFile = (key: string) => /^values\/[a-z0-9_]+\/tracts\/\d{5}\.json$/.test(key);
-/** One map's state or county values (values/<id>/{state,county}.json, from export-values). */
-const isLevelFile = (key: string) => /^values\/[a-z0-9_]+\/(state|county)\.json$/.test(key);
+/** One map's state or county values (values/<id>/{state,county}.json, from export-values), margins
+ *  (values/<id>/[<stop>/]{state,county}.moe.json) or counts (values/<id>/{state,county}.counts.json, #454). */
+const isLevelFile = (key: string) => /^values\/[a-z0-9_]+\/((\d{4}\/)?(state|county)\.moe|(state|county)(\.counts)?)\.json$/.test(key);
 
 /** What would be lost if `changed` went up, checked before anything does (one list for the lot):
  *  - a shard that drops a live dataset: a checkout without the full shards writes ones holding only
@@ -74,7 +75,8 @@ const isLevelFile = (key: string) => /^values\/[a-z0-9_]+\/(state|county)\.json$
  *  - a map's tract file that drops live tracts (a reload that came back short for a county);
  *  - a reloaded map (one with tract files here) whose county files on R2 include one this load
  *    doesn't have: its stale file would stay live, since publish never deletes;
- *  - a map's state or county file with fewer places than the live one (a short database, #449).
+ *  - a map's state or county file (values, margins or counts) with fewer places than the live one
+ *    (a short database #449, or a short Census response #454).
  *  Only files R2 already holds (`liveKeys`) are fetched. `local`: every key this upload covers. */
 export async function uploadProblems(changed: { key: string; body: Buffer }[], liveKeys: Set<string>, local: Set<string>,
   fetchLive: (key: string) => Promise<Record<string, unknown> | null>): Promise<string[]> {

@@ -192,14 +192,14 @@ Three more ways to run, each with that step alone (D-552, D-557):
   `publish-reload` as below: the count shards are merged into the live ones and every check runs.
   D-557 lists the ids of every ACS change map (a `timeline` in the registry).
 
-There is no dry-run switch: every run writes the database and publishes. Visitors see new values
+There is no dry-run switch: every run writes the database (`counts` only reads it) and publishes. Visitors see new values
 within an hour. The run loads, then `export-values <ids>` and `details` (from the database), then
 `publish-reload`: for each tract or block-group count file it wrote, it fetches the live file from R2,
 swaps in only the reloaded datasets and keeps the rest. If any county would lose a reloaded dataset (a
 source that came back short), it stops **before the first upload**. Tract values need no merge: each
 map has its own file per county, `values/<id>/tracts/<county>.json` (D-506). Before uploading anything,
 `publish-values` checks every changed file: a count shard that drops a live dataset, a map's tract
-file that drops live tracts, a map's state or county file with fewer places than the live one, or a
+file that drops live tracts, a map's state or county file (values, margins of any period, or counts) with fewer places than the live one, or a
 reloaded map with a county file on R2 that this load doesn't have (it would stay live with old
 numbers, since publish never deletes). If any check fails, **nothing is
 uploaded**. Then it uploads the changed value files, and the click details last. A run that writes
