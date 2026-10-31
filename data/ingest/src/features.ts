@@ -90,7 +90,8 @@ export async function ingestFeatures(only?: string[]) {
       // Polygons (areas) must never drop: like the boundary tiles, keep every feature.
       ...(m.geometry === "polygon"
         ? ["--no-feature-limit", "--no-tile-size-limit", "--detect-shared-borders", "--no-tiny-polygon-reduction", "--simplification=4"]
-        : ["--drop-densest-as-needed", "--extend-zooms-if-still-dropping", "--simplification=6"]),
+        // -r1: keep every point at every zoom (tippecanoe otherwise thins points below max zoom; lines are unaffected).
+        : ["--drop-densest-as-needed", "--extend-zooms-if-still-dropping", "--simplification=6", "-r1"]),
       ...(m.rank ? ["-j", rankFilter(m.rank, e.id)] : []),
       ...files,
     ];
