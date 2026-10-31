@@ -469,7 +469,7 @@ export function Viewer({ search }: { search: string }) {
       {/* Header: falls away entirely when immersed; peeks back at the top edge. */}
       <header onMouseLeave={() => setPeek(false)} data-obstructs={chromeShown ? "" : undefined}
         className={`absolute inset-x-0 top-0 z-30 flex h-14 items-center justify-between gap-3 border-b bg-background px-4 transition-transform duration-300 ease-out md:px-6 ${chromeShown ? "translate-y-0" : "-translate-y-full"}`}
-        aria-hidden={!chromeShown || undefined} inert={!chromeShown || undefined}>
+        inert={!chromeShown || undefined}>
         <HeaderContent current="map" onSearch={() => setSearchOpen(true)} explicitTheme={state.theme} onTheme={(t) => update({ theme: t })}
           unit={scaleUnit} onUnit={setScaleUnit} />
       </header>

@@ -14,6 +14,7 @@ const tagline = <p className="text-2xl font-medium tracking-tight sm:text-3xl" s
 export default function Splash() {
   return (
     <main className="fixed inset-0 grid place-items-center overflow-hidden" style={{ background: "var(--ui-splash-bg)" }}>
+      <h1 className="sr-only">Mapwich</h1>
       <div className="flex w-full flex-col items-center gap-6 px-4 sm:px-6">
         <LogoMark size={120} title="Mapwich" ink="var(--ui-splash-ink)" />
         {splash.questions.length ? <SplashQuestions questions={splash.questions} approved={splash.approved} fallback={tagline} /> : tagline}
