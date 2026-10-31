@@ -172,6 +172,16 @@ A dataset refresh can run on GitHub instead of Robbie's machine: `.github/workfl
 - **datasets**: the ids, e.g. `pct_poverty median_household_income`. Every step must load every
   id (`acs` with a FARS id is refused before anything runs; `data/ingest/src/check-run.ts`).
 
+Two more ways to run, each with that step alone (D-552):
+
+- **A map layer from files** (`features` in the registry, e.g. TIP projects): steps `features`,
+  datasets `tip_projects`. The run installs GDAL and tippecanoe, builds `<id>.pmtiles`, and uploads
+  only those tiles (`publish-tiles <ids>`); no values are touched. The registry and `layers.json`
+  entry must already be on `main` (they ship with the dataset's PR).
+- **Re-export values, no reload** (e.g. after a rounding change like D-545): steps `export-values`,
+  datasets empty for every map (or ids for just those). It loads nothing: it rewrites the state and
+  county value files from the database, then publishes exactly as below, with the same checks.
+
 There is no dry-run switch: every run writes the database and publishes. Visitors see new values
 within an hour. The run loads, then `export-values <ids>` and `details` (from the database), then
 `publish-reload`: for each tract or block-group count file it wrote, it fetches the live file from R2,
