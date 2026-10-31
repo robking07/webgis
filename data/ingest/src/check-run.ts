@@ -45,6 +45,8 @@ export function checkRun(steps: string[], ids: string[], entries: DatasetEntry[]
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const words = (v?: string) => (v ?? "").split(/\s+/).filter(Boolean);
   const errors = checkRun(words(process.env.STEPS), words(process.env.DATASETS), loadRegistry());
+  // data-run.yml picks the features steps with `inputs.steps == 'features'`, so no stray spaces.
+  if (words(process.env.STEPS).includes("features") && process.env.STEPS !== "features") errors.push('type steps as exactly "features"');
   for (const e of errors) console.log(`::error::${e}`);
   if (errors.length) process.exit(1);
   console.log("inputs OK");

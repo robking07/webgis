@@ -33,7 +33,7 @@ permissions:
 jobs:
   run:
     if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04 # D-552: features relies on its apt tippecanoe (2.49)
     timeout-minutes: 180 # #373: the Library pilot's ~142k value files took ~60 min to upload
     environment: data
     env:
@@ -62,33 +62,58 @@ jobs:
           pw=$(node -e 'const u = new URL(process.env.SUPABASE_DB_URL); console.log(u.password); console.log(decodeURIComponent(u.password))')
           while read -r p; do [ -n "$p" ] && echo "::add-mask::$p"; done <<< "$pw"
 
-      # check-run lets `features` run only alone, so any run naming it is a features run (#449).
+      # A map layer from files (#449; check-run lets `features` run only alone): build its PMTiles and
+      # upload only those. Its layers.json entry ships in git with its registry PR; if this load writes
+      # a different one, stop before uploading so the tiles and the manifest can't drift apart.
       - name: Install GDAL and tippecanoe
-        if: contains(inputs.steps, 'features')
+        if: inputs.steps == 'features'
         run: sudo apt-get update -q && sudo apt-get install -y -q gdal-bin tippecanoe
 
-      # `features` writes data/tiles/<id>.pmtiles and no values. `export-values` (alone) loads nothing:
-      # it re-exports the database's state and county values, every map when no ids are named.
+      - name: Load the map layer
+        if: inputs.steps == 'features'
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          npm run ingest -- features $DATASETS
+          git diff --exit-code apps/web/src/generated/layers.json || { echo "::error::layers.json from this load differs from main's; commit the regenerated entry in a PR, then run again"; exit 1; }
+
+      - name: Publish the map layer's tiles
+        if: inputs.steps == 'features'
+        env:
+          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_BUCKET: ${{ secrets.R2_BUCKET }}
+        run: npm run ingest -- publish-tiles $DATASETS
+
+      # `export-values` alone loads nothing (#449): it re-exports the database's state and county
+      # values, every registry map when no ids are named, and publishes them like a load.
       - name: Load and export
+        if: inputs.steps != 'features'
         env:
           SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
           CENSUS_API_KEY: ${{ secrets.CENSUS_API_KEY }}
         run: |
-          if [[ " $STEPS " == *" features "* ]]; then npm run ingest -- features $DATASETS; exit; fi
           for s in $STEPS; do [ "$s" = export-values ] || npm run ingest -- "$s" $DATASETS; done
           npm run ingest -- export-values $DATASETS
           npm run ingest -- details
-          # #453: similar also reads the residents counts, which only a population_density load writes; else use the live file.
-          f=data/tiles/values/population_density/county.counts.json
-          [ -e "$f" ] || curl -fsS --compressed --create-dirs -o "$f" "https://tiles.mapwich.org/values/population_density/county.counts.json"
-          npm run ingest -- similar
+
+      # Reads R2 only when this run didn't write the residents counts (a non-population load, #453).
+      - name: Similar counties
+        if: inputs.steps != 'features'
+        env:
+          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_BUCKET: ${{ secrets.R2_BUCKET }}
+        run: npm run ingest -- similar
 
       # publish-reload merges this run's count files into the live ones on R2, then checks every
-      # changed file (count shards, each map's tract files and counties) and stops before the first
-      # upload if any would lose data. ALLOW_TRACT_DROP is set only when the run's input asks for it.
-      # Click details go last, only once the values are up. A features run uploads only its tiles;
-      # the map's layers.json entry ships in git with its registry PR.
+      # changed file (count shards, each map's tract files, state and county files) and stops before
+      # the first upload if any would lose data. ALLOW_TRACT_DROP is set only when the run's input
+      # asks for it. Click details go last, only once the values are up.
       - name: Publish to R2
+        if: inputs.steps != 'features'
         env:
           ALLOW_TRACT_DROP: ${{ inputs.allow_tract_drop && '1' || '' }}
           R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
@@ -96,7 +121,6 @@ jobs:
           R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
           R2_BUCKET: ${{ secrets.R2_BUCKET }}
         run: |
-          if [[ " $STEPS " == *" features "* ]]; then npm run ingest -- publish-tiles $DATASETS; exit; fi
           npm run ingest -- publish-reload
           npm run ingest -- publish-details
           npm run ingest -- publish-similar
