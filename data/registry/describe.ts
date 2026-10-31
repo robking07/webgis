@@ -6,7 +6,7 @@ export function describeMethod(e: DatasetEntry): string {
   const m = e.measure;
   if (m.kind === "acs5") {
     const sum = (v: string[]) => v.map((x) => `\`${x}\``).join(" + ");
-    return `ACS 5-year API. ${m.denominator ? `(${sum(m.numerator)}) ÷ (${sum(m.denominator)})${m.scale !== 1 ? ` × ${m.scale}` : ""}` : sum(m.numerator)}${m.perSqMi ? " ÷ land area (sq mi)" : ""}. MOE: Census approximation formulas (${m.denominator ? (e.unit === "percent" ? "proportion" : "ratio") : m.numerator.length > 1 ? "sum" : "published"}).`;
+    return `ACS 5-year ${m.numerator[0].startsWith("DP") ? "Data Profile API (`acs5/profile`, the Census Bureau's own percentages)" : "API"}. ${m.denominator ? `(${sum(m.numerator)}) ÷ (${sum(m.denominator)})${m.scale !== 1 ? ` × ${m.scale}` : ""}` : sum(m.numerator)}${m.perSqMi ? " ÷ land area (sq mi)" : ""}. MOE: Census approximation formulas (${m.denominator ? (e.unit === "percent" ? "proportion" : "ratio") : m.numerator.length > 1 ? "sum" : "published"}).`;
   }
   if (m.kind === "census2020") {
     const what = { pop_density: "`P1_001N` (total population) ÷ land area (sq mi)", hu_density: "`H1_001N` (housing units) ÷ land area (sq mi)", pct_vacant: "`H1_003N` (vacant units) ÷ `H1_001N` × 100" }[m.value];

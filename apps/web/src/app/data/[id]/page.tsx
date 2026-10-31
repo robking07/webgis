@@ -6,7 +6,7 @@ import { TERM_BY_ID } from "@/lib/glossary";
 import { describeMethod } from "@webgis/registry/describe";
 import { SiteFooter } from "@/components/SiteNav";
 import { SiteHeader } from "@/components/SiteHeader";
-import { DATASETS, DATASET_BY_ID } from "@/lib/registry";
+import { ALL_DATASETS, DATASET_BY_ID, LIBRARY_LABEL } from "@/lib/registry";
 import { sourceOf, datasetHref } from "@/lib/sources";
 import { shareMeta } from "@/lib/share-meta";
 import { CsvDownload } from "@/components/CsvDownload";
@@ -15,7 +15,7 @@ import { CANDIDATES } from "@/lib/insights";
 import layersManifest from "@/generated/layers.json";
 
 export function generateStaticParams() {
-  return DATASETS.map((d) => ({ id: d.id }));
+  return ALL_DATASETS.map((d) => ({ id: d.id }));
 }
 
 export async function generateMetadata({ params }: PageProps<"/data/[id]">): Promise<Metadata> {
@@ -65,6 +65,7 @@ export default async function DatasetProfilePage({ params }: PageProps<"/data/[i
         <p className="text-xs uppercase tracking-wide text-muted-foreground">{d.category} › {d.subcategory} · {source.name}</p>
         <h1 className="mt-1 text-2xl font-semibold tracking-tight">{d.title}</h1>
         <p className="mt-2 text-muted-foreground">{d.description}</p>
+        {d.library && <p className="mt-2 text-sm text-muted-foreground"><span className="font-medium text-foreground">{LIBRARY_LABEL}.</span> Made from a recipe and published because it passed automatic checks (values, coverage and margins of error); nobody has reviewed it by hand yet.</p>}
         <a href={`/map?d=${d.id}`} className="mt-4 inline-flex rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">
           Map it
         </a>

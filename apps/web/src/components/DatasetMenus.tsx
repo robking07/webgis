@@ -9,7 +9,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode, 
 import { useEscape } from "./useEscape";
 import { Check, ChevronDown, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { CATEGORIES, DATASETS, bySubcategory, searchDatasets, type Dataset } from "@/lib/registry";
+import { CATEGORIES, DATASETS, LIBRARY_LABEL, bySubcategory, libraryIn, searchDatasets, type Dataset } from "@/lib/registry";
 import { pairReason } from "@/lib/layers";
 import { BottomSheet } from "./BottomSheet";
 import { DatasetSearch } from "./DatasetFilter";
@@ -43,7 +43,7 @@ function usePicker({ slot, primary, secondary, fits }: PickerProps) {
   const pairWith = slot === "b" ? primary : slot === "a" ? secondary : null;
   const title = slot === "ask" ? "Replace which map?" : slot === "b" && !secondary ? "Choose a second map"
     : secondary ? `Replace ${shown!.title}` : null;
-  return { q, setQ, category, categories, searching, datasets, pairWith, title, current: shown?.id ?? null, currentCategory: shown?.category,
+  return { q, setQ, category, categories, searching, datasets, pairWith, title, fits, current: shown?.id ?? null, currentCategory: shown?.category,
     pickCategory: (c: string) => { setCategory(c); setQ(""); } };
 }
 type Picker = ReturnType<typeof usePicker>;
@@ -126,6 +126,22 @@ export function DatasetMenu(props: PickerProps) {
 
 function DatasetList({ p, onPick, className }: { p: Picker; onPick: (id: string) => void; className?: string }) {
   const groups = bySubcategory(p.datasets);
+  // Which subcategory's Library maps are shown under its Featured ones (#372).
+  // shortcut: the line hangs off a Featured group, so a subcategory with only Library maps shows none; add an empty group if one appears.
+  const [more, setMore] = useState<string | null>(null);
+  const row = (d: Dataset) => {
+    const reason = p.pairWith && d.id !== p.current ? pairReason(d, p.pairWith) : null;
+    return (
+      <button key={d.id} type="button" role="menuitemradio" aria-checked={d.id === p.current} disabled={!!reason} onClick={() => onPick(d.id)}
+        className="flex w-full items-start gap-2 rounded-md px-2.5 py-2 text-left hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring disabled:cursor-not-allowed disabled:hover:bg-transparent">
+        <span className="min-w-0 flex-1">
+          <span className={`block text-sm font-medium leading-snug ${reason ? "text-muted-foreground" : ""}`}>{d.title}</span>
+          <span className="block text-xs text-muted-foreground">{reason ?? (d.library ? `${LIBRARY_LABEL} · ${d.vintage}` : d.vintage)}</span>
+        </span>
+        {d.id === p.current && <Check className="mt-0.5 size-3.5 shrink-0 text-primary" aria-hidden />}
+      </button>
+    );
+  };
   return (
     <div role="menu" aria-label={p.searching ? `${p.datasets.length} datasets match` : `${p.category} datasets`} className={className}>
       {groups.map((g, i) => (
@@ -133,23 +149,29 @@ function DatasetList({ p, onPick, className }: { p: Picker; onPick: (id: string)
           {/* Search results span categories: each category's name heads its first group. */}
           {p.searching && groups[i - 1]?.category !== g.category && <p aria-hidden className="px-2.5 pt-3 text-sm font-semibold">{g.category}</p>}
           <p aria-hidden className="px-2.5 pb-0.5 pt-2.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">{g.subcategory}</p>
-          {g.datasets.map((d) => {
-            const reason = p.pairWith && d.id !== p.current ? pairReason(d, p.pairWith) : null;
-            return (
-              <button key={d.id} type="button" role="menuitemradio" aria-checked={d.id === p.current} disabled={!!reason} onClick={() => onPick(d.id)}
-                className="flex w-full items-start gap-2 rounded-md px-2.5 py-2 text-left hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring disabled:cursor-not-allowed disabled:hover:bg-transparent">
-                <span className="min-w-0 flex-1">
-                  <span className={`block text-sm font-medium leading-snug ${reason ? "text-muted-foreground" : ""}`}>{d.title}</span>
-                  <span className="block text-xs text-muted-foreground">{reason ?? d.vintage}</span>
-                </span>
-                {d.id === p.current && <Check className="mt-0.5 size-3.5 shrink-0 text-primary" aria-hidden />}
-              </button>
-            );
-          })}
+          {g.datasets.map(row)}
+          {!p.searching && <LibraryMore id={`${g.category}/${g.subcategory}`} maps={libraryIn(g.category, g.subcategory).filter((d) => !p.fits || p.fits(d))} current={p.current} more={more} setMore={setMore} row={row} />}
         </div>
       ))}
       {!p.datasets.length && <p className="p-3 text-sm text-muted-foreground">No datasets match “{p.q}”.</p>}
     </div>
+  );
+}
+
+/** "More in the Library (n)": a subcategory's Library maps, folded under its Featured ones (#372).
+ *  Search finds them too; the category lists never show them unfolded. */
+function LibraryMore({ id, maps, current, more, setMore, row }: { id: string; maps: Dataset[]; current: string | null; more: string | null; setMore: (id: string | null) => void; row: (d: Dataset) => ReactNode }) {
+  if (!maps.length) return null;
+  // Starts open when the map on screen is one of them.
+  const open = more === id || (more == null && maps.some((d) => d.id === current));
+  return (
+    <>
+      <button type="button" aria-expanded={open} onClick={() => setMore(open ? "" : id)}
+        className="flex w-full items-center gap-1 rounded-md px-2.5 py-1.5 text-left text-xs font-medium text-primary hover:underline focus-visible:outline-2 focus-visible:outline-ring">
+        More in the Library ({maps.length}) <ChevronDown className={`size-3 transition-transform ${open ? "rotate-180" : ""}`} aria-hidden />
+      </button>
+      {open && maps.map(row)}
+    </>
   );
 }
 
