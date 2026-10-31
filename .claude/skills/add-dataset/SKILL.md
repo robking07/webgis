@@ -40,7 +40,7 @@ Then add the map to `data/registry/relations.yaml` (`maps:` with its `group` = c
 
 ## 3. Load, export, refresh
 
-**Before any load that ends in `publish-data`:** this checkout's `data/tiles/` must be complete. Run `ls data/tiles/values/tracts | wc -l` (3,222 expected), and check `geo/` and `details/` exist. Tract values are stored per county (`values/tracts/<county>.json`, every dataset in one file), so a checkout without them writes files holding only what it just loaded. `publish-data` now refuses to upload a tract file that drops live datasets (#143); `ALLOW_TRACT_DROP=1` is for deliberately removing a dataset only.
+**Before any load that ends in `publish-data`:** this checkout's `data/tiles/` must be complete. Check `values/counts/`, `geo/` and `details/` exist and are complete. Tract values are stored per map per county (`values/<id>/tracts/<county>.json`, D-506), and a load writes only its own map's folder. `publish-data` refuses a tract file that would drop live tracts; `ALLOW_TRACT_DROP=1` is only for a real loss.
 
 **Several data PRs at once:** merge their branches into one local worktree (detached, never pushed), resolve the overlaps there, and load everything in one run with Robbie's keys. Then merge the PRs one at a time, and finish with a PR holding the generated `periods.json`, `insights.json` and `docs/data-sources.md` from that run (wave 1, #133).
 
