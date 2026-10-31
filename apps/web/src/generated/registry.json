@@ -14335,7 +14335,7 @@
  {
   "id": "tip_projects",
   "title": "Planned road projects (TIP)",
-  "description": "Funded transportation projects in the Twin Cities region's four-year plan (2027-2030), drawn where they will be built. Darker lines cost more.",
+  "description": "Funded transportation projects in the Twin Cities region's four-year plan (2027-2030), drawn where they will be built: a line along a road or trail, or a dot for a single spot such as a bridge or stop. Darker colors cost more.",
   "category": "Transportation",
   "subcategory": "Roads and vehicles",
   "tags": [
@@ -14372,7 +14372,7 @@
     "url": "https://gisdata.metc.state.mn.us/gisdata/Transportation/tip_final_data.zip",
     "file": "tip_final_data.zip",
     "path": "tip_final_data/fgdb/tip_final_data.gdb",
-    "layerPattern": "^TIPfinalLine$"
+    "layerPattern": "^TIPfinal(Line|Point)$"
    },
    "select": "SELECT short_desc, CASE WHEN route_sytm = 'NA' THEN NULL WHEN route_sytm = 'LOCAL ST' THEN 'Local street' WHEN route_sytm = 'TRANSIT' THEN 'Transit' WHEN route_sytm GLOB 'I [0-9]*' THEN 'I-' || SUBSTR(route_sytm, 3) ELSE REPLACE(REPLACE(route_sytm, 'CSAH', 'County Rd'), 'MSAS', 'City street') END AS route, CAST(year AS INTEGER) AS year, Project_Type, CASE county WHEN 'MULTICOUNTY' THEN 'Several counties' WHEN 'DISTRICTWIDE' THEN 'Districtwide' ELSE county END AS county, NULLIF(Proj_total, 0) AS Proj_total, Shape FROM {layer}",
    "valueField": "Proj_total",
@@ -14393,7 +14393,7 @@
    ]
   },
   "modelInputs": [],
-  "coverageNote": "Twin Cities region only. Shows projects mapped as a road or trail line; projects mapped to a single point (such as some bridges and transit stops) and projects with no map location are not shown. Cost is the program total, so a project's listed years may share it. Plans change; check with the agency before relying on a date.",
+  "coverageNote": "Twin Cities region only. Projects with no map location are not shown. Cost is the program total, so a project's listed years may share it. Plans change; check with the agency before relying on a date.",
   "facets": [
    {
     "field": "Project_Type",
@@ -14429,6 +14429,11 @@
       "value": "Intelligent Transportation Systems",
       "label": "Smart traffic systems",
       "description": "Technology such as traffic cameras and signs that adjust to conditions."
+     },
+     {
+      "value": "Electronic vehicle/Charging infrastructure",
+      "label": "EV charging",
+      "description": "Charging stations for electric vehicles."
      },
      {
       "value": "Other",

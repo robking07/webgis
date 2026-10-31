@@ -1,6 +1,6 @@
 id: tip_projects
 title: Planned road projects (TIP)
-description: Funded transportation projects in the Twin Cities region's four-year plan (2027-2030), drawn where they will be built: a line along a road or trail, or a dot for a single spot such as a bridge or stop. Darker colors cost more.
+description: "Funded transportation projects in the Twin Cities region's four-year plan (2027-2030), drawn where they will be built: a line along a road or trail, or a dot for a single spot such as a bridge or stop. Darker colors cost more."
 category: Transportation
 subcategory: Roads and vehicles
 tags: [TIP, transportation improvement program, planned projects, construction, Met Council, Twin Cities, roads, bike, transit, safety, funding]
@@ -39,7 +39,7 @@ facets:
       - { value: 2030, label: "2030" }
 measure:
   kind: features
-  geometry: line # the point projects share the tiles and draw as dots (D-PLACEHOLDER)
+  geometry: line # the point projects share the tiles and draw as dots (D-558)
   noun: Projects
   source:
     url: https://gisdata.metc.state.mn.us/gisdata/Transportation/tip_final_data.zip

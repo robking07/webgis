@@ -326,6 +326,8 @@ for (const vp of ["laptop", "monitor"]) {
     await wait(300);
     const f = JSON.stringify(await page.evaluate(() => window.__wgMap.getFilter("aadt-line")));
     expect(f && f.includes("road_type"), `sidebar change didn't apply live: ${f}`);
+    const pf = JSON.stringify(await page.evaluate(() => window.__wgMap.getFilter("aadt-point")));
+    expect(pf.includes("geometry-type") && pf.includes("road_type"), `the dots lost their points-only filter or the facet: ${pf}`);
     await page.getByRole("button", { name: "Close map options" }).click();
     await side.waitFor({ state: "detached" });
     expect((await live(page).getAttribute("aria-label")) === "Map options, changed from the defaults", `label after close: ${await live(page).getAttribute("aria-label")}`);
