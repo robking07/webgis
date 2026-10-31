@@ -152,6 +152,7 @@ One line per task. These feed the project kit (#53).
 - **#170:** test IDs copied from unit fixtures may not exist in live data; pick e2e places from the live geo files.
 - **#167:** native range inputs lose the pointer when a mouse drags off them; commit-on-release needs `setPointerCapture`.
 - **This machine's `gh` is old:** no `gh pr checks --json` and no `gh pr update-branch`. Use `gh api -X PUT repos/robking07/webgis/pulls/<n>/update-branch`, and parse `gh pr checks` text (tab-separated). `gh run rerun` refuses a run that's still in progress or was superseded; update the branch instead to start a fresh run.
+- **#366 load test (2026-10-31):** 1,000 visitors over 3 min (`scripts/load-test.mjs`, ramped to ~11 visitors/s) gave site pages p50 63 ms / p95 116 ms and map files on tiles.mapwich.org p50 108 ms / p95 168 ms, 0 errors, 0 5xx, no 429s; the site is static enough that this scale is nowhere near Vercel Hobby limits. Chromium does run here with `CHROMIUM_PATH` set to playwright's `chromium_headless_shell-1243`, so a11y scans and e2e can run in a worker.
 - **Specials drafts:** run `check:special` on a `git archive` of `origin/main` (node_modules symlinked) to check a draft without a branch.
 
 ## How to update
