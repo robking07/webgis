@@ -4,6 +4,7 @@
 // tracts themselves are drawn on their 2010 shapes by `features` entries, as CEJST's are.
 import { loadRegistry } from "@webgis/registry/load";
 import { cached, db, FIPS_RENAMES, log, splitCsv } from "./util.ts";
+import { writeUs } from "./counts.ts";
 import { registerDataset, writeValues, type Value } from "./values.ts";
 import { unzipEntry } from "./zip.ts";
 
@@ -45,6 +46,7 @@ export async function ingestFoodAccess(only?: string[]) {
     const sums = foodAccessSums(await unzipEntry(await cached(m.url, m.file), new RegExp(`^${m.entry}$`)), m);
     const us = [...sums.state.values()].reduce((a, s) => [a[0] + s[0], a[1] + s[1]], [0, 0]);
     log(e.id, `United States: ${((100 * us[0]) / us[1]).toFixed(2)}% (${Math.round(us[0]).toLocaleString()} of ${Math.round(us[1]).toLocaleString()})`);
+    writeUs(e.id, null, { value: (100 * us[0]) / us[1], moe: null }, null);
     for (const level of ["state", "county"] as const) {
       if (!e.geographyLevels.includes(level)) continue;
       const values = new Map<string, Value>();
