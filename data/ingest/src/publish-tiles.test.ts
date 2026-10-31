@@ -77,6 +77,15 @@ describe("uploadProblems (D-506)", () => {
     const local = new Set(["values/pct_poverty/tracts/27053.json"]);
     expect(await uploadProblems([], liveKeys, local, fetchLive)).toEqual(["values/pct_poverty/tracts/27123.json: on R2 but not in this load (stale county)"]);
   });
+  it("refuses a state or county file with fewer places than the live one (#449)", async () => {
+    const county = { "27053": 1, "27123": 2 };
+    const fetch = async () => county;
+    const keys = new Set(["values/pct_poverty/county.json"]);
+    const short = [{ key: "values/pct_poverty/county.json", body: gz({ "27053": 1 }) }];
+    expect(await uploadProblems(short, keys, keys, fetch)).toEqual(["values/pct_poverty/county.json: would cut 2 live places to 1"]);
+    const same = [{ key: "values/pct_poverty/county.json", body: gz({ "27053": 1.5, "27123": 2 }) }];
+    expect(await uploadProblems(same, keys, keys, fetch)).toEqual([]);
+  });
   it("fetches nothing for files R2 doesn't have yet (the split's new files)", async () => {
     let fetched = 0;
     const changed = [{ key: "values/pct_poverty/tracts/01001.json", body: gz({}) }];

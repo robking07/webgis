@@ -8,6 +8,7 @@ const entries = [
   entry("pct_poverty", "acs5", { timeline: { from: 2014, to: 2024, step: 5 }, geographyLevels: ["county", "block_group"] }),
   entry("traffic_deaths", "fars", { timeline: { from: 2015, to: 2024, step: 1 } }),
   entry("asthma", "places"),
+  entry("tip_projects", "features"),
 ];
 
 describe("checkRun", () => {
@@ -24,5 +25,14 @@ describe("checkRun", () => {
     expect(checkRun(["tiles"], ["asthma"], entries)[0]).toMatch(/can't run on GitHub/);
     expect(checkRun(["places"], ["nope; rm"], entries)[0]).toMatch(/isn't a dataset id/);
     expect(checkRun([], [], entries)).toHaveLength(2);
+  });
+  it("lets features and export-values run alone, export-values with no ids (#449)", () => {
+    expect(checkRun(["features"], ["tip_projects"], entries)).toEqual([]);
+    expect(checkRun(["features"], ["asthma"], entries)).toHaveLength(1);
+    expect(checkRun(["export-values"], [], entries)).toEqual([]);
+    expect(checkRun(["export-values"], ["asthma"], entries)).toEqual([]);
+    expect(checkRun(["export-values"], ["tip_projects"], entries)[0]).toMatch(/no values/);
+    expect(checkRun(["export-values", "acs"], ["pct_poverty"], entries)[0]).toMatch(/runs alone/);
+    expect(checkRun(["acs", "features"], ["pct_poverty"], entries)[0]).toMatch(/runs alone/);
   });
 });

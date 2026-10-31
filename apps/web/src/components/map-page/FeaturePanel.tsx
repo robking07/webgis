@@ -10,13 +10,16 @@ import { BottomSheet, useIsPhone } from "../BottomSheet";
 import { LearnMore } from "./LearnMore";
 
 /** Readable title: the signed route ("I-35", "US 52"), else the street name, else the road class. */
-export function featureTitle(h: FeatureHit, spec?: FeatureLayerSpec): string {
+export const featureNoun = (d: Dataset | null) => (d?.measure.kind === "features" ? d.measure.noun : undefined);
+
+/** `noun` is the dataset's plural feature noun ("Road segments"); the fallback title is its singular. */
+export function featureTitle(h: FeatureHit, noun = "Features"): string {
   const p = h.properties;
   if (p.tract && p.place) return `Census tract ${Number(String(p.tract).slice(5)) / 100}, ${p.place}`;
   if (p.route) return String(p.route);
   if (p.street) return titleCase(String(p.street));
   const fs = Number(p.f_system);
-  return F_SYSTEM[fs] ? `${F_SYSTEM[fs]} segment` : spec ? "Segment" : "Road segment";
+  return F_SYSTEM[fs] ? `${F_SYSTEM[fs]} segment` : noun.replace(/s$/, "");
 }
 
 /** Some states publish street names in capitals; show them in title case. */
@@ -96,7 +99,7 @@ export function FeaturePanel({ hit, spec, dataset, top, onClose }: { hit: Featur
   const head = (
     <>
       <div className="mb-2 flex items-start justify-between gap-2">
-        <h2 className="text-sm font-semibold leading-snug">{featureTitle(hit)}</h2>
+        <h2 className="text-sm font-semibold leading-snug">{featureTitle(hit, featureNoun(dataset))}</h2>
         <button type="button" onClick={onClose} onPointerDown={(e) => e.stopPropagation()} aria-label="Close details" className="-mr-1 -mt-1 rounded p-1 text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring">
           <X className="size-4" />
         </button>
@@ -110,9 +113,9 @@ export function FeaturePanel({ hit, spec, dataset, top, onClose }: { hit: Featur
       <LearnMore links={links} />
     </>
   );
-  if (phone) return <BottomSheet label={`Details for ${featureTitle(hit)}`} summary={head} onClose={onClose}>{more}</BottomSheet>;
+  if (phone) return <BottomSheet label={`Details for ${featureTitle(hit, featureNoun(dataset))}`} summary={head} onClose={onClose}>{more}</BottomSheet>;
   return (
-    <section aria-label={`Details for ${featureTitle(hit)}`} data-obstructs=""
+    <section aria-label={`Details for ${featureTitle(hit, featureNoun(dataset))}`} data-obstructs=""
       className="absolute right-[72px] z-30 w-80 overflow-y-auto rounded-lg border bg-popover p-3 shadow-md transition-[top] duration-300"
       style={{ top, maxHeight: `calc(100% - ${top + 12}px)` }}>
       {head}{more}

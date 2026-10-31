@@ -26,12 +26,15 @@ export default function placeChainTests({ test, expect, immerse, mapIdle, tapLon
       const { page } = await o(vp, "/place/27053", { ready: false });
       const keys = page.locator("[data-key-numbers]");
       await keys.waitFor({ timeout: 20000 });
-      await page.waitForFunction(() => document.querySelectorAll("[data-key-numbers] dt").length === 6, null, { timeout: 15000 });
+      await page.waitForFunction(() => document.querySelectorAll("[data-key-numbers] > dl dt").length === 6, null, { timeout: 15000 });
       const text = await keys.innerText();
       for (const label of ["Residents", "Median household income", "Median age", "Median home value", "Average commute time", "Bachelor's degree or higher"]) {
         expect(text.includes(label), `key numbers lack "${label}": ${text}`);
       }
       expect(/±/.test(text), `no margins in the key numbers: ${text}`);
+      // #443: the grant rows sit in their own block under the key numbers.
+      const grant = await page.locator("[data-grant-numbers]").innerText();
+      for (const label of ["Households with no vehicle", "Traffic deaths"]) expect(grant.includes(label), `grant numbers lack "${label}": ${grant}`);
       // The header comes before the full list, and fits the phone's width.
       const box = await keys.boundingBox();
       expect(box.x >= 0 && box.x + box.width <= page.viewportSize().width, `key numbers overflow: ${JSON.stringify(box)}`);

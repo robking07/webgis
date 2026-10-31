@@ -5,7 +5,7 @@ import type { FeatureHit, HoverInfo } from "../map/MapView";
 import type { Dataset } from "@/lib/registry";
 import type { FeatureLayerSpec } from "@/lib/layers";
 import type { LevelValues, Values } from "@/lib/values";
-import { featureRows, featureTitle } from "./FeaturePanel";
+import { featureNoun, featureRows, featureTitle } from "./FeaturePanel";
 import { changeSummary } from "@/lib/change";
 import { areaChangeNote, type Stop } from "@/lib/periods";
 import type { ClassedLevel } from "./useViewerData";
@@ -83,7 +83,7 @@ export function FeatureHoverPopup({ hit, spec, primary }: { hit: FeatureHit; spe
   const [main, next] = featureRows(spec, hit, primary?.facets);
   return (
     <HoverCard x={hit.x} y={hit.y}>
-      <Popup title={featureTitle(hit, spec)}
+      <Popup title={featureTitle(hit, featureNoun(primary))}
         lead={main && { label: main.label, text: main.text ?? formatValue(main.value, main.unit), period: primary ? shortPeriod(primary.vintage) : undefined }}
         rows={next ? [next] : []} />
     </HoverCard>
