@@ -548,7 +548,11 @@ export function featureLineColors(colors: string[], theme: ThemeName): string[] 
   return theme === "dark" ? [...colors].reverse() : colors;
 }
 
-/** Cased lines colored by value class and sized by zoom × rank. Busier segments draw on top. */
+/** Point features in a line layer (e.g. TIP bridges and stops); a circle layer would also dot every line vertex. */
+export const POINT_FEATURES = ["in", ["geometry-type"], ["literal", ["Point", "MultiPoint"]]];
+
+/** Cased lines colored by value class and sized by zoom × rank, plus dots for any point features
+ *  in the same tiles, colored the same way. Busier segments draw on top. */
 export function featureLineLayers(o: FeatureLineOptions): LayerSpecification[] {
   const m = THEMES[o.theme].map;
   const value = ["to-number", ["get", o.valueField], 0];
@@ -565,6 +569,9 @@ export function featureLineLayers(o: FeatureLineOptions): LayerSpecification[] {
   return [
     { id: `${o.id}-casing`, type: "line", ...base, layout, paint: { "line-color": m.featureLineCasing, "line-opacity": 0.9, "line-width": width(1.2) as never } },
     { id: `${o.id}-line`, type: "line", ...base, layout, paint: { "line-color": color as never, "line-width": width(0) as never } },
+    { id: `${o.id}-point`, type: "circle", ...base, filter: POINT_FEATURES as never, layout: { "circle-sort-key": value as never },
+      paint: { "circle-color": color as never, "circle-radius": zoomInterp(SIZE.point) as never,
+        "circle-stroke-color": m.featureLineCasing, "circle-stroke-width": zoomInterp(SIZE.pointStroke) as never } },
   ];
 }
 
