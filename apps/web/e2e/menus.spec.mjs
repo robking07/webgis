@@ -850,13 +850,14 @@ for (const vp of ["phone", "laptop", "monitor"]) {
   });
 }
 
-test("phone: a long dataset title stops short of the back button (issue #243)", async (o) => {
+test("phone: a long dataset title stops short of the top-right buttons (issue #243)", async (o) => {
   const { page } = await o("phone", "/map?d=svi_minority&lv=county&at=-93.4752,45.0061,7.2");
   await immerse(page);
   await tapLonLat(page, ...HENNEPIN);
   await page.locator('section[aria-label^="Details for"]').waitFor();
-  const back = page.locator('button[data-back]');
-  await back.waitFor();
+  // A drill-down's back button sits under the place's name (#437); the right column starts with "Go to".
+  const back = page.locator('button[aria-label="Go to a region or state"]');
+  await page.locator("button[data-back]").waitFor();
   await wait(400);
   const h = await page.locator("[data-dataset-heading]").boundingBox();
   const b = await back.boundingBox();

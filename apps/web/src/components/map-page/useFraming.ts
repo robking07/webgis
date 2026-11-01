@@ -125,7 +125,8 @@ export function useFraming({ mapApi, setSelected, setFeatureSelected, isFeature,
     // The double click's first click already focused it (the trail holds the view before).
     if (childOf(h.level) && trail.current.at(-1)?.geoid !== h.geoid) {
       trail.current.push({ geoid: h.geoid, name: tidyPlaceName(h.name), before });
-      move();
+      // Focusing goes full screen: wait two frames so the padding measures the panels where they now are.
+      requestAnimationFrame(() => requestAnimationFrame(move));
       showTrail();
       setFocus(h.geoid);
       return;
@@ -171,6 +172,5 @@ export function useFraming({ mapApi, setSelected, setFeatureSelected, isFeature,
   }, [clearArea, isFeature, primary, tableOpen, narrow, mapApi, setSelected, childOf, leaveTo, setFocus, showTrail]);
 
   const leaveFocus = useCallback(() => leaveTo(null), [leaveTo]);
-  const backText = focus ? focusBack : canGoBack ? "Back to previous view" : null;
-  return { root, canGoBack: canGoBack || !!focus, backText, goBack, onMapSelect, onFeatureSelect, goToPlace, focusName, leaveFocus, clearArea };
+  return { root, canGoBack: canGoBack || !!focus, focusBack, goBack, onMapSelect, onFeatureSelect, goToPlace, focusName, leaveFocus, clearArea };
 }

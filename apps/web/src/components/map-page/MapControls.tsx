@@ -1,4 +1,4 @@
-import { ArrowLeft, Grid2x2Plus, LocateFixed, Map as MapIcon, Minus, Plus } from "lucide-react";
+import { CornerUpLeft, Grid2x2Plus, LocateFixed, Map as MapIcon, Minus, Plus } from "lucide-react";
 import { useEffect, useRef, useState, type RefObject } from "react";
 import type { Bbox, MapApi } from "../map/MapView";
 import { loadPlaceIndex, toHit, type PlaceHit, type PlaceRow } from "@/lib/search";
@@ -7,12 +7,11 @@ import { HEADER_GAP } from "./layout";
 
 /** Zoom pill (desktop; phones pinch-zoom), the "Go to" picker (issue #202), and the back button,
  *  which returns to the view before the last map click (only after a click has zoomed somewhere). */
-export function MapControls({ mapApi, atRest, backText, onBack, phone, cardH, onRegion, onPlace, onNearMe, pick }: {
+export function MapControls({ mapApi, atRest, canGoBack, onBack, phone, cardH, onRegion, onPlace, onNearMe, pick }: {
   mapApi: RefObject<MapApi | null>;
   /** The header and dataset card are showing (not immersed, not just peeking). */
   atRest: boolean;
-  /** The back button's words (where it goes), or null when there is no way back. */
-  backText: string | null;
+  canGoBack: boolean;
   onBack: () => void;
   phone: boolean;
   /** The dataset card's height: on phones the column sits just below it. */
@@ -38,20 +37,19 @@ export function MapControls({ mapApi, atRest, backText, onBack, phone, cardH, on
 
       <GoTo top={top} onRegion={onRegion} onPlace={onPlace} />
 
-      {/* Back one step, saying where to (issue #437): out of a focused place, or to the view before the last click. */}
-      {backText && (
-        <button type="button" onClick={onBack} data-back=""
-          className="wg-panel wg-zbtn absolute right-3 z-20 flex h-11 items-center gap-1.5 rounded-[14px] px-3 text-sm font-semibold whitespace-nowrap text-foreground transition-[top] duration-300 md:right-4"
+      {/* Back to the view before the last map click (only after a click has zoomed somewhere). */}
+      {canGoBack && (
+        <button type="button" onClick={onBack} aria-label="Back to the previous view" title="Back to the previous view"
+          className="wg-panel wg-zbtn absolute right-3 z-20 grid size-11 place-items-center rounded-[14px] text-foreground transition-[top] duration-300 md:right-4"
           style={{ top: top + 52 }}>
-          <ArrowLeft className="size-[18px] shrink-0" aria-hidden />
-          {backText}
+          <CornerUpLeft className="size-[18px]" aria-hidden />
         </button>
       )}
 
       {onNearMe && (
         <button type="button" onClick={onNearMe} aria-label="Near me" title="Near me"
           className="wg-panel wg-zbtn absolute right-3 z-20 grid size-11 place-items-center rounded-[14px] text-foreground transition-[top] duration-300 md:right-4"
-          style={{ top: top + (backText ? 104 : 52) }}>
+          style={{ top: top + (canGoBack ? 104 : 52) }}>
           <LocateFixed className="size-[18px]" aria-hidden />
         </button>
       )}
@@ -60,7 +58,7 @@ export function MapControls({ mapApi, atRest, backText, onBack, phone, cardH, on
         <button type="button" onClick={pick.onToggle} disabled={pick.off} aria-pressed={pick.on}
           aria-label="Pick tracts" title={pick.off ? "Zoom in to tracts to pick them" : "Pick tracts"}
           className={`wg-panel wg-zbtn absolute right-3 z-20 grid size-11 place-items-center rounded-[14px] transition-[top] duration-300 disabled:opacity-50 md:right-4 ${pick.on ? "text-primary" : "text-foreground"}`}
-          style={{ top: top + 52 * (1 + +!!backText + +!!onNearMe) }}>
+          style={{ top: top + 52 * (1 + +canGoBack + +!!onNearMe) }}>
           <Grid2x2Plus className="size-[18px]" aria-hidden />
         </button>
       )}

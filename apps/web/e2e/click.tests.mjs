@@ -26,7 +26,7 @@ export default function clickTests({ test, expect, immerse, mapIdle, tapAt, HENN
       // The padded center (clear of the details) is on Hennepin, and the panel's side is padded.
       expect(Math.abs(one.lon - HENNEPIN[0]) < 0.2 && Math.abs(one.lat - HENNEPIN[1]) < 0.15, `not centered on Hennepin: ${JSON.stringify(one)}`);
       expect(vp === "phone" ? one.pad.bottom > 0 : one.pad.right > 0, `no padding for the details: ${JSON.stringify(one.pad)}`);
-      await page.locator('button[data-back]').click();
+      await page.locator('button[aria-label="Back to the previous view"]').click();
       await mapIdle(page);
       const back = await cam(page);
       expect(Object.values(back.pad).every((v) => v === 0), `padding after Back: ${JSON.stringify(back.pad)}`);
