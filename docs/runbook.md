@@ -185,6 +185,10 @@ Three more ways to run, each with that step alone (D-552, D-557):
   datasets empty for every registry map (or ids for just those). It loads nothing: it rewrites the
   state and county value files from the database (registry ids only, never tracts), then publishes
   exactly as below, with the same checks.
+- **Commute flows** (#469): steps `commute`, datasets empty. It downloads every state's LODES
+  origin-destination files (`main` + `aux`, all jobs, the registry's LODES year), writes
+  `commute/commute.json` and uploads only that file. No database, no values; run it when `job_density`
+  moves to a new year.
 - **Margins and counts only** (D-257: every period's `<stop>/<level>.moe.json`, the counts files,
   the U.S. rows and the tract and block-group count shards), ACS maps only: steps `counts`, datasets
   the ids (required). It fetches from the Census API and reads land areas from the database, writes

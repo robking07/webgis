@@ -18,9 +18,11 @@ const STEP_KINDS: Record<string, string[]> = {
   lead: ["lead"], "food-access": ["food_access"], nri: ["fema_nri"], svi: ["svi"], features: ["features"], counts: ["acs5"],
   // shortcut: fars' timeline reads population_density's 2019 stop, which a runner doesn't have.
   timeline: ["acs5", "climdiv", "nbi", "lodes", "overdose"],
+  // #469: commute flows (LODES od), one national file, no registry dataset: named alone, with no ids.
+  commute: [],
 };
 /** Steps that run alone, each its own mode in data-run.yml. */
-const ALONE = ["features", "counts"];
+const ALONE = ["features", "counts", "commute"];
 /** Loads nothing: re-exports the database's values and publishes them, every map when no ids are named (#449). */
 const REEXPORT = "export-values";
 
@@ -33,7 +35,7 @@ export function checkRun(steps: string[], ids: string[], entries: DatasetEntry[]
   const errors: string[] = [];
   const reexport = steps.includes(REEXPORT);
   if (!steps.length) errors.push("name at least one step");
-  if (!ids.length && !reexport) errors.push("name at least one dataset id");
+  if (!ids.length && !reexport && !steps.includes("commute")) errors.push("name at least one dataset id");
   for (const s of [REEXPORT, ...ALONE]) if (steps.includes(s) && steps.length > 1) errors.push(`step "${s}" runs alone`);
   for (const s of steps) if (!STEP_KINDS[s] && s !== REEXPORT) errors.push(`step "${s}" can't run on GitHub (allowed: ${[...Object.keys(STEP_KINDS), REEXPORT].join(", ")})`);
   for (const id of ids) {

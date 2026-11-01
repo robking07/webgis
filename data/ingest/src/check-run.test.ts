@@ -41,7 +41,12 @@ describe("checkRun", () => {
     expect(checkRun(["counts"], [], entries)[0]).toMatch(/at least one dataset/);
     expect(checkRun(["acs", "counts"], ["pct_poverty"], entries)[0]).toMatch(/runs alone/);
   });
+  it("lets commute run alone, with no dataset ids (#469)", () => {
+    expect(checkRun(["commute"], [], entries)).toEqual([]);
+    expect(checkRun(["commute"], ["pct_poverty"], entries)[0]).toMatch(/doesn't load/);
+    expect(checkRun(["commute", "acs"], ["pct_poverty"], entries)[0]).toMatch(/runs alone/);
+  });
   it("names the run's mode for data-run.yml", () => {
-    expect([["acs", "timeline"], ["features"], ["counts"], ["export-values"]].map(runMode)).toEqual(["values", "features", "counts", "export-values"]);
+    expect([["acs", "timeline"], ["features"], ["counts"], ["export-values"], ["commute"]].map(runMode)).toEqual(["values", "features", "counts", "export-values", "commute"]);
   });
 });
