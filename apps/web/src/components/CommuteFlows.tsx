@@ -78,7 +78,13 @@ export function CommuteFlows({ geoid, onLines }: { geoid: string; onLines?: (lin
   const name = short(geoid);
   return (
     <section aria-labelledby="commute-flows" className={onLines ? "mt-3" : "mb-6"} data-commute-flows="">
-      <h2 id="commute-flows" className="text-base font-semibold">Commuting</h2>
+      <div className="flex items-baseline justify-between gap-2">
+        <h2 id="commute-flows" className="text-base font-semibold">Commuting</h2>
+        {onLines && <button type="button" onClick={() => setOpen(false)} className={link}>Hide commute flows</button>}
+      </div>
+      {onLines && <p className="text-xs text-muted-foreground">Line width = commuters, both directions.</p>}
+      {/* The phone sheet at its short height shows only the heading and key, so the map above stays readable. */}
+      <div className="group-data-[snap=peek]:hidden">
       <div className={`mt-1 grid gap-4 ${onLines ? "" : "sm:grid-cols-2"}`}>
         <List title="Where its workers live" lead={`${num(workers)} workers; ${pct(same, workers)} live in ${name}.`} rows={live} of={workers} />
         <List title="Where its residents work" lead={`${num(residents)} working residents; ${pct(same, residents)} work in ${name}.`} rows={work} of={residents} />
@@ -87,7 +93,7 @@ export function CommuteFlows({ geoid, onLines }: { geoid: string; onLines?: (lin
         Source: U.S. Census Bureau, LEHD Origin-Destination Employment Statistics (LODES 8), {data!.years[geoid.slice(0, 2)] ?? data!.year}.
         Counts are jobs, so a person with two jobs counts twice.
       </p>
-      {onLines && <button type="button" onClick={() => setOpen(false)} className={`mt-1 ${link}`}>Hide commute flows</button>}
+      </div>
     </section>
   );
 }
