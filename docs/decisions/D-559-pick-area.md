@@ -26,3 +26,7 @@ tract, outlined with the selection outline (a `picked` feature-state flag in `pa
 - **Not in v1:** sharing the area by URL, buffers, lasso, block groups or counties.
 - shortcut: on a timeline stop drawn on 2010 tracts, picks are 2010 geoids and the 2020 counts don't
   have them, so the total says a tract's numbers are missing.
+
+## Amendments
+
+- 2026-10-31 (PR #466, issue #391): counties too; the button is now "Pick an area". See D-566.
