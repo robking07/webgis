@@ -3,7 +3,7 @@ import type { GeoLevel } from "@webgis/design";
 import type { Camera, FeatureHit, HoverInfo, MapApi, Padding } from "../map/MapView";
 import type { Dataset } from "@/lib/registry";
 import { comparePickOpen } from "@/lib/compare";
-import { levelOfGeoid, tidyPlaceName } from "@/lib/place";
+import { backLabel, levelOfGeoid, tidyPlaceName } from "@/lib/place";
 import { loadPlaceIndex, placeByGeoid, zoomForArea } from "@/lib/search";
 
 export type PlaceTarget = { geoid: string | null; level: GeoLevel | null; name: string; lon: number; lat: number; sqmi?: number };
@@ -44,7 +44,13 @@ export function useFraming({ mapApi, setSelected, setFeatureSelected, isFeature,
   /** The places clicked into, outermost first; the last is the focused one. */
   const trail = useRef<Step[]>([]);
   const [focusName, setFocusName] = useState<string | null>(null);
-  const showTrail = useCallback(() => setFocusName(trail.current.at(-1)?.name.split(",")[0] ?? null), []);
+  /** The back button's words while a place is focused: the step Back goes to (issue #437). */
+  const [focusBack, setFocusBack] = useState("Back to national view");
+  const showTrail = useCallback(() => {
+    const t = trail.current;
+    setFocusName(t.at(-1)?.name.split(",")[0] ?? null);
+    setFocusBack(backLabel(t.at(-2)));
+  }, []);
 
   /** Map padding that keeps a target clear of whatever is open: every element marked
    *  `data-obstructs` claims the screen edge it covers least. `detail` reserves room for a
@@ -114,11 +120,13 @@ export function useFraming({ mapApi, setSelected, setFeatureSelected, isFeature,
     const api = mapApi.current;
     if (!h || !api || picking) return;
     const before = api.getCamera();
-    const move = () => api.fitGeography(h.level, h.geoid, clearArea(true), !fit);
+    // A state click frames the whole state (issue #437); deeper clicks only center (D-418).
+    const move = () => api.fitGeography(h.level, h.geoid, clearArea(true), !fit && h.level !== "state");
     // The double click's first click already focused it (the trail holds the view before).
     if (childOf(h.level) && trail.current.at(-1)?.geoid !== h.geoid) {
       trail.current.push({ geoid: h.geoid, name: tidyPlaceName(h.name), before });
-      move();
+      // Focusing goes full screen: wait two frames so the padding measures the panels where they now are.
+      requestAnimationFrame(() => requestAnimationFrame(move));
       showTrail();
       setFocus(h.geoid);
       return;
@@ -164,5 +172,5 @@ export function useFraming({ mapApi, setSelected, setFeatureSelected, isFeature,
   }, [clearArea, isFeature, primary, tableOpen, narrow, mapApi, setSelected, childOf, leaveTo, setFocus, showTrail]);
 
   const leaveFocus = useCallback(() => leaveTo(null), [leaveTo]);
-  return { root, canGoBack: canGoBack || !!focus, goBack, onMapSelect, onFeatureSelect, goToPlace, focusName, leaveFocus, clearArea };
+  return { root, canGoBack: canGoBack || !!focus, focusBack, goBack, onMapSelect, onFeatureSelect, goToPlace, focusName, leaveFocus, clearArea };
 }

@@ -850,13 +850,14 @@ for (const vp of ["phone", "laptop", "monitor"]) {
   });
 }
 
-test("phone: a long dataset title stops short of the back button (issue #243)", async (o) => {
+test("phone: a long dataset title stops short of the top-right buttons (issue #243)", async (o) => {
   const { page } = await o("phone", "/map?d=svi_minority&lv=county&at=-93.4752,45.0061,7.2");
   await immerse(page);
   await tapLonLat(page, ...HENNEPIN);
   await page.locator('section[aria-label^="Details for"]').waitFor();
-  const back = page.locator('button[aria-label="Back to the previous view"]');
-  await back.waitFor();
+  // A drill-down's back button sits under the place's name (#437); the right column starts with "Go to".
+  const back = page.locator('button[aria-label="Go to a region or state"]');
+  await page.locator("button[data-back]").waitFor();
   await wait(400);
   const h = await page.locator("[data-dataset-heading]").boundingBox();
   const b = await back.boundingBox();
@@ -913,7 +914,7 @@ for (const vp of ["laptop", "phone"]) {
 
 /** Phone chrome over the map: every text, icon and edge against its own backing. */
 const PHONE_ON_MAP = ["[data-dataset-heading]", "[data-filter-button]:not([inert] *)", "[data-filter-note]:not([inert] *)", "button[data-legend]",
-  'button[aria-label="Show navigation"]', 'button[aria-label="Back to the previous view"]', ".wg-credits", 'section[aria-label="Mapped dataset"]'];
+  'button[aria-label="Show navigation"]', 'button[data-back]', ".wg-credits", 'section[aria-label="Mapped dataset"]'];
 const contrastLog = [];
 for (const scheme of ["light", "dark"]) {
   test(`phone contrast (${scheme}): on-map text ≥ 4.5:1, icons and edges ≥ 3:1, all on a backing`, async (o) => {

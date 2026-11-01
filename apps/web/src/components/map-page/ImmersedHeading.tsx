@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Menu, X } from "lucide-react";
+import { ArrowLeft, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { Dataset } from "@/lib/registry";
 import { DatasetHeading } from "../DatasetMenus";
@@ -40,8 +40,9 @@ export function ImmersedHeading({ primary, secondary, immersed, hasFilters, filt
   /** Compare mode: back to the first map alone. Full screen folds the card's compare strip into this
    *  heading as an Exit button (Robbie, 2026-10-14, issue #198). */
   onExit: () => void;
-  /** Drill-down (issue #203): the focused place's name, larger, with a control that leaves it. */
-  place?: { name: string; onClear: () => void } | null;
+  /** Drill-down (issue #203): the focused place's name, larger, with a control that leaves it;
+   *  `back` names where `onBack` goes, one step up (issue #437). */
+  place?: { name: string; onClear: () => void; back?: string; onBack?: () => void } | null;
   /** Under the place's name: a searched city's or metro's own numbers (issue #332). */
   detail?: ReactNode;
   /** The map's back button is showing (top right on phones): keep the heading clear of it. */
@@ -85,6 +86,14 @@ export function ImmersedHeading({ primary, secondary, immersed, hasFilters, filt
               <X className="size-4" aria-hidden />
             </button>
           </p>
+        </div>
+      )}
+      {place?.back && (
+        <div className={phone ? "pl-[52px]" : ""}>
+          <button type="button" onClick={place.onBack} data-back=""
+            className={`wg-panel wg-zbtn pointer-events-auto inline-flex items-center gap-1.5 rounded-xl px-3 text-sm font-semibold text-foreground focus-visible:outline-2 focus-visible:outline-ring ${phone ? "h-11" : "h-9"}`}>
+            <ArrowLeft className="size-4 shrink-0" aria-hidden />{place.back}
+          </button>
         </div>
       )}
       {place && detail && <div className={phone ? "pl-[52px]" : ""}>{detail}</div>}

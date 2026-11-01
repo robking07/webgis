@@ -30,5 +30,15 @@ export function rankText(values: Record<string, number> | undefined, v: number |
   return `Ranks higher than ${lower.toLocaleString()} of ${n.toLocaleString()} ${plural}`;
 }
 
+/** The back button's words (issue #437): where Back goes, the place one step up the drill-down
+ *  (`to`, its GEOID and name), or the national view when nothing is above. */
+export function backLabel(to?: { geoid: string; name: string }): string {
+  if (!to) return "Back to national view";
+  const level = levelOfGeoid(to.geoid), name = to.name.split(",")[0];
+  if (level === "tract" || level === "block_group" || level === "block") return `Back to ${LEVEL_PLURAL[level].slice(0, -1)}`;
+  if (!name) return "Back to previous view"; // a shared link's name is still loading
+  return level === "state" ? `Back to ${name} view` : `Back to ${name}`;
+}
+
 /** Names the way the site writes them: DC's county reads "District of Columbia", tracts "Census tract 101, ...". */
 export const tidyPlaceName = (n: string) => (n === "District of Columbia, DC" ? "District of Columbia" : n.replace(/^Tract /, "Census tract "));
