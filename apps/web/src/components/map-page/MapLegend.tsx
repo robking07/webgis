@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { ChevronDown, Search } from "lucide-react";
+import { ChevronDown } from "lucide-react";
+import { SearchIcon } from "../SearchOverlay";
 import { BivariateLegend, Legend, StatusState } from "@webgis/design/components";
 import { featureLineColors, formatValue, GEO_LEVELS, legendFormat, type GeoLevel, type ThemeName } from "@webgis/design";
 import type { Dataset } from "@/lib/registry";
@@ -125,9 +126,9 @@ export function MapLegend({ theme, primary, secondary, isFeature, featureSpec, c
       )}
       {onSearch && legendStrip && legendEnds && !legendOpen && (
         // shortcut: hidden while the full legend shows (expanded, or no strip yet); fine while the strip is the phone default.
-        <button type="button" onClick={onSearch} aria-label="Search places or data" title="Search places or data"
+        <button type="button" onClick={onSearch} aria-label="Search places and datasets" title="Search places and datasets"
           className="wg-panel wg-zbtn absolute bottom-[66px] left-3 z-20 grid size-11 place-items-center rounded-[14px] text-foreground focus-visible:outline-2 focus-visible:outline-ring md:hidden">
-          <Search className="size-[18px]" aria-hidden />
+          <SearchIcon />
         </button>
       )}
       <section aria-label="Legend" data-legend=""

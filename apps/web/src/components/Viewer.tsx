@@ -508,7 +508,7 @@ export function Viewer({ search }: { search: string }) {
         <ImmersedHeading primary={primary} secondary={secondary} immersed={immersed} hasFilters={hasFilters} filtersOpen={!!filters} filterCount={nFilters}
           caption={isFeature ? filterSummary ?? "All roads shown" : GEO_LEVELS[level].plural} captionHint={isFeature ? null : chipHint}
           phone={phone} motion={stepAside ? (phone ? "hide" : "dim") : null}
-          onShowNav={() => { setImmersed(false); setPeek(false); }}
+          onShowNav={() => { setImmersed(false); setPeek(false); }} onSearch={() => setSearchOpen(true)}
           onOpenFilters={toggleFilters} onOpenLevel={openLevelFilters} levelPill={!isFeature}
           menuOpen={menuOpen && immersed} menu={immersed ? datasetMenu : null} onBrowse={changeDataset} onExit={exitCompare}
           place={picked ? { name: picked.mpo ? `${picked.name} · ${picked.mpo.states}` : picked.name, onClear: () => update({ mpo: null, area: null }) } : focus && focusName ? { name: focusName, onClear: leaveFocus, back: focusBack, onBack: goBack } : null} backShown={canGoBack || phone}
@@ -548,8 +548,8 @@ export function Viewer({ search }: { search: string }) {
         hatchToggle={hatchable ? { on: hatchOn, onChange: setHatchOn, loading: hatchOn && !hatch?.[level] } : null}
         desktopStrip={desktopStrip} mark={selected && selected.level === level ? selClass : null}
         covered={phone && (placeOpen || tableOpen || listOpen || stepAside || ctxOpen || pickShown)} tableReady={tableReady} tableLevel={tableLevel} onTable={() => setTableOpen(true)}
-        // Phones, once a tap or pick has zoomed in (the header and its search are gone): search above the legend (issue #246).
-        onSearch={phone && immersed && (canGoBack || !!focus) && !pickShown ? () => setSearchOpen(true) : null} />
+        // Phones, whenever the header and its search are gone: search above the legend (issues #246, #438).
+        onSearch={phone && immersed && !pickShown ? () => setSearchOpen(true) : null} />
 
       <MapCredits datasets={[primary, secondary].filter((d): d is Dataset => !!d)} />
 
