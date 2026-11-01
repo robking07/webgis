@@ -424,24 +424,27 @@ export function Viewer({ search }: { search: string }) {
       return blob && { blob, name: `mapwich-${cited.map((d) => d.id).join("-")}.png` };
     },
   };
-  // Pick an area (#455): taps toggle tracts while picking; the total stays after Done until Clear.
+  // Pick an area (#455, #391): taps toggle tracts or counties (the level drawn) while picking; the total stays after Done until Clear.
   const [picking, setPicking] = useState(false);
   // shortcut: picks on a 2010-tract timeline stop are 2010 geoids with no 2020 counts ("numbers are missing"); map them if planners pick on old years.
-  const [pickedTracts, setPickedTracts] = useState<string[]>([]);
+  const [picks, setPicks] = useState<string[]>([]);
   const [pickFull, setPickFull] = useState(false);
-  const pickable = !!primary && !isFeature && availableLevels.includes("tract");
+  // One level per pick set (mixing would count people twice): the first pick sets it.
+  const pickLevel: GeoLevel | null = picks[0] ? (picks[0].length === 5 ? "county" : "tract") : null;
+  const pickable = !!primary && !isFeature && (pickLevel ? availableLevels.includes(pickLevel) : availableLevels.includes("tract") || availableLevels.includes("county"));
   const onPick = (g: string) => {
-    if (pickedTracts.includes(g)) { setPickedTracts(pickedTracts.filter((t) => t !== g)); setPickFull(false); }
-    else if (pickedTracts.length >= PICK_MAX) setPickFull(true);
-    else setPickedTracts([...pickedTracts, g]);
+    if (picks.includes(g)) { setPicks(picks.filter((t) => t !== g)); setPickFull(false); }
+    else if (pickLevel && g.length !== picks[0].length) return; // the bar says to Clear first
+    else if (picks.length >= PICK_MAX) setPickFull(true);
+    else setPicks([...picks, g]);
   };
   const togglePicking = () => {
     if (!picking) { setSelected(null); setFeatureSelected(null); mapApi.current?.select("county", null); }
     setPicking(!picking);
   };
   const donePicking = useCallback(() => setPicking(false), []);
-  const clearPicks = () => { setPickedTracts([]); setPickFull(false); setPicking(false); };
-  const pickShown = pickable && (picking || pickedTracts.length > 0) && !(phone && placeOpen);
+  const clearPicks = () => { setPicks([]); setPickFull(false); setPicking(false); };
+  const pickShown = pickable && (picking || picks.length > 0) && !(phone && placeOpen);
   // Narrow screens dock the table at the bottom; the details panel waits until it closes.
   const detailHidden = tableOpen && narrow;
 
@@ -483,7 +486,7 @@ export function Viewer({ search }: { search: string }) {
           focus={focus}
           picking={picking && pickable}
           onPick={onPick}
-          picked={pickable ? pickedTracts : undefined}
+          picked={pickable ? picks : undefined}
           ariaLabel={primary ? `Map of ${since ? "change in " : ""}${primary.title}${since ? ` from ${since.label} to ${stop!.label}` : ""}${secondary ? ` compared with ${secondary.title}` : ""} by ${GEO_LEVELS[level].label.toLowerCase()}` : "Map"}
         />
       </main>
@@ -530,9 +533,9 @@ export function Viewer({ search }: { search: string }) {
 
       <MapControls mapApi={mapApi} atRest={chromeShown && !immersed} canGoBack={canGoBack && !focus} onBack={goBack} phone={phone} cardH={cardH}
         onRegion={goToRegion} onPlace={onSearchPlace} onNearMe={phone && "geolocation" in navigator ? nearMe : null}
-        pick={pickable ? { on: picking, off: level !== "tract" && !picking, onToggle: togglePicking } : null} />
+        pick={pickable ? { on: picking, off: level !== "tract" && level !== "county" && !picking, onToggle: togglePicking } : null} />
       {pickShown && (
-        <PickArea datasets={secondary ? [primary!, secondary] : [primary!]} picked={pickedTracts} picking={picking} full={pickFull}
+        <PickArea datasets={secondary ? [primary!, secondary] : [primary!]} picked={picks} picking={picking} full={pickFull} drawn={level}
           onDone={donePicking} onClear={clearPicks} />
       )}
       {usLost && (

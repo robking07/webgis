@@ -109,10 +109,10 @@ interface Props {
   /** Drill-down (issue #203): the clicked-into place. Its `child` level draws only inside it, the rest
    *  of its level sits under a dim wash, and hover and clicks reach only its children. */
   focus?: Focus | null;
-  /** Pick an area (#455): while true, a tract click calls onPick with its geoid instead of selecting. */
+  /** Pick an area (#455, #391): while true, a tract or county click calls onPick with its geoid instead of selecting. */
   picking?: boolean;
   onPick?: (geoid: string) => void;
-  /** The picked tracts (11-digit geoids), outlined. */
+  /** The picked tracts (11-digit geoids) or counties (5-digit), outlined. */
   picked?: string[];
 }
 
@@ -405,9 +405,9 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
       }
       last = null;
       if (latest.current.picking && !latest.current.featureLayer) {
-        // No details and no double-click fit (D-418) while picking: each tap toggles a tract.
+        // No details and no double-click fit (D-418) while picking: each tap toggles a tract or county.
         const f = placeAt(e.point);
-        if (f?.sourceLayer === "tract") latest.current.onPick?.(String(f.properties.geoid));
+        if (f?.sourceLayer === "tract" || f?.sourceLayer === "county") latest.current.onPick?.(String(f.properties.geoid));
         return;
       }
       if (latest.current.featureLayer) {
@@ -480,14 +480,14 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
   // Two quick taps while picking toggle tracts; they don't zoom in.
   useEffect(() => { if (picking) map.current?.doubleClickZoom.disable(); else map.current?.doubleClickZoom.enable(); }, [picking]);
 
-  // Picked tracts: flag the new ones, unflag the dropped ones.
+  // Picked tracts or counties: flag the new ones, unflag the dropped ones.
   useEffect(() => {
     const m = map.current;
     const prev = pickedRef.current;
     pickedRef.current = picked;
-    if (!m || !ready.current || !m.getSource("b-tract")) return;
-    for (const id of prev) if (!picked.includes(id)) m.removeFeatureState({ source: "b-tract", sourceLayer: "tract", id }, "picked");
-    for (const id of picked) m.setFeatureState({ source: "b-tract", sourceLayer: "tract", id }, { picked: true });
+    if (!m || !ready.current) return;
+    for (const id of prev) if (!picked.includes(id) && m.getSource(pickSource(id).source)) m.removeFeatureState(pickSource(id), "picked");
+    restoreFlags(m, null, null, null, picked);
   }, [picked]);
 
   // Drill-down focus: filters and the dim wash.
@@ -707,8 +707,11 @@ function restoreFlags(m: MlMap, hover: Flag, sel: Flag, second: Flag, picked: st
   for (const [f, key] of [[hover, "hover"], [sel, "selected"], [second, "second"]] as const) {
     if (f && m.getSource(`b-${f.level}`)) m.setFeatureState({ source: `b-${f.level}`, sourceLayer: f.level, id: f.id }, { [key]: true });
   }
-  if (m.getSource("b-tract")) for (const id of picked) m.setFeatureState({ source: "b-tract", sourceLayer: "tract", id }, { picked: true });
+  for (const id of picked) if (m.getSource(pickSource(id).source)) m.setFeatureState(pickSource(id), { picked: true });
 }
+
+/** A picked geoid's feature: 5 digits is a county, 11 a tract. */
+const pickSource = (id: string) => { const lv = id.length === 5 ? "county" : "tract"; return { source: `b-${lv}`, sourceLayer: lv, id }; };
 
 function setFlag(m: MlMap, ref: { current: { level: GeoLevel; id: string } | null }, next: { level: GeoLevel; id: string } | null, key: string) {
   const cur = ref.current;
