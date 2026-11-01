@@ -132,7 +132,7 @@ export function Viewer({ search }: { search: string }) {
 
   /** Counties whose tracts are on screen, while hatching or a change map's margin test needs them. */
   const [tractCounties, setTractCounties] = useState<string[]>([]);
-  const { primary, secondary, isFeature, featureSpec, stops, stop, stopId, since, xBase, xFrom, testMoes, fit, valueLevels, availableLevels, pinnedLevel, focus, bands, x, y, level, classed, blockField } = useViewerData(state, tractCounties);
+  const { primary, secondary, isFeature, featureSpec, stops, stop, stopId, since, xBase, xFrom, fit, valueLevels, availableLevels, pinnedLevel, focus, bands, x, y, level, classed, blockField } = useViewerData(state, tractCounties);
   const current = classed[level];
   // A year off the default is colored with the default's breaks (xBase): its failure is an error, not a spinner.
   const error = x.error ?? y.error ?? xFrom.error ?? xBase.error;
@@ -482,7 +482,7 @@ export function Viewer({ search }: { search: string }) {
           attribution={false}
           hatch={hatch}
           onTractCounties={setTractCounties}
-          watchCounties={testMoes || fit}
+          watchCounties={fit}
           focus={focus}
           picking={picking && pickable}
           onPick={onPick}
@@ -612,7 +612,7 @@ export function Viewer({ search }: { search: string }) {
         <DetailPanel info={selected} top={panelTop} onClose={() => { setSelected(null); mapApi.current?.select("county", null); }} primary={primary} secondary={secondary}
           xv={x.values[selected.level]} yv={y.values[selected.level]}
           period={stopId && !since ? { label: stop!.label, defaultLabel: primary.vintage } : undefined}
-          change={since && selClassed?.change ? { fromLabel: since.label, toLabel: stop!.label, fromValues: xFrom.values[selected.level], classed: selClassed, toIsDefault: !!stop?.isDefault, boundaryNote: areaChangeNote(since, stop!, selected.level, selected.geoid) } : undefined}
+          change={since && selClassed?.change ? { fromLabel: since.label, toLabel: stop!.label, fromValues: xFrom.values[selected.level], classed: selClassed, boundaryNote: areaChangeNote(since, stop!, selected.level, selected.geoid) } : undefined}
           onMapIt={pickDataset} onPlace={onSearchPlace} legendKey={legendKey} finest={!childLevel(availableLevels, selected.level)} />
       )}
     </div>

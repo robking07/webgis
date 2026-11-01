@@ -33,17 +33,12 @@ describe("change measure", () => {
 
 describe("margin of error of a change", () => {
   it("combines both margins as √(MOE₁² + MOE₂²)", () => {
-    expect(differenceMoe(10, 3, 12, 4)).toBeCloseTo(5);
+    expect(differenceMoe(3, 4)).toBeCloseTo(5);
   });
 
-  it("assumes the later relative margin when the earlier one is unknown", () => {
-    // MOE₁ ≈ 4 · 10/20 = 2 → √(4 + 16)
-    expect(differenceMoe(10, null, 20, 4)).toBeCloseTo(Math.sqrt(20));
-    expect(differenceMoe(10, null, 0, 4)).toBeCloseTo(Math.sqrt(32));
-  });
-
-  it("can't test without the later margin", () => {
-    expect(differenceMoe(10, 3, 12, null)).toBeNull();
+  it("can't test without both published margins (no estimate)", () => {
+    expect(differenceMoe(3, null)).toBeNull();
+    expect(differenceMoe(undefined, 4)).toBeNull();
     expect(withinMoe(10, 12, null)).toBe(false);
   });
 
@@ -85,11 +80,20 @@ describe("classifyChange", () => {
   });
 
   it("moves changes within the margin of error to the middle", () => {
-    const c = classifyChange(from, to, "percent", { g: 10, a: 1 });
+    // Real county margins, both years (2019 → 2024): +6 within √(8² + 6²) = 10, −6 past √(1² + 1²).
+    const moes = { g: differenceMoe(8, 6)!, a: differenceMoe(1, 1)! };
+    const c = classifyChange(from, to, "percent", moes);
     expect(c.tested).toBe(true);
     expect(c.labels[3]).toBe("No clear change");
-    expect(c.classes.get("g")).toBe(3); // +6 within √(MOE₁² + 10²)
-    expect(c.classes.get("a")).toBe(0); // −6 well past ≈1.6
+    expect(c.classes.get("g")).toBe(3);
+    expect(c.classes.get("a")).toBe(0);
+    expect(c.classes.get("f")).toBeGreaterThan(3); // no margins for f: classed by its change
+  });
+
+  it("tests nothing when a map has no margin file (empty margins)", () => {
+    const c = classifyChange(from, to, "percent", {});
+    expect(c.tested).toBe(false);
+    expect(c.labels[3]).toBe("No change");
   });
 
   it("drops a zero base from a percent-change map", () => {
