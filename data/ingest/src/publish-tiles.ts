@@ -233,8 +233,6 @@ export const publishSearch = () => publishJson("geo", "search", undefined, (f) =
 export const publishDetails = () => publishJson("details", "details");
 /** Similar counties (similar/similar.json, from `ingest similar`, #401), gzip-encoded. */
 export const publishSimilar = () => publishJson("similar", "similar");
-/** Commute flows (commute/commute.json, from `ingest commute`, #469), gzip-encoded. */
-export const publishCommute = () => publishJson("commute", "commute");
 /** City and metro area files (areas/, from `ingest areas`, #332), gzip-encoded. */
 export const publishAreas = () => publishJson("areas", "areas");
 
