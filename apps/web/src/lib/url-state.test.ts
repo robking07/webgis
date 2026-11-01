@@ -1,5 +1,14 @@
 import { describe, expect, it } from "vitest";
-import { historyKey, parseUrlState, serializeUrlState } from "./url-state";
+import { historyKey, parseUrlState, searchHref, serializeUrlState } from "./url-state";
+
+describe("searchHref (search off the map, issue #438)", () => {
+  it("links a dataset, a county (focused), a city and an MPO", () => {
+    expect(searchHref("asthma")).toBe("/map?d=asthma");
+    expect(searchHref(null, { name: "Cook County, IL", kind: "County", geoid: "17031", level: "county", lon: -87.75, lat: 41.84, sqmi: 945 })).toMatch(/^\/map\?at=-87\.7500,41\.8400,[\d.]+&in=17031$/);
+    expect(searchHref("asthma", { name: "Duluth", kind: "City", geoid: null, level: null, lon: -92.1, lat: 46.8, sqmi: 87, area: "place2717000" })).toMatch(/^\/map\?d=asthma&at=.+&area=place2717000$/);
+    expect(searchHref(null, { name: "Met Council", kind: "MPO", geoid: null, level: null, lon: -93.3, lat: 45, sqmi: 3000, mpo: { id: "27MC", states: "MN", bbox: [-94, 44, -92, 46] } })).toMatch(/&mpo=27MC$/);
+  });
+});
 
 describe("historyKey", () => {
   const base = parseUrlState("?d=a&at=-93,45,7");
