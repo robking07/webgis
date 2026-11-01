@@ -10,8 +10,7 @@ import type { Dataset } from "./registry";
 const NO_BENCHMARK = new Set<Unit>(["count", "agreements", "categories", "percentile"]);
 
 /** The kinds whose U.S. file is on R2 (D-257); others would only 404. */
-// shortcut: food_access joins once its us.json is published (Data run food-access, then #460).
-export const US_KINDS = new Set(["acs5", "census2020", "fars", "lodes"]);
+export const US_KINDS = new Set(["acs5", "census2020", "fars", "lodes", "food_access"]);
 
 export type Benchmark = { label: string; value: number };
 
