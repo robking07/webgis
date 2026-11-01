@@ -65,8 +65,13 @@ export const SHARD_PREFIXES = ["values/tracts/", "values/counts/"];
 /** One map's tract file for one county (values/<id>/tracts/<county>.json, D-506). Only that map's
  *  load writes it, so it can't drop another map; the checks refuse one that drops live tracts. */
 export const isTractFile = (key: string) => /^values\/[a-z0-9_]+\/tracts\/\d{5}\.json$/.test(key);
-/** One map's state or county values (values/<id>/{state,county}.json, from export-values). */
-const isLevelFile = (key: string) => /^values\/[a-z0-9_]+\/(state|county)\.json$/.test(key);
+/** Relative to values/: one map's margins, any period (D-257), and its state and county counts (`ingest counts`). */
+const MOE_FILE = /^[a-z0-9_]+\/(\d{4}\/)?(state|county|tract)\.moe\.json$/;
+const COUNTS_FILE = /^[a-z0-9_]+\/(state|county)\.counts\.json$/;
+/** One map's file keyed by place: its state or county values (values/<id>/{state,county}.json, from
+ *  export-values), margins or counts (#454). The drop check compares how many places each holds. */
+const isLevelFile = (key: string) => key.startsWith("values/")
+  && [/^[a-z0-9_]+\/(state|county)\.json$/, MOE_FILE, COUNTS_FILE].some((re) => re.test(key.slice("values/".length)));
 
 /** What would be lost if `changed` went up, checked before anything does (one list for the lot):
  *  - a shard that drops a live dataset: a checkout without the full shards writes ones holding only
@@ -74,7 +79,8 @@ const isLevelFile = (key: string) => /^values\/[a-z0-9_]+\/(state|county)\.json$
  *  - a map's tract file that drops live tracts (a reload that came back short for a county);
  *  - a reloaded map (one with tract files here) whose county files on R2 include one this load
  *    doesn't have: its stale file would stay live, since publish never deletes;
- *  - a map's state or county file with fewer places than the live one (a short database, #449).
+ *  - a map's state or county values, margins (tract too, any period) or counts with fewer places than the live one
+ *    (a short database #449, or a short Census response #454).
  *  Only files R2 already holds (`liveKeys`) are fetched. `local`: every key this upload covers. */
 export async function uploadProblems(changed: { key: string; body: Buffer }[], liveKeys: Set<string>, local: Set<string>,
   fetchLive: (key: string) => Promise<Record<string, unknown> | null>): Promise<string[]> {
@@ -233,12 +239,7 @@ export const publishAreas = () => publishJson("areas", "areas");
 /** The files `ingest counts` writes (#156, #154), relative to values/: margins of error, counts, U.S.
  *  rows and the tract and block-group count shards. Nothing else matches, so existing files are
  *  never re-sent by `publish-counts`, whatever state the rest of data/tiles is in. */
-const COUNT_FILES = [
-  /^[a-z0-9_]+\/(\d{4}\/)?(state|county|tract)\.moe\.json$/,
-  /^[a-z0-9_]+\/(state|county)\.counts\.json$/,
-  /^[a-z0-9_]+\/(\d{4}\/)?us\.json$/,
-  /^counts\/(tract|block_group)\/\d{5}\.json$/,
-];
+const COUNT_FILES = [MOE_FILE, COUNTS_FILE, /^[a-z0-9_]+\/(\d{4}\/)?us\.json$/, /^counts\/(tract|block_group)\/\d{5}\.json$/];
 export const isCountFile = (f: string) => COUNT_FILES.some((re) => re.test(f));
 /** `ingest publish-counts`: upload only the files `ingest counts` writes. */
 export const publishCounts = (only?: string[]) => publishJson("values", "counts", only && [...only, "counts"], isCountFile);

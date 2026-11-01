@@ -86,6 +86,13 @@ describe("uploadProblems (D-506)", () => {
     const same = [{ key: "values/pct_poverty/county.json", body: gz({ "27053": 1.5, "27123": 2 }) }];
     expect(await uploadProblems(same, keys, keys, fetch)).toEqual([]);
   });
+  it("refuses a short margins or counts file, an earlier period's too (#454)", async () => {
+    const fetch = async () => ({ "27053": 1, "27123": 2 });
+    const files = ["values/pct_poverty/2019/county.moe.json", "values/pct_poverty/2019/tract.moe.json", "values/pct_poverty/state.counts.json"];
+    const keys = new Set(files);
+    const short = files.map((key) => ({ key, body: gz({ "27053": 1 }) }));
+    expect(await uploadProblems(short, keys, keys, fetch)).toEqual(files.map((f) => `${f}: would cut 2 live places to 1`));
+  });
   it("fetches nothing for files R2 doesn't have yet (the split's new files)", async () => {
     let fetched = 0;
     const changed = [{ key: "values/pct_poverty/tracts/01001.json", body: gz({}) }];
