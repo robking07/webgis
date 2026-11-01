@@ -23,7 +23,7 @@ interface Props {
 /** The search buttons' icon, on and off the map (issue #438: a bit bigger and bolder). */
 export const SearchIcon = () => <Search className="size-5" strokeWidth={2.5} aria-hidden />;
 
-type Item ={ kind: "place"; p: PlaceHit } | { kind: "dataset"; d: Dataset } | { kind: "both"; d: Dataset; p: PlaceHit } | { kind: "address" };
+type Item = { kind: "place"; p: PlaceHit } | { kind: "dataset"; d: Dataset } | { kind: "both"; d: Dataset; p: PlaceHit } | { kind: "address" };
 
 export function SearchOverlay({ onClose, onPlace, onDataset, onBoth, onAddress, current, full }: Props) {
   const [q, setQ] = useState("");

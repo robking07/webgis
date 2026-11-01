@@ -81,7 +81,7 @@ function SiteSearch({ className }: { className: string }) {
   );
 }
 
-const noSubscribe =() => () => {};
+const noSubscribe = () => () => {};
 /** ?theme=, else the remembered choice, else null (follow the system). */
 const readExplicit = (): ThemeName | null => {
   const p = new URLSearchParams(window.location.search).get("theme");
