@@ -4,9 +4,9 @@
 // ingest publishes (relations.json) get a number; medians, indexes and modelled rates say they can't
 // be added up. Exact when the MPO is whole counties; "near-exact" when its boundary cuts a county and
 // that county's tracts inside are added instead (#390); "approximate" (the half rule) when they can't be.
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { formatEstimate } from "@webgis/design";
-import { countsLabels, regionCounties, regionTotal, shareOf, WHOLE, type RegionCounty } from "@/lib/counts";
+import { countsLabels, regionCounties, regionTotal, shareOf, WHOLE, type Counts, type RegionCounty } from "@/lib/counts";
 import { loadMpoCounties, loadPlaceIndex, placeByGeoid } from "@/lib/search";
 import type { Dataset } from "@/lib/registry";
 
@@ -19,6 +19,35 @@ const est = (n: number, moe: number | null) => {
   const e = count(n, moe);
   return e.moe ? `${e.value} ±${e.moe}` : e.value;
 };
+
+/** One map's line in an area total (an MPO's here, a picked area's in PickArea): the summed counts with
+ *  their ±, or why there's none. `c` undefined = still adding up; null = `missing`. */
+export function TotalRow({ d, c, across, missing, children }: { d: Dataset; c: Counts | null | undefined; across: string; missing: string; children?: ReactNode }) {
+  const labels = countsLabels(d.id);
+  const head = <p className="text-xs text-muted-foreground">{d.title}, {d.vintage.replace(/ \(.*\)$/, "")}</p>;
+  if (!labels) return <p className="text-xs text-muted-foreground">{d.title}: can’t be added up across {across}, so no area total.</p>;
+  if (c === undefined) return <div>{head}<p className="text-sm text-muted-foreground">Adding up…</p></div>;
+  if (!c || c[0] == null) return <div>{head}<p className="text-sm text-muted-foreground">{missing}</p></div>;
+  // Percent maps are a count over a count, so the area's own rate is the proportion of the sums.
+  // shortcut: ratio maps that aren't percents (mean commute minutes, deaths per 100,000) show their sums only; add the ratio formula if planners ask.
+  const s = labels.per && d.unit === "percent" ? shareOf(c[0], c[1], c[2], c[3]) : null;
+  const big = s ? formatEstimate(s.share, s.moe, "percent") : count(c[0], c[1]);
+  return (
+    <div data-region-dataset={d.id}>
+      {head}
+      <p className="text-xl font-semibold tabular-nums">
+        {big.value}
+        {big.moe && <span className="ml-1 text-xs font-normal text-muted-foreground">±{big.moe}</span>}
+      </p>
+      <p className="text-xs text-muted-foreground">
+        <span className="tabular-nums text-foreground">{est(c[0], c[1])}</span> {labels.of}
+        {labels.per && c[2] != null && <> out of <span className="tabular-nums">{est(c[2], c[3])}</span> {labels.per}</>}
+        {c[1] == null && " (a full count, no margin of error)"}
+      </p>
+      {children}
+    </div>
+  );
+}
 
 // Viewer keys it by MPO, so a new pick starts empty.
 export function RegionTotal({ datasets, mpo }: { datasets: Dataset[]; mpo: string }) {
@@ -76,31 +105,12 @@ export function RegionTotal({ datasets, mpo }: { datasets: Dataset[]; mpo: strin
   return (
     <div className="wg-panel pointer-events-auto mt-1 w-80 max-w-[calc(100vw-1.5rem)] space-y-2 rounded-xl px-3 py-2" data-region-total={!cut.length ? "exact" : tracts ? "near-exact" : "approximate"}>
       {datasets.map((d) => {
-        const labels = countsLabels(d.id);
-        const head = <p className="text-xs text-muted-foreground">{d.title}, {d.vintage.replace(/ \(.*\)$/, "")}</p>;
-        if (!labels) return <p key={d.id} className="text-xs text-muted-foreground">{d.title}: can’t be added up across counties, so no area total.</p>;
-        if (!(d.id in totals)) return <div key={d.id}>{head}<p className="text-sm text-muted-foreground">Adding up…</p></div>;
-        const { c, basis } = totals[d.id];
-        if (!c && !counted.length) return <div key={d.id}>{head}<p className="text-sm text-muted-foreground">No total: this map has no tract counts here, and less than half of each county’s residents live inside this area.</p></div>;
-        if (!c || c[0] == null) return <div key={d.id}>{head}<p className="text-sm text-muted-foreground">No total: a county’s numbers are missing.</p></div>;
-        // Percent maps are a count over a count, so the area's own rate is the proportion of the sums.
-        // shortcut: ratio maps that aren't percents (mean commute minutes, deaths per 100,000) show their sums only; add the ratio formula if planners ask.
-        const s = labels.per && d.unit === "percent" ? shareOf(c[0], c[1], c[2], c[3]) : null;
-        const big = s ? formatEstimate(s.share, s.moe, "percent") : count(c[0], c[1]);
+        const t = totals[d.id];
+        const missing = t && !t.c && !counted.length ? "No total: this map has no tract counts here, and less than half of each county’s residents live inside this area." : "No total: a county’s numbers are missing.";
         return (
-          <div key={d.id} data-region-dataset={d.id}>
-            {head}
-            <p className="text-xl font-semibold tabular-nums">
-              {big.value}
-              {big.moe && <span className="ml-1 text-xs font-normal text-muted-foreground">±{big.moe}</span>}
-            </p>
-            <p className="text-xs text-muted-foreground">
-              <span className="tabular-nums text-foreground">{est(c[0], c[1])}</span> {labels.of}
-              {labels.per && c[2] != null && <> out of <span className="tabular-nums">{est(c[2], c[3])}</span> {labels.per}</>}
-              {c[1] == null && " (a full count, no margin of error)"}
-            </p>
-            {tracts && cut.length > 0 && basis === "counties" && <p className="text-xs text-muted-foreground">Approximate: this map has no tract counts here, so it counts whole counties.</p>}
-          </div>
+          <TotalRow key={d.id} d={d} c={t && t.c} across="counties" missing={missing}>
+            {tracts && cut.length > 0 && t?.basis === "counties" && <p className="text-xs text-muted-foreground">Approximate: this map has no tract counts here, so it counts whole counties.</p>}
+          </TotalRow>
         );
       })}
       {shown.length > 0 && (
