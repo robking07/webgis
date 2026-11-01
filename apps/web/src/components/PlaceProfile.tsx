@@ -12,6 +12,7 @@ import { LANDING } from "@/lib/landing";
 import { placeCsv, saveBlob } from "@/lib/csv";
 import { DATASETS } from "@/lib/registry";
 import { TractPack } from "./TractPack";
+import { CommuteFlows } from "./CommuteFlows";
 
 const link = "rounded text-primary underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-ring";
 
@@ -72,6 +73,7 @@ export function PlaceProfile({ geoid, name, similar }: { geoid: string; name?: s
       </header>
       <KeyNumbers geoid={geoid} detail={detail} />
       {similar}
+      {level === "county" && <CommuteFlows geoid={geoid} />}
       <PlaceDataList geoid={geoid} level={level} detail={detail} mapHref={mapHref} />
       {level === "county" && <TractPack county={geoid} name={geo.name} />}
     </main>

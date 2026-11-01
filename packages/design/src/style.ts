@@ -481,6 +481,18 @@ export function pinLayers(theme: ThemeName): LayerSpecification[] {
   return [{ id: "pin", type: "circle", source: PIN_SOURCE, paint: { "circle-radius": 6, "circle-color": m.highlight, "circle-stroke-color": m.highlightHalo, "circle-stroke-width": 3 } }];
 }
 
+/** Commute flows (#469): straight lines from a county to the counties its workers and residents
+ *  commute to and from, in the selection colors, wider for more commuters (`w`, share of the biggest). */
+export const FLOW_SOURCE = "flows";
+export function flowLayers(theme: ThemeName): LayerSpecification[] {
+  const m = THEMES[theme].map;
+  const width = (add: number) => ["interpolate", ["linear"], ["get", "w"], ...SIZE.flow.flatMap(([w, px]) => [w, px + add])] as never;
+  return [
+    { id: "flows-halo", type: "line", source: FLOW_SOURCE, layout: { "line-cap": "round" }, paint: { "line-color": m.highlightHalo, "line-width": width(3) } },
+    { id: "flows", type: "line", source: FLOW_SOURCE, layout: { "line-cap": "round" }, paint: { "line-color": m.highlight, "line-width": width(0) } },
+  ];
+}
+
 /** Fill, outline and hover/selection outline for one geography level. */
 export function thematicLayers(o: ThematicLayerOptions): LayerSpecification[] {
   const m = THEMES[o.theme].map;
