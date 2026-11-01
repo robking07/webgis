@@ -164,7 +164,7 @@ export function Viewer({ search }: { search: string }) {
   // Drill-down (issue #203): a click on a place with a finer level focuses it; each step is a Back step.
   const setFocus = useCallback((geoid: string | null) => update({ in: geoid }), [update]);
   const childOf = useCallback((l: GeoLevel) => childLevel(availableLevels, l), [availableLevels]);
-  const { root, canGoBack, goBack, onMapSelect, onFeatureSelect, goToPlace, focusName, leaveFocus, clearArea } = useFraming({ mapApi, setSelected, setFeatureSelected, isFeature, primary, tableOpen, narrow, focus: state.in ?? null, setFocus, childOf });
+  const { root, canGoBack, backText, goBack, onMapSelect, onFeatureSelect, goToPlace, focusName, leaveFocus, clearArea } = useFraming({ mapApi, setSelected, setFeatureSelected, isFeature, primary, tableOpen, narrow, focus: state.in ?? null, setFocus, childOf });
   useEffect(() => { focusedRef.current = !!focus; });
   // Focusing a place goes full screen, where the heading names it (adjusted during render).
   const [seenFocus, setSeenFocus] = useState(focus?.geoid);
@@ -528,7 +528,7 @@ export function Viewer({ search }: { search: string }) {
           value={filterValue} onApply={applyFilters} onClose={() => setFilters(null)} />
       )}
 
-      <MapControls mapApi={mapApi} atRest={chromeShown && !immersed} canGoBack={canGoBack} onBack={goBack} phone={phone} cardH={cardH}
+      <MapControls mapApi={mapApi} atRest={chromeShown && !immersed} backText={backText} onBack={goBack} phone={phone} cardH={cardH}
         onRegion={goToRegion} onPlace={onSearchPlace} onNearMe={phone && "geolocation" in navigator ? nearMe : null}
         pick={pickable ? { on: picking, off: level !== "tract" && !picking, onToggle: togglePicking } : null} />
       {pickShown && (

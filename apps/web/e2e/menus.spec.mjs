@@ -855,7 +855,7 @@ test("phone: a long dataset title stops short of the back button (issue #243)", 
   await immerse(page);
   await tapLonLat(page, ...HENNEPIN);
   await page.locator('section[aria-label^="Details for"]').waitFor();
-  const back = page.locator('button[aria-label="Back to the previous view"]');
+  const back = page.locator('button[data-back]');
   await back.waitFor();
   await wait(400);
   const h = await page.locator("[data-dataset-heading]").boundingBox();
@@ -889,7 +889,7 @@ test("phone: zoomed in, search sits above the legend and opens full screen (issu
 
 /** Phone chrome over the map: every text, icon and edge against its own backing. */
 const PHONE_ON_MAP = ["[data-dataset-heading]", "[data-filter-button]:not([inert] *)", "[data-filter-note]:not([inert] *)", "button[data-legend]",
-  'button[aria-label="Show navigation"]', 'button[aria-label="Back to the previous view"]', ".wg-credits", 'section[aria-label="Mapped dataset"]'];
+  'button[aria-label="Show navigation"]', 'button[data-back]', ".wg-credits", 'section[aria-label="Mapped dataset"]'];
 const contrastLog = [];
 for (const scheme of ["light", "dark"]) {
   test(`phone contrast (${scheme}): on-map text ≥ 4.5:1, icons and edges ≥ 3:1, all on a backing`, async (o) => {
