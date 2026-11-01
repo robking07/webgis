@@ -2,7 +2,7 @@
 # Edit the recipe, not this file. To promote it to Featured, follow docs/library.md.
 id: pct_armed_forces
 title: People in the armed forces
-description: Share of residents 16 and older on active duty in the U.S. armed forces.
+description: Share of residents 16 and older serving in the U.S. armed forces.
 category: People
 subcategory: Population and age
 tags: [military, active duty, armed forces, bases]
