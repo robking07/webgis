@@ -172,10 +172,10 @@ A dataset refresh can run on GitHub instead of Robbie's machine: `.github/workfl
 - **datasets**: the ids, e.g. `pct_poverty median_household_income`. Every step must load every
   id (`acs` with a FARS id is refused before anything runs; `data/ingest/src/check-run.ts`).
 
-Two more ways to run, each with that step alone (D-552):
+Three more ways to run, each with that step alone (D-552, D-557):
 
 - **A map layer from files** (`features` in the registry, e.g. TIP projects): steps `features`,
-  datasets `tip_projects` (type `features` exactly, no extra spaces). The run installs GDAL and
+  datasets `tip_projects`. The run installs GDAL and
   tippecanoe, builds `<id>.pmtiles`, and uploads only those tiles (`publish-tiles <ids>`, which
   leaves the bucket's CORS rule alone); no values are touched. The registry and `layers.json` entry
   must already be on `main` (they ship with the dataset's PR): if the load writes a different
@@ -185,15 +185,24 @@ Two more ways to run, each with that step alone (D-552):
   datasets empty for every registry map (or ids for just those). It loads nothing: it rewrites the
   state and county value files from the database (registry ids only, never tracts), then publishes
   exactly as below, with the same checks.
+- **Margins and counts only** (D-257: every period's `<stop>/<level>.moe.json`, the counts files,
+  the U.S. rows and the tract and block-group count shards), ACS maps only: steps `counts`, datasets
+  the ids (required). It fetches from the Census API and reads land areas from the database, writes
+  nothing else (no database rows, no value files), then runs `details` and `similar` and publishes
+  exactly as below: the count shards are merged into the live ones and every check runs. Similar
+  counties are rebuilt because they read `population_density`'s counts. D-557 lists the ids of
+  every ACS change map (a `timeline` in the registry).
 
-There is no dry-run switch: every run writes the database and publishes. Visitors see new values
-within an hour. The run loads, then `export-values <ids>` and `details` (from the database), then
+There is no dry-run switch: every run writes the database (`counts` only reads it) and publishes. Visitors see new values
+within an hour. The run loads, then `export-values <ids>` (not for `counts`), `details` (from the
+database) and `similar`, then
 `publish-reload`: for each tract or block-group count file it wrote, it fetches the live file from R2,
 swaps in only the reloaded datasets and keeps the rest. If any county would lose a reloaded dataset (a
 source that came back short), it stops **before the first upload**. Tract values need no merge: each
 map has its own file per county, `values/<id>/tracts/<county>.json` (D-506). Before uploading anything,
 `publish-values` checks every changed file: a count shard that drops a live dataset, a map's tract
-file that drops live tracts, a map's state or county file with fewer places than the live one, or a
+file that drops live tracts, a map's state or county values, margins (tract too, any period) or counts with fewer places than the
+live one, or a
 reloaded map with a county file on R2 that this load doesn't have (it would stay live with old
 numbers, since publish never deletes). If any check fails, **nothing is
 uploaded**. Then it uploads the changed value files, and the click details last. A run that writes
@@ -218,7 +227,7 @@ dashboard, prefix `raw/`). It is public domain source data, so the copies are pu
 Local runs keep theirs in `data/cache/` already. About 0.1 to 1 GB per run, a cent or less a month.
 
 **Not on GitHub yet:** anything needing GDAL or tippecanoe (geographies, tiles, features,
-census2020, ddp287g, vmt, counts, label-mask, mpo); `timeline` for `fars` (it needs
+census2020, ddp287g, vmt, label-mask, mpo; `counts` for non-ACS sources); `timeline` for `fars` (it needs
 `population_density`'s 2019 stop on disk); and anything that changes committed files (a new
 dataset, level or timeline stop, insights). Those still run locally, through a PR (a local real
 loss uses `ALLOW_TRACT_DROP=1`).
