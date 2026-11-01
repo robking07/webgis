@@ -33,7 +33,7 @@ async function flowLines(geoid: string, [, , , live, work]: CountyFlows): Promis
 }
 
 const num = (n: number) => n.toLocaleString("en-US");
-const pct = (n: number, of: number) => `${Math.round((100 * n) / of)}%`;
+const pct = (n: number, of: number) => (n / of < 0.005 ? "<1%" : `${Math.round((100 * n) / of)}%`);
 const short = (g: string) => placeName(g)?.split(",")[0] ?? g;
 
 function List({ title, lead, rows, of }: { title: string; lead: string; rows: Flow[]; of: number }) {

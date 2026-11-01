@@ -47,7 +47,7 @@ interface DetailProps {
   change?: { fromLabel: string; toLabel: string; fromValues?: Values; classed: ClassedLevel; boundaryNote?: string | null };
   /** The map's finest level: a click here can't drill further down (issue #203), so say so. */
   finest?: boolean;
-  /** Draw or clear the county's commute flow lines on the map (#469). */
+  /** Draw or clear the county's commute flow lines (#469); given only while this county is the focused one. */
   onFlows?: (lines: FeatureCollection | null) => void;
 }
 
