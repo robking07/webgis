@@ -5,7 +5,7 @@ import { levelOfGeoid } from "@/lib/place";
 import { DATASET_BY_ID } from "@/lib/registry";
 import { featureLayerSpec, isFeatureDataset, pairReason } from "@/lib/layers";
 import type { UrlState } from "@/lib/url-state";
-import { blockPaintFrom, classifyBivariateCached, classifyUnivariateCached, useDatasetValues, type Classed } from "@/lib/values";
+import { blockPaintFrom, classifyBivariateCached, classifyFittedCached, classifyUnivariateCached, useDatasetValues, viewBreaks, type Classed } from "@/lib/values";
 import { changeEnds, stopsFor } from "@/lib/periods";
 import { classifyChangeCached, type ChangeMeasure } from "@/lib/change";
 import type { Values } from "@/lib/values";
@@ -15,6 +15,8 @@ export const LEVELS = Object.keys(GEO_LEVELS) as GeoLevel[];
 
 export type ClassedLevel = LevelPaint & {
   breaks?: number[]; xBreaks?: number[]; yBreaks?: number[]; minClass?: number;
+  /** The breaks fit the counties in view, not the U.S. (issue #439). */
+  fitted?: boolean;
   /** Change maps (issue #127): class labels, strip ends, geoid → change, how it's measured, and
    *  whether margins of error were tested. */
   labels?: string[]; ends?: [string, string]; change?: Values; measure?: ChangeMeasure; tested?: boolean;
@@ -75,6 +77,16 @@ export function useViewerData(state: UrlState, tractCounties: readonly string[] 
   const testMoes = !!since && !!stop?.isDefault && primary?.measure.kind === "acs5" && level === "tract";
   const tractMoes = useChangeMoes(testMoes ? primary!.id : null, tractCounties);
 
+  // Issue #439: zoomed in to neighbourhoods on a one-dataset map at its default period, tracts and
+  // block groups take breaks fitted to every place in the counties on screen. Change maps, compare
+  // and other years keep the U.S. breaks (moving colors there would hide the change).
+  // shortcut: the re-class runs on the main thread over every tract and block group (~0.1–0.5 s on a slow phone
+  // per county change); move it into the values worker if pans feel sticky.
+  const fit = !!primary && !isFeature && !since && !secondary && !stopId && (LAZY_LEVELS.has(level) || TILE_VALUE_LEVELS.has(level));
+  const fitBase = fit ? ((stop?.levels ?? primary!.geographyLevels).includes("tract") ? x.values.tract : x.values.block_group) : undefined;
+  const countyKey = tractCounties.join(",");
+  const fitted = useMemo(() => (fitBase && countyKey ? viewBreaks(primary!, fitBase, countyKey.split(",")) : null), [primary, fitBase, countyKey]);
+
   // Cached classification keeps its identity, so the map only repaints when the data changes (D-114).
   const classed = useMemo(() => {
     const out: Partial<Record<GeoLevel, ClassedLevel>> = {};
@@ -93,15 +105,16 @@ export function useViewerData(state: UrlState, tractCounties: readonly string[] 
         if (yv) out[l] = classifyBivariateCached(xv, yv);
       } else {
         const base = (stopId ? xBase.values : x.values)[l === "block_group" && tractBreaks ? "tract" : l];
-        if (base) out[l] = classifyUnivariateCached(primary, xv, base === xv ? undefined : base);
+        if (base) out[l] = fitted && LAZY_LEVELS.has(l) ? classifyFittedCached(primary, xv, fitted) : classifyUnivariateCached(primary, xv, base === xv ? undefined : base);
       }
     }
     const bg = out.block_group;
     if (blockField && !secondary && bg?.breaks) out.block = blockPaintFrom(bg as Classed, blockField);
     return out;
-  }, [primary, secondary, x.values, y.values, stopId, stop, xBase.values, blockField, since, xFrom.values, tractMoes]);
+  }, [primary, secondary, x.values, y.values, stopId, stop, xBase.values, blockField, since, xFrom.values, tractMoes, fitted]);
 
-  return { primary, secondary, isFeature, featureSpec, stops, stop, stopId, since, xBase, xFrom, testMoes, valueLevels, availableLevels, pinnedLevel, focus, bands, x, y, level, classed, blockField };
+  // `fit`: the map reports the counties in view (MapView's watchCounties) so the breaks can follow them.
+  return { primary, secondary, isFeature, featureSpec, stops, stop, stopId, since, xBase, xFrom, testMoes, fit, valueLevels, availableLevels, pinnedLevel, focus, bands, x, y, level, classed, blockField };
 }
 
 const onResize = (cb: () => void) => { window.addEventListener("resize", cb); return () => window.removeEventListener("resize", cb); };

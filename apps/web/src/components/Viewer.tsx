@@ -132,7 +132,7 @@ export function Viewer({ search }: { search: string }) {
 
   /** Counties whose tracts are on screen, while hatching or a change map's margin test needs them. */
   const [tractCounties, setTractCounties] = useState<string[]>([]);
-  const { primary, secondary, isFeature, featureSpec, stops, stop, stopId, since, xBase, xFrom, testMoes, valueLevels, availableLevels, pinnedLevel, focus, bands, x, y, level, classed, blockField } = useViewerData(state, tractCounties);
+  const { primary, secondary, isFeature, featureSpec, stops, stop, stopId, since, xBase, xFrom, testMoes, fit, valueLevels, availableLevels, pinnedLevel, focus, bands, x, y, level, classed, blockField } = useViewerData(state, tractCounties);
   const current = classed[level];
   // A year off the default is colored with the default's breaks (xBase): its failure is an error, not a spinner.
   const error = x.error ?? y.error ?? xFrom.error ?? xBase.error;
@@ -479,7 +479,7 @@ export function Viewer({ search }: { search: string }) {
           attribution={false}
           hatch={hatch}
           onTractCounties={setTractCounties}
-          watchCounties={testMoes}
+          watchCounties={testMoes || fit}
           focus={focus}
           picking={picking && pickable}
           onPick={onPick}

@@ -91,10 +91,11 @@ export function MapLegend({ theme, primary, secondary, isFeature, featureSpec, c
         ) : primary && current?.labels ? (
           <Legend title={primary.title} unit={primary.unit} colors={current.colors} breaks={[]} labels={current.labels} mark={mark}
             noDataFill="noDataChange" caption={changeHead} />
-        ) : primary && current?.breaks ? (
+        ) : primary && current?.breaks ? (<>
           <Legend title={primary.title} unit={primary.unit} colors={current.colors} breaks={current.breaks} minClass={current.minClass} mark={mark}
             caption={`${GEO_LEVELS[level].label} · ${periodLabel}`} />
-        ) : null}
+          {current.fitted && <p className="mt-1 text-xs text-muted-foreground" data-fitted="">Colors fit the counties in view</p>}
+        </>) : null}
       {notes && !secondary && !error && !loading && (
         <details className="mt-2 text-xs text-muted-foreground">
           <summary className="cursor-pointer rounded text-primary focus-visible:outline-2 focus-visible:outline-ring">About this scale</summary>
