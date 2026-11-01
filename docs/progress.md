@@ -22,7 +22,7 @@ and said "keep running". The lead works the list in `drafts/planner-depth-plan.m
   3-5-dataset Combinations #280, visitor suggestions #207, table into About #244, "Why this matters"
   #115, how datasets relate #118, tester onboarding #245, go public #44 (branch protection). FEMA #169
   and HUD #172 wait for the data-discovery phase; the data backlog lives in #133. 287(g) is held in
-  `data/registry/held/`. Map polish #187 and disclosures 1.6 (on hold by Robbie) are not shipped.
+  `data/registry/held/`. Disclosures 1.6 (on hold by Robbie) is not shipped.
 - **Known risks:** the 2021-2025 ACS 5-year tables drop health insurance, so the uninsured map can't
   refresh on the usual cycle (#133). The CI click-through times out when the Ubuntu apt mirror is
   slow; re-run failed jobs (`gh run rerun <id> --failed`). A data step's file must be on R2 before the
