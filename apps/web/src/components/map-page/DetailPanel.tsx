@@ -4,7 +4,7 @@ import { X } from "lucide-react";
 import { StatusState } from "@webgis/design/components";
 import { CHANGE_CLASSES, formatEstimate, formatValue, GEO_LEVELS, isGradable, STATIC_ONLY_LEVELS, TILE_VALUE_LEVELS, type GeoLevel } from "@webgis/design";
 import { moeRangeLine, noDataReason, reliabilityNote } from "@/lib/reliability";
-import { changeSummary, differenceMoe, formatChange, withinMoe } from "@/lib/change";
+import { changeSummary, formatChange } from "@/lib/change";
 import type { ClassedLevel } from "./useViewerData";
 import type { HoverInfo } from "../map/MapView";
 import { DATASET_BY_ID, type Dataset } from "@/lib/registry";
@@ -41,8 +41,8 @@ interface DetailProps {
   /** Phones: the legend key, shown in the sheet with this place's class outlined. */
   legendKey?: { colors: string[]; cls: number | null; ends: [string, string] } | null;
   /** A change map (issue #127): both stops' labels, the earlier values at this level, and the
-   *  change classification. `toIsDefault`: the later stop is the default, whose margins are known. */
-  change?: { fromLabel: string; toLabel: string; fromValues?: Values; classed: ClassedLevel; toIsDefault: boolean; boundaryNote?: string | null };
+   *  change classification. */
+  change?: { fromLabel: string; toLabel: string; fromValues?: Values; classed: ClassedLevel; boundaryNote?: string | null };
   /** The map's finest level: a click here can't drill further down (issue #203), so say so. */
   finest?: boolean;
 }
@@ -120,15 +120,12 @@ export function ReliabilityNote({ dataset, geoid, value, moe }: { dataset: Datas
 /** A clicked place: its values, ranks and links (desktop panel; a BottomSheet on phones). */
 /** A change map's card: the change, then both values, and "no clear change" when the difference is
  *  within its margin of error (√(MOE₁² + MOE₂²); see lib/change.ts). */
-function ChangeCard({ dataset, geoid, change, to, toMoe, sheetKey }: { dataset: Dataset; geoid: string; change: NonNullable<DetailProps["change"]>; to?: number; toMoe?: number | null; sheetKey: ReactNode }) {
+function ChangeCard({ dataset, geoid, change, to, sheetKey }: { dataset: Dataset; geoid: string; change: NonNullable<DetailProps["change"]>; to?: number; sheetKey: ReactNode }) {
   const from = change.fromValues?.[geoid];
-  const moe = isGradable(dataset.measure.kind) && change.toIsDefault && from != null && to != null ? differenceMoe(from, null, to, toMoe) : null;
-  const steady = from != null && to != null && withinMoe(from, to, moe);
   const c = change.classed.change?.[geoid];
-  // The headline says what the map's color and the hover card say (margins are tested on the map
-  // for tracts only); the note below adds this panel's own test, which reaches counties and states too.
-  const mapSteady = !!change.classed.tested && change.classed.classes.get(geoid) === (CHANGE_CLASSES - 1) / 2;
-  const { headline } = changeSummary(c, from, to, change.classed.measure!, dataset.unit, mapSteady, change.boundaryNote);
+  // The same test as the map's color and the hover card (D-545): the published margins of both periods.
+  const steady = !!change.classed.tested && change.classed.classes.get(geoid) === (CHANGE_CLASSES - 1) / 2;
+  const { headline } = changeSummary(c, from, to, change.classed.measure!, dataset.unit, steady, change.boundaryNote);
   return (
     <div className="rounded-md bg-muted px-3 py-2" data-change-card="">
       <p className="text-xs text-muted-foreground">{dataset.title}, change, {change.fromLabel} → {change.toLabel}</p>
@@ -206,7 +203,7 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
             {featured.map((d, i) => {
               const r = rows[d.id];
               if (i === 0 && change) {
-                return <ChangeCard key={d.id} dataset={d} geoid={info.geoid} change={change} to={xv?.[info.geoid]} toMoe={change.toIsDefault ? r?.moe : null}
+                return <ChangeCard key={d.id} dataset={d} geoid={info.geoid} change={change} to={xv?.[info.geoid]}
                   sheetKey={phone && legendKey ? <SheetKey {...legendKey} /> : null} />;
               }
               if (i === 0 && period) {

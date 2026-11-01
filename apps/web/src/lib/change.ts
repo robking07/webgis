@@ -25,14 +25,10 @@ export function changeOf(from: number | null | undefined, to: number | null | un
 }
 
 /** Margin of error of `to − from`: √(MOE₁² + MOE₂²), the Census Bureau's approximation for a
- *  difference of two estimates. `fromMoe` unknown: assume the earlier estimate had the same
- *  relative margin as the later one (MOE₁ ≈ MOE₂ · |from / to|).
- *  shortcut: earlier periods publish no margins, so MOE₁ is estimated; use the real ones once the
- *  ingest exports `values/<id>/<stop>/<level>.moe.json`. */
-export function differenceMoe(from: number, fromMoe: number | null | undefined, to: number, toMoe: number | null | undefined): number | null {
-  if (toMoe == null || !Number.isFinite(toMoe)) return null;
-  const m1 = fromMoe != null && Number.isFinite(fromMoe) ? fromMoe : to !== 0 ? toMoe * Math.abs(from / to) : toMoe;
-  return Math.sqrt(m1 * m1 + toMoe * toMoe);
+ *  difference of two estimates; null unless both margins are known. */
+export function differenceMoe(fromMoe: number | null | undefined, toMoe: number | null | undefined): number | null {
+  if (fromMoe == null || toMoe == null || !Number.isFinite(fromMoe) || !Number.isFinite(toMoe)) return null;
+  return Math.sqrt(fromMoe * fromMoe + toMoe * toMoe);
 }
 
 /** True when the change is inside the margin of error of the difference (no clear change). */
@@ -81,8 +77,8 @@ const MID = (CHANGE_CLASSES - 1) / 2;
 
 /** Classes for a change map. Magnitudes split into thirds (same cut-offs for falls and rises, so
  *  equal changes look equally strong); the middle class is "no clear change": within the margin
- *  of error where margins are known (`toMoes`, optional `fromMoes`), otherwise exactly no change. */
-export function classifyChange(from: Values, to: Values, unit: Unit, toMoes?: Values | null, fromMoes?: Values | null): ChangeClassed {
+ *  of error of the change where it's known (`moes`, from `differenceMoe`), otherwise exactly no change. */
+export function classifyChange(from: Values, to: Values, unit: Unit, moes?: Values | null): ChangeClassed {
   const measure = changeMeasure(unit);
   const change: Values = {};
   const steady = new Set<string>();
@@ -92,7 +88,7 @@ export function classifyChange(from: Values, to: Values, unit: Unit, toMoes?: Va
     const c = changeOf(a, b, measure);
     if (c == null) continue;
     change[g] = c;
-    const moe = toMoes ? differenceMoe(a, fromMoes?.[g], b, toMoes[g]) : null;
+    const moe = moes?.[g] ?? null;
     if (moe != null) tested = true;
     if (c === 0 || withinMoe(a, b, moe)) steady.add(g);
   }
@@ -133,13 +129,13 @@ export function classifyChange(from: Values, to: Values, unit: Unit, toMoes?: Va
 const cache = new WeakMap<Values, WeakMap<Values, WeakMap<Values, ChangeClassed>>>();
 const NO_MOES: Values = {};
 
-export function classifyChangeCached(from: Values, to: Values, unit: Unit, toMoes?: Values | null): ChangeClassed {
+export function classifyChangeCached(from: Values, to: Values, unit: Unit, moes?: Values | null): ChangeClassed {
   let byTo = cache.get(from);
   if (!byTo) cache.set(from, (byTo = new WeakMap()));
   let byMoes = byTo.get(to);
   if (!byMoes) byTo.set(to, (byMoes = new WeakMap()));
-  let c = byMoes.get(toMoes ?? NO_MOES);
-  if (!c) byMoes.set(toMoes ?? NO_MOES, (c = classifyChange(from, to, unit, toMoes)));
+  let c = byMoes.get(moes ?? NO_MOES);
+  if (!c) byMoes.set(moes ?? NO_MOES, (c = classifyChange(from, to, unit, moes)));
   return c;
 }
 
