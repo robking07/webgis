@@ -3,7 +3,7 @@
 // connect. The pieces live in ./map-page (data and classification in useViewerData, zoom-to-click
 // framing in useFraming, and one file per panel).
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import type { FeatureCollection } from "geojson";
+import type { FeatureCollection, LineString } from "geojson";
 import { StatusState } from "@webgis/design/components";
 import { childLevel, formatValue, GEO_LEVELS, HATCH_LEVELS, isGradable, levelBands, type GeoLevel } from "@webgis/design";
 import { DataTable } from "./DataTable";
@@ -228,7 +228,15 @@ export function Viewer({ search }: { search: string }) {
   // The pin goes once its place's details close or another place is picked (adjusted during render).
   if (pin?.geoid && selected?.geoid !== pin.geoid) setPin(null);
   useEffect(() => { mapApi.current?.showPin(pin?.at ?? null); }, [pin]);
-  const showFlows = useCallback((lines: FeatureCollection | null) => mapApi.current?.showFlows(lines), []);
+  const showFlows = useCallback((lines: FeatureCollection | null) => {
+    const api = mapApi.current;
+    api?.showFlows(lines);
+    const pts = lines?.features.flatMap((f) => (f.geometry as LineString).coordinates);
+    if (!api || !pts?.length) return;
+    const b: Bbox = [Math.min(...pts.map((p) => p[0])), Math.min(...pts.map((p) => p[1])), Math.max(...pts.map((p) => p[0])), Math.max(...pts.map((p) => p[1]))];
+    // shortcut: waits out the phone sheet's 200 ms drop to its short height so the padding clears it; a fixed delay, not an event.
+    setTimeout(() => api.fitBbox(b, clearArea(true)), 300);
+  }, [clearArea]);
   /** Frame a point at tract zoom and open the details of the place drawn there, on the map already
    *  showing (the anti-steering rule, issue #363): exactly what a tap there does. */
   const goToPoint = (lon: number, lat: number) => {

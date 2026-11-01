@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { useEscape } from "../useEscape";
 import { X } from "lucide-react";
 import { StatusState } from "@webgis/design/components";
@@ -154,6 +154,9 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
   /** "Compare with…" is waiting for a tap on the map: the phone drawer shrinks to the name and that prompt (issue #242). */
   const [picking, setPicking] = useState(false);
   const shrunk = phone && picking;
+  /** Commute lines are on the map: the phone sheet drops to its short height so they show above it. */
+  const [flowing, setFlowing] = useState(false);
+  const flows = useCallback((lines: FeatureCollection | null) => { setFlowing(!!lines); onFlows?.(lines); }, [onFlows]);
   // Block groups and blocks aren't in the database (D-124): the mapped values come from the static
   // files (block groups, with margins of error from side files) or the tiles (blocks); there's no
   // all-datasets list or place profile below tracts.
@@ -241,7 +244,7 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
         )}
       <CompareWith geoid={info.geoid} level={info.level} name={info.name} dataset={primary} otherPeriod={!!period}
         aValue={!rows ? null : staticOnly ? undefined : rows[primary.id]?.value ?? null} onPicking={setPicking} />
-      {!shrunk && info.level === "county" && onFlows && <CommuteFlows key={info.geoid} geoid={info.geoid} onLines={onFlows} />}
+      {!shrunk && info.level === "county" && onFlows && <CommuteFlows key={info.geoid} geoid={info.geoid} onLines={flows} />}
       {!shrunk && <LearnMore links={links} />}
       {phone && !shrunk && rows && !staticOnly && <p className="mt-2 text-center text-xs text-muted-foreground group-data-[snap=full]:hidden">Swipe up for all {info.level === "tract" ? TRACT_IDS.length : Object.keys(rows).filter((id) => !DATASET_BY_ID.get(id)?.library).length} datasets here</p>}
     </>
@@ -249,7 +252,7 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
 
   if (phone) {
     return (
-      <BottomSheet label={`Details for ${info.name}`} summary={summary} onClose={onClose} collapsed={picking} lazy>
+      <BottomSheet label={`Details for ${info.name}`} summary={summary} onClose={onClose} collapsed={picking || flowing} lazy>
         {rows && !staticOnly && (
           <>
             {info.level === "tract"
