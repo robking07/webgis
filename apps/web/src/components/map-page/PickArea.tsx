@@ -55,7 +55,7 @@ export function PickArea({ datasets, picked, picking, full, drawn, onDone, onCle
           {datasets.map((d) => (
             <TotalRow key={d.id} d={d} c={totals.key === key ? totals.c[d.id] : undefined} across={many} missing={`No total: a ${one}’s numbers are missing.`} />
           ))}
-          <p className="text-xs text-muted-foreground">The sum of {n} {county ? "" : "2020 census "}{n === 1 ? one : many}. Margins of error are at 90% confidence, combined as the Census Bureau does.</p>
+          {ids && <p className="text-xs text-muted-foreground">The sum of {n} {county ? "" : "census "}{n === 1 ? one : many}. Margins of error are at 90% confidence, combined as the Census Bureau does.</p>}
         </div>
       )}
       <div className="wg-panel flex items-center gap-1 rounded-full py-0.5 pl-4 pr-0.5">

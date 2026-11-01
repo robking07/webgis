@@ -129,14 +129,14 @@ function ChangeCard({ dataset, geoid, change, to, sheetKey }: { dataset: Dataset
   const c = change.classed.change?.[geoid];
   // The same test as the map's color and the hover card (D-545): the published margins of both periods.
   const steady = !!change.classed.tested && change.classed.classes.get(geoid) === (CHANGE_CLASSES - 1) / 2;
-  const { headline } = changeSummary(c, from, to, change.classed.measure!, dataset.unit, steady, change.boundaryNote);
+  const { headline, values } = changeSummary(c, from, to, change.classed.measure!, dataset.unit, steady, change.boundaryNote);
   return (
     <div className="rounded-md bg-muted px-3 py-2" data-change-card="">
       <p className="text-xs text-muted-foreground">{dataset.title}, change, {change.fromLabel} → {change.toLabel}</p>
       <p className="text-xl font-semibold tabular-nums" data-change-headline="">{headline}</p>
       {sheetKey}
       <p className="mt-1 text-xs text-muted-foreground tabular-nums">
-        {change.fromLabel}: {formatValue(from, dataset.unit)} · {change.toLabel}: {formatValue(to, dataset.unit)}
+        {change.fromLabel}: {values[0]} · {change.toLabel}: {values[1]}
       </p>
       {steady && (
         <p className="mt-1 text-xs text-muted-foreground">

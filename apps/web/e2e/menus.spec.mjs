@@ -341,11 +341,11 @@ test("laptop tract colors fit the counties in view; counties keep U.S. breaks (#
   const card = () => page.locator('section[aria-label="Legend"]').innerText();
   const top = (t) => Number(t.match(/≥ \$(\d+)K/)?.[1]);
   const seattle = await card();
-  expect(seattle.includes("Colors fit the counties in view") && top(seattle) > 110, `Seattle legend: ${seattle}`);
+  expect(seattle.includes("Colors fit the area in view") && top(seattle) > 110, `Seattle legend: ${seattle}`);
   await page.evaluate(() => window.__wgMap.jumpTo({ center: [-90.7, 33.5] }));
   await page.waitForFunction((was) => document.querySelector('section[aria-label="Legend"]').innerText !== was, seattle, { timeout: 20000 });
   const delta = await card();
-  expect(delta.includes("Colors fit the counties in view") && top(delta) < top(seattle), `Mississippi legend: ${delta}`);
+  expect(delta.includes("Colors fit the area in view") && top(delta) < top(seattle), `Mississippi legend: ${delta}`);
   await page.evaluate(() => window.__wgMap.jumpTo({ zoom: 6 }));
   await mapIdle(page);
   const county = await card();
