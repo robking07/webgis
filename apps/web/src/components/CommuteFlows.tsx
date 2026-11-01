@@ -14,6 +14,7 @@ type Flow = [string, number];
 type CountyFlows = [number, number, number, Flow[], Flow[]];
 interface Commute { year: number; years: Record<string, number>; counties: Record<string, CountyFlows> }
 
+// shortcut: a failed load is remembered until the page reloads; retry here if R2 blips turn out to matter.
 let cache: Promise<Commute | null> | null = null;
 const load = () => (cache ??= fetchRetry(staticUrl("commute/commute.json")).then((r) => (r.ok ? r.json() : null)).catch(() => null));
 
@@ -33,7 +34,7 @@ async function flowLines(geoid: string, [, , , live, work]: CountyFlows): Promis
 }
 
 const num = (n: number) => n.toLocaleString("en-US");
-const pct = (n: number, of: number) => (n / of < 0.005 ? "<1%" : `${Math.round((100 * n) / of)}%`);
+const pct = (n: number, of: number) => (!n ? "0%" : n / of < 0.005 ? "<1%" : `${Math.round((100 * n) / of)}%`);
 const short = (g: string) => placeName(g)?.split(",")[0] ?? g;
 
 function List({ title, lead, rows, of }: { title: string; lead: string; rows: Flow[]; of: number }) {
