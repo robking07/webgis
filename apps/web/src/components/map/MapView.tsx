@@ -452,8 +452,11 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
     const m = map.current;
     if (!m || !ready.current) return;
     syncHatch(m, hatch, appliedHatch.current, latest.current.levelZooms);
-    if (!hatch && !watchCounties) reportedCounties.current = "";
-    else reportTractCounties(m, true, latest.current.onTractCounties, reportedCounties);
+    // Off: forget the list, so the next turn-on (maybe far away) never starts from stale counties (#439).
+    if (!hatch && !watchCounties) {
+      if (reportedCounties.current) latest.current.onTractCounties?.([]);
+      reportedCounties.current = "";
+    } else reportTractCounties(m, true, latest.current.onTractCounties, reportedCounties);
   }, [hatch, watchCounties]);
 
   // Boundary vintage (timeline stops before 2020): swap the county/tract sources, keep the layers.

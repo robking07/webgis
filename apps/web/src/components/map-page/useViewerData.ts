@@ -80,6 +80,8 @@ export function useViewerData(state: UrlState, tractCounties: readonly string[] 
   // Issue #439: zoomed in to neighbourhoods on a one-dataset map at its default period, tracts and
   // block groups take breaks fitted to every place in the counties on screen. Change maps, compare
   // and other years keep the U.S. breaks (moving colors there would hide the change).
+  // shortcut: the re-class runs on the main thread over every tract and block group (~0.1–0.5 s on a slow phone
+  // per county change); move it into the values worker if pans feel sticky.
   const fit = !!primary && !isFeature && !since && !secondary && !stopId && (LAZY_LEVELS.has(level) || TILE_VALUE_LEVELS.has(level));
   const fitBase = fit ? ((stop?.levels ?? primary!.geographyLevels).includes("tract") ? x.values.tract : x.values.block_group) : undefined;
   const countyKey = tractCounties.join(",");
