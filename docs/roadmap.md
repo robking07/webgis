@@ -5,10 +5,12 @@ Claude Doc "Mapwich Roadmap": https://claude.ai/code/artifact/c2211bac-8fd8-47a3
 (tab *Roadmap* = what and why; tab *Build plan* = tasks, sizes, order, practices). This file is
 a compact mirror for agents. If they disagree, the doc wins.
 
-**Status (2026-10-27): base camp.** Phase 0 and most of Phase 1 shipped; the project is cleaned out and
-waiting for Robbie's next direction, which he will shape with planning skills. The summit report
-(what shipped, what's parked, risks, next steps) is `docs/progress.md` → Now. The phases below are
-the plan as approved on 2026-10-05; the next plan replaces them.
+**Status (2026-11-01): planner depth.** Phase 0 and most of Phase 1 shipped. On 2026-10-31 Robbie named
+the direction ("planner depth") and said keep running. Most of Phase 2 is live: metros and cities,
+MPO profiles with plans, place search, and the planner-depth wave (grant numbers, TIP projects, pick
+an area, commute flows, U.S. figures, real change-map margins). Left in Phase 2: transit (parked),
+scout datasets. Print/embed waits until Robbie asks. What shipped is in `docs/progress.md` → Now.
+The phases below are the plan as approved on 2026-10-05.
 
 ## Why
 
@@ -43,6 +45,8 @@ accomplishes, done when, and not in this phase (see the doc).
 | **0 · Foundations** | G1 agent guardrails · F1 handbook + architecture map · F2 checks in GitHub CI (build, lint, click-through, leaked-secret scan, speed + accessibility on the preview) · F3 code-checker cleanup · F4 scripts into repo · F5 usage log (model + effort too) · F6 agent roles + review-lead verdict · F7 prune CLAUDE.md · F8 progress log · F9 prototype audit · F10 tag prototype release · G2 dependency alerts · G3 runbook + rebuild drill · S3 cost alerts + uptime email + browser error reporting · F11 project kit (#53: package the owner-led AI development setup for reuse; at the gate) | CI passes on every PR; handbook, roles and progress log exist; prototype tagged and audited |
 | **1 · Compare reliably** | 1.1 side-by-side places · 1.2 change-over-time maps · 1.3 reliability warnings · 1.4 CSV download · 1.5 link previews (#37) · 1.6 disclosures page · 1.7 map polish (real phone) · 1.8 Specials pipeline · S1 static click details · S2 data files to R2 | Robbie uses compare and change maps in a real conversation; first Special in draft |
 | **2 · Depth for planners** | 2.4 transit (NTD) · 2.2 MPO boundaries + data · 2.8 MPO plans catalog (UPWP, TIP, grant program, CMP, LRTP; Minnesota pilot, public docs only) · 2.6 scout datasets · 2.5 commute flows (LODES) · 2.1 metros + cities · 2.3 place search (#36) | A planner compares metros and commutes; Minnesota MPO profiles link their five core products |
+
+Phase 2 progress (2026-11-01): done are 2.1 metros + cities, 2.2 MPO data, 2.3 place search, 2.5 commute flows (county to county, #469), 2.8 MPO plans (Minnesota pilot) and the planner-depth extras (grant numbers #443, TIP projects #444/#450, pick an area #455/#391, real change-map margins #188, U.S. figures #296/#460, hover = details #343). Still open: 2.4 transit (parked, #176), 2.6 scout datasets, print/embed (waits for Robbie).
 | **3 · Portfolio-ready** | 3.1 About + Methods · 3.2 remaining Specials · 3.3 real-device + accessibility audit · 3.4 speed (#28) · 3.5 navigation · 3.6 go public (#44) · S4 self-hosted basemap · S5 1,000-user load test | Robbie would show it to a hiring manager without caveats; load test passes; 6 Specials live |
 
 **DevOps additions (Robbie, 2026-10-05):** G1 hooks block pushes to main, merges outside
