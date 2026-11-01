@@ -2,7 +2,9 @@
 // 1970s to today, compared with that county's own 1970s average. Renders a vertical 1080x1920
 // Reels MP4 with sharp (SVG → PNG) piped into ffmpeg.
 //
-//   node scripts/timelapse/warming.mts [--cache data/cache] [--out drafts/instagram/warming.mp4] [--stats]
+//   node scripts/timelapse/warming.mts [--cache data/cache] [--out drafts/instagram/warming.mp4]
+//     [--cover drafts/instagram/warming-cover.png] [--stats] [--still <seconds>]
+// Also writes the cover (1080x1920) and its 4:5 grid crop (<cover>-4x5.png), uploaded as the Reel's cover.
 //
 // Inputs are files the climdiv and boundary ingests already cache: NOAA nClimDiv county monthly
 // mean temperature (climdiv-tmpccy-*) and Census cb_2019 counties (pre-2022 Connecticut counties,
@@ -11,6 +13,7 @@
 import { readdirSync, readFileSync, mkdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { spawn } from "node:child_process";
+import assert from "node:assert/strict";
 import * as shapefile from "shapefile";
 import sharp from "sharp";
 import { rampColors, THEMES } from "../../packages/design/src/index.ts";
@@ -156,36 +159,51 @@ function legend(o: number) {
     text(x, y + 58, 28, T.ui.textMuted, "cooler", 1, 400, "start") + `</g>`;
 }
 
+// ── The Mapwich mark (apps/web/src/components/Logo.tsx, 64 grid), with the pick dropped by dy ──
+/** Pick spans y 8–56 when in place. It shows as ink above the solid layer (to 13.5) and below the
+ *  open layer (from 47), as a cut-out inside the solid layer (15.5–27), and is hidden between. */
+function pickSegs(dy: number) {
+  const clip = (a: number, b: number) => [Math.max(a, 8 + dy), Math.min(b, 56 + dy)];
+  const ok = ([a, b]: number[]) => b - a > 0.01;
+  return { ink: [clip(-Infinity, 13.5), clip(47, Infinity)].filter(ok), cut: [clip(15.5, 27)].filter(ok) };
+}
+assert.deepEqual(pickSegs(0), { ink: [[8, 13.5], [47, 56]], cut: [[15.5, 27]] }); // in place = Logo.tsx
+const line = ([a, b]: number[], stroke = "") => `<line x1="32" y1="${a}" x2="32" y2="${b}"${stroke}/>`;
+
+/** The mark at `size` px, centered on cx with its grid top at y; drop 0 = pick a full length above, 1 = in place. */
+function logo(cx: number, y: number, size: number, drop: number, o: number) {
+  const { ink, cut } = pickSegs(-48 * (1 - drop)), ic = T.ui.splashInk;
+  return `<g opacity="${o}" transform="translate(${cx - size / 2} ${y}) scale(${size / 64})" fill="none" stroke="${ic}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">` +
+    `<mask id="cut" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64"><rect width="64" height="64" fill="#fff" stroke="none"/>${cut.map((s) => line(s, ' stroke="#000"')).join("")}</mask>` +
+    ink.map((s) => line(s)).join("") +
+    `<path d="M9 27 L32 15.5 L55 27 L32 38.5 Z" fill="${ic}" stroke="none" mask="url(#cut)"/><path d="M10 35 L32 46 L54 35"/></g>`;
+}
+
 // ── Timeline (seconds) ───────────────────────────────────────────────────────────────────────
-const HOOK = 2.2, STEP = 1.5, MORPH = 0.6;           // hook card, time per decade, color morph
-const MAP_END = HOOK + STEP * DECADES.length;        // 11.2 s
-const STAT_END = MAP_END + 2.8, END = STAT_END + 2.6; // final stat, then the end card (~16.6 s)
+const STEP = 1.5, MORPH = 0.6, LEAD = 0.5;              // time per decade, color morph, 1970s hold cut short
+const MAP_END = STEP * DECADES.length - LEAD;           // 8.5 s: opens straight on the map + title
+const STAT_END = MAP_END + 2.8, END = STAT_END + 4.2;    // final stat, then the logo end card (~15.5 s)
+const LOGO_IN = STAT_END + 1.7, DROP = 1;               // end card fades in once the stat is gone; pick drops for DROP s
 const ease = (x: number) => (x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x));
 const fade = (t: number, a: number, b: number) => ease((t - a) / (b - a));
 const fmt = (d: number) => `+${d.toFixed(1)}°F`;
+const title = (o: number) => text(W / 2, 300, 60, T.ui.splashInk, "Is your county hotter", o) + text(W / 2, 372, 60, COLORS[5], "than in the 1970s?", o);
 
 function frame(t: number) {
   const parts: string[] = [`<rect width="${W}" height="${H}" fill="${T.ui.splashBg}"/>`];
   // Decade index: holds on each decade, morphs in the last MORPH seconds of its step.
-  const s = Math.max(0, t - HOOK), di = Math.min(Math.floor(s / STEP), DECADES.length - 1);
+  const s = t + LEAD, di = Math.min(Math.floor(s / STEP), DECADES.length - 1);
   const into = s - di * STEP;
   const td = di >= DECADES.length - 1 ? di : di + ease((into - (STEP - MORPH)) / MORPH);
   const end = fade(t, STAT_END, STAT_END + 0.35);
-  // The hook teases today's map, dimmed behind the question, then the time-lapse starts from the 1970s.
-  if (t < HOOK) parts.push(mapSvg(DECADES.length - 1, 0.4 * (1 - fade(t, HOOK - 0.3, HOOK))));
-  else parts.push(mapSvg(td, fade(t, HOOK, HOOK + 0.2) * (1 - 0.88 * end)));
+  parts.push(mapSvg(td, 1 - 0.88 * end));
 
-  if (t < HOOK + 0.3) { // Hook: a question over the (still 1970s) map, on screen from frame 0
-    const o = 1 - fade(t, HOOK - 0.1, HOOK + 0.3);
-    parts.push(text(W / 2, 400, 86, T.ui.splashInk, "Is your county", o), text(W / 2, 505, 86, T.ui.splashInk, "hotter than it was", o),
-      text(W / 2, 610, 86, COLORS[5], "in the 1970s?", o));
-  }
-  if (t >= HOOK && t < STAT_END + 0.4) { // Year counter + header + legend
-    const o = fade(t, HOOK, HOOK + 0.3) * (1 - end);
+  if (t < STAT_END + 0.4) { // Title + year counter + legend, all on screen from frame 0
+    const o = 1 - end;
     const li = Math.round(td), label = DECADES[li].label; // label flips halfway through the morph
     const avgNow = STATS.decadeAvg[li];
-    parts.push(text(W / 2, 340, 44, T.ui.textMuted, "Average temperature vs. the 1970s", o, 400),
-      text(W / 2, 560, 200, T.ui.splashInk, label === "2020s" ? "Today" : label, o),
+    parts.push(title(o),
+      text(W / 2, 590, 180, T.ui.splashInk, label === "2020s" ? "Today" : label, o),
       text(W / 2, 1490, 64, COLORS[Math.min(classOf(avgNow), 5)], label === "1970s" ? "starting point" : `avg ${fmt(avgNow)}`, o * (t < STAT_END ? 1 : 0)),
       legend(o));
   }
@@ -196,8 +214,8 @@ function frame(t: number) {
       text(W / 2, 1020, 64, T.ui.splashInk, "counties in the lower 48", so, 400),
       text(W / 2, 1110, 64, T.ui.splashInk, "got warmer.", so),
       text(W / 2, 1260, 54, T.ui.textMuted, `Average: ${fmt(STATS.avg)}`, so, 400));
-    const eo = fade(t, STAT_END + 1.5, STAT_END + 1.9);
-    parts.push(text(W / 2, 880, 112, T.ui.splashInk, "mapwich.org", eo),
+    const eo = fade(t, LOGO_IN, LOGO_IN + 0.4), drop = 1 - (1 - Math.min(1, Math.max(0, (t - LOGO_IN) / DROP))) ** 3; // ease-out
+    parts.push(logo(W / 2, 480, 320, drop, eo), text(W / 2, 880, 112, T.ui.splashInk, "mapwich.org", eo),
       text(W / 2, 970, 44, T.ui.splashTagline, "See your county's map", eo, 400),
       text(W / 2, 1420, 30, T.ui.textMuted, `Data: NOAA nClimDiv county average temperature, 1970–${lastYear}.`, eo, 400),
       text(W / 2, 1464, 30, T.ui.textMuted, `Each county vs. its own 1970s average. 2020s = 2020–${lastYear}.`, eo, 400));
@@ -205,7 +223,24 @@ function frame(t: number) {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">${parts.join("")}</svg>`;
 }
 
+/** The Reel's cover (Instagram's "first slide"): today's map under the title. Everything sits inside
+ *  the middle 1350 px, so the 4:5 grid crop (y 285–1635) loses nothing. */
+function cover() {
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}"><rect width="${W}" height="${H}" fill="${T.ui.splashBg}"/>` +
+    mapSvg(DECADES.length - 1) + legend(1) +
+    text(W / 2, 400, 86, T.ui.splashInk, "Is your county") + text(W / 2, 505, 86, T.ui.splashInk, "hotter than it was") +
+    text(W / 2, 610, 86, COLORS[5], "in the 1970s?") +
+    text(W / 2, 1490, 56, COLORS[5], `avg ${fmt(STATS.decadeAvg.at(-1)!)} since the 1970s`) +
+    logo(W / 2 - 150, 1528, 72, 1, 1) + text(W / 2 - 108, 1582, 44, T.ui.splashInk, "mapwich.org", 1, 700, "start") + `</svg>`;
+}
+
 // ── Render: PNG frames piped into ffmpeg ─────────────────────────────────────────────────────
+const COVER = arg("cover", "drafts/instagram/warming-cover.png");
+mkdirSync(dirname(COVER), { recursive: true });
+const coverPng = await sharp(Buffer.from(cover())).png().toBuffer();
+await sharp(coverPng).toFile(COVER);
+await sharp(coverPng).extract({ left: 0, top: (H - 1350) / 2, width: W, height: 1350 }).toFile(COVER.replace(/\.png$/, "-4x5.png"));
+
 if (process.argv.includes("--still")) { // one frame for checking layout: --still <seconds>
   const at = +arg("still", "0");
   await sharp(Buffer.from(frame(at))).png().toFile(OUT.replace(/\.mp4$/, `-${at}s.png`));
