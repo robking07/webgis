@@ -7,7 +7,7 @@
 //   &area=<a city or metro area picked in search, by tagged code: place2743000, cbsa33460 (issue #332)>
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { AREA_CODE } from "./search";
+import { AREA_CODE, zoomForArea, type PlaceHit } from "./search";
 
 export interface ViewState {
   lon: number; lat: number; zoom: number;
@@ -70,6 +70,13 @@ export function serializeUrlState(s: UrlState): string {
   if (s.area) p.set("area", s.area);
   if (s.context) p.set("context", s.context);
   return `?${p.toString().replaceAll("%2C", ",")}`;
+}
+
+/** Search used off the map (issue #438): the map link that opens what was picked, framed on the place.
+ *  A county or state opens focused (`in`), as a search pick on the map does. */
+export function searchHref(d: string | null, p?: Pick<PlaceHit, "lon" | "lat" | "sqmi"> & Partial<PlaceHit>): string {
+  const at = p ? { lon: p.lon, lat: p.lat, zoom: zoomForArea(p.sqmi) } : DEFAULT_VIEW;
+  return `/map${serializeUrlState({ d, b: null, at, theme: null, lv: null, in: p?.level ? p.geoid : null, mpo: p?.mpo?.id ?? null, area: p?.area ?? null })}`;
 }
 
 /** The deliberate choices; changing one adds a Back step (each drill-down step too). Panning, zooming and theme don't. */

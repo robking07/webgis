@@ -4,12 +4,13 @@ import { Button } from "@/components/ui/button";
 import type { Dataset } from "@/lib/registry";
 import { DatasetHeading } from "../DatasetMenus";
 import { LogoMark } from "../Logo";
+import { SearchIcon } from "../SearchOverlay";
 import { FilterButton } from "./FiltersPanel";
 
 /** Immersed: menu button and wordmark, then the category above the dataset name (both open the
  *  dataset menu, issue #225), then the filter button with a caption (the level shown, or what's filtered).
  *  Phones drop the wordmark and put the heading beside the menu button, on one row (issue #34). */
-export function ImmersedHeading({ primary, secondary, immersed, hasFilters, filtersOpen, filterCount, caption, captionHint, phone, motion, onShowNav, onOpenFilters, onOpenLevel, levelPill, menuOpen, menu, onBrowse, onExit, place, detail, backShown }: {
+export function ImmersedHeading({ primary, secondary, immersed, hasFilters, filtersOpen, filterCount, caption, captionHint, phone, motion, onShowNav, onSearch, onOpenFilters, onOpenLevel, levelPill, menuOpen, menu, onBrowse, onExit, place, detail, backShown }: {
   primary: Dataset;
   secondary: Dataset | null;
   immersed: boolean;
@@ -24,6 +25,8 @@ export function ImmersedHeading({ primary, secondary, immersed, hasFilters, filt
   /** The map is moving on a smaller screen: "hide" (phones) or "dim" (laptops) the menu button and wordmark. */
   motion: "hide" | "dim" | null;
   onShowNav: () => void;
+  /** Opens the place + dataset search (laptops and up). */
+  onSearch?: () => void;
   onOpenFilters: (el: HTMLElement) => void;
   /** The caption pill: open Filters (not toggle) with the geography level in view. */
   onOpenLevel: (el: HTMLElement) => void;
@@ -58,6 +61,13 @@ export function ImmersedHeading({ primary, secondary, immersed, hasFilters, filt
           className={`wg-panel grid size-10 shrink-0 place-items-center rounded-xl text-foreground transition-opacity duration-200 focus-visible:outline-2 focus-visible:outline-ring ${motionClass}`}>
           <Menu className="size-[18px]" aria-hidden />
         </button>
+        {/* Laptops and up: search stays when the header falls away (issue #438); phones have it above the legend. */}
+        {!phone && onSearch && (
+          <button type="button" onClick={onSearch} aria-label="Search places and datasets" title="Search places and datasets ( / )"
+            className={`wg-panel grid size-10 shrink-0 place-items-center rounded-xl text-foreground transition-opacity duration-200 focus-visible:outline-2 focus-visible:outline-ring ${motionClass}`}>
+            <SearchIcon />
+          </button>
+        )}
         {phone ? heading : (
           <span className={`flex items-center gap-2 transition-opacity duration-200 ${motionClass}`} aria-hidden>
             <span className="wg-logo-on-map"><LogoMark size={34} /></span>

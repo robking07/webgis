@@ -1,20 +1,23 @@
 "use client";
 // One header for every page (D-33, P1): logo and wordmark, Map · Specials, then (right-justified)
 // a search icon and Settings (D-35). On the map, search opens the place + dataset search over the
-// map and Settings adds map units; elsewhere search goes to the data directory.
-import { useState, useSyncExternalStore } from "react";
+// map and Settings adds map units. Every other page opens the same search; a pick opens the map (issue #438).
+import { useEffect, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
-import { Search } from "lucide-react";
+import { useRouter } from "next/navigation";
 import type { ThemeName } from "@webgis/design";
 import { forgetTheme, readStoredTheme, useResolvedTheme } from "@/lib/theme";
+import { searchHref } from "@/lib/url-state";
+import { useIsPhone } from "./BottomSheet";
 import { LogoMark } from "./Logo";
+import { SearchIcon, SearchOverlay } from "./SearchOverlay";
 import { SettingsMenu, type ScaleUnit } from "./SettingsMenu";
 
 type Section = "map" | "specials";
 
 export function HeaderContent({ current, onSearch, explicitTheme, onTheme, unit, onUnit }: {
   current?: Section;
-  /** Opens the place + dataset search (map). Without it, search links to the data directory. */
+  /** Opens the map's place + dataset search. Without it (off the map), the header opens its own copy. */
   onSearch?: () => void;
   /** The explicit theme choice, or null when following the system. */
   explicitTheme: ThemeName | null;
@@ -41,20 +44,44 @@ export function HeaderContent({ current, onSearch, explicitTheme, onTheme, unit,
         </nav>
       </div>
       <div className="flex items-center gap-1">
-        {onSearch ? (
-          <button type="button" onClick={onSearch} aria-label="Search places and datasets" title="Search places and datasets ( / )" className={icon}>
-            <Search className="size-[18px]" aria-hidden />
-          </button>
-        ) : (
-          <Link href="/data" aria-label="Search datasets" className={icon}><Search className="size-[18px]" aria-hidden /></Link>
-        )}
+        {onSearch ? <SearchButton onClick={onSearch} className={icon} /> : <SiteSearch className={icon} />}
         <SettingsMenu theme={explicitTheme} onTheme={(t) => { if (!t) forgetTheme(); onTheme(t); }} unit={unit} onUnit={onUnit} />
       </div>
     </>
   );
 }
 
-const noSubscribe = () => () => {};
+const SearchButton = ({ onClick, className }: { onClick: () => void; className: string }) => (
+  <button type="button" onClick={onClick} aria-label="Search places and datasets" title="Search places and datasets ( / )" className={className}>
+    <SearchIcon />
+  </button>
+);
+
+/** Off the map (issue #438): the map's own search, with "/" to open it; a pick opens the map there. */
+function SiteSearch({ className }: { className: string }) {
+  const [open, setOpen] = useState(false);
+  const phone = useIsPhone();
+  const router = useRouter();
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "/" && !(e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement)) { e.preventDefault(); setOpen(true); }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+  const go = (href: string) => { setOpen(false); router.push(href); };
+  return (
+    <>
+      <SearchButton onClick={() => setOpen(true)} className={className} />
+      {open && <SearchOverlay full={phone} current={null} onClose={() => setOpen(false)}
+        onPlace={(p) => go(searchHref(null, p))} onDataset={(d) => go(searchHref(d.id))} onBoth={(d, p) => go(searchHref(d.id, p))}
+        // shortcut: an address opens the map framed on it, without the pin and tract details the map's own search adds; fine until someone asks.
+        onAddress={(m) => go(searchHref(null, { lon: m.lon, lat: m.lat, sqmi: 0 }))} />}
+    </>
+  );
+}
+
+const noSubscribe =() => () => {};
 /** ?theme=, else the remembered choice, else null (follow the system). */
 const readExplicit = (): ThemeName | null => {
   const p = new URLSearchParams(window.location.search).get("theme");

@@ -863,14 +863,10 @@ test("phone: a long dataset title stops short of the back button (issue #243)", 
   expect(h.x + h.width <= b.x, `heading ends at ${Math.round(h.x + h.width)}px, back button starts at ${Math.round(b.x)}px`);
 });
 
-test("phone: zoomed in, search sits above the legend and opens full screen (issue #246)", async (o) => {
+test("phone: header gone, search sits above the legend and opens full screen (issues #246, #438)", async (o) => {
   const { page } = await o("phone", "/map?d=median_household_income&lv=county&at=-93.4752,45.0061,7.2");
-  const btn = page.locator('button[aria-label="Search places or data"]');
+  const btn = page.locator('button[aria-label="Search places and datasets"]:not([inert] *)');
   await immerse(page);
-  expect(!(await btn.count()), "search button shows before any zoom");
-  await tapLonLat(page, ...HENNEPIN);
-  await page.locator('section[aria-label^="Details for"]').waitFor();
-  await page.locator('button[aria-label="Close details"]').click();
   await btn.waitFor();
   const b = await btn.boundingBox(), l = await page.locator("button[data-legend]").boundingBox();
   expect(b.y + b.height <= l.y && b.x < l.x + 20, `search ${JSON.stringify(b)} not just above the legend strip ${JSON.stringify(l)}`);
@@ -886,6 +882,34 @@ test("phone: zoomed in, search sits above the legend and opens full screen (issu
   await page.locator('[role="option"]').first().waitFor();
   expect((await input.boundingBox()).y < 40, "field didn't move to the top once typing started");
 });
+
+test("laptop: header gone, search stays on the map and opens the same search; Esc returns focus (#438)", async (o) => {
+  const { page } = await o("laptop", "/map?d=median_household_income&lv=county&at=-93.4752,45.0061,7.2");
+  await immerse(page);
+  await page.waitForFunction(() => document.querySelector("header")?.hasAttribute("inert"));
+  const btn = page.locator('[data-immersed-heading] button[aria-label="Search places and datasets"]');
+  expect(await btn.isVisible(), "no search button once the header hid");
+  const b = await btn.boundingBox(), l = await page.locator("[data-legend]:visible").first().boundingBox();
+  expect(b.y + b.height < l.y, `search ${JSON.stringify(b)} overlaps the legend ${JSON.stringify(l)}`);
+  await btn.click();
+  const dlg = page.getByRole("dialog", { name: "Search places and datasets" });
+  await dlg.getByRole("combobox").fill("Duluth");
+  await dlg.getByRole("region", { name: "Places" }).getByRole("option").first().waitFor({ timeout: 15000 });
+  await page.keyboard.press("Escape");
+  await dlg.waitFor({ state: "detached" });
+  expect(await btn.evaluate((el) => el === document.activeElement), "focus didn't return to the search button");
+});
+
+for (const vp of ["laptop", "phone"]) {
+  test(`${vp}: search off the map is the map's search; a dataset pick opens the map (#438)`, async (o) => {
+    const { page } = await o(vp, "/specials", { ready: false });
+    await page.locator('header button[aria-label="Search places and datasets"]').click();
+    const dlg = page.getByRole("dialog", { name: "Search places and datasets" });
+    await dlg.getByRole("combobox").fill("asthma");
+    await dlg.getByRole("region", { name: "Datasets" }).getByRole("option").first().click();
+    await page.waitForURL((u) => u.pathname === "/map" && u.searchParams.get("d") === "asthma", { timeout: 15000 });
+  });
+}
 
 /** Phone chrome over the map: every text, icon and edge against its own backing. */
 const PHONE_ON_MAP = ["[data-dataset-heading]", "[data-filter-button]:not([inert] *)", "[data-filter-note]:not([inert] *)", "button[data-legend]",
