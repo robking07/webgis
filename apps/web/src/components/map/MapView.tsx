@@ -99,7 +99,7 @@ interface Props {
   cooperative?: boolean;
   /** Reliability hatching (D-222): unreliable geoids per level; null or absent = hatching off. */
   hatch?: Partial<Record<GeoLevel, ReadonlySet<string>>> | null;
-  /** While hatching (or `watchCounties`) is on: the counties (5-digit FIPS) whose tracts are on screen, when they change. */
+  /** While hatching (or `watchCounties`) is on: the counties (5-digit FIPS) whose tracts, block groups or blocks are on screen, when they change. */
   onTractCounties?: (counties: string[]) => void;
   /** Report onTractCounties without hatching (a change map testing tract margins of error). */
   watchCounties?: boolean;
@@ -570,12 +570,13 @@ function syncHatch(m: MlMap, hatch: Props["hatch"], applied: Partial<Record<GeoL
   }
 }
 
-/** Counties (5-digit FIPS) whose tracts are drawn on screen; reported only when `on` (hatching or
- *  a change map) and the list changes. */
+/** Counties (5-digit FIPS) whose tracts, block groups or blocks are drawn on screen; reported only
+ *  when `on` (hatching, a change map, or breaks fitted to the view) and the list changes. */
 function reportTractCounties(m: MlMap, on: boolean, cb: Props["onTractCounties"], last: { current: string }) {
-  if (!on || !cb || !m.getLayer("tract-fill")) return;
+  const layers = ["tract-fill", "block_group-fill", "block-fill"].filter((id) => m.getLayer(id));
+  if (!on || !cb || !layers.length) return;
   const counties = new Set<string>();
-  for (const f of m.queryRenderedFeatures({ layers: ["tract-fill"] })) counties.add(String(f.properties.geoid).slice(0, 5));
+  for (const f of m.queryRenderedFeatures({ layers })) counties.add(String(f.properties.geoid).slice(0, 5));
   const key = [...counties].sort().join(",");
   if (!key || key === last.current) return;
   last.current = key;

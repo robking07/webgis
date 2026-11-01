@@ -123,14 +123,16 @@ export interface Classed {
   minClass?: number;
   /** `classes` packed for the per-state map layers, when the values worker classified them. */
   packed?: PackedClasses;
+  /** The breaks fit the counties in view, not the U.S. (issue #439). */
+  fitted?: boolean;
 }
 
 /** `breaksFrom`: classify with breaks computed from these values instead (the default view's),
- *  so stepping through time shows change rather than re-ranking each year (D-36). */
-export function classifyUnivariate(ds: Dataset, values: Values, breaksFrom?: Values): Classed {
+ *  so stepping through time shows change rather than re-ranking each year (D-36). `fixed`: use these breaks as they are. */
+export function classifyUnivariate(ds: Dataset, values: Values, breaksFrom?: Values, fixed?: number[]): Classed {
   // One Object.keys pass: Object.values/entries on a 240k-key object cost ~150 ms each.
   const keys = Object.keys(values);
-  const { cls, ...rest } = classifyValues(ds.symbology, keys.map((k) => values[k]), breaksFrom && Object.values(breaksFrom));
+  const { cls, ...rest } = classifyValues(ds.symbology, keys.map((k) => values[k]), breaksFrom && Object.values(breaksFrom), fixed);
   const classes = new Map<string, number>();
   keys.forEach((k, i) => classes.set(k, cls[i]));
   return { ...rest, classes };
@@ -171,6 +173,31 @@ export function classifyUnivariateCached(ds: Dataset, values: Values, breaksFrom
   return c;
 }
 
+/** Breaks fitted to the places in view (issue #439): the dataset's method and class count over the
+ *  values whose geoid starts with one of `counties` (5-digit FIPS). Null (keep the U.S. breaks) for
+ *  manual breaks or when fewer than 5 places per class are in those counties. */
+export function viewBreaks(ds: Dataset, values: Values, counties: readonly string[]): number[] | null {
+  if (ds.symbology.classification === "manual" || !counties.length) return null;
+  const inView = new Set(counties);
+  const vals: number[] = [];
+  for (const k in values) if (inView.has(k.slice(0, 5))) vals.push(values[k]);
+  if (vals.length < 5 * ds.symbology.classes) return null;
+  const breaks = classifyValues(ds.symbology, [], vals).breaks;
+  return breaks.length ? breaks : null;
+}
+
+// One fitted classification per values object, the latest view's: a pan re-fits, and the U.S. one stays in uniCache.
+const fitCache = new WeakMap<Values, { key: string; c: Classed }>();
+/** `values` classed with breaks fitted to the view (from viewBreaks), cached by dataset + breaks. */
+export function classifyFittedCached(ds: Dataset, values: Values, breaks: number[]): Classed {
+  const key = `${ds.id}|${breaks.join()}`;
+  const hit = fitCache.get(values);
+  if (hit?.key === key) return hit.c;
+  const c = { ...classifyUnivariate(ds, values, undefined, breaks), fitted: true };
+  fitCache.set(values, { key, c });
+  return c;
+}
+
 /** Caches a classification the values worker already made (default view; `breaksFrom` = the tracts
  *  for block groups). */
 function seedClassified(ds: Dataset, values: Values, c: Classed, breaksFrom?: Values) {
@@ -190,6 +217,6 @@ export function blockPaintFrom(bg: Classed, field: string): Classed & { field: s
   let byField = blockCache.get(bg);
   if (!byField) blockCache.set(bg, (byField = new Map()));
   let c = byField.get(field);
-  if (!c) byField.set(field, (c = { colors: bg.colors, breaks: bg.breaks, classes: new Map(), field }));
+  if (!c) byField.set(field, (c = { colors: bg.colors, breaks: bg.breaks, classes: new Map(), field, fitted: bg.fitted }));
   return c;
 }
