@@ -3,6 +3,7 @@
 // connect. The pieces live in ./map-page (data and classification in useViewerData, zoom-to-click
 // framing in useFraming, and one file per panel).
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import type { FeatureCollection } from "geojson";
 import { StatusState } from "@webgis/design/components";
 import { childLevel, formatValue, GEO_LEVELS, HATCH_LEVELS, isGradable, levelBands, type GeoLevel } from "@webgis/design";
 import { DataTable } from "./DataTable";
@@ -227,6 +228,7 @@ export function Viewer({ search }: { search: string }) {
   // The pin goes once its place's details close or another place is picked (adjusted during render).
   if (pin?.geoid && selected?.geoid !== pin.geoid) setPin(null);
   useEffect(() => { mapApi.current?.showPin(pin?.at ?? null); }, [pin]);
+  const showFlows = useCallback((lines: FeatureCollection | null) => mapApi.current?.showFlows(lines), []);
   /** Frame a point at tract zoom and open the details of the place drawn there, on the map already
    *  showing (the anti-steering rule, issue #363): exactly what a tap there does. */
   const goToPoint = (lon: number, lat: number) => {
@@ -613,7 +615,7 @@ export function Viewer({ search }: { search: string }) {
           xv={x.values[selected.level]} yv={y.values[selected.level]}
           period={stopId && !since ? { label: stop!.label, defaultLabel: primary.vintage } : undefined}
           change={since && selClassed?.change ? { fromLabel: since.label, toLabel: stop!.label, fromValues: xFrom.values[selected.level], classed: selClassed, boundaryNote: areaChangeNote(since, stop!, selected.level, selected.geoid) } : undefined}
-          onMapIt={pickDataset} onPlace={onSearchPlace} legendKey={legendKey} finest={!childLevel(availableLevels, selected.level)} />
+          onMapIt={pickDataset} onPlace={onSearchPlace} legendKey={legendKey} finest={!childLevel(availableLevels, selected.level)} onFlows={showFlows} />
       )}
     </div>
   );

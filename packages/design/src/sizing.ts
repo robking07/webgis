@@ -118,6 +118,8 @@ export const SIZE = {
   pointStroke: [[4, 0.5], [12, 1], [16, 1.5]],
   /** Main streets drawn over the data at city zoom (audit F4). */
   arterial: [[11, 0.8], [12, 1.4], [14, 2.4]],
+  /** Commute flow lines (#469), by the line's share of the biggest flow (0–1), not by zoom. */
+  flow: [[0, 1.5], [1, 9]],
 } as const satisfies Record<string, ReadonlyArray<readonly [number, number]>>;
 
 /** Width multiplier by rank (1 = most important, e.g. Interstate). */

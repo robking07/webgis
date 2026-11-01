@@ -19,6 +19,8 @@ import { LearnMore } from "./LearnMore";
 import type { PlaceHit } from "@/lib/search";
 import { placeChain } from "@/lib/place-chain";
 import { CompareWith } from "../compare/CompareWith";
+import { CommuteFlows } from "../CommuteFlows";
+import type { FeatureCollection } from "geojson";
 
 const dedupe = (links: Link[]) => links.filter((l, i) => links.findIndex((m) => m.url === l.url) === i);
 
@@ -45,6 +47,8 @@ interface DetailProps {
   change?: { fromLabel: string; toLabel: string; fromValues?: Values; classed: ClassedLevel; boundaryNote?: string | null };
   /** The map's finest level: a click here can't drill further down (issue #203), so say so. */
   finest?: boolean;
+  /** Draw or clear the county's commute flow lines on the map (#469). */
+  onFlows?: (lines: FeatureCollection | null) => void;
 }
 
 /** The places a clicked place sits inside, coarse first (state › MPO › metro › county › city › tract; issue #364). */
@@ -143,7 +147,7 @@ function ChangeCard({ dataset, geoid, change, to, sheetKey }: { dataset: Dataset
   );
 }
 
-export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, onMapIt, period, onPlace, legendKey, change, finest }: DetailProps) {
+export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, onMapIt, period, onPlace, legendKey, change, finest, onFlows }: DetailProps) {
   const [rows, setRows] = useState<Detail | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const phone = useIsPhone();
@@ -237,6 +241,7 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
         )}
       <CompareWith geoid={info.geoid} level={info.level} name={info.name} dataset={primary} otherPeriod={!!period}
         aValue={!rows ? null : staticOnly ? undefined : rows[primary.id]?.value ?? null} onPicking={setPicking} />
+      {!shrunk && info.level === "county" && onFlows && <CommuteFlows key={info.geoid} geoid={info.geoid} onLines={onFlows} />}
       {!shrunk && <LearnMore links={links} />}
       {phone && !shrunk && rows && !staticOnly && <p className="mt-2 text-center text-xs text-muted-foreground group-data-[snap=full]:hidden">Swipe up for all {info.level === "tract" ? TRACT_IDS.length : Object.keys(rows).filter((id) => !DATASET_BY_ID.get(id)?.library).length} datasets here</p>}
     </>
