@@ -146,7 +146,7 @@ export function classifyChangeCached(from: Values, to: Values, unit: Unit, moes?
 export function changeSummary(change: number | null | undefined, from: number | null | undefined, to: number | null | undefined,
   m: ChangeMeasure, unit: Unit, steady: boolean, boundaryNote?: string | null): { headline: string; values: [string, string] } {
   // Points: one decimal on both values so they visibly add up to the change ("12.8% → 12.3%", −0.5 pts, #200).
-  // Only the hover shows these values; the detail panel keeps its own rounding.
+  // The hover and the details card share these values (D-545).
   const d = m === "points" ? { decimals: 1 } : undefined;
   const values: [string, string] = [formatValue(from, unit, d), formatValue(to, unit, d)];
   if (change == null || !Number.isFinite(change)) {

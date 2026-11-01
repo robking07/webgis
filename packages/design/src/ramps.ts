@@ -58,7 +58,7 @@ export const RAMPS = {
   },
   puor: {
     id: "puor", label: "Orange–Purple", kind: "diverging", minClasses: 3, maxClasses: 7,
-    stops: ["#b35806", "#e08214", "#fdb863", "#fee0b6", "#e8e2d4", "#d8daeb", "#b2abd2", "#8073ac", "#542788"],
+    stops: ["#b35806", "#e08214", "#f2a95b", "#e8bd8a", "#c4c4c4", "#b9bbd9", "#9d96c4", "#8073ac", "#542788"],
     source: "ColorBrewer 2.0",
   },
   brbg: {
