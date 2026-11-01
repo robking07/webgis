@@ -37,13 +37,35 @@ export default function drilldownTests({ test, expect, immerse, mapIdle, tapLonL
       expect(st === "48", `focused ${st}, not Texas`);
       expect(await fits(page, "state", "48"), "Texas doesn't fit the screen");
       expect(/Texas/.test(await page.locator("[data-focus-name]").innerText()), "Texas's name isn't shown");
+      // The back button says where it goes (issue #437).
+      const backSays = async (want) => { const t = await page.locator("button[data-back]").innerText(); expect(t.trim() === want, `back button says "${t}", not "${want}"`); };
+      await backSays("Back to national view");
       const co = await step(page, [-97.75, 30.33], "tract", 5);
       expect(await fits(page, "county", co), `county ${co} doesn't fit the screen`);
+      await backSays("Back to Texas view");
       const tr = await step(page, [-97.743, 30.268], "block_group", 11);
       expect(await fits(page, "tract", tr), `tract ${tr} doesn't fit the screen (zoomed too deep)`);
+      await backSays("Back to Travis County");
       for (const want of [co, st, null]) { await page.goBack(); await waitIn(page, want); }
       await mapIdle(page);
       expect(!(await page.evaluate(() => !!window.__wgMap.getLayer("focus-dim"))), "dim wash left after Back to the whole map");
+    });
+  }
+
+  for (const vp of ["phone", "laptop"]) {
+    test(`${vp} one click on a state frames it whole; Back returns to the national view (issue #437)`, async (o) => {
+      const { page } = await o(vp, "/map?d=median_household_income");
+      await immerse(page);
+      const z0 = await page.evaluate(() => window.__wgMap.getZoom());
+      await tapLonLat(page, -94.3, 46.3);
+      await waitIn(page, "27");
+      await mapIdle(page);
+      expect(await page.evaluate(() => window.__wgMap.getZoom()) > z0 + 0.5, "a state click didn't zoom in");
+      expect(await fits(page, "state", "27"), "Minnesota doesn't fit the screen");
+      const back = page.locator("button[data-back]");
+      expect((await back.innerText()).trim() === "Back to national view", `back button says "${await back.innerText()}"`);
+      await back.click();
+      await waitIn(page, null);
     });
   }
 
