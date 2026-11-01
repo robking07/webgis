@@ -1,20 +1,23 @@
 "use client";
-// Pick an area (#455): the hand-picked tracts' bar ("N tracts picked · Done · Clear") and their total
+// Pick an area (#455, #391): the hand-picked tracts' or counties' bar ("N counties picked · Done · Clear") and their total
 // for the map(s) on screen, added up exactly as an MPO's tracts are (lib/counts sumCounts, RegionTotal's rows).
 import { useEffect, useState } from "react";
 import { countsLabels, placeCounts, sumCounts, type Counts } from "@/lib/counts";
 import type { Dataset } from "@/lib/registry";
+import type { GeoLevel } from "@webgis/design";
 import { TotalRow } from "./RegionTotal";
 
 export const PICK_MAX = 50;
 
-/** After Done the total stays (the map's "Pick tracts" button picks more) until Clear. */
-export function PickArea({ datasets, picked, picking, full, onDone, onClear }: {
+/** After Done the total stays (the map's "Pick an area" button picks more) until Clear. */
+export function PickArea({ datasets, picked, picking, full, drawn, onDone, onClear }: {
   datasets: Dataset[];
   picked: string[];
   picking: boolean;
   /** A tap was refused at PICK_MAX. */
   full: boolean;
+  /** The level on the map now: picks are its tracts or counties until the first pick sets the level. */
+  drawn: GeoLevel;
   onDone: () => void;
   onClear: () => void;
 }) {
@@ -39,6 +42,10 @@ export function PickArea({ datasets, picked, picking, full, onDone, onClear }: {
     return () => window.removeEventListener("keydown", esc, true);
   }, [picking, onDone]);
   const n = picked.length;
+  const county = n ? picked[0].length === 5 : drawn === "county";
+  const one = county ? "county" : "tract", many = county ? "counties" : "tracts";
+  // Picks on one level, the other drawn: taps there do nothing (mixing would count people twice).
+  const other = picking && n > 0 && drawn === (county ? "tract" : "county");
   const btn = "wg-zbtn h-11 rounded-full px-4 text-sm font-semibold text-foreground";
   return (
     <section aria-label="Picked area" data-pick-area=""
@@ -46,14 +53,15 @@ export function PickArea({ datasets, picked, picking, full, onDone, onClear }: {
       {n > 0 && (
         <div className="wg-panel min-h-0 space-y-2 overflow-y-auto rounded-xl px-3 py-2" data-pick-total="">
           {datasets.map((d) => (
-            <TotalRow key={d.id} d={d} c={totals.key === key ? totals.c[d.id] : undefined} across="tracts" missing="No total: a tract’s numbers are missing." />
+            <TotalRow key={d.id} d={d} c={totals.key === key ? totals.c[d.id] : undefined} across={many} missing={`No total: a ${one}’s numbers are missing.`} />
           ))}
-          <p className="text-xs text-muted-foreground">The sum of {n} 2020 census {n === 1 ? "tract" : "tracts"}. Margins of error are at 90% confidence, combined as the Census Bureau does.</p>
+          <p className="text-xs text-muted-foreground">The sum of {n} {county ? "" : "2020 census "}{n === 1 ? one : many}. Margins of error are at 90% confidence, combined as the Census Bureau does.</p>
         </div>
       )}
       <div className="wg-panel flex items-center gap-1 rounded-full py-0.5 pl-4 pr-0.5">
         <p className="mr-auto text-sm tabular-nums text-foreground" aria-live="polite">
-          {full ? `${PICK_MAX} tracts picked, the most allowed` : n ? `${n} ${n === 1 ? "tract" : "tracts"} picked` : "Pick tracts on the map"}
+          {full ? `${PICK_MAX} ${many} picked, the most allowed` : other ? `Picking ${many} · Clear to pick ${county ? "tracts" : "counties"}`
+            : n ? `${n} ${n === 1 ? one : many} picked` : `Pick ${many} on the map`}
         </p>
         {picking && <button type="button" onClick={onDone} className={btn}>Done</button>}
         <button type="button" onClick={onClear} className={btn}>Clear</button>
