@@ -16,14 +16,8 @@ export function useChangeMoes(id: string | null, from: string | null, to: string
     if (!id || !levelKey) return;
     let live = true;
     for (const l of levelKey.split(",") as GeoLevel[]) {
-      const moe = (stop: string | null) => loadValues(id, `${l}.moe` as GeoLevel, stop);
-      Promise.all([moe(from), moe(to)]).then(([a, b]) => {
-        const out: Values = {};
-        for (const [g, m2] of Object.entries(b)) {
-          const m = differenceMoe(a[g], m2);
-          if (m != null) out[g] = m;
-        }
-        if (live) setState((s) => ({ key, moes: { ...(s.key === key ? s.moes : {}), [l]: out } }));
+      changeMoes(id, from, to, l).then((out) => {
+        if (live) setState((s) => (s.key === key && s.moes[l] === out ? s : { key, moes: { ...(s.key === key ? s.moes : {}), [l]: out } }));
       }, () => {}); // no margin file for this map, stop or level: leave it untested
     }
     return () => { live = false; };
@@ -31,3 +25,22 @@ export function useChangeMoes(id: string | null, from: string | null, to: string
   return state.key === key ? state.moes : NONE;
 }
 const NONE: LevelValues = {};
+
+// One combined object per map, stops and level, so zooming back to tracts doesn't redo 85k margins
+// or reclassify (the change classification is cached by object, D-114).
+const cache = new Map<string, Promise<Values>>();
+function changeMoes(id: string, from: string | null, to: string | null, l: GeoLevel): Promise<Values> {
+  const k = `${id}@${from ?? ""}@${to ?? ""}/${l}`;
+  if (!cache.has(k)) {
+    const moe = (stop: string | null) => loadValues(id, `${l}.moe` as GeoLevel, stop);
+    cache.set(k, Promise.all([moe(from), moe(to)]).then(([a, b]) => {
+      const out: Values = {};
+      for (const [g, m2] of Object.entries(b)) {
+        const m = differenceMoe(a[g], m2);
+        if (m != null) out[g] = m;
+      }
+      return out;
+    }).catch((e) => { cache.delete(k); throw e; }));
+  }
+  return cache.get(k)!;
+}
