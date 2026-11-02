@@ -17,7 +17,7 @@ const API = (year: number) => `https://api.census.gov/data/${year}/acs/acs5`;
 const MAX_VARS = 48;
 /** CPI-U annual averages (BLS series CUUR0000SA0, period M13). A 5-year estimate's dollars are
  *  its last year's dollars; timeline periods are restated in headline-year dollars (D-36). */
-const CPI_U: Record<number, number> = { 2014: 236.736, 2019: 255.657, 2024: 313.689 };
+const CPI_U: Record<number, number> = { 2009: 214.537, 2014: 236.736, 2019: 255.657, 2024: 313.689 };
 
 
 function clean(raw: string | null, isMoe: boolean): number | null {
@@ -167,9 +167,21 @@ export function fetchLevel(level: Level | "us", vars: string[], year = YEAR): Pr
   })();
 }
 
+/** Re-key county (and tract) rows to the 2019 county codes. A merged county (Bedford city, VA,
+ *  in periods before 2013) is dropped rather than written over the county it later joined. */
+export function renameCounties(raw: Map<string, Row>): Map<string, Row> {
+  const out = new Map<string, Row>();
+  for (const [g, row] of raw) {
+    const to = FIPS_RENAMES[g.slice(0, 5)];
+    if (!to) out.set(g, row);
+    else if (!raw.has(to + g.slice(5))) out.set(to + g.slice(5), row);
+  }
+  return out;
+}
+
 /** Earlier 5-year periods for the year control (D-36), written to the web export only.
  *  Periods before 2020 are keyed to 2019 boundaries (2010 tracts); the 2010–2014 county
- *  codes renamed in 2015 are carried forward to match them. */
+ *  codes renamed in 2015 are carried forward to match them. 2005–2009 is state and county only. */
 export async function ingestAcsTimeline(only?: string[]) {
   const entries = loadRegistry().filter((e) => e.measure.kind === "acs5" && e.timeline && (!only || only.includes(e.id)));
   const byYear = new Map<number, Array<{ e: DatasetEntry; boundaries?: "2019" }>>();
@@ -188,15 +200,13 @@ export async function ingestAcsTimeline(only?: string[]) {
     await writeUsRows(pool, list.map((x) => x.e), [], vars, year, String(year), k);
     log("acs", `${year - 4}–${year}: ${list.length} datasets, ${vars.length} variables${boundaries ? `, ${boundaries} boundaries` : ""}`);
     for (const level of ["state", "county", "tract"] as const) {
+      // 2005–2009 and earlier use 2000 tracts; the 2019 boundary tiles have 2010 tracts (#479).
+      if (level === "tract" && year < 2010) continue;
       const levelEntries = list.map((x) => x.e).filter((e) => e.geographyLevels.includes(level));
       if (!levelEntries.length) continue;
       log("acs", `fetching ${year} ${level}…`);
       const raw = await fetchLevel(level, vars, year);
-      const table = new Map<string, Row>();
-      for (const [g, row] of raw) {
-        const fixed = level === "state" || !boundaries ? g : (FIPS_RENAMES[g.slice(0, 5)] ?? g.slice(0, 5)) + g.slice(5);
-        table.set(fixed, row);
-      }
+      const table = level === "state" || !boundaries ? raw : renameCounties(raw);
       const areas = level !== "state" && boundaries ? await areas2019(level) : await landArea(pool, level);
       for (const e of levelEntries) {
         const values = new Map<string, Value>();

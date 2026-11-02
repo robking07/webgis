@@ -59,7 +59,7 @@ export default function MethodsPage() {
       <p>Boundaries are the Census Bureau&apos;s 2024 cartographic boundary files: 2020 tracts, and Connecticut&apos;s nine planning regions in place of its old counties.</p>
       <ul>
         <li><strong>CEJST and USDA food access tracts use 2010 tracts</strong>, drawn as published. The county tract spreadsheet leaves them out, because it is for joining to 2020 tracts.</li>
-        <li><strong>Earlier ACS periods</strong> (2010–2014, 2015–2019) also use 2010 tracts. Change maps match tracts by ID, so one split or merged in 2020 shows &quot;No data&quot;, not a false change.</li>
+        <li><strong>Earlier ACS periods</strong> (2010–2014, 2015–2019) also use 2010 tracts. Change maps match tracts by ID, so one split or merged in 2020 shows &quot;No data&quot;, not a false change. 2005–2009 is available for states and counties only, because tracts drew different lines before 2010.</li>
         <li><strong>Traffic, bridge and climate sources</strong> still use Connecticut&apos;s old counties, so its counties show no data there.</li>
       </ul>
 

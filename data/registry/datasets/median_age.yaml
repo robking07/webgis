@@ -19,5 +19,5 @@ unit: years
 universe: total population
 terms: [median, acs-5-year, margin-of-error, census-geography, quantile-classes]
 measure: { kind: acs5, numerator: [B01002_001] }
-timeline: { from: 2014, to: 2024, step: 5 }
+timeline: { from: 2009, to: 2024, step: 5 }
 symbology: { ramp: cividis, classification: quantile, classes: 5 }

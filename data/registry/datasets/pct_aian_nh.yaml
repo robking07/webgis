@@ -19,5 +19,5 @@ universe: total population
 coverageNote: "Counts only people who give this as their single race; many Native people also report another race and are counted under two or more races. Small numbers make tract and block-group estimates uncertain outside reservations and Alaska."
 terms: [race-ethnicity, acs-5-year, margin-of-error, census-geography, quantile-classes]
 measure: { kind: acs5, numerator: [B03002_005], denominator: [B03002_001], scale: 100 }
-timeline: { from: 2014, to: 2024, step: 5 }
+timeline: { from: 2009, to: 2024, step: 5 }
 symbology: { ramp: blues, classification: quantile, classes: 5 }

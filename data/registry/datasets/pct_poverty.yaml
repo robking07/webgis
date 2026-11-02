@@ -25,5 +25,5 @@ measure:
   scale: 100
   # B17001 stops at tracts; C17002 (ratio of income to poverty) gives the same count at block groups.
   blockGroup: { numerator: [C17002_002, C17002_003], denominator: [C17002_001] }
-timeline: { from: 2014, to: 2024, step: 5 }
+timeline: { from: 2009, to: 2024, step: 5 }
 symbology: { ramp: purples, classification: quantile, classes: 5, higherIsBetter: false }
