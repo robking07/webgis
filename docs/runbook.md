@@ -173,6 +173,8 @@ A dataset refresh can run on GitHub instead of Robbie's machine: `.github/workfl
 - **datasets**: the ids, e.g. `pct_poverty median_household_income`. Every step must load every
   id (`acs` with a FARS id is refused before anything runs; `data/ingest/src/check-run.ts`).
 
+New timeline stops reach the year control only through a `periods.json` change in a PR, after the run uploads them (the run never commits it).
+
 Three more ways to run, each with that step alone (D-552, D-557):
 
 - **A map layer from files** (`features` in the registry, e.g. TIP projects): steps `features`,

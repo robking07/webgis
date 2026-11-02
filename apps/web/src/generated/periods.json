@@ -557,6 +557,10 @@
   ]
  },
  "median_age": {
+  "2009": [
+   "county",
+   "state"
+  ],
   "2014": [
    "county",
    "state",
@@ -569,6 +573,10 @@
   ]
  },
  "median_gross_rent": {
+  "2009": [
+   "county",
+   "state"
+  ],
   "2014": [
    "county",
    "state",
@@ -581,6 +589,10 @@
   ]
  },
  "median_home_value": {
+  "2009": [
+   "county",
+   "state"
+  ],
   "2014": [
    "county",
    "state",
@@ -593,6 +605,10 @@
   ]
  },
  "median_household_income": {
+  "2009": [
+   "county",
+   "state"
+  ],
   "2014": [
    "county",
    "state",
@@ -605,6 +621,10 @@
   ]
  },
  "pct_age_65_plus": {
+  "2009": [
+   "county",
+   "state"
+  ],
   "2014": [
    "county",
    "state",
@@ -617,6 +637,10 @@
   ]
  },
  "pct_aian_nh": {
+  "2009": [
+   "county",
+   "state"
+  ],
   "2014": [
    "county",
    "state",
@@ -629,6 +653,10 @@
   ]
  },
  "pct_asian_nh": {
+  "2009": [
+   "county",
+   "state"
+  ],
   "2014": [
    "county",
    "state",
@@ -653,6 +681,10 @@
   ]
  },
  "pct_bike_commute": {
+  "2009": [
+   "county",
+   "state"
+  ],
   "2014": [
    "county",
    "state",
@@ -665,6 +697,10 @@
   ]
  },
  "pct_black_nh": {
+  "2009": [
+   "county",
+   "state"
+  ],
   "2014": [
    "county",
    "state",
@@ -677,6 +713,10 @@
   ]
  },
  "pct_carpool": {
+  "2009": [
+   "county",
+   "state"
+  ],
   "2014": [
    "county",
    "state",
@@ -689,6 +729,10 @@
   ]
  },
  "pct_drive_alone": {
+  "2009": [
+   "county",
+   "state"
+  ],
   "2014": [
    "county",
    "state",
@@ -701,6 +745,10 @@
   ]
  },
  "pct_extreme_commute": {
+  "2009": [
+   "county",
+   "state"
+  ],
   "2014": [
    "county",
    "state",
@@ -713,6 +761,10 @@
   ]
  },
  "pct_foreign_born": {
+  "2009": [
+   "county",
+   "state"
+  ],
   "2014": [
    "county",
    "state",
@@ -725,6 +777,10 @@
   ]
  },
  "pct_hispanic_latino": {
+  "2009": [
+   "county",
+   "state"
+  ],
   "2014": [
    "county",
    "state",
@@ -737,6 +793,10 @@
   ]
  },
  "pct_leave_before_7am": {
+  "2009": [
+   "county",
+   "state"
+  ],
   "2014": [
    "county",
    "state",
@@ -756,6 +816,10 @@
   ]
  },
  "pct_long_commute": {
+  "2009": [
+   "county",
+   "state"
+  ],
   "2014": [
    "county",
    "state",
@@ -768,6 +832,10 @@
   ]
  },
  "pct_multiracial_nh": {
+  "2009": [
+   "county",
+   "state"
+  ],
   "2014": [
    "county",
    "state",
@@ -780,6 +848,10 @@
   ]
  },
  "pct_nhpi_nh": {
+  "2009": [
+   "county",
+   "state"
+  ],
   "2014": [
    "county",
    "state",
@@ -804,6 +876,10 @@
   ]
  },
  "pct_people_of_color": {
+  "2009": [
+   "county",
+   "state"
+  ],
   "2014": [
    "county",
    "state",
@@ -816,6 +892,10 @@
   ]
  },
  "pct_poverty": {
+  "2009": [
+   "county",
+   "state"
+  ],
   "2014": [
    "county",
    "state",
@@ -828,6 +908,10 @@
   ]
  },
  "pct_rent_burdened": {
+  "2009": [
+   "county",
+   "state"
+  ],
   "2014": [
    "county",
    "state",
@@ -840,6 +924,10 @@
   ]
  },
  "pct_renter_households": {
+  "2009": [
+   "county",
+   "state"
+  ],
   "2014": [
    "county",
    "state",
@@ -864,6 +952,10 @@
   ]
  },
  "pct_transit_commute": {
+  "2009": [
+   "county",
+   "state"
+  ],
   "2014": [
    "county",
    "state",
@@ -888,6 +980,10 @@
   ]
  },
  "pct_walk_commute": {
+  "2009": [
+   "county",
+   "state"
+  ],
   "2014": [
    "county",
    "state",
@@ -900,6 +996,10 @@
   ]
  },
  "pct_white_nh": {
+  "2009": [
+   "county",
+   "state"
+  ],
   "2014": [
    "county",
    "state",
@@ -912,6 +1012,10 @@
   ]
  },
  "pct_work_from_home": {
+  "2009": [
+   "county",
+   "state"
+  ],
   "2014": [
    "county",
    "state",
@@ -924,6 +1028,10 @@
   ]
  },
  "pct_work_outside_county": {
+  "2009": [
+   "county",
+   "state"
+  ],
   "2014": [
    "county",
    "state",
@@ -948,6 +1056,10 @@
   ]
  },
  "per_capita_income": {
+  "2009": [
+   "county",
+   "state"
+  ],
   "2014": [
    "county",
    "state",
@@ -960,6 +1072,10 @@
   ]
  },
  "population_density": {
+  "2009": [
+   "county",
+   "state"
+  ],
   "2014": [
    "county",
    "state",
@@ -1347,6 +1463,10 @@
   ]
  },
  "median_owner_costs_mortgage": {
+  "2009": [
+   "county",
+   "state"
+  ],
   "2014": [
    "county",
    "state",
@@ -1412,6 +1532,10 @@
   ]
  },
  "pct_mobile_homes": {
+  "2009": [
+   "county",
+   "state"
+  ],
   "2014": [
    "county",
    "state",
@@ -1436,6 +1560,10 @@
   ]
  },
  "pct_overcrowded": {
+  "2009": [
+   "county",
+   "state"
+  ],
   "2014": [
    "county",
    "state",
@@ -1448,6 +1576,10 @@
   ]
  },
  "pct_owner_cost_burdened": {
+  "2009": [
+   "county",
+   "state"
+  ],
   "2014": [
    "county",
    "state",
@@ -1460,6 +1592,10 @@
   ]
  },
  "pct_public_assistance": {
+  "2009": [
+   "county",
+   "state"
+  ],
   "2014": [
    "county",
    "state",
@@ -1472,6 +1608,10 @@
   ]
  },
  "pct_seniors_living_alone": {
+  "2009": [
+   "county",
+   "state"
+  ],
   "2014": [
    "county",
    "state",
@@ -1484,6 +1624,10 @@
   ]
  },
  "pct_single_parent_families": {
+  "2009": [
+   "county",
+   "state"
+  ],
   "2014": [
    "county",
    "state",
@@ -1496,6 +1640,10 @@
   ]
  },
  "pct_under_18": {
+  "2009": [
+   "county",
+   "state"
+  ],
   "2014": [
    "county",
    "state",
