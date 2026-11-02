@@ -402,7 +402,7 @@
 
 ## Known gaps and caveats
 
-- **LODES:** Alaska has no WAC file since 2016 (shown as no data); Michigan's latest is 2021; Puerto Rico isn't covered (D-14).
+- **LODES:** Alaska has no WAC file since 2016 (shown as no data); Michigan's latest is 2021; Puerto Rico isn't covered (D-14). Before 2010 federal jobs are not counted, and D.C. (before 2010), Massachusetts (before 2011), Arizona and Mississippi (2002–2003), Arkansas and New Hampshire (2002) have no workplace data.
 - **PLACES:** model-based small-area estimates (BRFSS + multilevel regression and poststratification), not direct counts. County poverty is a model input, so PLACES × poverty/income correlations are partly by construction (D-17). The 2025 release has no 2023-based estimates for Kentucky or Pennsylvania: CDC says they "were unable to collect enough data to meet the minimum requirements" for the 2023 BRFSS. Only the five every-other-year measures (short sleep among them) have 2022 values there ([PLACES release notes](https://www.cdc.gov/places/current-release-notes/index.html), [BRFSS 2023](https://www.cdc.gov/brfss/annual_data/annual_2023.html)).
 - **nClimDiv:** Connecticut uses pre-2022 county codes and Hawaii has no county series, so both show no data for climate.
 - **ACS:** 5-year estimates describe 2020–2024 as a period, not a single year. Small tracts carry large margins of error, which the detail panel shows.
