@@ -393,6 +393,8 @@ for (const [vp, hides] of [["phone", true], ["laptop", true], ["monitor", false]
     if (!page.isPhone) { await live(page).click(); await page.locator("section#filters-panel").waitFor(); await wait(300); }
     const side = page.locator("section#filters-panel");
     await dragStart(page);
+    // The fade is a CSS transition; on slow CI it can still be under way after the fixed wait in dragStart.
+    await page.waitForFunction(() => document.getAnimations().every((a) => a.playState !== "running"), null, { timeout: 5000 }).catch(() => {});
     const during = { menu: await opacityOf(menu), side: page.isPhone ? null : await opacityOf(side) };
     await dragEnd(page);
     await wait(1500);
