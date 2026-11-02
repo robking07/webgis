@@ -2066,5 +2066,291 @@
    "state",
    "county"
   ]
+ },
+ "pm25_annual": {
+  "2001": [
+   "county"
+  ],
+  "2002": [
+   "county"
+  ],
+  "2003": [
+   "county"
+  ],
+  "2004": [
+   "county"
+  ],
+  "2005": [
+   "county"
+  ],
+  "2006": [
+   "county"
+  ],
+  "2007": [
+   "county"
+  ],
+  "2008": [
+   "county"
+  ],
+  "2009": [
+   "county"
+  ],
+  "2010": [
+   "county"
+  ],
+  "2011": [
+   "county"
+  ],
+  "2012": [
+   "county"
+  ],
+  "2013": [
+   "county"
+  ],
+  "2014": [
+   "county"
+  ],
+  "2015": [
+   "county"
+  ],
+  "2016": [
+   "county"
+  ],
+  "2017": [
+   "county"
+  ],
+  "2018": [
+   "county"
+  ],
+  "2019": [
+   "county"
+  ],
+  "2020": [
+   "county"
+  ],
+  "2021": [
+   "county"
+  ],
+  "2022": [
+   "county"
+  ],
+  "2023": [
+   "county"
+  ],
+  "2024": [
+   "county"
+  ]
+ },
+ "ozone_8hr": {
+  "2005": [
+   "county"
+  ],
+  "2006": [
+   "county"
+  ],
+  "2007": [
+   "county"
+  ],
+  "2008": [
+   "county"
+  ],
+  "2009": [
+   "county"
+  ],
+  "2010": [
+   "county"
+  ],
+  "2011": [
+   "county"
+  ],
+  "2012": [
+   "county"
+  ],
+  "2013": [
+   "county"
+  ],
+  "2014": [
+   "county"
+  ],
+  "2015": [
+   "county"
+  ],
+  "2016": [
+   "county"
+  ],
+  "2017": [
+   "county"
+  ],
+  "2018": [
+   "county"
+  ],
+  "2019": [
+   "county"
+  ],
+  "2020": [
+   "county"
+  ],
+  "2021": [
+   "county"
+  ],
+  "2022": [
+   "county"
+  ],
+  "2023": [
+   "county"
+  ],
+  "2024": [
+   "county"
+  ]
+ },
+ "tri_onsite_releases": {
+  "1987": [
+   "county",
+   "state"
+  ],
+  "1988": [
+   "county",
+   "state"
+  ],
+  "1989": [
+   "county",
+   "state"
+  ],
+  "1990": [
+   "county",
+   "state"
+  ],
+  "1991": [
+   "county",
+   "state"
+  ],
+  "1992": [
+   "county",
+   "state"
+  ],
+  "1993": [
+   "county",
+   "state"
+  ],
+  "1994": [
+   "county",
+   "state"
+  ],
+  "1995": [
+   "county",
+   "state"
+  ],
+  "1996": [
+   "county",
+   "state"
+  ],
+  "1997": [
+   "county",
+   "state"
+  ],
+  "1998": [
+   "county",
+   "state"
+  ],
+  "1999": [
+   "county",
+   "state"
+  ],
+  "2000": [
+   "county",
+   "state"
+  ],
+  "2001": [
+   "county",
+   "state"
+  ],
+  "2002": [
+   "county",
+   "state"
+  ],
+  "2003": [
+   "county",
+   "state"
+  ],
+  "2004": [
+   "county",
+   "state"
+  ],
+  "2005": [
+   "county",
+   "state"
+  ],
+  "2006": [
+   "county",
+   "state"
+  ],
+  "2007": [
+   "county",
+   "state"
+  ],
+  "2008": [
+   "county",
+   "state"
+  ],
+  "2009": [
+   "county",
+   "state"
+  ],
+  "2010": [
+   "county",
+   "state"
+  ],
+  "2011": [
+   "county",
+   "state"
+  ],
+  "2012": [
+   "county",
+   "state"
+  ],
+  "2013": [
+   "county",
+   "state"
+  ],
+  "2014": [
+   "county",
+   "state"
+  ],
+  "2015": [
+   "county",
+   "state"
+  ],
+  "2016": [
+   "county",
+   "state"
+  ],
+  "2017": [
+   "county",
+   "state"
+  ],
+  "2018": [
+   "county",
+   "state"
+  ],
+  "2019": [
+   "county",
+   "state"
+  ],
+  "2020": [
+   "county",
+   "state"
+  ],
+  "2021": [
+   "county",
+   "state"
+  ],
+  "2022": [
+   "county",
+   "state"
+  ],
+  "2023": [
+   "county",
+   "state"
+  ]
  }
 }
