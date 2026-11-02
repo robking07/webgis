@@ -3215,11 +3215,12 @@
    "perSqMi": true
   },
   "modelInputs": [],
+  "coverageNote": "Years before 2010 leave out federal government jobs (LODES began counting them in 2010), so places with many federal workers jump between 2009 and 2010. Some states have no data in some years: Washington, D.C. before 2010; Massachusetts before 2011; Arizona and Mississippi before 2004; Arkansas and New Hampshire in 2002; Alaska after 2016; Michigan in 2022 (the 2023 map shows its 2021 jobs, the latest it has published). Puerto Rico isn't covered.",
   "facets": [],
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 2010,
+   "from": 2002,
    "to": 2023,
    "step": 1
   },
