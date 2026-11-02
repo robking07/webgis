@@ -25,7 +25,9 @@ export default function drilldownTests({ test, expect, immerse, mapIdle, tapLonL
     await focused(want).catch(async () => { await tapLonLat(page, ...lonlat, true); await focused(want); });
     await mapIdle(page);
     const g = inParam(page);
-    const kids = await drawn(page, level);
+    // The child level's tiles arrive after the fit settles (slow on CI): wait until some are drawn.
+    let kids = await drawn(page, level);
+    for (let i = 0; i < 40 && !kids.length; i++) { await new Promise((r) => setTimeout(r, 250)); kids = await drawn(page, level); }
     expect(kids.length > 0 && kids.every((k) => k.startsWith(g)), `in=${g}: ${level} drawn outside it: ${kids.filter((k) => !k.startsWith(g)).slice(0, 5).join(", ")} (${kids.length} drawn)`);
     expect(await page.evaluate(() => !!window.__wgMap.getLayer("focus-dim")), `in=${g}: no dim wash`);
     return g;
