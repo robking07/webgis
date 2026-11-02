@@ -355,7 +355,8 @@ export const DatasetEntry = z.object({
   /** Earlier (or later) moments the map can step through (D-36), `from`…`to` by `step`. The
    *  headline `vintage` stays the default and is what comparisons and Combinations use.
    *  acs5: 5-year periods named by their last year (2014 = 2010–2014; use step 5 so periods
-   *  don't overlap). fars, climdiv, nbi, lodes: single calendar years. overdose: 12-month periods ending in `endMonth` of each year. Stops: registry/timeline.ts. */
+   *  don't overlap). fars, climdiv, nbi, lodes: single calendar years. overdose: 12-month periods ending in `endMonth` of each year. fema_declarations: decades (step 10), named
+   *  "1960s" etc. Stops: registry/timeline.ts. */
   timeline: z.object({ from: z.number().int(), to: z.number().int(), step: z.number().int().min(1).default(1) })
     .refine((t) => t.to >= t.from, "timeline.to must be ≥ timeline.from").optional(),
   /** Popup links to readable resources about the clicked place or feature (D-35). */

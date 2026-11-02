@@ -70,6 +70,11 @@ export function timelineStops(e: DatasetEntry): TimelineStop[] {
       const label = (y: number) => (endMonth === 12 ? String(y) : `${["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][endMonth - 1]} ${y}`);
       return years.map((y) => ({ id: String(y), label: label(y), isDefault: y === endYear }));
     }
+    case "fema_declarations": // counts per decade (ids aren't years, so no change maps); the headline "since" count goes last
+      return [
+        ...years.map((y) => ({ id: `${y}s`, label: `${y}s`, isDefault: false })),
+        { id: "since", label: `Since ${e.measure.since}`, isDefault: true },
+      ];
     case "lodes": // LODES 8 keys every year to 2020 blocks, so current boundaries throughout
       return years.map((y) => ({ id: String(y), label: String(y), isDefault: y === +e.vintage }));
     default:

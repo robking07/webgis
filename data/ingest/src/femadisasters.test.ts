@@ -1,4 +1,6 @@
 import { describe, expect, it } from "vitest";
+import { loadRegistry } from "@webgis/registry/load";
+import { timelineStops } from "@webgis/registry/timeline";
 import { declarationSets } from "./femadisasters.ts";
 
 const CSV = [
@@ -38,5 +40,14 @@ describe("declarationSets", () => {
   it("leaves out pandemic (Biological) declarations", () => {
     const csv = "disasterNumber,declarationType,declarationDate,tribalRequest,fipsStateCode,fipsCountyCode,incidentType\n4480,DR,2020-03-20,0,27,053,Biological\n4500,DR,2020-05-01,0,27,053,Flood\n";
     expect([...declarationSets(csv, ["DR"], 2000).county.get("27053")!]).toEqual(["4500"]);
+  });
+  it("counts one span of years when given an end year", () => {
+    expect(declarationSets(CSV, ["DR"], 2010, 2019).county.get("27053")?.size).toBe(2);
+    expect(declarationSets(CSV, ["DR"], 1990, 1999).county.get("27053")?.size).toBe(1);
+  });
+  it("offers decade stops with the since-2000 count last, and none read as years (no change maps)", () => {
+    const stops = timelineStops(loadRegistry().find((e) => e.id === "fema_major_disasters")!);
+    expect(stops.map((s) => s.id)).toEqual(["1960s", "1970s", "1980s", "1990s", "2000s", "2010s", "2020s", "since"]);
+    expect(stops.filter((s) => s.isDefault).map((s) => s.label)).toEqual(["Since 2000"]);
   });
 });

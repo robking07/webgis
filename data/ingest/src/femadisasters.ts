@@ -1,9 +1,11 @@
 // OpenFEMA Disaster Declarations Summaries (registry `measure.kind: fema_declarations`): distinct
-// declarations (`disasterNumber`) of the chosen types since a start year, by county and state.
+// declarations (`disasterNumber`) of the chosen types since a start year, by county and state, plus
+// one count per decade for the year control (`timeline`).
 import { readFileSync } from "node:fs";
 import { loadRegistry } from "@webgis/registry/load";
 import { cached, db, FIPS_RENAMES, log, splitCsv } from "./util.ts";
-import { landArea, registerDataset, writeValues, type Value } from "./values.ts";
+import { timelineStops } from "@webgis/registry/timeline";
+import { landArea, registerDataset, writeStopValues, writeValues, type Value } from "./values.ts";
 
 /** Old Alaska codes FEMA still uses (often for school-district areas) for census areas later split:
  *  a declaration counts toward each successor. */
@@ -42,23 +44,35 @@ export function declarationSets(csv: string, types: string[], since: number, unt
 export async function ingestFemaDeclarations(only?: string[]) {
   const entries = loadRegistry().filter((e) => e.measure.kind === "fema_declarations" && (!only || only.includes(e.id)));
   const pool = db();
+  const known = { state: await landArea(pool, "state"), county: await landArea(pool, "county") };
   for (const e of entries) {
     if (e.measure.kind !== "fema_declarations") continue;
     await registerDataset(pool, e);
-    const sets = declarationSets(readFileSync(await cached(e.measure.url, e.measure.file), "utf8"), e.measure.types, e.measure.since);
+    const csv = readFileSync(await cached(e.measure.url, e.measure.file), "utf8");
+    const sets = declarationSets(csv, e.measure.types, e.measure.since);
     log(e.id, `${new Set([...sets.state.values()].flatMap((s) => [...s])).size} declarations since ${e.measure.since} (${sets.tribal} tribal-request rows left out)`);
     for (const level of ["state", "county"] as const) {
-      const known = await landArea(pool, level);
-      const values = new Map<string, Value>();
-      for (const g of known.keys()) {
-        // shortcut: FEMA still files Connecticut under its old counties (gone in 2022), so its planning regions get no value; map old counties to regions if FEMA never switches.
-        if (level === "county" && g.startsWith("09")) continue;
-        values.set(g, { value: sets[level].get(g)?.size ?? 0, moe: null }); // none declared = a real 0
-      }
-      const unmatched = [...sets[level].keys()].filter((g) => !known.has(g));
+      const unmatched = [...sets[level].keys()].filter((g) => !known[level].has(g));
       if (unmatched.length) log(e.id, `${level}: ${unmatched.length} codes not in current geography (${unmatched.slice(0, 8).join(", ")})`);
-      await writeValues(pool, e.id, level, values);
+      await writeValues(pool, e.id, level, counts(sets[level], known[level], level));
+    }
+    // Decade stops ("1960s"…): the same counts, one calendar decade each, web export only.
+    for (const s of timelineStops(e)) {
+      if (s.isDefault) continue;
+      const y = Number(s.id.slice(0, 4)), d = declarationSets(csv, e.measure.types, y, y + 9);
+      for (const level of ["state", "county"] as const) writeStopValues(e.id, s.id, level, counts(d[level], known[level], level));
     }
   }
   await pool.end();
+}
+
+/** Every known place gets a value: none declared = a real 0. */
+function counts(sets: Map<string, Set<string>>, known: Map<string, unknown>, level: "state" | "county") {
+  const values = new Map<string, Value>();
+  for (const g of known.keys()) {
+    // shortcut: FEMA still files Connecticut under its old counties (gone in 2022), so its planning regions get no value; map old counties to regions if FEMA never switches.
+    if (level === "county" && g.startsWith("09")) continue;
+    values.set(g, { value: sets.get(g)?.size ?? 0, moe: null });
+  }
+  return values;
 }
