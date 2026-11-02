@@ -18,5 +18,5 @@ unit: percent
 universe: owner-occupied housing units (cost burden computed)
 terms: [acs-5-year, margin-of-error, census-geography, quantile-classes]
 measure: { kind: acs5, numerator: [B25091_008, B25091_009, B25091_010, B25091_011, B25091_019, B25091_020, B25091_021, B25091_022], denominator: [B25091_003, B25091_004, B25091_005, B25091_006, B25091_007, B25091_008, B25091_009, B25091_010, B25091_011, B25091_014, B25091_015, B25091_016, B25091_017, B25091_018, B25091_019, B25091_020, B25091_021, B25091_022], scale: 100 }
-timeline: { from: 2014, to: 2024, step: 5 }
+timeline: { from: 2009, to: 2024, step: 5 }
 symbology: { ramp: oranges, classification: quantile, classes: 5, higherIsBetter: false }

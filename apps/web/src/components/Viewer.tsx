@@ -3,6 +3,7 @@
 // connect. The pieces live in ./map-page (data and classification in useViewerData, zoom-to-click
 // framing in useFraming, and one file per panel).
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import type { FeatureCollection, LineString } from "geojson";
 import { StatusState } from "@webgis/design/components";
 import { childLevel, formatValue, GEO_LEVELS, HATCH_LEVELS, isGradable, levelBands, type GeoLevel } from "@webgis/design";
 import { DataTable } from "./DataTable";
@@ -132,7 +133,7 @@ export function Viewer({ search }: { search: string }) {
 
   /** Counties whose tracts are on screen, while hatching or a change map's margin test needs them. */
   const [tractCounties, setTractCounties] = useState<string[]>([]);
-  const { primary, secondary, isFeature, featureSpec, stops, stop, stopId, since, xBase, xFrom, testMoes, fit, valueLevels, availableLevels, pinnedLevel, focus, bands, x, y, level, classed, blockField } = useViewerData(state, tractCounties);
+  const { primary, secondary, isFeature, featureSpec, stops, stop, stopId, since, xBase, xFrom, fit, valueLevels, availableLevels, pinnedLevel, focus, bands, x, y, level, classed, blockField } = useViewerData(state, tractCounties);
   const current = classed[level];
   // A year off the default is colored with the default's breaks (xBase): its failure is an error, not a spinner.
   const error = x.error ?? y.error ?? xFrom.error ?? xBase.error;
@@ -227,6 +228,15 @@ export function Viewer({ search }: { search: string }) {
   // The pin goes once its place's details close or another place is picked (adjusted during render).
   if (pin?.geoid && selected?.geoid !== pin.geoid) setPin(null);
   useEffect(() => { mapApi.current?.showPin(pin?.at ?? null); }, [pin]);
+  const showFlows = useCallback((lines: FeatureCollection | null) => {
+    const api = mapApi.current;
+    api?.showFlows(lines);
+    const pts = lines?.features.flatMap((f) => (f.geometry as LineString).coordinates);
+    if (!api || !pts?.length) return;
+    const b: Bbox = [Math.min(...pts.map((p) => p[0])), Math.min(...pts.map((p) => p[1])), Math.max(...pts.map((p) => p[0])), Math.max(...pts.map((p) => p[1]))];
+    // shortcut: waits out the phone sheet's 200 ms drop to its short height so the padding clears it; a fixed delay, not an event.
+    setTimeout(() => api.fitBbox(b, clearArea(true)), 300);
+  }, [clearArea]);
   /** Frame a point at tract zoom and open the details of the place drawn there, on the map already
    *  showing (the anti-steering rule, issue #363): exactly what a tap there does. */
   const goToPoint = (lon: number, lat: number) => {
@@ -424,24 +434,27 @@ export function Viewer({ search }: { search: string }) {
       return blob && { blob, name: `mapwich-${cited.map((d) => d.id).join("-")}.png` };
     },
   };
-  // Pick an area (#455): taps toggle tracts while picking; the total stays after Done until Clear.
+  // Pick an area (#455, #391): taps toggle tracts or counties (the level drawn) while picking; the total stays after Done until Clear.
   const [picking, setPicking] = useState(false);
   // shortcut: picks on a 2010-tract timeline stop are 2010 geoids with no 2020 counts ("numbers are missing"); map them if planners pick on old years.
-  const [pickedTracts, setPickedTracts] = useState<string[]>([]);
+  const [picks, setPicks] = useState<string[]>([]);
   const [pickFull, setPickFull] = useState(false);
-  const pickable = !!primary && !isFeature && availableLevels.includes("tract");
+  // One level per pick set (mixing would count people twice): the first pick sets it.
+  const pickLevel: GeoLevel | null = picks[0] ? (picks[0].length === 5 ? "county" : "tract") : null;
+  const pickable = !!primary && !isFeature && (pickLevel ? availableLevels.includes(pickLevel) : availableLevels.includes("tract") || availableLevels.includes("county"));
   const onPick = (g: string) => {
-    if (pickedTracts.includes(g)) { setPickedTracts(pickedTracts.filter((t) => t !== g)); setPickFull(false); }
-    else if (pickedTracts.length >= PICK_MAX) setPickFull(true);
-    else setPickedTracts([...pickedTracts, g]);
+    if (picks.includes(g)) { setPicks(picks.filter((t) => t !== g)); setPickFull(false); }
+    else if (pickLevel && g.length !== picks[0].length) return; // the bar says to Clear first
+    else if (picks.length >= PICK_MAX) setPickFull(true);
+    else setPicks([...picks, g]);
   };
   const togglePicking = () => {
     if (!picking) { setSelected(null); setFeatureSelected(null); mapApi.current?.select("county", null); }
     setPicking(!picking);
   };
   const donePicking = useCallback(() => setPicking(false), []);
-  const clearPicks = () => { setPickedTracts([]); setPickFull(false); setPicking(false); };
-  const pickShown = pickable && (picking || pickedTracts.length > 0) && !(phone && placeOpen);
+  const clearPicks = () => { setPicks([]); setPickFull(false); setPicking(false); };
+  const pickShown = pickable && (picking || picks.length > 0) && !(phone && placeOpen);
   // Narrow screens dock the table at the bottom; the details panel waits until it closes.
   const detailHidden = tableOpen && narrow;
 
@@ -479,11 +492,11 @@ export function Viewer({ search }: { search: string }) {
           attribution={false}
           hatch={hatch}
           onTractCounties={setTractCounties}
-          watchCounties={testMoes || fit}
+          watchCounties={fit}
           focus={focus}
           picking={picking && pickable}
           onPick={onPick}
-          picked={pickable ? pickedTracts : undefined}
+          picked={pickable ? picks : undefined}
           ariaLabel={primary ? `Map of ${since ? "change in " : ""}${primary.title}${since ? ` from ${since.label} to ${stop!.label}` : ""}${secondary ? ` compared with ${secondary.title}` : ""} by ${GEO_LEVELS[level].label.toLowerCase()}` : "Map"}
         />
       </main>
@@ -530,9 +543,9 @@ export function Viewer({ search }: { search: string }) {
 
       <MapControls mapApi={mapApi} atRest={chromeShown && !immersed} canGoBack={canGoBack && !focus} onBack={goBack} phone={phone} cardH={cardH}
         onRegion={goToRegion} onPlace={onSearchPlace} onNearMe={phone && "geolocation" in navigator ? nearMe : null}
-        pick={pickable ? { on: picking, off: level !== "tract" && !picking, onToggle: togglePicking } : null} />
+        pick={pickable ? { on: picking, off: level !== "tract" && level !== "county" && !picking, onToggle: togglePicking } : null} />
       {pickShown && (
-        <PickArea datasets={secondary ? [primary!, secondary] : [primary!]} picked={pickedTracts} picking={picking} full={pickFull}
+        <PickArea datasets={secondary ? [primary!, secondary] : [primary!]} picked={picks} picking={picking} full={pickFull} drawn={level}
           onDone={donePicking} onClear={clearPicks} />
       )}
       {usLost && (
@@ -609,8 +622,8 @@ export function Viewer({ search }: { search: string }) {
         <DetailPanel info={selected} top={panelTop} onClose={() => { setSelected(null); mapApi.current?.select("county", null); }} primary={primary} secondary={secondary}
           xv={x.values[selected.level]} yv={y.values[selected.level]}
           period={stopId && !since ? { label: stop!.label, defaultLabel: primary.vintage } : undefined}
-          change={since && selClassed?.change ? { fromLabel: since.label, toLabel: stop!.label, fromValues: xFrom.values[selected.level], classed: selClassed, toIsDefault: !!stop?.isDefault, boundaryNote: areaChangeNote(since, stop!, selected.level, selected.geoid) } : undefined}
-          onMapIt={pickDataset} onPlace={onSearchPlace} legendKey={legendKey} finest={!childLevel(availableLevels, selected.level)} />
+          change={since && selClassed?.change ? { fromLabel: since.label, toLabel: stop!.label, fromValues: xFrom.values[selected.level], classed: selClassed, boundaryNote: areaChangeNote(since, stop!, selected.level, selected.geoid) } : undefined}
+          onMapIt={pickDataset} onPlace={onSearchPlace} legendKey={legendKey} finest={!childLevel(availableLevels, selected.level)} onFlows={focus?.geoid === selected.geoid ? showFlows : undefined} />
       )}
     </div>
   );

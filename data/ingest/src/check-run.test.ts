@@ -7,6 +7,9 @@ const entry = (id: string, kind: string, extra: object = {}) =>
 const entries = [
   entry("pct_poverty", "acs5", { timeline: { from: 2014, to: 2024, step: 5 }, geographyLevels: ["county", "block_group"] }),
   entry("traffic_deaths", "fars", { timeline: { from: 2015, to: 2024, step: 1 } }),
+  entry("toxics", "tri", { timeline: { from: 1987, to: 2024, step: 1 } }),
+  entry("ozone_8hr", "airquality", { timeline: { from: 2005, to: 2025, step: 1 } }),
+  entry("uninsured", "sahie", { timeline: { from: 2008, to: 2024, step: 1 } }),
   entry("asthma", "places"),
   entry("tip_projects", "features"),
 ];
@@ -20,8 +23,11 @@ describe("checkRun", () => {
     expect(checkRun(["timeline"], ["asthma"], entries)).toHaveLength(1);
     expect(checkRun(["acs-bg"], ["asthma"], entries)).toHaveLength(1);
   });
-  it("rejects fars' timeline, steps the runner can't do, unknown ids and empty inputs", () => {
-    expect(checkRun(["timeline"], ["traffic_deaths"], entries)).toHaveLength(1);
+  it("rejects steps the runner can't do, unknown ids and empty inputs", () => {
+    expect(checkRun(["timeline"], ["traffic_deaths"], entries)).toEqual([]);
+    expect(checkRun(["timeline"], ["toxics"], entries)).toEqual([]);
+    expect(checkRun(["timeline"], ["ozone_8hr"], entries)).toEqual([]);
+    expect(checkRun(["timeline"], ["uninsured"], entries)).toEqual([]);
     expect(checkRun(["tiles"], ["asthma"], entries)[0]).toMatch(/can't run on GitHub/);
     expect(checkRun(["places"], ["nope; rm"], entries)[0]).toMatch(/isn't a dataset id/);
     expect(checkRun([], [], entries)).toHaveLength(2);
@@ -41,7 +47,12 @@ describe("checkRun", () => {
     expect(checkRun(["counts"], [], entries)[0]).toMatch(/at least one dataset/);
     expect(checkRun(["acs", "counts"], ["pct_poverty"], entries)[0]).toMatch(/runs alone/);
   });
+  it("lets commute run alone, with no dataset ids (#469)", () => {
+    expect(checkRun(["commute"], [], entries)).toEqual([]);
+    expect(checkRun(["commute"], ["pct_poverty"], entries)[0]).toMatch(/doesn't load/);
+    expect(checkRun(["commute", "acs"], ["pct_poverty"], entries)[0]).toMatch(/runs alone/);
+  });
   it("names the run's mode for data-run.yml", () => {
-    expect([["acs", "timeline"], ["features"], ["counts"], ["export-values"]].map(runMode)).toEqual(["values", "features", "counts", "export-values"]);
+    expect([["acs", "timeline"], ["features"], ["counts"], ["export-values"], ["commute"]].map(runMode)).toEqual(["values", "features", "counts", "export-values", "commute"]);
   });
 });

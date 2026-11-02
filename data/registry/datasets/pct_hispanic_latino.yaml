@@ -18,5 +18,5 @@ unit: percent
 universe: total population
 terms: [race-ethnicity, acs-5-year, margin-of-error, census-geography, quantile-classes]
 measure: { kind: acs5, numerator: [B03002_012], denominator: [B03002_001], scale: 100 }
-timeline: { from: 2014, to: 2024, step: 5 }
+timeline: { from: 2009, to: 2024, step: 5 }
 symbology: { ramp: blues, classification: quantile, classes: 5 }

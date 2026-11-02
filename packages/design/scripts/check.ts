@@ -126,6 +126,11 @@ for (const theme of Object.values(THEMES)) {
       landCases++;
       const d = de(sim(c), sim(theme.map.noDataChange));
       if (d < MIN_FROM_LAND) failures.push(`change ramp ${CHANGE_RAMP} class ${i + 1} theme ${theme.name} ${vision}: ΔE ${d.toFixed(1)} from change no-data < ${MIN_FROM_LAND}`);
+      // "No clear change" (the middle) is painted: it must not read as unpainted U.S. land (#474).
+      if (i === (CHANGE_CLASSES - 1) / 2) {
+        const dl = de(sim(c), sim(theme.map.focusLand));
+        if (dl < MIN_FROM_LAND) failures.push(`change ramp no-clear-change theme ${theme.name} ${vision}: ΔE ${dl.toFixed(1)} from U.S. land < ${MIN_FROM_LAND}`);
+      }
     }
   }
 }

@@ -19,5 +19,5 @@ universe: owner-occupied housing units with a mortgage
 coverageNote: "Block groups with too few mortgaged homes show no median."
 terms: [median, inflation-adjusted, acs-5-year, margin-of-error, census-geography, quantile-classes]
 measure: { kind: acs5, numerator: [B25088_002] }
-timeline: { from: 2014, to: 2024, step: 5 }
+timeline: { from: 2009, to: 2024, step: 5 }
 symbology: { ramp: ylgnbu, classification: quantile, classes: 5 }

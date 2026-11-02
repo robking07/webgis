@@ -14,8 +14,8 @@ export const placeHref = (geoid: string, d?: string | null) => `/place/${geoid}$
 export const isRaceRow = (d?: { subcategory?: string }) => d?.subcategory === "Race and ethnicity";
 
 /**
- * "Ranks higher than 39 of 52 states" — count of places at this level with a lower value.
- * The ends read plainly instead of "Ranks higher than 0 of 3,222": "Lowest of 52 states",
+ * "Higher than in 39 of the 50 states, DC and Puerto Rico" — count of places at this level with a lower value.
+ * The ends read plainly instead of "Higher than in 0 of 3,222": "Lowest of 52 states",
  * "Tied for the lowest value with 2,900 other counties", and the same for the highest.
  */
 export function rankText(values: Record<string, number> | undefined, v: number | null | undefined, level: GeoLevel): string | null {
@@ -27,7 +27,9 @@ export function rankText(values: Record<string, number> | undefined, v: number |
   const others = all.filter((w) => w === v).length - 1;
   if (lower === 0) return others > 0 ? `Tied for the lowest value with ${others.toLocaleString()} other ${plural}` : `Lowest of ${n.toLocaleString()} ${plural}`;
   if (lower + others === n - 1) return others > 0 ? `Tied for the highest value with ${others.toLocaleString()} other ${plural}` : `Highest of ${n.toLocaleString()} ${plural}`;
-  return `Ranks higher than ${lower.toLocaleString()} of ${n.toLocaleString()} ${plural}`;
+  // The 52 "states" are the 50, DC and Puerto Rico.
+  const set = level === "state" && n === 52 && "11" in values && "72" in values ? "the 50 states, DC and Puerto Rico" : `${n.toLocaleString()} ${plural}`;
+  return `Higher than in ${lower.toLocaleString()} of ${set}`;
 }
 
 /** The back button's words (issue #437): where Back goes, the place one step up the drill-down

@@ -18,5 +18,5 @@ unit: percent
 universe: workers 16+ not working from home
 terms: [acs-5-year, margin-of-error, census-geography, quantile-classes]
 measure: { kind: acs5, numerator: [B08302_002, B08302_003, B08302_004, B08302_005, B08302_006], denominator: [B08302_001], scale: 100 }
-timeline: { from: 2014, to: 2024, step: 5 }
+timeline: { from: 2009, to: 2024, step: 5 }
 symbology: { ramp: cividis, classification: quantile, classes: 5 }

@@ -19,4 +19,12 @@ describe("parseSahie", () => {
     expect(r.county.get("15005")).toEqual({ value: null, moe: null });
     expect(r.county.size).toBe(2);
   });
+  it("moves renamed counties to today's code and drops a merged city while its county has a rate", () => {
+    const r = parseSahie([H,
+      row("46", "113", "50", "0", "14.6", "1.9"), // Shannon → Oglala Lakota
+      row("51", "019", "50", "0", "13.0", "1.5"), row("51", "515", "50", "0", "18.4", "2.5"), // Bedford city
+    ].join("\n"));
+    expect([...r.county.keys()].sort()).toEqual(["46102", "51019"]);
+    expect(r.county.get("51019")?.value).toBe(13);
+  });
 });

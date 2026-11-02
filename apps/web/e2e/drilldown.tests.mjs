@@ -19,11 +19,15 @@ export default function drilldownTests({ test, expect, immerse, mapIdle, tapLonL
   const step = async (page, lonlat, level, want) => {
     const close = page.locator('button[aria-label="Close details"]');
     if (await close.count()) await close.click();
+    const focused = (n) => page.waitForFunction((n) => (new URL(location.href).searchParams.get("in") ?? "").length === n, n, { timeout: 8000 });
     await tapLonLat(page, ...lonlat, true);
-    await page.waitForFunction((n) => (new URL(location.href).searchParams.get("in") ?? "").length === n, want, { timeout: 15000 });
+    // A tap that lands before the level's tiles are queryable hits nothing (slow CI): tap again once.
+    await focused(want).catch(async () => { await tapLonLat(page, ...lonlat, true); await focused(want).catch(async (e) => { throw new Error(`${level}: in=${inParam(page)}, wanted ${want} digits, zoom ${await page.evaluate(() => window.__wgMap.getZoom())}, drawn ${(await drawn(page, level)).length}. ${e.message}`); }); });
     await mapIdle(page);
     const g = inParam(page);
-    const kids = await drawn(page, level);
+    // The child level's tiles arrive after the fit settles (slow on CI): wait until some are drawn.
+    let kids = await drawn(page, level);
+    for (let i = 0; i < 40 && !kids.length; i++) { await new Promise((r) => setTimeout(r, 250)); kids = await drawn(page, level); }
     expect(kids.length > 0 && kids.every((k) => k.startsWith(g)), `in=${g}: ${level} drawn outside it: ${kids.filter((k) => !k.startsWith(g)).slice(0, 5).join(", ")} (${kids.length} drawn)`);
     expect(await page.evaluate(() => !!window.__wgMap.getLayer("focus-dim")), `in=${g}: no dim wash`);
     return g;

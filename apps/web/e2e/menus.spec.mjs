@@ -341,11 +341,11 @@ test("laptop tract colors fit the counties in view; counties keep U.S. breaks (#
   const card = () => page.locator('section[aria-label="Legend"]').innerText();
   const top = (t) => Number(t.match(/≥ \$(\d+)K/)?.[1]);
   const seattle = await card();
-  expect(seattle.includes("Colors fit the counties in view") && top(seattle) > 110, `Seattle legend: ${seattle}`);
+  expect(seattle.includes("Colors fit the area in view") && top(seattle) > 110, `Seattle legend: ${seattle}`);
   await page.evaluate(() => window.__wgMap.jumpTo({ center: [-90.7, 33.5] }));
   await page.waitForFunction((was) => document.querySelector('section[aria-label="Legend"]').innerText !== was, seattle, { timeout: 20000 });
   const delta = await card();
-  expect(delta.includes("Colors fit the counties in view") && top(delta) < top(seattle), `Mississippi legend: ${delta}`);
+  expect(delta.includes("Colors fit the area in view") && top(delta) < top(seattle), `Mississippi legend: ${delta}`);
   await page.evaluate(() => window.__wgMap.jumpTo({ zoom: 6 }));
   await mapIdle(page);
   const county = await card();
@@ -393,12 +393,15 @@ for (const [vp, hides] of [["phone", true], ["laptop", true], ["monitor", false]
     if (!page.isPhone) { await live(page).click(); await page.locator("section#filters-panel").waitFor(); await wait(300); }
     const side = page.locator("section#filters-panel");
     await dragStart(page);
+    // The fade is a CSS transition; on slow CI it can still be under way after the fixed wait in dragStart.
+    await page.waitForFunction(() => document.getAnimations().every((a) => a.playState !== "running"), null, { timeout: 5000 }).catch(() => {});
     const during = { menu: await opacityOf(menu), side: page.isPhone ? null : await opacityOf(side) };
     await dragEnd(page);
-    await wait(1500);
-    // Slow machines (CI's software WebGL) can still be mid-fade here; let CSS transitions finish.
-    await page.waitForFunction(() => document.getAnimations().every((a) => a.playState !== "running"), null, { timeout: 5000 }).catch(() => {});
-    const after = { menu: await opacityOf(menu), side: page.isPhone ? null : await opacityOf(side) };
+    // Chrome returns once the map settles, and CI's software WebGL is slow: wait for the real signal (map idle,
+    // fades done, opacity back to 1), not a fixed delay. A chrome that never returns still fails below.
+    await mapIdle(page);
+    for (let i = 0; i < 50 && !(await opacityOf(menu) === 1 && (page.isPhone || await opacityOf(side) === 1)); i++) await wait(200);
+    const after ={ menu: await opacityOf(menu), side: page.isPhone ? null : await opacityOf(side) };
     if (vp === "phone") {
       expect(during.menu === 0, `menu button visible mid-pan (${during.menu})`);
       expect(after.menu === 1, `menu button didn't return (${after.menu})`);
@@ -631,7 +634,7 @@ for (const vp of ["phone", "laptop"]) {
     await mode.getByRole("radio", { name: "Change" }).click();
     // The year picker is gone (not greyed out); From and To take its place.
     expect(await page.locator("#filters-panel [role=radiogroup][aria-label=Years]").count() === 0, "year picker still shown in change mode");
-    expect((await span()).includes("from 2010–2014 to 2015–2019"), `kept year as To: ${await span()}`);
+    expect((await span()).includes("from 2005–2009 to 2015–2019"), `kept year as To: ${await span()}`);
     expect((await radio("To", "2015–2019").getAttribute("aria-checked")) === "true", "To isn't the year picked in Values");
     // Back to Values restores that year.
     await mode.getByRole("radio", { name: "Values" }).click();
@@ -639,7 +642,7 @@ for (const vp of ["phone", "laptop"]) {
     await mode.getByRole("radio", { name: "Change" }).click();
     // A later To keeps From; then a later From.
     await radio("To", "2020–2024").click();
-    expect((await span()).includes("from 2010–2014 to 2020–2024"), `after To: ${await span()}`);
+    expect((await span()).includes("from 2005–2009 to 2020–2024"), `after To: ${await span()}`);
     await radio("From", "2015–2019").click();
     expect((await span()).includes("from 2015–2019 to 2020–2024"), `after From: ${await span()}`);
     if (page.isPhone) await page.getByRole("button", { name: "Apply", exact: true }).click();
@@ -1055,7 +1058,7 @@ for (const vp of ["phone", "laptop"]) {
     const slider = panel.locator("input[type=range]");
     await slider.scrollIntoViewIfNeeded(); // the card's Why link makes the panel shorter, so the slider can sit below its fold
     const notches = await panel.locator("[data-notch]").count();
-    expect(notches === 10, `expected 10 notches (2015-2024), got ${notches}`);
+    expect(notches === 50, `expected 50 notches (1975-2024), got ${notches}`);
     const bg = await slider.evaluate((el) => getComputedStyle(el, "::-webkit-slider-runnable-track").backgroundImage);
     expect(bg === "none", `track has a fill: ${bg}`);
     const urlYear = () => new URL(page.url()).searchParams.get("t");
@@ -1071,14 +1074,14 @@ for (const vp of ["phone", "laptop"]) {
     await wait(300);
     expect((await shown()) === "2018", `after tap: ${await shown()}`);
     // Click midway between two notches: it still lands on one.
-    const a = await box('[data-notch="2020"]'), b = await box('[data-notch="2021"]');
+    const a = await box('[data-notch="2010"]'), b = await box('[data-notch="2011"]');
     await page.mouse.click((a.x + b.x) / 2 + a.width / 2 + 1, sb.y + sb.height / 2);
     await wait(300);
-    expect(/^202[01]$/.test(await shown()), `between notches: ${await shown()}`);
+    expect(/^201[01]$/.test(await shown()), `between notches: ${await shown()}`);
     // Drag the thumb to 2024 end.
     const tb = await slider.boundingBox();
     const cur = await slider.evaluate((el) => +el.value);
-    const thumbX = tb.x + 8 + (tb.width - 16) * (cur / 9);
+    const thumbX = tb.x + 8 + (tb.width - 16) * (cur / 49);
     await page.mouse.move(thumbX, tb.y + tb.height / 2);
     await page.mouse.down();
     await page.mouse.move(tb.x + tb.width + 20, tb.y + tb.height / 2, { steps: 8 });
@@ -1099,7 +1102,7 @@ for (const vp of ["phone", "laptop"]) {
     await wait(200);
     expect((await shown()) === "2023", `after Next: ${await shown()}`);
     const sliderAt = await slider.evaluate((el) => +el.value);
-    expect(sliderAt === 8, `thumb index ${sliderAt}`);
+    expect(sliderAt === 48, `thumb index ${sliderAt}`);
     // The map, legend and URL agree with the notch.
     if (page.isPhone) await page.getByRole("button", { name: "Apply", exact: true }).click();
     else await page.getByRole("button", { name: "Close map options" }).click();

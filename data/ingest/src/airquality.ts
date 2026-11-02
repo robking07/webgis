@@ -8,7 +8,10 @@ import unzipper from "unzipper";
 import { loadRegistry } from "@webgis/registry/load";
 import type { DatasetEntry } from "@webgis/registry";
 import { cached, db, log } from "./util.ts";
-import { registerDataset, writeValues, type Value } from "./values.ts";
+import { registerDataset, writeStopValues, writeValues, type Value } from "./values.ts";
+import { readXlsRows } from "./xls.ts";
+import { AIR_FILES } from "./airquality-files.ts";
+import { timelineStops } from "@webgis/registry/timeline";
 
 const decode = (s: string) => s.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&apos;/g, "'").replace(/&#(\d+);/g, (_, n) => String.fromCharCode(+n)).replace(/&amp;/g, "&");
 
@@ -40,29 +43,36 @@ export function parseSheetRows(xml: string, strings: string[]): string[][] {
 
 export interface AirQualityParse { values: Map<string, number>; skipped: number; header: string[] }
 
-/** County design values from the county-status sheet: finds the header row (the one with "State" and
- *  "County" FIPS columns), then takes the first column whose header mentions the design value for
- *  `year` (e.g. "2023-2025"). Rows without a numeric value (monitor lacks a valid design value) are skipped. */
+/** County design values for `period` (e.g. "2023-2025"). Finds the header row (the one with state and county
+ *  FIPS columns), then the value column: a header naming the design value and the period, or an older site
+ *  listing's `dv2003_2005` / `dva_20032005` (with its `dvstatusas_` column: only 1 and 2 meet completeness).
+ *  A county's value is its highest valid row. Rows without a numeric value (no valid design value) are skipped. */
 export function parseCountyDesignValues(rows: string[][], period: string): AirQualityParse {
-  const hi = rows.findIndex((r) => r.some((c) => /state\s*fips/i.test(c)) && r.some((c) => /county\s*fips/i.test(c)));
+  const clean = (c: string) => c.replace(/\s+/g, " ").trim();
+  const isS = (c: string) => /^(state fips|stfips|st)$/i.test(clean(c)), isC = (c: string) => /^(county fips|cntyfips|cou)$/i.test(clean(c));
+  const hi = rows.findIndex((r) => r.some(isS) && r.some(isC));
   if (hi < 0) throw new Error("airquality: no header row with State FIPS / County FIPS");
-  const header = rows[hi].map((c) => c.replace(/\s+/g, " ").trim());
-  const iS = header.findIndex((c) => /state fips/i.test(c)), iC = header.findIndex((c) => /county fips/i.test(c));
-  const iV = header.findIndex((c) => /design value/i.test(c) && c.includes(period));
+  const header = rows[hi].map(clean);
+  const iS = header.findIndex(isS), iC = header.findIndex(isC);
+  const [a, b] = period.split("-");
+  const iV = header.findIndex((c) => (/design value/i.test(c) && c.includes(period)) || c === `dv${a}_${b}` || c === `dva_${a}${b}`);
   if (iV < 0) throw new Error(`airquality: no design value column for ${period} in [${header.join(" | ")}]`);
+  const iT = header.indexOf(`dvstatusas_${a}${b}`);
   const values = new Map<string, number>();
   let skipped = 0;
   for (const r of rows.slice(hi + 1)) {
     const s = (r[iS] ?? "").trim(), c = (r[iC] ?? "").trim();
     if (!/^\d{1,2}$/.test(s) || !/^\d{1,3}$/.test(c)) continue; // footnotes, blanks
     const v = Number((r[iV] ?? "").trim());
-    if ((r[iV] ?? "").trim() === "" || !Number.isFinite(v) || v <= 0) { skipped++; continue; }
-    values.set(s.padStart(2, "0") + c.padStart(3, "0"), Math.round(v * 10000) / 10000);
+    if ((r[iV] ?? "").trim() === "" || !Number.isFinite(v) || v <= 0 || (iT >= 0 && !["1", "2"].includes((r[iT] ?? "").trim()))) { skipped++; continue; }
+    const g = s.padStart(2, "0") + c.padStart(3, "0");
+    values.set(g, Math.max(values.get(g) ?? 0, Math.round(v * 10000) / 10000));
   }
   return { values, skipped, header };
 }
 
 export async function readSheet(path: string, sheetName: string): Promise<string[][]> {
+  if (path.endsWith(".xls")) return readXlsRows(path, sheetName);
   const zip = await unzipper.Open.buffer(readFileSync(path));
   const text = async (p: string) => (await zip.files.find((f) => f.path === p)!.buffer()).toString("utf8");
   const wb = await text("xl/workbook.xml");
@@ -93,4 +103,19 @@ async function one(pool: ReturnType<typeof db>, e: DatasetEntry) {
   // Only monitored counties get a row; the rest are "no monitor", not zero. writeValues drops unknown geoids and logs them.
   const out = new Map<string, Value>([...values].map(([g, v]) => [g, { value: v, moe: null }]));
   await writeValues(pool, e.id, "county", out);
+}
+
+/** Year control (D-36): every earlier 3-year window, one file per stop (airquality-files.ts), written to the web export only. */
+export async function ingestAirQualityTimeline(only?: string[]) {
+  for (const e of loadRegistry().filter((e) => e.measure.kind === "airquality" && e.timeline && (!only || only.includes(e.id)))) {
+    for (const s of timelineStops(e)) {
+      if (s.isDefault) continue;
+      const file = AIR_FILES[e.id]?.[+s.id];
+      if (!file) throw new Error(`airquality: no EPA workbook listed for ${e.id} ${s.id} (airquality-files.ts)`);
+      const [url, sheet] = file;
+      const { values } = parseCountyDesignValues(await readSheet(await cached(url), sheet), s.label.replace("–", "-"));
+      log(e.id, `${s.label}: ${values.size} monitored counties`);
+      writeStopValues(e.id, s.id, "county", new Map([...values].map(([g, v]) => [g, { value: v, moe: null }])));
+    }
+  }
 }

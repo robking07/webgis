@@ -36,6 +36,21 @@ export default function popupTests({ test, expect, wait, mapIdle, pointerAt, hov
     }
   });
 
+  // Issue #188: counties are tested against both years' published margins. Dakota County, MN poverty
+  // 2015–2019 → 2020–2024: 6.0% → 5.8%, within √(0.39² + 0.40²).
+  test("laptop change map: a county within its margins reads no clear change, in hover and legend (#188)", async (o) => {
+    const DAKOTA = [-93.07, 44.67];
+    const { page } = await o("laptop", `/map?d=pct_poverty&lv=county&at=${DAKOTA.join(",")},8.5&since=2019`);
+    const [x, y] = await pointerAt(page, ...DAKOTA);
+    await hoverAt(page, x, y);
+    const lead = page.locator("[data-change-hover] .wg-popup-lead-value");
+    await page.waitForFunction(() => document.querySelector("[data-change-hover] .wg-popup-lead-value")?.textContent.trim() === "No clear change", null, { timeout: 8000 })
+      .catch(() => {});
+    expect((await lead.innerText()).trim() === "No clear change", `Dakota hover: ${await lead.innerText()}`);
+    const legend = await page.locator('section[aria-label="Legend"]').innerText();
+    expect(legend.includes("No clear change"), `legend: ${legend.slice(0, 200)}`);
+  });
+
   test("laptop environmental justice hover: the period reads Dec. 2024", async (o) => {
     const { page } = await o("laptop", "/map?d=cejst_pct_pop_disadvantaged");
     const [x, y] = await pointerAt(page, ...NEBRASKA);

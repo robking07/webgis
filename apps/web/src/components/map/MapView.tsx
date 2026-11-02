@@ -4,11 +4,11 @@
 import { useEffect, useLayoutEffect, useRef } from "react";
 import { AttributionControl, LngLatBounds, Map as MlMap, ScaleControl, addProtocol, setWorkerUrl, type LayerSpecification, type MapGeoJSONFeature } from "maplibre-gl";
 import { Protocol } from "pmtiles";
-import { areaHighlightLayers, AREA_SOURCE, basemapStyle, pinLayers, PIN_SOURCE, choroplethFill, hatchImage, hatchLayerId, HATCH_IMAGE, HATCH_LEVELS, membershipFilter, NO_FEATURES, choroplethFillsByState, DATA_BEFORE_ID, HIGHLIGHT_BEFORE_ID, referenceLineLayers, STATIC_ONLY_LEVELS, TILE_VALUE_LEVELS, THEMES, featureLineLayers, featurePolygonLayers, POINT_FEATURES, fillLayerIds, focusDimLayer, FOCUS_DIM_LAYER, focusFilters, focusLandLayer, FOCUS_LAND_BEFORE_ID, GEO_LEVELS, MOTION, PER_STATE_LEVELS, thematicLayers, type GeoLevel, type NoDataFill, type PackedClasses, type ThemeName } from "@webgis/design";
+import { areaHighlightLayers, AREA_SOURCE, basemapStyle, flowLayers, FLOW_SOURCE, pinLayers, PIN_SOURCE, choroplethFill, hatchImage, hatchLayerId, HATCH_IMAGE, HATCH_LEVELS, membershipFilter, NO_FEATURES, choroplethFillsByState, DATA_BEFORE_ID, HIGHLIGHT_BEFORE_ID, referenceLineLayers, STATIC_ONLY_LEVELS, TILE_VALUE_LEVELS, THEMES, featureLineLayers, featurePolygonLayers, POINT_FEATURES, fillLayerIds, focusDimLayer, FOCUS_DIM_LAYER, focusFilters, focusLandLayer, FOCUS_LAND_BEFORE_ID, GEO_LEVELS, MOTION, PER_STATE_LEVELS, thematicLayers, type GeoLevel, type NoDataFill, type PackedClasses, type ThemeName } from "@webgis/design";
 import { comparePickOpen } from "@/lib/compare";
 import type { FeatureLayerSpec } from "@/lib/layers";
 import type { ViewState } from "@/lib/url-state";
-import type { Geometry } from "geojson";
+import type { FeatureCollection, Geometry } from "geojson";
 import { boundaryFile } from "@webgis/registry/timeline";
 import { CONUS } from "@/lib/us-view";
 import { retryTile, TILES_BASE } from "@/lib/static-files";
@@ -109,10 +109,10 @@ interface Props {
   /** Drill-down (issue #203): the clicked-into place. Its `child` level draws only inside it, the rest
    *  of its level sits under a dim wash, and hover and clicks reach only its children. */
   focus?: Focus | null;
-  /** Pick an area (#455): while true, a tract click calls onPick with its geoid instead of selecting. */
+  /** Pick an area (#455, #391): while true, a tract or county click calls onPick with its geoid instead of selecting. */
   picking?: boolean;
   onPick?: (geoid: string) => void;
-  /** The picked tracts (11-digit geoids), outlined. */
+  /** The picked tracts (11-digit geoids) or counties (5-digit), outlined. */
   picked?: string[];
 }
 
@@ -142,6 +142,8 @@ export interface MapApi {
   snapshot: () => Promise<HTMLCanvasElement>;
   /** Mark a point (a found address, the visitor's spot; issue #363), or clear with null. */
   showPin: (at: [number, number] | null) => void;
+  /** Draw commute flow lines (#469; each a LineString with `w`, 0–1), or clear with null. */
+  showFlows: (lines: FeatureCollection | null) => void;
   /** Fly to a point, then select the place drawn under it exactly as a click would (its details open);
    *  resolves with that place, or null (open water, a feature map). */
   pickAt: (lon: number, lat: number, zoom: number, padding?: Padding) => Promise<HoverInfo | null>;
@@ -182,6 +184,7 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
   const area = useRef<Geometry | null>(null);
   const pickedRef = useRef<string[]>(NONE);
   const pin = useRef<Geometry | null>(null);
+  const flows = useRef<FeatureCollection | null>(null);
   const scale = useRef<ScaleControl | null>(null);
 
   // Create the map once.
@@ -244,6 +247,7 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
       isMoving: () => m.isMoving(),
       showArea: (shape) => { area.current = shape; if (ready.current) applyArea(m, shape, latest.current.theme); },
       showPin: (at) => { pin.current = at && { type: "Point", coordinates: at }; if (ready.current) applyPin(m, pin.current, latest.current.theme); },
+      showFlows: (lines) => { flows.current = lines; if (ready.current) applyFlows(m, lines, latest.current.theme); },
       pickAt: (lon, lat, zoom, padding) => new Promise((resolve) => {
         m.flyTo({ center: [lon, lat], zoom, padding: safePadding(m, padding), duration: fly, essential: true });
         // Idle: the move is done and the tiles there are drawn, so the place under the point can be read.
@@ -300,6 +304,7 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
       syncHatch(m, latest.current.hatch, appliedHatch.current, latest.current.levelZooms);
       applyFocus(m, latest.current.focus, latest.current.theme);
       applyArea(m, area.current, latest.current.theme);
+      applyFlows(m, flows.current, latest.current.theme);
       applyPin(m, pin.current, latest.current.theme);
     });
     // The opening bbox is an estimate from the place's center and area; frame it exactly once its tiles are in.
@@ -405,9 +410,9 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
       }
       last = null;
       if (latest.current.picking && !latest.current.featureLayer) {
-        // No details and no double-click fit (D-418) while picking: each tap toggles a tract.
+        // No details and no double-click fit (D-418) while picking: each tap toggles a tract or county.
         const f = placeAt(e.point);
-        if (f?.sourceLayer === "tract") latest.current.onPick?.(String(f.properties.geoid));
+        if (f?.sourceLayer === "tract" || f?.sourceLayer === "county") latest.current.onPick?.(String(f.properties.geoid));
         return;
       }
       if (latest.current.featureLayer) {
@@ -480,14 +485,14 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
   // Two quick taps while picking toggle tracts; they don't zoom in.
   useEffect(() => { if (picking) map.current?.doubleClickZoom.disable(); else map.current?.doubleClickZoom.enable(); }, [picking]);
 
-  // Picked tracts: flag the new ones, unflag the dropped ones.
+  // Picked tracts or counties: flag the new ones, unflag the dropped ones.
   useEffect(() => {
     const m = map.current;
     const prev = pickedRef.current;
     pickedRef.current = picked;
-    if (!m || !ready.current || !m.getSource("b-tract")) return;
-    for (const id of prev) if (!picked.includes(id)) m.removeFeatureState({ source: "b-tract", sourceLayer: "tract", id }, "picked");
-    for (const id of picked) m.setFeatureState({ source: "b-tract", sourceLayer: "tract", id }, { picked: true });
+    if (!m || !ready.current) return;
+    for (const id of prev) if (!picked.includes(id) && m.getSource(pickSource(id).source)) m.removeFeatureState(pickSource(id), "picked");
+    restoreFlags(m, null, null, null, picked);
   }, [picked]);
 
   // Drill-down focus: filters and the dim wash.
@@ -642,7 +647,7 @@ function addThematic(m: MlMap, theme: ThemeName, boundaries: string | null) {
 }
 
 /** The searched area's outline: a GeoJSON source with the selection outline, above every fill. */
-function applyArea(m: MlMap, shape: Geometry | null, theme: ThemeName, source = AREA_SOURCE, layers = areaHighlightLayers(theme), before: string | undefined = HIGHLIGHT_BEFORE_ID) {
+function applyArea(m: MlMap, shape: Geometry | FeatureCollection | null, theme: ThemeName, source = AREA_SOURCE, layers = areaHighlightLayers(theme), before: string | undefined = HIGHLIGHT_BEFORE_ID) {
   for (const l of layers) if (m.getLayer(l.id)) m.removeLayer(l.id);
   if (m.getSource(source)) m.removeSource(source);
   if (!shape) return;
@@ -651,6 +656,8 @@ function applyArea(m: MlMap, shape: Geometry | null, theme: ThemeName, source = 
 }
 /** The pin draws above everything. */
 const applyPin = (m: MlMap, at: Geometry | null, theme: ThemeName) => applyArea(m, at, theme, PIN_SOURCE, pinLayers(theme), undefined);
+/** Commute flow lines (#469) draw under the selection outlines, so the county still reads. */
+const applyFlows = (m: MlMap, lines: FeatureCollection | null, theme: ThemeName) => applyArea(m, lines, theme, FLOW_SOURCE, flowLayers(theme));
 
 /** Point the county and tract sources at another boundary vintage. A source's URL can't be
  *  changed in place, so its layers are lifted out (keeping their order, zoom bands and paint),
@@ -707,8 +714,11 @@ function restoreFlags(m: MlMap, hover: Flag, sel: Flag, second: Flag, picked: st
   for (const [f, key] of [[hover, "hover"], [sel, "selected"], [second, "second"]] as const) {
     if (f && m.getSource(`b-${f.level}`)) m.setFeatureState({ source: `b-${f.level}`, sourceLayer: f.level, id: f.id }, { [key]: true });
   }
-  if (m.getSource("b-tract")) for (const id of picked) m.setFeatureState({ source: "b-tract", sourceLayer: "tract", id }, { picked: true });
+  for (const id of picked) if (m.getSource(pickSource(id).source)) m.setFeatureState(pickSource(id), { picked: true });
 }
+
+/** A picked geoid's feature: 5 digits is a county, 11 a tract. */
+const pickSource = (id: string) => { const lv = id.length === 5 ? "county" : "tract"; return { source: `b-${lv}`, sourceLayer: lv, id }; };
 
 function setFlag(m: MlMap, ref: { current: { level: GeoLevel; id: string } | null }, next: { level: GeoLevel; id: string } | null, key: string) {
   const cur = ref.current;

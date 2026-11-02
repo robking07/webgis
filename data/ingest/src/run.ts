@@ -1,5 +1,5 @@
 // npm run ingest -- <step> [dataset or level ids…]
-// Steps: geographies | label-mask | mpo | mpo-counties | areas | publish-areas | publish-search | timeline | library [--offline] | acs | acs-bg | census2020 | lodes | places | climdiv | nbi | fars | overdose | airquality | features | vmt | cejst | ddp287g | tri | nri | svi | sahie | lead | food-access | tiles | publish-tiles | publish-reload | publish-raw | publish-values | publish-geo | publish-data | counts | publish-counts | details | similar | publish-similar | publish-details | tract-geo | export [--allow-period-drop] | export-values | insights [--reflag] | combinations [--dry-run] | tracts-out | split-tracts | docs | mn-catalog | mpo-plans | export-mpo-plans | publish-mpo-plans [--dry-run] | all
+// Steps: geographies | label-mask | mpo | mpo-counties | areas | publish-areas | publish-search | timeline | library [--offline] | acs | acs-bg | census2020 | lodes | places | climdiv | nbi | fars | overdose | airquality | features | vmt | cejst | ddp287g | tri | fema-disasters | nri | svi | sahie | lead | food-access | tiles | publish-tiles | publish-reload | publish-raw | publish-values | publish-geo | publish-data | counts | publish-counts | details | similar | publish-similar | commute | publish-commute | publish-details | tract-geo | export [--allow-period-drop] | export-values | insights [--reflag] | combinations [--dry-run] | tracts-out | split-tracts | docs | mn-catalog | mpo-plans | export-mpo-plans | publish-mpo-plans [--dry-run] | all
 import { ingestGeographies, tractGeography } from "./geographies.ts";
 import { ingestAcs, ingestAcsTimeline } from "./acs.ts";
 import { buildLibrary } from "./library.ts";
@@ -11,27 +11,29 @@ import { computeInsights, reflagInsights } from "./insights.ts";
 import { computeCombinations } from "./combinations.ts";
 import { ingestPlaces } from "./places.ts";
 import { ingestClimdiv, ingestClimdivTimeline } from "./climdiv.ts";
-import { publishAreas, publishCounts, publishSearch, publishData, publishDetails, publishGeo, publishReload, publishSimilar, publishTiles, publishValues } from "./publish-tiles.ts";
+import { publishAreas, publishCommute, publishCounts, publishSearch, publishData, publishDetails, publishGeo, publishReload, publishSimilar, publishTiles, publishValues } from "./publish-tiles.ts";
 import { publishRaw } from "./raw.ts";
 import { setCountsOnly } from "./values.ts";
 import { detailsOut } from "./details.ts";
 import { similarOut } from "./similar.ts";
+import { commuteOut } from "./commute.ts";
 import { writeDataSourcesDoc } from "./docs.ts";
 import { mnCatalog } from "./mn-catalog.ts";
 import { ingestNbi, ingestNbiTimeline } from "./nbi.ts";
 import { ingestFars, ingestFarsTimeline } from "./fars.ts";
-import { ingestAirQuality } from "./airquality.ts";
+import { ingestAirQuality, ingestAirQualityTimeline } from "./airquality.ts";
 import { ingestOverdose, ingestOverdoseTimeline } from "./overdose.ts";
 import { ingestFeatures } from "./features.ts";
 import { ingestVmt } from "./vmt.ts";
 import { ingestCejst } from "./cejst.ts";
 import { ingestDdp287g } from "./ddp287g.ts";
-import { ingestTri } from "./tri.ts";
+import { ingestTri, ingestTriTimeline } from "./tri.ts";
+import { ingestFemaDeclarations } from "./femadisasters.ts";
 import { ingestLead } from "./lead.ts";
 import { ingestFoodAccess } from "./foodaccess.ts";
 import { ingestNri } from "./nri.ts";
 import { ingestSvi } from "./svi.ts";
-import { ingestSahie } from "./sahie.ts";
+import { ingestSahie, ingestSahieTimeline } from "./sahie.ts";
 import { buildLabelMask } from "./label-mask.ts";
 import { buildMpo, buildMpoCounties } from "./mpo.ts";
 import { buildAreas } from "./areas.ts";
@@ -59,6 +61,7 @@ const steps: Record<string, () => Promise<void> | void> = {
   cejst: () => ingestCejst(only),
   ddp287g: () => ingestDdp287g(only),
   tri: () => ingestTri(only),
+  "fema-disasters": () => ingestFemaDeclarations(only),
   lead: () => ingestLead(only),
   "food-access": () => ingestFoodAccess(only),
   nri: () => ingestNri(only),
@@ -80,7 +83,8 @@ const steps: Record<string, () => Promise<void> | void> = {
   // Year control (D-36): earlier periods, written to the web export only. ACS first (FARS
   // uses its 2015–2019 population).
   timeline: async () => { await ingestAcsTimeline(only); await ingestFarsTimeline(only); await ingestClimdivTimeline(only);
-    await ingestNbiTimeline(only); await ingestLodesTimeline(only); await ingestOverdoseTimeline(only); exportRegistry(allowDrop); },
+    await ingestNbiTimeline(only); await ingestLodesTimeline(only); await ingestOverdoseTimeline(only); await ingestAirQualityTimeline(only); await ingestTriTimeline(only);
+    await ingestSahieTimeline(only); exportRegistry(allowDrop); },
   "publish-tiles": () => publishTiles(only),
   // S2: every value file, names, search and tract geography live on R2 beside the tiles, not in
   // the site's folder. `publish-data` uploads all of it (values/, geo/, details/); only changed files go up.
@@ -106,6 +110,9 @@ const steps: Record<string, () => Promise<void> | void> = {
   // #291: the counties most like each county, from the details files, to data/tiles/similar/similar.json (publish-similar uploads it).
   similar: similarOut,
   "publish-similar": publishSimilar,
+  // #469: where each county's workers live and residents work (LODES od), to data/tiles/commute/commute.json.
+  commute: commuteOut,
+  "publish-commute": publishCommute,
   "publish-details": publishDetails,
   docs: writeDataSourcesDoc,
   "mn-catalog": mnCatalog,
@@ -123,7 +130,7 @@ const steps: Record<string, () => Promise<void> | void> = {
   // Every ingest step above also goes in `all`.
   all: async () => {
     await ingestGeographies(); await ingestAcs(); await ingestCensus2020(); await ingestLodes(); await ingestPlaces(); await ingestClimdiv(); await ingestNbi(); await ingestFars(); await ingestOverdose(); await ingestAirQuality();
-    await ingestFeatures(); await ingestVmt(); await ingestCejst(); await ingestDdp287g(); await ingestTri(); await ingestNri(); await ingestLead(); await ingestSvi(); await ingestSahie(); await ingestFoodAccess();
+    await ingestFeatures(); await ingestVmt(); await ingestCejst(); await ingestDdp287g(); await ingestTri(); await ingestFemaDeclarations(); await ingestNri(); await ingestLead(); await ingestSvi(); await ingestSahie(); await ingestFoodAccess();
     await ingestAcsTimeline(); await ingestFarsTimeline(); await ingestClimdivTimeline(); await ingestNbiTimeline(); await ingestLodesTimeline(); await ingestOverdoseTimeline(); await buildLabelMask(); await buildTiles();
     await tractGeography();
     exportRegistry(allowDrop); await exportNames(); await exportSearch(); await exportValues(); await detailsOut(); await similarOut(); await computeInsights(); await computeCombinations(); await writeDataSourcesDoc();

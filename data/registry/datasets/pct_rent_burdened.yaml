@@ -19,5 +19,5 @@ unit: percent
 universe: renter households (rent burden computed)
 terms: [rent-burden, acs-5-year, margin-of-error, census-geography, quantile-classes]
 measure: { kind: acs5, numerator: [B25070_007, B25070_008, B25070_009, B25070_010], denominator: [B25070_002, B25070_003, B25070_004, B25070_005, B25070_006, B25070_007, B25070_008, B25070_009, B25070_010], scale: 100 }
-timeline: { from: 2014, to: 2024, step: 5 }
+timeline: { from: 2009, to: 2024, step: 5 }
 symbology: { ramp: oranges, classification: quantile, classes: 5, higherIsBetter: false }

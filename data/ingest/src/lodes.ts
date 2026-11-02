@@ -14,7 +14,7 @@ import { sumStates, usArea, writeCounts, writeUs, type Counts } from "./counts.t
 const BASE = "https://lehd.ces.census.gov/data/lodes/LODES8";
 const LEN: Record<Level, number> = { state: 2, county: 5, tract: 11 };
 
-async function stateFile(st: string, file: string, seg: string, jt: string, year: number, back: number): Promise<{ path: string; year: number } | null> {
+export async function stateFile(st: string, file: string, seg: string, jt: string, year: number, back: number): Promise<{ path: string; year: number } | null> {
   // Fall back up to `back` years when a state hasn't published the requested year.
   for (let y = year; y >= year - back; y--) {
     try {
@@ -36,19 +36,31 @@ async function readBlocks(path: string, column: string): Promise<Map<string, num
   return out;
 }
 
-/** Re-key blocks as <current tract code><block suffix> using the LODES crosswalk. */
-async function remap(st: string, blocks: Map<string, number>): Promise<Map<string, number>> {
+/** Each 2020 block's code in one column of the state's LODES crosswalk (`cty`, `trct`), which carries
+ *  current codes where block codes predate them (Connecticut's 2022 planning regions). */
+export async function xwalk(st: string, col: string): Promise<Map<string, string>> {
   const xw = await cached(`${BASE}/${st}/${st}_xwalk.csv.gz`);
   const rl = createInterface({ input: createReadStream(xw).pipe(createGunzip()) });
-  let iBlk = -1, iTrct = -1;
-  const out = new Map<string, number>();
+  let iBlk = -1, iCol = -1;
+  const out = new Map<string, string>();
   for await (const line of rl) {
     const p = splitCsv(line);
-    if (iBlk < 0) { iBlk = p.indexOf("tabblk2020"); iTrct = p.indexOf("trct"); continue; }
-    const n = blocks.get(p[iBlk]);
-    if (n != null) { out.set(p[iTrct] + p[iBlk].slice(11), n); blocks.delete(p[iBlk]); }
+    if (iBlk < 0) { iBlk = p.indexOf("tabblk2020"); iCol = p.indexOf(col); continue; }
+    out.set(p[iBlk], p[iCol]);
   }
-  if (blocks.size) throw new Error(`${st}_xwalk: ${blocks.size} blocks not in crosswalk`);
+  return out;
+}
+
+/** Re-key blocks as <current tract code><block suffix> using the LODES crosswalk. */
+async function remap(st: string, blocks: Map<string, number>): Promise<Map<string, number>> {
+  const trct = await xwalk(st, "trct");
+  const out = new Map<string, number>();
+  let missing = 0;
+  for (const [b, n] of blocks) {
+    const t = trct.get(b);
+    if (t == null) missing++; else out.set(t + b.slice(11), n);
+  }
+  if (missing) throw new Error(`${st}_xwalk: ${missing} blocks not in crosswalk`);
   return out;
 }
 

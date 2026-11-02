@@ -4,7 +4,7 @@ import { z } from "zod";
 import { CATEGORIES } from "./categories.ts";
 
 const Ramp = z.enum(["blues", "ylgnbu", "oranges", "purples", "viridis", "cividis", "rdbu", "puor", "brbg"]);
-const Unit = z.enum(["dollars", "percent", "minutes", "count", "per_sq_mi", "ratio", "years", "deg_f", "inches", "per_100k", "vehicles_per_day", "miles_per_day", "categories", "agreements", "percentile", "ug_m3", "ppm", "degree_days"]);
+const Unit = z.enum(["dollars", "percent", "minutes", "count", "per_sq_mi", "ratio", "years", "deg_f", "inches", "per_100k", "vehicles_per_day", "miles_per_day", "categories", "agreements", "declarations", "percentile", "ug_m3", "ppm", "degree_days"]);
 export const GeoLevel = z.enum(["state", "county", "tract", "block_group", "block"]);
 
 /** A feature-layer popup field with optional explainers (D-35). */
@@ -129,6 +129,18 @@ const Ddp287gMeasure = z.object({
   file: z.string(),
   /** Agreement statuses counted (e.g. ["Active"]). */
   statuses: z.array(z.string()).min(1),
+});
+
+/** OpenFEMA Disaster Declarations Summaries (public domain): distinct declarations (`disasterNumber`)
+ *  of the given types declared from `since` on, by county and state. Ingest: femadisasters.ts. */
+const FemaDeclarationsMeasure = z.object({
+  kind: z.literal("fema_declarations"),
+  url: z.url(),
+  file: z.string(),
+  /** Declaration types counted: DR major disaster, EM emergency, FM fire management. */
+  types: z.array(z.enum(["DR", "EM", "FM"])).min(1),
+  /** First calendar year of `declarationDate` counted. */
+  since: z.number().int().min(1964),
 });
 
 /** CEJST (Justice40) roll-up: share of residents living in tracts identified as disadvantaged,
@@ -326,7 +338,7 @@ export const DatasetEntry = z.object({
   unit: Unit,
   /** For insights: the population the value describes. Pairs that share one are flagged. */
   universe: z.string(),
-  measure: z.discriminatedUnion("kind", [AcsMeasure, Census2020Measure, LodesMeasure, PlacesMeasure, ClimdivMeasure, NbiMeasure, FarsMeasure, FeaturesMeasure, HpmsVmtMeasure, CejstMeasure, Ddp287gMeasure, LeadMeasure, FoodAccessMeasure, FemaNriMeasure, SviMeasure, AirQualityMeasure, OverdoseMeasure, TriMeasure, SahieMeasure]),
+  measure: z.discriminatedUnion("kind", [AcsMeasure, Census2020Measure, LodesMeasure, PlacesMeasure, ClimdivMeasure, NbiMeasure, FarsMeasure, FeaturesMeasure, HpmsVmtMeasure, CejstMeasure, Ddp287gMeasure, LeadMeasure, FoodAccessMeasure, FemaNriMeasure, SviMeasure, AirQualityMeasure, OverdoseMeasure, TriMeasure, SahieMeasure, FemaDeclarationsMeasure]),
   /** Other registry datasets used as inputs to this dataset's model (e.g. PLACES uses county poverty).
    *  Insight pairs with these are flagged: they correlate partly by construction. */
   modelInputs: z.array(z.string()).default([]),
@@ -343,7 +355,8 @@ export const DatasetEntry = z.object({
   /** Earlier (or later) moments the map can step through (D-36), `from`…`to` by `step`. The
    *  headline `vintage` stays the default and is what comparisons and Combinations use.
    *  acs5: 5-year periods named by their last year (2014 = 2010–2014; use step 5 so periods
-   *  don't overlap). fars, climdiv, nbi, lodes: single calendar years. overdose: 12-month periods ending in `endMonth` of each year. Stops: registry/timeline.ts. */
+   *  don't overlap). fars, climdiv, nbi, lodes: single calendar years. overdose: 12-month periods ending in `endMonth` of each year. fema_declarations: decades (step 10), named
+   *  "1960s" etc. Stops: registry/timeline.ts. */
   timeline: z.object({ from: z.number().int(), to: z.number().int(), step: z.number().int().min(1).default(1) })
     .refine((t) => t.to >= t.from, "timeline.to must be ≥ timeline.from").optional(),
   /** Popup links to readable resources about the clicked place or feature (D-35). */

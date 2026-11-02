@@ -168,9 +168,12 @@ A dataset refresh can run on GitHub instead of Robbie's machine: `.github/workfl
 **Run one:** GitHub, Actions, "Data run", "Run workflow" (branch `main`). Fill in:
 
 - **steps**, run in order: e.g. `acs`, or `acs timeline`. Allowed: acs, acs-bg, lodes, places,
-  climdiv, nbi, fars, airquality, overdose, cejst, tri, lead, food-access, nri, svi, timeline.
+  climdiv, nbi, fars, airquality, overdose, cejst, tri, lead, food-access, nri, svi, fema-disasters
+  (its decade stops come with it), timeline.
 - **datasets**: the ids, e.g. `pct_poverty median_household_income`. Every step must load every
   id (`acs` with a FARS id is refused before anything runs; `data/ingest/src/check-run.ts`).
+
+New timeline stops reach the year control only through a `periods.json` change in a PR, after the run uploads them (the run never commits it).
 
 Three more ways to run, each with that step alone (D-552, D-557):
 
@@ -185,6 +188,10 @@ Three more ways to run, each with that step alone (D-552, D-557):
   datasets empty for every registry map (or ids for just those). It loads nothing: it rewrites the
   state and county value files from the database (registry ids only, never tracts), then publishes
   exactly as below, with the same checks.
+- **Commute flows** (#469): steps `commute`, datasets empty. It downloads every state's LODES
+  origin-destination files (`main` + `aux`, all jobs, the registry's LODES year), writes
+  `commute/commute.json` and uploads only that file. No database, no values; run it when `job_density`
+  moves to a new year.
 - **Margins and counts only** (D-257: every period's `<stop>/<level>.moe.json`, the counts files,
   the U.S. rows and the tract and block-group count shards), ACS maps only: steps `counts`, datasets
   the ids (required). It fetches from the Census API and reads land areas from the database, writes
@@ -227,8 +234,7 @@ dashboard, prefix `raw/`). It is public domain source data, so the copies are pu
 Local runs keep theirs in `data/cache/` already. About 0.1 to 1 GB per run, a cent or less a month.
 
 **Not on GitHub yet:** anything needing GDAL or tippecanoe (geographies, tiles, features,
-census2020, ddp287g, vmt, label-mask, mpo; `counts` for non-ACS sources); `timeline` for `fars` (it needs
-`population_density`'s 2019 stop on disk); and anything that changes committed files (a new
+census2020, ddp287g, vmt, label-mask, mpo; `counts` for non-ACS sources); and anything that changes committed files (a new
 dataset, level or timeline stop, insights). Those still run locally, through a PR (a local real
 loss uses `ALLOW_TRACT_DROP=1`).
 

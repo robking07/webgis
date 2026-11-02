@@ -307,12 +307,12 @@
    ]
   },
   "modelInputs": [],
-  "coverageNote": "Contiguous U.S. and Alaska; Hawaii has no county series. Connecticut uses pre-2022 county codes in nClimDiv, so it shows no data.",
+  "coverageNote": "Contiguous U.S. and Alaska; Hawaii has no county series. Connecticut uses pre-2022 county codes in nClimDiv, so it shows no data. Years before 1991 reach back to 1895 as 10-year averages (the first covers 1895–1900); early decades are estimated from far fewer weather stations (NOAA nClimGrid method, 2014), so treat early county differences with caution.",
   "facets": [],
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 1991,
+   "from": 1895,
    "to": 2025,
    "step": 1
   },
@@ -566,7 +566,7 @@
    "name": "FHWA National Bridge Inventory",
    "shortName": "FHWA",
    "url": "https://www.fhwa.dot.gov/bridge/nbi.cfm",
-   "citation": "Federal Highway Administration, National Bridge Inventory, 2025 highway bridge file"
+   "citation": "Federal Highway Administration, National Bridge Inventory, 1992–2025 highway bridge files"
   },
   "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
   "updateCadence": "annual",
@@ -586,12 +586,12 @@
    "minBridges": 10
   },
   "modelInputs": [],
-  "coverageNote": "Counties with fewer than 10 bridges show no data. Connecticut's NBI records still use pre-2022 counties, so CT counties show no data.",
+  "coverageNote": "Counties with fewer than 10 bridges show no data. Connecticut's NBI records still use pre-2022 counties, so CT counties show no data from 2020 on (earlier years use the counties of the time). FHWA added its condition and deck area fields in 2019; for 1992 to 2018 they are worked out from the same inspection ratings and dimensions, the way FHWA does.",
   "facets": [],
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 2019,
+   "from": 1992,
    "to": 2025,
    "step": 1
   },
@@ -1330,12 +1330,12 @@
    ]
   },
   "modelInputs": [],
-  "coverageNote": "Contiguous U.S. and Alaska; Hawaii has no county series. Connecticut uses pre-2022 county codes in nClimDiv, so it shows no data.",
+  "coverageNote": "Contiguous U.S. and Alaska; Hawaii has no county series. Connecticut uses pre-2022 county codes in nClimDiv, so it shows no data. Years before 1991 reach back to 1895 as 10-year averages (the first covers 1895–1900); early decades are estimated from far fewer weather stations (NOAA nClimGrid method, 2014), so treat early county differences with caution.",
   "facets": [],
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 1991,
+   "from": 1895,
    "to": 2025,
    "step": 1
   },
@@ -2213,6 +2213,78 @@
   }
  },
  {
+  "id": "fema_major_disasters",
+  "title": "Major disaster declarations",
+  "phrase": "counts of major disaster declarations",
+  "description": "How many times the President declared a major disaster that covered this area, from FEMA's list of every federal declaration: since 2000, or one decade at a time back to the 1960s. Each disaster counts once, however many times the area was named in it. A declaration is an administrative decision, not a measure of damage.",
+  "category": "Environment and climate",
+  "subcategory": "Natural hazards",
+  "tags": [
+   "FEMA",
+   "OpenFEMA",
+   "disaster declarations",
+   "major disaster",
+   "natural hazards",
+   "hurricane",
+   "flood",
+   "tornado",
+   "wildfire",
+   "Stafford Act"
+  ],
+  "source": {
+   "name": "FEMA OpenFEMA Disaster Declarations Summaries (v2)",
+   "shortName": "FEMA declarations",
+   "url": "https://www.fema.gov/openfema-data-page/disaster-declarations-summaries-v2",
+   "citation": "Federal Emergency Management Agency (FEMA), OpenFEMA Dataset: Disaster Declarations Summaries - v2. Retrieved from https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries.csv on November 1, 2026. This product uses the FEMA OpenFEMA API, but is not endorsed by FEMA. The Federal Government or FEMA cannot vouch for the data or analyses derived from these data after the data have been retrieved from the Agency's website(s)."
+  },
+  "license": "U.S. Government work, public domain (data.gov: https://www.usa.gov/government-works). OpenFEMA Terms and Conditions (https://www.fema.gov/about/openfema/terms-conditions) ask users to cite the dataset and access date and to state: “This product uses the Federal Emergency Management Agency's OpenFEMA API, but is not endorsed by FEMA.”",
+  "updateCadence": "irregular",
+  "vintage": "Declared Jan. 2000 to Nov. 1, 2026",
+  "geographyLevels": [
+   "state",
+   "county"
+  ],
+  "areaLevels": [],
+  "unit": "declarations",
+  "universe": "federal major disaster declarations",
+  "measure": {
+   "kind": "fema_declarations",
+   "url": "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries.csv",
+   "file": "openfema-disaster-declarations-summaries-v2-2026-11-01.csv",
+   "types": [
+    "DR"
+   ],
+   "since": 2000
+  },
+  "modelInputs": [],
+  "coverageNote": "Counts declarations, not damage: a declaration depends on the governor asking for one and on federal cost thresholds, and requests that were turned down aren't listed. Thresholds and the habit of asking have changed over the decades, so older decades show fewer declarations; FEMA typed its older records in after 1998, and county detail starts in 1964 (declarations from 1960 to 1963 count toward the state only). The 2020s are the decade so far. Pandemic declarations (COVID-19, 2020) are left out: they covered every county. Declarations that name a whole state or a tribal area count toward the state only; declarations requested by tribal governments aren't counted. Connecticut counties show no data (FEMA still lists its old counties).",
+  "facets": [],
+  "library": false,
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 1960,
+   "to": 2020,
+   "step": 10
+  },
+  "learnMore": [],
+  "terms": [
+   "disaster-declaration",
+   "fema-nri"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "manual",
+   "classes": 5,
+   "breaks": [
+    3,
+    6,
+    10,
+    15
+   ],
+   "higherIsBetter": false
+  }
+ },
+ {
   "id": "food_access_no_car_tracts",
   "title": "No car, far from a supermarket (tracts)",
   "description": "Share of each census tract's households that have no car and live more than half a mile from the nearest supermarket, supercenter or large grocery store.",
@@ -2795,12 +2867,12 @@
    ]
   },
   "modelInputs": [],
-  "coverageNote": "Contiguous U.S. and Alaska; Hawaii has no county series. Connecticut uses pre-2022 county codes in nClimDiv, so it shows no data.",
+  "coverageNote": "Contiguous U.S. and Alaska; Hawaii has no county series. Connecticut uses pre-2022 county codes in nClimDiv, so it shows no data. Years before 1991 reach back to 1895 as 10-year averages (the first covers 1895–1900); early decades are estimated from far fewer weather stations (NOAA nClimGrid method, 2014), so treat early county differences with caution.",
   "facets": [],
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 1991,
+   "from": 1895,
    "to": 2025,
    "step": 1
   },
@@ -3137,12 +3209,12 @@
    ]
   },
   "modelInputs": [],
-  "coverageNote": "Contiguous U.S. and Alaska; Hawaii has no county series. Connecticut uses pre-2022 county codes in nClimDiv, so it shows no data.",
+  "coverageNote": "Contiguous U.S. and Alaska; Hawaii has no county series. Connecticut uses pre-2022 county codes in nClimDiv, so it shows no data. Years before 1991 reach back to 1895 as 10-year averages (the first covers 1895–1900); early decades are estimated from far fewer weather stations (NOAA nClimGrid method, 2014), so treat early county differences with caution.",
   "facets": [],
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 1991,
+   "from": 1895,
    "to": 2025,
    "step": 1
   },
@@ -3197,11 +3269,12 @@
    "perSqMi": true
   },
   "modelInputs": [],
+  "coverageNote": "Years before 2010 leave out federal government jobs (the Census Bureau began counting them in 2010), so places with many federal workers jump between 2009 and 2010. Some states have no data in some years: Washington, D.C. before 2010; Massachusetts before 2011; Arizona and Mississippi before 2004; Arkansas and New Hampshire in 2002; Alaska after 2016; Michigan in 2022 (the 2023 map shows its 2021 jobs, the latest it has published). Puerto Rico isn't covered.",
   "facets": [],
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 2010,
+   "from": 2002,
    "to": 2023,
    "step": 1
   },
@@ -3258,12 +3331,12 @@
    ]
   },
   "modelInputs": [],
-  "coverageNote": "Contiguous U.S. and Alaska; Hawaii has no county series. Connecticut uses pre-2022 county codes in nClimDiv, so it shows no data.",
+  "coverageNote": "Contiguous U.S. and Alaska; Hawaii has no county series. Connecticut uses pre-2022 county codes in nClimDiv, so it shows no data. Years before 1991 reach back to 1895 as 10-year averages (the first covers 1895–1900); early decades are estimated from far fewer weather stations (NOAA nClimGrid method, 2014), so treat early county differences with caution.",
   "facets": [],
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 1991,
+   "from": 1895,
    "to": 2025,
    "step": 1
   },
@@ -3320,12 +3393,12 @@
    ]
   },
   "modelInputs": [],
-  "coverageNote": "Contiguous U.S. and Alaska; Hawaii has no county series. Connecticut uses pre-2022 county codes in nClimDiv, so it shows no data.",
+  "coverageNote": "Contiguous U.S. and Alaska; Hawaii has no county series. Connecticut uses pre-2022 county codes in nClimDiv, so it shows no data. Years before 1991 reach back to 1895 as 10-year averages (the first covers 1895–1900); early decades are estimated from far fewer weather stations (NOAA nClimGrid method, 2014), so treat early county differences with caution.",
   "facets": [],
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 1991,
+   "from": 1895,
    "to": 2025,
    "step": 1
   },
@@ -3742,12 +3815,12 @@
    ]
   },
   "modelInputs": [],
-  "coverageNote": "Contiguous U.S. and Alaska; Hawaii has no county series. Connecticut uses pre-2022 county codes in nClimDiv, so it shows no data.",
+  "coverageNote": "Contiguous U.S. and Alaska; Hawaii has no county series. Connecticut uses pre-2022 county codes in nClimDiv, so it shows no data. Years before 1991 reach back to 1895 as 10-year averages (the first covers 1895–1900); early decades are estimated from far fewer weather stations (NOAA nClimGrid method, 2014), so treat early county differences with caution.",
   "facets": [],
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 1991,
+   "from": 1895,
    "to": 2025,
    "step": 1
   },
@@ -3808,7 +3881,7 @@
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 2014,
+   "from": 2009,
    "to": 2024,
    "step": 5
   },
@@ -3874,7 +3947,7 @@
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 2014,
+   "from": 2009,
    "to": 2024,
    "step": 5
   },
@@ -3941,7 +4014,7 @@
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 2014,
+   "from": 2009,
    "to": 2024,
    "step": 5
   },
@@ -4006,7 +4079,7 @@
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 2014,
+   "from": 2009,
    "to": 2024,
    "step": 5
   },
@@ -4068,7 +4141,7 @@
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 2014,
+   "from": 2009,
    "to": 2024,
    "step": 5
   },
@@ -4935,7 +5008,7 @@
   "id": "ozone_8hr",
   "title": "Ground-level ozone (smog)",
   "phrase": "smog (ozone) levels",
-  "description": "Ground-level ozone, 2023–2025 design value: the fourth-highest daily peak (8-hour average) each year, averaged over three years, at each county's highest valid monitor. The federal standard is 0.070 parts per million.",
+  "description": "Ground-level ozone design value: the fourth-highest daily peak (8-hour average) each year, averaged over three years, at each county's highest valid monitor. Step back through time to see each three-year period since 2003–2005. The current federal standard is 0.070 parts per million.",
   "category": "Environment and climate",
   "subcategory": "Air quality",
   "tags": [
@@ -4967,10 +5040,15 @@
    "period": "2023-2025"
   },
   "modelInputs": [],
-  "coverageNote": "Only the 688 counties with a valid ozone monitor have a value; every other county is blank, which means no monitor, not clean air. A county's value is its single highest monitor. EPA excludes exceptional-event days such as wildfire smoke. The federal 8-hour standard is 0.070 ppm; the top map classes mark counties above it (values are reported to three decimals, so 0.071 or higher exceeds it). EPA's tables are informational, not a regulatory determination.",
+  "coverageNote": "Only the 688 counties with a valid ozone monitor have a value; every other county is blank, which means no monitor, not clean air. A county's value is its single highest monitor. EPA excludes exceptional-event days such as wildfire smoke. The map classes stay the same for every period. The federal 8-hour standard was 0.084 ppm until 2008, 0.075 until 2015 and is now 0.070 (the top map classes mark counties above it today; values are reported to three decimals, so 0.071 or higher exceeds it), so a county can pass an older standard and fail today's. Each period is a three-year average labeled by its last year; earlier ones are EPA's published figures (2003–2005 to 2006–2008 come from EPA's monitor listings, taking each county's highest valid monitor). EPA publishes no county-level ozone design values before 2003–2005. EPA's tables are informational, not a regulatory determination.",
   "facets": [],
   "library": false,
   "excludeFromInsights": false,
+  "timeline": {
+   "from": 2005,
+   "to": 2025,
+   "step": 1
+  },
   "learnMore": [],
   "terms": [
    "design-value",
@@ -5584,7 +5662,7 @@
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 2014,
+   "from": 2009,
    "to": 2024,
    "step": 5
   },
@@ -5764,7 +5842,7 @@
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 2014,
+   "from": 2009,
    "to": 2024,
    "step": 5
   },
@@ -5883,7 +5961,7 @@
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 2014,
+   "from": 2009,
    "to": 2024,
    "step": 5
   },
@@ -6125,7 +6203,7 @@
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 2014,
+   "from": 2009,
    "to": 2024,
    "step": 5
   },
@@ -6190,7 +6268,7 @@
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 2014,
+   "from": 2009,
    "to": 2024,
    "step": 5
   },
@@ -6538,7 +6616,7 @@
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 2014,
+   "from": 2009,
    "to": 2024,
    "step": 5
   },
@@ -7137,7 +7215,7 @@
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 2014,
+   "from": 2009,
    "to": 2024,
    "step": 5
   },
@@ -7202,7 +7280,7 @@
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 2014,
+   "from": 2009,
    "to": 2024,
    "step": 5
   },
@@ -7382,7 +7460,7 @@
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 2014,
+   "from": 2009,
    "to": 2024,
    "step": 5
   },
@@ -8115,7 +8193,7 @@
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 2014,
+   "from": 2009,
    "to": 2024,
    "step": 5
   },
@@ -12484,7 +12562,7 @@
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 2014,
+   "from": 2009,
    "to": 2024,
    "step": 5
   },
@@ -12788,7 +12866,7 @@
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 2014,
+   "from": 2009,
    "to": 2024,
    "step": 5
   },
@@ -12960,7 +13038,7 @@
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 2014,
+   "from": 2009,
    "to": 2024,
    "step": 5
   },
@@ -13997,7 +14075,7 @@
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 2014,
+   "from": 2009,
    "to": 2024,
    "step": 5
   },
@@ -14121,7 +14199,7 @@
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 2014,
+   "from": 2009,
    "to": 2024,
    "step": 5
   },
@@ -16121,7 +16199,7 @@
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 2014,
+   "from": 2009,
    "to": 2024,
    "step": 5
   },
@@ -16264,7 +16342,7 @@
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 2014,
+   "from": 2009,
    "to": 2024,
    "step": 5
   },
@@ -16473,7 +16551,7 @@
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 2014,
+   "from": 2009,
    "to": 2024,
    "step": 5
   },
@@ -16549,7 +16627,7 @@
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 2014,
+   "from": 2009,
    "to": 2024,
    "step": 5
   },
@@ -16686,7 +16764,7 @@
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 2014,
+   "from": 2009,
    "to": 2024,
    "step": 5
   },
@@ -16925,7 +17003,7 @@
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 2014,
+   "from": 2009,
    "to": 2024,
    "step": 5
   },
@@ -17044,7 +17122,7 @@
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 2014,
+   "from": 2009,
    "to": 2024,
    "step": 5
   },
@@ -17450,7 +17528,7 @@
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 2014,
+   "from": 2009,
    "to": 2024,
    "step": 5
   },
@@ -17748,7 +17826,7 @@
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 2014,
+   "from": 2009,
    "to": 2024,
    "step": 5
   },
@@ -18438,7 +18516,7 @@
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 2014,
+   "from": 2009,
    "to": 2024,
    "step": 5
   },
@@ -18618,7 +18696,7 @@
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 2014,
+   "from": 2009,
    "to": 2024,
    "step": 5
   },
@@ -19096,7 +19174,7 @@
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 2014,
+   "from": 2009,
    "to": 2024,
    "step": 5
   },
@@ -19160,7 +19238,7 @@
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 2014,
+   "from": 2009,
    "to": 2024,
    "step": 5
   },
@@ -19336,7 +19414,7 @@
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 2014,
+   "from": 2009,
    "to": 2024,
    "step": 5
   },
@@ -19458,7 +19536,7 @@
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 2014,
+   "from": 2009,
    "to": 2024,
    "step": 5
   },
@@ -19764,7 +19842,7 @@
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 2014,
+   "from": 2009,
    "to": 2024,
    "step": 5
   },
@@ -19898,7 +19976,7 @@
   "id": "pm25_annual",
   "title": "Fine particle pollution (PM2.5)",
   "phrase": "fine particle pollution levels",
-  "description": "Yearly average concentration of fine particles (PM2.5) in the air, averaged over 2023–2025, at each county's highest valid monitor. The federal standard is 9.0 micrograms per cubic meter.",
+  "description": "Yearly average concentration of fine particles (PM2.5) in the air, averaged over three years, at each county's highest valid monitor. Step back through time to see each three-year period since 1999–2001. The current federal standard is 9.0 micrograms per cubic meter.",
   "category": "Environment and climate",
   "subcategory": "Air quality",
   "tags": [
@@ -19931,10 +20009,15 @@
    "period": "2023-2025"
   },
   "modelInputs": [],
-  "coverageNote": "Only the 549 counties with a valid PM2.5 monitor have a value; every other county is blank, which means no monitor, not clean air. A county's value is its single highest monitor, so one near-road or border monitor can set it. EPA excludes wildfire-smoke days it concurs are exceptional events, so smoke-heavy years read lower than residents experienced. The federal annual standard is 9.0 µg/m³ (tightened from 12.0 in 2024); the top map class marks counties above it. EPA's tables are informational, not a regulatory determination. El Paso County, TX: its value comes from a monitor that began in May 2024, so it covers two years, not three. It includes the 2025 spring dust storms; Texas has not asked EPA to exclude those days.",
+  "coverageNote": "Only the 549 counties with a valid PM2.5 monitor have a value; every other county is blank, which means no monitor, not clean air. A county's value is its single highest monitor, so one near-road or border monitor can set it. EPA excludes wildfire-smoke days it concurs are exceptional events, so smoke-heavy years read lower than residents experienced. The map classes stay the same for every period. The federal annual standard was 15.0 µg/m³ until 2013, 12.0 until 2024 and is now 9.0 (the top map class marks counties above it today), so a county can pass an older standard and fail today's. Each period is a three-year average labeled by its last year; earlier ones are EPA's published figures (periods before 2005–2007 come from monitor listings in EPA's 2005–2007 report, taking each county's highest valid monitor, and 1999–2001 is the first period with a full federal monitoring network). Monitors were sparser early on, so a county's first appearance can reflect a new monitor, not a change in air. EPA's tables are informational, not a regulatory determination. El Paso County, TX: its value comes from a monitor that began in May 2024, so it covers two years, not three. It includes the 2025 spring dust storms; Texas has not asked EPA to exclude those days.",
   "facets": [],
   "library": false,
   "excludeFromInsights": false,
+  "timeline": {
+   "from": 2001,
+   "to": 2025,
+   "step": 1
+  },
   "learnMore": [],
   "terms": [
    "design-value",
@@ -19995,7 +20078,7 @@
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 2014,
+   "from": 2009,
    "to": 2024,
    "step": 5
   },
@@ -20782,7 +20865,7 @@
   ],
   "areaLevels": [],
   "unit": "per_100k",
-  "universe": "traffic deaths per resident, counted where the crash happened (rate uses ACS population)",
+  "universe": "traffic deaths per resident, counted where the crash happened (rate uses ACS population; single years before 2020 use Census population estimates)",
   "measure": {
    "kind": "fars",
    "years": [
@@ -20794,12 +20877,12 @@
   "modelInputs": [
    "population_density"
   ],
-  "coverageNote": "Counted where crashes happened, divided by residents, so counties with heavy through-traffic look high. Connecticut counties use pre-2022 codes and show no data.",
+  "coverageNote": "Counted where crashes happened, divided by residents, so counties with heavy through-traffic look high. Connecticut counties use pre-2022 codes and show no data. Single years back to 1975 are available; Alaska counties show no data before 1986 (the old borough codes do not match today's).",
   "facets": [],
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 2015,
+   "from": 1975,
    "to": 2024,
    "step": 1
   },
@@ -20818,7 +20901,7 @@
   "id": "tri_onsite_releases",
   "title": "Toxic chemical releases (pounds per square mile)",
   "phrase": "toxic chemical releases per square mile",
-  "description": "Pounds of toxic chemicals that industrial facilities reported releasing at their own sites in 2024 (into the air, water, underground or onto land), per square mile of land. Pounds released are not the same as people's exposure or health risk.",
+  "description": "Pounds of toxic chemicals that industrial facilities reported releasing at their own sites each year (into the air, water, underground or onto land), per square mile of land. Step back through time to see each reporting year since 1987. Pounds released are not the same as people's exposure or health risk.",
   "category": "Environment and climate",
   "subcategory": "Toxic releases",
   "tags": [
@@ -20854,10 +20937,15 @@
    "file": "tri-2024-us.csv"
   },
   "modelInputs": [],
-  "coverageNote": "Only larger facilities in covered industries report (generally 10 or more employees and above set chemical amounts), so a county shown at zero has no reporting facility, not no pollution. Amounts are the facilities' own estimates. Metal mines account for nearly half of all pounds, mostly waste rock placed on land at the mine. Pounds say nothing about how toxic a chemical is or whether anyone is exposed to it. Connecticut counties show no data (facility records use its pre-2022 counties).",
+  "coverageNote": "Only larger facilities in covered industries report (generally 10 or more employees and above set chemical amounts), so a county shown at zero has no reporting facility, not no pollution. Amounts are the facilities' own estimates. Metal mines account for nearly half of all pounds, mostly waste rock placed on land at the mine. Pounds say nothing about how toxic a chemical is or whether anyone is exposed to it. Connecticut counties show no data (facility records use its pre-2022 counties). Read changes over time with care: the list of reportable chemicals and industries grew, so a jump is often a rule change, not more pollution. About 286 chemicals were added for 1995; metal mines, coal mines, power plants and some other industries began reporting in 1998 (metal mines are now nearly half of all pounds); and in 2000 and 2001 the reporting thresholds for lead and other persistent, bioaccumulative chemicals dropped sharply, bringing in many small releasers. PFAS were added from 2020. Each year is placed in today's counties by the facility's current county. 1987, the first year, is inflated by one facility that reported 5.2 billion pounds.",
   "facets": [],
   "library": false,
   "excludeFromInsights": true,
+  "timeline": {
+   "from": 1987,
+   "to": 2024,
+   "step": 1
+  },
   "learnMore": [],
   "terms": [
    "toxics-release-inventory",
@@ -20955,7 +21043,7 @@
    "name": "U.S. Census Bureau, Small Area Health Insurance Estimates (SAHIE)",
    "shortName": "Census Bureau",
    "url": "https://www.census.gov/programs-surveys/sahie.html",
-   "citation": "U.S. Census Bureau, Small Area Health Insurance Estimates (SAHIE), 2024 estimates (released August 2026)"
+   "citation": "U.S. Census Bureau, Small Area Health Insurance Estimates (SAHIE), 2008–2024 estimates (2024 released August 2026)"
   },
   "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
   "updateCadence": "annual",
@@ -20974,10 +21062,15 @@
   "modelInputs": [
    "pct_uninsured"
   ],
-  "coverageNote": "States and counties only. Kalawao County, Hawaii, has no estimate, and Puerto Rico is not covered.",
+  "coverageNote": "States and counties only. Kalawao County, Hawaii, has no estimate, and Puerto Rico is not covered. Years go back to 2008, when the estimates began using the American Community Survey; the Census Bureau advises against comparing them with its earlier estimates. Through 2021 the map uses the counties of the time, including Connecticut's old counties.",
   "facets": [],
   "library": false,
   "excludeFromInsights": false,
+  "timeline": {
+   "from": 2008,
+   "to": 2024,
+   "step": 1
+  },
   "learnMore": [],
   "terms": [
    "model-based-estimate",

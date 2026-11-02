@@ -1,4 +1,7 @@
 import { describe, expect, it } from "vitest";
+import { decodeRk } from "./xls.ts";
+import { timelineStops } from "@webgis/registry/timeline";
+import type { DatasetEntry } from "@webgis/registry";
 import { parseCountyDesignValues, parseSharedStrings, parseSheetRows } from "./airquality.ts";
 
 describe("xlsx reading", () => {
@@ -30,5 +33,30 @@ describe("parseCountyDesignValues", () => {
   });
   it("fails loudly when the period column is missing", () => {
     expect(() => parseCountyDesignValues([hdr], "2024-2026")).toThrow(/2024-2026/);
+  });
+});
+
+describe("older workbooks", () => {
+  it("keeps a county's highest valid monitor from a site listing, honoring the status column", () => {
+    const rows = [
+      ["epa_region", "site", "st", "cou", "dva_19992001", "dvstatusas_19992001"],
+      ["5", "a", "17", "031", "15.5", "1"],
+      ["5", "b", "17", "031", "17.4", "3"], // incomplete: ignored
+      ["5", "c", "17", "031", "16.1", "2"],
+    ];
+    expect(parseCountyDesignValues(rows, "1999-2001").values.get("17031")).toBe(16.1);
+  });
+  it("reads ozone monitor listings (dv2003_2005, blank when invalid)", () => {
+    const rows = [["stfips", "cntyfips", "dv2003_2005"], ["01", "003", "0.077"], ["01", "027", ""]];
+    expect([...parseCountyDesignValues(rows, "2003-2005").values]).toEqual([["01003", 0.077]]);
+  });
+  it("decodes packed .xls numbers", () => {
+    expect(decodeRk((7 << 2) | 2)).toBe(7); // integer
+    expect(decodeRk((705 << 2) | 3)).toBe(7.05); // integer / 100
+  });
+  it("names each stop for its three-year window; the registry period is the headline", () => {
+    const e = { measure: { kind: "airquality", period: "2023-2025" }, timeline: { from: 2023, to: 2025, step: 1 } } as DatasetEntry;
+    expect(timelineStops(e).map((s) => [s.id, s.label, s.isDefault, s.boundaries])).toEqual([
+      ["2023", "2021–2023", false, undefined], ["2024", "2022–2024", false, undefined], ["2025", "2023–2025", true, undefined]]);
   });
 });

@@ -5,32 +5,30 @@ rows into one summary line. Roadmap: `docs/roadmap.md`. Rules: `docs/handbook.md
 
 ## Now
 
-**Base camp (2026-10-27).** Robbie: "a summit where we can base camp to plan for our next ascent."
-No new work until he names a direction; he will shape it with planning skills. His one task file
-is `~/webgis/drafts/robbie.md` (gitignored).
+**Planner depth (2026-11-01).** Base camp ended 2026-10-31: Robbie named the direction ("planner depth")
+and said "keep running". The lead works the list in `drafts/planner-depth-plan.md`.
 
-- **Shipped:** all of Phase 0. Phase 1: compare places (1.1, all parts), change maps with From → To
-  (1.2), reliability warnings (1.3), CSV download (1.4), link previews (1.5), Specials pipeline (1.8),
-  static click details (S1), data files on R2 (S2). 138 datasets. Four Specials live (traffic deaths,
-  Holmes County bikes, work from home and exercise, the ACS explainer). Every Combination that passes
-  the automatic checks is live with no hand review (D-447). Splash questions approved and live.
-  Repo public since 2026-10-10, MIT license.
-- **Not shipped from Phase 1:** map polish 1.7 (#187, now holds the map-audit fixes too) and
-  disclosures 1.6 (on hold by Robbie; nobody rewrites the copy). The Phase 1 gate (Robbie uses
-  compare and change maps in a real conversation) hasn't run.
-- **Parked, each with its plan on GitHub (label `parked`):** cities and metros #332, focused-area
-  totals #292, US figures #296, real margins on change maps #188, similar places #291 (Robbie: build),
-  hover vs details numbers #343, 3–5-dataset Combinations #280, visitor suggestions #207, table into
-  About #244, "Why this matters" #115, drive times #205, transit #176 (branch `data/transit-routes`
-  kept, PR #261 closed), how datasets relate #118, tester onboarding #245 (mockups first), go public
-  #44 (branch protection). New data: FEMA #169 (PR #235) and HUD #172 (PR #330) are built and wait;
-  the data backlog and the data.gov sweep live in #133. 287(g) is held in `data/registry/held/`.
-- **Known risks:** the 2021–2025 ACS 5-year tables drop health insurance, so the uninsured map can't
+- **Shipped 2026-10-31 to 11-01:** grant numbers on place profiles (#443); TIP projects on the map, Met
+  Council first, with the 129 point projects (#444, #450); hover popup and details show the same number
+  (#343); U.S. figures for 2020 Census, traffic deaths, jobs and food access (#296, #460); pick an area:
+  tap tracts for one total (#455) and pick several counties (#391); change maps use real margins of error
+  (#188, PR #468); commute flows, where a county's workers live and its residents work (roadmap 2.5,
+  #469, PRs #470 and #471, 3,114 counties); back button says where it goes (#437); search always on the
+  map (#438); colors fit the counties in view (#439). Also live: the Library pilot (100 maps), About and
+  Methods pages, the accessibility pass and load test (#366), the census-privacy-order Special.
+- **Waiting:** print/embed a locked view (plan F) until Robbie asks. Drawing buffers, transit #176 and
+  drive times #205 stay parked.
+- **Still parked, each with its plan on GitHub (label `parked`):** similar places #291 follow-ups,
+  3-5-dataset Combinations #280, visitor suggestions #207, table into About #244, "Why this matters"
+  #115, how datasets relate #118, tester onboarding #245, go public #44 (branch protection). FEMA #169
+  and HUD #172 wait for the data-discovery phase; the data backlog lives in #133. 287(g) is held in
+  `data/registry/held/`. Disclosures 1.6 (on hold by Robbie) is not shipped.
+- **Known risks:** the 2021-2025 ACS 5-year tables drop health insurance, so the uninsured map can't
   refresh on the usual cycle (#133). The CI click-through times out when the Ubuntu apt mirror is
-  slow; re-run failed jobs (`gh run rerun <id> --failed`). The Census API needs a key; Census Reporter's
-  API works without one for the latest release.
-- **Next steps:** Robbie picks the direction; the lead turns it into a plan, then issues. Turning a
-  parked issue back on needs no re-planning.
+  slow; re-run failed jobs (`gh run rerun <id> --failed`). A data step's file must be on R2 before the
+  UI PR that reads it passes CI (commute flows went data first).
+- **Next steps:** keep running the planner-depth list; Robbie reacts live. The Phase 1 gate (Robbie uses
+  compare and change maps in a real conversation) hasn't run.
 - **Working rules that still hold:** Specials publish verbatim from `drafts/specials/` ("publish
   <name>": strip `<!-- -->` comments, move the numbers script to `apps/web/scripts/specials-numbers/`,
   run `check:special` and the build). Workers self-review with `ponytail-review`; the lead runs it

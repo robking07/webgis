@@ -1,10 +1,10 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { useEscape } from "../useEscape";
 import { X } from "lucide-react";
 import { StatusState } from "@webgis/design/components";
 import { CHANGE_CLASSES, formatEstimate, formatValue, GEO_LEVELS, isGradable, STATIC_ONLY_LEVELS, TILE_VALUE_LEVELS, type GeoLevel } from "@webgis/design";
 import { moeRangeLine, noDataReason, reliabilityNote } from "@/lib/reliability";
-import { changeSummary, differenceMoe, formatChange, withinMoe } from "@/lib/change";
+import { changeSummary, formatChange } from "@/lib/change";
 import type { ClassedLevel } from "./useViewerData";
 import type { HoverInfo } from "../map/MapView";
 import { DATASET_BY_ID, type Dataset } from "@/lib/registry";
@@ -19,6 +19,8 @@ import { LearnMore } from "./LearnMore";
 import type { PlaceHit } from "@/lib/search";
 import { placeChain } from "@/lib/place-chain";
 import { CompareWith } from "../compare/CompareWith";
+import { CommuteFlows } from "../CommuteFlows";
+import type { FeatureCollection } from "geojson";
 
 const dedupe = (links: Link[]) => links.filter((l, i) => links.findIndex((m) => m.url === l.url) === i);
 
@@ -41,10 +43,12 @@ interface DetailProps {
   /** Phones: the legend key, shown in the sheet with this place's class outlined. */
   legendKey?: { colors: string[]; cls: number | null; ends: [string, string] } | null;
   /** A change map (issue #127): both stops' labels, the earlier values at this level, and the
-   *  change classification. `toIsDefault`: the later stop is the default, whose margins are known. */
-  change?: { fromLabel: string; toLabel: string; fromValues?: Values; classed: ClassedLevel; toIsDefault: boolean; boundaryNote?: string | null };
+   *  change classification. */
+  change?: { fromLabel: string; toLabel: string; fromValues?: Values; classed: ClassedLevel; boundaryNote?: string | null };
   /** The map's finest level: a click here can't drill further down (issue #203), so say so. */
   finest?: boolean;
+  /** Draw or clear the county's commute flow lines (#469); given only while this county is the focused one. */
+  onFlows?: (lines: FeatureCollection | null) => void;
 }
 
 /** The places a clicked place sits inside, coarse first (state › MPO › metro › county › city › tract; issue #364). */
@@ -120,22 +124,19 @@ export function ReliabilityNote({ dataset, geoid, value, moe }: { dataset: Datas
 /** A clicked place: its values, ranks and links (desktop panel; a BottomSheet on phones). */
 /** A change map's card: the change, then both values, and "no clear change" when the difference is
  *  within its margin of error (√(MOE₁² + MOE₂²); see lib/change.ts). */
-function ChangeCard({ dataset, geoid, change, to, toMoe, sheetKey }: { dataset: Dataset; geoid: string; change: NonNullable<DetailProps["change"]>; to?: number; toMoe?: number | null; sheetKey: ReactNode }) {
+function ChangeCard({ dataset, geoid, change, to, sheetKey }: { dataset: Dataset; geoid: string; change: NonNullable<DetailProps["change"]>; to?: number; sheetKey: ReactNode }) {
   const from = change.fromValues?.[geoid];
-  const moe = isGradable(dataset.measure.kind) && change.toIsDefault && from != null && to != null ? differenceMoe(from, null, to, toMoe) : null;
-  const steady = from != null && to != null && withinMoe(from, to, moe);
   const c = change.classed.change?.[geoid];
-  // The headline says what the map's color and the hover card say (margins are tested on the map
-  // for tracts only); the note below adds this panel's own test, which reaches counties and states too.
-  const mapSteady = !!change.classed.tested && change.classed.classes.get(geoid) === (CHANGE_CLASSES - 1) / 2;
-  const { headline } = changeSummary(c, from, to, change.classed.measure!, dataset.unit, mapSteady, change.boundaryNote);
+  // The same test as the map's color and the hover card (D-545): the published margins of both periods.
+  const steady = !!change.classed.tested && change.classed.classes.get(geoid) === (CHANGE_CLASSES - 1) / 2;
+  const { headline, values } = changeSummary(c, from, to, change.classed.measure!, dataset.unit, steady, change.boundaryNote);
   return (
     <div className="rounded-md bg-muted px-3 py-2" data-change-card="">
       <p className="text-xs text-muted-foreground">{dataset.title}, change, {change.fromLabel} → {change.toLabel}</p>
       <p className="text-xl font-semibold tabular-nums" data-change-headline="">{headline}</p>
       {sheetKey}
       <p className="mt-1 text-xs text-muted-foreground tabular-nums">
-        {change.fromLabel}: {formatValue(from, dataset.unit)} · {change.toLabel}: {formatValue(to, dataset.unit)}
+        {change.fromLabel}: {values[0]} · {change.toLabel}: {values[1]}
       </p>
       {steady && (
         <p className="mt-1 text-xs text-muted-foreground">
@@ -146,13 +147,16 @@ function ChangeCard({ dataset, geoid, change, to, toMoe, sheetKey }: { dataset: 
   );
 }
 
-export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, onMapIt, period, onPlace, legendKey, change, finest }: DetailProps) {
+export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, onMapIt, period, onPlace, legendKey, change, finest, onFlows }: DetailProps) {
   const [rows, setRows] = useState<Detail | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const phone = useIsPhone();
   /** "Compare with…" is waiting for a tap on the map: the phone drawer shrinks to the name and that prompt (issue #242). */
   const [picking, setPicking] = useState(false);
   const shrunk = phone && picking;
+  /** Commute lines are on the map: the phone sheet drops to its short height so they show above it. */
+  const [flowing, setFlowing] = useState(false);
+  const flows = useCallback((lines: FeatureCollection | null) => { setFlowing(!!lines); onFlows?.(lines); }, [onFlows]);
   // Block groups and blocks aren't in the database (D-124): the mapped values come from the static
   // files (block groups, with margins of error from side files) or the tiles (blocks); there's no
   // all-datasets list or place profile below tracts.
@@ -206,7 +210,7 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
             {featured.map((d, i) => {
               const r = rows[d.id];
               if (i === 0 && change) {
-                return <ChangeCard key={d.id} dataset={d} geoid={info.geoid} change={change} to={xv?.[info.geoid]} toMoe={change.toIsDefault ? r?.moe : null}
+                return <ChangeCard key={d.id} dataset={d} geoid={info.geoid} change={change} to={xv?.[info.geoid]}
                   sheetKey={phone && legendKey ? <SheetKey {...legendKey} /> : null} />;
               }
               if (i === 0 && period) {
@@ -240,6 +244,7 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
         )}
       <CompareWith geoid={info.geoid} level={info.level} name={info.name} dataset={primary} otherPeriod={!!period}
         aValue={!rows ? null : staticOnly ? undefined : rows[primary.id]?.value ?? null} onPicking={setPicking} />
+      {!shrunk && info.level === "county" && onFlows && <CommuteFlows key={info.geoid} geoid={info.geoid} onLines={flows} />}
       {!shrunk && <LearnMore links={links} />}
       {phone && !shrunk && rows && !staticOnly && <p className="mt-2 text-center text-xs text-muted-foreground group-data-[snap=full]:hidden">Swipe up for all {info.level === "tract" ? TRACT_IDS.length : Object.keys(rows).filter((id) => !DATASET_BY_ID.get(id)?.library).length} datasets here</p>}
     </>
@@ -247,7 +252,7 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
 
   if (phone) {
     return (
-      <BottomSheet label={`Details for ${info.name}`} summary={summary} onClose={onClose} collapsed={picking} lazy>
+      <BottomSheet label={`Details for ${info.name}`} summary={summary} onClose={onClose} collapsed={picking || flowing} lazy>
         {rows && !staticOnly && (
           <>
             {info.level === "tract"

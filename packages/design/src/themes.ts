@@ -60,8 +60,8 @@ export interface Theme {
     highlightHalo: string;
     /** Fill for features with no value. */
     noData: string;
-    /** No-data fill on change maps: darker than the grey "no clear change" middle in light themes, so
-     *  a steady area never reads as missing (design check keeps every class ΔE ≥ 10 away). */
+    /** No-data fill on change maps: a pale tone, lighter than the light grey "no clear change" middle in light themes, so
+     *  missing data recedes and a steady area never reads as missing (design check keeps every class ΔE ≥ 10 away). */
     noDataChange: string;
     /** Reference overlays drawn above thematic fills (cased so they read over any fill). */
     interstate: string;
@@ -132,7 +132,7 @@ export const THEMES: Record<ThemeName, Theme> = {
       highlight: "#111111",
       highlightHalo: "#ffffff",
       noData: "#d9d6cf",
-      noDataChange: "#b0ada5",
+      noDataChange: "#f3f0e8",
       interstate: "#4a4d55",
       interstateCasing: "#ffffff",
       river: "#5b8fbf",

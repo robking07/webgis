@@ -94,7 +94,7 @@ export function MapLegend({ theme, primary, secondary, isFeature, featureSpec, c
         ) : primary && current?.breaks ? (<>
           <Legend title={primary.title} unit={primary.unit} colors={current.colors} breaks={current.breaks} minClass={current.minClass} mark={mark}
             caption={`${GEO_LEVELS[level].label} · ${periodLabel}`} />
-          {current.fitted && <p className="mt-1 text-xs text-muted-foreground" data-fitted="">Colors fit the counties in view</p>}
+          {current.fitted && <p className="mt-1 text-xs text-muted-foreground" data-fitted="">Colors fit the area in view</p>}
         </>) : null}
       {notes && !secondary && !error && !loading && (
         <details className="mt-2 text-xs text-muted-foreground">

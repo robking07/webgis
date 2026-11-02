@@ -17,6 +17,7 @@ describe("formatValue", () => {
     expect(formatValue(7.25, "per_sq_mi")).toBe("7.3/sq mi");
     expect(formatValue(3400, "per_sq_mi")).toBe("3,400/sq mi");
     expect(formatValue(1, "agreements")).toBe("1 agreement");
+    expect(formatValue(12, "declarations")).toBe("12 declarations");
     expect(formatValue(3, "categories")).toBe("3 categories");
     expect(formatValue(42, "percentile")).toBe("42nd percentile");
     expect(formatValue(11, "percentile")).toBe("11th percentile");

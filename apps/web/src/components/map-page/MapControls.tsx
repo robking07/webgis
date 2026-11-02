@@ -21,7 +21,7 @@ export function MapControls({ mapApi, atRest, canGoBack, onBack, phone, cardH, o
   onPlace: (p: PlaceHit) => void;
   /** Phones only (issue #363): frame the visitor's own census tract. */
   onNearMe: (() => void) | null;
-  /** "Pick tracts" (#455), on maps with tracts; off (greyed) above tract zoom. */
+  /** "Pick an area" (#455, #391), on maps with tracts or counties; off (greyed) when neither is drawn. */
   pick: { on: boolean; off: boolean; onToggle: () => void } | null;
 }) {
   // Desktop: under the zoom pill. Phones (no zoom pill): top right, below the dataset card at rest.
@@ -56,7 +56,7 @@ export function MapControls({ mapApi, atRest, canGoBack, onBack, phone, cardH, o
 
       {pick && (
         <button type="button" onClick={pick.onToggle} disabled={pick.off} aria-pressed={pick.on}
-          aria-label="Pick tracts" title={pick.off ? "Zoom in to tracts to pick them" : "Pick tracts"}
+          aria-label="Pick an area" title={pick.off ? "Zoom in to counties or tracts to pick them" : "Pick an area"}
           className={`wg-panel wg-zbtn absolute right-3 z-20 grid size-11 place-items-center rounded-[14px] transition-[top] duration-300 disabled:opacity-50 md:right-4 ${pick.on ? "text-primary" : "text-foreground"}`}
           style={{ top: top + 52 * (1 + +canGoBack + +!!onNearMe) }}>
           <Grid2x2Plus className="size-[18px]" aria-hidden />

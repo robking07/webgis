@@ -20,5 +20,5 @@ universe: renter-occupied housing units paying cash rent
 coverageNote: "The Census Bureau caps the top value ($3,500 or more) and the bottom value, so the most and least expensive areas show the cap rather than their true median. Block groups with too few renters paying cash rent show no median."
 terms: [median, inflation-adjusted, acs-5-year, margin-of-error, census-geography, quantile-classes]
 measure: { kind: acs5, numerator: [B25064_001] }
-timeline: { from: 2014, to: 2024, step: 5 }
+timeline: { from: 2009, to: 2024, step: 5 }
 symbology: { ramp: ylgnbu, classification: quantile, classes: 5 }

@@ -18,5 +18,5 @@ unit: percent
 universe: workers 16+
 terms: [acs-5-year, margin-of-error, census-geography, quantile-classes]
 measure: { kind: acs5, numerator: [B08007_004, B08007_005], denominator: [B08007_001], scale: 100 }
-timeline: { from: 2014, to: 2024, step: 5 }
+timeline: { from: 2009, to: 2024, step: 5 }
 symbology: { ramp: ylgnbu, classification: quantile, classes: 5 }

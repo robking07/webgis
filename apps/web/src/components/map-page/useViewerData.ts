@@ -12,6 +12,8 @@ import type { Values } from "@/lib/values";
 import { useChangeMoes } from "./useChangeMoes";
 
 export const LEVELS = Object.keys(GEO_LEVELS) as GeoLevel[];
+/** Levels with published margin files at every ACS stop (D-257). */
+const MOE_LEVELS = new Set<GeoLevel>(["state", "county", "tract"]);
 
 export type ClassedLevel = LevelPaint & {
   breaks?: number[]; xBreaks?: number[]; yBreaks?: number[]; minClass?: number;
@@ -24,7 +26,7 @@ export type ClassedLevel = LevelPaint & {
 
 /** What the map shows for the URL state: the datasets, the year stop, the geography levels and
  *  zoom bands, the loaded values, and their classification (one paint per level).
- *  `tractCounties`: counties whose tracts are on screen (a change map tests their margins of error). */
+ *  `tractCounties`: counties whose tracts are on screen (fitted breaks follow them, issue #439). */
 export function useViewerData(state: UrlState, tractCounties: readonly string[] = []) {
   const primary = state.d ? DATASET_BY_ID.get(state.d)! : null;
   // Feature layers (roads, transit…) draw their own geometry: no choropleth, no comparison.
@@ -71,11 +73,10 @@ export function useViewerData(state: UrlState, tractCounties: readonly string[] 
   const xBase = useDatasetValues(stopId && !since ? primary : null, want);
   const xFrom = useDatasetValues(since ? primary : null, want, since && !since.isDefault ? since.id : null, since?.levels);
   const level = levelAtZoom(bands, state.at.zoom) ?? availableLevels[0] ?? "county";
-  // Margins of error exist only for the default period, as published (tract shards; D-222).
-  // shortcut: counties and states aren't tested (their margins are only in the per-state detail
-  // files, ~6 MB for the country); test them too if a county-level margins file is published.
-  const testMoes = !!since && !!stop?.isDefault && primary?.measure.kind === "acs5" && level === "tract";
-  const tractMoes = useChangeMoes(testMoes ? primary!.id : null, tractCounties);
+  // ACS change maps test each change against both stops' published margins (state, county, tract;
+  // D-257, D-557); tract margins load only once tracts are wanted.
+  const moeLevels = availableLevels.filter((l) => MOE_LEVELS.has(l) && (!LAZY_LEVELS.has(l) || want.includes(l)));
+  const moes = useChangeMoes(since && primary?.measure.kind === "acs5" ? primary.id : null, since && !since.isDefault ? since.id : null, stopId, moeLevels);
 
   // Issue #439: zoomed in to neighbourhoods on a one-dataset map at its default period, tracts and
   // block groups take breaks fitted to every place in the counties on screen. Change maps, compare
@@ -99,7 +100,7 @@ export function useViewerData(state: UrlState, tractCounties: readonly string[] 
       if (!xv) continue;
       if (since) {
         const fv = xFrom.values[l];
-        if (fv) out[l] = classifyChangeCached(fv, xv, primary.unit as Unit, l === "tract" ? tractMoes : null);
+        if (fv) out[l] = classifyChangeCached(fv, xv, primary.unit as Unit, moes[l]);
       } else if (secondary) {
         const yv = y.values[l];
         if (yv) out[l] = classifyBivariateCached(xv, yv);
@@ -111,10 +112,10 @@ export function useViewerData(state: UrlState, tractCounties: readonly string[] 
     const bg = out.block_group;
     if (blockField && !secondary && bg?.breaks) out.block = blockPaintFrom(bg as Classed, blockField);
     return out;
-  }, [primary, secondary, x.values, y.values, stopId, stop, xBase.values, blockField, since, xFrom.values, tractMoes, fitted]);
+  }, [primary, secondary, x.values, y.values, stopId, stop, xBase.values, blockField, since, xFrom.values, moes, fitted]);
 
   // `fit`: the map reports the counties in view (MapView's watchCounties) so the breaks can follow them.
-  return { primary, secondary, isFeature, featureSpec, stops, stop, stopId, since, xBase, xFrom, testMoes, fit, valueLevels, availableLevels, pinnedLevel, focus, bands, x, y, level, classed, blockField };
+  return { primary, secondary, isFeature, featureSpec, stops, stop, stopId, since, xBase, xFrom, fit, valueLevels, availableLevels, pinnedLevel, focus, bands, x, y, level, classed, blockField };
 }
 
 const onResize = (cb: () => void) => { window.addEventListener("resize", cb); return () => window.removeEventListener("resize", cb); };

@@ -9,15 +9,15 @@ source:
   name: FHWA National Bridge Inventory
   shortName: FHWA
   url: https://www.fhwa.dot.gov/bridge/nbi.cfm
-  citation: "Federal Highway Administration, National Bridge Inventory, 2025 highway bridge file"
+  citation: "Federal Highway Administration, National Bridge Inventory, 1992–2025 highway bridge files"
 license: Public domain (U.S. Government work, 17 U.S.C. § 105)
 updateCadence: annual
 vintage: "2025 inventory"
 geographyLevels: [state, county]
 unit: percent
 universe: highway bridge deck area
-coverageNote: Counties with fewer than 10 bridges show no data. Connecticut's NBI records still use pre-2022 counties, so CT counties show no data.
+coverageNote: "Counties with fewer than 10 bridges show no data. Connecticut's NBI records still use pre-2022 counties, so CT counties show no data from 2020 on (earlier years use the counties of the time). FHWA added its condition and deck area fields in 2019; for 1992 to 2018 they are worked out from the same inspection ratings and dimensions, the way FHWA does."
 terms: [bridge-condition, quantile-classes]
 measure: { kind: nbi, year: 2025, weight: deckArea, condition: P, minBridges: 10 }
-timeline: { from: 2019, to: 2025 }
+timeline: { from: 1992, to: 2025 }
 symbology: { ramp: oranges, classification: quantile, classes: 5 }
