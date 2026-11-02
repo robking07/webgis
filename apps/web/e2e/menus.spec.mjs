@@ -403,10 +403,11 @@ for (const [vp, hides] of [["phone", true], ["laptop", true], ["monitor", false]
     await page.waitForFunction(() => document.getAnimations().every((a) => a.playState !== "running"), null, { timeout: 5000 }).catch(() => {});
     const during = { menu: await opacityOf(menu), side: page.isPhone ? null : await opacityOf(side) };
     await dragEnd(page);
-    await wait(1500);
-    // Slow machines (CI's software WebGL) can still be mid-fade here; let CSS transitions finish.
-    await page.waitForFunction(() => document.getAnimations().every((a) => a.playState !== "running"), null, { timeout: 5000 }).catch(() => {});
-    const after = { menu: await opacityOf(menu), side: page.isPhone ? null : await opacityOf(side) };
+    // Chrome returns once the map settles, and CI's software WebGL is slow: wait for the real signal (map idle,
+    // fades done, opacity back to 1), not a fixed delay. A chrome that never returns still fails below.
+    await mapIdle(page);
+    for (let i = 0; i < 50 && !(await opacityOf(menu) === 1 && (page.isPhone || await opacityOf(side) === 1)); i++) await wait(200);
+    const after ={ menu: await opacityOf(menu), side: page.isPhone ? null : await opacityOf(side) };
     if (vp === "phone") {
       expect(during.menu === 0, `menu button visible mid-pan (${during.menu})`);
       expect(after.menu === 1, `menu button didn't return (${after.menu})`);
