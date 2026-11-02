@@ -5,8 +5,8 @@ import { loadRegistry } from "@webgis/registry/load";
 import type { DatasetEntry } from "@webgis/registry";
 import { timelineStops } from "@webgis/registry/timeline";
 import { cached, db, FIPS_RENAMES, log, splitCsv } from "./util.ts";
-import { areas2019 } from "./geographies.ts";
-import { landArea, readStopValues, registerDataset, writeStopValues, writeValues, type Level, type Value } from "./values.ts";
+import { estimatedPop } from "./popest.ts";
+import { registerDataset, writeStopValues, writeValues, type Level, type Value } from "./values.ts";
 import { unzipEntry } from "./zip.ts";
 import { sumStates, writeCounts, writeUs, type Counts } from "./counts.ts";
 
@@ -22,16 +22,7 @@ async function population(pool: Pool, level: Level): Promise<Map<string, number>
   return new Map(rows.map((r) => [r.geoid, r.pop]));
 }
 
-/** 2015–2019 ACS population on 2019 boundaries, from the population_density timeline export. */
-async function population2019(pool: Pool, level: Level): Promise<Map<string, number>> {
-  const density = readStopValues("population_density", "2019", level);
-  const areas = level === "state" ? await landArea(pool, "state") : await areas2019(level as "county");
-  const out = new Map<string, number>();
-  for (const [g, d] of density) { const a = areas.get(g); if (a) out.set(g, d * a); }
-  return out;
-}
-
-async function readYears(from: number, to: number): Promise<Deaths> {
+export async function readYears(from: number, to: number): Promise<Deaths> {
   const d: Deaths = { state: new Map(), county: new Map(), total: 0, unknownCounty: 0 };
   for (let y = from; y <= to; y++) {
     const zip = await cached(`https://static.nhtsa.gov/nhtsa/downloads/FARS/${y}/National/FARS${y}NationalCSV.zip`);
@@ -111,17 +102,17 @@ export function farsCounts(values: Map<string, Value>, deaths: Map<string, numbe
   return out;
 }
 
-/** Single-year rates (D-36). Years before 2020 use 2019 boundaries and 2015–2019 ACS
- *  population (so Connecticut's old counties match FARS's codes); later years, the current
- *  ones. Single years in small counties swing a lot: the average stays the default. */
+/** Single-year rates (D-36), 1975 on. Years before 2020 use 2019 boundaries and that year's Census
+ *  population estimate (so Connecticut's old counties match FARS's codes); later years, the current
+ *  boundaries and ACS population. Single years in small counties swing a lot: the average stays the default. */
 export async function ingestFarsTimeline(only?: string[]) {
   const entries = loadRegistry().filter((e) => e.measure.kind === "fars" && e.timeline && (!only || only.includes(e.id)));
   const pool = db();
-  const pops = new Map<string, Map<string, number>>();
-  const popFor = async (level: Level, old: boolean) => {
-    const k = `${level}/${old}`;
-    if (!pops.has(k)) pops.set(k, old ? await population2019(pool, level) : await population(pool, level));
-    return pops.get(k)!;
+  const pops = new Map<Level, Map<string, number>>();
+  const popFor = async (level: Level, year: number) => {
+    if (year < 2020) return estimatedPop(year, level as "state" | "county");
+    if (!pops.has(level)) pops.set(level, await population(pool, level));
+    return pops.get(level)!;
   };
   for (const e of entries) {
     for (const s of timelineStops(e)) {
@@ -131,7 +122,7 @@ export async function ingestFarsTimeline(only?: string[]) {
       log(e.id, `${y}: ${deaths.total.toLocaleString()} deaths`);
       for (const level of e.geographyLevels) {
         if (level === "tract") continue;
-        writeStopValues(e.id, s.id, level, rates(e, deaths, level, await popFor(level, !!s.boundaries), 1, s.id));
+        writeStopValues(e.id, s.id, level, rates(e, deaths, level, await popFor(level, y), 1, s.id));
       }
     }
   }

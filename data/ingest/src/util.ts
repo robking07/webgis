@@ -107,4 +107,7 @@ export const FIPS_RENAMES: Record<string, string> = {
   "46113": "46102", // Shannon County, SD → Oglala Lakota County (2015)
   "02270": "02158", // Wade Hampton Census Area, AK → Kusilvak Census Area (2015)
   "51515": "51019", // Bedford city, VA merged into Bedford County (2013)
+  "12025": "12086", // Dade County, FL → Miami-Dade County (1997)
+  "51560": "51005", // Clifton Forge city, VA merged into Alleghany County (2001)
+  "51780": "51083", // South Boston city, VA merged into Halifax County (1995)
 };
