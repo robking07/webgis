@@ -27,6 +27,11 @@ export function periodLosses(old: Periods, next: Periods): string[] {
     !next[id] ? [id] : Object.keys(stops).filter((s) => !next[id][s]).map((s) => `${id}/${s}`));
 }
 
+/** Fill in `old` entries for datasets with no local stop folder (a partial runner), so they are neither lost nor dropped. */
+export function carryOver(old: Periods, periods: Periods, local: Set<string>) {
+  for (const [id, stops] of Object.entries(old)) if (!local.has(id)) periods[id] = stops;
+}
+
 export function exportRegistry(allowPeriodDrop = false) {
   const dir = join(ROOT, "apps/web/src/generated");
   mkdirSync(dir, { recursive: true });
@@ -39,9 +44,11 @@ export function exportRegistry(allowPeriodDrop = false) {
   // Timeline stops whose values are on disk, with the levels each has, so the year control
   // only offers what was exported: { dataset: { stop: [levels] } }.
   const periods: Periods = {};
+  const local = new Set<string>(); // datasets with any values folder on this machine
   for (const e of entries) {
     for (const s of timelineStops(e)) {
       const dir = join(TILES, "values", e.id, s.id);
+      if (existsSync(dir)) local.add(e.id);
       if (s.isDefault || !existsSync(dir)) continue;
       // Level files only: a stop folder also holds <level>.moe.json and us.json (#154, #156).
       const levels = readdirSync(dir).filter((f) => LEVEL_FILE.test(f)).map((f) => f.replace(/\.json$/, ""));
@@ -50,7 +57,9 @@ export function exportRegistry(allowPeriodDrop = false) {
   }
   // Refuse to shrink: a worktree without data/tiles/values timeline folders would silently drop years (#384).
   const file = join(dir, "periods.json");
-  const lost = existsSync(file) && !allowPeriodDrop ? periodLosses(JSON.parse(readFileSync(file, "utf8")), periods) : [];
+  const old: Periods = existsSync(file) ? JSON.parse(readFileSync(file, "utf8")) : {};
+  carryOver(old, periods, local); // partial runner (Data run): keep what it did not load (#479)
+  const lost = allowPeriodDrop ? [] : periodLosses(old, periods);
   if (lost.length) {
     throw new Error(`export: periods.json would lose years for ${lost.length} dataset(s)/stop(s): ${lost.slice(0, 20).join(", ")}${lost.length > 20 ? ", ..." : ""}. ` +
       "The data folder is probably incomplete (docs/handbook.md section 1). Nothing written to periods.json. If the drop is intended, add --allow-period-drop.");
