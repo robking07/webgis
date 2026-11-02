@@ -9,7 +9,7 @@ source:
   name: U.S. Census Bureau, Small Area Health Insurance Estimates (SAHIE)
   shortName: Census Bureau
   url: https://www.census.gov/programs-surveys/sahie.html
-  citation: "U.S. Census Bureau, Small Area Health Insurance Estimates (SAHIE), 2024 estimates (released August 2026)"
+  citation: "U.S. Census Bureau, Small Area Health Insurance Estimates (SAHIE), 2008–2024 estimates (2024 released August 2026)"
 license: Public domain (U.S. Government work, 17 U.S.C. § 105)
 updateCadence: annual
 vintage: "2024 data"
@@ -17,7 +17,8 @@ geographyLevels: [state, county]
 unit: percent
 universe: residents under 65 (model-based estimate)
 modelInputs: [pct_uninsured]  # SAHIE's model starts from the ACS uninsured estimates
-coverageNote: "States and counties only. Kalawao County, Hawaii, has no estimate, and Puerto Rico is not covered."
+coverageNote: "States and counties only. Kalawao County, Hawaii, has no estimate, and Puerto Rico is not covered. Years go back to 2008, when the estimates began using the American Community Survey; the Census Bureau advises against comparing them with its earlier estimates. Through 2021 the map uses the counties of the time, including Connecticut's old counties."
 terms: [model-based-estimate, margin-of-error, quantile-classes]
 measure: { kind: sahie, year: 2024 }
+timeline: { from: 2008, to: 2024 }
 symbology: { ramp: oranges, classification: quantile, classes: 5, higherIsBetter: false }

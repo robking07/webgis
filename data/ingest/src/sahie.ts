@@ -2,12 +2,14 @@
 // under 65 (all races, sexes and incomes) by county and state, from the yearly CSV on www2.census.gov
 // (the API now needs a key; the file doesn't). Model-based; margins are 90% like the ACS.
 import { loadRegistry } from "@webgis/registry/load";
-import { cached, db, log } from "./util.ts";
-import { registerDataset, writeValues, type Value } from "./values.ts";
+import { timelineStops } from "@webgis/registry/timeline";
+import { cached, db, FIPS_RENAMES, log } from "./util.ts";
+import { registerDataset, writeStopValues, writeValues, type Value } from "./values.ts";
 import { unzipEntry } from "./zip.ts";
 
 /** SAHIE CSV text (a long notes preamble, then `year,version,statefips,…`) → PCTUI and its MOE for
- *  the all-groups rows, by state and county FIPS. "." (Kalawao, HI) becomes no value. */
+ *  the all-groups rows, by state and county FIPS. "." (Kalawao, HI) becomes no value. Renamed counties
+ *  (FIPS_RENAMES) take the new code; a merged-away city is dropped while its county has its own rate. */
 export function parseSahie(text: string) {
   const lines = text.split(/\r?\n/);
   const start = lines.findIndex((l) => l.startsWith("year,version,"));
@@ -24,8 +26,17 @@ export function parseSahie(text: string) {
     if (f[iG] === "40") out.state.set(f[iS], v);
     else if (f[iG] === "50") out.county.set(f[iS] + f[iC], v);
   }
+  for (const [g, v] of out.county) {
+    const to = FIPS_RENAMES[g];
+    if (to) { out.county.delete(g); if (!out.county.has(to)) out.county.set(to, v); }
+  }
   return out;
 }
+
+const sahieYear = async (year: number) => {
+  const zip = await cached(`https://www2.census.gov/programs-surveys/sahie/datasets/time-series/estimates-acs/sahie-${year}-csv.zip`);
+  return parseSahie(await unzipEntry(zip, new RegExp(`sahie_${year}\\.csv$`)));
+};
 
 export async function ingestSahie(only?: string[]) {
   const entries = loadRegistry().filter((e) => e.measure.kind === "sahie" && (!only || only.includes(e.id)));
@@ -34,10 +45,20 @@ export async function ingestSahie(only?: string[]) {
   for (const e of entries) {
     if (e.measure.kind !== "sahie") continue;
     const { year } = e.measure;
-    const zip = await cached(`https://www2.census.gov/programs-surveys/sahie/datasets/time-series/estimates-acs/sahie-${year}-csv.zip`);
-    const rows = parseSahie(await unzipEntry(zip, new RegExp(`sahie_${year}\\.csv$`)));
+    const rows = await sahieYear(year);
     await registerDataset(pool, e);
     for (const level of ["state", "county"] as const) if (e.geographyLevels.includes(level)) await writeValues(pool, e.id, level, rows[level]);
   }
   await pool.end();
+}
+
+/** Year control (D-36): every earlier estimate year (2008 on: the ACS-based series), web export only. */
+export async function ingestSahieTimeline(only?: string[]) {
+  for (const e of loadRegistry().filter((e) => e.measure.kind === "sahie" && e.timeline && (!only || only.includes(e.id)))) {
+    for (const s of timelineStops(e)) {
+      if (s.isDefault) continue;
+      const rows = await sahieYear(+s.id);
+      for (const level of ["state", "county"] as const) if (e.geographyLevels.includes(level)) writeStopValues(e.id, s.id, level, rows[level]);
+    }
+  }
 }
