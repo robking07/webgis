@@ -27,7 +27,7 @@ import { ingestFeatures } from "./features.ts";
 import { ingestVmt } from "./vmt.ts";
 import { ingestCejst } from "./cejst.ts";
 import { ingestDdp287g } from "./ddp287g.ts";
-import { ingestTri } from "./tri.ts";
+import { ingestTri, ingestTriTimeline } from "./tri.ts";
 import { ingestFemaDeclarations } from "./femadisasters.ts";
 import { ingestLead } from "./lead.ts";
 import { ingestFoodAccess } from "./foodaccess.ts";
@@ -83,7 +83,7 @@ const steps: Record<string, () => Promise<void> | void> = {
   // Year control (D-36): earlier periods, written to the web export only. ACS first (FARS
   // uses its 2015–2019 population).
   timeline: async () => { await ingestAcsTimeline(only); await ingestFarsTimeline(only); await ingestClimdivTimeline(only);
-    await ingestNbiTimeline(only); await ingestLodesTimeline(only); await ingestOverdoseTimeline(only); exportRegistry(allowDrop); },
+    await ingestNbiTimeline(only); await ingestLodesTimeline(only); await ingestOverdoseTimeline(only); await ingestTriTimeline(only); exportRegistry(allowDrop); },
   "publish-tiles": () => publishTiles(only),
   // S2: every value file, names, search and tract geography live on R2 beside the tiles, not in
   // the site's folder. `publish-data` uploads all of it (values/, geo/, details/); only changed files go up.

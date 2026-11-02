@@ -1,4 +1,6 @@
 import { describe, expect, it } from "vitest";
+import { timelineStops } from "@webgis/registry/timeline";
+import type { DatasetEntry } from "@webgis/registry";
 import { facilityFips, triTotals, triValues } from "./tri.ts";
 
 const facilities = [
@@ -38,5 +40,13 @@ describe("tri", () => {
     expect(v.get("27053")!.value).toBe(2);
     expect(v.get("27001")!.value).toBe(0);
     expect(v.get("09110")!.value).toBeNull();
+  });
+});
+
+describe("timeline", () => {
+  it("is one stop per reporting year, the headline year last", () => {
+    const e = { measure: { kind: "tri", year: 2024 }, timeline: { from: 1987, to: 2024, step: 1 } } as DatasetEntry;
+    const stops = timelineStops(e);
+    expect([stops.length, stops[0].id, stops.filter((s) => s.isDefault).map((s) => s.id)]).toEqual([38, "1987", ["2024"]]);
   });
 });

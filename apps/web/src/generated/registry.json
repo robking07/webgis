@@ -14621,7 +14621,7 @@
   "id": "tri_onsite_releases",
   "title": "Toxic chemical releases (pounds per square mile)",
   "phrase": "toxic chemical releases per square mile",
-  "description": "Pounds of toxic chemicals that industrial facilities reported releasing at their own sites in 2024 (into the air, water, underground or onto land), per square mile of land. Pounds released are not the same as people's exposure or health risk.",
+  "description": "Pounds of toxic chemicals that industrial facilities reported releasing at their own sites each year (into the air, water, underground or onto land), per square mile of land. Step back through time to see each reporting year since 1987. Pounds released are not the same as people's exposure or health risk.",
   "category": "Environment and climate",
   "subcategory": "Toxic releases",
   "tags": [
@@ -14657,10 +14657,15 @@
    "file": "tri-2024-us.csv"
   },
   "modelInputs": [],
-  "coverageNote": "Only larger facilities in covered industries report (generally 10 or more employees and above set chemical amounts), so a county shown at zero has no reporting facility, not no pollution. Amounts are the facilities' own estimates. Metal mines account for nearly half of all pounds, mostly waste rock placed on land at the mine. Pounds say nothing about how toxic a chemical is or whether anyone is exposed to it. Connecticut counties show no data (facility records use its pre-2022 counties).",
+  "coverageNote": "Only larger facilities in covered industries report (generally 10 or more employees and above set chemical amounts), so a county shown at zero has no reporting facility, not no pollution. Amounts are the facilities' own estimates. Metal mines account for nearly half of all pounds, mostly waste rock placed on land at the mine. Pounds say nothing about how toxic a chemical is or whether anyone is exposed to it. Connecticut counties show no data (facility records use its pre-2022 counties). Read changes over time with care: the list of reportable chemicals and industries grew, so a jump is often a rule change, not more pollution. About 286 chemicals were added for 1995; metal mines, coal mines, power plants and some other industries began reporting in 1998 (metal mines are now nearly half of all pounds); and in 2000 and 2001 the reporting thresholds for lead and other persistent, bioaccumulative chemicals dropped sharply, bringing in many small releasers. PFAS were added from 2020. Each year is placed in today's counties by the facility's current county. 1987, the first year, is inflated by one facility that reported 5.2 billion pounds.",
   "facets": [],
   "library": false,
   "excludeFromInsights": true,
+  "timeline": {
+   "from": 1987,
+   "to": 2024,
+   "step": 1
+  },
   "learnMore": [],
   "terms": [
    "toxics-release-inventory",
