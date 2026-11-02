@@ -1055,7 +1055,7 @@ for (const vp of ["phone", "laptop"]) {
     const slider = panel.locator("input[type=range]");
     await slider.scrollIntoViewIfNeeded(); // the card's Why link makes the panel shorter, so the slider can sit below its fold
     const notches = await panel.locator("[data-notch]").count();
-    expect(notches === 10, `expected 10 notches (2015-2024), got ${notches}`);
+    expect(notches === 50, `expected 50 notches (1975-2024), got ${notches}`);
     const bg = await slider.evaluate((el) => getComputedStyle(el, "::-webkit-slider-runnable-track").backgroundImage);
     expect(bg === "none", `track has a fill: ${bg}`);
     const urlYear = () => new URL(page.url()).searchParams.get("t");
@@ -1071,14 +1071,14 @@ for (const vp of ["phone", "laptop"]) {
     await wait(300);
     expect((await shown()) === "2018", `after tap: ${await shown()}`);
     // Click midway between two notches: it still lands on one.
-    const a = await box('[data-notch="2020"]'), b = await box('[data-notch="2021"]');
+    const a = await box('[data-notch="2010"]'), b = await box('[data-notch="2011"]');
     await page.mouse.click((a.x + b.x) / 2 + a.width / 2 + 1, sb.y + sb.height / 2);
     await wait(300);
-    expect(/^202[01]$/.test(await shown()), `between notches: ${await shown()}`);
+    expect(/^201[01]$/.test(await shown()), `between notches: ${await shown()}`);
     // Drag the thumb to 2024 end.
     const tb = await slider.boundingBox();
     const cur = await slider.evaluate((el) => +el.value);
-    const thumbX = tb.x + 8 + (tb.width - 16) * (cur / 9);
+    const thumbX = tb.x + 8 + (tb.width - 16) * (cur / 49);
     await page.mouse.move(thumbX, tb.y + tb.height / 2);
     await page.mouse.down();
     await page.mouse.move(tb.x + tb.width + 20, tb.y + tb.height / 2, { steps: 8 });
@@ -1099,7 +1099,7 @@ for (const vp of ["phone", "laptop"]) {
     await wait(200);
     expect((await shown()) === "2023", `after Next: ${await shown()}`);
     const sliderAt = await slider.evaluate((el) => +el.value);
-    expect(sliderAt === 8, `thumb index ${sliderAt}`);
+    expect(sliderAt === 48, `thumb index ${sliderAt}`);
     // The map, legend and URL agree with the notch.
     if (page.isPhone) await page.getByRole("button", { name: "Apply", exact: true }).click();
     else await page.getByRole("button", { name: "Close map options" }).click();
