@@ -4,7 +4,8 @@
 import { readFileSync } from "node:fs";
 import { loadRegistry } from "@webgis/registry/load";
 import { cached, db, FIPS_RENAMES, log, splitCsv, STATES } from "./util.ts";
-import { landArea, registerDataset, writeValues, type Value } from "./values.ts";
+import { landArea, registerDataset, writeStopValues, writeValues, type Value } from "./values.ts";
+import { timelineStops } from "@webgis/registry/timeline";
 import { sumStates, usArea, writeCounts, writeUs, type Counts } from "./counts.ts";
 
 const FACILITY_API = "https://data.epa.gov/efservice/tri_facility";
@@ -112,6 +113,28 @@ export async function ingestTri(only?: string[]) {
       const rows = new Map([...values].map(([g, v]): [string, Counts] => [g, [v.value == null ? null : Math.round(t[level].get(g) ?? 0), null, null, null]]));
       writeCounts(level, new Map([[e.id, rows]]));
       if (level === "state") { const us = sumStates(rows); writeUs(e.id, null, { value: us[0] == null ? null : us[0] / usArea(areas), moe: null }, us); }
+    }
+  }
+  await pool.end();
+}
+
+/** Year control (D-36): one Basic Data File per earlier reporting year (1987 on), web export only. Counties are today's
+ *  (a facility's code is its current county), so Connecticut shows no data in every year, as in the headline. */
+export async function ingestTriTimeline(only?: string[]) {
+  const entries = loadRegistry().filter((e) => e.measure.kind === "tri" && e.timeline && (!only || only.includes(e.id)));
+  if (!entries.length) return;
+  const pool = db();
+  const fips = await fetchFacilityFips();
+  const { rows } = await pool.query<{ geoid: string; name: string }>("select geoid, name from public.geographies where level = 'county'");
+  const counties = new Map(rows.map((r) => [r.geoid, r.name]));
+  for (const e of entries) {
+    if (e.measure.kind !== "tri") continue;
+    const { url, file, year } = e.measure;
+    for (const s of timelineStops(e)) {
+      if (s.isDefault) continue;
+      const t = triTotals(readFileSync(await cached(url.replace(`${year}_US`, `${s.id}_US`), file.replace(String(year), s.id)), "utf8"), fips, counties);
+      log(e.id, `${s.id}: ${Math.round(t.pounds).toLocaleString()} lb on site from ${t.facilities.toLocaleString()} facilities`);
+      for (const level of ["state", "county"] as const) if (e.geographyLevels.includes(level)) writeStopValues(e.id, s.id, level, triValues(t[level], await landArea(pool, level)));
     }
   }
   await pool.end();
