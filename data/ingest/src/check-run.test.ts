@@ -20,8 +20,8 @@ describe("checkRun", () => {
     expect(checkRun(["timeline"], ["asthma"], entries)).toHaveLength(1);
     expect(checkRun(["acs-bg"], ["asthma"], entries)).toHaveLength(1);
   });
-  it("rejects fars' timeline, steps the runner can't do, unknown ids and empty inputs", () => {
-    expect(checkRun(["timeline"], ["traffic_deaths"], entries)).toHaveLength(1);
+  it("rejects steps the runner can't do, unknown ids and empty inputs", () => {
+    expect(checkRun(["timeline"], ["traffic_deaths"], entries)).toEqual([]);
     expect(checkRun(["tiles"], ["asthma"], entries)[0]).toMatch(/can't run on GitHub/);
     expect(checkRun(["places"], ["nope; rm"], entries)[0]).toMatch(/isn't a dataset id/);
     expect(checkRun([], [], entries)).toHaveLength(2);

@@ -15,10 +15,10 @@ updateCadence: annual
 vintage: "2020–2024 average"
 geographyLevels: [state, county]
 unit: per_100k
-universe: traffic deaths per resident, counted where the crash happened (rate uses ACS population)
+universe: traffic deaths per resident, counted where the crash happened (rate uses ACS population; single years before 2020 use Census population estimates)
 modelInputs: [population_density]
-coverageNote: Counted where crashes happened, divided by residents, so counties with heavy through-traffic look high. Connecticut counties use pre-2022 codes and show no data.
+coverageNote: Counted where crashes happened, divided by residents, so counties with heavy through-traffic look high. Connecticut counties use pre-2022 codes and show no data. Single years back to 1975 are available; Alaska counties show no data before 1986 (the old borough codes do not match today's).
 terms: [per-100k, quantile-classes]
 measure: { kind: fars, years: [2020, 2024], perPopulation: 100000 }
-timeline: { from: 2015, to: 2024 }
+timeline: { from: 1975, to: 2024 }
 symbology: { ramp: purples, classification: quantile, classes: 5 }

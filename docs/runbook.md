@@ -234,8 +234,7 @@ dashboard, prefix `raw/`). It is public domain source data, so the copies are pu
 Local runs keep theirs in `data/cache/` already. About 0.1 to 1 GB per run, a cent or less a month.
 
 **Not on GitHub yet:** anything needing GDAL or tippecanoe (geographies, tiles, features,
-census2020, ddp287g, vmt, label-mask, mpo; `counts` for non-ACS sources); `timeline` for `fars` (it needs
-`population_density`'s 2019 stop on disk); and anything that changes committed files (a new
+census2020, ddp287g, vmt, label-mask, mpo; `counts` for non-ACS sources); and anything that changes committed files (a new
 dataset, level or timeline stop, insights). Those still run locally, through a PR (a local real
 loss uses `ALLOW_TRACT_DROP=1`).
 
