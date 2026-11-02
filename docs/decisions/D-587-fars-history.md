@@ -1,4 +1,4 @@
-# D-587: Traffic deaths step back to 1975
+# D-587 · Traffic deaths step back to 1975
 
 PR #487, part of #479. `traffic_fatalities` timeline is now 1975 to 2024 (single years; the
 2020 to 2024 average stays the default), state and county.
