@@ -23,7 +23,7 @@
   "id": "acs-5-year",
   "term": "ACS 5-year estimates",
   "short": "Census survey results pooled over five years, so even small places have enough responses to be reliable.",
-  "long": "The American Community Survey asks a sample of households every year. Combining five years of responses gives estimates for every county and census tract, at the cost of describing a period (for example 2020–2024) rather than a single year. Small areas have fewer responses, so their estimates are less precise; that's what the margin of error shows.",
+  "long": "The American Community Survey asks a sample of households every year. Combining five years of responses gives estimates for every county and census tract, at the cost of describing a period (for example 2020–2024) rather than a single year. Small areas have fewer responses, so their estimates are less precise; that's what the margin of error shows. The 2005–2009 period is weighted to 2000 census population totals (later periods to 2010 or 2020) and first counted people in group quarters, such as dorms and nursing homes, in 2006, so small shifts at that stop can come from the method.",
   "source": "https://www.census.gov/programs-surveys/acs/guidance/estimates.html"
  },
  {
