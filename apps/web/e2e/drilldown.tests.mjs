@@ -22,7 +22,7 @@ export default function drilldownTests({ test, expect, immerse, mapIdle, tapLonL
     const focused = (n) => page.waitForFunction((n) => (new URL(location.href).searchParams.get("in") ?? "").length === n, n, { timeout: 8000 });
     await tapLonLat(page, ...lonlat, true);
     // A tap that lands before the level's tiles are queryable hits nothing (slow CI): tap again once.
-    await focused(want).catch(async () => { await tapLonLat(page, ...lonlat, true); await focused(want).catch((e) => { throw new Error(`${level}: in=${inParam(page)}, wanted ${want} digits. ${e.message}`); }); });
+    await focused(want).catch(async () => { await tapLonLat(page, ...lonlat, true); await focused(want); });
     await mapIdle(page);
     const g = inParam(page);
     const kids = await drawn(page, level);

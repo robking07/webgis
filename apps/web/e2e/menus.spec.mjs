@@ -143,13 +143,7 @@ async function tapLonLat(page, lon, lat, double = false) {
 const HENNEPIN = [-93.4752, 45.0061];
 async function tapAt(page, x, y, double = false) {
   if (!page.isPhone) await page.mouse.click(x, y, { clickCount: double ? 2 : 1 });
-  else if (!double) await page.touchscreen.tap(x, y);
-  else {
-    // Both taps in one burst: awaiting each round trip can pass the app's 500 ms double-tap window on slow CI.
-    const cdp = await page.context().newCDPSession(page), tp = [{ x, y, id: 1 }];
-    await Promise.all([1, 2].flatMap(() => [cdp.send("Input.dispatchTouchEvent", { type: "touchStart", touchPoints: tp }), cdp.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] })]));
-    await cdp.detach();
-  }
+  else for (let i = double ? 2 : 1; i > 0; i--) await page.touchscreen.tap(x, y);
 }
 
 // ── Measuring ──────────────────────────────────────────────────────────────────
