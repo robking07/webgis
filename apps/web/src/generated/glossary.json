@@ -193,6 +193,13 @@
   "source": "https://aspe.hhs.gov/topics/poverty-economic-mobility/poverty-guidelines"
  },
  {
+  "id": "disaster-declaration",
+  "term": "Major disaster declaration",
+  "short": "The President's finding that a disaster is too big for a state or tribe to handle alone, which opens up federal aid.",
+  "long": "A governor or tribal leader asks, FEMA reviews the damage, and the President decides. The declaration lists the counties that qualify for aid to rebuild public facilities, help households and reduce future risk. Smaller emergency declarations (often before a hurricane lands) and fire management declarations are separate and aren't counted here. More declarations can mean more damage, but also a state that asks more often or costs that clear federal thresholds more easily, so it isn't a direct measure of losses.",
+  "source": "https://www.fema.gov/disaster/how-declared"
+ },
+ {
   "id": "fema-nri",
   "term": "FEMA National Risk Index",
   "short": "FEMA's nationwide model of how much 18 natural hazards are expected to cost each county and census tract, and how well people there could cope.",

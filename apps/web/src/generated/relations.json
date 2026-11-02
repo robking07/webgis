@@ -256,6 +256,19 @@
     }
    ]
   },
+  "fema_major_disasters": {
+   "group": "Environment and climate",
+   "links": [
+    {
+     "id": "nri_expected_loss_per_person",
+     "why": "Disasters actually declared next to FEMA's estimate of yearly losses."
+    },
+    {
+     "id": "nri_risk_score",
+     "why": "Past federal disaster declarations next to FEMA's overall risk score."
+    }
+   ]
+  },
   "nri_coastal_flood_loss": {
    "group": "Environment and climate",
    "links": []
@@ -270,6 +283,10 @@
     {
      "id": "nri_risk_score",
      "why": "Expected loss is the main part of FEMA's risk score."
+    },
+    {
+     "id": "fema_major_disasters",
+     "why": "Disasters actually declared next to FEMA's estimate of yearly losses."
     }
    ]
   },
@@ -296,6 +313,10 @@
     {
      "id": "nri_expected_loss_per_person",
      "why": "Expected loss is the main part of FEMA's risk score."
+    },
+    {
+     "id": "fema_major_disasters",
+     "why": "Past federal disaster declarations next to FEMA's overall risk score."
     }
    ]
   },
