@@ -14585,7 +14585,7 @@
   ],
   "areaLevels": [],
   "unit": "per_100k",
-  "universe": "traffic deaths per resident, counted where the crash happened (rate uses ACS population)",
+  "universe": "traffic deaths per resident, counted where the crash happened (rate uses ACS population; single years before 2020 use Census population estimates)",
   "measure": {
    "kind": "fars",
    "years": [
@@ -14597,12 +14597,12 @@
   "modelInputs": [
    "population_density"
   ],
-  "coverageNote": "Counted where crashes happened, divided by residents, so counties with heavy through-traffic look high. Connecticut counties use pre-2022 codes and show no data.",
+  "coverageNote": "Counted where crashes happened, divided by residents, so counties with heavy through-traffic look high. Connecticut counties use pre-2022 codes and show no data. Single years back to 1975 are available; Alaska counties show no data before 1986 (the old borough codes do not match today's).",
   "facets": [],
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 2015,
+   "from": 1975,
    "to": 2024,
    "step": 1
   },
