@@ -30,7 +30,7 @@ export function stopNote(d: Dataset, s: Stop, level: GeoLevel): string | null {
   if (s.boundaries && level === "tract") notes.push("2010 tract boundaries");
   if (s.boundaries && level === "county") notes.push("Connecticut shows its old counties");
   if (d.measure.kind === "fars") notes.push("One year: rates in small counties swing a lot");
-  if (d.measure.kind === "climdiv") notes.push("One year, not the long-term normal");
+  if (d.measure.kind === "climdiv") notes.push(s.span ? "A multi-year average; early decades come from far fewer weather stations" : "One year, not the long-term normal");
   notes.push("Colors use the same breaks as the default view, so they show change");
   return notes.join(". ");
 }
