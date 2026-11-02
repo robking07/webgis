@@ -10,21 +10,37 @@ import { unzipEntry } from "./zip.ts";
 
 type Acc = Record<"state" | "county", Map<string, [number, number, number]>>;
 
+const RATINGS = ["DECK_COND_058", "SUPERSTRUCTURE_COND_059", "SUBSTRUCTURE_COND_060", "CULVERT_COND_062"];
+const ITEMS = [...RATINGS, "STRUCTURE_LEN_MT_049", "DECK_WIDTH_MT_052", "APPR_WIDTH_MT_032"];
+
+/** FHWA's bridge condition and deck area from the inventory items, for years before the BRIDGE_CONDITION and
+ *  DECK_AREA fields: lowest of items 58, 59, 60, 62 (7+ good, 5-6 fair, 4 or below poor; "N" skipped), and
+ *  item 49 x item 52, or x item 32 when 52 is 0 (culverts). Matches FHWA's fields on all 617,084 2019 bridges. */
+export function conditionAndArea(H: (k: string) => string): [string, number] {
+  const r = RATINGS.map(H).filter((x) => /^\d$/.test(x)).map(Number);
+  const low = r.length ? Math.min(...r) : null;
+  const width = Number(H("DECK_WIDTH_MT_052")) || 0;
+  return [low == null ? "" : low >= 7 ? "G" : low >= 5 ? "F" : "P",
+    (Number(H("STRUCTURE_LEN_MT_049")) || 0) * (width > 0 ? width : Number(H("APPR_WIDTH_MT_032")) || 0)];
+}
+
 /** [in condition, total weight, bridge count] by state and county for one inventory year. */
 async function tally(e: DatasetEntry, year: number): Promise<Acc> {
   if (e.measure.kind !== "nbi") throw new Error("not nbi");
   const { weight, condition } = e.measure;
-  const zip = await cached(`https://www.fhwa.dot.gov/bridge/nbi/${year}hwybronefiledel.zip`);
+  // FHWA's one-file highway bridge download is named differently before 2018.
+  const zip = await cached(`https://www.fhwa.dot.gov/bridge/nbi/${year}${year >= 2018 ? "hwybronefiledel" : "hwybronlyonefile"}.zip`);
   const text = await unzipEntry(zip, /\.txt$/i);
   const acc: Acc = { state: new Map(), county: new Map() };
-  let header: string[] | null = null, rows = 0;
+  let header: string[] | null = null, fhwa = false, rows = 0;
   for (const line of text.split(/\r?\n/)) {
     if (!line) continue;
     const f = splitCsv(line).map((x) => x.trim());
     if (!header) {
       header = f;
-      // BRIDGE_CONDITION and DECK_AREA (FHWA's own fields) start with the 2019 inventory.
-      for (const k of ["BRIDGE_CONDITION", "DECK_AREA"]) if (!header.includes(k)) throw new Error(`NBI ${year}: no ${k} column`);
+      // BRIDGE_CONDITION and DECK_AREA (FHWA's own fields) start with the 2019 inventory; before that, from the items.
+      fhwa = header.includes("BRIDGE_CONDITION") && header.includes("DECK_AREA");
+      for (const k of fhwa ? [] : ITEMS) if (!header.includes(k)) throw new Error(`NBI ${year}: no ${k} column`);
       continue;
     }
     const H = (k: string) => f[header!.indexOf(k)];
@@ -32,8 +48,9 @@ async function tally(e: DatasetEntry, year: number): Promise<Acc> {
     const st = H("STATE_CODE_001").padStart(2, "0");
     const rawCty = st + H("COUNTY_CODE_003").padStart(3, "0");
     const cty = FIPS_RENAMES[rawCty] ?? rawCty;
-    const w = weight === "deckArea" ? Number(H("DECK_AREA")) || 0 : 1;
-    const hit = H("BRIDGE_CONDITION") === condition ? w : 0;
+    const [cond, area] = fhwa ? [H("BRIDGE_CONDITION"), Number(H("DECK_AREA")) || 0] : conditionAndArea(H);
+    const w = weight === "deckArea" ? area : 1;
+    const hit = cond === condition ? w : 0;
     for (const [lvl, g] of [["state", st], ["county", cty]] as const) {
       const a = acc[lvl].get(g) ?? [0, 0, 0];
       a[0] += hit; a[1] += w; a[2] += 1;
@@ -68,7 +85,7 @@ export async function ingestNbi(only?: string[]) {
 }
 
 /** Earlier inventories (D-36), web export only. NBI county codes follow the year's own
- *  geography, so the 2019 inventory uses 2019 boundaries. */
+ *  geography, so inventories before 2020 use 2019 boundaries (older codes via FIPS_RENAMES). */
 export async function ingestNbiTimeline(only?: string[]) {
   const entries = loadRegistry().filter((e) => e.measure.kind === "nbi" && e.timeline && (!only || only.includes(e.id)));
   for (const e of entries) {
