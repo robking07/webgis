@@ -7,6 +7,7 @@ const entry = (id: string, kind: string, extra: object = {}) =>
 const entries = [
   entry("pct_poverty", "acs5", { timeline: { from: 2014, to: 2024, step: 5 }, geographyLevels: ["county", "block_group"] }),
   entry("traffic_deaths", "fars", { timeline: { from: 2015, to: 2024, step: 1 } }),
+  entry("ozone_8hr", "airquality", { timeline: { from: 2005, to: 2025, step: 1 } }),
   entry("asthma", "places"),
   entry("tip_projects", "features"),
 ];
@@ -22,6 +23,7 @@ describe("checkRun", () => {
   });
   it("rejects steps the runner can't do, unknown ids and empty inputs", () => {
     expect(checkRun(["timeline"], ["traffic_deaths"], entries)).toEqual([]);
+    expect(checkRun(["timeline"], ["ozone_8hr"], entries)).toEqual([]);
     expect(checkRun(["tiles"], ["asthma"], entries)[0]).toMatch(/can't run on GitHub/);
     expect(checkRun(["places"], ["nope; rm"], entries)[0]).toMatch(/isn't a dataset id/);
     expect(checkRun([], [], entries)).toHaveLength(2);

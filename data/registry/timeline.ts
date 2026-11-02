@@ -74,6 +74,10 @@ export function timelineStops(e: DatasetEntry): TimelineStop[] {
       const { year } = e.measure;
       return years.map((y) => ({ id: String(y), label: String(y), isDefault: y === year, ...pre2020(y) }));
     }
+    case "airquality": { // 3-year design values, named for the last year; the headline is the registry entry's own period
+      const now = +e.measure.period.split("-")[1];
+      return years.map((y) => ({ id: String(y), label: `${y - 2}–${y}`, isDefault: y === now, ...pre2020(y) }));
+    }
     case "overdose": { // 12 months ending in endMonth of each year; the headline is the latest
       const { endYear, endMonth } = e.measure;
       const label = (y: number) => (endMonth === 12 ? String(y) : `${["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][endMonth - 1]} ${y}`);
