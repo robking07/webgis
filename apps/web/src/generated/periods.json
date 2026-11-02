@@ -137,6 +137,114 @@
   ]
  },
  "bridges_poor_condition": {
+  "1992": [
+   "county",
+   "state"
+  ],
+  "1993": [
+   "county",
+   "state"
+  ],
+  "1994": [
+   "county",
+   "state"
+  ],
+  "1995": [
+   "county",
+   "state"
+  ],
+  "1996": [
+   "county",
+   "state"
+  ],
+  "1997": [
+   "county",
+   "state"
+  ],
+  "1998": [
+   "county",
+   "state"
+  ],
+  "1999": [
+   "county",
+   "state"
+  ],
+  "2000": [
+   "county",
+   "state"
+  ],
+  "2001": [
+   "county",
+   "state"
+  ],
+  "2002": [
+   "county",
+   "state"
+  ],
+  "2003": [
+   "county",
+   "state"
+  ],
+  "2004": [
+   "county",
+   "state"
+  ],
+  "2005": [
+   "county",
+   "state"
+  ],
+  "2006": [
+   "county",
+   "state"
+  ],
+  "2007": [
+   "county",
+   "state"
+  ],
+  "2008": [
+   "county",
+   "state"
+  ],
+  "2009": [
+   "county",
+   "state"
+  ],
+  "2010": [
+   "county",
+   "state"
+  ],
+  "2011": [
+   "county",
+   "state"
+  ],
+  "2012": [
+   "county",
+   "state"
+  ],
+  "2013": [
+   "county",
+   "state"
+  ],
+  "2014": [
+   "county",
+   "state"
+  ],
+  "2015": [
+   "county",
+   "state"
+  ],
+  "2016": [
+   "county",
+   "state"
+  ],
+  "2017": [
+   "county",
+   "state"
+  ],
+  "2018": [
+   "county",
+   "state"
+  ],
   "2019": [
    "county",
    "state"
@@ -312,6 +420,46 @@
   ]
  },
  "job_density": {
+  "2002": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2003": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2004": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2005": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2006": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2007": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2008": [
+   "county",
+   "state",
+   "tract"
+  ],
+  "2009": [
+   "county",
+   "state",
+   "tract"
+  ],
   "2010": [
    "county",
    "state",
@@ -2288,6 +2436,72 @@
    "county",
    "state"
   ],
+  "2008": [
+   "county",
+   "state"
+  ],
+  "2009": [
+   "county",
+   "state"
+  ],
+  "2010": [
+   "county",
+   "state"
+  ],
+  "2011": [
+   "county",
+   "state"
+  ],
+  "2012": [
+   "county",
+   "state"
+  ],
+  "2013": [
+   "county",
+   "state"
+  ],
+  "2014": [
+   "county",
+   "state"
+  ],
+  "2015": [
+   "county",
+   "state"
+  ],
+  "2016": [
+   "county",
+   "state"
+  ],
+  "2017": [
+   "county",
+   "state"
+  ],
+  "2018": [
+   "county",
+   "state"
+  ],
+  "2019": [
+   "county",
+   "state"
+  ],
+  "2020": [
+   "county",
+   "state"
+  ],
+  "2021": [
+   "county",
+   "state"
+  ],
+  "2022": [
+   "county",
+   "state"
+  ],
+  "2023": [
+   "county",
+   "state"
+  ]
+ },
+ "uninsured_under_65": {
   "2008": [
    "county",
    "state"
