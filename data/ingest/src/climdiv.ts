@@ -78,7 +78,12 @@ export async function ingestClimdivTimeline(only?: string[]) {
     for (const s of timelineStops(e)) {
       if (s.isDefault) continue;
       const values = new Map<string, Value>();
-      for (const [g, byYear] of annual) { const v = byYear.get(+s.id); if (v != null) values.set(g, { value: v, moe: null }); }
+      const [from, to] = s.span ?? [+s.id, +s.id];
+      for (const [g, byYear] of annual) {
+        const arr = [...byYear].filter(([y]) => y >= from && y <= to).map(([, v]) => v);
+        // Same 80% rule as the normal; a single year needs its one value.
+        if (arr.length && arr.length >= (to - from + 1) * 0.8) values.set(g, { value: arr.reduce((a, b) => a + b, 0) / arr.length, moe: null });
+      }
       if (!values.size) { log(e.id, `${s.id}: no complete year in nClimDiv yet, skipped`); continue; }
       writeStopValues(e.id, s.id, "county", values);
     }

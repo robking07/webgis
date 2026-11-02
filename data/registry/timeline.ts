@@ -14,6 +14,8 @@ export interface TimelineStop {
   /** County and tract boundaries the values are keyed to. "2019" = 2010 tracts and the
    *  counties before Connecticut's 2022 planning regions; omitted = the current tiles. */
   boundaries?: "2019";
+  /** Set when the stop averages several years (first, last) rather than naming one. */
+  span?: [number, number];
 }
 
 /** Levels that have a boundary file for each older vintage on R2 (`county-2019.pmtiles`, ...).
@@ -56,8 +58,15 @@ export function timelineStops(e: DatasetEntry): TimelineStop[] {
     }
     case "climdiv": {
       const [a, b] = e.measure.years;
+      // Before the normals period, 10-year averages ending in a-1, a-11, ... (single years are noisy
+      // weather, and the early network was thin); the oldest may be short. Single years from `a` on.
+      const dated = years.filter((y) => y >= a || (a - 1 - y) % 10 === 0).map((y) => {
+        if (y >= a) return { id: String(y), label: String(y), isDefault: false };
+        const first = Math.max(years[0], y - 9);
+        return { id: String(y), label: `${first}–${y} average`, isDefault: false, span: [first, y] as [number, number] };
+      });
       return [
-        ...years.map((y) => ({ id: String(y), label: String(y), isDefault: false })),
+        ...dated,
         { id: "normal", label: `${a}–${b} normal`, isDefault: true },
       ];
     }

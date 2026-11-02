@@ -15,9 +15,9 @@ updateCadence: static
 vintage: "1991–2020 average"
 geographyLevels: [county]
 universe: county area (area-weighted grid average)
-coverageNote: Contiguous U.S. and Alaska; Hawaii has no county series. Connecticut uses pre-2022 county codes in nClimDiv, so it shows no data.
+coverageNote: Contiguous U.S. and Alaska; Hawaii has no county series. Connecticut uses pre-2022 county codes in nClimDiv, so it shows no data. Years before 1991 reach back to 1895 as 10-year averages (the first covers 1895–1900); early decades are estimated from far fewer weather stations (NOAA nClimGrid method, 2014), so treat early county differences with caution.
 unit: deg_f
 terms: [climate-normal, quantile-classes]
 measure: { kind: climdiv, element: tmin, months: [1], stat: mean, years: [1991, 2020] }
-timeline: { from: 1991, to: 2025 }
+timeline: { from: 1895, to: 2025 }
 symbology: { ramp: blues, classification: quantile, classes: 5 }
