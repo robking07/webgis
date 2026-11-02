@@ -168,7 +168,8 @@ A dataset refresh can run on GitHub instead of Robbie's machine: `.github/workfl
 **Run one:** GitHub, Actions, "Data run", "Run workflow" (branch `main`). Fill in:
 
 - **steps**, run in order: e.g. `acs`, or `acs timeline`. Allowed: acs, acs-bg, lodes, places,
-  climdiv, nbi, fars, airquality, overdose, cejst, tri, lead, food-access, nri, svi, timeline.
+  climdiv, nbi, fars, airquality, overdose, cejst, tri, lead, food-access, nri, svi, fema-disasters
+  (its decade stops come with it), timeline.
 - **datasets**: the ids, e.g. `pct_poverty median_household_income`. Every step must load every
   id (`acs` with a FARS id is refused before anything runs; `data/ingest/src/check-run.ts`).
 
