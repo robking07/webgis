@@ -566,7 +566,7 @@
    "name": "FHWA National Bridge Inventory",
    "shortName": "FHWA",
    "url": "https://www.fhwa.dot.gov/bridge/nbi.cfm",
-   "citation": "Federal Highway Administration, National Bridge Inventory, 2025 highway bridge file"
+   "citation": "Federal Highway Administration, National Bridge Inventory, 1992–2025 highway bridge files"
   },
   "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
   "updateCadence": "annual",
@@ -586,12 +586,12 @@
    "minBridges": 10
   },
   "modelInputs": [],
-  "coverageNote": "Counties with fewer than 10 bridges show no data. Connecticut's NBI records still use pre-2022 counties, so CT counties show no data.",
+  "coverageNote": "Counties with fewer than 10 bridges show no data. Connecticut's NBI records still use pre-2022 counties, so CT counties show no data from 2020 on (earlier years use the counties of the time). FHWA added its condition and deck area fields in 2019; for 1992 to 2018 they are worked out from the same inspection ratings and dimensions, the way FHWA does.",
   "facets": [],
   "library": false,
   "excludeFromInsights": false,
   "timeline": {
-   "from": 2019,
+   "from": 1992,
    "to": 2025,
    "step": 1
   },
@@ -14773,7 +14773,7 @@
    "name": "U.S. Census Bureau, Small Area Health Insurance Estimates (SAHIE)",
    "shortName": "Census Bureau",
    "url": "https://www.census.gov/programs-surveys/sahie.html",
-   "citation": "U.S. Census Bureau, Small Area Health Insurance Estimates (SAHIE), 2024 estimates (released August 2026)"
+   "citation": "U.S. Census Bureau, Small Area Health Insurance Estimates (SAHIE), 2008–2024 estimates (2024 released August 2026)"
   },
   "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
   "updateCadence": "annual",
@@ -14792,10 +14792,15 @@
   "modelInputs": [
    "pct_uninsured"
   ],
-  "coverageNote": "States and counties only. Kalawao County, Hawaii, has no estimate, and Puerto Rico is not covered.",
+  "coverageNote": "States and counties only. Kalawao County, Hawaii, has no estimate, and Puerto Rico is not covered. Years go back to 2008, when the estimates began using the American Community Survey; the Census Bureau advises against comparing them with its earlier estimates. Through 2021 the map uses the counties of the time, including Connecticut's old counties. Rates fell sharply in 2014, when the Affordable Care Act's marketplaces and Medicaid expansions began.",
   "facets": [],
   "library": false,
   "excludeFromInsights": false,
+  "timeline": {
+   "from": 2008,
+   "to": 2024,
+   "step": 1
+  },
   "learnMore": [],
   "terms": [
    "model-based-estimate",
