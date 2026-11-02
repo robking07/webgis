@@ -31,7 +31,9 @@ export function stopNote(d: Dataset, s: Stop, level: GeoLevel): string | null {
   if (s.boundaries && level === "county") notes.push("Connecticut shows its old counties");
   if (d.measure.kind === "fars") notes.push("One year: rates in small counties swing a lot");
   if (d.measure.kind === "climdiv") notes.push(s.span ? "A multi-year average; early decades come from far fewer weather stations" : "One year, not the long-term normal");
-  notes.push("Colors use the same breaks as the default view, so they show change");
+  // Decades aren't the same kind of period as the default count, so they can't show change.
+  if (d.measure.kind === "fema_declarations") notes.push(`Colors use the same breaks as ${timelineStops(d).find((t) => t.isDefault)?.label}`);
+  else notes.push("Colors use the same breaks as the default view, so they show change");
   return notes.join(". ");
 }
 
