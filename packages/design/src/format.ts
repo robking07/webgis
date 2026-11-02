@@ -1,6 +1,6 @@
 // Number formatting and legend rules, keyed by the `unit` field of a registry entry.
 
-export type Unit = "dollars" | "percent" | "minutes" | "count" | "per_sq_mi" | "ratio" | "years" | "deg_f" | "inches" | "per_100k" | "vehicles_per_day" | "miles_per_day" | "categories" | "agreements" | "percentile" | "ug_m3" | "ppm" | "degree_days";
+export type Unit = "dollars" | "percent" | "minutes" | "count" | "per_sq_mi" | "ratio" | "years" | "deg_f" | "inches" | "per_100k" | "vehicles_per_day" | "miles_per_day" | "categories" | "agreements" | "declarations" | "percentile" | "ug_m3" | "ppm" | "degree_days";
 
 const nf = (o: Intl.NumberFormatOptions) => new Intl.NumberFormat("en-US", o);
 /** Default decimals for the units whose precision depends on the value (margins reuse these). */
@@ -23,6 +23,7 @@ const FORMATTERS: Record<Unit, (v: number, d: number) => string> = {
   vehicles_per_day: (v) => `${nf({ notation: v >= 1000 ? "compact" : "standard", maximumFractionDigits: 1 }).format(v)} vehicles/day`,
   categories: (v) => `${nf({ maximumFractionDigits: 0 }).format(v)} ${Math.round(v) === 1 ? "category" : "categories"}`,
   agreements: (v) => `${nf({ maximumFractionDigits: 0 }).format(v)} ${Math.round(v) === 1 ? "agreement" : "agreements"}`,
+  declarations: (v) => `${nf({ maximumFractionDigits: 0 }).format(v)} ${Math.round(v) === 1 ? "declaration" : "declarations"}`,
   miles_per_day: (v) => `${nf({ maximumFractionDigits: 1 }).format(v)} mi/day`,
   per_100k: (v) => `${nf({ maximumFractionDigits: 1 }).format(v)} per 100k`,
   ug_m3: (v) => `${nf({ minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(v)} µg/m³`,
@@ -37,13 +38,13 @@ function ordinal(n: number) {
 }
 
 /** Units whose values are whole-number counts. */
-const INTEGER_UNITS = new Set<Unit>(["count", "categories", "agreements", "percentile"]);
+const INTEGER_UNITS = new Set<Unit>(["count", "categories", "agreements", "declarations", "percentile"]);
 
 /** Units in words, for profile pages and screen readers. */
 export const UNIT_LABEL: Record<Unit, string> = {
   dollars: "U.S. dollars", percent: "percent", minutes: "minutes", count: "count", per_sq_mi: "per square mile of land",
   ratio: "ratio", years: "years", deg_f: "degrees Fahrenheit", inches: "inches", per_100k: "per 100,000 residents",
-  vehicles_per_day: "vehicles per day", miles_per_day: "miles per day", categories: "burden categories exceeded", agreements: "active agreements", percentile: "percentile (national rank)",
+  vehicles_per_day: "vehicles per day", miles_per_day: "miles per day", categories: "burden categories exceeded", agreements: "active agreements", declarations: "disaster declarations", percentile: "percentile (national rank)",
   ug_m3: "micrograms per cubic meter of air", ppm: "parts per million",
   degree_days: "degree days (°F)",
 };
@@ -109,7 +110,7 @@ export function classLabels(breaks: number[], unit: Unit, opts?: { min?: number;
     const cls = [[lo0, breaks[0] - 1], ...breaks.slice(1).map((b, i) => [breaks[i], b - 1])];
     return [
       ...cls.map(([lo, hi]) => (lo >= hi ? f(hi) : `${n(lo)}–${f(hi)}`)),
-      `${n(breaks[breaks.length - 1])} or more ${f(breaks[breaks.length - 1]).replace(/^[\d,.]+\s*/, "").replace(/^agreement$/, "agreements").replace(/^category$/, "categories")}`,
+      `${n(breaks[breaks.length - 1])} or more ${f(breaks[breaks.length - 1]).replace(/^[\d,.]+\s*/, "").replace(/^agreement$/, "agreements").replace(/^declaration$/, "declarations").replace(/^category$/, "categories")}`,
     ];
   }
   // Whole-number steps of 1 (e.g. 0–8 categories): label each class with its exact value.

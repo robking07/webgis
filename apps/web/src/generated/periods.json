@@ -1518,5 +1518,35 @@
    "state",
    "tract"
   ]
+ },
+ "fema_major_disasters": {
+  "1960s": [
+   "state",
+   "county"
+  ],
+  "1970s": [
+   "state",
+   "county"
+  ],
+  "1980s": [
+   "state",
+   "county"
+  ],
+  "1990s": [
+   "state",
+   "county"
+  ],
+  "2000s": [
+   "state",
+   "county"
+  ],
+  "2010s": [
+   "state",
+   "county"
+  ],
+  "2020s": [
+   "state",
+   "county"
+  ]
  }
 }
