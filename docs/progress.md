@@ -36,7 +36,8 @@ and said "keep running". The lead works the list in `drafts/planner-depth-plan.m
   slow; re-run failed jobs (`gh run rerun <id> --failed`). A data step's file must be on R2 before the
   UI PR that reads it passes CI (commute flows went data first).
 - **Next steps:** keep running the planner-depth list; Robbie reacts live. The Phase 1 gate (Robbie uses
-  compare and change maps in a real conversation) hasn't run.
+  compare and change maps in a real conversation) was dropped 2026-11-03; the lead keeps building toward a
+  friends-and-colleagues share.
 - **Working rules that still hold:** Specials publish verbatim from `drafts/specials/` ("publish
   <name>": strip `<!-- -->` comments, move the numbers script to `apps/web/scripts/specials-numbers/`,
   run `check:special` and the build). Workers self-review with `ponytail-review`; the lead runs it
