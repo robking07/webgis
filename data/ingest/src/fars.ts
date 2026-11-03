@@ -115,6 +115,8 @@ export async function ingestFarsTimeline(only?: string[]) {
     return pops.get(level)!;
   };
   for (const e of entries) {
+    if (e.measure.kind !== "fars") continue;
+    const per = e.measure.perPopulation;
     for (const s of timelineStops(e)) {
       if (s.isDefault) continue;
       const y = +s.id;
@@ -122,7 +124,10 @@ export async function ingestFarsTimeline(only?: string[]) {
       log(e.id, `${y}: ${deaths.total.toLocaleString()} deaths`);
       for (const level of e.geographyLevels) {
         if (level === "tract") continue;
-        writeStopValues(e.id, s.id, level, rates(e, deaths, level, await popFor(level, y), 1, s.id));
+        const pop = await popFor(level, y), values = rates(e, deaths, level, pop, 1, s.id);
+        writeStopValues(e.id, s.id, level, values);
+        // U.S. rate: deaths ÷ residents, summed over the states; left out if any state has no rate.
+        if (level === "state") { const us = sumStates(farsCounts(values, deaths.state, pop, 1)); if (us[0] != null && us[2]) writeUs(e.id, s.id, { value: (us[0] / us[2]) * per, moe: null }, us); }
       }
     }
   }

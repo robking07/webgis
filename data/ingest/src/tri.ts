@@ -134,7 +134,12 @@ export async function ingestTriTimeline(only?: string[]) {
       if (s.isDefault) continue;
       const t = triTotals(readFileSync(await cached(url.replace(`${year}_US`, `${s.id}_US`), file.replace(String(year), s.id)), "utf8"), fips, counties);
       log(e.id, `${s.id}: ${Math.round(t.pounds).toLocaleString()} lb on site from ${t.facilities.toLocaleString()} facilities`);
-      for (const level of ["state", "county"] as const) if (e.geographyLevels.includes(level)) writeStopValues(e.id, s.id, level, triValues(t[level], await landArea(pool, level)));
+      for (const level of ["state", "county"] as const) {
+        if (!e.geographyLevels.includes(level)) continue;
+        const areas = await landArea(pool, level), values = triValues(t[level], areas);
+        writeStopValues(e.id, s.id, level, values);
+        if (level === "state") { const us = sumStates(new Map([...values].map(([g, v]): [string, Counts] => [g, [v.value == null ? null : Math.round(t.state.get(g) ?? 0), null, null, null]]))); writeUs(e.id, s.id, { value: us[0] == null ? null : us[0] / usArea(areas), moe: null }, us); }
+      }
     }
   }
   await pool.end();
