@@ -2,7 +2,10 @@
 import { loadRegistry, loadRelations } from "@webgis/registry/load";
 import { RAMPS, rampColors, type RampId } from "@webgis/design";
 import { existsSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 import { CHECKS } from "./library.ts";
+import { registryJsonDrift } from "./exportweb.ts";
+import { ROOT } from "./util.ts";
 
 const entries = loadRegistry();
 const problems: string[] = [];
@@ -19,6 +22,9 @@ for (const e of entries) {
 const checks = existsSync(CHECKS) ? (JSON.parse(readFileSync(CHECKS, "utf8")) as { maps: Record<string, { pass: boolean }> }).maps : {};
 const unchecked = entries.filter((e) => e.library && !checks[e.id]?.pass).map((e) => e.id);
 if (unchecked.length) problems.push(`${unchecked.length} Library map(s) without a passing check (run \`npm run ingest -- library\`): ${unchecked.join(", ")}`);
+// A stale committed registry.json reached the live site once (#467), so YAML edits must regenerate it (#499).
+const drift = registryJsonDrift(entries, readFileSync(join(ROOT, "apps/web/src/generated/registry.json"), "utf8"));
+if (drift) problems.push(drift);
 // relations.yaml (#156): every map listed, parts and links point at real maps.
 let relations = 0;
 try { relations = Object.keys(loadRelations(entries).maps).length; } catch (err) { problems.push((err as Error).message); }

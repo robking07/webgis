@@ -32,6 +32,13 @@ export function carryOver(old: Periods, periods: Periods, local: Set<string>) {
   for (const [id, stops] of Object.entries(old)) if (!local.has(id)) periods[id] = stops;
 }
 
+/** Why the committed registry.json is stale (#499), or null when it matches the registry YAML. */
+export function registryJsonDrift(entries: unknown[], committed: string): string | null {
+  if (JSON.stringify(entries, null, 1) === committed) return null;
+  return "apps/web/src/generated/registry.json doesn't match data/registry/datasets/*.yaml. " +
+    "Run `npm run prepare:assets -w web` and commit apps/web/src/generated/registry.json.";
+}
+
 export function exportRegistry(allowPeriodDrop = false) {
   const dir = join(ROOT, "apps/web/src/generated");
   mkdirSync(dir, { recursive: true });
