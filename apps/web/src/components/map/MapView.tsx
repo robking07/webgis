@@ -537,10 +537,12 @@ function applyBands(m: MlMap, bands?: Props["levelZooms"]) {
       if (!m.getLayer(id)) continue;
       // Block groups and blocks are never picked from the table or search, and an always-on
       // outline would load their heavy tiles at every zoom (D-124): only within their band.
+      // Tract outlines start at county zoom: at state zoom a tract is a dot, and an always-on
+      // outline loaded ~1.7 MB of tract tiles on a phone's first national view (#505).
       if (STATIC_ONLY_LEVELS.has(level)) {
         m.setLayoutProperty(id, "visibility", band ? "visible" : "none");
         if (band) m.setLayerZoomRange(id, band.minzoom, band.maxzoom);
-      } else m.setLayerZoomRange(id, 0, 24);
+      } else m.setLayerZoomRange(id, level === "tract" ? GEO_LEVELS.county.minzoom : 0, 24);
     }
   }
 }

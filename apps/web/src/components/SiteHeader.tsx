@@ -26,9 +26,11 @@ export function HeaderContent({ current, onSearch, explicitTheme, onTheme, unit,
   unit?: ScaleUnit;
   onUnit?: (u: ScaleUnit) => void;
 }) {
+  // No viewport prefetch of Specials: on the map it pulled the Specials page and its lead image
+  // (~250 KB) in while a phone was still loading the map (#505).
   const nav = (href: string, label: string, key: Section) => current === key
     ? <Link href={href} aria-current="page" className="font-semibold text-foreground shadow-[inset_0_-2px_0_var(--ui-accent)]">{label}</Link>
-    : <Link href={href} className="text-muted-foreground hover:text-foreground">{label}</Link>;
+    : <Link href={href} prefetch={key === "specials" ? false : undefined} className="text-muted-foreground hover:text-foreground">{label}</Link>;
   const icon = "grid size-9 place-items-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring";
   return (
     <>
