@@ -89,6 +89,13 @@ export function triValues(pounds: Map<string, number>, areas: Map<string, number
   return values;
 }
 
+/** Pounds behind the map where it has a value (#156), and the U.S. row: pounds ÷ land area of the states. */
+function triCounts(id: string, stop: string | null, values: Map<string, Value>, pounds: Map<string, number>, areas: Map<string, number>, state: boolean): Map<string, Counts> {
+  const rows = new Map([...values].map(([g, v]): [string, Counts] => [g, [v.value == null ? null : Math.round(pounds.get(g) ?? 0), null, null, null]]));
+  if (state) { const us = sumStates(rows); writeUs(id, stop, { value: us[0] == null ? null : us[0] / usArea(areas), moe: null }, us); }
+  return rows;
+}
+
 export async function ingestTri(only?: string[]) {
   const entries = loadRegistry().filter((e) => e.measure.kind === "tri" && (!only || only.includes(e.id)));
   if (!entries.length) return;
@@ -109,10 +116,7 @@ export async function ingestTri(only?: string[]) {
       const unmatched = [...t[level].keys()].filter((g) => !areas.has(g));
       if (unmatched.length) log(e.id, `${level}: ${unmatched.length} codes not in current geography (${unmatched.slice(0, 5).join(", ")})`);
       await writeValues(pool, e.id, level, values);
-      // The counts behind the map (#156): pounds released on site, where the map has a value.
-      const rows = new Map([...values].map(([g, v]): [string, Counts] => [g, [v.value == null ? null : Math.round(t[level].get(g) ?? 0), null, null, null]]));
-      writeCounts(level, new Map([[e.id, rows]]));
-      if (level === "state") { const us = sumStates(rows); writeUs(e.id, null, { value: us[0] == null ? null : us[0] / usArea(areas), moe: null }, us); }
+      writeCounts(level, new Map([[e.id, triCounts(e.id, null, values, t[level], areas, level === "state")]]));
     }
   }
   await pool.end();
@@ -134,7 +138,12 @@ export async function ingestTriTimeline(only?: string[]) {
       if (s.isDefault) continue;
       const t = triTotals(readFileSync(await cached(url.replace(`${year}_US`, `${s.id}_US`), file.replace(String(year), s.id)), "utf8"), fips, counties);
       log(e.id, `${s.id}: ${Math.round(t.pounds).toLocaleString()} lb on site from ${t.facilities.toLocaleString()} facilities`);
-      for (const level of ["state", "county"] as const) if (e.geographyLevels.includes(level)) writeStopValues(e.id, s.id, level, triValues(t[level], await landArea(pool, level)));
+      for (const level of ["state", "county"] as const) {
+        if (!e.geographyLevels.includes(level)) continue;
+        const areas = await landArea(pool, level), values = triValues(t[level], areas);
+        writeStopValues(e.id, s.id, level, values);
+        if (level === "state") triCounts(e.id, s.id, values, t.state, areas, true);
+      }
     }
   }
   await pool.end();
