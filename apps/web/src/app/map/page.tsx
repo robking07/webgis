@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { preload } from "react-dom";
 import { ViewerShell } from "@/components/ViewerShell";
 import { DATASET_BY_ID } from "@/lib/registry";
 import { shareMeta } from "@/lib/share-meta";
@@ -15,6 +16,9 @@ export async function generateMetadata({ searchParams }: PageProps<"/map">): Pro
 
 export default async function Page({ searchParams }: PageProps<"/map">) {
   const sp = await searchParams;
+  // The map's worker script (MapView's setWorkerUrl) otherwise starts downloading only once the
+  // map exists, and the first tiles wait for it: fetch it alongside the page's own JS (#505).
+  preload("/maplibre/maplibre-gl-worker.mjs", { as: "script" });
   const search = new URLSearchParams(
     Object.entries(sp).flatMap(([k, v]) => (typeof v === "string" ? [[k, v]] : [])),
   ).toString();
