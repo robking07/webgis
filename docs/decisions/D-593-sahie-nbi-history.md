@@ -24,3 +24,5 @@ PR #493, part of #479. Registry + ingest only; same measures as before, one stop
   and each year is a separate multi-GB geodatabase that needs GDAL, which the Data run doesn't have for `vmt`
   (check-run.ts). FHWA's state VMT tables (Highway Statistics VM-2) count all roads, not the sampled sections we
   sum, so they are a different measure and are not mixed in. More than half a day of work; left out.
+
+Amendment 2026-11-02 (Robbie): coverage note adds the 2014 sentence, approved as written (drafts/site-copy/uninsured-2014-sentence.md).
