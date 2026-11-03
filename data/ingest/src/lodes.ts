@@ -120,26 +120,29 @@ async function levelValues(pool: Pool, e: DatasetEntry, t: Totals, level: Level)
   return values;
 }
 
+/** values/<id>/[<stop>/]us.json. States LODES doesn't publish that year (Alaska) stay out of the
+ *  U.S. row, jobs and land area alike, so the density is still jobs per square mile of the places counted. */
+async function writeUsJobs(pool: Pool, e: DatasetEntry, t: Totals, stop: string | null) {
+  const perSqMi = e.measure.kind === "lodes" && e.measure.perSqMi;
+  const areas = new Map([...(await landArea(pool, "state"))].filter(([g]) => !t.missingStates.has(g)));
+  const us = sumStates(new Map([...areas.keys()].map((g): [string, Counts] => [g, [t.jobs.state.get(g) ?? 0, null, null, null]])));
+  writeUs(e.id, stop, { value: us[0] == null ? null : perSqMi ? us[0] / usArea(areas) : us[0], moe: null }, us);
+}
+
 export async function ingestLodes(only?: string[]) {
   const entries = loadRegistry().filter((e) => e.measure.kind === "lodes" && (!only || only.includes(e.id)));
   const pool = db();
   for (const e of entries) {
     await registerDataset(pool, e);
     const t = await totals(pool, e, +e.vintage, true);
-    let us: Counts | null = null;
     for (const level of e.geographyLevels) {
       const values = await levelValues(pool, e, t, level);
       await writeValues(pool, e.id, level, values);
       // The counts behind the map (#156): jobs, for the same places (no data where a state is missing).
       const jobs = new Map([...values].map(([g, v]): [string, Counts] => [g, [t.missingStates.has(g.slice(0, 2)) ? null : t.jobs[level].get(g) ?? 0, null, null, null]]));
       writeCounts(level, new Map([[e.id, jobs]]));
-      // States LODES doesn't publish (Alaska) stay out of the U.S. row, jobs and land area alike, so the density is still jobs per square mile of the places counted.
-      if (level === "state") us = sumStates(new Map([...jobs].filter(([g]) => !t.missingStates.has(g))));
     }
-    if (us) {
-      const perSqMi = e.measure.kind === "lodes" && e.measure.perSqMi;
-      writeUs(e.id, null, { value: us[0] == null ? null : perSqMi ? us[0] / usArea(new Map([...(await landArea(pool, "state"))].filter(([g]) => !t.missingStates.has(g)))) : us[0], moe: null }, us);
-    }
+    if (e.geographyLevels.includes("state")) await writeUsJobs(pool, e, t, null);
   }
   await pool.end();
 }
@@ -160,6 +163,7 @@ export async function ingestLodesTimeline(only?: string[]) {
         if (h && n < 0.1 * h) { t.missingStates.add(st); log(e.id, `${s.id} ${st}: ${n.toLocaleString()} jobs vs ${h.toLocaleString()} in ${e.vintage} → no data`); }
       }
       for (const level of e.geographyLevels) writeStopValues(e.id, s.id, level, await levelValues(pool, e, t, level));
+      if (e.geographyLevels.includes("state")) await writeUsJobs(pool, e, t, s.id);
     }
   }
   await pool.end();
