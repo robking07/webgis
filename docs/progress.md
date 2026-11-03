@@ -16,6 +16,14 @@ and said "keep running". The lead works the list in `drafts/planner-depth-plan.m
   #469, PRs #470 and #471, 3,114 counties); back button says where it goes (#437); search always on the
   map (#438); colors fit the counties in view (#439). Also live: the Library pilot (100 maps), About and
   Methods pages, the accessibility pass and load test (#366), the census-privacy-order Special.
+- **Shipped 2026-11-02:** full history (#479): traffic deaths back to 1975 and climate to 1895 (#486-#488);
+  PM2.5 back to 2001, ozone 2005, toxic releases (TRI) 1987 (#489-#491); uninsured under 65 (SAHIE)
+  back to 2008 and bridges in poor condition (NBI) back to 1992 (PR #493, D-593); jobs (LODES) back to
+  2002 (PR #495, D-595; federal jobs only counted from 2010, noted on the map); year stops for those
+  three (PR #496). Miles driven (VMT) stays 2024 only: no consistent past series (D-593). Left in #479:
+  NHGIS pre-2005 census tables, waiting on Robbie's IPUMS key. The FEMA declarations decade note no
+  longer claims the colors "show change" (#482, PR #494). The Library second batch: 108 more maps
+  (#373, PR #467; 213 checked live, 211 passed, 2 left out); Data run 41553506295 loads them.
 - **Waiting:** print/embed a locked view (plan F) until Robbie asks. Drawing buffers, transit #176 and
   drive times #205 stay parked.
 - **Still parked, each with its plan on GitHub (label `parked`):** similar places #291 follow-ups,
@@ -95,6 +103,13 @@ and said "keep running". The lead works the list in `drafts/planner-depth-plan.m
 | Downloads fail loudly on a bot check | #331 | #340 | S / ~100k | ~40k | 0.4x | Sonnet / medium | 2026-10-26 |
 | Change mode: level pill switches level | #249 | #342 | S / ~100k | ~55k | 0.55x | Opus / medium | 2026-10-26 |
 | Phone tap: no hover card repeating details | #321 | #341 | S / ~100k | ~55k | 0.55x | Opus / medium | 2026-10-26 |
+| Full history: traffic deaths 1975, climate 1895 | #479 | #486, #487, #488 | — | — | — | — | 2026-11-02 |
+| Full history: PM2.5 2001, ozone 2005, TRI 1987 | #479 | #489, #490, #491 | — | — | — | — | 2026-11-02 |
+| Full history: uninsured 2008, bridges 1992 | #479 | #493 | — | — | — | — | 2026-11-02 |
+| Full history: jobs 2002 (federal jobs from 2010) | #479 | #495 | — | — | — | — | 2026-11-02 |
+| Year stops for uninsured, bridges, jobs | #479 | #496 | — | — | — | — | 2026-11-02 |
+| FEMA decade note no longer claims change | #482 | #494 | — | — | — | — | 2026-11-02 |
+| The Library second batch, 108 maps | #373 | #467 | — | — | — | — | 2026-11-02 |
 
 ## Lessons
 
@@ -152,6 +167,10 @@ One line per task. These feed the project kit (#53).
 - **This machine's `gh` is old:** no `gh pr checks --json` and no `gh pr update-branch`. Use `gh api -X PUT repos/robking07/webgis/pulls/<n>/update-branch`, and parse `gh pr checks` text (tab-separated). `gh run rerun` refuses a run that's still in progress or was superseded; update the branch instead to start a fresh run.
 - **#366 load test (2026-10-31):** 1,000 visitors over 3 min (`scripts/load-test.mjs`, ramped to ~11 visitors/s) gave site pages p50 63 ms / p95 116 ms and map files on tiles.mapwich.org p50 108 ms / p95 168 ms, 0 errors, 0 5xx, no 429s; the site is static enough that this scale is nowhere near Vercel Hobby limits. Chromium does run here with `CHROMIUM_PATH` set to playwright's `chromium_headless_shell-1243`, so a11y scans and e2e can run in a worker.
 - **Specials drafts:** run `check:special` on a `git archive` of `origin/main` (node_modules symlinked) to check a draft without a branch.
+- **2026-11-02, worker briefs:** a worker sandbox without `node_modules` skips checks; brief workers to run `npm ci` first and to put the literal line "Ponytail verdict: Ship" in the PR body (`merge-pr.sh` refuses without it). `gh pr edit` fails on this repo (Projects classic); edit PR bodies with `gh api -X PATCH repos/robking07/webgis/pulls/<n> -F body=@file`.
+- **2026-11-02, merging in a row:** merging one PR puts every other open PR behind main and fails its branch-rules check; merge main in and push before merging the next.
+- **2026-11-02, local e2e:** it needs a build with `NEXT_PUBLIC_TILES_BASE_URL=https://tiles.mapwich.org` and a free `E2E_PORT`.
+- **2026-11-02, Library tags (#373):** new search tags can trip the #252 search test (an "active duty" tag matched "Du"); check tags for short-prefix collisions.
 
 ## How to update
 
