@@ -41,7 +41,9 @@ before the change. It is added to the "before" byte and JS totals above.
 1. **No tract tiles at the national view.** The tract selection outlines were on at every zoom so
    a picked tract always shows. That made MapLibre load tract tiles at the national view: two
    tiles, 1.7 MB, competing with everything else on a phone's first load. Tract outlines now start
-   at county zoom (5.5). Below that, a tract is a dot. County and state outlines are unchanged.
+   at county zoom (5.5), or wherever tracts themselves start drawing if that is lower. Compare
+   maps draw tracts at every zoom, so two far-apart tracts keep their outlines. Below county zoom
+   on the main map, a tract is a dot. County and state outlines are unchanged.
 2. **The map page doesn't prefetch Specials.** The header's Specials link was prefetched as soon
    as it appeared, which pulled in the Specials page and its lead image (~250 KB) during the map's
    first load. Specials now loads when tapped. That costs one small page request, as for any link
