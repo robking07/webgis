@@ -6,9 +6,9 @@ const titles = (q: string) => searchDatasets(q, null).map((d) => d.title);
 describe("dataset search (issue #252)", () => {
   it("doesn't match letters inside words of the descriptions", () => {
     // "Du" (for Duluth) used to list every CDC measure: their descriptions say "adults".
-    // A word starting "du" is a real match: duplexes (#372), the "active duty" tag (#373).
-    expect(titles("Du")).toEqual(["Homes in duplexes", "People in the armed forces"]);
-    expect(titles("du")).toEqual(["Homes in duplexes", "People in the armed forces"]);
+    // A word starting "du" is a real match: duplexes (#372). The armed forces map's "active duty" tag became "service members" (#373).
+    expect(titles("Du")).toEqual(["Homes in duplexes"]);
+    expect(titles("du")).toEqual(["Homes in duplexes"]);
   });
   it("finds the right maps first", () => {
     expect(titles("poverty").slice(0, 2)).toEqual(["Children in poverty", "Population below poverty"]);
