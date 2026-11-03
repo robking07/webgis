@@ -521,7 +521,7 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
 }
 
 /** Show each level only within its band; levels without a band are hidden. The selection
- *  outline stays on at every zoom, so a county picked from the table or search still shows
+ *  outline stays on at every zoom (tracts: from county zoom), so a county picked from the table or search still shows
  *  while tracts are drawn (it only draws for the one selected/hovered feature). */
 function applyBands(m: MlMap, bands?: Props["levelZooms"]) {
   for (const level of LEVELS) {
@@ -537,10 +537,12 @@ function applyBands(m: MlMap, bands?: Props["levelZooms"]) {
       if (!m.getLayer(id)) continue;
       // Block groups and blocks are never picked from the table or search, and an always-on
       // outline would load their heavy tiles at every zoom (D-124): only within their band.
+      // Tract outlines start at county zoom (or lower when tracts draw lower, as on compare maps):
+      // an always-on outline loaded ~1.7 MB of tract tiles on a phone's first national view (#505).
       if (STATIC_ONLY_LEVELS.has(level)) {
         m.setLayoutProperty(id, "visibility", band ? "visible" : "none");
         if (band) m.setLayerZoomRange(id, band.minzoom, band.maxzoom);
-      } else m.setLayerZoomRange(id, 0, 24);
+      } else m.setLayerZoomRange(id, level === "tract" ? Math.min(band?.minzoom ?? 24, GEO_LEVELS.county.minzoom) : 0, 24);
     }
   }
 }
