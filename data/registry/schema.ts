@@ -198,6 +198,16 @@ const BpsMeasure = z.object({
   year: z.number().int(),
 });
 
+/** BLS Quarterly Census of Employment and Wages (public domain): annual averages, all industries,
+ *  all ownerships, state and county. `pay` = average annual pay in 2024 dollars (CPI-U);
+ *  `per_1k` = covered jobs per 1,000 residents (Census population estimates). Ingest: qcew.ts. */
+const QcewMeasure = z.object({
+  kind: z.literal("qcew"),
+  field: z.enum(["pay", "per_1k"]),
+  /** Year of the annual averages; the headline. */
+  year: z.number().int(),
+});
+
 /** CDC/ATSDR Social Vulnerability Index: one percentile-rank field of CDC's U.S.-wide county and
  *  tract CSVs (ranked nationally, not within each state). Ingest: data/ingest/src/svi.ts. */
 const SviMeasure = z.object({
@@ -358,7 +368,7 @@ export const DatasetEntry = z.object({
   unit: Unit,
   /** For insights: the population the value describes. Pairs that share one are flagged. */
   universe: z.string(),
-  measure: z.discriminatedUnion("kind", [AcsMeasure, Census2020Measure, LodesMeasure, PlacesMeasure, ClimdivMeasure, NbiMeasure, FarsMeasure, FeaturesMeasure, HpmsVmtMeasure, CejstMeasure, Ddp287gMeasure, LeadMeasure, FoodAccessMeasure, FemaNriMeasure, SviMeasure, AirQualityMeasure, OverdoseMeasure, TriMeasure, SahieMeasure, PopestMeasure, BpsMeasure, FemaDeclarationsMeasure]),
+  measure: z.discriminatedUnion("kind", [AcsMeasure, Census2020Measure, LodesMeasure, PlacesMeasure, ClimdivMeasure, NbiMeasure, FarsMeasure, FeaturesMeasure, HpmsVmtMeasure, CejstMeasure, Ddp287gMeasure, LeadMeasure, FoodAccessMeasure, FemaNriMeasure, SviMeasure, AirQualityMeasure, OverdoseMeasure, TriMeasure, SahieMeasure, PopestMeasure, BpsMeasure, QcewMeasure, FemaDeclarationsMeasure]),
   /** Other registry datasets used as inputs to this dataset's model (e.g. PLACES uses county poverty).
    *  Insight pairs with these are flagged: they correlate partly by construction. */
   modelInputs: z.array(z.string()).default([]),

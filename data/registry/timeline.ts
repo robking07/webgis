@@ -90,6 +90,10 @@ export function timelineStops(e: DatasetEntry): TimelineStop[] {
       const { year } = e.measure;
       return years.map((y) => ({ id: String(y), label: String(y), isDefault: y === year, ...(y < 2023 ? { boundaries: "2019" as const } : {}) }));
     }
+    case "qcew": { // calendar years; BLS keeps Connecticut's old counties through 2023
+      const { year } = e.measure;
+      return years.map((y) => ({ id: String(y), label: String(y), isDefault: y === year, ...(y < 2024 ? { boundaries: "2019" as const } : {}) }));
+    }
     case "tri": { // yearly reporting years; today's counties throughout
       const { year } = e.measure;
       return years.map((y) => ({ id: String(y), label: String(y), isDefault: y === year }));

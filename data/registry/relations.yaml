@@ -49,6 +49,8 @@ links:
   # Work
   - { maps: [unemployment_rate, labor_force_participation], why: Unemployment is counted only among people in the labor force. }
   - { maps: [job_density, population_density], why: Where jobs are compared with where people live. }
+  - { maps: [qcew_jobs_per_1k, job_density], why: Two counts of jobs where people work, one per resident and one per square mile. }
+  - { maps: [qcew_avg_pay, median_household_income], why: Pay at the jobs located in a county and the income of the households living there. }
   - { maps: [pct_work_outside_county, mean_commute_minutes], why: Working in another county usually means a longer trip. }
   - { maps: [mean_commute_minutes, pct_long_commute], why: The average and the share of long trips. }
   - { maps: [pct_long_commute, pct_extreme_commute], why: 90-minute-plus commutes are part of hour-plus commutes. }
@@ -375,6 +377,10 @@ maps:
   job_density:
     group: "Economy"
     counts: { of: "jobs" }
+  qcew_avg_pay:
+    group: "Economy"
+  qcew_jobs_per_1k:
+    group: "Economy"
   labor_force_participation:
     group: "Economy"
     counts: { of: "people working or looking for work", per: "people 16 and older" }

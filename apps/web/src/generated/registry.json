@@ -20268,6 +20268,127 @@
   }
  },
  {
+  "id": "qcew_avg_pay",
+  "title": "Average pay per job",
+  "phrase": "average pay per job",
+  "description": "Average yearly pay of the jobs located in the area, all industries, private and government, in 2024 dollars. It is total wages divided by the number of jobs, so it counts where people work, not where they live.",
+  "category": "Economy",
+  "subcategory": "Jobs",
+  "tags": [
+   "wages",
+   "pay",
+   "earnings",
+   "salary",
+   "jobs",
+   "employment",
+   "workplace",
+   "QCEW",
+   "BLS"
+  ],
+  "source": {
+   "name": "U.S. Bureau of Labor Statistics, Quarterly Census of Employment and Wages",
+   "shortName": "BLS",
+   "url": "https://www.bls.gov/cew/",
+   "citation": "U.S. Bureau of Labor Statistics, Quarterly Census of Employment and Wages, annual averages (1990–2025); restated in 2024 dollars with the BLS CPI-U"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2025 (in 2024 dollars)",
+  "geographyLevels": [
+   "state",
+   "county"
+  ],
+  "areaLevels": [],
+  "unit": "dollars",
+  "universe": "jobs covered by unemployment insurance (by workplace)",
+  "measure": {
+   "kind": "qcew",
+   "field": "pay",
+   "year": 2025
+  },
+  "modelInputs": [],
+  "coverageNote": "Counted where people work, not where they live: a county's figure is the pay of the jobs located there, whoever holds them. It covers jobs under unemployment insurance, more than 95% of U.S. jobs, and leaves out the self-employed, most farm and household workers, railroad workers and members of the military. Pay includes bonuses and stock options, and part-time and seasonal jobs count as whole jobs, so this is not what a typical worker earns. BLS withholds a few county figures to protect individual employers; those show no data, not zero. Every year is in 2024 dollars, adjusted for inflation with the consumer price index (CPI-U), so the 2025 figures read about 2.6% below BLS's own. The Job density map counts jobs from Census LODES, which starts from the same employer records but counts jobs at one point in the year and adds statistical noise; this map uses BLS's yearly averages, for states and counties only. Connecticut shows its old counties through 2023 and its nine planning regions from 2024.",
+  "facets": [],
+  "library": false,
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 1990,
+   "to": 2025,
+   "step": 1
+  },
+  "learnMore": [],
+  "terms": [
+   "qcew",
+   "inflation-adjusted",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": true
+  }
+ },
+ {
+  "id": "qcew_jobs_per_1k",
+  "title": "Jobs per 1,000 residents",
+  "phrase": "jobs per resident",
+  "description": "Jobs located in the area (yearly average, all industries, private and government) per 1,000 people who live there. Above 1,000 means more jobs than residents, a job center that draws commuters; a low number means many residents work elsewhere, or are retired, in school or not working.",
+  "category": "Economy",
+  "subcategory": "Jobs",
+  "tags": [
+   "jobs",
+   "employment",
+   "workplace",
+   "job centers",
+   "commuting",
+   "QCEW",
+   "BLS"
+  ],
+  "source": {
+   "name": "U.S. Bureau of Labor Statistics, Quarterly Census of Employment and Wages",
+   "shortName": "BLS",
+   "url": "https://www.bls.gov/cew/",
+   "citation": "U.S. Bureau of Labor Statistics, Quarterly Census of Employment and Wages, annual averages (1990–2025); Census Bureau population estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2025",
+  "geographyLevels": [
+   "state",
+   "county"
+  ],
+  "areaLevels": [],
+  "unit": "per_1k",
+  "universe": "jobs covered by unemployment insurance (by workplace)",
+  "measure": {
+   "kind": "qcew",
+   "field": "per_1k",
+   "year": 2025
+  },
+  "modelInputs": [],
+  "coverageNote": "Jobs are counted where people work, not where they live, and someone with two jobs counts twice, so this is not the share of residents who have a job. It covers jobs under unemployment insurance, more than 95% of U.S. jobs, and leaves out the self-employed, most farm and household workers, railroad workers and members of the military, so farm counties read low. BLS withholds a few county figures to protect individual employers; those show no data, not zero. The Job density map counts jobs per square mile from Census LODES, which starts from the same employer records but counts jobs at one point in the year and adds statistical noise; this map uses BLS's yearly averages and divides by residents, for states and counties only. Connecticut shows its old counties through 2023 (with no data for 2020–2023) and its nine planning regions from 2024.",
+  "facets": [],
+  "library": false,
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 1990,
+   "to": 2025,
+   "step": 1
+  },
+  "learnMore": [],
+  "terms": [
+   "qcew",
+   "population-estimates",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
   "id": "rental_vacancy_rate",
   "title": "Rental vacancy rate",
   "description": "Vacant homes for rent as a share of all rental homes, rented or for rent.",
