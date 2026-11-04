@@ -1,0 +1,62 @@
+id: walkability_index
+title: Walkability index
+description: "EPA's National Walkability Index, from 1 (least walkable) to 20 (most walkable). It is a model score built from how many street intersections an area has, how close its homes are to a transit stop, and how well jobs and homes are mixed. It does not measure sidewalks, crossings or how safe it is to walk."
+category: Transportation
+subcategory: Commuting
+tags: [walkability, walkable, walking, National Walkability Index, Smart Location Database, EPA, intersection density, transit access, land use mix]
+source:
+  name: U.S. Environmental Protection Agency, Smart Location Database version 3.0, National Walkability Index (2021)
+  shortName: EPA Walkability Index
+  url: https://www.epa.gov/smartgrowth/smart-location-mapping
+  citation: "U.S. Environmental Protection Agency. National Walkability Index, from the Smart Location Database version 3.0, released June 2021."
+license: Public domain (U.S. Government work, 17 U.S.C. § 105).
+updateCadence: irregular
+vintage: "2021 release"
+unit: ratio
+universe: residents (2014–2018 American Community Survey, 2010 tracts)
+coverageNote: "Shown on 2010 census tracts: each tract is the average of EPA's block-group scores, weighted by population. Inputs: streets from 2018, transit stops from 2020 (only agencies that publish schedule data), jobs from 2017 and residents from 2014–2018. Tracts with no residents show no data."
+terms: [walkability-index, tract-2010]
+learnMore:
+  - label: How EPA builds the walkability index
+    url: https://www.epa.gov/smartgrowth/national-walkability-index-user-guide-and-methodology
+measure:
+  kind: features
+  geometry: polygon
+  noun: Tracts
+  source:
+    url: https://www2.census.gov/geo/tiger/GENZ2019/shp/cb_2019_us_tract_500k.zip
+    file: cb_2019_us_tract_500k.zip
+    path: cb_2019_us_tract_500k.shp
+    layerPattern: "^cb_2019_us_tract_500k$"
+  join:
+    url: https://edg.epa.gov/EPADataCommons/public/OA/WalkabilityIndex.zip
+    file: epa-walkability-index-2021.zip
+    path: Natl_WI.gdb
+  # 2019 cartographic tracts are the 2010 tracts. EPA's state/county/tract parts carry the 2019 county codes
+  # the tiles use (GEOID10 keeps three retired ones, e.g. Bedford city 51515). Population-weighted mean of the
+  # block-group scores; block groups with no residents add nothing, and a tract with none is left blank.
+  # shortcut: tract level only; block-group detail would need 2010 block-group tiles. Upgrade if users ask for it.
+  select: >-
+    SELECT t.GEOID AS tract, w.walk_index,
+    CASE WHEN w.walk_index IS NULL THEN NULL WHEN w.walk_index <= 5.75 THEN 'Least walkable' WHEN w.walk_index <= 10.5 THEN 'Below average'
+    WHEN w.walk_index <= 15.25 THEN 'Above average' ELSE 'Most walkable' END AS band,
+    w.population, t.geom FROM {layer} t LEFT JOIN (
+    SELECT STATEFP || COUNTYFP || TRACTCE AS tract, ROUND(SUM(NatWalkInd * TotPop) / NULLIF(SUM(TotPop), 0), 1) AS walk_index,
+    SUM(TotPop) AS population FROM "join" GROUP BY 1) w ON w.tract = t.GEOID
+  valueField: walk_index
+  fields:
+    walk_index:
+      label: Walkability index (1 to 20)
+      unit: ratio
+      explainer: "EPA's score for how easy it is to get around on foot: 1 is least walkable, 20 most. A model built from intersection density, distance to the nearest transit stop and the mix of jobs and homes, averaged over the tract's block groups by population. It says nothing about sidewalks, crossings or safety."
+    band:
+      label: EPA's walkability group
+      explainer: "EPA's four groups: least walkable (1 to 5.75), below average (5.76 to 10.5), above average (10.51 to 15.25) and most walkable (15.26 to 20), applied here to the tract average."
+    population: { label: "Residents (2014–2018)", unit: count }
+  zooms: [2, 12]
+symbology:
+  ramp: ylgnbu
+  classification: manual
+  classes: 4
+  breaks: [5.76, 10.51, 15.26]
+  higherIsBetter: true
