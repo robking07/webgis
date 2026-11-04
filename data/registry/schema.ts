@@ -4,7 +4,7 @@ import { z } from "zod";
 import { CATEGORIES } from "./categories.ts";
 
 const Ramp = z.enum(["blues", "ylgnbu", "oranges", "purples", "viridis", "cividis", "rdbu", "puor", "brbg"]);
-const Unit = z.enum(["dollars", "percent", "minutes", "count", "per_sq_mi", "ratio", "years", "deg_f", "inches", "per_100k", "per_1k", "vehicles_per_day", "miles_per_day", "categories", "agreements", "declarations", "percentile", "ug_m3", "ppm", "degree_days"]);
+const Unit = z.enum(["dollars", "percent", "minutes", "count", "per_sq_mi", "ratio", "score", "years", "deg_f", "inches", "per_100k", "per_1k", "vehicles_per_day", "miles_per_day", "categories", "agreements", "declarations", "percentile", "ug_m3", "ppm", "degree_days"]);
 export const GeoLevel = z.enum(["state", "county", "tract", "block_group", "block"]);
 
 /** A feature-layer popup field with optional explainers (D-35). */

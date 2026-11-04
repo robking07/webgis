@@ -12,7 +12,7 @@ source:
 license: Public domain (U.S. Government work, 17 U.S.C. § 105).
 updateCadence: irregular
 vintage: "2021 release"
-unit: ratio
+unit: score
 universe: residents (2014–2018 American Community Survey, 2010 tracts)
 coverageNote: "Shown on 2010 census tracts: each tract is the average of EPA's block-group scores, weighted by population. Inputs: streets from 2018, transit stops from 2020 (only agencies that publish schedule data), jobs from 2017 and residents from 2014–2018. Tracts with no residents show no data."
 terms: [walkability-index, tract-2010]
@@ -58,7 +58,7 @@ measure:
   fields:
     walk_index:
       label: Walkability index (1 to 20)
-      unit: ratio
+      unit: score
       explainer: "EPA's score for how easy it is to get around on foot: 1 is least walkable, 20 most. A model built from intersection density, distance to the nearest transit stop and the mix of jobs and homes, averaged over the tract's block groups by population. It says nothing about sidewalks, crossings or safety."
     band:
       label: EPA's walkability group

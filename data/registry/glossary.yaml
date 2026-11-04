@@ -153,7 +153,7 @@
   short: >-
     EPA's 1-to-20 score for how easy a neighborhood is to get around on foot, built from its street pattern, transit access and mix of jobs and homes.
   long: >-
-    EPA ranks every block group on four measures from its Smart Location Database: how many street intersections there are (more means shorter, more direct walks), how far homes are from the nearest transit stop, the mix of job types, and the mix of jobs and homes. Intersections and transit each count for a third, the two mix measures for a sixth each. It is a model of the built environment, not a survey: it has no data on sidewalks, crossings, traffic speed or safety, and places far from a transit stop, or served only by agencies that publish no schedule data, get the lowest transit score (more than half of all block groups). Inputs date from 2017 to 2020.
+    EPA scores every block group on four measures from its Smart Location Database: how many street intersections there are (more means shorter, more direct walks), how far homes are from the nearest transit stop, the mix of job types, and the mix of jobs and homes. Intersections and transit each count for a third, the two mix measures for a sixth each. It is a model of the built environment, not a survey: it has no data on sidewalks, crossings, traffic speed or safety, and places far from a transit stop, or served only by agencies that publish no schedule data, get the lowest transit score (more than half of all block groups). Inputs date from 2017 to 2020.
   source: https://www.epa.gov/smartgrowth/national-walkability-index-user-guide-and-methodology
 
 - id: food-access
