@@ -10,7 +10,7 @@ import type { Dataset } from "./registry";
 const NO_BENCHMARK = new Set<Unit>(["count", "agreements", "categories", "percentile"]);
 
 /** The kinds whose U.S. file is on R2 (D-257); others would only 404. */
-export const US_KINDS = new Set(["acs5", "census2020", "fars", "lodes", "food_access"]);
+export const US_KINDS = new Set(["acs5", "census2020", "fars", "lodes", "food_access", "tri"]);
 
 export type Benchmark = { label: string; value: number };
 
@@ -25,15 +25,16 @@ export function benchmarkRows(unit: Unit, geoid: string, state: { name: string; 
 }
 
 // shortcut: one small us.json fetch per map (cached), ~60 on a place page; bundle them into one file if that shows up as slow.
-/** `geoid` "" (a metro area, issue #332): the U.S. only. */
-export async function loadBenchmarks(d: Dataset, geoid: string): Promise<Benchmark[]> {
+/** `geoid` "" (a metro area, issue #332): the U.S. only. `stop`: a timeline stop's own state and
+ *  U.S. files (issue #507); a year without them shows no line. */
+export async function loadBenchmarks(d: Dataset, geoid: string, stop?: string | null): Promise<Benchmark[]> {
   if (NO_BENCHMARK.has(d.unit)) return [];
   const st = geoid.slice(0, 2);
   // Benchmarks are an extra: a failed file shows nothing.
-  // Library maps aren't in the state click files (D-536): their state value comes from the map's state values file.
-  const stateValue = !st ? null : d.library ? loadValues(d.id, "state").then((v) => v[st] ?? null, () => null)
+  // Library maps aren't in the state click files (D-536), nor are older years: their state value comes from the map's state values file.
+  const stateValue = !st || (stop && !d.geographyLevels.includes("state")) ? null : d.library || stop ? loadValues(d.id, "state", stop).then((v) => v[st] ?? null, () => null)
     : fetchDetail(st).then((r) => r[d.id]?.value ?? null, () => null);
   const [geo, value, us] = await Promise.all([
-    st ? fetchGeography(st).catch(() => null) : null, stateValue, US_KINDS.has(d.measure.kind) ? usValue(d.id) : null]);
+    st ? fetchGeography(st).catch(() => null) : null, stateValue, US_KINDS.has(d.measure.kind) ? usValue(d.id, stop) : null]);
   return benchmarkRows(d.unit, geoid, geo && { name: geo.name, value }, us);
 }

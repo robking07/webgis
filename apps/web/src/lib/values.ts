@@ -82,9 +82,9 @@ export type WorkerReply = { id: number } & (
 
 export type LevelValues = Partial<Record<GeoLevel, Values>>;
 
-/** Margins of error for a static-only level (block groups), for the details panel. */
-export function loadMoes(id: string, level: GeoLevel): Promise<Values> {
-  return loadValues(id, `${level}.moe` as GeoLevel);
+/** Margins of error for a static-only level (block groups) or a timeline stop, for the details panel. */
+export function loadMoes(id: string, level: GeoLevel, stop?: string | null): Promise<Values> {
+  return loadValues(id, `${level}.moe` as GeoLevel, stop);
 }
 
 /** Loads state + county immediately; tracts and block groups only once they're wanted

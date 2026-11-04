@@ -37,7 +37,7 @@ interface DetailProps {
   /** Switch the map to another dataset (from the drawer's full list). */
   onMapIt: (id: string) => void;
   /** A timeline stop is shown (D-36): the primary value comes from `xv` for that period. */
-  period?: { label: string; defaultLabel: string };
+  period?: { id: string; label: string; defaultLabel: string };
   /** Open a place this one sits inside (the "inside" links, issues #34, #364): select and frame it, or outline a city, metro or MPO. */
   onPlace?: (p: PlaceHit) => void;
   /** Phones: the legend key, shown in the sheet with this place's class outlined. */
@@ -187,6 +187,16 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
     return () => { live = false; };
   }, [info.geoid, info.level, info.props, staticOnly, primary, secondary, xv, yv]);
   useEscape(onClose);
+  // An older year's margin of error (ACS only, like the CSV): that stop's own <level>.moe.json (#507).
+  const moeKey = period && primary.measure.kind === "acs5" ? `${primary.id}/${period.id}/${info.level}/${info.geoid}` : null;
+  const [stopMoe, setStopMoe] = useState<{ key: string; moe: number | null } | null>(null);
+  const stopId = period?.id;
+  useEffect(() => {
+    if (!moeKey || !stopId) return;
+    let live = true;
+    loadMoes(primary.id, info.level, stopId).then((m) => live && setStopMoe({ key: moeKey, moe: m[info.geoid] ?? null }), () => {});
+    return () => { live = false; };
+  }, [moeKey, primary.id, info.level, info.geoid, stopId]);
 
   const inside = useInside(info.geoid, info.level, info.lon, info.lat);
   const featured = [primary, secondary].filter((d): d is Dataset => !!d);
@@ -215,10 +225,15 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
               }
               if (i === 0 && period) {
                 const v = xv?.[info.geoid];
+                const est = formatEstimate(v, stopMoe?.key === moeKey ? stopMoe?.moe : null, d.unit);
                 return (
                   <div key={d.id} className="rounded-md bg-muted px-3 py-2">
                     <p className="text-xs text-muted-foreground">{d.title}, {period.label}</p>
-                    <p className="text-xl font-semibold tabular-nums">{formatValue(v, d.unit)}</p>
+                    <p className="text-xl font-semibold tabular-nums">
+                      {est.value}
+                      {est.moe && <span className="ml-1 text-xs font-normal text-muted-foreground">±{est.moe}</span>}
+                    </p>
+                    {v != null && <Benchmarks dataset={d} geoid={info.geoid} stop={period.id} />}
                     {!isRaceRow(d) && rankText(xv, v, info.level) && <p className="text-xs text-muted-foreground">{rankText(xv, v, info.level)}</p>}
                     {r?.value != null && <p className="mt-1 text-xs text-muted-foreground">{period.defaultLabel}: <span className="tabular-nums">{formatValue(r.value, d.unit)}</span></p>}
                   </div>

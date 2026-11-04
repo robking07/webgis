@@ -61,11 +61,21 @@ export function latestStop(stops: Stop[]): Stop | null {
   return d && DATED.test(d.id) ? d : [...stops].reverse().find((s) => DATED.test(s.id)) ?? null;
 }
 
+/** Why an older stop has no tracts though the map has them (issue #507; the Methods page's wording).
+ *  `levels`: the dataset's levels. */
+export function noTractsNote(s: Stop | null | undefined, levels: readonly string[]): string | null {
+  if (!s || !levels.includes("tract") || s.levels.includes("tract")) return null;
+  // shortcut: says "before 2010" because ACS 2005–2009 is the only such stop today; reword if another source's older years lose tracts.
+  return `${s.label} is available for states and counties only, because tracts drew different lines before 2010.`;
+}
+
 /** Why one area has no change: its boundaries changed between the two periods. */
 export function areaChangeNote(from: Stop, to: Stop, level: GeoLevel, geoid: string): string | null {
   if (from.boundaries === to.boundaries) return null;
   if (level === "tract") return "tract changed in 2020";
   if (level === "county" && geoid.startsWith("09")) return "Connecticut's counties changed in 2022";
+  // Valdez–Cordova (02261) split into Chugach (02063) and Copper River (02066) in 2019.
+  if (level === "county" && (geoid === "02063" || geoid === "02066")) return "this area was split from Valdez–Cordova in 2019";
   return null;
 }
 
