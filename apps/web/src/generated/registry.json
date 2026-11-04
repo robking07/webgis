@@ -438,6 +438,65 @@
   }
  },
  {
+  "id": "bea_income_per_person",
+  "title": "Personal income per person",
+  "phrase": "personal income per person",
+  "description": "All the income of the people living in the area in a year, divided by the number of residents, in 2024 dollars. It counts wages, business and farm income, investment income and rent, and government payments such as Social Security and Medicare, before taxes.",
+  "category": "Economy",
+  "subcategory": "Income and poverty",
+  "tags": [
+   "income",
+   "personal income",
+   "per capita",
+   "earnings",
+   "wealth",
+   "Social Security",
+   "investment income",
+   "BEA"
+  ],
+  "source": {
+   "name": "U.S. Bureau of Economic Analysis, Regional Economic Accounts (table CAINC1)",
+   "shortName": "BEA",
+   "url": "https://www.bea.gov/data/income-saving/personal-income-county-metro-and-other-areas",
+   "citation": "U.S. Bureau of Economic Analysis, Personal Income by County, Metro, and Other Areas (CAINC1), 1990–2024, released February 2026; restated in 2024 dollars with the BLS CPI-U"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2024 (in 2024 dollars)",
+  "geographyLevels": [
+   "state",
+   "county"
+  ],
+  "areaLevels": [],
+  "unit": "dollars",
+  "universe": "total population",
+  "measure": {
+   "kind": "bea_income",
+   "year": 2024
+  },
+  "modelInputs": [],
+  "coverageNote": "Counted where people live, not where they work. Personal income is everything residents receive before taxes: wages and salaries, business and farm income, interest, dividends and rent, and government payments such as Social Security, Medicare and unemployment benefits, plus employers' pension and insurance contributions. That is broader than the Census's household income, which asks households about their cash income in a survey; BEA builds this from tax, payroll and program records, so it is higher, especially where retirees or investors live. It is spread over every resident, children included, so it is not what a typical person earns, and a few residents with very high incomes can lift a small county (Teton County, Wyoming). BEA reports some Virginia counties together with their independent cities, and Maui with Kalawao; each place in a group shows the group's figure. BEA publishes no figures for some places in some years (several Alaska areas, Connecticut's old counties in 2024); those show no data, not zero. Every year is in 2024 dollars, adjusted for inflation with the consumer price index (CPI-U), so earlier years are restated; the slider starts in 1990, although BEA has data back to 1969. BEA revises recent years each year. Connecticut shows its old counties through 2023 and its nine planning regions from 2024.",
+  "facets": [],
+  "library": false,
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 1990,
+   "to": 2024,
+   "step": 1
+  },
+  "learnMore": [],
+  "terms": [
+   "inflation-adjusted",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": true
+  }
+ },
+ {
   "id": "binge_drinking",
   "title": "Binge drinking",
   "phrase": "binge drinking rates",
