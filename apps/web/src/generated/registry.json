@@ -19835,6 +19835,254 @@
   }
  },
  {
+  "id": "popest_change",
+  "title": "Population change since 2020",
+  "phrase": "population growth since 2020",
+  "description": "How much the number of residents has grown or shrunk since the April 2020 Census count, as of July 1 of each year. Brown areas lost people; teal areas gained.",
+  "category": "People",
+  "subcategory": "Population and age",
+  "tags": [
+   "population",
+   "growth",
+   "decline",
+   "population estimates",
+   "demographics"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, Population Estimates Program",
+   "shortName": "Census Bureau",
+   "url": "https://www.census.gov/programs-surveys/popest.html",
+   "citation": "U.S. Census Bureau, Population Estimates Program, Vintage 2025 county totals (co-est2025-alldata)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "July 1, 2025 estimate",
+  "geographyLevels": [
+   "state",
+   "county"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "total population (estimate)",
+  "measure": {
+   "kind": "popest",
+   "field": "change",
+   "year": 2025
+  },
+  "modelInputs": [],
+  "coverageNote": "States and counties only; Puerto Rico is not included. These are estimates built from births, deaths and administrative records, not a count, and each year's release revises the years before it, so figures here can differ from earlier editions. The year control starts at 2021 because the base is the 2020 Census. Connecticut is shown by its nine planning regions.",
+  "facets": [],
+  "library": false,
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2021,
+   "to": 2025,
+   "step": 1
+  },
+  "learnMore": [],
+  "terms": [
+   "population-estimates",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "brbg",
+   "classification": "manual",
+   "classes": 5,
+   "breaks": [
+    -4,
+    -1,
+    1,
+    4
+   ]
+  }
+ },
+ {
+  "id": "popest_domestic_migration",
+  "title": "People moving in or out (within the U.S.)",
+  "phrase": "rates of people moving in from elsewhere in the U.S.",
+  "description": "People who moved in from other parts of the U.S. minus people who moved out, in the year to July 1, per 1,000 residents. Teal areas gained residents this way; brown areas lost them.",
+  "category": "People",
+  "subcategory": "Population and age",
+  "tags": [
+   "migration",
+   "moving",
+   "population estimates",
+   "domestic migration",
+   "demographics"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, Population Estimates Program",
+   "shortName": "Census Bureau",
+   "url": "https://www.census.gov/programs-surveys/popest.html",
+   "citation": "U.S. Census Bureau, Population Estimates Program, Vintage 2025 county totals (co-est2025-alldata) and Vintage 2020 (co-est2020-alldata)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "Year to July 1, 2025",
+  "geographyLevels": [
+   "state",
+   "county"
+  ],
+  "areaLevels": [],
+  "unit": "per_1k",
+  "universe": "total population (modeled estimate)",
+  "measure": {
+   "kind": "popest",
+   "field": "domestic",
+   "year": 2025
+  },
+  "modelInputs": [],
+  "coverageNote": "Modeled, not counted: the Census Bureau estimates moves from tax returns, Medicare and other records, so a county's figure can be revised. Each release revises its decade, and 2011–2019 come from the Vintage 2020 estimates (built on the 2010 Census) while 2021 on build on the 2020 Census, so the two runs are not one series; 2020 is left out. Counties with large college or military populations can swing widely. Connecticut shows its old counties through 2019 and its nine planning regions from 2021.",
+  "facets": [],
+  "library": false,
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2011,
+   "to": 2025,
+   "step": 1
+  },
+  "learnMore": [],
+  "terms": [
+   "population-estimates",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "brbg",
+   "classification": "manual",
+   "classes": 5,
+   "breaks": [
+    -10,
+    -3,
+    3,
+    10
+   ]
+  }
+ },
+ {
+  "id": "popest_international_migration",
+  "title": "People moving in from abroad",
+  "phrase": "rates of people moving in from abroad",
+  "description": "People who moved in from other countries minus people who moved out, in the year to July 1, per 1,000 residents. Darker areas gained more residents from abroad.",
+  "category": "People",
+  "subcategory": "Immigration and language",
+  "tags": [
+   "migration",
+   "immigration",
+   "population estimates",
+   "international migration",
+   "demographics"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, Population Estimates Program",
+   "shortName": "Census Bureau",
+   "url": "https://www.census.gov/programs-surveys/popest.html",
+   "citation": "U.S. Census Bureau, Population Estimates Program, Vintage 2025 county totals (co-est2025-alldata) and Vintage 2020 (co-est2020-alldata)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "Year to July 1, 2025",
+  "geographyLevels": [
+   "state",
+   "county"
+  ],
+  "areaLevels": [],
+  "unit": "per_1k",
+  "universe": "total population (modeled estimate)",
+  "measure": {
+   "kind": "popest",
+   "field": "international",
+   "year": 2025
+  },
+  "modelInputs": [],
+  "coverageNote": "Modeled, not counted: the Census Bureau estimates international moves from survey and administrative sources and spreads them across counties, so small counties' figures are rough and can be revised. Each release revises its decade, and 2011–2019 come from the Vintage 2020 estimates (built on the 2010 Census) while 2021 on build on the 2020 Census, so the two runs are not one series; 2020 is left out. Connecticut shows its old counties through 2019 and its nine planning regions from 2021.",
+  "facets": [],
+  "library": false,
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2011,
+   "to": 2025,
+   "step": 1
+  },
+  "learnMore": [],
+  "terms": [
+   "population-estimates",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "manual",
+   "classes": 5,
+   "breaks": [
+    0.5,
+    1,
+    2,
+    4
+   ]
+  }
+ },
+ {
+  "id": "popest_natural_change",
+  "title": "Births minus deaths",
+  "phrase": "rates of births outnumbering deaths",
+  "description": "Births minus deaths in the year to July 1, per 1,000 residents. Teal areas had more births than deaths; brown areas had more deaths, which is common where residents are older.",
+  "category": "People",
+  "subcategory": "Population and age",
+  "tags": [
+   "births",
+   "deaths",
+   "natural change",
+   "population estimates",
+   "demographics"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, Population Estimates Program",
+   "shortName": "Census Bureau",
+   "url": "https://www.census.gov/programs-surveys/popest.html",
+   "citation": "U.S. Census Bureau, Population Estimates Program, Vintage 2025 county totals (co-est2025-alldata) and Vintage 2020 (co-est2020-alldata)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "Year to July 1, 2025",
+  "geographyLevels": [
+   "state",
+   "county"
+  ],
+  "areaLevels": [],
+  "unit": "per_1k",
+  "universe": "total population (estimate)",
+  "measure": {
+   "kind": "popest",
+   "field": "natural",
+   "year": 2025
+  },
+  "modelInputs": [],
+  "coverageNote": "Births and deaths come from vital records, so this part is closer to a count than the migration maps. Each release revises its decade, and 2011–2019 come from the Vintage 2020 estimates (built on the 2010 Census) while 2021 on build on the 2020 Census, so the two runs are not one series; 2020 is left out. Connecticut shows its old counties through 2019 and its nine planning regions from 2021.",
+  "facets": [],
+  "library": false,
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2011,
+   "to": 2025,
+   "step": 1
+  },
+  "learnMore": [],
+  "terms": [
+   "population-estimates",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "brbg",
+   "classification": "manual",
+   "classes": 5,
+   "breaks": [
+    -6,
+    -2,
+    2,
+    6
+   ]
+  }
+ },
+ {
   "id": "population_density",
   "title": "Population density",
   "phrase": "population density",

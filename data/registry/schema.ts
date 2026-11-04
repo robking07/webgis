@@ -4,7 +4,7 @@ import { z } from "zod";
 import { CATEGORIES } from "./categories.ts";
 
 const Ramp = z.enum(["blues", "ylgnbu", "oranges", "purples", "viridis", "cividis", "rdbu", "puor", "brbg"]);
-const Unit = z.enum(["dollars", "percent", "minutes", "count", "per_sq_mi", "ratio", "years", "deg_f", "inches", "per_100k", "vehicles_per_day", "miles_per_day", "categories", "agreements", "declarations", "percentile", "ug_m3", "ppm", "degree_days"]);
+const Unit = z.enum(["dollars", "percent", "minutes", "count", "per_sq_mi", "ratio", "years", "deg_f", "inches", "per_100k", "per_1k", "vehicles_per_day", "miles_per_day", "categories", "agreements", "declarations", "percentile", "ug_m3", "ppm", "degree_days"]);
 export const GeoLevel = z.enum(["state", "county", "tract", "block_group", "block"]);
 
 /** A feature-layer popup field with optional explainers (D-35). */
@@ -178,6 +178,16 @@ const SahieMeasure = z.object({
   year: z.number().int(),
 });
 
+/** Census Population Estimates (public domain): county and state rows of the yearly estimates
+ *  files. `change` = % change from the 2020 Census base to July 1 of `year`; the others are the
+ *  Census Bureau's own rates per 1,000 residents for the year to July 1. Ingest: popest.ts. */
+const PopestMeasure = z.object({
+  kind: z.literal("popest"),
+  field: z.enum(["change", "domestic", "international", "natural"]),
+  /** Estimate year (July 1); the headline. */
+  year: z.number().int(),
+});
+
 /** CDC/ATSDR Social Vulnerability Index: one percentile-rank field of CDC's U.S.-wide county and
  *  tract CSVs (ranked nationally, not within each state). Ingest: data/ingest/src/svi.ts. */
 const SviMeasure = z.object({
@@ -338,7 +348,7 @@ export const DatasetEntry = z.object({
   unit: Unit,
   /** For insights: the population the value describes. Pairs that share one are flagged. */
   universe: z.string(),
-  measure: z.discriminatedUnion("kind", [AcsMeasure, Census2020Measure, LodesMeasure, PlacesMeasure, ClimdivMeasure, NbiMeasure, FarsMeasure, FeaturesMeasure, HpmsVmtMeasure, CejstMeasure, Ddp287gMeasure, LeadMeasure, FoodAccessMeasure, FemaNriMeasure, SviMeasure, AirQualityMeasure, OverdoseMeasure, TriMeasure, SahieMeasure, FemaDeclarationsMeasure]),
+  measure: z.discriminatedUnion("kind", [AcsMeasure, Census2020Measure, LodesMeasure, PlacesMeasure, ClimdivMeasure, NbiMeasure, FarsMeasure, FeaturesMeasure, HpmsVmtMeasure, CejstMeasure, Ddp287gMeasure, LeadMeasure, FoodAccessMeasure, FemaNriMeasure, SviMeasure, AirQualityMeasure, OverdoseMeasure, TriMeasure, SahieMeasure, PopestMeasure, FemaDeclarationsMeasure]),
   /** Other registry datasets used as inputs to this dataset's model (e.g. PLACES uses county poverty).
    *  Insight pairs with these are flagged: they correlate partly by construction. */
   modelInputs: z.array(z.string()).default([]),
