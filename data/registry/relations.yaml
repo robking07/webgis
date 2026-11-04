@@ -60,6 +60,8 @@ links:
   - { maps: [aadt, vmt_per_capita], why: Road traffic counts are what driving totals are built from. }
   # People: Population and age, Immigration and language
   - { maps: [population_density, census2020_pop_density], why: The same measure from the survey and from the 2020 count. }
+  - { maps: [popest_change, popest_domestic_migration], why: Places that gain people mostly do so by people moving in from elsewhere in the U.S. }
+  - { maps: [popest_change, popest_natural_change], why: Growth comes from moves and from births outnumbering deaths. }
   - { maps: [census2020_housing_density, census2020_pop_density], why: Homes and residents per square mile from the same count. }
   - { maps: [pct_age_65_plus, pct_seniors_living_alone], why: More older residents, more seniors living alone. }
   - { maps: [pct_seniors_living_alone, loneliness], why: Living alone is one driver of loneliness. }
@@ -384,6 +386,14 @@ maps:
   pct_age_65_plus:
     group: "People"
     counts: { of: "people 65 and older", per: "residents" }
+  popest_change:
+    group: "People"
+  popest_domestic_migration:
+    group: "People"
+  popest_international_migration:
+    group: "People"
+  popest_natural_change:
+    group: "People"
   pct_foreign_born:
     group: "People"
     counts: { of: "residents born outside the U.S.", per: "residents" }

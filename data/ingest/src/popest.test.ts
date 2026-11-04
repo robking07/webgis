@@ -1,5 +1,21 @@
 import { describe, expect, it } from "vitest";
-import { parse1990s, parseCsv, parseDecadeText } from "./popest.ts";
+import { parse1990s, parseCsv, parseDecadeText, parsePopest } from "./popest.ts";
+
+describe("parsePopest", () => {
+  const text = ["SUMLEV,STATE,COUNTY,ESTIMATESBASE2020,POPESTIMATE2025,RDOMESTICMIG2025,RNATURALINC2025",
+    "040,27,000,100,110,1,2", "050,27,053,200,210,-3.5,4", "050,46,113,50,60,0,0"].join("\n");
+  it("gives % change since the 2020 base, state and county", () => {
+    const p = parsePopest(text, "change", 2025);
+    expect(p.state.get("27")!.value).toBeCloseTo(10);
+    expect(p.county.get("27053")!.value).toBeCloseTo(5);
+    expect(p.county.get("46102")!.value).toBeCloseTo(20); // Shannon → Oglala Lakota
+  });
+  it("reads the Census rates, and the 2010s INC name for natural change", () => {
+    expect(parsePopest(text, "domestic", 2025).county.get("27053")!.value).toBe(-3.5);
+    expect(parsePopest(text, "natural", 2025).state.get("27")!.value).toBe(2);
+    expect(() => parsePopest(text, "domestic", 2024)).toThrow(/RDOMESTICMIG2024/);
+  });
+});
 
 describe("Census population estimate parsers", () => {
   it("reads the 1970s/80s blocks, joins a wrapped county name, skips state rows", () => {

@@ -330,3 +330,12 @@
   long: >-
     Any project that uses federal transportation dollars in the seven-county Twin Cities area has to be listed in the TIP before it can be built. The Metropolitan Council, the region's planning agency, publishes it each year after state, county and city agencies submit their projects. Being in the TIP means the money is committed on paper; schedules and designs can still change.
   source: https://metrocouncil.org/Transportation/Planning-2/Transportation-Improvement-Program.aspx
+
+- id: population-estimates
+  term: >-
+    Population estimates
+  short: >-
+    The Census Bureau's yearly estimate of how many people live in a place between the once-a-decade counts. Migration in them is modeled, not counted.
+  long: >-
+    Each year the Census Bureau starts from the last Census count and adds births, subtracts deaths, then estimates moves in and out of each county using tax returns, Medicare, school and other records. Births and deaths come from vital records and are close to counts; migration is modeled, so a county's figure can be off and later be revised. Each yearly release also revises the years before it, and when a new Census arrives the whole decade is rebuilt, so estimates from different decades are not one smooth series.
+  source: https://www.census.gov/programs-surveys/popest/about.html
