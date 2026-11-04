@@ -2566,5 +2566,185 @@
    "county",
    "state"
   ]
+ },
+ "popest_change": {
+  "2021": [
+   "county",
+   "state"
+  ],
+  "2022": [
+   "county",
+   "state"
+  ],
+  "2023": [
+   "county",
+   "state"
+  ],
+  "2024": [
+   "county",
+   "state"
+  ]
+ },
+ "popest_domestic_migration": {
+  "2011": [
+   "county",
+   "state"
+  ],
+  "2012": [
+   "county",
+   "state"
+  ],
+  "2013": [
+   "county",
+   "state"
+  ],
+  "2014": [
+   "county",
+   "state"
+  ],
+  "2015": [
+   "county",
+   "state"
+  ],
+  "2016": [
+   "county",
+   "state"
+  ],
+  "2017": [
+   "county",
+   "state"
+  ],
+  "2018": [
+   "county",
+   "state"
+  ],
+  "2019": [
+   "county",
+   "state"
+  ],
+  "2021": [
+   "county",
+   "state"
+  ],
+  "2022": [
+   "county",
+   "state"
+  ],
+  "2023": [
+   "county",
+   "state"
+  ],
+  "2024": [
+   "county",
+   "state"
+  ]
+ },
+ "popest_international_migration": {
+  "2011": [
+   "county",
+   "state"
+  ],
+  "2012": [
+   "county",
+   "state"
+  ],
+  "2013": [
+   "county",
+   "state"
+  ],
+  "2014": [
+   "county",
+   "state"
+  ],
+  "2015": [
+   "county",
+   "state"
+  ],
+  "2016": [
+   "county",
+   "state"
+  ],
+  "2017": [
+   "county",
+   "state"
+  ],
+  "2018": [
+   "county",
+   "state"
+  ],
+  "2019": [
+   "county",
+   "state"
+  ],
+  "2021": [
+   "county",
+   "state"
+  ],
+  "2022": [
+   "county",
+   "state"
+  ],
+  "2023": [
+   "county",
+   "state"
+  ],
+  "2024": [
+   "county",
+   "state"
+  ]
+ },
+ "popest_natural_change": {
+  "2011": [
+   "county",
+   "state"
+  ],
+  "2012": [
+   "county",
+   "state"
+  ],
+  "2013": [
+   "county",
+   "state"
+  ],
+  "2014": [
+   "county",
+   "state"
+  ],
+  "2015": [
+   "county",
+   "state"
+  ],
+  "2016": [
+   "county",
+   "state"
+  ],
+  "2017": [
+   "county",
+   "state"
+  ],
+  "2018": [
+   "county",
+   "state"
+  ],
+  "2019": [
+   "county",
+   "state"
+  ],
+  "2021": [
+   "county",
+   "state"
+  ],
+  "2022": [
+   "county",
+   "state"
+  ],
+  "2023": [
+   "county",
+   "state"
+  ],
+  "2024": [
+   "county",
+   "state"
+  ]
  }
 }
