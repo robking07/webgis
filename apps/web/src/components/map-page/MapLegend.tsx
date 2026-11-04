@@ -5,7 +5,7 @@ import { BivariateLegend, Legend, StatusState } from "@webgis/design/components"
 import { featureLineColors, formatValue, GEO_LEVELS, legendFormat, type GeoLevel, type ThemeName } from "@webgis/design";
 import type { Dataset } from "@/lib/registry";
 import type { FeatureLayerSpec } from "@/lib/layers";
-import { changeNote, stopNote, type Stop } from "@/lib/periods";
+import { changeNote, restatesDollars, stopNote, type Stop } from "@/lib/periods";
 import { changeUnitWords } from "@/lib/change";
 import { LEVEL_PLURAL } from "@/lib/place";
 import type { ClassedLevel } from "./useViewerData";
@@ -71,7 +71,7 @@ export function MapLegend({ theme, primary, secondary, isFeature, featureSpec, c
   const [changeHead, ...changeNotes] = primary && since && stop && current?.measure ? [
     `Change, ${since.label} → ${stop.label}, ${changeUnitWords(current.measure, primary.unit)} · ${GEO_LEVELS[level].label}`,
     current.tested && "No clear change: within the margin of error",
-    primary.measure.kind === "acs5" && primary.unit === "dollars" && "Adjusted for inflation",
+    restatesDollars(primary) && "Adjusted for inflation",
     changeNote(since, stop, level),
     primary.coverageNote,
   ].filter(Boolean) as string[] : [];
