@@ -35,6 +35,14 @@ describe("library recipe", () => {
     expect(checkLevel("county", [{ value: v(60, 30, 20), moe: 1 }]).reasons).toHaveLength(1);
   });
 
+  it("carries a recipe note and extra glossary terms into the entry (#422)", () => {
+    const fam = shape(recipe.maps.find((m) => m.id === "pct_poverty_families")!, recipe).entry;
+    expect(fam.terms[0]).toBe("federal-poverty-level");
+    expect(fam.terms).toContain("acs-5-year");
+    expect(shape(recipe.maps.find((m) => m.id === "pct_households_ssi")!, recipe).entry.coverageNote).toMatch(/^SSI is not Social Security/);
+    expect(shape(recipe.maps[0], recipe).raw).not.toHaveProperty("coverageNote");
+  });
+
   it("writes compact YAML", () => {
     const yaml = toYaml(shape(recipe.maps[0], recipe).raw);
     expect(yaml).toMatch(/^measure: \{kind: acs5, numerator: \[DP04_0007P\]\}$/m);

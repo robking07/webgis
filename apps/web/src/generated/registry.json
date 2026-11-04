@@ -5789,6 +5789,66 @@
   }
  },
  {
+  "id": "pct_aian_incl_multiracial",
+  "title": "American Indian and Alaska Native residents, including multiracial",
+  "description": "Share of residents who report being American Indian or Alaska Native, alone or with another race, of any Hispanic origin.",
+  "category": "People",
+  "subcategory": "Race and ethnicity",
+  "tags": [
+   "race",
+   "American Indian",
+   "Alaska Native",
+   "Native American",
+   "Indigenous",
+   "tribal",
+   "multiracial",
+   "alone or in combination",
+   "demographics"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP05",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP05 (ACS Demographic and Housing Estimates)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "total population",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP05_0085P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "coverageNote": "Counts everyone who reports this race, alone or with other races, so a person who reports two races counts in both groups and the groups add up to more than 100%. The race maps marked (non-Hispanic) count each person once. These numbers count how people describe themselves to the Census Bureau. Differences between places reflect history, not the people in them: redlining, highway building through Black neighborhoods, exclusionary zoning and unequal lending shaped where people could live and what they could own. Many measures on this site, like income, housing cost, health and pollution, track race closely for the same reasons.",
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
   "id": "pct_aian_nh",
   "title": "American Indian and Alaska Native (non-Hispanic) residents",
   "phrase": "shares of non-Hispanic American Indian and Alaska Native residents",
@@ -5894,6 +5954,63 @@
    "perSqMi": false
   },
   "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_asian_incl_multiracial",
+  "title": "Asian residents, including multiracial",
+  "description": "Share of residents who report being Asian, alone or with another race, of any Hispanic origin.",
+  "category": "People",
+  "subcategory": "Race and ethnicity",
+  "tags": [
+   "race",
+   "Asian",
+   "Asian American",
+   "multiracial",
+   "alone or in combination",
+   "demographics"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP05",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP05 (ACS Demographic and Housing Estimates)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "total population",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP05_0086P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "coverageNote": "Counts everyone who reports this race, alone or with other races, so a person who reports two races counts in both groups and the groups add up to more than 100%. The race maps marked (non-Hispanic) count each person once. These numbers count how people describe themselves to the Census Bureau. Differences between places reflect history, not the people in them: redlining, highway building through Black neighborhoods, exclusionary zoning and unequal lending shaped where people could live and what they could own. Many measures on this site, like income, housing cost, health and pollution, track race closely for the same reasons.",
   "facets": [],
   "library": true,
   "excludeFromInsights": false,
@@ -6212,6 +6329,63 @@
   ],
   "symbology": {
    "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_black_incl_multiracial",
+  "title": "Black or African American residents, including multiracial",
+  "description": "Share of residents who report being Black or African American, alone or with another race, of any Hispanic origin.",
+  "category": "People",
+  "subcategory": "Race and ethnicity",
+  "tags": [
+   "race",
+   "Black",
+   "African American",
+   "multiracial",
+   "alone or in combination",
+   "demographics"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP05",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP05 (ACS Demographic and Housing Estimates)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "total population",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP05_0084P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "coverageNote": "Counts everyone who reports this race, alone or with other races, so a person who reports two races counts in both groups and the groups add up to more than 100%. The race maps marked (non-Hispanic) count each person once. These numbers count how people describe themselves to the Census Bureau. Differences between places reflect history, not the people in them: redlining, highway building through Black neighborhoods, exclusionary zoning and unequal lending shaped where people could live and what they could own. Many measures on this site, like income, housing cost, health and pollution, track race closely for the same reasons.",
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
    "classification": "quantile",
    "classes": 5
   }
@@ -7106,6 +7280,167 @@
   }
  },
  {
+  "id": "pct_disability_18_64",
+  "title": "Adults 18 to 64 with a disability",
+  "description": "Share of adults 18 to 64 with at least one disability: hearing, vision, thinking, walking, self-care or living independently.",
+  "category": "Health",
+  "subcategory": "Disability",
+  "tags": [
+   "disability",
+   "working age",
+   "adults"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP02",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP02 (Selected Social Characteristics in the United States)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "adults 18 to 64 (civilian",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP02_0076P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_disability_65_plus",
+  "title": "People 65 and older with a disability",
+  "description": "Share of people 65 and older with at least one disability: hearing, vision, thinking, walking, self-care or living independently.",
+  "category": "Health",
+  "subcategory": "Disability",
+  "tags": [
+   "disability",
+   "seniors",
+   "older adults",
+   "aging"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP02",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP02 (Selected Social Characteristics in the United States)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "people 65 and older (civilian",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP02_0078P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_disability_under_18",
+  "title": "Children with a disability",
+  "description": "Share of children under 18 with serious difficulty hearing, seeing, concentrating, walking or dressing and bathing.",
+  "category": "Health",
+  "subcategory": "Disability",
+  "tags": [
+   "disability",
+   "children",
+   "special needs"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP02",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP02 (Selected Social Characteristics in the United States)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "children under 18 (civilian",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP02_0074P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "coverageNote": "Children under 5 are asked only about hearing and seeing.",
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
   "id": "pct_divorced",
   "title": "People who are divorced",
   "description": "Share of people 15 and older who are divorced and have not remarried.",
@@ -7221,6 +7556,62 @@
   ],
   "symbology": {
    "ramp": "cividis",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_english_less_than_very_well",
+  "title": "People who speak English less than \"very well\"",
+  "description": "Share of people 5 and older who speak another language at home and say they speak English less than \"very well\".",
+  "category": "People",
+  "subcategory": "Immigration and language",
+  "tags": [
+   "language",
+   "English",
+   "limited English proficiency",
+   "language access",
+   "interpreters"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP02",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP02 (Selected Social Characteristics in the United States)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "people 5 and older",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP02_0115P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "coverageNote": "This counts people; the \"Households with limited English\" map counts households. Federal language-access guidance uses this person count to define limited English proficiency.",
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
    "classification": "quantile",
    "classes": 5
   }
@@ -7587,6 +7978,62 @@
    "classification": "quantile",
    "classes": 5,
    "higherIsBetter": true
+  }
+ },
+ {
+  "id": "pct_grandparents_responsible",
+  "title": "Grandparents raising their grandchildren",
+  "description": "Share of grandparents living with their grandchildren under 18 who are responsible for most of those grandchildren's basic needs.",
+  "category": "People",
+  "subcategory": "Population and age",
+  "tags": [
+   "grandparents",
+   "grandfamilies",
+   "kinship care",
+   "caregivers",
+   "family"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP02",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP02 (Selected Social Characteristics in the United States)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "grandparents living with their grandchildren under 18",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP02_0045P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "coverageNote": "A share of grandparents who live with their grandchildren, not of all grandparents or all residents.",
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
   }
  },
  {
@@ -10206,6 +10653,61 @@
   }
  },
  {
+  "id": "pct_households_ssi",
+  "title": "Households receiving Supplemental Security Income (SSI)",
+  "description": "Share of households where someone received Supplemental Security Income, the federal monthly payment for people with low income and savings who are 65 or older, blind or have a disability.",
+  "category": "Economy",
+  "subcategory": "Income and poverty",
+  "tags": [
+   "Supplemental Security Income",
+   "benefits",
+   "disability benefits",
+   "low income"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP03",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP03 (Selected Economic Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "households",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP03_0070P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "coverageNote": "SSI is not Social Security: it is paid from general taxes, based on need, and is separate from Social Security retirement and disability (SSDI) benefits.",
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
   "id": "pct_households_with_children",
   "title": "Households with children",
   "description": "Share of households with at least one person under 18.",
@@ -10353,6 +10855,118 @@
    "perSqMi": false
   },
   "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_immigrants_arrived_2010_later",
+  "title": "Immigrants who arrived in 2010 or later",
+  "description": "Share of residents born outside the U.S. (immigrants) who came to live in the U.S. in 2010 or later.",
+  "category": "People",
+  "subcategory": "Immigration and language",
+  "tags": [
+   "immigrants",
+   "foreign-born",
+   "recent arrivals",
+   "year of entry",
+   "immigration"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP02",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP02 (Selected Social Characteristics in the United States)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "people born outside the U.S.",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP02_0103P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "coverageNote": "A share of immigrants, not of all residents. The year is when a person last came to live in the U.S.",
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_immigrants_naturalized",
+  "title": "Immigrants who are naturalized citizens",
+  "description": "Share of residents born outside the U.S. (immigrants) who have become U.S. citizens.",
+  "category": "People",
+  "subcategory": "Immigration and language",
+  "tags": [
+   "immigrants",
+   "foreign-born",
+   "naturalization",
+   "citizenship",
+   "immigration"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP02",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP02 (Selected Social Characteristics in the United States)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "people born outside the U.S.",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP02_0096P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "coverageNote": "A share of immigrants, not of all residents, as people report it to the Census Bureau.",
   "facets": [],
   "library": true,
   "excludeFromInsights": false,
@@ -12292,6 +12906,60 @@
   ],
   "symbology": {
    "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_language_other_than_english",
+  "title": "Speak a language other than English at home",
+  "description": "Share of people 5 and older who speak a language other than English at home, however well they also speak English.",
+  "category": "People",
+  "subcategory": "Immigration and language",
+  "tags": [
+   "language",
+   "bilingual",
+   "multilingual",
+   "language at home"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP02",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP02 (Selected Social Characteristics in the United States)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "people 5 and older",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP02_0114P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
    "classification": "quantile",
    "classes": 5
   }
@@ -16460,6 +17128,229 @@
   }
  },
  {
+  "id": "pct_poverty_65_plus",
+  "title": "People 65 and older in poverty",
+  "description": "Share of people 65 and older whose income in the past year was below the federal poverty line.",
+  "category": "Economy",
+  "subcategory": "Income and poverty",
+  "tags": [
+   "poverty",
+   "seniors",
+   "older adults",
+   "aging",
+   "low income"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP03",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP03 (Selected Economic Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "people 65 and older",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP03_0135P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "federal-poverty-level",
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_poverty_families",
+  "title": "Families in poverty",
+  "description": "Share of families whose income in the past year was below the federal poverty line.",
+  "category": "Economy",
+  "subcategory": "Income and poverty",
+  "tags": [
+   "poverty",
+   "families",
+   "low income",
+   "poverty rate"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP03",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP03 (Selected Economic Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "families",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP03_0119P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "federal-poverty-level",
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_poverty_married_couple_families",
+  "title": "Married-couple families in poverty",
+  "description": "Share of married-couple families whose income in the past year was below the federal poverty line.",
+  "category": "Economy",
+  "subcategory": "Income and poverty",
+  "tags": [
+   "poverty",
+   "families",
+   "married couples",
+   "low income"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP03",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP03 (Selected Economic Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "married-couple families",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP03_0122P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "federal-poverty-level",
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_poverty_single_women_families",
+  "title": "Families led by a woman with no spouse, in poverty",
+  "description": "Share of families led by a woman with no spouse at home whose income in the past year was below the federal poverty line.",
+  "category": "Economy",
+  "subcategory": "Income and poverty",
+  "tags": [
+   "poverty",
+   "families",
+   "single mothers",
+   "single parents",
+   "low income"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP03",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP03 (Selected Economic Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "families led by a woman with no spouse present",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP03_0125P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "coverageNote": "A family here is a woman who maintains the home, no husband or wife present, living with relatives such as her children, grandchildren or siblings.",
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "federal-poverty-level",
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
   "id": "pct_private_school_k12",
   "title": "K–12 students in private school",
   "description": "Share of students in kindergarten through 12th grade who go to a private school.",
@@ -17934,6 +18825,116 @@
   }
  },
  {
+  "id": "pct_spanish_at_home",
+  "title": "Speak Spanish at home",
+  "description": "Share of people 5 and older who speak Spanish at home, however well they also speak English.",
+  "category": "People",
+  "subcategory": "Immigration and language",
+  "tags": [
+   "language",
+   "Spanish",
+   "bilingual",
+   "language at home"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP02",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP02 (Selected Social Characteristics in the United States)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "people 5 and older",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP02_0116P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_spanish_limited_english",
+  "title": "Spanish speakers with limited English",
+  "description": "Share of people 5 and older who speak Spanish at home and speak English less than \"very well\".",
+  "category": "People",
+  "subcategory": "Immigration and language",
+  "tags": [
+   "language",
+   "Spanish",
+   "limited English proficiency",
+   "language access",
+   "interpreters"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP02",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP02 (Selected Social Characteristics in the United States)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "people 5 and older",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP02_0117P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "coverageNote": "A share of everyone 5 and older, not only of Spanish speakers.",
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
   "id": "pct_state_government_workers",
   "title": "State government workers",
   "description": "Share of employed residents who work for a state government, including state universities.",
@@ -18637,6 +19638,171 @@
   }
  },
  {
+  "id": "pct_uninsured_adults_not_in_labor_force",
+  "title": "Adults outside the workforce without health insurance",
+  "description": "Share of adults 19 to 64 who are neither working nor looking for work, such as students, caregivers, early retirees and people unable to work, with no health insurance.",
+  "category": "Health",
+  "subcategory": "Care and coverage",
+  "tags": [
+   "health insurance",
+   "uninsured",
+   "not working",
+   "caregivers",
+   "students"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP03",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP03 (Selected Economic Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "adults 19 to 64 not in the labor force",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP03_0118P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_uninsured_under_19",
+  "title": "Children and teens without health insurance",
+  "description": "Share of children and teens under 19 with no health insurance.",
+  "category": "Health",
+  "subcategory": "Care and coverage",
+  "tags": [
+   "health insurance",
+   "uninsured",
+   "children",
+   "Medicaid",
+   "CHIP"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP03",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP03 (Selected Economic Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "people under 19 (civilian",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP03_0101P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "coverageNote": "Under 19 is the age limit for children's Medicaid and CHIP.",
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_uninsured_working_adults",
+  "title": "Working adults without health insurance",
+  "description": "Share of employed adults 19 to 64 with no health insurance.",
+  "category": "Health",
+  "subcategory": "Care and coverage",
+  "tags": [
+   "health insurance",
+   "uninsured",
+   "workers",
+   "employer coverage"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP03",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP03 (Selected Economic Characteristics)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "employed adults 19 to 64",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP03_0108P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
   "id": "pct_unmarried_couples_with_children",
   "title": "Unmarried couples with children",
   "description": "Share of households that are an unmarried couple living with their own children under 18.",
@@ -18929,6 +20095,65 @@
   }
  },
  {
+  "id": "pct_veterans_disability_rating",
+  "title": "Veterans with a service-connected disability rating",
+  "description": "Share of veterans whom the VA has rated as having a disability caused or made worse by military service.",
+  "category": "Health",
+  "subcategory": "Disability",
+  "tags": [
+   "veterans",
+   "disability",
+   "VA",
+   "service-connected",
+   "military"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDT5Y2024.B21100",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table B21100 (Service-Connected Disability-Rating Status and Ratings for Civilian Veterans 18 Years and Over)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "civilian veterans 18 and older",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "B21100_003"
+   ],
+   "denominator": [
+    "B21100_001"
+   ],
+   "scale": 100,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "coverageNote": "A rating of 0% counts: the VA recognizes the condition but pays no compensation for it.",
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
   "id": "pct_walk_commute",
   "title": "Walk to work",
   "phrase": "walk-to-work rates",
@@ -18979,6 +20204,62 @@
    "to": 2024,
    "step": 5
   },
+  "learnMore": [],
+  "terms": [
+   "acs-5-year",
+   "margin-of-error",
+   "census-geography",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "pct_white_incl_multiracial",
+  "title": "White residents, including multiracial",
+  "description": "Share of residents who report being White, alone or with another race, of any Hispanic origin.",
+  "category": "People",
+  "subcategory": "Race and ethnicity",
+  "tags": [
+   "race",
+   "White",
+   "multiracial",
+   "alone or in combination",
+   "demographics"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, ACS 5-year estimates (added automatically)",
+   "shortName": "Census Bureau",
+   "url": "https://data.census.gov/table/ACSDP5Y2024.DP05",
+   "citation": "U.S. Census Bureau, 2020–2024 American Community Survey 5-Year Estimates, table DP05 (ACS Demographic and Housing Estimates)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2020–2024 (5-year estimate)",
+  "geographyLevels": [
+   "state",
+   "county",
+   "tract"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "total population",
+  "measure": {
+   "kind": "acs5",
+   "numerator": [
+    "DP05_0083P"
+   ],
+   "scale": 1,
+   "perSqMi": false
+  },
+  "modelInputs": [],
+  "coverageNote": "Counts everyone who reports this race, alone or with other races, so a person who reports two races counts in both groups and the groups add up to more than 100%. The race maps marked (non-Hispanic) count each person once. These numbers count how people describe themselves to the Census Bureau. Differences between places reflect history, not the people in them: redlining, highway building through Black neighborhoods, exclusionary zoning and unequal lending shaped where people could live and what they could own. Many measures on this site, like income, housing cost, health and pollution, track race closely for the same reasons.",
+  "facets": [],
+  "library": true,
+  "excludeFromInsights": false,
   "learnMore": [],
   "terms": [
    "acs-5-year",
