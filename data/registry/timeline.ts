@@ -14,6 +14,9 @@ export interface TimelineStop {
   /** County and tract boundaries the values are keyed to. "2019" = 2010 tracts and the
    *  counties before Connecticut's 2022 planning regions; omitted = the current tiles. */
   boundaries?: "2019";
+  /** Set when the stop belongs to an earlier, separate series (popest's 2010-based estimates):
+   *  a change map only pairs stops of the same series. */
+  series?: string;
   /** Set when the stop averages several years (first, last) rather than naming one. */
   span?: [number, number];
 }
@@ -83,8 +86,9 @@ export function timelineStops(e: DatasetEntry): TimelineStop[] {
       return years.map((y) => ({ id: String(y), label: String(y), isDefault: y === year, ...(y < 2022 ? { boundaries: "2019" as const } : {}) }));
     }
     case "popest": { // July 1 estimates; 2020 is left out (its base is the Census itself); the 2010s file still has Connecticut's old counties
+      // and is built on the 2010 Census, so it's a separate series from 2021 on (no change maps across).
       const { year } = e.measure;
-      return years.filter((y) => y !== 2020).map((y) => ({ id: String(y), label: String(y), isDefault: y === year, ...pre2020(y) }));
+      return years.filter((y) => y !== 2020).map((y) => ({ id: String(y), label: String(y), isDefault: y === year, ...(y < 2020 ? { boundaries: "2019" as const, series: "2010" } : {}) }));
     }
     case "bps": { // calendar years; the county files keep Connecticut's old counties through 2022
       const { year } = e.measure;

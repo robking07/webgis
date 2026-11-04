@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { areaChangeNote, changeEnds, noTractsNote, restatesDollars, type Stop } from "./periods";
+import { timelineStops } from "@webgis/registry/timeline";
+import { areaChangeNote, changeEnds, changeNote, changeStops, noTractsNote, restatesDollars, type Stop } from "./periods";
 
 const stop = (id: string, isDefault = false) => ({ id, label: id, isDefault, levels: [] }) as unknown as Stop;
 // A climate map: years, and a normal as the default.
@@ -31,6 +32,23 @@ describe("older-year notes (#507)", () => {
     expect(areaChangeNote(old, now, "county", "02063")).toMatch(/Valdez–Cordova in 2019/);
     expect(areaChangeNote(old, now, "county", "02066")).toMatch(/Valdez–Cordova in 2019/);
     expect(areaChangeNote(old, now, "county", "27053")).toBeNull();
+  });
+  it("says which end keeps Connecticut's old counties, not a fixed year (#540)", () => {
+    const permits2022 = { id: "2022", label: "2022", isDefault: false, levels: ["county"], boundaries: "2019" } as Stop;
+    expect(changeNote(permits2022, now, "county")).toBe("Connecticut shows no data (2022 uses its old counties)");
+    expect(areaChangeNote(permits2022, now, "county", "09110")).toBe("2022 uses Connecticut's old counties");
+    expect(changeNote(now, now, "county")).toBeNull();
+  });
+});
+
+describe("changeStops across a series break (#540)", () => {
+  const popest = timelineStops({ measure: { kind: "popest", field: "natural", year: 2025 }, timeline: { from: 2011, to: 2025, step: 1 } } as never)
+    .map((s) => ({ ...s, levels: ["county"] }) as Stop);
+  const at = (id: string) => popest.find((s) => s.id === id)!;
+  it("pairs popest's 2010-based years only with each other, and 2021 on only with 2021 on", () => {
+    expect(changeStops(popest, at("2025")).map((s) => s.id)).toEqual(["2024", "2023", "2022", "2021"]);
+    expect(changeStops(popest, at("2019")).at(-1)?.id).toBe("2011");
+    expect(changeStops(popest, at("2019"))).toHaveLength(8);
   });
 });
 
