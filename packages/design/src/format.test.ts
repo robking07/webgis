@@ -38,6 +38,7 @@ describe("classLabels", () => {
     expect(classLabels([10, 20], "percent")).toEqual(["< 10%", "10% – 20%", "≥ 20%"]);
   });
   it("drops a repeated multi-character unit from the lower bound", () => {
+    expect(classLabels([-3, 3], "per_1k")).toEqual(["< -3 per 1,000", "-3 – 3 per 1,000", "≥ 3 per 1,000"]);
     expect(classLabels([10.9, 15.9, 20], "per_100k")).toEqual(["< 10.9 per 100k", "10.9 – 15.9 per 100k", "15.9 – 20 per 100k", "≥ 20 per 100k"]);
   });
   it("uses exact inclusive ranges for whole-number counts", () => {

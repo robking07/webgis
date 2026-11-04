@@ -1,8 +1,11 @@
 // Census county population estimates, July 1 of each year 1970–2019, for the years before ACS
 // (FARS history, #479). One public file per era, each keyed to that era's county codes; no key needed.
 import { readFileSync } from "node:fs";
-import { cached, FIPS_RENAMES, splitCsv } from "./util.ts";
+import { loadRegistry } from "@webgis/registry/load";
+import { timelineStops } from "@webgis/registry/timeline";
+import { cached, db, FIPS_RENAMES, splitCsv } from "./util.ts";
 import { areas2019 } from "./geographies.ts";
+import { registerDataset, writeStopValues, writeValues, type Value } from "./values.ts";
 
 const BASE = "https://www2.census.gov/programs-surveys/popest";
 /** year → county FIPS (as the file coded it) → residents */
@@ -94,4 +97,73 @@ export async function estimatedPop(year: number, level: "state" | "county"): Pro
   const valid = await areas2019("county");
   for (const [g, n] of county) if (valid.has(g)) out.set(g, n);
   return out;
+}
+
+// ── Population change and migration maps (registry `measure.kind: popest`, #515) ──
+
+type Field = "change" | "domestic" | "international" | "natural";
+const RATE_COLUMN: Record<Exclude<Field, "change">, string[]> = {
+  domestic: ["RDOMESTICMIG"], international: ["RINTERNATIONALMIG"], natural: ["RNATURALCHG", "RNATURALINC"], // the 2010s file says INC
+};
+
+/** One alldata file → the field for one year, by state and county FIPS. `change` is % growth from the
+ *  April 2020 Census base; the rest are the Census Bureau's own rates per 1,000 residents. Renamed
+ *  counties (FIPS_RENAMES) take the new code. No margins: the Census publishes none for these. */
+export function parsePopest(text: string, field: Field, year: number) {
+  const lines = text.split(/\r?\n/);
+  const h = splitCsv(lines[0]);
+  const col = (...names: string[]) => {
+    const i = names.map((n) => h.indexOf(n)).find((j) => j >= 0);
+    if (i === undefined) throw new Error(`population estimates file: no ${names.join(" / ")} column`);
+    return i;
+  };
+  const [iL, iS, iC] = [col("SUMLEV"), col("STATE"), col("COUNTY")];
+  const iA = col(...(field === "change" ? [`POPESTIMATE${year}`] : RATE_COLUMN[field].map((n) => n + year)));
+  const iB = field === "change" ? col("ESTIMATESBASE2020") : -1;
+  const out = { state: new Map<string, Value>(), county: new Map<string, Value>() };
+  for (const line of lines.slice(1)) {
+    if (!line) continue;
+    const f = splitCsv(line);
+    const lvl = Number(f[iL]);
+    if (lvl !== 40 && lvl !== 50) continue;
+    const v = field === "change" ? (Number(f[iA]) / Number(f[iB]) - 1) * 100 : Number(f[iA]);
+    if (!Number.isFinite(v)) throw new Error(`population estimates ${field} ${year} ${f[iS]}${f[iC]}: not a number`);
+    const sf = f[iS].padStart(2, "0");
+    if (lvl === 40) out.state.set(sf, { value: v, moe: null });
+    else out.county.set(sf + f[iC].padStart(3, "0"), { value: v, moe: null });
+  }
+  for (const [g, v] of out.county) {
+    const to = FIPS_RENAMES[g];
+    if (to) { out.county.delete(g); if (!out.county.has(to)) out.county.set(to, v); }
+  }
+  return out;
+}
+
+// 2021 on is in one file; 2011–2019 rates are in the vintage-2020 file (2010-based, never revised to the 2020 Census).
+const fileFor = (year: number) => `${BASE}/datasets/${year > 2020 ? "2020-2025/counties/totals/co-est2025-alldata.csv" : "2010-2020/counties/totals/co-est2020-alldata.csv"}`;
+const popestYear = async (field: Field, year: number) => parsePopest(readFileSync(await cached(fileFor(year)), "latin1"), field, year);
+
+export async function ingestPopest(only?: string[]) {
+  const entries = loadRegistry().filter((e) => e.measure.kind === "popest" && (!only || only.includes(e.id)));
+  if (!entries.length) return;
+  const pool = db();
+  for (const e of entries) {
+    if (e.measure.kind !== "popest") continue;
+    const rows = await popestYear(e.measure.field, e.measure.year);
+    await registerDataset(pool, e);
+    for (const level of ["state", "county"] as const) await writeValues(pool, e.id, level, rows[level]);
+  }
+  await pool.end();
+}
+
+/** Year control (D-36): every other estimate year, web export only. */
+export async function ingestPopestTimeline(only?: string[]) {
+  for (const e of loadRegistry().filter((e) => e.measure.kind === "popest" && e.timeline && (!only || only.includes(e.id)))) {
+    if (e.measure.kind !== "popest") continue;
+    for (const s of timelineStops(e)) {
+      if (s.isDefault) continue;
+      const rows = await popestYear(e.measure.field, +s.id);
+      for (const level of ["state", "county"] as const) writeStopValues(e.id, s.id, level, rows[level]);
+    }
+  }
 }

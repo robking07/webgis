@@ -1,6 +1,6 @@
 // Number formatting and legend rules, keyed by the `unit` field of a registry entry.
 
-export type Unit = "dollars" | "percent" | "minutes" | "count" | "per_sq_mi" | "ratio" | "years" | "deg_f" | "inches" | "per_100k" | "vehicles_per_day" | "miles_per_day" | "categories" | "agreements" | "declarations" | "percentile" | "ug_m3" | "ppm" | "degree_days";
+export type Unit = "dollars" | "percent" | "minutes" | "count" | "per_sq_mi" | "ratio" | "years" | "deg_f" | "inches" | "per_100k" | "per_1k" | "vehicles_per_day" | "miles_per_day" | "categories" | "agreements" | "declarations" | "percentile" | "ug_m3" | "ppm" | "degree_days";
 
 const nf = (o: Intl.NumberFormatOptions) => new Intl.NumberFormat("en-US", o);
 /** Default decimals for the units whose precision depends on the value (margins reuse these). */
@@ -25,6 +25,7 @@ const FORMATTERS: Record<Unit, (v: number, d: number) => string> = {
   agreements: (v) => `${nf({ maximumFractionDigits: 0 }).format(v)} ${Math.round(v) === 1 ? "agreement" : "agreements"}`,
   declarations: (v) => `${nf({ maximumFractionDigits: 0 }).format(v)} ${Math.round(v) === 1 ? "declaration" : "declarations"}`,
   miles_per_day: (v) => `${nf({ maximumFractionDigits: 1 }).format(v)} mi/day`,
+  per_1k: (v) => `${nf({ maximumFractionDigits: 1 }).format(v)} per 1,000`,
   per_100k: (v) => `${nf({ maximumFractionDigits: 1 }).format(v)} per 100k`,
   ug_m3: (v) => `${nf({ minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(v)} µg/m³`,
   ppm: (v) => `${nf({ minimumFractionDigits: 3, maximumFractionDigits: 3 }).format(v)} ppm`,
@@ -43,7 +44,7 @@ const INTEGER_UNITS = new Set<Unit>(["count", "categories", "agreements", "decla
 /** Units in words, for profile pages and screen readers. */
 export const UNIT_LABEL: Record<Unit, string> = {
   dollars: "U.S. dollars", percent: "percent", minutes: "minutes", count: "count", per_sq_mi: "per square mile of land",
-  ratio: "ratio", years: "years", deg_f: "degrees Fahrenheit", inches: "inches", per_100k: "per 100,000 residents",
+  ratio: "ratio", years: "years", deg_f: "degrees Fahrenheit", inches: "inches", per_100k: "per 100,000 residents", per_1k: "per 1,000 residents",
   vehicles_per_day: "vehicles per day", miles_per_day: "miles per day", categories: "burden categories exceeded", agreements: "active agreements", declarations: "disaster declarations", percentile: "percentile (national rank)",
   ug_m3: "micrograms per cubic meter of air", ppm: "parts per million",
   degree_days: "degree days (°F)",

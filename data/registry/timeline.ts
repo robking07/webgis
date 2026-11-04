@@ -82,6 +82,10 @@ export function timelineStops(e: DatasetEntry): TimelineStop[] {
       const { year } = e.measure;
       return years.map((y) => ({ id: String(y), label: String(y), isDefault: y === year, ...(y < 2022 ? { boundaries: "2019" as const } : {}) }));
     }
+    case "popest": { // July 1 estimates; 2020 is left out (its base is the Census itself); the 2010s file still has Connecticut's old counties
+      const { year } = e.measure;
+      return years.filter((y) => y !== 2020).map((y) => ({ id: String(y), label: String(y), isDefault: y === year, ...pre2020(y) }));
+    }
     case "tri": { // yearly reporting years; today's counties throughout
       const { year } = e.measure;
       return years.map((y) => ({ id: String(y), label: String(y), isDefault: y === year }));
