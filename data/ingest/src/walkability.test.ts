@@ -17,6 +17,6 @@ describe("walkability_index tract roll-up", () => {
     const rows = Object.fromEntries(d.prepare(sql).all().map((r) => [r.tract, r]));
     expect(rows["51019050100"]).toMatchObject({ walk_index: 13, band: "Above average", population: 400 }); // (4·100 + 16·300) / 400
     expect(rows["36061000100"]).toMatchObject({ walk_index: null, band: null, population: 0 });
-    expect(rows["01001020100"]).toMatchObject({ walk_index: null, population: null }); // no block groups at all
+    expect(rows["01001020100"]).toBeUndefined(); // no block groups at all (none in the real data)
   });
 });

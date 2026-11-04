@@ -19,6 +19,16 @@ terms: [walkability-index, tract-2010]
 learnMore:
   - label: How EPA builds the walkability index
     url: https://www.epa.gov/smartgrowth/national-walkability-index-user-guide-and-methodology
+facets:
+  - field: band
+    label: EPA's walkability group
+    term: walkability-index
+    explainer: "EPA sorts scores into four groups. Hide a group to see only the others."
+    values:
+      - { value: "Least walkable", label: "Least walkable", description: "A score of 1 to 5.75." }
+      - { value: "Below average", label: "Below average", description: "A score of 5.76 to 10.5." }
+      - { value: "Above average", label: "Above average", description: "A score of 10.51 to 15.25." }
+      - { value: "Most walkable", label: "Most walkable", description: "A score of 15.26 to 20." }
 measure:
   kind: features
   geometry: polygon
@@ -35,12 +45,13 @@ measure:
   # 2019 cartographic tracts are the 2010 tracts. EPA's state/county/tract parts carry the 2019 county codes
   # the tiles use (GEOID10 keeps three retired ones, e.g. Bedford city 51515). Population-weighted mean of the
   # block-group scores; block groups with no residents add nothing, and a tract with none is left blank.
+  # Inner join (SQLite indexes it; a LEFT JOIN on the grouped table scans it per tract): every 2019 tract has EPA block groups.
   # shortcut: tract level only; block-group detail would need 2010 block-group tiles. Upgrade if users ask for it.
   select: >-
     SELECT t.GEOID AS tract, w.walk_index,
     CASE WHEN w.walk_index IS NULL THEN NULL WHEN w.walk_index <= 5.75 THEN 'Least walkable' WHEN w.walk_index <= 10.5 THEN 'Below average'
     WHEN w.walk_index <= 15.25 THEN 'Above average' ELSE 'Most walkable' END AS band,
-    w.population, t.geom FROM {layer} t LEFT JOIN (
+    w.population, t.geom FROM {layer} t JOIN (
     SELECT STATEFP || COUNTYFP || TRACTCE AS tract, ROUND(SUM(NatWalkInd * TotPop) / NULLIF(SUM(TotPop), 0), 1) AS walk_index,
     SUM(TotPop) AS population FROM "join" GROUP BY 1) w ON w.tract = t.GEOID
   valueField: walk_index

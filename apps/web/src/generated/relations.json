@@ -197,7 +197,12 @@
     "of": "workers who walk to work",
     "per": "workers 16 and older"
    },
-   "links": [],
+   "links": [
+    {
+     "id": "walkability_index",
+     "why": "How walkable a place is built and how many people there walk to work."
+    }
+   ],
    "parts": "commute_modes"
   },
   "pct_work_from_home": {
@@ -208,6 +213,15 @@
    },
    "links": [],
    "parts": "commute_modes"
+  },
+  "walkability_index": {
+   "group": "Transportation",
+   "links": [
+    {
+     "id": "pct_walk_commute",
+     "why": "How walkable a place is built and how many people there walk to work."
+    }
+   ]
   },
   "pct_work_outside_county": {
    "group": "Transportation",
@@ -816,12 +830,33 @@
     }
    ]
   },
+  "permits_per_1k": {
+   "group": "Housing",
+   "links": []
+  },
+  "permits_multifamily_share": {
+   "group": "Housing",
+   "links": []
+  },
   "median_home_value": {
    "group": "Housing",
    "links": [
     {
+     "id": "fhfa_hpi_change_10yr",
+     "why": "How much prices rose over ten years beside what homes are worth now."
+    },
+    {
      "id": "median_household_income",
      "why": "How far home prices run ahead of incomes."
+    }
+   ]
+  },
+  "fhfa_hpi_change_10yr": {
+   "group": "Housing",
+   "links": [
+    {
+     "id": "median_home_value",
+     "why": "How much prices rose over ten years beside what homes are worth now."
     }
    ]
   },
@@ -948,6 +983,10 @@
      "why": "Education and earnings go together."
     },
     {
+     "id": "qcew_avg_pay",
+     "why": "Pay at the jobs located in a county and the income of the households living there."
+    },
+    {
      "id": "energy_burden",
      "why": "The same bill is a bigger share of a smaller income."
     }
@@ -1039,7 +1078,21 @@
   },
   "per_capita_income": {
    "group": "Economy",
-   "links": []
+   "links": [
+    {
+     "id": "bea_income_per_person",
+     "why": "Two counts of income per resident"
+    }
+   ]
+  },
+  "bea_income_per_person": {
+   "group": "Economy",
+   "links": [
+    {
+     "id": "per_capita_income",
+     "why": "Two counts of income per resident"
+    }
+   ]
   },
   "pct_broadband": {
    "group": "Economy",
@@ -1093,6 +1146,28 @@
     {
      "id": "population_density",
      "why": "Where jobs are compared with where people live."
+    },
+    {
+     "id": "qcew_jobs_per_1k",
+     "why": "Two counts of jobs where people work"
+    }
+   ]
+  },
+  "qcew_avg_pay": {
+   "group": "Economy",
+   "links": [
+    {
+     "id": "median_household_income",
+     "why": "Pay at the jobs located in a county and the income of the households living there."
+    }
+   ]
+  },
+  "qcew_jobs_per_1k": {
+   "group": "Economy",
+   "links": [
+    {
+     "id": "job_density",
+     "why": "Two counts of jobs where people work"
     }
    ]
   },
@@ -1152,6 +1227,41 @@
     {
      "id": "pct_seniors_living_alone",
      "why": "More older residents"
+    }
+   ]
+  },
+  "popest_change": {
+   "group": "People",
+   "links": [
+    {
+     "id": "popest_domestic_migration",
+     "why": "Places that gain people mostly do so by people moving in from elsewhere in the U.S."
+    },
+    {
+     "id": "popest_natural_change",
+     "why": "Growth comes from moves and from births outnumbering deaths."
+    }
+   ]
+  },
+  "popest_domestic_migration": {
+   "group": "People",
+   "links": [
+    {
+     "id": "popest_change",
+     "why": "Places that gain people mostly do so by people moving in from elsewhere in the U.S."
+    }
+   ]
+  },
+  "popest_international_migration": {
+   "group": "People",
+   "links": []
+  },
+  "popest_natural_change": {
+   "group": "People",
+   "links": [
+    {
+     "id": "popest_change",
+     "why": "Growth comes from moves and from births outnumbering deaths."
     }
    ]
   },
@@ -1354,6 +1464,24 @@
     {
      "id": "vmt_per_capita",
      "why": "More driving per person means more exposure to crashes."
+    }
+   ]
+  },
+  "rail_crossing_crashes": {
+   "group": "Transportation",
+   "links": [
+    {
+     "id": "rail_crossings_public",
+     "why": "More street-level crossings mean more places a train and a road user can meet."
+    }
+   ]
+  },
+  "rail_crossings_public": {
+   "group": "Transportation",
+   "links": [
+    {
+     "id": "rail_crossing_crashes",
+     "why": "More street-level crossings mean more places a train and a road user can meet."
     }
    ]
   },
