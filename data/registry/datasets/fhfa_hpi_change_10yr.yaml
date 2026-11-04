@@ -16,7 +16,7 @@ vintage: "2015–2025"
 geographyLevels: [state, county]
 unit: percent
 universe: homes with mortgages bought or guaranteed by Fannie Mae or Freddie Mac
-coverageNote: "Built from repeat sales and appraisals of homes with mortgages bought or guaranteed by Fannie Mae and Freddie Mac, so it leaves out cash sales, jumbo loans and most government-insured loans, and covers a place's typical home, not every one. FHFA calls the county figures developmental: they can be revised as new data arrive. Counties with too few sales have no index and show no data. These are price changes as they happened, not adjusted for inflation, so a rise smaller than general price growth is a real-terms decline. Connecticut is shown by its nine planning regions. Unlike the Census home value map, this follows price changes of the same homes over time, not the value owners estimate."
+coverageNote: "Built from repeat sales and appraisals of homes with mortgages bought or guaranteed by Fannie Mae and Freddie Mac, so it leaves out cash sales, jumbo loans and most government-insured loans, and covers a place's typical home, not every one. FHFA calls the county figures developmental: they can be revised as new data arrive. Counties with too few sales have no index and show no data: about 1,400 counties have one in 1996, 2,000 by 2005 and about 2,650 now, so early maps are partly blank. These are price changes as they happened, not adjusted for inflation, so a rise smaller than general price growth is a real-terms decline. Connecticut is shown by its nine planning regions. Unlike the Census home value map, this follows price changes of the same homes over time, not the value owners estimate."
 terms: [fhfa-hpi]
 measure: { kind: fhfa_hpi, year: 2025 }
 timeline: { from: 1996, to: 2025 }

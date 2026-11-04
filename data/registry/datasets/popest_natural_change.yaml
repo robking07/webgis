@@ -16,7 +16,7 @@ vintage: "Year to July 1, 2025"
 geographyLevels: [state, county]
 unit: per_1k
 universe: total population (estimate)
-coverageNote: "Births and deaths come from vital records, so this part is closer to a count than the migration maps. Each release revises its decade, and 2011–2019 come from the Vintage 2020 estimates (built on the 2010 Census) while 2021 on build on the 2020 Census, so the two runs are not one series; 2020 is left out. Connecticut shows its old counties through 2019 and its nine planning regions from 2021."
+coverageNote: "Births and deaths come from vital records, so this part is closer to a count than the migration maps. Each release revises its decade, and 2011–2019 come from the Vintage 2020 estimates (built on the 2010 Census) while 2021 on are built on the 2020 Census, so the two runs are not one series; 2020 is left out. Change maps never pair a year before 2020 with one after. Connecticut shows its old counties through 2019 and its nine planning regions from 2021."
 terms: [population-estimates, quantile-classes]
 measure: { kind: popest, field: natural, year: 2025 }
 timeline: { from: 2011, to: 2025 }

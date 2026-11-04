@@ -2379,7 +2379,7 @@
    "year": 2025
   },
   "modelInputs": [],
-  "coverageNote": "Built from repeat sales and appraisals of homes with mortgages bought or guaranteed by Fannie Mae and Freddie Mac, so it leaves out cash sales, jumbo loans and most government-insured loans, and covers a place's typical home, not every one. FHFA calls the county figures developmental: they can be revised as new data arrive. Counties with too few sales have no index and show no data. These are price changes as they happened, not adjusted for inflation, so a rise smaller than general price growth is a real-terms decline. Connecticut is shown by its nine planning regions. Unlike the Census home value map, this follows price changes of the same homes over time, not the value owners estimate.",
+  "coverageNote": "Built from repeat sales and appraisals of homes with mortgages bought or guaranteed by Fannie Mae and Freddie Mac, so it leaves out cash sales, jumbo loans and most government-insured loans, and covers a place's typical home, not every one. FHFA calls the county figures developmental: they can be revised as new data arrive. Counties with too few sales have no index and show no data: about 1,400 counties have one in 1996, 2,000 by 2005 and about 2,650 now, so early maps are partly blank. These are price changes as they happened, not adjusted for inflation, so a rise smaller than general price growth is a real-terms decline. Connecticut is shown by its nine planning regions. Unlike the Census home value map, this follows price changes of the same homes over time, not the value owners estimate.",
   "facets": [],
   "library": false,
   "excludeFromInsights": false,
@@ -20101,7 +20101,7 @@
   },
   "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
   "updateCadence": "annual",
-  "vintage": "July 1, 2025 estimate",
+  "vintage": "As of July 1, 2025",
   "geographyLevels": [
    "state",
    "county"
@@ -20177,7 +20177,7 @@
    "year": 2025
   },
   "modelInputs": [],
-  "coverageNote": "Modeled, not counted: the Census Bureau estimates moves from tax returns, Medicare and other records, so a county's figure can be revised. Each release revises its decade, and 2011–2019 come from the Vintage 2020 estimates (built on the 2010 Census) while 2021 on build on the 2020 Census, so the two runs are not one series; 2020 is left out. Counties with large college or military populations can swing widely. Connecticut shows its old counties through 2019 and its nine planning regions from 2021.",
+  "coverageNote": "Modeled, not counted: the Census Bureau estimates moves from tax returns, Medicare and other records, so a county's figure can be revised. Each release revises its decade, and 2011–2019 come from the Vintage 2020 estimates (built on the 2010 Census) while 2021 on are built on the 2020 Census, so the two runs are not one series; 2020 is left out. Change maps never pair a year before 2020 with one after. Counties with large college or military populations can swing widely. Connecticut shows its old counties through 2019 and its nine planning regions from 2021.",
   "facets": [],
   "library": false,
   "excludeFromInsights": false,
@@ -20239,7 +20239,7 @@
    "year": 2025
   },
   "modelInputs": [],
-  "coverageNote": "Modeled, not counted: the Census Bureau estimates international moves from survey and administrative sources and spreads them across counties, so small counties' figures are rough and can be revised. Each release revises its decade, and 2011–2019 come from the Vintage 2020 estimates (built on the 2010 Census) while 2021 on build on the 2020 Census, so the two runs are not one series; 2020 is left out. Connecticut shows its old counties through 2019 and its nine planning regions from 2021.",
+  "coverageNote": "Modeled, not counted: the Census Bureau estimates international moves from survey and administrative sources and spreads them across counties, so small counties' figures are rough and can be revised. Each release revises its decade, and 2011–2019 come from the Vintage 2020 estimates (built on the 2010 Census) while 2021 on are built on the 2020 Census, so the two runs are not one series; 2020 is left out. Change maps never pair a year before 2020 with one after. Connecticut shows its old counties through 2019 and its nine planning regions from 2021.",
   "facets": [],
   "library": false,
   "excludeFromInsights": false,
@@ -20301,7 +20301,7 @@
    "year": 2025
   },
   "modelInputs": [],
-  "coverageNote": "Births and deaths come from vital records, so this part is closer to a count than the migration maps. Each release revises its decade, and 2011–2019 come from the Vintage 2020 estimates (built on the 2010 Census) while 2021 on build on the 2020 Census, so the two runs are not one series; 2020 is left out. Connecticut shows its old counties through 2019 and its nine planning regions from 2021.",
+  "coverageNote": "Births and deaths come from vital records, so this part is closer to a count than the migration maps. Each release revises its decade, and 2011–2019 come from the Vintage 2020 estimates (built on the 2010 Census) while 2021 on are built on the 2020 Census, so the two runs are not one series; 2020 is left out. Change maps never pair a year before 2020 with one after. Connecticut shows its old counties through 2019 and its nine planning regions from 2021.",
   "facets": [],
   "library": false,
   "excludeFromInsights": false,
