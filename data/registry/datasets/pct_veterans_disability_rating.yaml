@@ -2,7 +2,7 @@
 # Edit the recipe, not this file. To promote it to Featured, follow docs/library.md.
 id: pct_veterans_disability_rating
 title: Veterans with a service-connected disability rating
-description: Share of veterans whom the VA has rated as having a disability caused or made worse by military service.
+description: Share of veterans whom the Department of Veterans Affairs (VA) has rated as having a disability caused or made worse by military service.
 category: Health
 subcategory: Disability
 tags: [veterans, disability, VA, service-connected, military]

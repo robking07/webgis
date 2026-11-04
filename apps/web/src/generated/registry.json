@@ -7389,7 +7389,7 @@
  {
   "id": "pct_disability_under_18",
   "title": "Children with a disability",
-  "description": "Share of children under 18 with serious difficulty hearing, seeing, concentrating, walking or dressing and bathing.",
+  "description": "Share of children under 18 with at least one disability: hearing, vision, thinking, walking or self-care.",
   "category": "Health",
   "subcategory": "Disability",
   "tags": [
@@ -7423,7 +7423,7 @@
    "perSqMi": false
   },
   "modelInputs": [],
-  "coverageNote": "Children under 5 are asked only about hearing and seeing.",
+  "coverageNote": "Children under 5 are asked only about hearing and vision.",
   "facets": [],
   "library": true,
   "excludeFromInsights": false,
@@ -17332,7 +17332,7 @@
    "perSqMi": false
   },
   "modelInputs": [],
-  "coverageNote": "A family here is a woman who maintains the home, no husband or wife present, living with relatives such as her children, grandchildren or siblings.",
+  "coverageNote": "In these families a woman maintains the home, no husband or wife lives there, and she lives with relatives such as her children, grandchildren or siblings.",
   "facets": [],
   "library": true,
   "excludeFromInsights": false,
@@ -19731,7 +19731,7 @@
    "perSqMi": false
   },
   "modelInputs": [],
-  "coverageNote": "Under 19 is the age limit for children's Medicaid and CHIP.",
+  "coverageNote": "Under 19 is the age limit for children's Medicaid and the Children's Health Insurance Program (CHIP).",
   "facets": [],
   "library": true,
   "excludeFromInsights": false,
@@ -20097,7 +20097,7 @@
  {
   "id": "pct_veterans_disability_rating",
   "title": "Veterans with a service-connected disability rating",
-  "description": "Share of veterans whom the VA has rated as having a disability caused or made worse by military service.",
+  "description": "Share of veterans whom the Department of Veterans Affairs (VA) has rated as having a disability caused or made worse by military service.",
   "category": "Health",
   "subcategory": "Disability",
   "tags": [
