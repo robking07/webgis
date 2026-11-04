@@ -4,25 +4,13 @@
 // BEA's own per-capita line is used as published (it divides by BEA's population), never recomputed.
 import { loadRegistry } from "@webgis/registry/load";
 import { timelineStops } from "@webgis/registry/timeline";
+import { BEA_GROUPS } from "@webgis/registry/bea-groups";
 import { CPI_U, db, log, splitCsv } from "./util.ts";
 import { registerDataset, writeStopValues, writeValues, type Value } from "./values.ts";
 import { remoteZipEntry } from "./zip.ts";
 
 /** year → FIPS (state "27", county "27053") → dollars of that year, or null where BEA has no figure. */
 export type Bea = Map<number, Map<string, number | null>>;
-
-/** BEA's combined areas (county code starting with 9) → the places each covers (BEA footnotes: a Virginia
- *  county with one or two adjacent independent cities; Maui + Kalawao). Each member shows the group's figure. */
-export const BEA_GROUPS: Record<string, string[]> = {
-  "15901": ["15009", "15005"], "51901": ["51003", "51540"], "51903": ["51005", "51580"],
-  "51907": ["51015", "51790", "51820"], "51911": ["51031", "51680"], "51913": ["51035", "51640"],
-  "51918": ["51053", "51570", "51730"], "51919": ["51059", "51600", "51610"], "51921": ["51069", "51840"],
-  "51923": ["51081", "51595"], "51929": ["51089", "51690"], "51931": ["51095", "51830"],
-  "51933": ["51121", "51750"], "51939": ["51143", "51590"], "51941": ["51149", "51670"],
-  "51942": ["51153", "51683", "51685"], "51944": ["51161", "51775"], "51945": ["51163", "51530", "51678"],
-  "51947": ["51165", "51660"], "51949": ["51175", "51620"], "51951": ["51177", "51630"],
-  "51953": ["51191", "51520"], "51955": ["51195", "51720"], "51958": ["51199", "51735"],
-};
 
 /** The CAINC1 all-areas file, line 3 (per capita personal income). Keeps states and counties:
  *  skips the U.S., BEA's regions (state code over 56) and any combined area not in BEA_GROUPS

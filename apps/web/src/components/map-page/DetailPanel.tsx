@@ -3,7 +3,7 @@ import { useEscape } from "../useEscape";
 import { X } from "lucide-react";
 import { StatusState } from "@webgis/design/components";
 import { CHANGE_CLASSES, formatEstimate, formatValue, GEO_LEVELS, isGradable, STATIC_ONLY_LEVELS, TILE_VALUE_LEVELS, type GeoLevel } from "@webgis/design";
-import { moeRangeLine, noDataReason, reliabilityNote } from "@/lib/reliability";
+import { combinedAreaNote, moeRangeLine, noDataReason, reliabilityNote } from "@/lib/reliability";
 import { changeSummary, formatChange } from "@/lib/change";
 import type { ClassedLevel } from "./useViewerData";
 import type { HoverInfo } from "../map/MapView";
@@ -121,6 +121,12 @@ export function ReliabilityNote({ dataset, geoid, value, moe }: { dataset: Datas
   );
 }
 
+/** One muted line when the source reports this place together with others (BEA's combined areas, #540). */
+function CombinedNote({ dataset, geoid }: { dataset: Dataset; geoid: string }) {
+  const note = combinedAreaNote(dataset, geoid);
+  return note ? <p className="mt-1 text-xs text-muted-foreground" data-combined-area="">{note}</p> : null;
+}
+
 /** A clicked place: its values, ranks and links (desktop panel; a BottomSheet on phones). */
 /** A change map's card: the change, then both values, and "no clear change" when the difference is
  *  within its margin of error (√(MOE₁² + MOE₂²); see lib/change.ts). */
@@ -138,6 +144,7 @@ function ChangeCard({ dataset, geoid, change, to, sheetKey }: { dataset: Dataset
       <p className="mt-1 text-xs text-muted-foreground tabular-nums">
         {change.fromLabel}: {values[0]} · {change.toLabel}: {values[1]}
       </p>
+      <CombinedNote dataset={dataset} geoid={geoid} />
       {steady && (
         <p className="mt-1 text-xs text-muted-foreground">
           The change ({formatChange(c, change.classed.measure!, dataset.unit)}) is within the margin of error, so it may not be real.
@@ -236,6 +243,7 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
                     {v != null && <Benchmarks dataset={d} geoid={info.geoid} stop={period.id} />}
                     {!isRaceRow(d) && rankText(xv, v, info.level) && <p className="text-xs text-muted-foreground">{rankText(xv, v, info.level)}</p>}
                     {r?.value != null && <p className="mt-1 text-xs text-muted-foreground">{period.defaultLabel}: <span className="tabular-nums">{formatValue(r.value, d.unit)}</span></p>}
+                    <CombinedNote dataset={d} geoid={info.geoid} />
                   </div>
                 );
               }
@@ -251,6 +259,7 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
                   {r?.value != null && <Benchmarks dataset={d} geoid={info.geoid} />}
                   {i === 0 && phone && legendKey && <SheetKey {...legendKey} />}
                   {rank &&<p className="mt-1 text-xs text-muted-foreground">{rank}</p>}
+                  <CombinedNote dataset={d} geoid={info.geoid} />
                   <ReliabilityNote dataset={d} geoid={info.geoid} value={r?.value} moe={r?.moe} />
                 </div>
               );

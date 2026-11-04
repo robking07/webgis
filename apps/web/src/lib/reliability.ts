@@ -2,7 +2,9 @@
 // tract values and margins in each map's per-county files (values/<id>/tracts/<county>.json), block-group
 // margins in values/<id>/block_group.moe.json. Grading itself lives in @webgis/design (reliability.ts).
 import { formatValue, gradeEstimate, type Reliability, type Unit } from "@webgis/design";
+import { BEA_GROUPS } from "@webgis/registry/bea-groups";
 import type { TractShard } from "./details";
+import { placeName } from "./place-name";
 
 /** Tract geoids in one county shard whose estimate for `datasetId` is unreliable. */
 export function unreliableTracts(shard: TractShard | null, datasetId: string, county: string): string[] {
@@ -43,6 +45,15 @@ export function moeRangeLine(value: number | null | undefined, moe: number | nul
   const lo = Math.max(0, value - moe);
   const hi = unit === "percent" ? Math.min(100, value + moe) : value + moe;
   return `Few households were surveyed here, so this is a range: likely between ${formatValue(lo, unit)} and ${formatValue(hi, unit)}.`;
+}
+
+/** BEA reports some counties together with their independent cities, one figure each member shows
+ *  (BEA_GROUPS): "Figure for Fairfax County with Fairfax city and Falls Church city" (#540). */
+export function combinedAreaNote(ds: { measure: { kind: string } }, geoid: string): string | null {
+  const group = ds.measure.kind === "bea_income" && Object.values(BEA_GROUPS).find((g) => g.includes(geoid));
+  if (!group) return null;
+  const [head, ...rest] = group.map((g) => placeName(g)?.split(",")[0] ?? g);
+  return `Figure for ${head} with ${rest.length > 1 ? `${rest.slice(0, -1).join(", ")} and ${rest.at(-1)}` : rest[0]}`;
 }
 
 /** Why a place has no value (issue #193): from the registry's coverage note and the place's code
