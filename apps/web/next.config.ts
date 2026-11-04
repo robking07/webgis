@@ -1,8 +1,15 @@
+import { createRequire } from "node:module";
 import type { NextConfig } from "next";
+
+// MapLibre's engine files are served from /maplibre/<version>/ so they can be cached for good (#511).
+const maplibreVersion: string = createRequire(import.meta.url)("maplibre-gl/package.json").version;
 
 const nextConfig: NextConfig = {
   // Inline an empty DSN when unset so the Sentry SDK is dropped from the client bundle (S3).
-  env: { NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN ?? "" },
+  env: { NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN ?? "", NEXT_PUBLIC_MAPLIBRE_VERSION: maplibreVersion },
+  async headers() {
+    return [{ source: "/maplibre/:path*", headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }] }];
+  },
   // Workspace packages ship TypeScript source.
   transpilePackages: ["@webgis/design", "@webgis/registry"],
   // Share cards read their font files with fs at request time (D-165); bundle them.
