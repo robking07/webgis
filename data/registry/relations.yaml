@@ -52,6 +52,7 @@ links:
   - { maps: [job_density, population_density], why: Where jobs are compared with where people live. }
   - { maps: [qcew_jobs_per_1k, job_density], why: Two counts of jobs where people work, one per resident and one per square mile. }
   - { maps: [qcew_avg_pay, median_household_income], why: Pay at the jobs located in a county and the income of the households living there. }
+  - { maps: [bea_income_per_person, per_capita_income], why: Two counts of income per resident, one from tax and program records (BEA) and one from a Census survey. }
   - { maps: [pct_work_outside_county, mean_commute_minutes], why: Working in another county usually means a longer trip. }
   - { maps: [mean_commute_minutes, pct_long_commute], why: The average and the share of long trips. }
   - { maps: [pct_long_commute, pct_extreme_commute], why: 90-minute-plus commutes are part of hour-plus commutes. }
@@ -365,6 +366,8 @@ maps:
     group: "Economy"
     counts: { of: "households getting SNAP (food stamps)", per: "households" }
   per_capita_income:
+    group: "Economy"
+  bea_income_per_person:
     group: "Economy"
   # Economy: Internet access
   pct_broadband:
