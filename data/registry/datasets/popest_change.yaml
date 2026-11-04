@@ -12,7 +12,7 @@ source:
   citation: "U.S. Census Bureau, Population Estimates Program, Vintage 2025 county totals (co-est2025-alldata)"
 license: Public domain (U.S. Government work, 17 U.S.C. § 105)
 updateCadence: annual
-vintage: "July 1, 2025 estimate"
+vintage: "As of July 1, 2025"
 geographyLevels: [state, county]
 unit: percent
 universe: total population (estimate)
