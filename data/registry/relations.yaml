@@ -58,6 +58,7 @@ links:
   - { maps: [pct_long_commute, pct_extreme_commute], why: 90-minute-plus commutes are part of hour-plus commutes. }
   - { maps: [pct_leave_before_7am, pct_long_commute], why: Long commutes start early. }
   # Getting around
+  - { maps: [walkability_index, pct_walk_commute], why: How walkable a place is built and how many people there walk to work. }
   - { maps: [pct_zero_vehicle_households, pct_transit_commute], why: Households without a car rely on transit. }
   - { maps: [pct_zero_vehicle_households, lack_transportation], why: Two views of not having a way to get around. }
   - { maps: [traffic_fatalities, vmt_per_capita], why: More driving per person means more exposure to crashes. }
@@ -97,7 +98,6 @@ links:
   - { maps: [pct_uninsured, uninsured_under_65], why: "The same question two ways: the survey for all ages, and the Census model for under-65s, updated every year." }
   # Food access
   - { maps: [far_from_supermarket, food_access_tracts], why: The share of residents and the tracts behind it. }
-  - { maps: [walkability_index, pct_walk_commute], why: How walkable a place is built and how many people there walk to work. }
   - { maps: [no_car_far_from_supermarket, food_access_no_car_tracts], why: The share of households and the tracts behind it. }
   - { maps: [food_desert_residents, far_from_supermarket], why: Low-income, low-access tracts are low-income tracts where many residents live far from a supermarket. }
   - { maps: [no_car_far_from_supermarket, pct_zero_vehicle_households], why: Living far from a supermarket is harder without a car. }
