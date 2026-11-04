@@ -6,15 +6,16 @@ import { formatValue } from "@webgis/design";
 import { loadBenchmarks, type Benchmark } from "@/lib/benchmarks";
 import type { Dataset } from "@/lib/registry";
 
-export function Benchmarks({ dataset, geoid, className = "" }: { dataset: Dataset; geoid: string; className?: string }) {
-  const key = `${dataset.id}/${geoid}`;
+/** `stop`: a timeline stop's figures instead of the default year's. */
+export function Benchmarks({ dataset, geoid, stop, className = "" }: { dataset: Dataset; geoid: string; stop?: string; className?: string }) {
+  const key = `${dataset.id}/${stop ?? ""}/${geoid}`;
   // Keyed, so a newly clicked place never shows the last one's benchmarks while its own load.
   const [got, setGot] = useState<{ key: string; rows: Benchmark[] } | null>(null);
   useEffect(() => {
     let live = true;
-    loadBenchmarks(dataset, geoid).then((rows) => live && setGot({ key: `${dataset.id}/${geoid}`, rows }), () => {});
+    loadBenchmarks(dataset, geoid, stop).then((rows) => live && setGot({ key, rows }), () => {});
     return () => { live = false; };
-  }, [dataset, geoid]);
+  }, [dataset, geoid, stop, key]);
   const rows = got?.key === key ? got.rows : [];
   if (!rows.length) return null;
   return (
