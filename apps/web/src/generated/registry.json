@@ -2285,6 +2285,67 @@
   }
  },
  {
+  "id": "fhfa_hpi_change_10yr",
+  "title": "Home price change over 10 years",
+  "phrase": "home price growth over 10 years",
+  "description": "How much typical home prices rose or fell over the 10 years ending in the year shown, from a price index that follows the same homes as they resell. Teal areas gained; brown areas lost. The middle shade is little change, within 10%.",
+  "category": "Housing",
+  "subcategory": "Costs",
+  "tags": [
+   "home prices",
+   "house prices",
+   "appreciation",
+   "housing market",
+   "real estate",
+   "FHFA"
+  ],
+  "source": {
+   "name": "Federal Housing Finance Agency, House Price Index",
+   "shortName": "FHFA",
+   "url": "https://www.fhfa.gov/data/hpi/datasets",
+   "citation": "Federal Housing Finance Agency, annual House Price Index (all-transactions, developmental state and county indexes), released March 31, 2026"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2015–2025",
+  "geographyLevels": [
+   "state",
+   "county"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "homes with mortgages bought or guaranteed by Fannie Mae or Freddie Mac",
+  "measure": {
+   "kind": "fhfa_hpi",
+   "year": 2025
+  },
+  "modelInputs": [],
+  "coverageNote": "Built from repeat sales and appraisals of homes with mortgages bought or guaranteed by Fannie Mae and Freddie Mac, so it leaves out cash sales, jumbo loans and most government-insured loans, and covers a place's typical home, not every one. FHFA calls the county figures developmental: they can be revised as new data arrive. Counties with too few sales have no index and show no data. These are price changes as they happened, not adjusted for inflation, so a rise smaller than general price growth is a real-terms decline. Connecticut is shown by its nine planning regions. Unlike the Census home value map, this follows price changes of the same homes over time, not the value owners estimate.",
+  "facets": [],
+  "library": false,
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 1996,
+   "to": 2025,
+   "step": 1
+  },
+  "learnMore": [],
+  "terms": [
+   "fhfa-hpi"
+  ],
+  "symbology": {
+   "ramp": "brbg",
+   "classification": "manual",
+   "classes": 5,
+   "breaks": [
+    -10,
+    10,
+    50,
+    100
+   ]
+  }
+ },
+ {
   "id": "food_access_no_car_tracts",
   "title": "No car, far from a supermarket (tracts)",
   "description": "Share of each census tract's households that have no car and live more than half a mile from the nearest supermarket, supercenter or large grocery store.",

@@ -15,8 +15,8 @@ import { fileURLToPath } from "node:url";
 const STEP_KINDS: Record<string, string[]> = {
   acs: ["acs5"], "acs-bg": ["acs5"], lodes: ["lodes"], places: ["places"], climdiv: ["climdiv"], nbi: ["nbi"],
   fars: ["fars"], airquality: ["airquality"], overdose: ["overdose"], cejst: ["cejst"], tri: ["tri"],
-  lead: ["lead"], popest: ["popest"], bps: ["bps"], qcew: ["qcew"], "food-access": ["food_access"], nri: ["fema_nri"], "fema-disasters": ["fema_declarations"], svi: ["svi"], features: ["features"], counts: ["acs5"],
-  timeline: ["acs5", "climdiv", "nbi", "lodes", "overdose", "fars", "airquality", "tri", "sahie", "popest", "bps", "qcew"],
+  lead: ["lead"], popest: ["popest"], bps: ["bps"], qcew: ["qcew"], fhfa: ["fhfa_hpi"], "food-access": ["food_access"], nri: ["fema_nri"], "fema-disasters": ["fema_declarations"], svi: ["svi"], features: ["features"], counts: ["acs5"],
+  timeline: ["acs5", "climdiv", "nbi", "lodes", "overdose", "fars", "airquality", "tri", "sahie", "popest", "bps", "qcew", "fhfa_hpi"],
   // #469: commute flows (LODES od), one national file, no registry dataset: named alone, with no ids.
   commute: [],
 };
