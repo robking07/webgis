@@ -22,8 +22,8 @@ export function stopsFor(d: Dataset | null): Stop[] {
   return stops.length > 1 ? stops : [];
 }
 
-/** Dollar maps whose older years are restated to 2024 dollars (ACS and BLS QCEW; not LEAD or NRI). */
-export const restatesDollars = (d: Dataset) => d.unit === "dollars" && (d.measure.kind === "acs5" || d.measure.kind === "qcew");
+/** Dollar maps whose older years are restated to 2024 dollars (ACS, BLS QCEW and BEA income; not LEAD or NRI). */
+export const restatesDollars = (d: Dataset) => d.unit === "dollars" && (d.measure.kind === "acs5" || d.measure.kind === "qcew" || d.measure.kind === "bea_income");
 
 /** A plain-language note for the legend about what a non-default stop is. */
 export function stopNote(d: Dataset, s: Stop, level: GeoLevel): string | null {

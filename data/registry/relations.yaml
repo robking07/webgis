@@ -26,6 +26,7 @@ parts:
 
 links:
   # Housing costs and income
+  - { maps: [bea_income_per_person, per_capita_income], why: Two counts of income per resident, one from tax and program records (BEA) and one from a Census survey. }
   - { maps: [median_gross_rent, median_household_income], why: Rent is paid out of household income. }
   - { maps: [pct_rent_burdened, median_gross_rent], why: Higher rents push more renters past 30% of income. }
   - { maps: [pct_rent_burdened, pct_renter_households], why: Rent burden is a share of renter households only. }
@@ -365,6 +366,8 @@ maps:
     group: "Economy"
     counts: { of: "households getting SNAP (food stamps)", per: "households" }
   per_capita_income:
+    group: "Economy"
+  bea_income_per_person:
     group: "Economy"
   # Economy: Internet access
   pct_broadband:
