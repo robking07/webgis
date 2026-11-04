@@ -1,5 +1,5 @@
 // Read one entry of a zip as text (via the unzipper package already used for TIGER).
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { PassThrough, Readable } from "node:stream";
 import unzipper from "unzipper";
@@ -43,6 +43,7 @@ export async function remoteZipEntry(url: string, name: RegExp, cacheName: strin
   if (!f) throw new Error(`${url}: no entry matching ${name}`);
   const text = (await f.buffer()).toString("latin1");
   mkdirSync(CACHE, { recursive: true });
-  writeFileSync(path, text, "latin1");
+  writeFileSync(`${path}.part`, text, "latin1");
+  renameSync(`${path}.part`, path); // a cut-off write never passes for the file
   return text;
 }
