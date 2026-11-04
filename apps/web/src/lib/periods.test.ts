@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { areaChangeNote, changeEnds, noTractsNote, type Stop } from "./periods";
+import { areaChangeNote, changeEnds, noTractsNote, restatesDollars, type Stop } from "./periods";
 
 const stop = (id: string, isDefault = false) => ({ id, label: id, isDefault, levels: [] }) as unknown as Stop;
 // A climate map: years, and a normal as the default.
@@ -31,5 +31,16 @@ describe("older-year notes (#507)", () => {
     expect(areaChangeNote(old, now, "county", "02063")).toMatch(/Valdez–Cordova in 2019/);
     expect(areaChangeNote(old, now, "county", "02066")).toMatch(/Valdez–Cordova in 2019/);
     expect(areaChangeNote(old, now, "county", "27053")).toBeNull();
+  });
+});
+
+describe("restatesDollars (#530)", () => {
+  const d = (kind: string, unit = "dollars") => ({ unit, measure: { kind } }) as never;
+  it("is true for ACS and QCEW dollars only", () => {
+    expect(restatesDollars(d("acs5"))).toBe(true);
+    expect(restatesDollars(d("qcew"))).toBe(true);
+    expect(restatesDollars(d("lead"))).toBe(false);
+    expect(restatesDollars(d("fema_nri"))).toBe(false);
+    expect(restatesDollars(d("qcew", "jobs_per_1k"))).toBe(false);
   });
 });
