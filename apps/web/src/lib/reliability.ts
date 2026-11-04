@@ -61,8 +61,9 @@ export function combinedAreaNote(ds: { measure: { kind: string } }, geoid: strin
 export function noDataReason(ds: { measure: { kind: string }; coverageNote?: string }, geoid: string): string {
   const census = ds.measure.kind === "acs5" || ds.measure.kind === "census2020";
   if (geoid.startsWith("72") && /Puerto Rico/.test(ds.coverageNote ?? "")) return "This source has no data for Puerto Rico.";
-  // Connecticut's nine planning regions (091xx) replaced its counties in 2022; Census data uses them, older sources don't.
-  if (/^091\d\d$/.test(geoid) && !census) return "This source still uses Connecticut's old counties (before 2022).";
+  // Connecticut's nine planning regions (091xx) replaced its counties in 2022. Each source switches in its own
+  // year (#543), so only one whose coverage note says Connecticut shows no data gets the old-counties line.
+  if (/^091\d\d$/.test(geoid) && /Connecticut[^.()]*shows? no data/.test(ds.coverageNote ?? "")) return "This source still uses Connecticut's old counties (before 2022).";
   if (census) return "The Census Bureau doesn't publish this figure for this area.";
   return "The source has no value for this area.";
 }
