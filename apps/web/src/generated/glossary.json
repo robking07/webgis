@@ -294,5 +294,12 @@
   "short": "A count of jobs and pay from the reports employers file for unemployment insurance, published by the Bureau of Labor Statistics.",
   "long": "Nearly every employer reports, each quarter, how many people it paid each month and the wages it paid, for state unemployment insurance. BLS adds these reports up by county and industry. Because it is close to a full count, not a survey, it is the benchmark other job figures are checked against. Jobs are counted at the workplace, a person with two jobs counts twice, and workers outside unemployment insurance (the self-employed, most farm and household workers, railroad workers, the military) are not counted. BLS withholds figures that could reveal a single employer's numbers.",
   "source": "https://www.bls.gov/cew/overview.htm"
+ },
+ {
+  "id": "fhfa-hpi",
+  "term": "House Price Index (FHFA)",
+  "short": "A measure of how much the price of the same homes changes as they resell, published by the Federal Housing Finance Agency.",
+  "long": "The index follows homes that sold or were refinanced more than once and tracks how their prices changed between sales, so it measures price change for a typical home, not the mix of homes that happened to sell. It uses only mortgages bought or guaranteed by Fannie Mae and Freddie Mac, which leaves out cash sales, jumbo loans and most government-insured loans. FHFA calls its county indexes developmental because they can be revised and are thinner where few homes sell. Values are in the dollars of each year, not adjusted for inflation.",
+  "source": "https://www.fhfa.gov/data/hpi"
  }
 ]

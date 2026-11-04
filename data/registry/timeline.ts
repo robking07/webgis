@@ -94,6 +94,10 @@ export function timelineStops(e: DatasetEntry): TimelineStop[] {
       const { year } = e.measure;
       return years.map((y) => ({ id: String(y), label: String(y), isDefault: y === year, ...(y < 2024 ? { boundaries: "2019" as const } : {}) }));
     }
+    case "fhfa_hpi": { // calendar years from the first with a 10-year look-back; today's counties throughout
+      const { year } = e.measure;
+      return years.map((y) => ({ id: String(y), label: `${y - 10}–${y}`, isDefault: y === year }));
+    }
     case "tri": { // yearly reporting years; today's counties throughout
       const { year } = e.measure;
       return years.map((y) => ({ id: String(y), label: String(y), isDefault: y === year }));

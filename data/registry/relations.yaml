@@ -30,6 +30,7 @@ links:
   - { maps: [pct_rent_burdened, median_gross_rent], why: Higher rents push more renters past 30% of income. }
   - { maps: [pct_rent_burdened, pct_renter_households], why: Rent burden is a share of renter households only. }
   - { maps: [pct_rent_burdened, median_household_income], why: Rent burden compares rent with income. }
+  - { maps: [fhfa_hpi_change_10yr, median_home_value], why: How much prices rose over ten years beside what homes are worth now. }
   - { maps: [median_home_value, median_household_income], why: How far home prices run ahead of incomes. }
   - { maps: [pct_owner_cost_burdened, median_owner_costs_mortgage], why: Higher monthly costs push more owners past 30% of income. }
   - { maps: [pct_overcrowded, median_gross_rent], why: Crowding often follows high rents. }
@@ -322,6 +323,8 @@ maps:
   permits_multifamily_share:
     group: "Housing"
   median_home_value:
+    group: "Housing"
+  fhfa_hpi_change_10yr:
     group: "Housing"
   median_owner_costs_mortgage:
     group: "Housing"
