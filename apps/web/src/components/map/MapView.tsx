@@ -191,7 +191,7 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
   useEffect(() => {
     if (!container.current) return;
     if (!protocolReady) {
-      setWorkerUrl(new URL("/maplibre/maplibre-gl-worker.mjs", window.location.href).href);
+      setWorkerUrl(new URL(`/maplibre/${process.env.NEXT_PUBLIC_MAPLIBRE_VERSION}/maplibre-gl-worker.mjs`, window.location.href).href);
       const protocol = new Protocol();
       addProtocol("pmtiles", (p, c) => retryTile(() => protocol.tile(p, c)));
       protocolReady = true;

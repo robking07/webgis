@@ -18,7 +18,7 @@ export default async function Page({ searchParams }: PageProps<"/map">) {
   const sp = await searchParams;
   // The map's worker script (MapView's setWorkerUrl) otherwise starts downloading only once the
   // map exists, and the first tiles wait for it: fetch it alongside the page's own JS (#505).
-  preload("/maplibre/maplibre-gl-worker.mjs", { as: "script" });
+  preload(`/maplibre/${process.env.NEXT_PUBLIC_MAPLIBRE_VERSION}/maplibre-gl-worker.mjs`, { as: "script" });
   const search = new URLSearchParams(
     Object.entries(sp).flatMap(([k, v]) => (typeof v === "string" ? [[k, v]] : [])),
   ).toString();
