@@ -24,6 +24,17 @@ and said "keep running". The lead works the list in `drafts/planner-depth-plan.m
   NHGIS pre-2005 census tables, waiting on Robbie's IPUMS key. The FEMA declarations decade note no
   longer claims the colors "show change" (#482, PR #494). The Library second batch: 108 more maps
   (#373, PR #467; 213 checked live, 211 passed, 2 left out); Data run 41553506295 loads them.
+- **Shipped 2026-11-03 to 11-04 (roadmap 2.6 scout datasets):** new maps for population estimates (births, deaths,
+  moving in from other states and from abroad, total change; PR #523), building permits (PR #525), jobs and pay
+  (QCEW, PR #529), home prices (FHFA, 10-year change, PR #534), income per person (BEA, PR #535), rail crossing
+  crashes and public crossings (FRA, 1975-2025, PR #538) and the EPA walkability index (#521, 2010 tracts,
+  PR #546). Fixes: older-year notes and U.S. figures (#510), old-year margins on the card (#512), long-cache map
+  engine files (#531), legend inflation note (#532), change-tab and card fixes (#540, PR #541: Connecticut years,
+  population series break, 1996 legend, Fairfax combined areas), new-maps wording (#544), Connecticut no-data
+  reasons and older air-quality years (#545). 2.6 still has Opportunity Atlas (#522, license), EV stations
+  (needs a key, Robbie's call); #520 is parked.
+- **Waiting on Robbie:** sensitive wording for the 23 Library maps (#422, PR #513), income and rail wording
+  (`drafts/site-copy/`), the rent Special, the NHGIS permission email.
 - **Waiting:** print/embed a locked view (plan F) until Robbie asks. Drawing buffers, transit #176 and
   drive times #205 stay parked.
 - **Still parked, each with its plan on GitHub (label `parked`):** similar places #291 follow-ups,
@@ -36,8 +47,8 @@ and said "keep running". The lead works the list in `drafts/planner-depth-plan.m
   slow; re-run failed jobs (`gh run rerun <id> --failed`). A data step's file must be on R2 before the
   UI PR that reads it passes CI (commute flows went data first).
 - **Next steps:** keep running the planner-depth list; Robbie reacts live. The Phase 1 gate (Robbie uses
-  compare and change maps in a real conversation) was dropped 2026-11-03; the lead keeps building toward a
-  friends-and-colleagues share.
+  compare and change maps in a real conversation) was cancelled 2026-11-03: build as much as possible, then
+  friends and colleagues test (Robbie picks the timing).
 - **Working rules that still hold:** Specials publish verbatim from `drafts/specials/` ("publish
   <name>": strip `<!-- -->` comments, move the numbers script to `apps/web/scripts/specials-numbers/`,
   run `check:special` and the build). Workers self-review with `ponytail-review`; the lead runs it
