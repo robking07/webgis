@@ -1,0 +1,24 @@
+id: rail_crossings_public
+title: Rail crossings at street level
+phrase: public street-level rail crossings
+description: "How many places a public road crosses railroad tracks at street level (grade crossings), from the Federal Railroad Administration's national crossing inventory as it stands today. Bridges and underpasses, closed crossings and private crossings are not counted."
+category: Transportation
+subcategory: Traffic safety
+tags: [railroad, grade crossings, rail crossings, rail safety, FRA, Form 71, crossing inventory]
+source:
+  name: Federal Railroad Administration, Crossing Inventory Data (Form 71), Current
+  shortName: FRA
+  url: https://data.transportation.gov/d/m2f8-22s6
+  citation: "Federal Railroad Administration, Crossing Inventory Data (Form 71) - Current, data.transportation.gov dataset m2f8-22s6, retrieved November 2026"
+license: Public domain (U.S. Government work, 17 U.S.C. § 105; data.transportation.gov lists it as Public Domain)
+updateCadence: monthly
+vintage: "November 2026 inventory"
+geographyLevels: [state, county]
+unit: count
+universe: open public highway-rail crossings at street level (not people or residents)
+coverageNote: "Counts open public crossings at street level in FRA's national crossing inventory, which railroads and states keep up to date. It is today's list only, with no past years. Crossings FRA lists as having no train traffic are left out. A count, not a rate: counties with more rail lines have more crossings, and a county with none shows 0. Connecticut's counties show no data (the inventory still uses its old counties), and so do Alaska's (about 5% of its crossings carry retired census-area codes)."
+terms: [grade-crossing, quantile-classes]
+# Raw counts follow county size and rail mileage, so correlations with other maps would mislead.
+excludeFromInsights: true
+measure: { kind: fra_crossings, field: crossings }
+symbology: { ramp: blues, classification: quantile, classes: 5 }
