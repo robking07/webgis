@@ -58,6 +58,7 @@ links:
   - { maps: [pct_long_commute, pct_extreme_commute], why: 90-minute-plus commutes are part of hour-plus commutes. }
   - { maps: [pct_leave_before_7am, pct_long_commute], why: Long commutes start early. }
   # Getting around
+  - { maps: [walkability_index, pct_walk_commute], why: How walkable a place is built and how many people there walk to work. }
   - { maps: [pct_zero_vehicle_households, pct_transit_commute], why: Households without a car rely on transit. }
   - { maps: [pct_zero_vehicle_households, lack_transportation], why: Two views of not having a way to get around. }
   - { maps: [traffic_fatalities, vmt_per_capita], why: More driving per person means more exposure to crashes. }
@@ -149,6 +150,8 @@ maps:
   pct_work_from_home:
     group: "Transportation"
     counts: { of: "workers who work from home", per: "workers 16 and older" }
+  walkability_index:
+    group: "Transportation"
   pct_work_outside_county:
     group: "Transportation"
     counts: { of: "workers who work outside their home county", per: "workers 16 and older" }

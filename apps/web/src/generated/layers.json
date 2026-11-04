@@ -347,5 +347,28 @@
   },
   "rankField": null,
   "featureCount": 397
+ },
+ "walkability_index": {
+  "tiles": "walkability_index.pmtiles",
+  "sourceLayer": "walkability_index",
+  "geometry": "polygon",
+  "valueField": "walk_index",
+  "fields": {
+   "walk_index": {
+    "label": "Walkability index (1 to 20)",
+    "unit": "ratio",
+    "explainer": "EPA's score for how easy it is to get around on foot: 1 is least walkable, 20 most. A model built from intersection density, distance to the nearest transit stop and the mix of jobs and homes, averaged over the tract's block groups by population. It says nothing about sidewalks, crossings or safety."
+   },
+   "band": {
+    "label": "EPA's walkability group",
+    "explainer": "EPA's four groups: least walkable (1 to 5.75), below average (5.76 to 10.5), above average (10.51 to 15.25) and most walkable (15.26 to 20), applied here to the tract average."
+   },
+   "population": {
+    "label": "Residents (2014–2018)",
+    "unit": "count"
+   }
+  },
+  "rankField": null,
+  "featureCount": 73868
  }
 }
