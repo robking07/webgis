@@ -315,6 +315,10 @@ maps:
     counts: { of: "vacant homes", per: "homes" }
   median_gross_rent:
     group: "Housing"
+  permits_per_1k:
+    group: "Housing"
+  permits_multifamily_share:
+    group: "Housing"
   median_home_value:
     group: "Housing"
   median_owner_costs_mortgage:

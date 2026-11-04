@@ -188,6 +188,16 @@ const PopestMeasure = z.object({
   year: z.number().int(),
 });
 
+/** Census Building Permits Survey (public domain): new housing units authorized by permits in the
+ *  calendar year, state and county annual files. `per_1k` = units per 1,000 residents (Census
+ *  population estimates); `multifamily` = % of units in buildings with 5 or more. Ingest: bps.ts. */
+const BpsMeasure = z.object({
+  kind: z.literal("bps"),
+  field: z.enum(["per_1k", "multifamily"]),
+  /** Permit year; the headline. */
+  year: z.number().int(),
+});
+
 /** CDC/ATSDR Social Vulnerability Index: one percentile-rank field of CDC's U.S.-wide county and
  *  tract CSVs (ranked nationally, not within each state). Ingest: data/ingest/src/svi.ts. */
 const SviMeasure = z.object({
@@ -348,7 +358,7 @@ export const DatasetEntry = z.object({
   unit: Unit,
   /** For insights: the population the value describes. Pairs that share one are flagged. */
   universe: z.string(),
-  measure: z.discriminatedUnion("kind", [AcsMeasure, Census2020Measure, LodesMeasure, PlacesMeasure, ClimdivMeasure, NbiMeasure, FarsMeasure, FeaturesMeasure, HpmsVmtMeasure, CejstMeasure, Ddp287gMeasure, LeadMeasure, FoodAccessMeasure, FemaNriMeasure, SviMeasure, AirQualityMeasure, OverdoseMeasure, TriMeasure, SahieMeasure, PopestMeasure, FemaDeclarationsMeasure]),
+  measure: z.discriminatedUnion("kind", [AcsMeasure, Census2020Measure, LodesMeasure, PlacesMeasure, ClimdivMeasure, NbiMeasure, FarsMeasure, FeaturesMeasure, HpmsVmtMeasure, CejstMeasure, Ddp287gMeasure, LeadMeasure, FoodAccessMeasure, FemaNriMeasure, SviMeasure, AirQualityMeasure, OverdoseMeasure, TriMeasure, SahieMeasure, PopestMeasure, BpsMeasure, FemaDeclarationsMeasure]),
   /** Other registry datasets used as inputs to this dataset's model (e.g. PLACES uses county poverty).
    *  Insight pairs with these are flagged: they correlate partly by construction. */
   modelInputs: z.array(z.string()).default([]),

@@ -19661,6 +19661,131 @@
   }
  },
  {
+  "id": "permits_multifamily_share",
+  "title": "New homes permitted in apartment buildings",
+  "phrase": "shares of new homes in apartment buildings",
+  "description": "Of the housing units authorized by building permits during the year, the share in buildings with 5 or more homes (apartments and condos). The rest are houses, duplexes and buildings with 3 or 4 homes.",
+  "category": "Housing",
+  "subcategory": "Homes",
+  "tags": [
+   "building permits",
+   "multifamily",
+   "apartments",
+   "new construction",
+   "housing supply",
+   "density"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, Building Permits Survey",
+   "shortName": "Census Bureau",
+   "url": "https://www.census.gov/construction/bps/",
+   "citation": "U.S. Census Bureau, Building Permits Survey, annual county and state files (1990–2025)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2025 permits",
+  "geographyLevels": [
+   "state",
+   "county"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "housing units authorized by building permits",
+  "measure": {
+   "kind": "bps",
+   "field": "multifamily",
+   "year": 2025
+  },
+  "modelInputs": [],
+  "coverageNote": "Permits are not completions: some permitted homes are built years later or never. Only places that issue building permits are counted, so a county with no permit-issuing places, or one that permitted no homes that year, shows no data; a county where some areas need no permit leaves those homes out. Small counties swing a lot from year to year: a single apartment building can take the share from 0% to over half. Connecticut shows its old counties through 2022 (with no data for 2020–2022) and its nine planning regions from 2023.",
+  "facets": [],
+  "library": false,
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 1990,
+   "to": 2025,
+   "step": 1
+  },
+  "learnMore": [],
+  "terms": [
+   "building-permits"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "manual",
+   "classes": 5,
+   "breaks": [
+    1,
+    10,
+    25,
+    50
+   ]
+  }
+ },
+ {
+  "id": "permits_per_1k",
+  "title": "New homes permitted per 1,000 residents",
+  "phrase": "rates of new home permits",
+  "description": "Housing units authorized by building permits during the year, per 1,000 residents. Darker areas approved more new homes for their size. A permit is approval to build, not a finished home.",
+  "category": "Housing",
+  "subcategory": "Homes",
+  "tags": [
+   "building permits",
+   "new construction",
+   "housing supply",
+   "homebuilding",
+   "growth"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, Building Permits Survey",
+   "shortName": "Census Bureau",
+   "url": "https://www.census.gov/construction/bps/",
+   "citation": "U.S. Census Bureau, Building Permits Survey, annual county and state files (1990–2025); Census Bureau population estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2025 permits",
+  "geographyLevels": [
+   "state",
+   "county"
+  ],
+  "areaLevels": [],
+  "unit": "per_1k",
+  "universe": "housing units authorized by building permits",
+  "measure": {
+   "kind": "bps",
+   "field": "per_1k",
+   "year": 2025
+  },
+  "modelInputs": [],
+  "coverageNote": "Permits are not completions: some permitted homes are built years later or never. Only places that issue building permits are counted, so a county with no permit-issuing places shows no data, and a county where some areas need no permit reads low. In New Mexico, Maine, Michigan and Oregon some permits are filed for the state as a whole, not a county; they count in the state figure only. Small counties swing a lot from year to year: one apartment building can make a big year. Connecticut shows its old counties through 2022 (with no data for 2020–2022) and its nine planning regions from 2023.",
+  "facets": [],
+  "library": false,
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 1990,
+   "to": 2025,
+   "step": 1
+  },
+  "learnMore": [],
+  "terms": [
+   "building-permits",
+   "population-estimates"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "manual",
+   "classes": 6,
+   "breaks": [
+    1,
+    2,
+    4,
+    7,
+    12
+   ]
+  }
+ },
+ {
   "id": "physical_distress",
   "title": "Frequent physical distress",
   "phrase": "rates of frequent physical distress",

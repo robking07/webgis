@@ -280,5 +280,12 @@
   "short": "The Census Bureau's yearly estimate of how many people live in a place between the once-a-decade counts. Migration in them is modeled, not counted.",
   "long": "Each year the Census Bureau starts from the last Census count and adds births, subtracts deaths, then estimates moves in and out of each county using tax returns, Medicare, school and other records. Births and deaths come from vital records and are close to counts; migration is modeled, so a county's figure can be off and later be revised. Each yearly release also revises the years before it, and when a new Census arrives the whole decade is rebuilt, so estimates from different decades are not one smooth series.",
   "source": "https://www.census.gov/programs-surveys/popest/about.html"
+ },
+ {
+  "id": "building-permits",
+  "term": "Building permits",
+  "short": "Approval from a city or county to build new homes. The Census Bureau counts the homes each permit allows; a permit is not a finished home.",
+  "long": "The Census Bureau's Building Permits Survey asks about 20,000 cities, towns and counties that require a permit for new homes how many they approved each month, and estimates for the few that don't answer. It counts homes (housing units), so a 100-unit apartment building is 100. Most permitted homes are started within a few months, but some are delayed or never built, and homes in areas that need no permit are not counted at all. The survey has covered more places over time (about 17,000 in the early 1990s), so early years count slightly fewer areas.",
+  "source": "https://www.census.gov/construction/bps/about.html"
  }
 ]

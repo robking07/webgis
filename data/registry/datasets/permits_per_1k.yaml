@@ -1,0 +1,23 @@
+id: permits_per_1k
+title: New homes permitted per 1,000 residents
+phrase: rates of new home permits
+description: Housing units authorized by building permits during the year, per 1,000 residents. Darker areas approved more new homes for their size. A permit is approval to build, not a finished home.
+category: Housing
+subcategory: Homes
+tags: [building permits, new construction, housing supply, homebuilding, growth]
+source:
+  name: U.S. Census Bureau, Building Permits Survey
+  shortName: Census Bureau
+  url: https://www.census.gov/construction/bps/
+  citation: "U.S. Census Bureau, Building Permits Survey, annual county and state files (1990–2025); Census Bureau population estimates"
+license: Public domain (U.S. Government work, 17 U.S.C. § 105)
+updateCadence: annual
+vintage: "2025 permits"
+geographyLevels: [state, county]
+unit: per_1k
+universe: housing units authorized by building permits
+coverageNote: "Permits are not completions: some permitted homes are built years later or never. Only places that issue building permits are counted, so a county with no permit-issuing places shows no data, and a county where some areas need no permit reads low. In New Mexico, Maine, Michigan and Oregon some permits are filed for the state as a whole, not a county; they count in the state figure only. Small counties swing a lot from year to year: one apartment building can make a big year. Connecticut shows its old counties through 2022 (with no data for 2020–2022) and its nine planning regions from 2023."
+terms: [building-permits, population-estimates]
+measure: { kind: bps, field: per_1k, year: 2025 }
+timeline: { from: 1990, to: 2025 }
+symbology: { ramp: blues, classification: manual, classes: 6, breaks: [1, 2, 4, 7, 12] }

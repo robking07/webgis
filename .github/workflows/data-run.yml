@@ -11,7 +11,7 @@ on:
     inputs:
       steps:
         # The allowed steps and which datasets each loads: data/ingest/src/check-run.ts.
-        description: "Ingest steps, run in order, space-separated: acs acs-bg lodes places climdiv nbi fars airquality overdose cejst tri lead food-access nri svi timeline; or alone: features (map layers from files), export-values (re-publish values, no reload), counts (ACS margins and counts only), commute (commute flows, no ids)"
+        description: "Ingest steps, run in order, space-separated: acs acs-bg lodes places climdiv nbi fars airquality overdose cejst tri lead food-access nri svi popest bps timeline; or alone: features (map layers from files), export-values (re-publish values, no reload), counts (ACS margins and counts only), commute (commute flows, no ids)"
         required: true
         default: acs
       datasets:
