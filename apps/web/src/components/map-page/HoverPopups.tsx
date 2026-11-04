@@ -52,7 +52,7 @@ export function PlaceHoverPopup({ hover, primary, secondary, xValues, yValues, b
   /** A change map (issue #127): the two stops, the earlier values and the change classes. */
   change?: { from: Stop; to: Stop; fromValues?: Values; classed: ClassedLevel };
 }) {
-  const moeKey = stopId && primary.measure.kind === "acs5" && !secondary && !change && !TILE_VALUE_LEVELS.has(hover.level) ? `${stopId}/${hover.level}` : null;
+  const moeKey = stopId && primary.measure.kind === "acs5" && !secondary && !change && !TILE_VALUE_LEVELS.has(hover.level) ? `${primary.id}/${stopId}/${hover.level}` : null;
   const [stopMoes, setStopMoes] = useState<{ key: string; moes: Values } | null>(null);
   useEffect(() => {
     if (!moeKey || !stopId) return;
