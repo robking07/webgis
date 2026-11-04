@@ -88,5 +88,6 @@ export function classifyValues(
     cls[i] = classOf(vals[i], breaks);
     if (cls[i] === 0 && vals[i] !== min) bottomAllMin = false;
   }
-  return { colors, breaks, cls, minClass: breaks.length && bottomAllMin ? min : undefined };
+  // Manual breaks keep their labels: a year where few places sit below the first break isn't the skewed-minimum case (#540).
+  return { colors, breaks, cls, minClass: sym.classification !== "manual" && breaks.length && bottomAllMin ? min : undefined };
 }

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { moeRangeLine, noDataReason, reliabilityNote, unreliableIn, unreliableTracts } from "./reliability";
+import { combinedAreaNote, moeRangeLine, noDataReason, reliabilityNote, unreliableIn, unreliableTracts } from "./reliability";
 
 describe("unreliableTracts", () => {
   const shard = {
@@ -37,6 +37,17 @@ describe("reliabilityNote", () => {
   it("says why a zero with a big margin is unreliable; a zero with a small one gets nothing", () => {
     expect(reliabilityNote(0, 57.69)?.body).toMatch(/estimate of zero/);
     expect(reliabilityNote(0, 0.4)).toBeNull();
+  });
+});
+
+describe("combinedAreaNote (#540)", () => {
+  const bea = { measure: { kind: "bea_income" } };
+  it("names the places BEA reports together, for each member and only for BEA", () => {
+    expect(combinedAreaNote(bea, "51059")).toBe("Figure for Fairfax County with Fairfax city and Falls Church city");
+    expect(combinedAreaNote(bea, "51610")).toBe("Figure for Fairfax County with Fairfax city and Falls Church city");
+    expect(combinedAreaNote(bea, "15009")).toBe("Figure for Maui County with Kalawao County");
+    expect(combinedAreaNote(bea, "27053")).toBeNull();
+    expect(combinedAreaNote({ measure: { kind: "qcew" } }, "51059")).toBeNull();
   });
 });
 

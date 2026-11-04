@@ -46,14 +46,15 @@ const DATED = /^\d{4}$/;
  *  None when `to` is an average or normal (a change since then isn't a change over time). */
 export function changeStops(stops: Stop[], to: Stop | null): Stop[] {
   if (!to || !DATED.test(to.id)) return [];
-  return stops.slice(0, stops.indexOf(to)).filter((s) => DATED.test(s.id)).reverse();
+  return stops.slice(0, stops.indexOf(to)).filter((s) => DATED.test(s.id) && s.series === to.series).reverse();
 }
 
 /** The legend's note for a change map: what's matched across a boundary change. */
 export function changeNote(from: Stop, to: Stop, level: GeoLevel): string | null {
   if (from.boundaries === to.boundaries) return null;
   if (level === "tract") return "Tracts are matched by their code; tracts split or merged in 2020 show no data";
-  if (level === "county") return "Connecticut shows no data (its counties changed in 2022)";
+  // `from` keeps Connecticut's old counties (each source switches in its own year, #540).
+  if (level === "county") return `Connecticut shows no data (${from.label} uses its old counties)`;
   return null;
 }
 
@@ -76,7 +77,7 @@ export function noTractsNote(s: Stop | null | undefined, levels: readonly string
 export function areaChangeNote(from: Stop, to: Stop, level: GeoLevel, geoid: string): string | null {
   if (from.boundaries === to.boundaries) return null;
   if (level === "tract") return "tract changed in 2020";
-  if (level === "county" && geoid.startsWith("09")) return "Connecticut's counties changed in 2022";
+  if (level === "county" && geoid.startsWith("09")) return `${from.label} uses Connecticut's old counties`;
   // Valdez–Cordova (02261) split into Chugach (02063) and Copper River (02066) in 2019.
   if (level === "county" && (geoid === "02063" || geoid === "02066")) return "this area was split from Valdez–Cordova in 2019";
   return null;
