@@ -140,7 +140,7 @@
   "id": "inflation-adjusted",
   "term": "Inflation-adjusted dollars",
   "short": "Dollar amounts are restated in 2024 dollars, so earlier periods can be compared without inflation getting in the way.",
-  "long": "The Census Bureau reports each 5-year period in its own last year's dollars. When you step back to earlier periods on the map, those values are converted to 2024 dollars with the Consumer Price Index (CPI-U), so a change you see reflects a real change in buying power rather than rising prices.",
+  "long": "The Census Bureau reports each 5-year period in its own last year's dollars, and BLS reports pay in each year's own dollars. When you step back to earlier periods on the map, those values are converted to 2024 dollars with the Consumer Price Index (CPI-U), so a change you see reflects a real change in buying power rather than rising prices.",
   "source": "https://www.bls.gov/cpi/"
  },
  {
