@@ -46,7 +46,7 @@ const INTEGER_UNITS = new Set<Unit>(["count", "categories", "agreements", "decla
 /** Units in words, for profile pages and screen readers. */
 export const UNIT_LABEL: Record<Unit, string> = {
   dollars: "U.S. dollars", percent: "percent", minutes: "minutes", count: "count", per_sq_mi: "per square mile of land",
-  ratio: "ratio", score: "score from 1 to 20", years: "years", deg_f: "degrees Fahrenheit", inches: "inches", per_100k: "per 100,000 residents", per_1k: "per 1,000 residents",
+  ratio: "ratio", score: "score", years: "years", deg_f: "degrees Fahrenheit", inches: "inches", per_100k: "per 100,000 residents", per_1k: "per 1,000 residents",
   vehicles_per_day: "vehicles per day", miles_per_day: "miles per day", categories: "burden categories exceeded", agreements: "active agreements", declarations: "disaster declarations", percentile: "percentile (national rank)",
   ug_m3: "micrograms per cubic meter of air", ppm: "parts per million",
   degree_days: "degree days (°F)",
