@@ -51,6 +51,16 @@ export default function popupTests({ test, expect, wait, mapIdle, pointerAt, hov
     expect(legend.includes("No clear change"), `legend: ${legend.slice(0, 200)}`);
   });
 
+  test("laptop older year: an ACS hover carries that year's margin, like the card (#524)", async (o) => {
+    const { page } = await o("laptop", `/map?d=median_gross_rent&t=2009&lv=county&at=${HENNEPIN.join(",")},9`);
+    const [x, y] = await pointerAt(page, ...HENNEPIN);
+    await hoverAt(page, x, y);
+    const lead = page.locator(".wg-popup-lead-value").first();
+    await page.waitForFunction(() => /±/.test(document.querySelector(".wg-popup-lead-value")?.textContent ?? ""), null, { timeout: 8000 }).catch(() => {});
+    const text = (await lead.innerText()).trim();
+    expect(/^\$[\d,]+ ±\$[\d,]+$/.test(text), `hover: ${text}`);
+  });
+
   test("laptop environmental justice hover: the period reads Dec. 2024", async (o) => {
     const { page } = await o("laptop", "/map?d=cejst_pct_pop_disadvantaged");
     const [x, y] = await pointerAt(page, ...NEBRASKA);

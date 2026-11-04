@@ -1,10 +1,10 @@
-import { useLayoutEffect, useRef, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { Popup } from "@webgis/design/components";
-import { formatValue, GEO_LEVELS, TILE_VALUE_LEVELS } from "@webgis/design";
+import { formatEstimate, formatValue, GEO_LEVELS, TILE_VALUE_LEVELS } from "@webgis/design";
 import type { FeatureHit, HoverInfo } from "../map/MapView";
 import type { Dataset } from "@/lib/registry";
 import type { FeatureLayerSpec } from "@/lib/layers";
-import type { LevelValues, Values } from "@/lib/values";
+import { loadMoes, type LevelValues, type Values } from "@/lib/values";
 import { featureNoun, featureRows, featureTitle } from "./FeaturePanel";
 import { changeSummary } from "@/lib/change";
 import { areaChangeNote, type Stop } from "@/lib/periods";
@@ -35,7 +35,7 @@ function HoverCard({ x, y, children, ...rest }: { x: number; y: number; children
 
 /** The hover card for a place (value for each mapped dataset), shown until something is clicked.
  *  On a change map it shows the change, with both periods' values under it. */
-export function PlaceHoverPopup({ hover, primary, secondary, xValues, yValues, blockField, periodLabel, change, unreliable }: {
+export function PlaceHoverPopup({ hover, primary, secondary, xValues, yValues, blockField, periodLabel, stopId, change, unreliable }: {
   hover: HoverInfo;
   primary: Dataset;
   secondary: Dataset | null;
@@ -45,11 +45,21 @@ export function PlaceHoverPopup({ hover, primary, secondary, xValues, yValues, b
   blockField?: string | null;
   /** The shown period (a year stop's label, or the dataset's vintage). */
   periodLabel: string;
+  /** An older year's stop id: its own margin of error is read for ACS maps, as on the card (#507). */
+  stopId?: string | null;
   /** Hatching is on and this area's estimate is unreliable (D-222). */
   unreliable?: boolean;
   /** A change map (issue #127): the two stops, the earlier values and the change classes. */
   change?: { from: Stop; to: Stop; fromValues?: Values; classed: ClassedLevel };
 }) {
+  const moeKey = stopId && primary.measure.kind === "acs5" && !secondary && !change && !TILE_VALUE_LEVELS.has(hover.level) ? `${stopId}/${hover.level}` : null;
+  const [stopMoes, setStopMoes] = useState<{ key: string; moes: Values } | null>(null);
+  useEffect(() => {
+    if (!moeKey || !stopId) return;
+    let live = true; // loadMoes caches per stop and level, so moving between places doesn't refetch
+    loadMoes(primary.id, hover.level, stopId).then((moes) => live && setStopMoes({ key: moeKey, moes }), () => {});
+    return () => { live = false; };
+  }, [moeKey, stopId, primary.id, hover.level]);
   if (change) {
     const g = hover.geoid;
     const tested = !!change.classed.tested && change.classed.classes.get(g) === (CHANGE_CLASSES - 1) / 2;
@@ -65,12 +75,13 @@ export function PlaceHoverPopup({ hover, primary, secondary, xValues, yValues, b
   }
   const valueOf = (d: Dataset) => TILE_VALUE_LEVELS.has(hover.level) && blockField ? (hover.props?.[blockField] as number | undefined) : (d === primary ? xValues : yValues)[hover.level]?.[hover.geoid];
   const v = valueOf(primary);
+  const est = formatEstimate(v, stopMoes?.key === moeKey ? stopMoes?.moes[hover.geoid] : null, primary.unit);
   // One map: its value is the headline, with its period under it. Two maps: each value with its own period.
   // shortcut: "unreliable" is only known while hatching is on (margins load then); show the margin itself if visitors ask.
   return (
     <HoverCard x={hover.x} y={hover.y}>
       <Popup title={hover.name} subtitle={GEO_LEVELS[hover.level].label}
-        lead={secondary ? undefined : { label: primary.title, text: formatValue(v, primary.unit), period: shortPeriod(periodLabel), none: v == null }}
+        lead={secondary ? undefined : { label: primary.title, text: est.moe ? `${est.value} ±${est.moe}` : est.value, period: shortPeriod(periodLabel), none: v == null }}
         rows={secondary ? [primary, secondary].map((d) => ({ label: d.title, unit: d.unit, value: valueOf(d), period: shortPeriod(d === primary ? periodLabel : d.vintage) })) : []}
         footnote={!unreliable ? undefined : v === 0 ? "Rough estimate: the margin of error is large for a zero." : "Rough estimate: the margin of error is about half the value or more."} />
     </HoverCard>
