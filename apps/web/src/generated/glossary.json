@@ -140,7 +140,7 @@
   "id": "inflation-adjusted",
   "term": "Inflation-adjusted dollars",
   "short": "Dollar amounts are restated in 2024 dollars, so earlier periods can be compared without inflation getting in the way.",
-  "long": "The Census Bureau reports each 5-year period in its own last year's dollars. When you step back to earlier periods on the map, those values are converted to 2024 dollars with the Consumer Price Index (CPI-U), so a change you see reflects a real change in buying power rather than rising prices.",
+  "long": "The Census Bureau reports each 5-year period in its own last year's dollars, and BLS reports pay in each year's own dollars. When you step back to earlier periods on the map, those values are converted to 2024 dollars with the Consumer Price Index (CPI-U), so a change you see reflects a real change in buying power rather than rising prices.",
   "source": "https://www.bls.gov/cpi/"
  },
  {
@@ -287,5 +287,12 @@
   "short": "Approval from a city or county to build new homes. The Census Bureau counts the homes each permit allows; a permit is not a finished home.",
   "long": "The Census Bureau asks about 20,000 cities, towns and counties that require permits how many new homes they approved, and estimates for those that don't answer. It counts homes, so a 100-unit apartment building counts as 100. Most permitted homes are started within months, but some are delayed or never built, and homes in areas that need no permit are not counted. The survey covered fewer places before 2004 (about 17,000 through 1993), so early years count slightly fewer areas.",
   "source": "https://www.census.gov/construction/bps/about.html"
+ },
+ {
+  "id": "qcew",
+  "term": "QCEW (Quarterly Census of Employment and Wages)",
+  "short": "A count of jobs and pay from the reports employers file for unemployment insurance, published by the Bureau of Labor Statistics.",
+  "long": "Nearly every employer reports, each quarter, how many people it paid each month and the wages it paid, for state unemployment insurance. BLS adds these reports up by county and industry. Because it is close to a full count, not a survey, it is the benchmark other job figures are checked against. Jobs are counted at the workplace, a person with two jobs counts twice, and workers outside unemployment insurance (the self-employed, most farm and household workers, railroad workers, the military) are not counted. BLS withholds figures that could reveal a single employer's numbers.",
+  "source": "https://www.bls.gov/cew/overview.htm"
  }
 ]

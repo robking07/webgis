@@ -1,0 +1,23 @@
+id: qcew_jobs_per_1k
+title: Jobs per 1,000 residents
+phrase: jobs per resident
+description: Jobs located in the area (yearly average, all industries, private and government) per 1,000 people who live there. Above 1,000 means more jobs than residents, a job center that draws commuters; a low number means many residents work elsewhere, or are retired, in school or not working.
+category: Economy
+subcategory: Jobs
+tags: [jobs, employment, workplace, job centers, commuting, QCEW, BLS]
+source:
+  name: U.S. Bureau of Labor Statistics, Quarterly Census of Employment and Wages
+  shortName: BLS
+  url: https://www.bls.gov/cew/
+  citation: "U.S. Bureau of Labor Statistics, Quarterly Census of Employment and Wages, annual averages (1990–2025); Census Bureau population estimates"
+license: Public domain (U.S. Government work, 17 U.S.C. § 105)
+updateCadence: annual
+vintage: "2025"
+geographyLevels: [state, county]
+unit: per_1k
+universe: jobs covered by unemployment insurance (by workplace)
+coverageNote: "Jobs are counted where people work, not where they live, and someone with two jobs counts twice, so this is not the share of residents who have a job. It covers jobs under unemployment insurance, more than 95% of U.S. jobs, and leaves out the self-employed, most farm and household workers, railroad workers and members of the military, so farm counties read low. BLS withholds a few county figures to protect individual employers; those show no data, not zero. The Job density map counts jobs per square mile from Census LODES, which starts from the same employer records but counts jobs at one point in the year and adds statistical noise; this map uses BLS's yearly averages and divides by residents, for states and counties only. Connecticut shows its old counties through 2023 (with no data for 2020–2023) and its nine planning regions from 2024."
+terms: [qcew, population-estimates, quantile-classes]
+measure: { kind: qcew, field: per_1k, year: 2025 }
+timeline: { from: 1990, to: 2025 }
+symbology: { ramp: blues, classification: quantile, classes: 5 }
