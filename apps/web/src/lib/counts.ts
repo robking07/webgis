@@ -36,9 +36,10 @@ export async function placeCounts(id: string, geoid: string): Promise<Counts | n
   return (await load<Record<string, Counts>>(`values/${id}/${level}.counts.json`))?.[geoid] ?? null;
 }
 
-/** The U.S. value for a map (the Census Bureau's own U.S. row, or the summed counts; D-257), or null. */
-export async function usValue(id: string): Promise<number | null> {
-  return (await load<{ value?: number | null }>(`values/${id}/us.json`))?.value ?? null;
+/** The U.S. value for a map (the Census Bureau's own U.S. row, or the summed counts; D-257), or null.
+ *  `stop`: a timeline stop's own file (`values/<id>/<stop>/us.json`), where the ingest wrote one. */
+export async function usValue(id: string, stop?: string | null): Promise<number | null> {
+  return (await load<{ value?: number | null }>(`values/${id}/${stop ? `${stop}/` : ""}us.json`))?.value ?? null;
 }
 
 /** The places a share is taken of: tract → county, state; county → state, U.S.; state → U.S.
