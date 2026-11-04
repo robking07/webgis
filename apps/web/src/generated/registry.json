@@ -20509,6 +20509,120 @@
   }
  },
  {
+  "id": "rail_crossing_crashes",
+  "title": "Rail crossing crashes",
+  "phrase": "rail crossing crashes a year",
+  "description": "How many crashes happen in a year where a public road crosses railroad tracks at street level: a train hitting a vehicle, a person on foot or someone on a bike at the crossing. The map opens on the average for 2021–2025; step back through single years to 1975. Counted where the crash happened.",
+  "category": "Transportation",
+  "subcategory": "Traffic safety",
+  "tags": [
+   "railroad",
+   "grade crossings",
+   "train crashes",
+   "rail safety",
+   "FRA",
+   "Form 57",
+   "Vision Zero"
+  ],
+  "source": {
+   "name": "Federal Railroad Administration, Highway-Rail Grade Crossing Incident Data (Form 57)",
+   "shortName": "FRA",
+   "url": "https://data.transportation.gov/d/7wn6-i5b9",
+   "citation": "Federal Railroad Administration, Office of Railroad Safety, Highway-Rail Grade Crossing Incident Data (Form 57), data.transportation.gov dataset 7wn6-i5b9, retrieved November 2026"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105; data.transportation.gov lists it as Public Domain)",
+  "updateCadence": "monthly",
+  "vintage": "2021–2025 average",
+  "geographyLevels": [
+   "state",
+   "county"
+  ],
+  "areaLevels": [],
+  "unit": "count",
+  "universe": "collisions between trains and road users at public highway-rail grade crossings, counted where they happened (not people or residents)",
+  "measure": {
+   "kind": "fra_crossings",
+   "field": "crashes",
+   "years": [
+    2021,
+    2025
+   ]
+  },
+  "modelInputs": [],
+  "coverageNote": "A crossing crash is a collision between a train and a road user (a vehicle, a person on foot, a bike) at a highway-rail grade crossing, as railroads report them to the Federal Railroad Administration. Only public crossings are counted; crashes at private crossings (farm, industrial and driveway crossings, about one in six in recent years) are left out. Each crash counts once, even when two railroads reported it. These are counts, not rates: counties with more rail lines, crossings and traffic have more chances for a crash, and a county with no crossings shows 0. Small counties swing a lot from year to year; the five-year average is steadier. FRA revises recent years as late reports come in. Crashes fell from about 11,000 a year in the late 1970s to about 1,900 in recent years. From 2020 on, Connecticut's counties show no data (the reports still use its old counties), and Alaska's do in 1976, 1979 and 1993 (old borough codes that don't match the map).",
+  "facets": [],
+  "library": false,
+  "excludeFromInsights": true,
+  "timeline": {
+   "from": 1975,
+   "to": 2025,
+   "step": 1
+  },
+  "learnMore": [],
+  "terms": [
+   "grade-crossing",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": false
+  }
+ },
+ {
+  "id": "rail_crossings_public",
+  "title": "Rail crossings at street level",
+  "phrase": "public street-level rail crossings",
+  "description": "How many places a public road crosses railroad tracks at street level (grade crossings), from the Federal Railroad Administration's national crossing inventory as it stands today. Bridges and underpasses, closed crossings and private crossings are not counted.",
+  "category": "Transportation",
+  "subcategory": "Traffic safety",
+  "tags": [
+   "railroad",
+   "grade crossings",
+   "rail crossings",
+   "rail safety",
+   "FRA",
+   "Form 71",
+   "crossing inventory"
+  ],
+  "source": {
+   "name": "Federal Railroad Administration, Crossing Inventory Data (Form 71), Current",
+   "shortName": "FRA",
+   "url": "https://data.transportation.gov/d/m2f8-22s6",
+   "citation": "Federal Railroad Administration, Crossing Inventory Data (Form 71) - Current, data.transportation.gov dataset m2f8-22s6, retrieved November 2026"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105; data.transportation.gov lists it as Public Domain)",
+  "updateCadence": "monthly",
+  "vintage": "November 2026 inventory",
+  "geographyLevels": [
+   "state",
+   "county"
+  ],
+  "areaLevels": [],
+  "unit": "count",
+  "universe": "open public highway-rail crossings at street level (not people or residents)",
+  "measure": {
+   "kind": "fra_crossings",
+   "field": "crossings"
+  },
+  "modelInputs": [],
+  "coverageNote": "Counts open public crossings at street level in FRA's national crossing inventory, which railroads and states keep up to date. It is today's list only, with no past years. Crossings FRA lists as having no train traffic are left out. A count, not a rate: counties with more rail lines have more crossings, and a county with none shows 0. Connecticut's counties show no data (the inventory still uses its old counties), and so do Alaska's (about 5% of its crossings carry retired census-area codes).",
+  "facets": [],
+  "library": false,
+  "excludeFromInsights": true,
+  "learnMore": [],
+  "terms": [
+   "grade-crossing",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
   "id": "rental_vacancy_rate",
   "title": "Rental vacancy rate",
   "description": "Vacant homes for rent as a share of all rental homes, rented or for rent.",

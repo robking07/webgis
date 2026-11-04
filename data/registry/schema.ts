@@ -216,6 +216,16 @@ const FhfaHpiMeasure = z.object({
   year: z.number().int(),
 });
 
+/** FRA highway-rail grade crossing data (public domain, data.transportation.gov, no key). `crashes`:
+ *  Form 57 incidents at public crossings a year, averaged over `years` (single years on the timeline);
+ *  `crossings`: open public at-grade crossings in today's Form 71 inventory. Ingest: fra.ts. */
+const FraCrossingsMeasure = z.object({
+  kind: z.literal("fra_crossings"),
+  field: z.enum(["crashes", "crossings"]),
+  /** Inclusive incident years averaged for the headline; required for `crashes`. */
+  years: z.tuple([z.number().int(), z.number().int()]).optional(),
+});
+
 /** BEA Regional Economic Accounts, table CAINC1 (public domain): per capita personal income, state
  *  and county, in 2024 dollars (CPI-U). Uses BEA's own population. Ingest: bea.ts. */
 const BeaIncomeMeasure = z.object({
@@ -384,7 +394,7 @@ export const DatasetEntry = z.object({
   unit: Unit,
   /** For insights: the population the value describes. Pairs that share one are flagged. */
   universe: z.string(),
-  measure: z.discriminatedUnion("kind", [AcsMeasure, Census2020Measure, LodesMeasure, PlacesMeasure, ClimdivMeasure, NbiMeasure, FarsMeasure, FeaturesMeasure, HpmsVmtMeasure, CejstMeasure, Ddp287gMeasure, LeadMeasure, FoodAccessMeasure, FemaNriMeasure, SviMeasure, AirQualityMeasure, OverdoseMeasure, TriMeasure, SahieMeasure, PopestMeasure, BpsMeasure, QcewMeasure, FhfaHpiMeasure, BeaIncomeMeasure, FemaDeclarationsMeasure]),
+  measure: z.discriminatedUnion("kind", [AcsMeasure, Census2020Measure, LodesMeasure, PlacesMeasure, ClimdivMeasure, NbiMeasure, FarsMeasure, FeaturesMeasure, HpmsVmtMeasure, CejstMeasure, Ddp287gMeasure, LeadMeasure, FoodAccessMeasure, FemaNriMeasure, SviMeasure, AirQualityMeasure, OverdoseMeasure, TriMeasure, SahieMeasure, PopestMeasure, BpsMeasure, QcewMeasure, FhfaHpiMeasure, BeaIncomeMeasure, FraCrossingsMeasure, FemaDeclarationsMeasure]),
   /** Other registry datasets used as inputs to this dataset's model (e.g. PLACES uses county poverty).
    *  Insight pairs with these are flagged: they correlate partly by construction. */
   modelInputs: z.array(z.string()).default([]),
