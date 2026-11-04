@@ -285,7 +285,7 @@
   "id": "building-permits",
   "term": "Building permits",
   "short": "Approval from a city or county to build new homes. The Census Bureau counts the homes each permit allows; a permit is not a finished home.",
-  "long": "The Census Bureau's Building Permits Survey asks about 20,000 cities, towns and counties that require a permit for new homes how many they approved each month, and estimates for the few that don't answer. It counts homes (housing units), so a 100-unit apartment building is 100. Most permitted homes are started within a few months, but some are delayed or never built, and homes in areas that need no permit are not counted at all. The survey has covered more places over time (about 17,000 in the early 1990s), so early years count slightly fewer areas.",
+  "long": "The Census Bureau asks about 20,000 cities, towns and counties that require permits how many new homes they approved, and estimates for those that don't answer. It counts homes, so a 100-unit apartment building counts as 100. Most permitted homes are started within months, but some are delayed or never built, and homes in areas that need no permit are not counted. The survey covered fewer places before 2004 (about 17,000 through 1993), so early years count slightly fewer areas.",
   "source": "https://www.census.gov/construction/bps/about.html"
  }
 ]

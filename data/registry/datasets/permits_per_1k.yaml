@@ -16,7 +16,7 @@ vintage: "2025 permits"
 geographyLevels: [state, county]
 unit: per_1k
 universe: housing units authorized by building permits
-coverageNote: "Permits are not completions: some permitted homes are built years later or never. Only places that issue building permits are counted, so a county with no permit-issuing places shows no data, and a county where some areas need no permit reads low. In New Mexico, Maine, Michigan and Oregon some permits are filed for the state as a whole, not a county; they count in the state figure only. Small counties swing a lot from year to year: one apartment building can make a big year. Connecticut shows its old counties through 2022 (with no data for 2020–2022) and its nine planning regions from 2023."
+coverageNote: "Permits are not completions: some permitted homes are built years later or never. Only places that issue building permits are counted, so a county with no permit-issuing places shows no data, and a county where some areas need no permit reads low. In New Mexico, Maine, Michigan and Oregon some permits are not tied to a county (state-issued, or in unorganized areas); they count in the state figure only. Small counties swing a lot from year to year: one apartment building can make a big year. Connecticut shows its old counties through 2022 (with no data for 2020–2022) and its nine planning regions from 2023."
 terms: [building-permits, population-estimates]
 measure: { kind: bps, field: per_1k, year: 2025 }
 timeline: { from: 1990, to: 2025 }
