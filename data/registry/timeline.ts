@@ -78,8 +78,9 @@ export function timelineStops(e: DatasetEntry): TimelineStop[] {
       return years.map((y) => ({ id: String(y), label: String(y), isDefault: y === year, ...pre2020(y) }));
     }
     case "airquality": { // 3-year design values, named for the last year; the headline is the registry entry's own period
+      // EPA's county tables keep Connecticut's old counties (still in 2023–2025, #543), so every earlier stop draws them.
       const now = +e.measure.period.split("-")[1];
-      return years.map((y) => ({ id: String(y), label: `${y - 2}–${y}`, isDefault: y === now, ...pre2020(y) }));
+      return years.map((y) => ({ id: String(y), label: `${y - 2}–${y}`, isDefault: y === now, ...(y < now ? { boundaries: "2019" as const } : {}) }));
     }
     case "sahie": { // yearly estimates; Connecticut's old counties run through 2021, so 2019 boundaries until then
       const { year } = e.measure;
