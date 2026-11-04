@@ -10,11 +10,11 @@ New `measure.kind: bea_income`, ingest `data/ingest/src/bea.ts`, Data run step `
   The legend's inflation note is on through `restatesDollars` in `apps/web/src/lib/periods.ts`.
 - **Defaulted (worker): slider starts 1990**, not 1969: the CPI-U table in `util.ts` starts at 1990.
   Adding 1969-1989 CPI-U values would extend it with no other change.
-- **Defaulted (worker): combined areas show no data.** BEA joins Virginia counties with their
-  independent cities (23 areas, e.g. Fairfax + Fairfax City + Falls Church), Maui + Kalawao, and
-  uses old Alaska divisions: county codes starting with 9. 39 counties are blank (3,105 of 3,144 have
-  a value). Option: attribute each combined figure to its member counties (a table of about 25
-  groups); skipped because a city's income is not the combined area's.
+- **Lead call: combined areas are spread over their members.** BEA joins 23 Virginia counties with
+  their independent cities (e.g. Fairfax + Fairfax City + Falls Church) and Maui with Kalawao; each
+  member place shows the group's figure (`BEA_GROUPS` in `bea.ts`, member FIPS from BEA's footnote
+  and the Census county list). Old Alaska divisions and Shawano + Menominee stay no data. A city's
+  own income is not known, so the note says each place in a group shows the group's figure.
 - **Skipped: real GDP (CAGDP9).** It is in chained 2017 dollars (not the 2024 dollars of every other
   money map), is counted at the workplace so a per-resident figure misleads in commuter and energy
   counties, needs a second population source, and growth rates swing wildly in small counties.

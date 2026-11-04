@@ -26,6 +26,7 @@ parts:
 
 links:
   # Housing costs and income
+  - { maps: [bea_income_per_person, per_capita_income], why: Two counts of income per resident, one from tax and program records (BEA) and one from a Census survey. }
   - { maps: [median_gross_rent, median_household_income], why: Rent is paid out of household income. }
   - { maps: [pct_rent_burdened, median_gross_rent], why: Higher rents push more renters past 30% of income. }
   - { maps: [pct_rent_burdened, pct_renter_households], why: Rent burden is a share of renter households only. }
@@ -52,7 +53,6 @@ links:
   - { maps: [job_density, population_density], why: Where jobs are compared with where people live. }
   - { maps: [qcew_jobs_per_1k, job_density], why: Two counts of jobs where people work, one per resident and one per square mile. }
   - { maps: [qcew_avg_pay, median_household_income], why: Pay at the jobs located in a county and the income of the households living there. }
-  - { maps: [bea_income_per_person, per_capita_income], why: Two counts of income per resident, one from tax and program records (BEA) and one from a Census survey. }
   - { maps: [pct_work_outside_county, mean_commute_minutes], why: Working in another county usually means a longer trip. }
   - { maps: [mean_commute_minutes, pct_long_commute], why: The average and the share of long trips. }
   - { maps: [pct_long_commute, pct_extreme_commute], why: 90-minute-plus commutes are part of hour-plus commutes. }

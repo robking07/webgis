@@ -12,14 +12,16 @@ describe("BEA income", () => {
     row("27053", 2, "1", "1", "1"), // population line: skipped
     row("27053", 3, "26136", "96394", "100352"),
     row("09001", 3, "30000", "140184", "(NA)"), // Connecticut old county, gone in 2024
-    row("51919", 3, "30000", "109471", "114330"), // Fairfax + Fairfax City + Falls Church: combined, skipped
+    row("51919", 3, "30000", "109471", "114330"), // Fairfax + Fairfax City + Falls Church: each gets the figure
+    row("02901", 3, "4000", "(NA)", "(NA)"), // old Alaska division: not in a known group, skipped
     row("48301", 3, "(D)", "210370", "220625"),
     "Note: See the included footnote file.",
   ].join("\n");
 
-  it("keeps states and single counties, per-capita line only", () => {
+  it("keeps states and counties, spreading a combined area over its members, per-capita line only", () => {
     const b = parseBea(text);
-    expect([...b.get(2024)!.keys()].sort()).toEqual(["09001", "27", "27053", "48301"]);
+    expect([...b.get(2024)!.keys()].sort()).toEqual(["09001", "27", "27053", "48301", "51059", "51600", "51610"]);
+    expect(b.get(2024)!.get("51600")).toBe(114330);
     expect(b.get(2024)!.get("27053")).toBe(100352);
     expect(b.get(2024)!.get("09001")).toBeNull();
     expect(b.get(1990)!.get("48301")).toBeNull();
