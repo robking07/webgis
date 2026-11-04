@@ -79,6 +79,7 @@ function vars(e: DatasetEntry): string[] {
   if (m.kind === "bps") return m.field === "per_1k" ? ["BPS:UNITS"] : ["BPS:UNITS", "BPS:UNITS5"];
   if (m.kind === "fhfa_hpi") return ["FHFA:HPI"];
   if (m.kind === "bea_income") return ["BEA:PCPI"];
+  if (m.kind === "fra_crossings") return [`FRA:${m.field}`];
   if (m.kind === "qcew") return m.field === "pay" ? ["QCEW:WAGES", "QCEW:JOBS"] : ["QCEW:JOBS"];
   return ["FARS:FATALS"];
 }

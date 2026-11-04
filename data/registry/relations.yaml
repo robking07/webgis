@@ -61,6 +61,7 @@ links:
   - { maps: [pct_zero_vehicle_households, pct_transit_commute], why: Households without a car rely on transit. }
   - { maps: [pct_zero_vehicle_households, lack_transportation], why: Two views of not having a way to get around. }
   - { maps: [traffic_fatalities, vmt_per_capita], why: More driving per person means more exposure to crashes. }
+  - { maps: [rail_crossing_crashes, rail_crossings_public], why: More street-level crossings mean more places a train and a road user can meet. }
   - { maps: [aadt, vmt_per_capita], why: Road traffic counts are what driving totals are built from. }
   # People: Population and age, Immigration and language
   - { maps: [population_density, census2020_pop_density], why: The same measure from the survey and from the 2020 count. }
@@ -469,6 +470,10 @@ maps:
   traffic_fatalities:
     group: "Transportation"
     counts: { of: "traffic deaths a year (average)", per: "residents" }
+  rail_crossing_crashes:
+    group: "Transportation"
+  rail_crossings_public:
+    group: "Transportation"
   vmt_per_capita:
     group: "Transportation"
   # Transportation: Roads and vehicles

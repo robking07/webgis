@@ -301,5 +301,12 @@
   "short": "A measure of how much the price of the same homes changes as they resell, published by the Federal Housing Finance Agency.",
   "long": "The index follows homes that sold or were refinanced more than once and tracks how their prices changed between sales, so it measures price change for a typical home, not the mix of homes that happened to sell. It uses only mortgages bought or guaranteed by Fannie Mae and Freddie Mac, which leaves out cash sales, jumbo loans and most government-insured loans. FHFA calls its county indexes developmental because they can be revised and are thinner where few homes sell. Values are in the dollars of each year, not adjusted for inflation.",
   "source": "https://www.fhfa.gov/data/hpi"
+ },
+ {
+  "id": "grade-crossing",
+  "term": "Highway-rail grade crossing",
+  "short": "A place where a road or path crosses railroad tracks at the same level, so cars, people and trains share the space.",
+  "long": "Where a road meets a railroad it either crosses at street level (a grade crossing) or goes over or under the tracks on a bridge. Public grade crossings are on roads open to everyone; private ones serve farms, businesses or driveways. Crossings have warning devices ranging from signs alone to flashing lights and gates. Railroads must report every collision at a crossing to the Federal Railroad Administration, and FRA keeps a national inventory of every crossing.",
+  "source": "https://data.transportation.gov/d/m2f8-22s6"
  }
 ]
