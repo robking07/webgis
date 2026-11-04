@@ -5,7 +5,7 @@
 import { loadRegistry } from "@webgis/registry/load";
 import type { DatasetEntry } from "@webgis/registry";
 import { ACS_HEADLINE_YEAR, timelineStops } from "@webgis/registry/timeline";
-import { db, FIPS_RENAMES, log, STATES } from "./util.ts";
+import { CPI_U, db, FIPS_RENAMES, log, STATES } from "./util.ts";
 import { areas2019, blockGroupLandArea } from "./geographies.ts";
 import { landArea, registerDataset, writeStatic, writeStopValues, writeValues, type Level, type Value } from "./values.ts";
 import { countsSpec, type Relations } from "@webgis/registry/relations";
@@ -13,11 +13,9 @@ import { loadRelations } from "@webgis/registry/load";
 import { countsRow, remainderRow, sumVars as sum, usArea, writeCounts, writeMoes, writeUs, PackedRow, type Counts, type Row } from "./counts.ts";
 
 const YEAR = ACS_HEADLINE_YEAR;
+// A 5-year estimate's dollars are its last year's dollars; timeline periods are restated in headline-year dollars with CPI_U (D-36).
 const API = (year: number) => `https://api.census.gov/data/${year}/acs/acs5`;
 const MAX_VARS = 48;
-/** CPI-U annual averages (BLS series CUUR0000SA0, period M13). A 5-year estimate's dollars are
- *  its last year's dollars; timeline periods are restated in headline-year dollars (D-36). */
-const CPI_U: Record<number, number> = { 2009: 214.537, 2014: 236.736, 2019: 255.657, 2024: 313.689 };
 
 
 function clean(raw: string | null, isMoe: boolean): number | null {
