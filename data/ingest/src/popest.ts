@@ -1,5 +1,5 @@
-// Census county population estimates, July 1 of each year 1970–2019, for the years before ACS
-// (FARS history, #479). One public file per era, each keyed to that era's county codes; no key needed.
+// Census county population estimates, July 1 of each year 1970–2025: FARS history before ACS (#479)
+// and the building permits rate (#514). One public file per era, each keyed to that era's county codes; no key needed.
 import { readFileSync } from "node:fs";
 import { loadRegistry } from "@webgis/registry/load";
 import { timelineStops } from "@webgis/registry/timeline";
@@ -76,14 +76,16 @@ function load(): Promise<Pops> {
     parse1990s(await read("tables/1990-2000/counties/totals/99c8_00.txt"), out);
     parseCsv(await read("datasets/2000-2010/intercensal/county/co-est00int-tot.csv"), 2000, 2009, out);
     parseCsv(await read("datasets/2010-2019/counties/totals/co-est2019-alldata.csv"), 2010, 2019, out);
+    parseCsv(await read("datasets/2020-2025/counties/totals/co-est2025-alldata.csv"), 2020, 2025, out);
     return out;
   })();
   return all;
 }
 
-/** Residents of one year, 1975–2019, on 2019 boundaries: the codes FARS used that year are carried
+/** Residents of one year. 1975–2019 are on 2019 boundaries: the codes FARS used that year are carried
  *  to the 2019 ones (FIPS_RENAMES: Dade → Miami-Dade, towns merged into Virginia counties), and
- *  counties that no longer exist are dropped from the county map but still count in their state. */
+ *  counties that no longer exist are dropped from the county map but still count in their state.
+ *  2020 on are the Vintage 2025 estimates on current counties (Connecticut's planning regions). */
 export async function estimatedPop(year: number, level: "state" | "county"): Promise<Map<string, number>> {
   const raw = (await load()).get(year);
   if (!raw?.size) throw new Error(`no Census population estimates for ${year}`);
@@ -95,7 +97,7 @@ export async function estimatedPop(year: number, level: "state" | "county"): Pro
     return out;
   }
   const valid = await areas2019("county");
-  for (const [g, n] of county) if (valid.has(g)) out.set(g, n);
+  for (const [g, n] of county) if (year >= 2020 || valid.has(g)) out.set(g, n);
   return out;
 }
 

@@ -76,6 +76,7 @@ function vars(e: DatasetEntry): string[] {
   if (m.kind === "overdose") return ["VSRR:OVERDOSE"];
   if (m.kind === "sahie") return ["SAHIE:PCTUI"];
   if (m.kind === "popest") return [`POPEST:${m.field}`];
+  if (m.kind === "bps") return m.field === "per_1k" ? ["BPS:UNITS"] : ["BPS:UNITS", "BPS:UNITS5"];
   return ["FARS:FATALS"];
 }
 function perArea(e: DatasetEntry) {
