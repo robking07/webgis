@@ -26,6 +26,7 @@ const codes = [...names.keys()];
 for (let i = 0; i < codes.length; i += 20) {
   await Promise.all(codes.slice(i, i + 20).map(async (code) => {
     const r = await fetch(`${BASE}/areas/${code}.json`);
+    if (!r.ok && r.status !== 404) throw new Error(`areas/${code}.json: ${r.status}`); // a hiccup must not drop a city
     if (r.ok) out.push([code, names.get(code), pop.get(code), (await r.json()).v]);
   }));
 }
