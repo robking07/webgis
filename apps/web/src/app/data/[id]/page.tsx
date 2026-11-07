@@ -13,6 +13,9 @@ import { CsvDownload } from "@/components/CsvDownload";
 import { CSV_LEVELS } from "@/lib/csv";
 import { CANDIDATES } from "@/lib/insights";
 import layersManifest from "@/generated/layers.json";
+import NAMES from "@/generated/names.json";
+import CITIES from "@/generated/cities.json";
+import { DatasetKeyNumbers } from "@/components/DatasetKeyNumbers";
 
 export function generateStaticParams() {
   return ALL_DATASETS.map((d) => ({ id: d.id }));
@@ -27,6 +30,10 @@ export async function generateMetadata({ params }: PageProps<"/data/[id]">): Pro
 }
 
 const LEVEL_LABEL: Record<string, string> = { state: "States", county: "Counties", tract: "Census tracts", block_group: "Block groups" };
+const STATE_NAMES = Object.fromEntries(Object.entries(NAMES).filter(([g]) => g.length === 2));
+// shortcut: cities.json is a snapshot (apps/web/scripts/big-cities.mjs); re-run it when `ingest areas` refreshes, or have that step publish it.
+const cityRows = (id: string) => (CITIES as unknown as Array<[string, string, number, Record<string, [number, number | null]>]>)
+  .flatMap(([, name, , v]) => (v[id] ? [{ name, value: v[id][0], moe: v[id][1] }] : []));
 const CLASSIFY_LABEL: Record<string, string> = { quantile: "Quantile", equalInterval: "Equal interval", jenks: "Natural breaks (Jenks)", manual: "Fixed breaks" };
 
 export default async function DatasetProfilePage({ params }: PageProps<"/data/[id]">) {
@@ -70,6 +77,11 @@ export default async function DatasetProfilePage({ params }: PageProps<"/data/[i
           Map it
         </a>
       </header>
+
+      {/* Feature layers and maps without a state level have no key numbers (feature-fit rule). */}
+      {d.measure.kind !== "features" && d.geographyLevels.includes("state") && (
+        <DatasetKeyNumbers dataset={d} stateNames={STATE_NAMES} cities={d.areaLevels.includes("place") ? cityRows(d.id) : []} />
+      )}
 
       <section aria-labelledby="facts" className="mb-8">
         <h2 id="facts" className="sr-only">About this dataset</h2>
