@@ -1,0 +1,1 @@
+Instagram time-lapse renders (#441). Needs ffmpeg on PATH and the cached NOAA nClimDiv + Census boundary files in `data/cache`: `node scripts/timelapse/warming.mts --cache data/cache --out drafts/instagram/warming.mp4` (also writes the cover PNGs next to it; `--still <s>` renders one frame instead).
