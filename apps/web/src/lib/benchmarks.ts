@@ -7,7 +7,7 @@ import { loadValues } from "./values";
 import type { Dataset } from "./registry";
 
 /** Totals, categories and percentiles have no like-for-like state or U.S. figure. */
-const NO_BENCHMARK = new Set<Unit>(["count", "agreements", "categories", "percentile"]);
+export const NO_BENCHMARK = new Set<Unit>(["count", "agreements", "categories", "percentile"]);
 
 /** The kinds whose U.S. file is on R2 (D-257); others would only 404. */
 export const US_KINDS = new Set(["acs5", "census2020", "fars", "lodes", "food_access", "tri"]);
