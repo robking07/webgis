@@ -1,4 +1,4 @@
-# D-651: Header sections are Map · Data · Specials (roadmap 3.5)
+# D-651 · Header sections are Map · Data · Specials (roadmap 3.5)
 
 - Data (/data) joins the header on every page. The current section is underlined, subpages included: /data/<id> is Data; /specials/* is Specials; /map, /place/* and /compare/* are Map.
 - About and Methods stay in the footer row (SiteNav), which every non-map page already has.
