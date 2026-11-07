@@ -71,6 +71,8 @@ interface Props {
   onSelect?: (h: HoverInfo | null, fit?: boolean) => void;
   /** Our own tiles (boundaries or a feature layer) failed to load; null once they load again. */
   onTilesError?: (msg: string | null) => void;
+  /** The OpenFreeMap basemap failed to load; the map switched to the backup (D-652). */
+  onBasemapFallback?: () => void;
   ariaLabel: string;
   /** Override the zoom band per level, e.g. show counties at every zoom on an insight page. */
   levelZooms?: Partial<Record<GeoLevel, { minzoom: number; maxzoom: number }>>;
@@ -162,7 +164,7 @@ function pmtilesUrl(path: string) {
 }
 const tilesUrl = (level: GeoLevel, boundaries?: string | null) => pmtilesUrl(`${boundaryFile(level, boundaries)}.pmtiles`);
 
-export function MapView({ theme, initialView, paint, onViewChange, onHover, onSelect, onTilesError, ariaLabel, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, onApi, featureFilter, scaleUnit = "imperial", fitLeft = 16, attribution = true, boundaries = null, cooperative = false, hatch = null, onTractCounties, watchCounties = false, compare, focus = null, picking = false, onPick, picked = NONE }: Props) {
+export function MapView({ theme, initialView, paint, onViewChange, onHover, onSelect, onTilesError, onBasemapFallback, ariaLabel, levelZooms, featureLayer, onFeatureHover, onFeatureSelect, onUserMove, onApi, featureFilter, scaleUnit = "imperial", fitLeft = 16, attribution = true, boundaries = null, cooperative = false, hatch = null, onTractCounties, watchCounties = false, compare, focus = null, picking = false, onPick, picked = NONE }: Props) {
   const container = useRef<HTMLDivElement>(null);
   const map = useRef<MlMap | null>(null);
   const applied = useRef<Partial<Record<GeoLevel, LevelPaint>>>({});
@@ -178,6 +180,8 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
   /** True once our sources/layers exist on the current style. isStyleLoaded() can't be used:
    *  it stays false while tiles are loading, which silently dropped paint updates. */
   const ready = useRef(false);
+  /** True once OpenFreeMap failed and the backup basemap is showing. */
+  const basemapDown = useRef(false);
   const hovered = useRef<{ level: GeoLevel; id: string } | null>(null);
   const selected = useRef<Flag>(compare ? { level: compare.level, id: compare.a } : null);
   const second = useRef<Flag>(compare ? { level: compare.level, id: compare.b } : null);
@@ -210,6 +214,19 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
       cooperativeGestures: cooperative,
     });
     map.current = m;
+    // OpenFreeMap has no SLA: on a tilejson/tile error, or no basemap tile within 10 s, switch to the
+    // backup style for the rest of the visit. shortcut: one failed tile is enough; not retried until reload.
+    let omtLoaded = false;
+    const switchToBackup = () => {
+      if (basemapDown.current) return;
+      basemapDown.current = true;
+      ready.current = false;
+      m.setStyle(basemapStyle(latest.current.theme, true));
+      onBasemapFallback?.();
+    };
+    const omtTimer = setTimeout(() => { if (!omtLoaded) switchToBackup(); }, 10000);
+    m.on("error", (e) => { if ((e as { sourceId?: unknown }).sourceId === "omt") switchToBackup(); });
+    m.on("data", (e) => { if (e.dataType === "source" && e.sourceId === "omt" && "tile" in e && e.tile) omtLoaded = true; });
     // ?debug (or window.__wgDebug, set by the e2e init script so reloads keep it) exposes the map for devtools / headless checks.
     if ((window as unknown as { __wgDebug?: boolean }).__wgDebug || new URLSearchParams(window.location.search).has("debug")) (window as unknown as { __wgMap: MlMap }).__wgMap = (container.current as unknown as { __wgMap: MlMap }).__wgMap = m;
     m.touchZoomRotate.disableRotation();
@@ -430,7 +447,7 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
     // Double tap: MapLibre zooms on the second touchend, before its click; cancel that at its touchstart.
     m.on("touchstart", (e) => { if (e.points.length === 1 && isDouble(e.originalEvent.timeStamp, e.point)) e.preventDefault(); });
 
-    return () => { m.remove(); map.current = null; };
+    return () => { clearTimeout(omtTimer); m.remove(); map.current = null; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -439,7 +456,7 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
   useEffect(() => {
     if (firstTheme.current) { firstTheme.current = false; return; }
     ready.current = false;
-    map.current?.setStyle(basemapStyle(theme));
+    map.current?.setStyle(basemapStyle(theme, basemapDown.current));
   }, [theme]);
 
   useEffect(() => { scale.current?.setUnit(scaleUnit); }, [scaleUnit]);

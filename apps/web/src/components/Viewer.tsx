@@ -75,6 +75,7 @@ export function Viewer({ search }: { search: string }) {
   const [featureHover, setFeatureHover] = useState<FeatureHit | null>(null);
   const [featureSelected, setFeatureSelected] = useState<FeatureHit | null>(null);
   const [tilesError, setTilesError] = useState<string | null>(null);
+  const [basemapDown, setBasemapDown] = useState(false);
   const [tableOpen, setTableOpen] = useState(false);
   /** The dataset menu is open, and which map it picks (issue #198); null = closed. Laptops and up:
    *  the title's drop-down; phones: the dataset sheet (issue #225). */
@@ -480,6 +481,7 @@ export function Viewer({ search }: { search: string }) {
           onHover={setHover}
           onSelect={onMapSelect}
           onTilesError={setTilesError}
+          onBasemapFallback={() => setBasemapDown(true)}
           levelZooms={bands}
           featureLayer={featureSpec}
           featureFilter={featureFilter}
@@ -568,7 +570,7 @@ export function Viewer({ search }: { search: string }) {
         // Phones, whenever the header and its search are gone: search above the legend (issues #246, #438).
         onSearch={phone && immersed && !pickShown ? () => setSearchOpen(true) : null} />
 
-      <MapCredits datasets={[primary, secondary].filter((d): d is Dataset => !!d)} />
+      <MapCredits basemapDown={basemapDown} datasets={[primary, secondary].filter((d): d is Dataset => !!d)} />
 
       {leaveFor && secondary && (
         <LeaveComparePrompt next={DATASET_BY_ID.get(leaveFor)!} other={secondary} onCancel={() => setLeaveFor(null)}
