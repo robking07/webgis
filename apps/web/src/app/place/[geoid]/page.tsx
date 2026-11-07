@@ -23,7 +23,7 @@ export default async function PlacePage({ params }: PageProps<"/place/[geoid]">)
   if (name === null) notFound();
   return (
     <>
-      <SiteHeader />
+      <SiteHeader current="map" />
       <PlaceProfile geoid={geoid} name={name} similar={<SimilarPlaces geoid={geoid} />} />
       <div className="mx-auto max-w-3xl px-4 pb-8 md:px-8"><SiteFooter /></div>
     </>
