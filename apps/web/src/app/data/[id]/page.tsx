@@ -58,7 +58,7 @@ export default async function DatasetProfilePage({ params }: PageProps<"/data/[i
 
   return (
     <>
-    <SiteHeader />
+    <SiteHeader current="data" />
     <main className="mx-auto max-w-3xl px-4 py-6 md:px-8 md:py-8">
       <p className="text-sm"><Link href="/data" className="text-primary underline-offset-2 hover:underline">← All data</Link></p>
       <header className="mb-6 mt-3">
