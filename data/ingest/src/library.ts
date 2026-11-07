@@ -22,7 +22,8 @@ export const MIN_COVERAGE = 0.9, MIN_MOE = 0.9;
 /** Above this share of unreliable graded tract values, the map ships at state and county only (D-521). */
 export const MAX_UNRELIABLE_TRACTS = 0.5;
 
-export interface RecipeMap { id: string; title: string; topic: string; universe: string; num: string[]; den?: string[]; text: string; tags: string[] }
+/** `note` becomes the entry's coverageNote; `terms` are glossary ids added before the usual ACS ones (#422). */
+export interface RecipeMap { id: string; title: string; topic: string; universe: string; num: string[]; den?: string[]; text: string; tags: string[]; note?: string; terms?: string[] }
 export interface Recipe { vintage: string; year: number; ramps: Record<string, string>; tables: Record<string, string>; maps: RecipeMap[] }
 
 export const loadRecipe = (file = RECIPE) => parse(readFileSync(file, "utf8")) as Recipe;
@@ -44,7 +45,8 @@ export function shape(m: RecipeMap, r: Recipe): { raw: Record<string, unknown>; 
     },
     license: "Public domain (U.S. Government work, 17 U.S.C. § 105)",
     updateCadence: "annual", vintage: r.vintage, geographyLevels: [...LEVELS], unit: "percent", universe: m.universe,
-    terms: ["acs-5-year", "margin-of-error", "census-geography", "quantile-classes"],
+    ...(m.note && { coverageNote: m.note }),
+    terms: [...(m.terms ?? []), "acs-5-year", "margin-of-error", "census-geography", "quantile-classes"],
     // Data Profile percents are already shares (scale 1); detailed tables are numerator ÷ denominator.
     measure: m.den ? { kind: "acs5", numerator: m.num, denominator: m.den, scale: 100 } : { kind: "acs5", numerator: m.num },
     symbology: { ramp: r.ramps[category], classification: "quantile", classes: 5 },
