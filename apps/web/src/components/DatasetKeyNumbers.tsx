@@ -44,9 +44,9 @@ export function DatasetKeyNumbers({ dataset: d, stateNames, cities }: Props) {
   return (
     <section aria-labelledby="key-numbers" className="mb-8">
       <h2 id="key-numbers" className="sr-only">Key numbers</h2>
-      <div className="grid gap-4 rounded-xl border bg-card p-4 text-sm sm:grid-cols-3">
+      <div className="grid gap-4 rounded-xl border bg-card p-4 text-sm sm:grid-cols-2">
         {us && (
-          <div>
+          <div className="sm:col-span-2">
             <h3 className="text-xs text-muted-foreground">U.S.</h3>
             <p className="mt-1 text-lg font-semibold tabular-nums">{est(us)}</p>
           </div>
@@ -77,8 +77,8 @@ function Top3({ title, rows, est }: { title: string; rows: Row[]; est: Est }) {
       <ol className="mt-1 space-y-0.5">
         {rows.map((r, i) => (
           // #1 larger and bold, #2 and #3 smaller and regular (Robbie, #244).
-          <li key={r.name} className={i === 0 ? "text-lg font-semibold" : "text-sm"}>
-            {r.name} <span className="whitespace-nowrap tabular-nums">{est(r)}</span>
+          <li key={r.name} className={`flex flex-wrap items-baseline justify-between gap-x-3 ${i === 0 ? "text-lg font-semibold" : "text-sm"}`}>
+            <span>{r.name}</span><span className="whitespace-nowrap tabular-nums">{est(r)}</span>
           </li>
         ))}
       </ol>
@@ -117,7 +117,7 @@ function RankTable({ id, label, rows, title, est }: { id: string; label: string;
           {sorted.map((r) => (
             <tr key={r.name} className="border-t">
               <th scope="row" className="px-3 py-1.5 text-left font-normal">{r.name}</th>
-              <td className="px-3 py-1.5 text-right">{est(r)}</td>
+              <td className="whitespace-nowrap px-3 py-1.5 text-right">{est(r)}</td>
             </tr>
           ))}
         </tbody>
