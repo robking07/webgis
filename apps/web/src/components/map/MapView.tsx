@@ -71,7 +71,7 @@ interface Props {
   onSelect?: (h: HoverInfo | null, fit?: boolean) => void;
   /** Our own tiles (boundaries or a feature layer) failed to load; null once they load again. */
   onTilesError?: (msg: string | null) => void;
-  /** The OpenFreeMap basemap failed to load; the map switched to the backup (D-652). */
+  /** The OpenFreeMap basemap failed to load; the map switched to the backup (D-653). */
   onBasemapFallback?: () => void;
   ariaLabel: string;
   /** Override the zoom band per level, e.g. show counties at every zoom on an insight page. */
@@ -214,9 +214,10 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
       cooperativeGestures: cooperative,
     });
     map.current = m;
-    // OpenFreeMap has no SLA: on a tilejson/tile error, or no basemap tile within 10 s, switch to the
+    // OpenFreeMap has no SLA: on a tilejson/tile error, or no basemap tilejson within 10 s, switch to the
     // backup style for the rest of the visit. shortcut: the first basemap error (or 3 after tiles arrived) switches for the rest of the visit.
-    let omtLoaded = false;
+    let omtLoaded = false; // a basemap tile has arrived
+    let omtMeta = false; // the tilejson (or a tile) has arrived: a slow phone is not an outage
     const switchToBackup = () => {
       if (basemapDown.current) return;
       basemapDown.current = true;
@@ -224,10 +225,10 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
       m.setStyle(basemapStyle(latest.current.theme, true));
       onBasemapFallback?.();
     };
-    const omtTimer = setTimeout(() => { if (!omtLoaded) switchToBackup(); }, 10000);
+    const omtTimer = setTimeout(() => { if (!omtMeta) switchToBackup(); }, 10000);
     let omtErrors = 0; // a lone tile blip after tiles arrived is not an outage
     m.on("error", (e) => { if ((e as { sourceId?: unknown }).sourceId === "omt" && (!omtLoaded || ++omtErrors >= 3)) switchToBackup(); });
-    m.on("data", (e) => { if (e.dataType === "source" && e.sourceId === "omt" && "tile" in e && e.tile) omtLoaded = true; });
+    m.on("data", (e) => { if (e.dataType !== "source" || e.sourceId !== "omt") return; omtMeta = true; if ("tile" in e && e.tile) omtLoaded = true; });
     // ?debug (or window.__wgDebug, set by the e2e init script so reloads keep it) exposes the map for devtools / headless checks.
     if ((window as unknown as { __wgDebug?: boolean }).__wgDebug || new URLSearchParams(window.location.search).has("debug")) (window as unknown as { __wgMap: MlMap }).__wgMap = (container.current as unknown as { __wgMap: MlMap }).__wgMap = m;
     m.touchZoomRotate.disableRotation();

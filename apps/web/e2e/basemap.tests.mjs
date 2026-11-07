@@ -1,4 +1,4 @@
-// Backup basemap (issue #552, D-652), registered by menus.spec.mjs: with OpenFreeMap unreachable the map
+// Backup basemap (issue #552, D-653), registered by menus.spec.mjs: with OpenFreeMap unreachable the map
 // switches to the backup style (our own state tiles on a water-coloured background) and keeps its data layers.
 export default function basemapTests({ test, expect }) {
   test("laptop basemap down: the map falls back to our state tiles and the credits drop OpenFreeMap", async (o) => {

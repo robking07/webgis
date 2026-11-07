@@ -25,7 +25,7 @@ export const DATA_BEFORE_ID = "overlay-water";
 /** Selection outlines go here: above the water (a lakeside pick still shows), under the boundary lines. */
 export const HIGHLIGHT_BEFORE_ID = "ref-county-line";
 
-/** `fallback`: OpenFreeMap is unreachable (D-652): the same layers over an empty source, so the map keeps
+/** `fallback`: OpenFreeMap is unreachable (D-653): the same layers over an empty source, so the map keeps
  *  its layer ids and draws only the water-coloured background plus our own state tiles (U.S. land and
  *  the state lines). shortcut: Canada and Mexico read as water and there are no labels or roads;
  *  upgrade to a small low-zoom world file only if OpenFreeMap really goes away. */

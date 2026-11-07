@@ -5,7 +5,7 @@ PR #553, closes #552 (roadmap S4). Kind: perf/resilience.
 ## Decision
 
 - OpenFreeMap stays the basemap. If its tilejson or a tile errors before any basemap tile has arrived
-  (or 3 errors after), or no basemap tile has arrived after 10 s, the map switches (once per visit) to
+  (or 3 errors after), or the basemap tilejson has not arrived after 10 s, the map switches (once per visit) to
   `basemapStyle(theme, true)`: the same layer ids over an empty source, a water-coloured background, and
   our own state tiles on R2 for U.S. land and state lines (`us-focus-land`, `ref-state-line`). No glyph or
   sprite URLs, so nothing else is fetched.
