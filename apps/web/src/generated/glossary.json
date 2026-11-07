@@ -106,8 +106,15 @@
  {
   "id": "tract-2010",
   "term": "2010 census tracts",
-  "short": "CEJST and USDA's Food Access Research Atlas use the 2010 tract boundaries, which differ in places from the 2020 tracts used by most other layers here.",
-  "long": "Census tracts are redrawn every ten years. CEJST 2.0 and the 2019 Food Access Research Atlas were built on 2010 tracts, so their tract shapes are drawn as published rather than matched to 2020 tracts. County and state roll-ups use the 2010 county codes, which still match today's counties everywhere except Connecticut (which switched to planning regions in 2022) and a few renamed or split areas."
+  "short": "CEJST, USDA's Food Access Research Atlas and EPA's walkability index use the 2010 tract boundaries, which differ in places from the 2020 tracts used by most other layers here.",
+  "long": "Census tracts are redrawn every ten years. CEJST 2.0, the 2019 Food Access Research Atlas and EPA's 2021 walkability index were built on 2010 tracts (or their block groups), so their tract shapes are drawn as published rather than matched to 2020 tracts. County and state roll-ups use the 2010 county codes, which still match today's counties everywhere except Connecticut (which switched to planning regions in 2022) and a few renamed or split areas."
+ },
+ {
+  "id": "walkability-index",
+  "term": "National Walkability Index",
+  "short": "EPA's 1-to-20 score for how easy a neighborhood is to get around on foot, built from its street pattern, transit access and mix of jobs and homes.",
+  "long": "EPA scores every block group on four measures from its Smart Location Database: how many street intersections there are (more means shorter, more direct walks), how far homes are from the nearest transit stop, the mix of job types, and the mix of jobs and homes. Intersections and transit each count for a third, the two mix measures for a sixth each. It is a model of the built environment, not a survey: it has no data on sidewalks, crossings, traffic speed or safety, and places far from a transit stop, or served only by agencies that publish no schedule data, get the lowest transit score (more than half of all block groups). Inputs date from 2017 to 2020.",
+  "source": "https://www.epa.gov/smartgrowth/national-walkability-index-user-guide-and-methodology"
  },
  {
   "id": "food-access",
@@ -140,7 +147,7 @@
   "id": "inflation-adjusted",
   "term": "Inflation-adjusted dollars",
   "short": "Dollar amounts are restated in 2024 dollars, so earlier periods can be compared without inflation getting in the way.",
-  "long": "The Census Bureau reports each 5-year period in its own last year's dollars. When you step back to earlier periods on the map, those values are converted to 2024 dollars with the Consumer Price Index (CPI-U), so a change you see reflects a real change in buying power rather than rising prices.",
+  "long": "The Census Bureau reports each 5-year period in its own last year's dollars, and BLS reports pay in each year's own dollars. When you step back to earlier periods on the map, those values are converted to 2024 dollars with the Consumer Price Index (CPI-U), so a change you see reflects a real change in buying power rather than rising prices.",
   "source": "https://www.bls.gov/cpi/"
  },
  {
@@ -273,5 +280,40 @@
   "short": "The Twin Cities region's four-year list of road, transit, bike and walking projects that have federal money.",
   "long": "Any project that uses federal transportation dollars in the seven-county Twin Cities area has to be listed in the TIP before it can be built. The Metropolitan Council, the region's planning agency, publishes it each year after state, county and city agencies submit their projects. Being in the TIP means the money is committed on paper; schedules and designs can still change.",
   "source": "https://metrocouncil.org/Transportation/Planning-2/Transportation-Improvement-Program.aspx"
+ },
+ {
+  "id": "population-estimates",
+  "term": "Population estimates",
+  "short": "The Census Bureau's yearly estimate of how many people live in a place between the once-a-decade counts. Migration in them is modeled, not counted.",
+  "long": "Each year the Census Bureau starts from the last Census count and adds births, subtracts deaths, then estimates moves in and out of each county using tax returns, Medicare, school and other records. Births and deaths come from vital records and are close to counts; migration is modeled, so a county's figure can be off and later be revised. Each yearly release also revises the years before it, and when a new Census arrives the whole decade is rebuilt, so estimates from different decades are not one smooth series.",
+  "source": "https://www.census.gov/programs-surveys/popest/about.html"
+ },
+ {
+  "id": "building-permits",
+  "term": "Building permits",
+  "short": "Approval from a city or county to build new homes. The Census Bureau counts the homes each permit allows; a permit is not a finished home.",
+  "long": "The Census Bureau asks about 20,000 cities, towns and counties that require permits how many new homes they approved, and estimates for those that don't answer. It counts homes, so a 100-unit apartment building counts as 100. Most permitted homes are started within months, but some are delayed or never built, and homes in areas that need no permit are not counted. The survey covered fewer places before 2004 (about 17,000 through 1993), so early years count slightly fewer areas.",
+  "source": "https://www.census.gov/construction/bps/about.html"
+ },
+ {
+  "id": "qcew",
+  "term": "QCEW (Quarterly Census of Employment and Wages)",
+  "short": "A count of jobs and pay from the reports employers file for unemployment insurance, published by the Bureau of Labor Statistics.",
+  "long": "Nearly every employer reports, each quarter, how many people it paid each month and the wages it paid, for state unemployment insurance. BLS adds these reports up by county and industry. Because it is close to a full count, not a survey, it is the benchmark other job figures are checked against. Jobs are counted at the workplace, a person with two jobs counts twice, and workers outside unemployment insurance (the self-employed, most farm and household workers, railroad workers, the military) are not counted. BLS withholds figures that could reveal a single employer's numbers.",
+  "source": "https://www.bls.gov/cew/overview.htm"
+ },
+ {
+  "id": "fhfa-hpi",
+  "term": "House Price Index (FHFA)",
+  "short": "A measure of how much the price of the same homes changes as they resell, published by the Federal Housing Finance Agency.",
+  "long": "The index follows homes that sold or were refinanced more than once and tracks how their prices changed between sales, so it measures price change for a typical home, not the mix of homes that happened to sell. It uses only mortgages bought or guaranteed by Fannie Mae and Freddie Mac, which leaves out cash sales, jumbo loans and most government-insured loans. FHFA calls its county indexes developmental because they can be revised and are thinner where few homes sell. Values are in the dollars of each year, not adjusted for inflation.",
+  "source": "https://www.fhfa.gov/data/hpi"
+ },
+ {
+  "id": "grade-crossing",
+  "term": "Highway-rail grade crossing",
+  "short": "A place where a road or path crosses railroad tracks at the same level, so cars, people and trains share the space.",
+  "long": "Where a road meets a railroad it either crosses at street level (a grade crossing) or goes over or under the tracks on a bridge. Public grade crossings are on roads open to everyone; private ones serve farms, businesses or driveways. Crossings have warning devices ranging from signs alone to flashing lights and gates. Railroads must report every collision at a crossing to the Federal Railroad Administration, and FRA keeps a national inventory of every crossing.",
+  "source": "https://data.transportation.gov/d/m2f8-22s6"
  }
 ]

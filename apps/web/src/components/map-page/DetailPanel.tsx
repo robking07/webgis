@@ -3,7 +3,7 @@ import { useEscape } from "../useEscape";
 import { X } from "lucide-react";
 import { StatusState } from "@webgis/design/components";
 import { CHANGE_CLASSES, formatEstimate, formatValue, GEO_LEVELS, isGradable, STATIC_ONLY_LEVELS, TILE_VALUE_LEVELS, type GeoLevel } from "@webgis/design";
-import { moeRangeLine, noDataReason, reliabilityNote } from "@/lib/reliability";
+import { combinedAreaNote, moeRangeLine, noDataReason, reliabilityNote } from "@/lib/reliability";
 import { changeSummary, formatChange } from "@/lib/change";
 import type { ClassedLevel } from "./useViewerData";
 import type { HoverInfo } from "../map/MapView";
@@ -37,7 +37,7 @@ interface DetailProps {
   /** Switch the map to another dataset (from the drawer's full list). */
   onMapIt: (id: string) => void;
   /** A timeline stop is shown (D-36): the primary value comes from `xv` for that period. */
-  period?: { label: string; defaultLabel: string };
+  period?: { id: string; label: string; defaultLabel: string };
   /** Open a place this one sits inside (the "inside" links, issues #34, #364): select and frame it, or outline a city, metro or MPO. */
   onPlace?: (p: PlaceHit) => void;
   /** Phones: the legend key, shown in the sheet with this place's class outlined. */
@@ -121,6 +121,12 @@ export function ReliabilityNote({ dataset, geoid, value, moe }: { dataset: Datas
   );
 }
 
+/** One muted line when the source reports this place together with others (BEA's combined areas, #540). */
+function CombinedNote({ dataset, geoid }: { dataset: Dataset; geoid: string }) {
+  const note = combinedAreaNote(dataset, geoid);
+  return note ? <p className="mt-1 text-xs text-muted-foreground" data-combined-area="">{note}</p> : null;
+}
+
 /** A clicked place: its values, ranks and links (desktop panel; a BottomSheet on phones). */
 /** A change map's card: the change, then both values, and "no clear change" when the difference is
  *  within its margin of error (√(MOE₁² + MOE₂²); see lib/change.ts). */
@@ -138,6 +144,7 @@ function ChangeCard({ dataset, geoid, change, to, sheetKey }: { dataset: Dataset
       <p className="mt-1 text-xs text-muted-foreground tabular-nums">
         {change.fromLabel}: {values[0]} · {change.toLabel}: {values[1]}
       </p>
+      <CombinedNote dataset={dataset} geoid={geoid} />
       {steady && (
         <p className="mt-1 text-xs text-muted-foreground">
           The change ({formatChange(c, change.classed.measure!, dataset.unit)}) is within the margin of error, so it may not be real.
@@ -187,6 +194,16 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
     return () => { live = false; };
   }, [info.geoid, info.level, info.props, staticOnly, primary, secondary, xv, yv]);
   useEscape(onClose);
+  // An older year's margin of error (ACS only, like the CSV): that stop's own <level>.moe.json (#507).
+  const moeKey = period && primary.measure.kind === "acs5" ? `${primary.id}/${period.id}/${info.level}/${info.geoid}` : null;
+  const [stopMoe, setStopMoe] = useState<{ key: string; moe: number | null } | null>(null);
+  const stopId = period?.id;
+  useEffect(() => {
+    if (!moeKey || !stopId) return;
+    let live = true;
+    loadMoes(primary.id, info.level, stopId).then((m) => live && setStopMoe({ key: moeKey, moe: m[info.geoid] ?? null }), () => {});
+    return () => { live = false; };
+  }, [moeKey, primary.id, info.level, info.geoid, stopId]);
 
   const inside = useInside(info.geoid, info.level, info.lon, info.lat);
   const featured = [primary, secondary].filter((d): d is Dataset => !!d);
@@ -215,12 +232,18 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
               }
               if (i === 0 && period) {
                 const v = xv?.[info.geoid];
+                const est = formatEstimate(v, stopMoe?.key === moeKey ? stopMoe?.moe : null, d.unit);
                 return (
                   <div key={d.id} className="rounded-md bg-muted px-3 py-2">
                     <p className="text-xs text-muted-foreground">{d.title}, {period.label}</p>
-                    <p className="text-xl font-semibold tabular-nums">{formatValue(v, d.unit)}</p>
+                    <p className="text-xl font-semibold tabular-nums">
+                      {est.value}
+                      {est.moe && <span className="ml-1 text-xs font-normal text-muted-foreground">±{est.moe}</span>}
+                    </p>
+                    {v != null && <Benchmarks dataset={d} geoid={info.geoid} stop={period.id} />}
                     {!isRaceRow(d) && rankText(xv, v, info.level) && <p className="text-xs text-muted-foreground">{rankText(xv, v, info.level)}</p>}
                     {r?.value != null && <p className="mt-1 text-xs text-muted-foreground">{period.defaultLabel}: <span className="tabular-nums">{formatValue(r.value, d.unit)}</span></p>}
+                    <CombinedNote dataset={d} geoid={info.geoid} />
                   </div>
                 );
               }
@@ -236,6 +259,7 @@ export function DetailPanel({ info, top, onClose, primary, secondary, xv, yv, on
                   {r?.value != null && <Benchmarks dataset={d} geoid={info.geoid} />}
                   {i === 0 && phone && legendKey && <SheetKey {...legendKey} />}
                   {rank &&<p className="mt-1 text-xs text-muted-foreground">{rank}</p>}
+                  <CombinedNote dataset={d} geoid={info.geoid} />
                   <ReliabilityNote dataset={d} geoid={info.geoid} value={r?.value} moe={r?.moe} />
                 </div>
               );

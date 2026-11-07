@@ -2,7 +2,9 @@
 // tract values and margins in each map's per-county files (values/<id>/tracts/<county>.json), block-group
 // margins in values/<id>/block_group.moe.json. Grading itself lives in @webgis/design (reliability.ts).
 import { formatValue, gradeEstimate, type Reliability, type Unit } from "@webgis/design";
+import { BEA_GROUPS } from "@webgis/registry/bea-groups";
 import type { TractShard } from "./details";
+import { placeName } from "./place-name";
 
 /** Tract geoids in one county shard whose estimate for `datasetId` is unreliable. */
 export function unreliableTracts(shard: TractShard | null, datasetId: string, county: string): string[] {
@@ -45,13 +47,23 @@ export function moeRangeLine(value: number | null | undefined, moe: number | nul
   return `Few households were surveyed here, so this is a range: likely between ${formatValue(lo, unit)} and ${formatValue(hi, unit)}.`;
 }
 
+/** BEA reports some counties together with their independent cities, one figure each member shows
+ *  (BEA_GROUPS): "Figure for Fairfax County with Fairfax city and Falls Church city" (#540). */
+export function combinedAreaNote(ds: { measure: { kind: string } }, geoid: string): string | null {
+  const group = ds.measure.kind === "bea_income" && Object.values(BEA_GROUPS).find((g) => g.includes(geoid));
+  if (!group) return null;
+  const [head, ...rest] = group.map((g) => placeName(g)?.split(",")[0] ?? g);
+  return `Figure for ${head} with ${rest.length > 1 ? `${rest.slice(0, -1).join(", ")} and ${rest.at(-1)}` : rest[0]}`;
+}
+
 /** Why a place has no value (issue #193): from the registry's coverage note and the place's code
  *  where that's knowable, else a plain line. */
 export function noDataReason(ds: { measure: { kind: string }; coverageNote?: string }, geoid: string): string {
   const census = ds.measure.kind === "acs5" || ds.measure.kind === "census2020";
   if (geoid.startsWith("72") && /Puerto Rico/.test(ds.coverageNote ?? "")) return "This source has no data for Puerto Rico.";
-  // Connecticut's nine planning regions (091xx) replaced its counties in 2022; Census data uses them, older sources don't.
-  if (/^091\d\d$/.test(geoid) && !census) return "This source still uses Connecticut's old counties (before 2022).";
+  // Connecticut's nine planning regions (091xx) replaced its counties in 2022. Each source switches in its own
+  // year (#543), so only one whose coverage note says Connecticut shows no data gets the old-counties line.
+  if (/^091\d\d$/.test(geoid) && /Connecticut[^.()]*shows? no data/.test(ds.coverageNote ?? "")) return "This source still uses Connecticut's old counties (before 2022).";
   if (census) return "The Census Bureau doesn't publish this figure for this area.";
   return "The source has no value for this area.";
 }

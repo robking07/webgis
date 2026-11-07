@@ -19,7 +19,7 @@ import { areaByCode, loadArea, loadMpoShape, loadPlaceIndex, mpoById, placeByGeo
 import { useIsCompact, useIsNarrow, useIsPhone } from "./BottomSheet";
 import { DatasetMenu, DatasetSheet, type BrowseSlot } from "./DatasetMenus";
 import { historyKey, parseUrlState, useUrlState, type UrlState } from "@/lib/url-state";
-import { areaChangeNote, stopsFor } from "@/lib/periods";
+import { areaChangeNote, noTractsNote, stopsFor } from "@/lib/periods";
 import { tableScope } from "@/lib/table-scope";
 import { useViewerData } from "./map-page/useViewerData";
 import { useFraming } from "./map-page/useFraming";
@@ -250,6 +250,10 @@ export function Viewer({ search }: { search: string }) {
   };
   const [toast, setToast] = useState<string | null>(null);
   useEffect(() => { if (toast) { const t = setTimeout(() => setToast(null), 8000); return () => clearTimeout(t); } }, [toast]);
+  // lv=tract (or finer) on an older year without tracts (#507): say why it's counties, once per change (adjusted during render).
+  const lostTracts = state.lv && state.lv !== "auto" && !pinnedLevel && primary ? noTractsNote(since ?? stop, primary.geographyLevels) : null;
+  const [seenLost, setSeenLost] = useState<string | null>(null);
+  if (lostTracts !== seenLost) { setSeenLost(lostTracts); if (lostTracts) setToast(lostTracts); }
   /** Phones: "Near me" (issue #363). The position stays in the browser: the tract comes from the map's own tiles. */
   const nearMe = () => {
     setToast("Your location stays on your device. Mapwich uses it only to find your census tract.");
@@ -621,7 +625,7 @@ export function Viewer({ search }: { search: string }) {
       {selected && primary && !isFeature && !detailHidden && (
         <DetailPanel info={selected} top={panelTop} onClose={() => { setSelected(null); mapApi.current?.select("county", null); }} primary={primary} secondary={secondary}
           xv={x.values[selected.level]} yv={y.values[selected.level]}
-          period={stopId && !since ? { label: stop!.label, defaultLabel: primary.vintage } : undefined}
+          period={stopId && !since ? { id: stop!.id, label: stop!.label, defaultLabel: primary.vintage } : undefined}
           change={since && selClassed?.change ? { fromLabel: since.label, toLabel: stop!.label, fromValues: xFrom.values[selected.level], classed: selClassed, boundaryNote: areaChangeNote(since, stop!, selected.level, selected.geoid) } : undefined}
           onMapIt={pickDataset} onPlace={onSearchPlace} legendKey={legendKey} finest={!childLevel(availableLevels, selected.level)} onFlows={focus?.geoid === selected.geoid ? showFlows : undefined} />
       )}

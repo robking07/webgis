@@ -4,7 +4,7 @@ import { z } from "zod";
 import { CATEGORIES } from "./categories.ts";
 
 const Ramp = z.enum(["blues", "ylgnbu", "oranges", "purples", "viridis", "cividis", "rdbu", "puor", "brbg"]);
-const Unit = z.enum(["dollars", "percent", "minutes", "count", "per_sq_mi", "ratio", "years", "deg_f", "inches", "per_100k", "vehicles_per_day", "miles_per_day", "categories", "agreements", "declarations", "percentile", "ug_m3", "ppm", "degree_days"]);
+const Unit = z.enum(["dollars", "percent", "minutes", "count", "per_sq_mi", "ratio", "score", "years", "deg_f", "inches", "per_100k", "per_1k", "vehicles_per_day", "miles_per_day", "categories", "agreements", "declarations", "percentile", "ug_m3", "ppm", "degree_days"]);
 export const GeoLevel = z.enum(["state", "county", "tract", "block_group", "block"]);
 
 /** A feature-layer popup field with optional explainers (D-35). */
@@ -178,6 +178,62 @@ const SahieMeasure = z.object({
   year: z.number().int(),
 });
 
+/** Census Population Estimates (public domain): county and state rows of the yearly estimates
+ *  files. `change` = % change from the 2020 Census base to July 1 of `year`; the others are the
+ *  Census Bureau's own rates per 1,000 residents for the year to July 1. Ingest: popest.ts. */
+const PopestMeasure = z.object({
+  kind: z.literal("popest"),
+  field: z.enum(["change", "domestic", "international", "natural"]),
+  /** Estimate year (July 1); the headline. */
+  year: z.number().int(),
+});
+
+/** Census Building Permits Survey (public domain): new housing units authorized by permits in the
+ *  calendar year, state and county annual files. `per_1k` = units per 1,000 residents (Census
+ *  population estimates); `multifamily` = % of units in buildings with 5 or more. Ingest: bps.ts. */
+const BpsMeasure = z.object({
+  kind: z.literal("bps"),
+  field: z.enum(["per_1k", "multifamily"]),
+  /** Permit year; the headline. */
+  year: z.number().int(),
+});
+
+/** BLS Quarterly Census of Employment and Wages (public domain): annual averages, all industries,
+ *  all ownerships, state and county. `pay` = average annual pay in 2024 dollars (CPI-U);
+ *  `per_1k` = covered jobs per 1,000 residents (Census population estimates). Ingest: qcew.ts. */
+const QcewMeasure = z.object({
+  kind: z.literal("qcew"),
+  field: z.enum(["pay", "per_1k"]),
+  /** Year of the annual averages; the headline. */
+  year: z.number().int(),
+});
+
+/** FHFA annual House Price Index (public domain), state and county: the % change in the index over
+ *  the 10 years to `year`. Nominal (not adjusted for inflation). Ingest: fhfa.ts. */
+const FhfaHpiMeasure = z.object({
+  kind: z.literal("fhfa_hpi"),
+  /** Last year of the 10-year look-back; the headline. */
+  year: z.number().int(),
+});
+
+/** FRA highway-rail grade crossing data (public domain, data.transportation.gov, no key). `crashes`:
+ *  Form 57 incidents at public crossings a year, averaged over `years` (single years on the timeline);
+ *  `crossings`: open public at-grade crossings in today's Form 71 inventory. Ingest: fra.ts. */
+const FraCrossingsMeasure = z.object({
+  kind: z.literal("fra_crossings"),
+  field: z.enum(["crashes", "crossings"]),
+  /** Inclusive incident years averaged for the headline; required for `crashes`. */
+  years: z.tuple([z.number().int(), z.number().int()]).optional(),
+});
+
+/** BEA Regional Economic Accounts, table CAINC1 (public domain): per capita personal income, state
+ *  and county, in 2024 dollars (CPI-U). Uses BEA's own population. Ingest: bea.ts. */
+const BeaIncomeMeasure = z.object({
+  kind: z.literal("bea_income"),
+  /** Year of the figures; the headline. */
+  year: z.number().int(),
+});
+
 /** CDC/ATSDR Social Vulnerability Index: one percentile-rank field of CDC's U.S.-wide county and
  *  tract CSVs (ranked nationally, not within each state). Ingest: data/ingest/src/svi.ts. */
 const SviMeasure = z.object({
@@ -338,7 +394,7 @@ export const DatasetEntry = z.object({
   unit: Unit,
   /** For insights: the population the value describes. Pairs that share one are flagged. */
   universe: z.string(),
-  measure: z.discriminatedUnion("kind", [AcsMeasure, Census2020Measure, LodesMeasure, PlacesMeasure, ClimdivMeasure, NbiMeasure, FarsMeasure, FeaturesMeasure, HpmsVmtMeasure, CejstMeasure, Ddp287gMeasure, LeadMeasure, FoodAccessMeasure, FemaNriMeasure, SviMeasure, AirQualityMeasure, OverdoseMeasure, TriMeasure, SahieMeasure, FemaDeclarationsMeasure]),
+  measure: z.discriminatedUnion("kind", [AcsMeasure, Census2020Measure, LodesMeasure, PlacesMeasure, ClimdivMeasure, NbiMeasure, FarsMeasure, FeaturesMeasure, HpmsVmtMeasure, CejstMeasure, Ddp287gMeasure, LeadMeasure, FoodAccessMeasure, FemaNriMeasure, SviMeasure, AirQualityMeasure, OverdoseMeasure, TriMeasure, SahieMeasure, PopestMeasure, BpsMeasure, QcewMeasure, FhfaHpiMeasure, BeaIncomeMeasure, FraCrossingsMeasure, FemaDeclarationsMeasure]),
   /** Other registry datasets used as inputs to this dataset's model (e.g. PLACES uses county poverty).
    *  Insight pairs with these are flagged: they correlate partly by construction. */
   modelInputs: z.array(z.string()).default([]),

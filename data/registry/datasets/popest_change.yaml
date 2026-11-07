@@ -1,0 +1,24 @@
+id: popest_change
+title: Population change since 2020
+phrase: population growth since 2020
+description: How much the number of residents has grown or shrunk since the April 2020 Census count, as of July 1 of each year. Brown areas lost people; teal areas gained.
+category: People
+subcategory: Population and age
+tags: [population, growth, decline, population estimates, demographics]
+source:
+  name: U.S. Census Bureau, Population Estimates Program
+  shortName: Census Bureau
+  url: https://www.census.gov/programs-surveys/popest.html
+  citation: "U.S. Census Bureau, Population Estimates Program, Vintage 2025 county totals (co-est2025-alldata)"
+license: Public domain (U.S. Government work, 17 U.S.C. § 105)
+updateCadence: annual
+vintage: "As of July 1, 2025"
+geographyLevels: [state, county]
+unit: percent
+universe: total population (estimate)
+coverageNote: "States and counties only; Puerto Rico is not included. These are estimates built from births, deaths and administrative records, not a count, and each year's release revises the years before it, so figures here can differ from earlier editions. The year control starts at 2021 because the base is the 2020 Census. Connecticut is shown by its nine planning regions."
+terms: [population-estimates, quantile-classes]
+measure: { kind: popest, field: change, year: 2025 }
+timeline: { from: 2021, to: 2025 }
+# shortcut: only the years since the 2020 Census; the 2010s would be "change since 2010" and mixing them in one slider would mislead. Add a separate map if wanted.
+symbology: { ramp: brbg, classification: manual, classes: 5, breaks: [-4, -1, 1, 4] }

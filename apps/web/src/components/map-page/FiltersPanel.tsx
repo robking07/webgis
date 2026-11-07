@@ -10,7 +10,7 @@ import { Info, SlidersHorizontal, X } from "lucide-react";
 import { GEO_LEVELS, type GeoLevel } from "@webgis/design";
 import type { Facet } from "@webgis/registry";
 import { TERM_BY_ID } from "@/lib/glossary";
-import { changeEnds, changeStops, latestStop, type Stop } from "@/lib/periods";
+import { changeEnds, changeStops, latestStop, noTractsNote, type Stop } from "@/lib/periods";
 import { TimeControl } from "../TimeControl";
 
 /** What the filters control. `hidden`: facet field → values the visitor hid. */
@@ -76,7 +76,7 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 
 /** The panel's sections: geography level, time (values for one period, or the change since an
  *  earlier one), then each facet as a checkbox list. */
-function FilterControls({ levels, shown, changeLevels, facets, stops, value, onChange }: ControlsProps) {
+function FilterControls({ levels: allLevels, shown, changeLevels, facets, stops, value, onChange }: ControlsProps) {
   const plural = (l: GeoLevel) => GEO_LEVELS[l].plural.toLowerCase();
   const defaultStop = stops.find((s) => s.isDefault)?.id;
   // Values / Change (Robbie, 2026-10-10): Change swaps the year picker for two, From and To, with
@@ -92,9 +92,14 @@ function FilterControls({ levels, shown, changeLevels, facets, stops, value, onC
     onChange({ ...value, since: from, stop: changeEnds(stops, value.stop, from)!.to.id === value.stop ? value.stop : null });
   };
   /** A new To keeps From when it's still earlier, else starts from the oldest again. */
-  const setTo = (id: string) => onChange({ ...value, stop: pick(id),
-    since: changeStops(stops, stops.find((s) => s.id === id)!).some((s) => s.id === value.since) ? value.since : earlier[earlier.length - 1].id });
+  const setTo = (id: string) => {
+    const from = changeStops(stops, stops.find((s) => s.id === id)!);
+    onChange({ ...value, stop: pick(id), since: from.some((s) => s.id === value.since) ? value.since : from[from.length - 1].id });
+  };
   const chip = (on: boolean) => `rounded-md px-2 py-1 text-xs font-medium focus-visible:outline-2 focus-visible:outline-ring ${on ? "bg-primary text-primary-foreground" : "border hover:bg-muted"}`;
+  // An older stop without tracts (ACS 2005–2009, as the year shown or a change's From) offers only its own levels, and says why (#507).
+  const noTracts = noTractsNote(ends?.from ?? stops.find((s) => s.id === value.stop), stops.find((s) => s.isDefault)?.levels ?? []);
+  const levels = noTracts ? allLevels.filter((l) => changeLevels.includes(l)) : allLevels;
   return (
     <div className="space-y-5">
       {/* Issue #249: the level pill opens this panel, so a one-level map says why there's no choice. */}
@@ -121,6 +126,7 @@ function FilterControls({ levels, shown, changeLevels, facets, stops, value, onC
           {value.pinned && "pinFloor" in GEO_LEVELS[value.pinned] && (
             <p className="px-1.5 text-xs text-muted-foreground">{GEO_LEVELS[value.pinned].plural} show once you zoom in closer than a few states.</p>
           )}
+          {noTracts && <p className="px-1.5 text-xs text-muted-foreground" data-no-tracts="">{noTracts}</p>}
         </Section>
       )}
       {stops.length > 0 && defaultStop && (
@@ -137,7 +143,7 @@ function FilterControls({ levels, shown, changeLevels, facets, stops, value, onC
             // selected buttons carry the span, and one plain line under them says it in words.
             <>
               <TimeControl label="From" stops={changeStops(stops, ends.to).reverse()} value={ends.from.id} onChange={(id) => onChange({ ...value, since: id })} />
-              <TimeControl label="To" stops={[...earlier.slice(0, -1).reverse(), latest!]} value={ends.to.id} onChange={setTo} />
+              <TimeControl label="To" stops={stops.filter((s) => changeStops(stops, s).length)} value={ends.to.id} onChange={setTo} />
               <p className="text-xs text-muted-foreground" data-change-span="">The map shows how each area changed from {ends.from.label} to {ends.to.label}.</p>
             </>
           ) : (

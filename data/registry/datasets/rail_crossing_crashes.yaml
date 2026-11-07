@@ -1,0 +1,26 @@
+id: rail_crossing_crashes
+title: Rail crossing crashes
+phrase: rail crossing crashes a year
+description: "How many crashes happen in a year where a public road crosses railroad tracks at street level: a train hitting a vehicle, a person on foot or someone on a bike at the crossing. The map opens on the average for 2021–2025; step back through single years to 1975. Counted where the crash happened."
+category: Transportation
+subcategory: Traffic safety
+tags: [railroad, grade crossings, train crashes, rail safety, FRA, Form 57, Vision Zero]
+source:
+  name: Federal Railroad Administration, Highway-Rail Grade Crossing Incident Data (Form 57)
+  shortName: FRA
+  url: https://data.transportation.gov/d/7wn6-i5b9
+  citation: "Federal Railroad Administration, Office of Railroad Safety, Highway-Rail Grade Crossing Incident Data (Form 57), data.transportation.gov dataset 7wn6-i5b9, retrieved November 2026"
+license: Public domain (U.S. Government work, 17 U.S.C. § 105; data.transportation.gov lists it as Public Domain)
+updateCadence: monthly
+vintage: "2021–2025 average"
+geographyLevels: [state, county]
+unit: count
+universe: collisions between trains and road users at public highway-rail grade crossings, counted where they happened (not people or residents)
+coverageNote: "A crossing crash is a collision between a train and a road user (a vehicle, a person on foot, a bike) at a highway-rail grade crossing, as railroads report them to the Federal Railroad Administration. Only public crossings are counted; crashes at private crossings (farm, industrial and driveway crossings, about one in six in recent years) are left out. Each crash counts once, even when two railroads reported it. These are counts, not rates: counties with more rail lines, crossings and traffic have more chances for a crash, and a county with no crossings shows 0. Small counties swing a lot from year to year; the five-year average is steadier. FRA revises recent years as late reports come in. Crashes fell from about 11,000 a year in the late 1970s to about 1,900 in recent years. From 2020 on, Connecticut's counties show no data (the reports still use its old counties), and Alaska shows no data in 1976, 1979 and 1993 (old borough codes that don't match the map)."
+terms: [grade-crossing, quantile-classes]
+# Raw counts follow county size and rail mileage, so correlations with other maps would mislead.
+excludeFromInsights: true
+measure: { kind: fra_crossings, field: crashes, years: [2021, 2025] }
+# 1975 is FRA's first year in the file; 2026 is left off until the year is complete.
+timeline: { from: 1975, to: 2025 }
+symbology: { ramp: oranges, classification: quantile, classes: 5, higherIsBetter: false }

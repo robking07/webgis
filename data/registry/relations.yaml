@@ -26,10 +26,12 @@ parts:
 
 links:
   # Housing costs and income
+  - { maps: [bea_income_per_person, per_capita_income], why: Two counts of income per resident, one from tax and program records (BEA) and one from a Census survey. }
   - { maps: [median_gross_rent, median_household_income], why: Rent is paid out of household income. }
   - { maps: [pct_rent_burdened, median_gross_rent], why: Higher rents push more renters past 30% of income. }
   - { maps: [pct_rent_burdened, pct_renter_households], why: Rent burden is a share of renter households only. }
   - { maps: [pct_rent_burdened, median_household_income], why: Rent burden compares rent with income. }
+  - { maps: [fhfa_hpi_change_10yr, median_home_value], why: How much prices rose over ten years beside what homes are worth now. }
   - { maps: [median_home_value, median_household_income], why: How far home prices run ahead of incomes. }
   - { maps: [pct_owner_cost_burdened, median_owner_costs_mortgage], why: Higher monthly costs push more owners past 30% of income. }
   - { maps: [pct_overcrowded, median_gross_rent], why: Crowding often follows high rents. }
@@ -49,17 +51,23 @@ links:
   # Work
   - { maps: [unemployment_rate, labor_force_participation], why: Unemployment is counted only among people in the labor force. }
   - { maps: [job_density, population_density], why: Where jobs are compared with where people live. }
+  - { maps: [qcew_jobs_per_1k, job_density], why: Two counts of jobs where people work, one per resident and one per square mile. }
+  - { maps: [qcew_avg_pay, median_household_income], why: Pay at the jobs located in a county and the income of the households living there. }
   - { maps: [pct_work_outside_county, mean_commute_minutes], why: Working in another county usually means a longer trip. }
   - { maps: [mean_commute_minutes, pct_long_commute], why: The average and the share of long trips. }
   - { maps: [pct_long_commute, pct_extreme_commute], why: 90-minute-plus commutes are part of hour-plus commutes. }
   - { maps: [pct_leave_before_7am, pct_long_commute], why: Long commutes start early. }
   # Getting around
+  - { maps: [walkability_index, pct_walk_commute], why: How walkable a place is built and how many people there walk to work. }
   - { maps: [pct_zero_vehicle_households, pct_transit_commute], why: Households without a car rely on transit. }
   - { maps: [pct_zero_vehicle_households, lack_transportation], why: Two views of not having a way to get around. }
   - { maps: [traffic_fatalities, vmt_per_capita], why: More driving per person means more exposure to crashes. }
+  - { maps: [rail_crossing_crashes, rail_crossings_public], why: More street-level crossings mean more places a train and a road user can meet. }
   - { maps: [aadt, vmt_per_capita], why: Road traffic counts are what driving totals are built from. }
   # People: Population and age, Immigration and language
   - { maps: [population_density, census2020_pop_density], why: The same measure from the survey and from the 2020 count. }
+  - { maps: [popest_change, popest_domestic_migration], why: Places that gain people mostly do so by people moving in from elsewhere in the U.S. }
+  - { maps: [popest_change, popest_natural_change], why: Growth comes from moves and from births outnumbering deaths. }
   - { maps: [census2020_housing_density, census2020_pop_density], why: Homes and residents per square mile from the same count. }
   - { maps: [pct_age_65_plus, pct_seniors_living_alone], why: More older residents, more seniors living alone. }
   - { maps: [pct_seniors_living_alone, loneliness], why: Living alone is one driver of loneliness. }
@@ -142,6 +150,8 @@ maps:
   pct_work_from_home:
     group: "Transportation"
     counts: { of: "workers who work from home", per: "workers 16 and older" }
+  walkability_index:
+    group: "Transportation"
   pct_work_outside_county:
     group: "Transportation"
     counts: { of: "workers who work outside their home county", per: "workers 16 and older" }
@@ -313,7 +323,13 @@ maps:
     counts: { of: "vacant homes", per: "homes" }
   median_gross_rent:
     group: "Housing"
+  permits_per_1k:
+    group: "Housing"
+  permits_multifamily_share:
+    group: "Housing"
   median_home_value:
+    group: "Housing"
+  fhfa_hpi_change_10yr:
     group: "Housing"
   median_owner_costs_mortgage:
     group: "Housing"
@@ -355,6 +371,8 @@ maps:
     counts: { of: "households getting SNAP (food stamps)", per: "households" }
   per_capita_income:
     group: "Economy"
+  bea_income_per_person:
+    group: "Economy"
   # Economy: Internet access
   pct_broadband:
     group: "Economy"
@@ -369,6 +387,10 @@ maps:
   job_density:
     group: "Economy"
     counts: { of: "jobs" }
+  qcew_avg_pay:
+    group: "Economy"
+  qcew_jobs_per_1k:
+    group: "Economy"
   labor_force_participation:
     group: "Economy"
     counts: { of: "people working or looking for work", per: "people 16 and older" }
@@ -384,6 +406,14 @@ maps:
   pct_age_65_plus:
     group: "People"
     counts: { of: "people 65 and older", per: "residents" }
+  popest_change:
+    group: "People"
+  popest_domestic_migration:
+    group: "People"
+  popest_international_migration:
+    group: "People"
+  popest_natural_change:
+    group: "People"
   pct_foreign_born:
     group: "People"
     counts: { of: "residents born outside the U.S.", per: "residents" }
@@ -443,6 +473,10 @@ maps:
   traffic_fatalities:
     group: "Transportation"
     counts: { of: "traffic deaths a year (average)", per: "residents" }
+  rail_crossing_crashes:
+    group: "Transportation"
+  rail_crossings_public:
+    group: "Transportation"
   vmt_per_capita:
     group: "Transportation"
   # Transportation: Roads and vehicles

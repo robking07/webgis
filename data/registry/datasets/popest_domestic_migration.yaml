@@ -1,0 +1,24 @@
+id: popest_domestic_migration
+title: People moving in or out (within the U.S.)
+phrase: rates of people moving in from elsewhere in the U.S.
+description: People who moved in from other parts of the U.S. minus people who moved out, in the year to July 1, per 1,000 residents. Teal areas gained residents this way; brown areas lost them.
+category: People
+subcategory: Population and age
+tags: [migration, moving, population estimates, domestic migration, demographics]
+source:
+  name: U.S. Census Bureau, Population Estimates Program
+  shortName: Census Bureau
+  url: https://www.census.gov/programs-surveys/popest.html
+  citation: "U.S. Census Bureau, Population Estimates Program, Vintage 2025 county totals (co-est2025-alldata) and Vintage 2020 (co-est2020-alldata)"
+license: Public domain (U.S. Government work, 17 U.S.C. § 105)
+updateCadence: annual
+vintage: "Year to July 1, 2025"
+geographyLevels: [state, county]
+unit: per_1k
+universe: total population (modeled estimate)
+coverageNote: "Modeled, not counted: the Census Bureau estimates moves from tax returns, Medicare and other records, so a county's figure can be revised. Each release revises its decade, and 2011–2019 come from the Vintage 2020 estimates (built on the 2010 Census) while 2021 on are built on the 2020 Census, so the two runs are not one series; 2020 is left out. Change maps never pair a year before 2020 with one after. Counties with large college or military populations can swing widely. Connecticut shows its old counties through 2019 and its nine planning regions from 2021."
+terms: [population-estimates, quantile-classes]
+measure: { kind: popest, field: domestic, year: 2025 }
+timeline: { from: 2011, to: 2025 }
+# shortcut: 2000–2010 not added; its components are in 51 per-state files, not one.
+symbology: { ramp: brbg, classification: manual, classes: 5, breaks: [-10, -3, 3, 10] }

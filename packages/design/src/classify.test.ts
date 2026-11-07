@@ -81,6 +81,10 @@ describe("classifyValues", () => {
   it("skewed data: the bottom class is exactly the minimum", () => {
     expect(classifyValues(sym, [0, 0, 0, 0, 1, 2, 3]).minClass).toBe(0);
   });
+  it("manual breaks keep their labels even when one value sits below the first (#540)", () => {
+    const manual = { ramp: "brbg", classification: "manual" as const, classes: 5, breaks: [-10, 10, 50, 100] };
+    expect(classifyValues(manual, [-11, 20, 30, 60]).minClass).toBeUndefined();
+  });
   it("breaksFrom: breaks come from the other values", () => {
     expect([...classifyValues(sym, [5, 5], [1, 2, 3, 10, 11, 12]).cls]).toEqual([1, 1]);
   });

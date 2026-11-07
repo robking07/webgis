@@ -22,11 +22,14 @@ export function stopsFor(d: Dataset | null): Stop[] {
   return stops.length > 1 ? stops : [];
 }
 
+/** Dollar maps whose older years are restated to 2024 dollars (ACS, BLS QCEW and BEA income; not LEAD or NRI). */
+export const restatesDollars = (d: Dataset) => d.unit === "dollars" && (d.measure.kind === "acs5" || d.measure.kind === "qcew" || d.measure.kind === "bea_income");
+
 /** A plain-language note for the legend about what a non-default stop is. */
 export function stopNote(d: Dataset, s: Stop, level: GeoLevel): string | null {
   if (s.isDefault) return null;
   const notes: string[] = [];
-  if (d.measure.kind === "acs5" && d.unit === "dollars") notes.push("Adjusted for inflation to 2024 dollars");
+  if (restatesDollars(d)) notes.push("Adjusted for inflation to 2024 dollars");
   if (s.boundaries && level === "tract") notes.push("2010 tract boundaries");
   if (s.boundaries && level === "county") notes.push("Connecticut shows its old counties");
   if (d.measure.kind === "fars") notes.push("One year: rates in small counties swing a lot");
@@ -43,14 +46,15 @@ const DATED = /^\d{4}$/;
  *  None when `to` is an average or normal (a change since then isn't a change over time). */
 export function changeStops(stops: Stop[], to: Stop | null): Stop[] {
   if (!to || !DATED.test(to.id)) return [];
-  return stops.slice(0, stops.indexOf(to)).filter((s) => DATED.test(s.id)).reverse();
+  return stops.slice(0, stops.indexOf(to)).filter((s) => DATED.test(s.id) && s.series === to.series).reverse();
 }
 
 /** The legend's note for a change map: what's matched across a boundary change. */
 export function changeNote(from: Stop, to: Stop, level: GeoLevel): string | null {
   if (from.boundaries === to.boundaries) return null;
   if (level === "tract") return "Tracts are matched by their code; tracts split or merged in 2020 show no data";
-  if (level === "county") return "Connecticut shows no data (its counties changed in 2022)";
+  // `from` keeps Connecticut's old counties (each source switches in its own year, #540).
+  if (level === "county") return `Connecticut shows no data (${from.label} uses its old counties)`;
   return null;
 }
 
@@ -61,11 +65,21 @@ export function latestStop(stops: Stop[]): Stop | null {
   return d && DATED.test(d.id) ? d : [...stops].reverse().find((s) => DATED.test(s.id)) ?? null;
 }
 
+/** Why an older stop has no tracts though the map has them (issue #507; the Methods page's wording).
+ *  `levels`: the dataset's levels. */
+export function noTractsNote(s: Stop | null | undefined, levels: readonly string[]): string | null {
+  if (!s || !levels.includes("tract") || s.levels.includes("tract")) return null;
+  // shortcut: says "before 2010" because ACS 2005–2009 is the only such stop today; reword if another source's older years lose tracts.
+  return `${s.label} is available for states and counties only, because tracts drew different lines before 2010.`;
+}
+
 /** Why one area has no change: its boundaries changed between the two periods. */
 export function areaChangeNote(from: Stop, to: Stop, level: GeoLevel, geoid: string): string | null {
   if (from.boundaries === to.boundaries) return null;
   if (level === "tract") return "tract changed in 2020";
-  if (level === "county" && geoid.startsWith("09")) return "Connecticut's counties changed in 2022";
+  if (level === "county" && geoid.startsWith("09")) return `${from.label} uses Connecticut's old counties`;
+  // Valdez–Cordova (02261) split into Chugach (02063) and Copper River (02066) in 2019.
+  if (level === "county" && (geoid === "02063" || geoid === "02066")) return "this area was split from Valdez–Cordova in 2019";
   return null;
 }
 

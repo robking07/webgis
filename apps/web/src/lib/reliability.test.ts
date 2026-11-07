@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { moeRangeLine, noDataReason, reliabilityNote, unreliableIn, unreliableTracts } from "./reliability";
+import { combinedAreaNote, moeRangeLine, noDataReason, reliabilityNote, unreliableIn, unreliableTracts } from "./reliability";
+import { DATASET_BY_ID } from "./registry";
 
 describe("unreliableTracts", () => {
   const shard = {
@@ -40,6 +41,17 @@ describe("reliabilityNote", () => {
   });
 });
 
+describe("combinedAreaNote (#540)", () => {
+  const bea = { measure: { kind: "bea_income" } };
+  it("names the places BEA reports together, for each member and only for BEA", () => {
+    expect(combinedAreaNote(bea, "51059")).toBe("Figure for Fairfax County with Fairfax city and Falls Church city");
+    expect(combinedAreaNote(bea, "51610")).toBe("Figure for Fairfax County with Fairfax city and Falls Church city");
+    expect(combinedAreaNote(bea, "15009")).toBe("Figure for Maui County with Kalawao County");
+    expect(combinedAreaNote(bea, "27053")).toBeNull();
+    expect(combinedAreaNote({ measure: { kind: "qcew" } }, "51059")).toBeNull();
+  });
+});
+
 describe("noDataReason", () => {
   const acs = { measure: { kind: "acs5" } };
   const nri = { measure: { kind: "fema_nri" }, coverageNote: "Puerto Rico and the island territories show no data." };
@@ -49,10 +61,16 @@ describe("noDataReason", () => {
     expect(noDataReason(nbi, "72001")).toBe("The source has no value for this area.");
     expect(noDataReason(acs, "72")).toBe("The Census Bureau doesn't publish this figure for this area.");
   });
-  it("explains Connecticut's planning regions for non-Census sources", () => {
-    expect(noDataReason(nbi, "09110")).toBe("This source still uses Connecticut's old counties (before 2022).");
+  it("blames Connecticut's old counties only for a source whose coverage note says it shows no data (#543)", () => {
+    const old = DATASET_BY_ID.get("bridges_poor_condition")!;
+    expect(noDataReason(old, "09110")).toBe("This source still uses Connecticut's old counties (before 2022).");
+    expect(noDataReason(DATASET_BY_ID.get("pm25_annual")!, "09110")).toBe("This source still uses Connecticut's old counties (before 2022).");
+    expect(noDataReason(old, "09")).toBe("The source has no value for this area.");
+    // Planning regions from 2023 on; the note's "(with no data for 2020–2022)" is about older years.
+    expect(noDataReason(DATASET_BY_ID.get("permits_per_1k")!, "09110")).toBe("The source has no value for this area.");
+    expect(noDataReason(DATASET_BY_ID.get("bea_income_per_person")!, "09110")).toBe("The source has no value for this area.");
+    expect(noDataReason(nbi, "09110")).toBe("The source has no value for this area.");
     expect(noDataReason(acs, "09110")).toBe("The Census Bureau doesn't publish this figure for this area.");
-    expect(noDataReason(nbi, "09")).toBe("The source has no value for this area.");
   });
   it("says Census doesn't publish it for a survey gap (Loving County mean commute)", () => {
     expect(noDataReason(acs, "48301")).toBe("The Census Bureau doesn't publish this figure for this area.");

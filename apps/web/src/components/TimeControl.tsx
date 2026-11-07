@@ -73,7 +73,10 @@ export function TimeControl({ stops, value, onChange, docked, label }: {
       </div>
       {summary && (
         <div role="radiogroup" aria-label="Show" className="flex flex-wrap gap-1">
-          <button type="button" role="radio" aria-checked={!onSummary} onClick={() => onSummary && onChange(dated[last].id)} className={chip(!onSummary)}>One year</button>
+          <button type="button" role="radio" aria-checked={!onSummary} onClick={() => onSummary && onChange(dated[last].id)} className={chip(!onSummary)}>
+            {/* Climate's early stops average a decade (the oldest is shorter; #507). */}
+            {onSummary || !current.span ? "One year" : current.span[1] - current.span[0] >= 9 ? "Decade average" : "Average"}
+          </button>
           <button type="button" role="radio" aria-checked={onSummary} onClick={() => onChange(summary.id)} className={chip(onSummary)}>{summary.label}</button>
         </div>
       )}

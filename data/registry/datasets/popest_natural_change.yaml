@@ -1,0 +1,23 @@
+id: popest_natural_change
+title: Births minus deaths
+phrase: rates of births outnumbering deaths
+description: Births minus deaths in the year to July 1, per 1,000 residents. Teal areas had more births than deaths; brown areas had more deaths, which is common where residents are older.
+category: People
+subcategory: Population and age
+tags: [births, deaths, natural change, population estimates, demographics]
+source:
+  name: U.S. Census Bureau, Population Estimates Program
+  shortName: Census Bureau
+  url: https://www.census.gov/programs-surveys/popest.html
+  citation: "U.S. Census Bureau, Population Estimates Program, Vintage 2025 county totals (co-est2025-alldata) and Vintage 2020 (co-est2020-alldata)"
+license: Public domain (U.S. Government work, 17 U.S.C. § 105)
+updateCadence: annual
+vintage: "Year to July 1, 2025"
+geographyLevels: [state, county]
+unit: per_1k
+universe: total population (estimate)
+coverageNote: "Births and deaths come from vital records, so this part is closer to a count than the migration maps. Each release revises its decade, and 2011–2019 come from the Vintage 2020 estimates (built on the 2010 Census) while 2021 on are built on the 2020 Census, so the two runs are not one series; 2020 is left out. Change maps never pair a year before 2020 with one after. Connecticut shows its old counties through 2019 and its nine planning regions from 2021."
+terms: [population-estimates, quantile-classes]
+measure: { kind: popest, field: natural, year: 2025 }
+timeline: { from: 2011, to: 2025 }
+symbology: { ramp: brbg, classification: manual, classes: 5, breaks: [-6, -2, 2, 6] }

@@ -9,7 +9,8 @@
     "./categories": "./categories.ts",
     "./describe": "./describe.ts",
     "./timeline": "./timeline.ts",
-    "./relations": "./relations.ts"
+    "./relations": "./relations.ts",
+    "./bea-groups": "./bea-groups.ts"
   },
   "dependencies": {
     "yaml": "^2.8.0",

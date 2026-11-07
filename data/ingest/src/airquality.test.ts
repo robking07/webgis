@@ -57,6 +57,7 @@ describe("older workbooks", () => {
   it("names each stop for its three-year window; the registry period is the headline", () => {
     const e = { measure: { kind: "airquality", period: "2023-2025" }, timeline: { from: 2023, to: 2025, step: 1 } } as DatasetEntry;
     expect(timelineStops(e).map((s) => [s.id, s.label, s.isDefault, s.boundaries])).toEqual([
-      ["2023", "2021–2023", false, undefined], ["2024", "2022–2024", false, undefined], ["2025", "2023–2025", true, undefined]]);
+      // EPA keeps Connecticut's old counties (#543): every earlier stop draws them; the headline goes through today's counties.
+      ["2023", "2021–2023", false, "2019"], ["2024", "2022–2024", false, "2019"], ["2025", "2023–2025", true, undefined]]);
   });
 });

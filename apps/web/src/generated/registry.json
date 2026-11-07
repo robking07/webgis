@@ -438,6 +438,65 @@
   }
  },
  {
+  "id": "bea_income_per_person",
+  "title": "Personal income per person",
+  "phrase": "personal income per person",
+  "description": "All the income of the people living in the area in a year, divided by the number of residents, in 2024 dollars. It counts wages, business and farm income, investment income and rent, and government payments such as Social Security and Medicare, before taxes.",
+  "category": "Economy",
+  "subcategory": "Income and poverty",
+  "tags": [
+   "income",
+   "personal income",
+   "per capita",
+   "earnings",
+   "wealth",
+   "Social Security",
+   "investment income",
+   "BEA"
+  ],
+  "source": {
+   "name": "U.S. Bureau of Economic Analysis, Regional Economic Accounts (table CAINC1)",
+   "shortName": "BEA",
+   "url": "https://www.bea.gov/data/income-saving/personal-income-county-metro-and-other-areas",
+   "citation": "U.S. Bureau of Economic Analysis, Personal Income by County, Metro, and Other Areas (CAINC1), 1990–2024, released February 2026; restated in 2024 dollars with the BLS CPI-U"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2024 (in 2024 dollars)",
+  "geographyLevels": [
+   "state",
+   "county"
+  ],
+  "areaLevels": [],
+  "unit": "dollars",
+  "universe": "total population",
+  "measure": {
+   "kind": "bea_income",
+   "year": 2024
+  },
+  "modelInputs": [],
+  "coverageNote": "Counted where people live, not where they work. Personal income is everything residents receive before taxes: wages and salaries, business and farm income, interest, dividends and rent, and government payments such as Social Security, Medicare and unemployment benefits, plus employers' pension and insurance contributions. That is broader than the Census's household income, which asks households about their cash income in a survey; BEA builds this from tax, payroll and program records, so it is higher, especially where retirees or investors live. It is spread over every resident, children included, so it is not what a typical person earns, and a few residents with very high incomes can lift a small county (Teton County, Wyoming). BEA reports some Virginia counties together with their independent cities, and Maui with Kalawao; each place in a group shows the group's figure. BEA publishes no figures for some places in some years (several Alaska areas, Connecticut's old counties in 2024); those show no data, not zero. Every year is in 2024 dollars, adjusted for inflation with the consumer price index (CPI-U), so earlier years are restated; the slider starts in 1990, although BEA has data back to 1969. BEA revises recent years each year. Connecticut shows its old counties through 2023 and its nine planning regions from 2024.",
+  "facets": [],
+  "library": false,
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 1990,
+   "to": 2024,
+   "step": 1
+  },
+  "learnMore": [],
+  "terms": [
+   "inflation-adjusted",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": true
+  }
+ },
+ {
   "id": "binge_drinking",
   "title": "Binge drinking",
   "phrase": "binge drinking rates",
@@ -2285,6 +2344,67 @@
   }
  },
  {
+  "id": "fhfa_hpi_change_10yr",
+  "title": "Home price change over 10 years",
+  "phrase": "home price growth over 10 years",
+  "description": "How much typical home prices rose or fell over the 10 years ending in the year shown, from a price index that follows the same homes as they resell. Teal areas gained; brown areas lost. The middle shade is little change, within 10%.",
+  "category": "Housing",
+  "subcategory": "Costs",
+  "tags": [
+   "home prices",
+   "house prices",
+   "appreciation",
+   "housing market",
+   "real estate",
+   "FHFA"
+  ],
+  "source": {
+   "name": "Federal Housing Finance Agency, House Price Index",
+   "shortName": "FHFA",
+   "url": "https://www.fhfa.gov/data/hpi/datasets",
+   "citation": "Federal Housing Finance Agency, annual House Price Index (all-transactions, developmental state and county indexes), released March 31, 2026"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2015–2025",
+  "geographyLevels": [
+   "state",
+   "county"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "homes with mortgages bought or guaranteed by Fannie Mae or Freddie Mac",
+  "measure": {
+   "kind": "fhfa_hpi",
+   "year": 2025
+  },
+  "modelInputs": [],
+  "coverageNote": "Built from repeat sales and appraisals of homes with mortgages bought or guaranteed by Fannie Mae and Freddie Mac, so it leaves out cash sales, jumbo loans and most government-insured loans, and covers a place's typical home, not every one. FHFA calls the county figures developmental: they can be revised as new data arrive. Counties with too few sales have no index and show no data: about 1,400 counties have one in 1996, 2,000 by 2005 and about 2,650 now, so early maps are partly blank. These are price changes as they happened, not adjusted for inflation, so a rise smaller than general price growth is a real-terms decline. Connecticut is shown by its nine planning regions. Unlike the Census home value map, this follows price changes of the same homes over time, not the value owners estimate.",
+  "facets": [],
+  "library": false,
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 1996,
+   "to": 2025,
+   "step": 1
+  },
+  "learnMore": [],
+  "terms": [
+   "fhfa-hpi"
+  ],
+  "symbology": {
+   "ramp": "brbg",
+   "classification": "manual",
+   "classes": 5,
+   "breaks": [
+    -10,
+    10,
+    50,
+    100
+   ]
+  }
+ },
+ {
   "id": "food_access_no_car_tracts",
   "title": "No car, far from a supermarket (tracts)",
   "description": "Share of each census tract's households that have no car and live more than half a mile from the nearest supermarket, supercenter or large grocery store.",
@@ -3268,7 +3388,7 @@
    "perSqMi": true
   },
   "modelInputs": [],
-  "coverageNote": "Years before 2010 leave out federal government jobs (the Census Bureau began counting them in 2010), so places with many federal workers jump between 2009 and 2010. The Census Bureau has no complete job counts for some states in some years, so those states show as no data (not zero jobs): Washington, D.C. before 2010; Massachusetts before 2011; Arizona and Mississippi before 2004; Arkansas and New Hampshire in 2002; Alaska after 2016; Michigan in 2022 (the 2023 map shows its 2021 jobs, the latest it has published). The U.S. figure for a year counts only the states with data. Puerto Rico isn't covered. The map colors use the same breaks for every year.",
+  "coverageNote": "Years before 2010 leave out federal government jobs (the Census Bureau began counting them in 2010), so places with many federal workers jump between 2009 and 2010. The Census Bureau has no complete job counts for some states in some years, so those states show as no data (not zero jobs): Washington, D.C. before 2010; Massachusetts before 2011; Arizona and Mississippi before 2004; Arkansas and New Hampshire in 2002; Alaska after 2016; Michigan in 2022 (the 2023 map shows its 2021 jobs, the latest it has published). The U.S. figure for a year counts only the states with data. Puerto Rico isn't covered.",
   "facets": [],
   "library": false,
   "excludeFromInsights": false,
@@ -5039,7 +5159,7 @@
    "period": "2023-2025"
   },
   "modelInputs": [],
-  "coverageNote": "Only counties with a valid ozone monitor have a value (about 640 to 730, depending on the period); every other county is blank, which means no monitor, not clean air. A county's value is its single highest monitor. EPA excludes exceptional-event days such as wildfire smoke. The map classes stay the same for every period. The federal 8-hour standard was 0.084 ppm until 2008, 0.075 until 2015 and is now 0.070 (the top map classes mark counties above it today; values are reported to three decimals, so 0.071 or higher exceeds it), so a county can pass an older standard and fail today's. Each period is a three-year average labeled by its last year; earlier ones are EPA's published figures (2003–2005 to 2006–2008 come from EPA's monitor listings, taking each county's highest valid monitor). EPA publishes no county-level ozone design values before 2003–2005. EPA's tables are informational, not a regulatory determination.",
+  "coverageNote": "Only counties with a valid ozone monitor have a value (about 640 to 730, depending on the period); every other county is blank, which means no monitor, not clean air. A county's value is its single highest monitor. EPA excludes exceptional-event days such as wildfire smoke. The federal 8-hour standard was 0.084 ppm until 2008, 0.075 until 2015 and is now 0.070 (the top map classes mark counties above it today; values are reported to three decimals, so 0.071 or higher exceeds it), so a county can pass an older standard and fail today's. Each period is a three-year average labeled by its last year; earlier ones are EPA's published figures (2003–2005 to 2006–2008 come from EPA's monitor listings, taking each county's highest valid monitor). EPA publishes no county-level ozone design values before 2003–2005. EPA's tables are informational, not a regulatory determination. They still use Connecticut's old counties, so its planning regions show no data in the latest period; earlier periods show the old counties.",
   "facets": [],
   "library": false,
   "excludeFromInsights": false,
@@ -20942,6 +21062,131 @@
   }
  },
  {
+  "id": "permits_multifamily_share",
+  "title": "New homes permitted in apartment buildings",
+  "phrase": "shares of new homes in apartment buildings",
+  "description": "Of the housing units authorized by building permits during the year, the share in buildings with 5 or more homes (apartments and condos). The rest are houses, duplexes and buildings with 3 or 4 homes.",
+  "category": "Housing",
+  "subcategory": "Homes",
+  "tags": [
+   "building permits",
+   "multifamily",
+   "apartments",
+   "new construction",
+   "housing supply",
+   "density"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, Building Permits Survey",
+   "shortName": "Census Bureau",
+   "url": "https://www.census.gov/construction/bps/",
+   "citation": "U.S. Census Bureau, Building Permits Survey, annual county and state files (1990–2025)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2025 permits",
+  "geographyLevels": [
+   "state",
+   "county"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "housing units authorized by building permits",
+  "measure": {
+   "kind": "bps",
+   "field": "multifamily",
+   "year": 2025
+  },
+  "modelInputs": [],
+  "coverageNote": "Permits are not completions: some permitted homes are built years later or never. Only places that issue building permits are counted, so a county with no permit-issuing places, or one that permitted no homes that year, shows no data; a county where some areas need no permit leaves those homes out. Small counties swing a lot from year to year: a single apartment building can take the share from 0% to over half. Connecticut shows its old counties through 2022 (with no data for 2020–2022) and its nine planning regions from 2023.",
+  "facets": [],
+  "library": false,
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 1990,
+   "to": 2025,
+   "step": 1
+  },
+  "learnMore": [],
+  "terms": [
+   "building-permits"
+  ],
+  "symbology": {
+   "ramp": "purples",
+   "classification": "manual",
+   "classes": 5,
+   "breaks": [
+    1,
+    10,
+    25,
+    50
+   ]
+  }
+ },
+ {
+  "id": "permits_per_1k",
+  "title": "New homes permitted per 1,000 residents",
+  "phrase": "rates of new home permits",
+  "description": "Housing units authorized by building permits during the year, per 1,000 residents. Darker areas approved more new homes for their size. A permit is approval to build, not a finished home.",
+  "category": "Housing",
+  "subcategory": "Homes",
+  "tags": [
+   "building permits",
+   "new construction",
+   "housing supply",
+   "homebuilding",
+   "growth"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, Building Permits Survey",
+   "shortName": "Census Bureau",
+   "url": "https://www.census.gov/construction/bps/",
+   "citation": "U.S. Census Bureau, Building Permits Survey, annual county and state files (1990–2025); Census Bureau population estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2025 permits",
+  "geographyLevels": [
+   "state",
+   "county"
+  ],
+  "areaLevels": [],
+  "unit": "per_1k",
+  "universe": "housing units authorized by building permits",
+  "measure": {
+   "kind": "bps",
+   "field": "per_1k",
+   "year": 2025
+  },
+  "modelInputs": [],
+  "coverageNote": "Permits are not completions: some permitted homes are built years later or never. Only places that issue building permits are counted, so a county with no permit-issuing places shows no data, and a county where some areas need no permit reads low. In New Mexico, Maine, Michigan and Oregon some permits are not tied to a county (state-issued, or in unorganized areas); they count in the state figure only. Small counties swing a lot from year to year: one apartment building can make a big year. Connecticut shows its old counties through 2022 (with no data for 2020–2022) and its nine planning regions from 2023.",
+  "facets": [],
+  "library": false,
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 1990,
+   "to": 2025,
+   "step": 1
+  },
+  "learnMore": [],
+  "terms": [
+   "building-permits",
+   "population-estimates"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "manual",
+   "classes": 6,
+   "breaks": [
+    1,
+    2,
+    4,
+    7,
+    12
+   ]
+  }
+ },
+ {
   "id": "physical_distress",
   "title": "Frequent physical distress",
   "phrase": "rates of frequent physical distress",
@@ -21089,7 +21334,7 @@
    "period": "2023-2025"
   },
   "modelInputs": [],
-  "coverageNote": "Only counties with a valid PM2.5 monitor have a value (about 330 in 1999–2001, about 540 in recent periods); every other county is blank, which means no monitor, not clean air. A county's value is its single highest monitor, so one near-road or border monitor can set it. EPA excludes wildfire-smoke days it concurs are exceptional events, so smoke-heavy years read lower than residents experienced. The map classes stay the same for every period. The federal annual standard was 15.0 µg/m³ until 2013, 12.0 until 2024 and is now 9.0 (the top map class marks counties above it today), so a county can pass an older standard and fail today's. Each period is a three-year average labeled by its last year; earlier ones are EPA's published figures (periods before 2005–2007 come from monitor listings in EPA's 2005–2007 report, taking each county's highest valid monitor, and 1999–2001 is the first period with a full federal monitoring network). Monitors were sparser early on, so a county's first appearance can reflect a new monitor, not a change in air. EPA's tables are informational, not a regulatory determination. El Paso County, Texas, in 2023–2025: its value comes from a monitor that began in May 2024, so it covers two years, not three, and it includes the 2025 spring dust storms; Texas has not asked EPA to exclude those days.",
+  "coverageNote": "Only counties with a valid PM2.5 monitor have a value (about 330 in 1999–2001, about 540 in recent periods); every other county is blank, which means no monitor, not clean air. A county's value is its single highest monitor, so one near-road or border monitor can set it. EPA excludes wildfire-smoke days it concurs are exceptional events, so smoke-heavy years read lower than residents experienced. The federal annual standard was 15.0 µg/m³ until 2013, 12.0 until 2024 and is now 9.0 (the top map class marks counties above it today), so a county can pass an older standard and fail today's. Each period is a three-year average labeled by its last year; earlier ones are EPA's published figures (periods before 2005–2007 come from monitor listings in EPA's 2005–2007 report, taking each county's highest valid monitor, and 1999–2001 is the first period with a full federal monitoring network). Monitors were sparser early on, so a county's first appearance can reflect a new monitor, not a change in air. EPA's tables are informational, not a regulatory determination. They still use Connecticut's old counties, so its planning regions show no data in the latest period; earlier periods show the old counties. El Paso County, Texas, in 2023–2025: its value comes from a monitor that began in May 2024, so it covers two years, not three, and it includes the 2025 spring dust storms; Texas has not asked EPA to exclude those days.",
   "facets": [],
   "library": false,
   "excludeFromInsights": false,
@@ -21112,6 +21357,254 @@
     8,
     9.1,
     12
+   ]
+  }
+ },
+ {
+  "id": "popest_change",
+  "title": "Population change since 2020",
+  "phrase": "population growth since 2020",
+  "description": "How much the number of residents has grown or shrunk since the April 2020 Census count, as of July 1 of each year. Brown areas lost people; teal areas gained.",
+  "category": "People",
+  "subcategory": "Population and age",
+  "tags": [
+   "population",
+   "growth",
+   "decline",
+   "population estimates",
+   "demographics"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, Population Estimates Program",
+   "shortName": "Census Bureau",
+   "url": "https://www.census.gov/programs-surveys/popest.html",
+   "citation": "U.S. Census Bureau, Population Estimates Program, Vintage 2025 county totals (co-est2025-alldata)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "As of July 1, 2025",
+  "geographyLevels": [
+   "state",
+   "county"
+  ],
+  "areaLevels": [],
+  "unit": "percent",
+  "universe": "total population (estimate)",
+  "measure": {
+   "kind": "popest",
+   "field": "change",
+   "year": 2025
+  },
+  "modelInputs": [],
+  "coverageNote": "States and counties only; Puerto Rico is not included. These are estimates built from births, deaths and administrative records, not a count, and each year's release revises the years before it, so figures here can differ from earlier editions. The year control starts at 2021 because the base is the 2020 Census. Connecticut is shown by its nine planning regions.",
+  "facets": [],
+  "library": false,
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2021,
+   "to": 2025,
+   "step": 1
+  },
+  "learnMore": [],
+  "terms": [
+   "population-estimates",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "brbg",
+   "classification": "manual",
+   "classes": 5,
+   "breaks": [
+    -4,
+    -1,
+    1,
+    4
+   ]
+  }
+ },
+ {
+  "id": "popest_domestic_migration",
+  "title": "People moving in or out (within the U.S.)",
+  "phrase": "rates of people moving in from elsewhere in the U.S.",
+  "description": "People who moved in from other parts of the U.S. minus people who moved out, in the year to July 1, per 1,000 residents. Teal areas gained residents this way; brown areas lost them.",
+  "category": "People",
+  "subcategory": "Population and age",
+  "tags": [
+   "migration",
+   "moving",
+   "population estimates",
+   "domestic migration",
+   "demographics"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, Population Estimates Program",
+   "shortName": "Census Bureau",
+   "url": "https://www.census.gov/programs-surveys/popest.html",
+   "citation": "U.S. Census Bureau, Population Estimates Program, Vintage 2025 county totals (co-est2025-alldata) and Vintage 2020 (co-est2020-alldata)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "Year to July 1, 2025",
+  "geographyLevels": [
+   "state",
+   "county"
+  ],
+  "areaLevels": [],
+  "unit": "per_1k",
+  "universe": "total population (modeled estimate)",
+  "measure": {
+   "kind": "popest",
+   "field": "domestic",
+   "year": 2025
+  },
+  "modelInputs": [],
+  "coverageNote": "Modeled, not counted: the Census Bureau estimates moves from tax returns, Medicare and other records, so a county's figure can be revised. Each release revises its decade, and 2011–2019 come from the Vintage 2020 estimates (built on the 2010 Census) while 2021 on are built on the 2020 Census, so the two runs are not one series; 2020 is left out. Change maps never pair a year before 2020 with one after. Counties with large college or military populations can swing widely. Connecticut shows its old counties through 2019 and its nine planning regions from 2021.",
+  "facets": [],
+  "library": false,
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2011,
+   "to": 2025,
+   "step": 1
+  },
+  "learnMore": [],
+  "terms": [
+   "population-estimates",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "brbg",
+   "classification": "manual",
+   "classes": 5,
+   "breaks": [
+    -10,
+    -3,
+    3,
+    10
+   ]
+  }
+ },
+ {
+  "id": "popest_international_migration",
+  "title": "People moving in from abroad",
+  "phrase": "rates of people moving in from abroad",
+  "description": "People who moved in from other countries minus people who moved out, in the year to July 1, per 1,000 residents. Darker areas gained more residents from abroad.",
+  "category": "People",
+  "subcategory": "Immigration and language",
+  "tags": [
+   "migration",
+   "immigration",
+   "population estimates",
+   "international migration",
+   "demographics"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, Population Estimates Program",
+   "shortName": "Census Bureau",
+   "url": "https://www.census.gov/programs-surveys/popest.html",
+   "citation": "U.S. Census Bureau, Population Estimates Program, Vintage 2025 county totals (co-est2025-alldata) and Vintage 2020 (co-est2020-alldata)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "Year to July 1, 2025",
+  "geographyLevels": [
+   "state",
+   "county"
+  ],
+  "areaLevels": [],
+  "unit": "per_1k",
+  "universe": "total population (modeled estimate)",
+  "measure": {
+   "kind": "popest",
+   "field": "international",
+   "year": 2025
+  },
+  "modelInputs": [],
+  "coverageNote": "Modeled, not counted: the Census Bureau estimates international moves from survey and administrative sources and spreads them across counties, so small counties' figures are rough and can be revised. Each release revises its decade, and 2011–2019 come from the Vintage 2020 estimates (built on the 2010 Census) while 2021 on are built on the 2020 Census, so the two runs are not one series; 2020 is left out. Change maps never pair a year before 2020 with one after. Connecticut shows its old counties through 2019 and its nine planning regions from 2021.",
+  "facets": [],
+  "library": false,
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2011,
+   "to": 2025,
+   "step": 1
+  },
+  "learnMore": [],
+  "terms": [
+   "population-estimates",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "manual",
+   "classes": 5,
+   "breaks": [
+    0.5,
+    1,
+    2,
+    4
+   ]
+  }
+ },
+ {
+  "id": "popest_natural_change",
+  "title": "Births minus deaths",
+  "phrase": "rates of births outnumbering deaths",
+  "description": "Births minus deaths in the year to July 1, per 1,000 residents. Teal areas had more births than deaths; brown areas had more deaths, which is common where residents are older.",
+  "category": "People",
+  "subcategory": "Population and age",
+  "tags": [
+   "births",
+   "deaths",
+   "natural change",
+   "population estimates",
+   "demographics"
+  ],
+  "source": {
+   "name": "U.S. Census Bureau, Population Estimates Program",
+   "shortName": "Census Bureau",
+   "url": "https://www.census.gov/programs-surveys/popest.html",
+   "citation": "U.S. Census Bureau, Population Estimates Program, Vintage 2025 county totals (co-est2025-alldata) and Vintage 2020 (co-est2020-alldata)"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "Year to July 1, 2025",
+  "geographyLevels": [
+   "state",
+   "county"
+  ],
+  "areaLevels": [],
+  "unit": "per_1k",
+  "universe": "total population (estimate)",
+  "measure": {
+   "kind": "popest",
+   "field": "natural",
+   "year": 2025
+  },
+  "modelInputs": [],
+  "coverageNote": "Births and deaths come from vital records, so this part is closer to a count than the migration maps. Each release revises its decade, and 2011–2019 come from the Vintage 2020 estimates (built on the 2010 Census) while 2021 on are built on the 2020 Census, so the two runs are not one series; 2020 is left out. Change maps never pair a year before 2020 with one after. Connecticut shows its old counties through 2019 and its nine planning regions from 2021.",
+  "facets": [],
+  "library": false,
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 2011,
+   "to": 2025,
+   "step": 1
+  },
+  "learnMore": [],
+  "terms": [
+   "population-estimates",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "brbg",
+   "classification": "manual",
+   "classes": 5,
+   "breaks": [
+    -6,
+    -2,
+    2,
+    6
    ]
   }
  },
@@ -21173,6 +21666,241 @@
    "ramp": "viridis",
    "classification": "quantile",
    "classes": 7
+  }
+ },
+ {
+  "id": "qcew_avg_pay",
+  "title": "Average pay per job",
+  "phrase": "average pay per job",
+  "description": "Average yearly pay of the jobs located in the area, all industries, private and government, in 2024 dollars. It is total wages divided by the number of jobs, so it counts where people work, not where they live.",
+  "category": "Economy",
+  "subcategory": "Jobs",
+  "tags": [
+   "wages",
+   "pay",
+   "earnings",
+   "salary",
+   "jobs",
+   "employment",
+   "workplace",
+   "QCEW",
+   "BLS"
+  ],
+  "source": {
+   "name": "U.S. Bureau of Labor Statistics, Quarterly Census of Employment and Wages",
+   "shortName": "BLS",
+   "url": "https://www.bls.gov/cew/",
+   "citation": "U.S. Bureau of Labor Statistics, Quarterly Census of Employment and Wages, annual averages (1990–2025); restated in 2024 dollars with the BLS CPI-U"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2025 (in 2024 dollars)",
+  "geographyLevels": [
+   "state",
+   "county"
+  ],
+  "areaLevels": [],
+  "unit": "dollars",
+  "universe": "jobs covered by unemployment insurance (by workplace)",
+  "measure": {
+   "kind": "qcew",
+   "field": "pay",
+   "year": 2025
+  },
+  "modelInputs": [],
+  "coverageNote": "Counted where people work, not where they live: a county's figure is the pay of the jobs located there, whoever holds them. It covers jobs under unemployment insurance, more than 95% of U.S. jobs, and leaves out the self-employed, most farm and household workers, railroad workers and members of the military. Pay includes bonuses and stock options, and part-time and seasonal jobs count as whole jobs, so this is not what a typical worker earns. BLS withholds a few county figures to protect individual employers; those show no data, not zero. Every year is in 2024 dollars, adjusted for inflation with the consumer price index (CPI-U), so the 2025 figures read about 2.6% below BLS's own. The Job density map counts jobs from Census LODES, which starts from the same employer records but counts jobs at one point in the year and adds statistical noise; this map uses BLS's yearly averages, for states and counties only. Connecticut shows its old counties through 2023 and its nine planning regions from 2024.",
+  "facets": [],
+  "library": false,
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 1990,
+   "to": 2025,
+   "step": 1
+  },
+  "learnMore": [],
+  "terms": [
+   "qcew",
+   "inflation-adjusted",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": true
+  }
+ },
+ {
+  "id": "qcew_jobs_per_1k",
+  "title": "Jobs per 1,000 residents",
+  "phrase": "jobs per resident",
+  "description": "Jobs located in the area (yearly average, all industries, private and government) per 1,000 people who live there. Above 1,000 means more jobs than residents, a job center that draws commuters; a low number means many residents work elsewhere, or are retired, in school or not working.",
+  "category": "Economy",
+  "subcategory": "Jobs",
+  "tags": [
+   "jobs",
+   "employment",
+   "workplace",
+   "job centers",
+   "commuting",
+   "QCEW",
+   "BLS"
+  ],
+  "source": {
+   "name": "U.S. Bureau of Labor Statistics, Quarterly Census of Employment and Wages",
+   "shortName": "BLS",
+   "url": "https://www.bls.gov/cew/",
+   "citation": "U.S. Bureau of Labor Statistics, Quarterly Census of Employment and Wages, annual averages (1990–2025); Census Bureau population estimates"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105)",
+  "updateCadence": "annual",
+  "vintage": "2025",
+  "geographyLevels": [
+   "state",
+   "county"
+  ],
+  "areaLevels": [],
+  "unit": "per_1k",
+  "universe": "jobs covered by unemployment insurance (by workplace)",
+  "measure": {
+   "kind": "qcew",
+   "field": "per_1k",
+   "year": 2025
+  },
+  "modelInputs": [],
+  "coverageNote": "Jobs are counted where people work, not where they live, and someone with two jobs counts twice, so this is not the share of residents who have a job. It covers jobs under unemployment insurance, more than 95% of U.S. jobs, and leaves out the self-employed, most farm and household workers, railroad workers and members of the military, so farm counties read low. BLS withholds a few county figures to protect individual employers; those show no data, not zero. The Job density map counts jobs per square mile from Census LODES, which starts from the same employer records but counts jobs at one point in the year and adds statistical noise; this map uses BLS's yearly averages and divides by residents, for states and counties only. Connecticut shows its old counties through 2023 (with no data for 2020–2023) and its nine planning regions from 2024.",
+  "facets": [],
+  "library": false,
+  "excludeFromInsights": false,
+  "timeline": {
+   "from": 1990,
+   "to": 2025,
+   "step": 1
+  },
+  "learnMore": [],
+  "terms": [
+   "qcew",
+   "population-estimates",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
+  }
+ },
+ {
+  "id": "rail_crossing_crashes",
+  "title": "Rail crossing crashes",
+  "phrase": "rail crossing crashes a year",
+  "description": "How many crashes happen in a year where a public road crosses railroad tracks at street level: a train hitting a vehicle, a person on foot or someone on a bike at the crossing. The map opens on the average for 2021–2025; step back through single years to 1975. Counted where the crash happened.",
+  "category": "Transportation",
+  "subcategory": "Traffic safety",
+  "tags": [
+   "railroad",
+   "grade crossings",
+   "train crashes",
+   "rail safety",
+   "FRA",
+   "Form 57",
+   "Vision Zero"
+  ],
+  "source": {
+   "name": "Federal Railroad Administration, Highway-Rail Grade Crossing Incident Data (Form 57)",
+   "shortName": "FRA",
+   "url": "https://data.transportation.gov/d/7wn6-i5b9",
+   "citation": "Federal Railroad Administration, Office of Railroad Safety, Highway-Rail Grade Crossing Incident Data (Form 57), data.transportation.gov dataset 7wn6-i5b9, retrieved November 2026"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105; data.transportation.gov lists it as Public Domain)",
+  "updateCadence": "monthly",
+  "vintage": "2021–2025 average",
+  "geographyLevels": [
+   "state",
+   "county"
+  ],
+  "areaLevels": [],
+  "unit": "count",
+  "universe": "collisions between trains and road users at public highway-rail grade crossings, counted where they happened (not people or residents)",
+  "measure": {
+   "kind": "fra_crossings",
+   "field": "crashes",
+   "years": [
+    2021,
+    2025
+   ]
+  },
+  "modelInputs": [],
+  "coverageNote": "A crossing crash is a collision between a train and a road user (a vehicle, a person on foot, a bike) at a highway-rail grade crossing, as railroads report them to the Federal Railroad Administration. Only public crossings are counted; crashes at private crossings (farm, industrial and driveway crossings, about one in six in recent years) are left out. Each crash counts once, even when two railroads reported it. These are counts, not rates: counties with more rail lines, crossings and traffic have more chances for a crash, and a county with no crossings shows 0. Small counties swing a lot from year to year; the five-year average is steadier. FRA revises recent years as late reports come in. Crashes fell from about 11,000 a year in the late 1970s to about 1,900 in recent years. From 2020 on, Connecticut's counties show no data (the reports still use its old counties), and Alaska shows no data in 1976, 1979 and 1993 (old borough codes that don't match the map).",
+  "facets": [],
+  "library": false,
+  "excludeFromInsights": true,
+  "timeline": {
+   "from": 1975,
+   "to": 2025,
+   "step": 1
+  },
+  "learnMore": [],
+  "terms": [
+   "grade-crossing",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "oranges",
+   "classification": "quantile",
+   "classes": 5,
+   "higherIsBetter": false
+  }
+ },
+ {
+  "id": "rail_crossings_public",
+  "title": "Rail crossings at street level",
+  "phrase": "public street-level rail crossings",
+  "description": "How many places a public road crosses railroad tracks at street level (grade crossings), from the Federal Railroad Administration's national crossing inventory as it stands today. Bridges and underpasses, closed crossings and private crossings are not counted.",
+  "category": "Transportation",
+  "subcategory": "Traffic safety",
+  "tags": [
+   "railroad",
+   "grade crossings",
+   "rail crossings",
+   "rail safety",
+   "FRA",
+   "Form 71",
+   "crossing inventory"
+  ],
+  "source": {
+   "name": "Federal Railroad Administration, Crossing Inventory Data (Form 71), Current",
+   "shortName": "FRA",
+   "url": "https://data.transportation.gov/d/m2f8-22s6",
+   "citation": "Federal Railroad Administration, Crossing Inventory Data (Form 71) - Current, data.transportation.gov dataset m2f8-22s6, retrieved November 2026"
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105; data.transportation.gov lists it as Public Domain)",
+  "updateCadence": "monthly",
+  "vintage": "November 2026 inventory",
+  "geographyLevels": [
+   "state",
+   "county"
+  ],
+  "areaLevels": [],
+  "unit": "count",
+  "universe": "open public highway-rail crossings at street level (not people or residents)",
+  "measure": {
+   "kind": "fra_crossings",
+   "field": "crossings"
+  },
+  "modelInputs": [],
+  "coverageNote": "Counts open public crossings at street level in FRA's national crossing inventory, which railroads and states keep up to date. It is today's list only, with no past years. Crossings FRA lists as having no train traffic are left out. A count, not a rate: counties with more rail lines have more crossings, and a county with none shows 0. Connecticut's counties show no data (the inventory still uses its old counties), and so do Alaska's (about 5% of its crossings carry retired census-area codes).",
+  "facets": [],
+  "library": false,
+  "excludeFromInsights": true,
+  "learnMore": [],
+  "terms": [
+   "grade-crossing",
+   "quantile-classes"
+  ],
+  "symbology": {
+   "ramp": "blues",
+   "classification": "quantile",
+   "classes": 5
   }
  },
  {
@@ -22277,6 +23005,129 @@
    "ramp": "oranges",
    "classification": "quantile",
    "classes": 5
+  }
+ },
+ {
+  "id": "walkability_index",
+  "title": "Walkability index",
+  "description": "EPA's National Walkability Index, from 1 (least walkable) to 20 (most walkable). It is a model score built from how many street intersections an area has, how close its homes are to a transit stop, and how well jobs and homes are mixed. It does not measure sidewalks, crossings or how safe it is to walk.",
+  "category": "Transportation",
+  "subcategory": "Commuting",
+  "tags": [
+   "walkability",
+   "walkable",
+   "walking",
+   "National Walkability Index",
+   "Smart Location Database",
+   "EPA",
+   "intersection density",
+   "transit access",
+   "land use mix"
+  ],
+  "source": {
+   "name": "U.S. Environmental Protection Agency, Smart Location Database version 3.0, National Walkability Index (2021)",
+   "shortName": "EPA Walkability Index",
+   "url": "https://www.epa.gov/smartgrowth/smart-location-mapping",
+   "citation": "U.S. Environmental Protection Agency. National Walkability Index, from the Smart Location Database version 3.0, released June 2021."
+  },
+  "license": "Public domain (U.S. Government work, 17 U.S.C. § 105).",
+  "updateCadence": "irregular",
+  "vintage": "2021 release",
+  "geographyLevels": [],
+  "areaLevels": [],
+  "unit": "score",
+  "universe": "residents (2014–2018 American Community Survey, 2010 tracts)",
+  "measure": {
+   "kind": "features",
+   "geometry": "polygon",
+   "noun": "Tracts",
+   "source": {
+    "url": "https://www2.census.gov/geo/tiger/GENZ2019/shp/cb_2019_us_tract_500k.zip",
+    "file": "cb_2019_us_tract_500k.zip",
+    "path": "cb_2019_us_tract_500k.shp",
+    "layerPattern": "^cb_2019_us_tract_500k$"
+   },
+   "join": {
+    "url": "https://edg.epa.gov/EPADataCommons/public/OA/WalkabilityIndex.zip",
+    "file": "epa-walkability-index-2021.zip",
+    "path": "Natl_WI.gdb"
+   },
+   "select": "SELECT t.GEOID AS tract, w.walk_index, CASE WHEN w.walk_index IS NULL THEN NULL WHEN w.walk_index <= 5.75 THEN 'Least walkable' WHEN w.walk_index <= 10.5 THEN 'Below average' WHEN w.walk_index <= 15.25 THEN 'Above average' ELSE 'Most walkable' END AS band, w.population, t.geom FROM {layer} t JOIN ( SELECT STATEFP || COUNTYFP || TRACTCE AS tract, ROUND(SUM(NatWalkInd * TotPop) / NULLIF(SUM(TotPop), 0), 1) AS walk_index, SUM(TotPop) AS population FROM \"join\" GROUP BY 1) w ON w.tract = t.GEOID",
+   "valueField": "walk_index",
+   "fields": {
+    "walk_index": {
+     "label": "Walkability index (1 to 20)",
+     "unit": "score",
+     "explainer": "EPA's score for how easy it is to get around on foot: 1 is least walkable, 20 most. A model built from intersection density, distance to the nearest transit stop and the mix of jobs and homes, averaged over the tract's block groups by population. It says nothing about sidewalks, crossings or safety."
+    },
+    "band": {
+     "label": "EPA's walkability group",
+     "explainer": "EPA's four groups: least walkable (1 to 5.75), below average (5.76 to 10.5), above average (10.51 to 15.25) and most walkable (15.26 to 20), applied here to the tract average."
+    },
+    "population": {
+     "label": "Residents (2014–2018)",
+     "unit": "count"
+    }
+   },
+   "zooms": [
+    2,
+    12
+   ]
+  },
+  "modelInputs": [],
+  "coverageNote": "Shown on 2010 census tracts: each tract is the average of EPA's block-group scores, weighted by population. Inputs: streets from 2018, transit stops from 2020 (only agencies that publish schedule data), jobs from 2017 and residents from 2014–2018. Tracts with no residents show no data.",
+  "facets": [
+   {
+    "field": "band",
+    "label": "EPA's walkability group",
+    "explainer": "EPA sorts scores into four groups. Hide a group to see only the others.",
+    "term": "walkability-index",
+    "values": [
+     {
+      "value": "Least walkable",
+      "label": "Least walkable",
+      "description": "A score of 1 to 5.75."
+     },
+     {
+      "value": "Below average",
+      "label": "Below average",
+      "description": "A score of 5.76 to 10.5."
+     },
+     {
+      "value": "Above average",
+      "label": "Above average",
+      "description": "A score of 10.51 to 15.25."
+     },
+     {
+      "value": "Most walkable",
+      "label": "Most walkable",
+      "description": "A score of 15.26 to 20."
+     }
+    ]
+   }
+  ],
+  "library": false,
+  "excludeFromInsights": false,
+  "learnMore": [
+   {
+    "label": "How EPA builds the walkability index",
+    "url": "https://www.epa.gov/smartgrowth/national-walkability-index-user-guide-and-methodology"
+   }
+  ],
+  "terms": [
+   "walkability-index",
+   "tract-2010"
+  ],
+  "symbology": {
+   "ramp": "ylgnbu",
+   "classification": "manual",
+   "classes": 4,
+   "breaks": [
+    5.76,
+    10.51,
+    15.26
+   ],
+   "higherIsBetter": true
   }
  }
 ]
