@@ -1,5 +1,5 @@
 "use client";
-// One header for every page (D-33, P1): logo and wordmark, Map · Specials, then (right-justified)
+// One header for every page (D-33, P1): logo and wordmark, Map · Data · Specials, then (right-justified)
 // a search icon and Settings (D-35). On the map, search opens the place + dataset search over the
 // map and Settings adds map units. Every other page opens the same search; a pick opens the map (issue #438).
 import { useEffect, useState, useSyncExternalStore } from "react";
@@ -13,7 +13,7 @@ import { LogoMark } from "./Logo";
 import { SearchIcon, SearchOverlay } from "./SearchOverlay";
 import { SettingsMenu, type ScaleUnit } from "./SettingsMenu";
 
-type Section = "map" | "specials";
+type Section = "map" | "data" | "specials";
 
 export function HeaderContent({ current, onSearch, explicitTheme, onTheme, unit, onUnit }: {
   current?: Section;
@@ -27,10 +27,11 @@ export function HeaderContent({ current, onSearch, explicitTheme, onTheme, unit,
   onUnit?: (u: ScaleUnit) => void;
 }) {
   // No viewport prefetch of Specials: on the map it pulled the Specials page and its lead image
-  // (~250 KB) in while a phone was still loading the map (#505).
+  // (~250 KB) in while a phone was still loading the map (#505). Data is the same shape (the whole
+  // dataset registry in one client bundle), so it waits for a tap too.
   const nav = (href: string, label: string, key: Section) => current === key
     ? <Link href={href} aria-current="page" className="font-semibold text-foreground shadow-[inset_0_-2px_0_var(--ui-accent)]">{label}</Link>
-    : <Link href={href} prefetch={key === "specials" ? false : undefined} className="text-muted-foreground hover:text-foreground">{label}</Link>;
+    : <Link href={href} prefetch={key === "map" ? undefined : false} className="text-muted-foreground hover:text-foreground">{label}</Link>;
   const icon = "grid size-9 place-items-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring";
   return (
     <>
@@ -42,6 +43,7 @@ export function HeaderContent({ current, onSearch, explicitTheme, onTheme, unit,
         </Link>
         <nav aria-label="Sections" className="flex gap-4 text-sm md:gap-5">
           {nav("/map", "Map", "map")}
+          {nav("/data", "Data", "data")}
           {nav("/specials", "Specials", "specials")}
         </nav>
       </div>

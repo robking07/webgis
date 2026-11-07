@@ -45,7 +45,7 @@ export default async function ComparePage(props: Props) {
   if (!c) notFound();
   return (
     <>
-      <SiteHeader />
+      <SiteHeader current="map" />
       <ComparePlaces a={c.a} b={c.b} nameA={c.nameA} nameB={c.nameB} datasetId={c.dataset.id} parentNames={c.parentNames} unknownD={c.unknownD} />
       <div className="mx-auto max-w-3xl px-4 pb-8 md:px-8"><SiteFooter /></div>
     </>
