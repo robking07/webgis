@@ -2,11 +2,11 @@
 // Replaces MapLibre's attribution box; the basemap credit (OpenStreetMap et al.) stays visible.
 import type { Dataset } from "@/lib/registry";
 
-export function MapCredits({ datasets, basemapDown = false }: { datasets: Dataset[]; basemapDown?: boolean }) {
+export function MapCredits({ datasets, basemapDown = false, newTab = false }: { datasets: Dataset[]; basemapDown?: boolean; newTab?: boolean }) {
   return (
     <p className="wg-credits pointer-events-auto absolute bottom-1 left-3 z-10 max-w-[calc(100%-1.5rem)] truncate rounded px-1 text-[10px] leading-tight md:left-4 md:max-w-[calc(100%-2rem)] lg:whitespace-normal">
       {datasets.map((d) => (
-        <span key={d.id}><a href={`/data/${d.id}`}>{d.source.name.split(" (")[0]}</a> · </span>
+        <span key={d.id}><a href={`/data/${d.id}`} target={newTab ? "_blank" : undefined}>{d.source.name.split(" (")[0]}</a> · </span>
       ))}
       Boundaries <a href="https://www.census.gov/geographies/mapping-files/time-series/geo/cartographic-boundary.html" target="_blank" rel="noopener">U.S. Census Bureau</a>
       {!basemapDown && <>{" · "}<a href="https://openfreemap.org" target="_blank" rel="noopener">OpenFreeMap</a>

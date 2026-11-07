@@ -1,7 +1,8 @@
 "use client";
 // Share the exact view (issue #164). The page URL already holds it: dataset, place, year, since=,
 // zoom (lib/url-state.ts), and the compare page's places and metric.
-// On the map, Share opens a short menu (issue #361): the link, a citation for a memo, and a map image.
+// On the map, Share opens a short menu (issue #361): the link, a citation for a memo, a map image,
+// and an iframe snippet for another site (issue #554).
 import { useEffect, useRef, useState, type ComponentProps } from "react";
 import { Check, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -11,6 +12,14 @@ export function shareUrl() {
   const u = new URL(location.href);
   u.searchParams.delete("theme");
   return u.href;
+}
+
+/** An iframe of this exact view for another website (issue #554): the map, legend and credits only. */
+export function embedSnippet(title: string) {
+  const u = new URL(shareUrl());
+  u.searchParams.set("embed", "1");
+  const t = title.replaceAll("&", "&amp;").replaceAll('"', "&quot;").replaceAll("<", "&lt;");
+  return `<iframe src="${u.href.replaceAll("&", "&amp;")}" title="${t}" width="100%" height="480" style="border:0" loading="lazy"></iframe>`;
 }
 
 // Touch screens get the native share sheet; laptops whose browser also has one (Chrome, Safari) just copy.
@@ -38,6 +47,8 @@ async function saveFile(file: File) {
 export interface ShareExtras {
   /** One-line citation for "Copy for my memo". */
   memo: () => string;
+  /** The map's title, for the embed's iframe title. */
+  title: () => string;
   /** The map image and its file name, for "Save image". */
   image: () => Promise<{ blob: Blob; name: string } | null>;
 }
@@ -75,6 +86,9 @@ export function ShareButton({ extras, align = "right", ...props }: Pick<Componen
   async function memo() {
     if (await copy(extras!.memo(), "Copy this citation:")) setDone("Citation copied");
   }
+  async function embed() {
+    if (await copy(embedSnippet(extras!.title()), "Copy this embed code:")) setDone("Embed code copied");
+  }
   async function image() {
     setDone("Making image…");
     try {
@@ -99,6 +113,7 @@ export function ShareButton({ extras, align = "right", ...props }: Pick<Componen
           <button type="button" className={item} onClick={pick(shareLink)}>{sheet() ? "Share link" : "Copy link"}</button>
           <button type="button" className={item} onClick={pick(memo)}>Copy for my memo</button>
           <button type="button" className={item} onClick={pick(image)}>Save image</button>
+          <button type="button" className={item} onClick={pick(embed)}>Embed</button>
         </div>
       )}
       <span role="status" className="sr-only">{done ?? ""}</span>

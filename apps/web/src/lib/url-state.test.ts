@@ -57,3 +57,10 @@ describe("context=preview", () => {
     expect(serializeUrlState(parseUrlState("?context=other"))).not.toContain("context");
   });
 });
+
+describe("embed=1 (issue #554)", () => {
+  it("survives a pan, and only 1 turns it on", () => {
+    expect(serializeUrlState({ ...parseUrlState("?d=a&embed=1"), at: { lon: -93, lat: 45, zoom: 8 } })).toContain("embed=1");
+    expect(parseUrlState("?embed=yes").embed).toBe(false);
+  });
+});
