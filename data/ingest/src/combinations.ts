@@ -22,6 +22,7 @@ export const COMBO_RULES = {
   maxCompanions: 4,    // sets of 3 to 5 datasets
   candidates: 30,      // companions tried per focus: top passing pairs by |within-state ρ|
   maxInterRho: 0.7,    // |ρ| between two companions
+  maxVif: 5,           // variance inflation of each companion on the others (Spielman et al. 2020)
   maxPerCategory: 2,   // companions from one category
   maxPlaces: 1,        // CDC PLACES modelled estimates among the companions
   maxComposites: 1,    // composite indexes (SVI, FEMA NRI scores, CEJST) in the whole set
@@ -86,6 +87,11 @@ export function r2(R: number[][], r: number[]) {
   return { r2: beta.reduce((s, b, i) => s + b * r[i], 0), beta };
 }
 const sub = (R: number[][], keep: number[]) => keep.map((i) => keep.map((j) => R[i][j]));
+/** Largest variance inflation factor, 1/(1 − R²) of each predictor on the others, from their correlations. */
+export function maxVif(R: number[][]) {
+  const all = R.map((_, i) => i);
+  return Math.max(...all.map((j) => { const o = all.filter((i) => i !== j); return 1 / (1 - r2(sub(R, o), o.map((i) => R[j][i])).r2); }));
+}
 
 function lgamma(x: number) {
   const c = [76.18009172947146, -86.50532032941677, 24.01409824083091, -1.231739572450155, 0.1208650973866179e-2, -0.5395239384953e-5];
@@ -188,7 +194,8 @@ function wrho(c: Ctx, h: number, a: string, b: string) {
   return v;
 }
 function fitPairwise(c: Ctx, h: number, f: string, comps: string[]) {
-  return r2(comps.map((a) => comps.map((b) => (a === b ? 1 : wrho(c, h, a, b)))), comps.map((a) => wrho(c, h, f, a)));
+  const R = comps.map((a) => comps.map((b) => (a === b ? 1 : wrho(c, h, a, b))));
+  return { ...r2(R, comps.map((a) => wrho(c, h, f, a))), vif: maxVif(R) };
 }
 
 /** Companion guardrails against the set so far (the focus pairs were already screened). */
@@ -221,8 +228,8 @@ export function discover(c: Ctx, f: string, h: number, gain = c.rules.gain): str
     let best = "", bestR2 = cur;
     for (const x of cands) {
       if (set.includes(x) || !allowed(c, f, set, x)) continue;
-      const v = fitPairwise(c, h, f, [...set, x]).r2;
-      if (v > bestR2 && v < 1) { bestR2 = v; best = x; }
+      const { r2: v, vif } = fitPairwise(c, h, f, [...set, x]);
+      if (v > bestR2 && v < 1 && vif <= c.rules.maxVif) { bestR2 = v; best = x; }
     }
     if (!best || (set.length && bestR2 - cur < gain)) break;
     set.push(best); cur = bestR2;
@@ -259,7 +266,7 @@ export function confirm(c: Ctx, f: string, comps: string[], h: number, signs?: n
   const F = ((full.r2 - best) / (k - 1)) / ((1 - full.r2) / (ne - k - 1));
   const p = ne > k + 1 && F > 0 ? fP(F, k - 1, ne - k - 1) : 1;
   return { idx, cols, n: idx.length, r2Set: full.r2, r2Best: best, gain: full.r2 - best, beta: full.beta, nEff: ne, p,
-    ok: full.r2 - best >= gain && earns && keepsSign };
+    ok: full.r2 - best >= gain && earns && keepsSign && maxVif(Rx) <= c.rules.maxVif };
 }
 
 /** Census regions where the fitted weights still beat the best member alone, within the counties fitted. */

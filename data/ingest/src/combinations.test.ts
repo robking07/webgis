@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { DatasetEntry } from "@webgis/registry";
-import { by, combinations, confirm, context, fP, ingredients, nEff, distanceClasses, type Data, type Pairs } from "./combinations.ts";
+import { by, combinations, confirm, context, fP, ingredients, maxVif, nEff, distanceClasses, type Data, type Pairs } from "./combinations.ts";
 import { checks, pearson, ranks, withinStateRho } from "./insights.ts";
 
 // Seeded normal noise, so the test is deterministic.
@@ -59,6 +59,12 @@ describe("combinations", () => {
     expect([...ingredients("b", byId)].sort()).toEqual(["x1", "x2", "y"]);
     const out = combinations(context(data, leaky, pairs)).combinations;
     expect(out.every((x) => !([x.focus, ...x.companions].includes("b") && [x.focus, ...x.companions].includes("y")))).toBe(true);
+  });
+  it("collinearity cap: a companion that is nearly the sum of the others fails VIF ≤ 5, though no pair tops |ρ| 0.7", () => {
+    expect(maxVif([[1, 0, 0], [0, 1, 0], [0, 0, 1]])).toBeCloseTo(1, 6);
+    const s = 0.57, R = [[1, 0, 0, s], [0, 1, 0, s], [0, 0, 1, s], [s, s, s, 1]];
+    expect(maxVif(R)).toBeGreaterThan(5); // R² = 3 × 0.57² ≈ 0.975, VIF ≈ 40
+    expect(maxVif(R.map((r) => r.map((v) => (v === s ? 0.3 : v))))).toBeLessThan(5);
   });
   it("effective n ≈ n for unrelated, unclustered noise", () => {
     const idx = geoids.map((_, i) => i), x = idx.map(norm), z = idx.map(norm);
