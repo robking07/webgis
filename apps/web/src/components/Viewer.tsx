@@ -18,7 +18,7 @@ import { DATASET_BY_ID, DATASETS, LIBRARY_LABEL, type Dataset } from "@/lib/regi
 import { areaByCode, loadArea, loadMpoShape, loadPlaceIndex, mpoById, placeByGeoid, type AreaFile, type PlaceHit } from "@/lib/search";
 import { useIsCompact, useIsNarrow, useIsPhone } from "./BottomSheet";
 import { DatasetMenu, DatasetSheet, type BrowseSlot } from "./DatasetMenus";
-import { historyKey, parseUrlState, useUrlState, type UrlState } from "@/lib/url-state";
+import { historyKey, parseUrlState, serializeUrlState, useUrlState, type UrlState } from "@/lib/url-state";
 import { areaChangeNote, noTractsNote, stopsFor } from "@/lib/periods";
 import { tableScope } from "@/lib/table-scope";
 import { useViewerData } from "./map-page/useViewerData";
@@ -60,6 +60,9 @@ export function Viewer({ search }: { search: string }) {
     return { ...s, d, b, at: new URLSearchParams(search).has("at") ? s.at : LANDING.at ?? s.at };
   });
   const [state, update] = useUrlState(initial);
+  /** In another site's iframe (Share → Embed, issue #554): only the map, legend, credits and a link
+   *  out. Pan, zoom and hover work; nothing changes the map and clicks open nothing. */
+  const embed = !!initial.embed;
   // A ?d= or ?b= that names no dataset: say so once instead of silently showing something else.
   const [unavailable, setUnavailable] = useState(() => {
     const q = new URLSearchParams(search);
@@ -430,6 +433,7 @@ export function Viewer({ search }: { search: string }) {
   const placeLabel = selected?.name ?? (picked ? picked.name : focus ? focusName : null);
   const share: ShareExtras | null = primary && {
     memo: () => memoCitation({ datasets: cited, place: placeLabel, period: periodLabel, url: shareUrl(), date: new Date() }),
+    title: () => citeTitle({ datasets: cited, place: placeLabel, period: periodLabel }),
     image: async () => {
       const map = await mapApi.current?.snapshot();
       if (!map) return null;
@@ -466,8 +470,8 @@ export function Viewer({ search }: { search: string }) {
   return (
     <div ref={root} className="fixed inset-0 overflow-hidden"
       onMouseMove={(e) => { if (immersed && !peek && e.clientY < 14) setPeek(true); }}>
-      <button type="button" onClick={changeDataset}
-        className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-50 focus:rounded focus:bg-card focus:px-3 focus:py-2 focus:shadow">Choose a dataset</button>
+      {!embed && <button type="button" onClick={changeDataset}
+        className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-50 focus:rounded focus:bg-card focus:px-3 focus:py-2 focus:shadow">Choose a dataset</button>}
 
       <main className="absolute inset-0">
         {primary && <h1 className="sr-only">{primary.title}{secondary ? ` and ${secondary.title}` : ""}</h1>}
@@ -479,14 +483,14 @@ export function Viewer({ search }: { search: string }) {
           boundaries={stopId ? stop!.boundaries ?? null : null}
           onViewChange={(at) => update({ at })}
           onHover={setHover}
-          onSelect={onMapSelect}
+          onSelect={embed ? () => {} : onMapSelect}
           onTilesError={setTilesError}
           onBasemapFallback={() => setBasemapDown(true)}
           levelZooms={bands}
           featureLayer={featureSpec}
           featureFilter={featureFilter}
           onFeatureHover={setFeatureHover}
-          onFeatureSelect={onFeatureSelect}
+          onFeatureSelect={embed ? () => {} : onFeatureSelect}
           onUserMove={() => {
             startMotion();
             // An open dataset menu closes on pan everywhere (D-135).
@@ -508,14 +512,14 @@ export function Viewer({ search }: { search: string }) {
       </main>
 
       {/* Header: falls away entirely when immersed; peeks back at the top edge. */}
-      <header onMouseLeave={() => setPeek(false)} data-obstructs={chromeShown ? "" : undefined}
+      {!embed && <header onMouseLeave={() => setPeek(false)} data-obstructs={chromeShown ? "" : undefined}
         className={`absolute inset-x-0 top-0 z-30 flex h-14 items-center justify-between gap-3 border-b bg-background px-4 transition-transform duration-300 ease-out md:px-6 ${chromeShown ? "translate-y-0" : "-translate-y-full"}`}
         inert={!chromeShown || undefined}>
         <HeaderContent current="map" onSearch={() => setSearchOpen(true)} explicitTheme={state.theme} onTheme={(t) => update({ theme: t })}
           unit={scaleUnit} onUnit={setScaleUnit} />
-      </header>
+      </header>}
 
-      {primary && (
+      {primary && !embed && (
         <DatasetCard share={share!} cardRef={card} explainOpen={explainOpen} setExplainOpen={setExplainOpen} primary={primary} secondary={secondary} meta={meta} immersed={immersed} isFeature={isFeature}
           tableReady={tableReady} hasFilters={hasFilters} filtersOpen={!!filters} filterCount={nFilters} onOpenFilters={toggleFilters}
           onBrowse={changeDataset} menuOpen={menuOpen && !immersed} menu={immersed ? null : datasetMenu}
@@ -523,7 +527,7 @@ export function Viewer({ search }: { search: string }) {
           contextLink={ctx ? <ContextLink open={ctxOpen} onToggle={toggleContext} /> : undefined} />
       )}
 
-      {primary && (
+      {primary && !embed && (
         <ImmersedHeading primary={primary} secondary={secondary} immersed={immersed} hasFilters={hasFilters} filtersOpen={!!filters} filterCount={nFilters}
           caption={isFeature ? filterSummary ?? "All roads shown" : GEO_LEVELS[level].plural} captionHint={isFeature ? null : chipHint}
           phone={phone} motion={stepAside ? (phone ? "hide" : "dim") : null}
@@ -547,14 +551,14 @@ export function Viewer({ search }: { search: string }) {
           value={filterValue} onApply={applyFilters} onClose={() => setFilters(null)} />
       )}
 
-      <MapControls mapApi={mapApi} atRest={chromeShown && !immersed} canGoBack={canGoBack && !focus} onBack={goBack} phone={phone} cardH={cardH}
+      {!embed && <MapControls mapApi={mapApi} atRest={chromeShown && !immersed} canGoBack={canGoBack && !focus} onBack={goBack} phone={phone} cardH={cardH}
         onRegion={goToRegion} onPlace={onSearchPlace} onNearMe={phone && "geolocation" in navigator ? nearMe : null}
-        pick={pickable ? { on: picking, off: level !== "tract" && level !== "county" && !picking, onToggle: togglePicking } : null} />
+        pick={pickable ? { on: picking, off: level !== "tract" && level !== "county" && !picking, onToggle: togglePicking } : null} />}
       {pickShown && (
         <PickArea datasets={secondary ? [primary!, secondary] : [primary!]} picked={picks} picking={picking} full={pickFull} drawn={level}
           onDone={donePicking} onClear={clearPicks} />
       )}
-      {usLost && (
+      {usLost && !embed && (
         <button type="button" onClick={() => goToRegion(CONUS)}
           className="wg-panel wg-zbtn absolute bottom-24 left-1/2 z-20 h-11 -translate-x-1/2 rounded-full px-4 text-sm font-semibold text-foreground">
           Back to the US
@@ -564,13 +568,19 @@ export function Viewer({ search }: { search: string }) {
       <MapLegend theme={theme} primary={primary} secondary={secondary} isFeature={isFeature} featureSpec={featureSpec} current={current}
         error={error} available={available} loading={loading} level={level} periodLabel={periodLabel}
         stop={stop} stopId={stopId} since={since}
-        hatchToggle={hatchable ? { on: hatchOn, onChange: setHatchOn, loading: hatchOn && !hatch?.[level] } : null}
+        hatchToggle={hatchable && !embed ? { on: hatchOn, onChange: setHatchOn, loading: hatchOn && !hatch?.[level] } : null}
         desktopStrip={desktopStrip} mark={selected && selected.level === level ? selClass : null}
-        covered={phone && (placeOpen || tableOpen || listOpen || stepAside || ctxOpen || pickShown)} tableReady={tableReady} tableLevel={tableLevel} onTable={() => setTableOpen(true)}
+        covered={phone && (placeOpen || tableOpen || listOpen || stepAside || ctxOpen || pickShown)} tableReady={tableReady && !embed} tableLevel={tableLevel} onTable={() => setTableOpen(true)}
         // Phones, whenever the header and its search are gone: search above the legend (issues #246, #438).
-        onSearch={phone && immersed && !pickShown ? () => setSearchOpen(true) : null} />
+        onSearch={phone && immersed && !pickShown && !embed ? () => setSearchOpen(true) : null} />
 
-      <MapCredits basemapDown={basemapDown} datasets={[primary, secondary].filter((d): d is Dataset => !!d)} />
+      <MapCredits basemapDown={basemapDown} datasets={[primary, secondary].filter((d): d is Dataset => !!d)} newTab={embed} />
+      {embed && (
+        <a href={`/map${serializeUrlState({ ...state, theme: null, embed: false })}`} target="_blank" rel="noopener"
+          className="wg-panel wg-zbtn absolute right-3 top-3 z-20 rounded-full px-3 py-1.5 text-xs font-semibold text-foreground">
+          Open in Mapwich ↗
+        </a>
+      )}
 
       {leaveFor && secondary && (
         <LeaveComparePrompt next={DATASET_BY_ID.get(leaveFor)!} other={secondary} onCancel={() => setLeaveFor(null)}
@@ -579,7 +589,7 @@ export function Viewer({ search }: { search: string }) {
 
       {listOpen && slot && primary && <DatasetSheet key={slot} slot={slot} primary={primary} secondary={secondary} onSlot={setBrowse} onPick={onMenuPick} onClose={() => setBrowse(null)} />}
 
-      {searchOpen && <SearchOverlay full={phone} current={state.d} onClose={() => setSearchOpen(false)} onPlace={onSearchPlace} onDataset={onSearchDataset}
+      {searchOpen && !embed && <SearchOverlay full={phone} current={state.d} onClose={() => setSearchOpen(false)} onPlace={onSearchPlace} onDataset={onSearchDataset}
         onBoth={onSearchBoth} onAddress={(m) => { setSearchOpen(false); goToPoint(m.lon, m.lat); }} />}
 
       {tableOpen && primary && tableLevel && (

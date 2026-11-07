@@ -5,6 +5,7 @@
 //   &in=<geoid: the place clicked into, drawn with the next level inside it (issue #203)>
 //   &mpo=<MPO id: a Metropolitan Planning Organization picked in search, outlined (issue #276)>
 //   &area=<a city or metro area picked in search, by tagged code: place2743000, cbsa33460 (issue #332)>
+//   &embed=1 <the map alone, for another site's iframe: legend, credits, "Open in Mapwich" (issue #554)>
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { AREA_CODE, zoomForArea, type PlaceHit } from "./search";
@@ -33,6 +34,8 @@ export interface UrlState {
   area?: string | null;
   /** `preview` also shows unapproved "Why this matters" drafts; kept in the URL as is. */
   context?: "preview" | null;
+  /** Shown in another site's iframe (Share → Embed): the map, legend and credits only. */
+  embed?: boolean;
 }
 
 export const DEFAULT_VIEW: ViewState = { lon: -96.5, lat: 38.5, zoom: 3.6, fit: true };
@@ -53,6 +56,7 @@ export function parseUrlState(search: string): UrlState {
     mpo: p.get("mpo")?.match(/^\w{1,10}$/)?.[0] ?? null,
     area: p.get("area")?.match(AREA_CODE)?.[0] ?? null,
     context: p.get("context") === "preview" ? "preview" : null,
+    embed: p.get("embed") === "1",
   };
 }
 
@@ -69,6 +73,7 @@ export function serializeUrlState(s: UrlState): string {
   if (s.mpo) p.set("mpo", s.mpo);
   if (s.area) p.set("area", s.area);
   if (s.context) p.set("context", s.context);
+  if (s.embed) p.set("embed", "1");
   return `?${p.toString().replaceAll("%2C", ",")}`;
 }
 
