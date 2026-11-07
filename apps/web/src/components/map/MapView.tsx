@@ -215,7 +215,7 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
     });
     map.current = m;
     // OpenFreeMap has no SLA: on a tilejson/tile error, or no basemap tile within 10 s, switch to the
-    // backup style for the rest of the visit. shortcut: one failed tile is enough; not retried until reload.
+    // backup style for the rest of the visit. shortcut: the first basemap error (or 3 after tiles arrived) switches for the rest of the visit.
     let omtLoaded = false;
     const switchToBackup = () => {
       if (basemapDown.current) return;
@@ -225,7 +225,8 @@ export function MapView({ theme, initialView, paint, onViewChange, onHover, onSe
       onBasemapFallback?.();
     };
     const omtTimer = setTimeout(() => { if (!omtLoaded) switchToBackup(); }, 10000);
-    m.on("error", (e) => { if ((e as { sourceId?: unknown }).sourceId === "omt") switchToBackup(); });
+    let omtErrors = 0; // a lone tile blip after tiles arrived is not an outage
+    m.on("error", (e) => { if ((e as { sourceId?: unknown }).sourceId === "omt" && (!omtLoaded || ++omtErrors >= 3)) switchToBackup(); });
     m.on("data", (e) => { if (e.dataType === "source" && e.sourceId === "omt" && "tile" in e && e.tile) omtLoaded = true; });
     // ?debug (or window.__wgDebug, set by the e2e init script so reloads keep it) exposes the map for devtools / headless checks.
     if ((window as unknown as { __wgDebug?: boolean }).__wgDebug || new URLSearchParams(window.location.search).has("debug")) (window as unknown as { __wgMap: MlMap }).__wgMap = (container.current as unknown as { __wgMap: MlMap }).__wgMap = m;
