@@ -63,8 +63,9 @@ const CORS = { "access-control-allow-origin": "*", "access-control-allow-headers
 /** Open a page. Boundary tiles come from tiles.mapwich.org, whose CORS rules only allow the
  *  production origins, so the test answers the preflight itself and adds the CORS headers to the
  *  real responses (the tiles are still fetched for real). */
-async function open(vp, path, { scheme = "light", ready = true } = {}) {
+async function open(vp, path, { scheme = "light", ready = true, block = null } = {}) {
   const ctx = await browser.newContext({ ...(typeof vp === "string" ? VP[vp] : vp), colorScheme: scheme });
+  if (block) await ctx.route(block, (route) => route.abort()); // e.g. the basemap host being down
   await ctx.route(/tiles\.mapwich\.org/, async (route) => {
     if (route.request().method() === "OPTIONS") return route.fulfill({ status: 204, headers: CORS });
     try {
@@ -1217,6 +1218,7 @@ test("laptop map fixes (#187): canvas label follows the map, tiles banner only f
 (await import("./history.tests.mjs")).default({ test, expect, immerse, mapIdle });
 (await import("./drilldown.tests.mjs")).default({ test, expect, immerse, mapIdle, tapLonLat, HENNEPIN });
 (await import("./compare-mode.tests.mjs")).default({ test, expect, immerse });
+(await import("./basemap.tests.mjs")).default({ test, expect });
 (await import("./splash.tests.mjs")).default({ test, expect, wait });
 (await import("./getting-around.tests.mjs")).default({ test, expect, mapIdle });
 (await import("./table.tests.mjs")).default({ test, expect, wait });

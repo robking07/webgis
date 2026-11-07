@@ -25,7 +25,11 @@ export const DATA_BEFORE_ID = "overlay-water";
 /** Selection outlines go here: above the water (a lakeside pick still shows), under the boundary lines. */
 export const HIGHLIGHT_BEFORE_ID = "ref-county-line";
 
-export function basemapStyle(themeName: ThemeName): StyleSpecification {
+/** `fallback`: OpenFreeMap is unreachable (D-653): the same layers over an empty source, so the map keeps
+ *  its layer ids and draws only the water-coloured background plus our own state tiles (U.S. land and
+ *  the state lines). shortcut: Canada and Mexico read as water and there are no labels or roads;
+ *  upgrade to a small low-zoom world file only if OpenFreeMap really goes away. */
+export function basemapStyle(themeName: ThemeName, fallback = false): StyleSpecification {
   const m = THEMES[themeName].map;
   const haloColor = `rgba(${rgb(m.labelHalo).join(",")},${LABEL.haloOpacity})`;
   const halo = { "text-halo-color": haloColor, "text-halo-width": LABEL.haloWidth, "text-halo-blur": LABEL.haloBlur };
@@ -34,7 +38,7 @@ export function basemapStyle(themeName: ThemeName): StyleSpecification {
   /** True for label points inside the U.S. (OpenMapTiles places have no country code). */
   const inUS = ["within", US_LABEL_MASK] as never;
   const layers: LayerSpecification[] = [
-    { id: "background", type: "background", paint: { "background-color": m.background } },
+    { id: "background", type: "background", paint: { "background-color": fallback ? m.water : m.background } },
     {
       id: "park", type: "fill", source: "omt", "source-layer": "park",
       paint: { "fill-color": m.park },
@@ -243,6 +247,7 @@ export function basemapStyle(themeName: ThemeName): StyleSpecification {
       paint: { "text-color": m.labelForeign, "text-halo-color": haloColor, "text-halo-width": LABEL.haloWidth * 0.7 },
     })),
   ];
+  if (fallback) return { version: 8, sources: { omt: { type: "geojson", data: { type: "FeatureCollection", features: [] } } }, layers };
   return {
     version: 8,
     glyphs: BASEMAP.glyphs,
